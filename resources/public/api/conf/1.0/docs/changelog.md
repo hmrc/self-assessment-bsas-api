@@ -1,0 +1,1 @@
+You can find the changelog in the [self-assessment-bsas-api](https://github.com/hmrc/self-assessment-bsas-api/wiki) GitHub wiki.
