@@ -42,7 +42,7 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         )
       ),
       api = APIDefinition(
-        name = "Self-Assessment Business Source Accounting Summary (MTD)",
+        name = "Business Source Accounting Summary (MTD)",
         description = "An API for providing individual losses data",
         context = appConfig.apiGatewayContext,
         categories = Seq("INCOME_TAX_MTD"),
