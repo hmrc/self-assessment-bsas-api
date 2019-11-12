@@ -1,0 +1,44 @@
+#%RAML 1.0
+---
+title: Business Source Accounting Summary (MTD)
+description: This is a draft spec for the Business Source Accounting Summary API
+version: 1.0
+
+protocols: [ HTTPS ]
+baseUri: https://api.service.hmrc.gov.uk/
+
+documentation:
+  - title: Overview
+    content: !include docs/overview.md
+  - title: Changelog
+    content: !include docs/changelog.md
+  - title: Support
+    content: !include docs/support.md
+  - title: Testing
+    content: !include docs/testing.md
+  - title: Versioning
+    content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/versioning.md
+  - title: Errors
+    content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/errors.md
+
+mediaType: application/hal+json
+
+uses:
+  sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
+  annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+  errors: errors.raml
+  headers: headers.raml
+
+'/insert/context':
+  /{nino}:
+    uriParameters:
+      nino:
+        description: National Insurance number, in the format AA999999A.
+        type: string
+        example: TC663795B
+    /sample-endpoint:
+      (annotations.group):
+        name: Sample Endpoint
+        description: This is a sample endpoint
+      get: !include sample_retrieve.raml
