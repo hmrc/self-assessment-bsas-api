@@ -34,8 +34,8 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |		"description": "Allow write access to self assessment data"
       |	}],
       |	"api": {
-      |		"name": "Self-Assessment Business Source Accounting Summary (MTD)",
-      |		"description": "An API for providing individual losses data",
+      |		"name": "Business Source Accounting Summary (MTD)",
+      |		"description": "An API for providing business source accounting summary data",
       |		"context": "individuals/self-assessment/accounting-summary",
       |		"categories": ["INCOME_TAX_MTD"],
       |		"versions": [{
