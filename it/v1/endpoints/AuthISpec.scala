@@ -44,7 +44,7 @@ class AuthISpec extends IntegrationBaseSpec {
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(s"/ni/$nino/$taxYear/sampleEndpoint")
+      buildRequest(s"/$nino/$taxYear/sampleEndpoint")
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
   }
