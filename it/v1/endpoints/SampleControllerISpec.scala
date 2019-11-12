@@ -75,7 +75,7 @@ class SampleControllerISpec extends IntegrationBaseSpec {
   "Calling the sample endpoint" should {
 
     trait SampleTest extends Test {
-      def uri: String = s"/ni/$nino/$taxYear/sampleEndpoint"
+      def uri: String = s"/$nino/$taxYear/sampleEndpoint"
     }
 
     "return a 201 status code" when {
