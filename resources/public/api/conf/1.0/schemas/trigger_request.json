@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Trigger a Business Source Accounting Summary (BSAS)",
+  "description": "Trigger a Business Source Accounting Summary (BSAS)",
+  "type": "object",
+  "properties": {
+    "accountingPeriod": {
+      "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned.",
+      "type": "object",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "description": "The date the accounting period began. ",
+          "example": "2018-05-01"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
+          "example": "2019-04-30"
+        }
+      },
+      "required": [
+        "startDate",
+        "endDate"
+      ]
+    },
+    "typeOfBusiness": {
+      "description": "The type of business the summary calculation is for.",
+      "type": "number",
+      "enum": ["self-employment", "uk-property-fhl", "uk-property-non-fhl"]
+    },
+    "selfEmploymentId": {
+      "description": "An identifier for the self-employment business, unique to the customer.",
+      "type": "string",
+      "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
+      "example": "X9IS98470026982"
+      }
+  },
+  "required": [
+    "accountingPeriod",
+    "typeOfBusiness"
+  ]
+}
+
