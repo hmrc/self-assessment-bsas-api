@@ -29,7 +29,7 @@
     "typeOfBusiness": {
       "title": "typeOfBusiness",
       "description": "The type of business the summary calculation is for.",
-      "type": "number",
+      "type": "string",
       "enum": ["self-employment", "uk-property-fhl", "uk-property-non-fhl"]
     },
     "selfEmploymentId": {
