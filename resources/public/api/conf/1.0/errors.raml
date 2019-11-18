@@ -106,7 +106,7 @@ traits:
                   code: RULE_END_DATE_BEFORE_START_DATE
   ruleAccountingPeriodNotSupported:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
