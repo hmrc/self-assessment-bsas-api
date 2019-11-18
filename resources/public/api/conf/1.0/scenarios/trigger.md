@@ -12,7 +12,7 @@
             <td><p>Simulates a successful response</p></td>
         </tr>
         <tr>
-            <td><p>NOT_FOUND/p></td>
+            <td><p>NOT_FOUND</p></td>
             <td><p>The accounting period given does not exist</p></td>
         </tr>
     </tbody>
