@@ -1,13 +1,10 @@
-API Example Microservice
-========================
+# self-assessment-bsas-api
 
-TODO Describe microservice / API
- 
-# Run tests
-```
-sbt test
-sbt it:test
-```
+# To run locally
+
+`sbt "run 9787"`
+or
+`sbt run`
 
 # License
 
