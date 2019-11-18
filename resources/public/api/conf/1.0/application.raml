@@ -37,7 +37,12 @@ uses:
         description: National Insurance number, in the format AA999999A.
         type: string
         example: TC663795B
-    /sampleEndpoint:
-     post: !include sample_post.raml
-  /trigger:
-   post: !include trigger.raml
+    /{taxYear}:
+      uriParameters:
+       taxYear:
+        description: 'The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid.'
+        example: "2017-18"
+      /sampleEndpoint:
+       post: !include sample_post.raml
+    /trigger:
+     post: !include trigger.raml
