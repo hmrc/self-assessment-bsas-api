@@ -68,7 +68,7 @@ traits:
             type: types.errorResponse
             examples:
               formatStartDate:
-                description: The format of the given accounting period start date is invalid
+                description: The format of the supplied accounting period start date is invalid
                 value:
                   code: FORMAT_START_DATE
   formatEndDate:
@@ -79,7 +79,7 @@ traits:
             type: types.errorResponse
             examples:
               formatEndDate:
-                description: The format of the given accounting period end date is invalid
+                description: The format of the supplied accounting period end date is invalid
                 value:
                   code: FORMAT_END_DATE
   formatTypeOfBusiness:
@@ -90,7 +90,7 @@ traits:
             type: types.errorResponse
             examples:
               formatTypeOfBusiness:
-                description: The format of the type of business is not valid
+                description: The format of the supplied type of business is not valid
                 value:
                   code: FORMAT_TYPE_OF_BUSINESS
   ruleEndDateBeforeStartDate:
@@ -123,21 +123,21 @@ traits:
             type: types.errorResponse
             examples:
               ruleAccountingPeriodNotEnded:
-                description: The accounting period end date has not been reached
+                description: The accounting period has not ended
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_ENDED
-  ruleAccountingPeriodNotFound:
+  ruleNoAccountingPeriod:
     responses:
       403:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              ruleAccountingPeriodNotFound:
-                description: The accounting period cannot be matched
+              ruleNoAccountingPeriod:
+                description: The supplied accounting period does not exist
                 value:
-                  code: RULE_ACCOUNTING_PERIOD_NOT_FOUND
-  notFound:
+                  code: RULE_NO_ACCOUNTING_PERIOD
+  triggerNotFound:
     responses:
       403:
         body:
@@ -145,6 +145,6 @@ traits:
             type: types.errorResponse
             examples:
               notFound:
-                description: The given accounting period is not found
+                description: The supplied income source could not be found
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
