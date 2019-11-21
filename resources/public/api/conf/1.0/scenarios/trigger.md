@@ -13,7 +13,15 @@
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
-            <td><p>The accounting period given does not exist</p></td>
+            <td><p>The supplied income source could not be found</p></td>
+        </tr>
+        <tr>
+            <td><p>NO_ACCOUNTING_PERIOD</p></td>
+            <td><p>The supplied accounting period does not exist</p></td>
+        </tr>
+        <tr>
+            <td><p>OBLIGATIONS_NOT_MET</p></td>
+            <td><p>One or more periodic updates are missing for this accounting period</p></td>
         </tr>
     </tbody>
 </table>
