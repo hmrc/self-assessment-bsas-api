@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.models.response.triggerBsas
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.SampleValidator
-import v1.models.errors.MtdError
-import v1.models.request.SampleRawData
+import play.api.libs.json._
 
-class MockSampleValidator extends MockFactory {
+case class TriggerBsasResponse(id: String)
 
-  val mockValidator: SampleValidator = mock[SampleValidator]
+object TriggerBsasResponse {
+  implicit val writes: OWrites[TriggerBsasResponse] = Json.writes[TriggerBsasResponse]
 
-  object MockSampleValidator {
-
-    def validate(data: SampleRawData): CallHandler1[SampleRawData, List[MtdError]] = {
-      (mockValidator
-        .validate(_: SampleRawData))
-        .expects(data)
-    }
-  }
+  implicit val reads: Reads[TriggerBsasResponse] =
+    (JsPath \ "metadata" \ "calculationId").read[String].map(TriggerBsasResponse.apply)
 }

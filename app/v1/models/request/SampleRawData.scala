@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.SampleRequestBody
+import play.api.libs.json.JsValue
 
-case class SampleRequestData(nino: Nino, desTaxYear: DesTaxYear, body: SampleRequestBody)
+case class SampleRawData(nino: String, taxYear: String, body: JsValue) extends RawData

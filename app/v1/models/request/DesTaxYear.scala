@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.models.request
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.SampleValidator
-import v1.models.errors.MtdError
-import v1.models.request.SampleRawData
+/**
+  * Represents a tax year for DES
+  *
+  * @param value the tax year string (where 2018 represents 2017-18)
+  */
+case class DesTaxYear(value: String) extends AnyVal {
+  override def toString: String = value
+}
 
-class MockSampleValidator extends MockFactory {
+object DesTaxYear {
 
-  val mockValidator: SampleValidator = mock[SampleValidator]
-
-  object MockSampleValidator {
-
-    def validate(data: SampleRawData): CallHandler1[SampleRawData, List[MtdError]] = {
-      (mockValidator
-        .validate(_: SampleRawData))
-        .expects(data)
-    }
-  }
+  /**
+    * @param taxYear tax year in MTD format (e.g. 2017-18)
+    */
+  def fromMtd(taxYear: String): DesTaxYear =
+    DesTaxYear(taxYear.take(2) + taxYear.drop(5))
 }
