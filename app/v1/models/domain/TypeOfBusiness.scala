@@ -47,8 +47,3 @@ object TypeOfBusiness {
     def toIdentifierValue: String = "02"
   }
 }
-
-
-
-
-
