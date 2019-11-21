@@ -1,0 +1,29 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.formatSelfEmploymentId
+  - errors.formatTypeOfBusiness
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeExceeded
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+  - queryParameters.taxYearRequired
+  - queryParameters.typeOfBusinessOptional
+  - queryParameters.selfEmploymentIdOptional
+displayName: List Business Source Accounting Summaries (BSAS) [test only]
+description: This endpoint allows the user to generate a list of Business Source Accounting Summaries (BSAS) for a given tax year. A filter can be set to return the BSAS for a single business or business type.
+(annotations.sandboxData): !include scenarios/list.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+responses:
+  200:
+    body:
+      application/json:
+        type: !include schemas/list_response.json
+        example: !include examples/list_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.

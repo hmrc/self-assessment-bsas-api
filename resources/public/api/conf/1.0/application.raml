@@ -29,6 +29,7 @@ uses:
   types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
   errors: errors.raml
   headers: headers.raml
+  queryParameters: queryParameters.raml
 
 '/individuals/self-assessment/accounting-summary':
   /{nino}:
@@ -37,6 +38,7 @@ uses:
         description: National Insurance number, in the format AA999999A.
         type: string
         example: TC663795B
+    get: !include list.raml
     /{taxYear}:
       uriParameters:
        taxYear:
@@ -45,4 +47,4 @@ uses:
       /sampleEndpoint:
        post: !include sample_post.raml
     /trigger:
-     post: !include trigger.raml
+      post: !include trigger.raml

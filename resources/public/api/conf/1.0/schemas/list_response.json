@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Sample Endpoint",
+  "description": "Sample Endpoint",
+  "type": "object",
+  "properties": {
+    "businessSourceSummaries": {
+      "title": "Business Source Summaries",
+      "description": "The array holding Business Source Accounting Summary (BSAS) Entries, by Business Income Source",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "typeOfBusiness",
+          "accountingPeriod",
+          "bsasEntries"
+        ],
+        "properties": {
+          "typeOfBusiness": {
+            "title": "Type of Business",
+            "description": "The type of business the loss applies to",
+            "type": "string",
+            "enum": [ "self-employment", "uk-property-fhl", "uk-property-non-fhl" ]
+          },
+          "selfEmploymentId": {
+            "title": "Self-Employment ID",
+            "description": "An identifier for the self-employment business, unique to the customer",
+            "type": "string",
+            "example": "XAIS12345678910",
+            "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$"
+          },
+          "accountingPeriod": {
+            "title": "Accounting Period",
+            "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned",
+            "type": "object",
+            "required": [
+              "startDate",
+              "endDate"
+            ],
+            "properties": {
+              "startDate": {
+                "title": "Start Date",
+                "description": "The date the accounting period began",
+                "type": "string",
+                "example": "2018-05-01",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              },
+              "endDate": {
+                "title": "End Date",
+                "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end",
+                "type": "string",
+                "example": "2019-04-30",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              }
+            }
+          },
+          "bsasEntries": {
+            "title": "BSAS Entries",
+            "description": "The array holding Business Source Accounting Summary (BSAS) Entries",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "requestedDateTime",
+                "summaryStatus",
+                "adjustedSummary"
+              ],
+              "properties": {
+                "id": {
+                  "title": "BSAS ID",
+                  "description": "The unique identifier of the summary calculation",
+                  "type": "string",
+                  "example": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+                  "pattern": "^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                },
+                "requestedDateTime": {
+                  "title": "Requested Datetime",
+                  "description": "The date and time this summary calculation was originally requested, prior to any adjustments",
+                  "type": "string"
+                },
+                "summaryStatus": {
+                  "title": "Summary Status",
+                  "description": "Whether the summary calculation with this ID is current, has been invalidated (by subsequent data entry) or has been superseded by a more recent request for a summary calculation",
+                  "type": "string",
+                  "enum": [ "valid", "invalid", "superseded" ]
+                },
+                "adjustedSummary": {
+                  "title": "Adjusted Summary",
+                  "description": "Indicates whether the original summary calculation has had adjustments applied",
+                  "type": "boolean",
+                  "example": "false"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "businessSourceSummaries"
+  ]
+}

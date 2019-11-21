@@ -16,17 +16,17 @@ traits:
                 description: The format of the supplied NINO field is not valid
                 value:
                   code: FORMAT_NINO
-  incorrectOrEmptyBodySubmitted:
+  formatTaxYear:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              incorrectOrEmptyBodySubmitted:
-                description: An empty or non-matching body was submitted
+              formatTaxYear:
+                description: The format of the supplied tax year is not valid
                 value:
-                  code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+                  code: FORMAT_TAX_YEAR
   formatSelfEmploymentId:
     responses:
       400:
@@ -38,28 +38,6 @@ traits:
                 description: The format of the self-employment ID is not valid
                 value:
                   code: FORMAT_SELF_EMPLOYMENT_ID
-  ruleSelfEmploymentId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleSelfEmploymentId:
-                description: A self-employment ID can only be supplied for a self-employment business type
-                value:
-                  code: RULE_SELF_EMPLOYMENT_ID
-  rulePeriodicDataIncomplete:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              rulePeriodicDataIncomplete:
-                description: One or more Periodic updates are missing for this accounting period
-                value:
-                  code: RULE_PERIODIC_DATA_INCOMPLETE
   formatStartDate:
     responses:
       400:
@@ -93,6 +71,50 @@ traits:
                 description: The format of the supplied type of business is not valid
                 value:
                   code: FORMAT_TYPE_OF_BUSINESS
+  ruleSelfEmploymentId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSelfEmploymentId:
+                description: A self-employment ID can only be supplied for a self-employment business type
+                value:
+                  code: RULE_SELF_EMPLOYMENT_ID
+  ruleTaxYearNotSupported:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearNotSupported:
+                description: The specified tax year is not supported, that is, the tax year specified is before the minimum tax year value
+                value:
+                  code: RULE_TAX_YEAR_NOT_SUPPORTED
+  ruleTaxYearRangeExceeded:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearRangeExceeded:
+                description: Tax year range exceeded. A tax year range of one year is required
+                value:
+                  code: RULE_TAX_YEAR_RANGE_EXCEEDED
+  rulePeriodicDataIncomplete:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              rulePeriodicDataIncomplete:
+                description: One or more Periodic updates are missing for this accounting period
+                value:
+                  code: RULE_PERIODIC_DATA_INCOMPLETE
   ruleEndDateBeforeStartDate:
     responses:
       400:
@@ -137,6 +159,17 @@ traits:
                 description: The supplied accounting period does not exist
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
+  incorrectOrEmptyBodySubmitted:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              incorrectOrEmptyBodySubmitted:
+                description: An empty or non-matching body was submitted
+                value:
+                  code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
   triggerNotFound:
     responses:
       404:
@@ -146,6 +179,17 @@ traits:
             examples:
               notFound:
                 description: The supplied income source could not be found
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
+  notFound:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              notFound:
+                description: Matching resource not found
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   clientOrAgentNotAuthorised:
