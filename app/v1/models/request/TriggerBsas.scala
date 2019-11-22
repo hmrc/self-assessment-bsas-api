@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.models.request
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.SampleValidator
-import v1.models.errors.MtdError
-import v1.models.request.SampleRawData
+import play.api.libs.json.JsValue
+import uk.gov.hmrc.domain.Nino
+import v1.models.request.triggerBsas.TriggerBsasRequestBody
 
-class MockSampleValidator extends MockFactory {
+case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
 
-  val mockValidator: SampleValidator = mock[SampleValidator]
-
-  object MockSampleValidator {
-
-    def validate(data: SampleRawData): CallHandler1[SampleRawData, List[MtdError]] = {
-      (mockValidator
-        .validate(_: SampleRawData))
-        .expects(data)
-    }
-  }
-}
+case class TriggerBsasRequestData(nino: Nino, body: TriggerBsasRequestBody)
