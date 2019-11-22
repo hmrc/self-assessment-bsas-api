@@ -22,17 +22,20 @@ sealed trait TypeOfBusiness {
 
 object TypeOfBusiness {
 
+  private val selfEmployment: String = "self-employment"
+  private val ukPropertyFhl: String = "uk-property-fhl"
+  private val ukPropertyNonFhl: String = "uk-property-non-fhl"
+  private val typesOfBusiness: Seq[String] = Seq(selfEmployment, ukPropertyFhl, ukPropertyNonFhl)
+
   def isTypeOfBusiness(typeOfBusiness: String): Boolean = typeOfBusiness match {
-    case "self-employment" => true
-    case "uk-property-fhl" => true
-    case "uk-property-non-fhl" => true
+    case _ if typesOfBusiness.contains(typeOfBusiness) => true
     case _ => false
   }
 
   def apply(typeOfBusiness: String): TypeOfBusiness = typeOfBusiness match {
-    case "self-employment" => TypeOfBusiness.SelfEmployment
-    case "uk-property-fhl" => TypeOfBusiness.UkPropertyFhl
-    case "uk-property-non-fhl" => TypeOfBusiness.UkPropertyNonFhl
+    case _ if typeOfBusiness == selfEmployment => TypeOfBusiness.SelfEmployment
+    case _ if typeOfBusiness == ukPropertyFhl => TypeOfBusiness.UkPropertyFhl
+    case _ if typeOfBusiness == ukPropertyNonFhl => TypeOfBusiness.UkPropertyNonFhl
   }
 
   case object SelfEmployment extends TypeOfBusiness {
