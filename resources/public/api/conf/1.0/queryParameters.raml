@@ -1,0 +1,40 @@
+#%RAML 1.0 Library
+
+uses:
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+
+traits:
+  taxYearOptional:
+    queryParameters:
+      taxYear:
+        description: 'The tax year to which the data applies, in the format YYYY-YY. If no tax year is supplied, then it will default to the current tax year.'
+        example: "2019-20"
+        required: false
+  selfEmploymentIdOptional:
+    queryParameters:
+      selfEmploymentId:
+        description: 'An identifier for the self-employment business, unique to the customer. Must conform to the regular expression `^X[A-Z0-9]{1}IS[0-9]{11}$`'
+        example: "X9IS98470026982"
+        required: false
+  typeOfBusinessOptional:
+    queryParameters:
+      typeOfBusiness:
+        description: "The type of business the summary calculation is for.<br><br>Limited to the following possible values: <br>`self-employment`<br>`uk-property-non-fhl`<br>`uk-property-fhl`"
+        required: false
+  taxYearRequired:
+    queryParameters:
+      taxYear:
+        description: 'The tax year the data applies to.<br>The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid. The minimum tax year is 2019-20.'
+        example: "2019-20"
+        required: true
+  selfEmploymentIdRequired:
+    queryParameters:
+      selfEmploymentId:
+        description: 'An identifier for the self-employment business, unique to the customer. Must conform to the regular expression `^X[A-Z0-9]{1}IS[0-9]{11}$`'
+        example: "X9IS98470026982"
+        required: true
+  typeOfBusinessRequired:
+    queryParameters:
+      typeOfBusiness:
+        description: "The type of business the summary calculation is for.<br><br>Limited to the following possible values: <br>`uk-property-non-fhl`<br>`uk-property-fhl`"
+        required: true
