@@ -17,39 +17,15 @@
 package v1.models.domain
 
 import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+import v1.models.domain.TypeOfBusiness._
 
-class TypeOfBusinessSpec extends UnitSpec {
+class TypeOfBusinessSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  "isTypeOfBusiness" when {
-    "provided with a valid type of business" should {
-      "return 'true'" in {
-        TypeOfBusiness.isTypeOfBusiness("self-employment") shouldBe true
-        TypeOfBusiness.isTypeOfBusiness("uk-property-fhl") shouldBe true
-        TypeOfBusiness.isTypeOfBusiness("uk-property-non-fhl") shouldBe true
-      }
-    }
-    "provided with an invalid type of business" should {
-      "return 'false'" in {
-        TypeOfBusiness.isTypeOfBusiness("not-a-business-type") shouldBe false
-      }
-    }
-  }
-
-  "apply" when {
-    "provided with a valid type of business" should {
-      "return the corresponding case object" in {
-        TypeOfBusiness("self-employment") shouldBe TypeOfBusiness.SelfEmployment
-        TypeOfBusiness("uk-property-fhl") shouldBe TypeOfBusiness.UkPropertyFhl
-        TypeOfBusiness("uk-property-non-fhl") shouldBe TypeOfBusiness.UkPropertyNonFhl
-      }
-    }
-  }
-
-  "toIdentifierValue" must {
-    "return the correct values" in {
-      TypeOfBusiness.SelfEmployment.toIdentifierValue shouldBe "N/A"
-      TypeOfBusiness.UkPropertyFhl.toIdentifierValue shouldBe "04"
-      TypeOfBusiness.UkPropertyNonFhl.toIdentifierValue shouldBe "02"
-    }
-  }
+  testRoundTrip[TypeOfBusiness](
+    ("self-employment", `self-employment`),
+    ("uk-property-fhl", `uk-property-fhl`),
+    ("uk-property-non-fhl", `uk-property-non-fhl`)
+  )
 }
+

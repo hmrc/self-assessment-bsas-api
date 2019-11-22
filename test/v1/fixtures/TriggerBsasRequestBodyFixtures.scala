@@ -17,6 +17,7 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsValue, Json}
+import v1.models.domain.TypeOfBusiness
 import v1.models.request.triggerBsas.{AccountingPeriod, TriggerBsasRequestBody}
 
 object TriggerBsasRequestBodyFixtures {
@@ -59,13 +60,13 @@ object TriggerBsasRequestBodyFixtures {
 
   val seBody: TriggerBsasRequestBody = TriggerBsasRequestBody(
     AccountingPeriod("2018-11-25", "2018-11-26"),
-    "self-employment",
+    TypeOfBusiness.`self-employment`,
     Some("anId")
   )
 
   val fhlBody: TriggerBsasRequestBody = TriggerBsasRequestBody(
     AccountingPeriod("2018-11-25", "2018-11-26"),
-    "uk-property-fhl",
+    TypeOfBusiness.`uk-property-fhl`,
     None
   )
 

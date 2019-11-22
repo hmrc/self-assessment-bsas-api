@@ -20,7 +20,7 @@ import play.api.libs.json.{JsObject, Json, OFormat, OWrites, Reads}
 import v1.models.domain.TypeOfBusiness
 
 case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod,
-                                  typeOfBusiness: String,
+                                  typeOfBusiness: TypeOfBusiness,
                                   selfEmploymentId: Option[String])
 
 object TriggerBsasRequestBody {
@@ -31,9 +31,7 @@ object TriggerBsasRequestBody {
 
     def writes(triggerBsasRequestBody: TriggerBsasRequestBody): JsObject = {
 
-      val typeOfBusiness: TypeOfBusiness = TypeOfBusiness(triggerBsasRequestBody.typeOfBusiness)
-
-      if (typeOfBusiness == TypeOfBusiness.SelfEmployment) {
+      if (triggerBsasRequestBody.typeOfBusiness == TypeOfBusiness.`self-employment`) {
         Json.obj(
           "incomeSourceIdentifier" -> "incomeSourceId",
           "identifierValue" -> triggerBsasRequestBody.selfEmploymentId,
@@ -43,7 +41,7 @@ object TriggerBsasRequestBody {
       } else {
         Json.obj(
           "incomeSourceIdentifier" -> "incomeSourceType",
-          "identifierValue" -> typeOfBusiness.toIdentifierValue,
+          "identifierValue" -> triggerBsasRequestBody.typeOfBusiness.toIdentifierValue,
           "accountingPeriodStartDate" -> triggerBsasRequestBody.accountingPeriod.startDate,
           "accountingPeriodEndDate" -> triggerBsasRequestBody.accountingPeriod.endDate
         )

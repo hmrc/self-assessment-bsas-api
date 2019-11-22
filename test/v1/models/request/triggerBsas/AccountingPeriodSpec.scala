@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse("""
+  val requestJson: JsValue = Json.parse("""
       |{
       |  "startDate" : "2018-11-25",
       |  "endDate" : "2018-11-26"
@@ -35,12 +35,12 @@ class AccountingPeriodSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val response: AccountingPeriod = AccountingPeriod("2018-11-25","2018-11-26")
+  val model: AccountingPeriod = AccountingPeriod("2018-11-25","2018-11-26")
 
   "AccountingPeriod" when {
     "read from valid JSON" should {
       "return the expected AccountingPeriod object" in {
-        desJson.validate[AccountingPeriod] shouldBe JsSuccess(response)
+        requestJson.validate[AccountingPeriod] shouldBe JsSuccess(model)
       }
     }
 
@@ -52,7 +52,7 @@ class AccountingPeriodSpec extends UnitSpec {
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(response) shouldBe desJson
+        Json.toJson(model) shouldBe requestJson
       }
     }
   }

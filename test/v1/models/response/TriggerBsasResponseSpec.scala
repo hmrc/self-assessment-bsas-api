@@ -36,7 +36,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val invalidJson: JsValue = Json.parse("""
+  val invalidDesJson: JsValue = Json.parse("""
       |{
       |   "id" : 3
       |}
@@ -53,7 +53,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidJson.validate[TriggerBsasResponse] shouldBe a[JsError]
+        invalidDesJson.validate[TriggerBsasResponse] shouldBe a[JsError]
       }
     }
 

@@ -16,37 +16,28 @@
 
 package v1.models.domain
 
+import play.api.libs.json.Format
+import utils.enums.Enums
+
 sealed trait TypeOfBusiness {
   def toIdentifierValue: String
 }
 
+//noinspection ScalaStyle
 object TypeOfBusiness {
 
-  private val selfEmployment: String = "self-employment"
-  private val ukPropertyFhl: String = "uk-property-fhl"
-  private val ukPropertyNonFhl: String = "uk-property-non-fhl"
-  private val typesOfBusiness: Seq[String] = Seq(selfEmployment, ukPropertyFhl, ukPropertyNonFhl)
-
-  def isTypeOfBusiness(typeOfBusiness: String): Boolean = typeOfBusiness match {
-    case _ if typesOfBusiness.contains(typeOfBusiness) => true
-    case _ => false
+  case object `self-employment` extends TypeOfBusiness {
+    override def toIdentifierValue: String = "01"
   }
 
-  def apply(typeOfBusiness: String): TypeOfBusiness = typeOfBusiness match {
-    case _ if typeOfBusiness == selfEmployment => TypeOfBusiness.SelfEmployment
-    case _ if typeOfBusiness == ukPropertyFhl => TypeOfBusiness.UkPropertyFhl
-    case _ if typeOfBusiness == ukPropertyNonFhl => TypeOfBusiness.UkPropertyNonFhl
+  case object `uk-property-fhl` extends TypeOfBusiness {
+    override def toIdentifierValue: String = "04"
   }
 
-  case object SelfEmployment extends TypeOfBusiness {
-    def toIdentifierValue: String = "N/A"
+  case object `uk-property-non-fhl` extends TypeOfBusiness {
+    override def toIdentifierValue: String = "02"
   }
 
-  case object UkPropertyFhl extends TypeOfBusiness {
-    def toIdentifierValue: String = "04"
-  }
-
-  case object UkPropertyNonFhl extends TypeOfBusiness {
-    def toIdentifierValue: String = "02"
-  }
+  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
+  val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 }
