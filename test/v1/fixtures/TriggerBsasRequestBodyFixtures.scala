@@ -51,6 +51,15 @@ object TriggerBsasRequestBodyFixtures {
       |}
   """.stripMargin)
 
+  val nonFhlRequestBodyDes: JsValue = Json.parse("""
+      |{
+      |   "incomeSourceIdentifier" : "incomeSourceType",
+      |   "identifierValue" : "02",
+      |   "accountingPeriodStartDate" : "2018-11-25",
+      |   "accountingPeriodEndDate" : "2018-11-26"
+      |}
+  """.stripMargin)
+
   val invalidJson: JsValue = Json.parse("""
       |{
       |  "startDate" : 4,
@@ -70,4 +79,9 @@ object TriggerBsasRequestBodyFixtures {
     None
   )
 
+  val nonFhlBody: TriggerBsasRequestBody = TriggerBsasRequestBody(
+    AccountingPeriod("2018-11-25", "2018-11-26"),
+    TypeOfBusiness.`uk-property-non-fhl`,
+    None
+  )
 }

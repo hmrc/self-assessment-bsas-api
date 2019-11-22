@@ -44,6 +44,7 @@ class TriggerBsasRequestBodySpec extends UnitSpec {
     "written to JSON (uk property)" should {
       "return the expected JsValue" in {
         Json.toJson(fhlBody) shouldBe fhlRequestBodyDes
+        Json.toJson(fhlBody) shouldBe fhlRequestBodyDes
       }
     }
   }
