@@ -21,7 +21,9 @@ import play.api.libs.json._
 case class TriggerBsasResponse(id: String)
 
 object TriggerBsasResponse {
+
   implicit val writes: OWrites[TriggerBsasResponse] = Json.writes[TriggerBsasResponse]
+
   implicit val reads: Reads[TriggerBsasResponse] =
     (JsPath \ "metadata" \ "calculationId").read[String].map(TriggerBsasResponse.apply)
 }

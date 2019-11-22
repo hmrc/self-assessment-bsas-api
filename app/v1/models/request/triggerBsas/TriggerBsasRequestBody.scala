@@ -28,9 +28,7 @@ object TriggerBsasRequestBody {
   implicit val reads: Reads[TriggerBsasRequestBody] = Json.reads[TriggerBsasRequestBody]
 
   implicit val writes: OWrites[TriggerBsasRequestBody] = new OWrites[TriggerBsasRequestBody] {
-
     def writes(triggerBsasRequestBody: TriggerBsasRequestBody): JsObject = {
-
       if (triggerBsasRequestBody.typeOfBusiness == TypeOfBusiness.`self-employment`) {
         Json.obj(
           "incomeSourceIdentifier" -> "incomeSourceId",
