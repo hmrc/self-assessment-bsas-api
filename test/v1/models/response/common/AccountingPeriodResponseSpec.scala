@@ -16,42 +16,32 @@
 
 package v1.models.response.common
 
-import play.api.libs.json.{JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import support.UnitSpec
+import v1.fixtures.ListBSASFixtures._
 
-class AccountingPeriodSpec extends UnitSpec {
-
-  val json: JsValue = Json.parse(
-    """
-      |{
-      | "startDate": "2018-10-11",
-      | "endDate": "2019-10-10"
-      | }
-      |""".stripMargin
-  )
-
-  val desJson: JsValue = Json.parse (
-    """
-      |{
-      | "accountingStartDate": "2018-10-11",
-      | "accountingEndDate": "2019-10-10"
-      | }
-      |""".stripMargin)
+class AccountingPeriodResponseSpec extends UnitSpec {
 
   val model =
-    AccountingPeriod(
+    AccountingPeriodResponse(
       startDate = "2018-10-11",
       endDate = "2019-10-10"
     )
 
-  "Accounting Period" should {
+  "AccountingPeriodResponse" should {
 
-    "write correctly to json" in {
-      Json.toJson(model) shouldBe json
+    "write correctly to JSON" in {
+      Json.toJson(model) shouldBe accountingJSON
     }
 
-    "read correctly to json" in {
-      desJson.validate[AccountingPeriod] shouldBe JsSuccess(model)
+    "read from valid JSON" in {
+      accountingFromDesJSON.validate[AccountingPeriodResponse] shouldBe JsSuccess(model)
+    }
+
+    "read from invalid JSON" should {
+      "return a JsError" in {
+        invalidAccountingJson.validate[AccountingPeriodResponse] shouldBe a[JsError]
+      }
     }
   }
 }

@@ -18,8 +18,8 @@ package v1.models.request.triggerBsas
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AccountingPeriod(startDate: String, endDate: String)
+case class AccountingPeriodRequest(startDate: String, endDate: String)
 
-object AccountingPeriod {
-  implicit val format: OFormat[AccountingPeriod] = Json.format[AccountingPeriod]
+object AccountingPeriodRequest {
+  implicit val format: OFormat[AccountingPeriodRequest] = Json.format[AccountingPeriodRequest]
 }

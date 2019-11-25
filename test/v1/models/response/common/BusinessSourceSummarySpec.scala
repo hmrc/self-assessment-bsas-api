@@ -16,53 +16,18 @@
 
 package v1.models.response.common
 
-import play.api.libs.json.{JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
-
+import v1.fixtures.ListBSASFixtures._
+import v1.models.domain.TypeOfBusiness
 
 class BusinessSourceSummarySpec extends UnitSpec {
 
-  val json: JsValue = Json.parse(
-    """
-      |{
-      | "typeOfBusiness": "self-employment",
-      | "selfEmploymentId": "000000000000210",
-      | "accountingPeriod": {
-      |     "startDate": "2018-10-11",
-      |     "endDate": "2019-10-10"
-      | },
-      | "bsasEntries": [
-      |     {
-      |     "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |     "requestedDateTime": "2019-10-14T11:33:27Z",
-      |     "summaryStatus": "valid",
-      |     "adjustedSummary": false
-      |     }
-      |   ]
-      | }
-      |""".stripMargin
-  )
-
-  val desJson: JsValue = Json.parse(
-    """
-      |{
-      | "incomeSourceType": "self-employment",
-      | "incomeSourceId": "000000000000210",
-      | "accountingStartDate": "2018-10-11",
-      | "accountingEndDate": "2019-10-10",
-      | "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      | "requestedDateTime": "2019-10-14T11:33:27Z",
-      | "status": "valid",
-      | "adjusted": false
-      | }
-      |""".stripMargin
-  )
-
   val model =
     BusinessSourceSummary(
-      typeOfBusiness = "self-employment",
+      typeOfBusiness = TypeOfBusiness.`self-employment`,
       selfEmploymentId = Some("000000000000210"),
-      AccountingPeriod(
+      AccountingPeriodResponse(
         startDate = "2018-10-11",
         endDate = "2019-10-10"
       ),
@@ -79,11 +44,11 @@ class BusinessSourceSummarySpec extends UnitSpec {
   "BusinessSourceSummary" should {
 
     "write correctly to json" in {
-      Json.toJson(model) shouldBe json
+      Json.toJson(model) shouldBe summaryJSON
     }
 
     "read correctly to json" in {
-      desJson.validate[BusinessSourceSummary] shouldBe JsSuccess(model)
+      summaryFromDesJSON.validate[BusinessSourceSummary] shouldBe JsSuccess(model)
     }
   }
 }

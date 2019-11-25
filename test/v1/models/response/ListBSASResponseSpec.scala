@@ -16,6 +16,42 @@
 
 package v1.models.response
 
-class ListBSASResponseSpec {
+import play.api.libs.json.{JsSuccess, Json}
+import support.UnitSpec
+import v1.fixtures.ListBSASFixtures._
+import v1.models.domain.TypeOfBusiness
+import v1.models.response.common.{AccountingPeriodResponse, BSASEntries, BusinessSourceSummary}
 
+class ListBSASResponseSpec extends UnitSpec {
+
+  val model =
+    ListBSASResponse(
+      Seq(BusinessSourceSummary(
+        typeOfBusiness = TypeOfBusiness.`self-employment`,
+        selfEmploymentId = Some("000000000000210"),
+        AccountingPeriodResponse(
+          startDate = "2018-10-11",
+          endDate = "2019-10-10"
+        ),
+        Seq(
+          BSASEntries(
+            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+            requestedDateTime = "2019-10-14T11:33:27Z",
+            summaryStatus = "valid",
+            adjustedSummary = false
+          )
+        )
+      ))
+    )
+
+  "BusinessSourceSummaries" should {
+
+    "write correctly to json" in {
+      Json.toJson(model) shouldBe summariesJSON
+    }
+
+    "read correctly to json" in {
+      summariesFromDesJSON.validate[ListBSASResponse] shouldBe JsSuccess(model)
+    }
+  }
 }

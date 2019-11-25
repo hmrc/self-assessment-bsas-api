@@ -16,13 +16,17 @@
 
 package v1.models.response.common
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BusinessSourceSummaries(businessSourceSummaries: Seq[BusinessSourceSummary])
+case class AccountingPeriodResponse(startDate: String, endDate: String)
 
-object BusinessSourceSummaries {
+object AccountingPeriodResponse {
 
-  implicit val reads: Reads[BusinessSourceSummaries] = Json.reads[BusinessSourceSummaries]
+  implicit val reads: Reads[AccountingPeriodResponse] = (
+    (JsPath \ "accountingStartDate").read[String] and
+      (JsPath \ "accountingEndDate").read[String]
+  )(AccountingPeriodResponse.apply _)
 
-  implicit val writes: OWrites[BusinessSourceSummaries] = Json.writes[BusinessSourceSummaries]
+  implicit val writes: OWrites[AccountingPeriodResponse] = Json.writes[AccountingPeriodResponse]
 }

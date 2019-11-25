@@ -16,32 +16,11 @@
 
 package v1.models.response.common
 
-import play.api.libs.json.{JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
+import v1.fixtures.ListBSASFixtures._
 
 class BSASEntriesSpec extends UnitSpec{
-
-  val json: JsValue = Json.parse(
-    """
-      |{
-      | "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      | "requestedDateTime": "2019-10-14T11:33:27Z",
-      | "summaryStatus": "valid",
-      | "adjustedSummary": false
-      | }
-      |""".stripMargin
-  )
-
-  val desJson: JsValue = Json.parse (
-    """
-      |{
-      | "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      | "requestedDateTime": "2019-10-14T11:33:27Z",
-      | "status": "valid",
-      | "adjusted": false
-      | }
-      |""".stripMargin
-  )
 
   val model =
     BSASEntries(
@@ -54,11 +33,11 @@ class BSASEntriesSpec extends UnitSpec{
   "BSAS Entries" should {
 
     "write correctly to json" in {
-      Json.toJson(model) shouldBe json
+      Json.toJson(model) shouldBe bsasEntriesJSON
     }
 
     "read correctly to json" in {
-      desJson.validate[BSASEntries] shouldBe JsSuccess(model)
+      bsasEntriesFromDesJSON.validate[BSASEntries] shouldBe JsSuccess(model)
     }
   }
 }

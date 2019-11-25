@@ -18,19 +18,20 @@ package v1.models.response.common
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.domain.TypeOfBusiness
 
-case class BusinessSourceSummary(typeOfBusiness: String,
+case class BusinessSourceSummary(typeOfBusiness: TypeOfBusiness,
                                  selfEmploymentId: Option[String],
-                                 accountingPeriod: AccountingPeriod,
+                                 accountingPeriod: AccountingPeriodResponse,
                                  bsasEntries: Seq[BSASEntries])
 
 object BusinessSourceSummary {
 
   implicit val reads: Reads[BusinessSourceSummary] = (
-    (JsPath \ "incomeSourceType").read[String] and
+    (JsPath \ "incomeSourceType").read[TypeOfBusiness] and
       (JsPath \ "incomeSourceId").readNullable[String] and
-      JsPath.read[AccountingPeriod] and
-    JsPath.read[Seq[BSASEntries]]
+      JsPath.read[AccountingPeriodResponse] and
+      (JsPath \ "ascCalculations").read[Seq[BSASEntries]]
     )(BusinessSourceSummary.apply _)
 
   implicit val writes: OWrites[BusinessSourceSummary] = Json.writes[BusinessSourceSummary]

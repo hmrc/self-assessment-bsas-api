@@ -17,13 +17,14 @@
 package v1.models.response
 
 import play.api.libs.json.{Json, OWrites, Reads}
-import v1.models.response.common.{BusinessSourceSummaries}
+import v1.models.response.common.BusinessSourceSummary
 
-case class ListBSASResponse(businessSourceSummary: BusinessSourceSummaries)
+case class ListBSASResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
 
 object ListBSASResponse {
 
-  implicit val reads: Reads[ListBSASResponse] = Json.reads[ListBSASResponse]
+  implicit val reads: Reads[ListBSASResponse] = implicitly[Reads[Seq[BusinessSourceSummary]]].map(ListBSASResponse(_))
 
   implicit val writes: OWrites[ListBSASResponse] = Json.writes[ListBSASResponse]
+
 }

@@ -19,7 +19,7 @@ package v1.models.request.triggerBsas
 import play.api.libs.json.{JsObject, Json, OFormat, OWrites, Reads}
 import v1.models.domain.TypeOfBusiness
 
-case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod,
+case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriodRequest,
                                   typeOfBusiness: TypeOfBusiness,
                                   selfEmploymentId: Option[String])
 
