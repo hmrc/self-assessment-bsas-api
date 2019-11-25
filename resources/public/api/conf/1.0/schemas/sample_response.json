@@ -4,7 +4,7 @@
   "description": "Sample Endpoint",
   "type": "object",
   "properties": {
-    "aFieldUsedAcrossMultipleSchemas": { "$ref": "definitions.json#/definitions/uid" },
+    "aFieldUsedAcrossMultipleSchemas": { "$ref": "definitions.json#/definitions/uid"},
     "aFieldDefinedInline": {
       "description": "a field defined within the schema",
       "type": "string",
