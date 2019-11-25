@@ -29,7 +29,7 @@ object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax 
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
-    extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "Tax year not supported, because it precedes the earliest allowable tax year")
+    extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED", "The accounting period is not supported, because it predates the earliest allowable tax year")
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
@@ -42,6 +42,26 @@ object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCO
 
 object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The accounting period given does not exist")
 
+
+object StartDateFormatError
+    extends MtdError("FORMAT_START_DATE","The supplied accounting period start date format is invalid")
+
+object EndDateFormatError
+  extends MtdError("FORMAT_END_DATE","The supplied accounting period end date format is invalid")
+
+object TypeOfBusinessFormatError
+  extends MtdError("FORMAT_TYPE_OF_BUSINESS","The supplied type of business format is invalid")
+
+object SelfEmploymentIdFormatError extends MtdError("FORMAT_SELF_EMPLOYMENT_ID","The supplied self-employment ID format is invalid")
+
+object SelfEmploymentIdRuleError
+  extends MtdError("RULE_SELF_EMPLOYMENT_ID","A self-employment ID should be supplied for a self-employment business type")
+
+object EndBeforeStartDateError
+  extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
+
+object PeriodNotEndedError
+  extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED","The accounting period has not yet ended")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

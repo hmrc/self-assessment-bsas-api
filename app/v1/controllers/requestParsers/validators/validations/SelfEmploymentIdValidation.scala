@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import v1.models.errors.{MtdError, SelfEmploymentIdFormatError}
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+object SelfEmploymentIdValidation {
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+  private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
+
+  def validate(selfEmploymentId: Option[String]): List[MtdError] = {
+
+    selfEmploymentId match {
+      case Some(id) if !id.matches(regex) => List(SelfEmploymentIdFormatError)
+      case _ => List()
+    }
+  }
+}

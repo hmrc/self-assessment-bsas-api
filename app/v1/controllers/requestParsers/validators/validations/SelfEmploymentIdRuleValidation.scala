@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import v1.models.domain.TypeOfBusiness
+import v1.models.errors.{MtdError, SelfEmploymentIdRuleError}
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+object SelfEmploymentIdRuleValidation {
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+  def validate(selfEmploymentId: Option[String], typeOfBusiness: String): List[MtdError] =
+
+    selfEmploymentId match {
+      case Some(_) if typeOfBusiness != TypeOfBusiness.`self-employment`.toString => List(SelfEmploymentIdRuleError)
+      case None if typeOfBusiness == TypeOfBusiness.`self-employment`.toString => List(SelfEmploymentIdRuleError)
+      case _ => List()
+    }
+}

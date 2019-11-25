@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import v1.models.errors.MtdError
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+object DateValidation {
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+  val dateFormat = "[0-9][0-9][0-9][0-9]\\-[0-1][0-9]\\-[0-3][0-9]"
+
+  def validate(date: String, error: MtdError): List[MtdError] = {
+    if (date.matches(dateFormat)) NoValidationErrors else List(error)
+  }
+
+}
