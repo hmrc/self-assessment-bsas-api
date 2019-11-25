@@ -43,7 +43,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   "triggerBsas" must {
     val request = TriggerBsasRequestData(nino,seBody)
 
-    "post an empty body and return the result" in new Test {
+    "post a TriggerBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
 
       MockedHttpClient
