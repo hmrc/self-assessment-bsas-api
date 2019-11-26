@@ -47,7 +47,6 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
   val apiGatewayContext: String = config.getString("api.gateway.context")
-  val endpointsEnabled: Boolean = config.getBoolean("api-definitions.endpoints.enabled")
 
   def apiStatus(version: String): String = config.getString(s"api.$version.status")
 
