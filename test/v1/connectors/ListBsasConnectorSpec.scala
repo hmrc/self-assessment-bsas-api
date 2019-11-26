@@ -20,19 +20,23 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.TriggerBsasRequestData
-import v1.fixtures.TriggerBsasRequestBodyFixtures._
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.models.request.{DesTaxYear, ListBsasRequest}
+import v1.models.response.ListBsasResponse
 
 import scala.concurrent.Future
 
-class TriggerBsasConnectorSpec extends ConnectorSpec {
+class ListBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+  val queryParams: Map[String, String] = Map(
+    "taxYear" -> "2019",
+    "incomeSourceIdentifier" -> "incomeSourceId",
+    "identifierValue" -> "02"
+  )
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -40,19 +44,21 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "triggerBsas" must {
-    val request = TriggerBsasRequestData(nino,seBody)
+  "listBsas" when {
+    "provided with a valid request" must {
+      val request = ListBsasRequest(nino, DesTaxYear("2019"), "incomeSourceId", "02")
 
-    "post a TriggerBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
+      "return a ListBsasResponse" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, ListBsasResponse()))
 
-      MockedHttpClient.post(
+        MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-          body = seBody,
+          queryParams.toSeq,
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-      )
+        ).returns(Future.successful(outcome))
 
-      await(connector.triggerBsas(request)) shouldBe outcome
+        await(connector.listBsas(request)) shouldBe outcome
+      }
     }
   }
 }

@@ -16,30 +16,35 @@
 
 package v1.connectors
 
-import javax.inject.{Inject, Singleton}
 import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.TriggerBsasRequestData
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.models.request.ListBsasRequest
+import v1.models.response.ListBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDesConnector {
+class ListBsasConnector @Inject()(val http: HttpClient,
+                                  val appConfig: AppConfig) extends BaseDesConnector {
 
-  def triggerBsas(request: TriggerBsasRequestData)(
+  def listBsas(request: ListBsasRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[TriggerBsasResponse]] = {
+    ec: ExecutionContext): Future[DesOutcome[ListBsasResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
 
-    post(
-      body = request.body,
-      DesUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+    val queryParams = Map(
+      "taxYear" -> request.taxYear.toString,
+      "incomeSourceIdentifier" -> request.incomeSourceIdentifier,
+      "identifierValue" -> request.identifierValue
+    )
+
+    get(
+      DesUri[ListBsasResponse](s"income-tax/adjustable-summary-calculation/$nino"), queryParams.toSeq
     )
   }
 }
