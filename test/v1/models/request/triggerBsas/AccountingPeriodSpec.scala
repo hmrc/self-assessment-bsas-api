@@ -18,8 +18,9 @@ package v1.models.request.triggerBsas
 
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import support.UnitSpec
+import v1.models.request.AccountingPeriod
 
-class AccountingPeriodRequestSpec extends UnitSpec {
+class AccountingPeriodSpec extends UnitSpec {
 
   val requestJson: JsValue = Json.parse("""
       |{
@@ -35,18 +36,18 @@ class AccountingPeriodRequestSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val model: AccountingPeriodRequest = AccountingPeriodRequest("2018-11-25","2018-11-26")
+  val model: AccountingPeriod = AccountingPeriod("2018-11-25","2018-11-26")
 
-  "AccountingPeriodRequest" when {
+  "AccountingPeriod" when {
     "read from valid JSON" should {
       "return the expected AccountingPeriod object" in {
-        requestJson.validate[AccountingPeriodRequest] shouldBe JsSuccess(model)
+        requestJson.validate[AccountingPeriod] shouldBe JsSuccess(model)
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidJson.validate[AccountingPeriodRequest] shouldBe a[JsError]
+        invalidJson.validate[AccountingPeriod] shouldBe a[JsError]
       }
     }
 

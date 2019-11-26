@@ -16,15 +16,14 @@
 
 package v1.models.response
 
-import play.api.libs.json.{Json, OWrites, Reads}
-import v1.models.response.common.BusinessSourceSummary
+import play.api.libs.json._
 
-case class ListBsasResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
+case class TriggerBsasResponse(id: String)
 
-object ListBsasResponse {
+object TriggerBsasResponse {
 
-  implicit val reads: Reads[ListBsasResponse] = implicitly[Reads[Seq[BusinessSourceSummary]]].map(ListBsasResponse(_))
+  implicit val writes: OWrites[TriggerBsasResponse] = Json.writes[TriggerBsasResponse]
 
-  implicit val writes: OWrites[ListBsasResponse] = Json.writes[ListBsasResponse]
-
+  implicit val reads: Reads[TriggerBsasResponse] =
+    (JsPath \ "metadata" \ "calculationId").read[String].map(TriggerBsasResponse.apply)
 }

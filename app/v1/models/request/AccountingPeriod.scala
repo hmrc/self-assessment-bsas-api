@@ -16,10 +16,19 @@
 
 package v1.models.request
 
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.response.listBsas.AccountingPeriodResponse
 
-case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
+case class AccountingPeriod(startDate: String, endDate: String)
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+object AccountingPeriod {
+  implicit val reads: Reads[AccountingPeriod] = Json.reads[AccountingPeriod]
+
+  implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
+
+  val desReads: Reads[AccountingPeriod] = (
+    (JsPath \ "accountingStartDate").read[String] and
+      (JsPath \ "accountingEndDate").read[String]
+    )(AccountingPeriodResponse.apply _)
+}

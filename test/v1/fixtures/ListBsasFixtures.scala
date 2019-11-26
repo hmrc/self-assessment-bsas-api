@@ -18,8 +18,7 @@ package v1.fixtures
 
 import play.api.libs.json.{JsArray, JsValue, Json}
 import v1.models.domain.{Status, TypeOfBusiness}
-import v1.models.response.ListBsasResponse
-import v1.models.response.common.{AccountingPeriodResponse, BsasEntries, BusinessSourceSummary}
+import v1.models.response.listBsas.{AccountingPeriodResponse, BsasEntries, BusinessSourceSummary, ListBsasResponse}
 
 
 object ListBsasFixtures {

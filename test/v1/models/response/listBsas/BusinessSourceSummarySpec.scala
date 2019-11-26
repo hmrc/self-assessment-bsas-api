@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package v1.models.response.common
+package v1.models.response.listBsas
 
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v1.fixtures.ListBsasFixtures._
 import v1.models.domain.{Status, TypeOfBusiness}
+import v1.models.request.AccountingPeriod
 
 class BusinessSourceSummarySpec extends UnitSpec {
 
@@ -27,7 +28,7 @@ class BusinessSourceSummarySpec extends UnitSpec {
     BusinessSourceSummary(
       typeOfBusiness = TypeOfBusiness.`self-employment`,
       selfEmploymentId = Some("000000000000210"),
-      AccountingPeriodResponse(
+      AccountingPeriod(
         startDate = "2018-10-11",
         endDate = "2019-10-10"
       ),

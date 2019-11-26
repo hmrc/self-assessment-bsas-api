@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.response.common
+package v1.models.response.listBsas
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v1.models.request.AccountingPeriod
 
 case class BusinessSourceSummary(typeOfBusiness: TypeOfBusiness,
                                  selfEmploymentId: Option[String],
-                                 accountingPeriod: AccountingPeriodResponse,
+                                 accountingPeriod: AccountingPeriod,
                                  bsasEntries: Seq[BsasEntries])
 
 object BusinessSourceSummary {
@@ -30,7 +31,7 @@ object BusinessSourceSummary {
   implicit val reads: Reads[BusinessSourceSummary] = (
     (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       (JsPath \ "incomeSourceId").readNullable[String] and
-      JsPath.read[AccountingPeriodResponse] and
+      JsPath.read[AccountingPeriod](AccountingPeriod.desReads) and
       (JsPath \ "ascCalculations").read[Seq[BsasEntries]]
     )(BusinessSourceSummary.apply _)
 

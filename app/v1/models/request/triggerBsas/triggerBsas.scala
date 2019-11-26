@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.common
+package v1.models.request.triggerBsas
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.JsValue
+import uk.gov.hmrc.domain.Nino
+import v1.models.request.RawData
 
-case class AccountingPeriodResponse(startDate: String, endDate: String)
+case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
 
-object AccountingPeriodResponse {
-
-  implicit val reads: Reads[AccountingPeriodResponse] = (
-    (JsPath \ "accountingStartDate").read[String] and
-      (JsPath \ "accountingEndDate").read[String]
-  )(AccountingPeriodResponse.apply _)
-
-  implicit val writes: OWrites[AccountingPeriodResponse] = Json.writes[AccountingPeriodResponse]
-}
+case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
