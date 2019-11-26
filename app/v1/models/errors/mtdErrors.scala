@@ -27,6 +27,8 @@ object MtdError {
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 
+object TypeOfBusinessFormatError extends MtdError("FORMAT_TYPE_OF_BUSINESS", "The provided type of business is invalid")
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
     extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED", "The accounting period is not supported, because it predates the earliest allowable tax year")
