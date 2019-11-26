@@ -22,4 +22,4 @@ import v1.models.request.triggerBsas.TriggerBsasRequestBody
 
 case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
 
-case class TriggerBsasRequestData(nino: Nino, body: TriggerBsasRequestBody)
+case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
