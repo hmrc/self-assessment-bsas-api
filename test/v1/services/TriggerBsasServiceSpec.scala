@@ -24,11 +24,10 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.mocks.connectors.MockTriggerBsasConnector
-import v1.models.request.TriggerBsasRequestData
+import v1.models.request.{TriggerBsasRequest}
 import v1.models.response.triggerBsas.TriggerBsasResponse
 
 import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class TriggerBsasServiceSpec extends UnitSpec {
@@ -37,7 +36,7 @@ class TriggerBsasServiceSpec extends UnitSpec {
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
-  val request = TriggerBsasRequestData(nino, seBody)
+  val request = TriggerBsasRequest(nino, seBody)
 
   val response = TriggerBsasResponse(id)
 

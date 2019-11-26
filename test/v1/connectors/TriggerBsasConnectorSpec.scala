@@ -20,7 +20,7 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.TriggerBsasRequestData
+import v1.models.request.{TriggerBsasRequest}
 import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.models.response.triggerBsas.TriggerBsasResponse
 
@@ -41,7 +41,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   }
 
   "triggerBsas" must {
-    val request = TriggerBsasRequestData(nino,seBody)
+    val request = TriggerBsasRequest(nino,seBody)
 
     "post a TriggerBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
