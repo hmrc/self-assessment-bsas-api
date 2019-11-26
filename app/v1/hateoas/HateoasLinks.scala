@@ -24,9 +24,6 @@ import v1.models.hateoas.RelType._
 trait HateoasLinks {
 
   //Domain URIs
-  private def sampleUri(appConfig: AppConfig, nino: String): String =
-    s"/${appConfig.apiGatewayContext}/$nino/sample-endpoint"
-
   private def bsasBasUri(appConfig: AppConfig, nino: String) =
     s"/${appConfig.apiGatewayContext}/$nino"
 
@@ -48,9 +45,6 @@ trait HateoasLinks {
     bsasBasUri(appConfig, nino) + s"/property/$bsasId/adjust"
 
   //API resource links
-  def sampleLink(appConfig: AppConfig, nino: String): Link =
-    Link(href = sampleUri(appConfig, nino), method = GET, rel = SAMPLE_ENDPOINT_REL)
-
   def listBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = listUri(appConfig, nino), method = GET, rel = SELF)
 

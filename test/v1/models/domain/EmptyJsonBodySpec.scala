@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.domain
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.SampleRequestBody
+import play.api.libs.json.Json
+import support.UnitSpec
 
-case class SampleRequestData(nino: Nino, desTaxYear: DesTaxYear, body: SampleRequestBody)
+class EmptyJsonBodySpec extends UnitSpec {
+
+
+  "EmptyJsonBody.writes" should {
+    "return an empty JSON body" when {
+      "called" in {
+        val json = EmptyJsonBody
+        Json.toJson(json)(EmptyJsonBody.writes) shouldBe Json.obj()
+      }
+    }
+  }
+
+}
