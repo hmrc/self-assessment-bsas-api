@@ -46,7 +46,7 @@ traits:
             type: types.errorResponse
             examples:
               formatStartDate:
-                description: The format of the supplied accounting period start date is invalid
+                description: The format of the supplied accounting period start date is not valid
                 value:
                   code: FORMAT_START_DATE
   formatEndDate:
@@ -57,7 +57,7 @@ traits:
             type: types.errorResponse
             examples:
               formatEndDate:
-                description: The format of the supplied accounting period end date is invalid
+                description: The format of the supplied accounting period end date is not valid
                 value:
                   code: FORMAT_END_DATE
   formatTypeOfBusiness:
@@ -71,6 +71,39 @@ traits:
                 description: The format of the supplied type of business is not valid
                 value:
                   code: FORMAT_TYPE_OF_BUSINESS
+  formatBsasId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatBsasId:
+                description: The format of the supplied BSAS ID is not valid
+                value:
+                  code: FORMAT_BSAS_ID
+  formatAdjustedStatus:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatAdjustedStatus:
+                description: The format of the supplied adjusted status field is not valid
+                value:
+                  code: FORMAT_ADJUSTED_STATUS
+  ruleNotSelfEmployment:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleNotSelfEmployment:
+                description: The BSAS ID supplied does not relate to a self-employment business
+                value:
+                  code: RULE_NOT_SELF_EMPLOYMENT
   ruleSelfEmploymentId:
     responses:
       400:
@@ -159,6 +192,17 @@ traits:
                 description: The supplied accounting period does not exist
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
+  ruleNoAdjustmentsMade:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleNoAdjustmentsMade:
+                description: An adjusted calculation doesn't exist
+                value:
+                  code: RULE_NO_ADJUSTMENTS_MADE
   incorrectOrEmptyBodySubmitted:
     responses:
       400:
@@ -179,6 +223,17 @@ traits:
             examples:
               notFound:
                 description: The supplied income source could not be found
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
+  bsasNotFound:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              notFound:
+                description: A calculation with this BSAS ID cannot be found
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   notFound:
