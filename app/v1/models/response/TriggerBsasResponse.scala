@@ -16,14 +16,40 @@
 
 package v1.models.response
 
+import config.AppConfig
 import play.api.libs.json._
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.domain.TypeOfBusiness
+import v1.models.hateoas.{HateoasData, Link}
 
 case class TriggerBsasResponse(id: String)
 
-object TriggerBsasResponse {
+object TriggerBsasResponse extends HateoasLinks {
 
   implicit val writes: OWrites[TriggerBsasResponse] = Json.writes[TriggerBsasResponse]
 
   implicit val reads: Reads[TriggerBsasResponse] =
     (JsPath \ "metadata" \ "calculationId").read[String].map(TriggerBsasResponse.apply)
+
+  implicit object TriggerHateoasFactory extends HateoasLinksFactory[TriggerBsasResponse, TriggerBsasHateoasData] {
+    override def links(appConfig: AppConfig, data: TriggerBsasHateoasData): Seq[Link] = {
+      import TypeOfBusiness._
+      import data._
+
+      data.typeOfBusiness match {
+        case `self-employment` =>
+          Seq(
+            getSelfEmploymentBsas(appConfig, nino, bsasId),
+            adjustSelfEmploymentBsas(appConfig, nino, bsasId)
+          )
+        case `uk-property-fhl` | `uk-property-non-fhl` =>
+          Seq(
+            getPropertyBsas(appConfig, nino, bsasId),
+            adjustPropertyBsas(appConfig, nino, bsasId)
+          )
+      }
+    }
+  }
 }
+
+case class TriggerBsasHateoasData(nino: String, typeOfBusiness: TypeOfBusiness, bsasId: String) extends HateoasData

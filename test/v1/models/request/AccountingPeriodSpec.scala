@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.models.request
 
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.AccountingPeriod
 
 class AccountingPeriodSpec extends UnitSpec {
 
