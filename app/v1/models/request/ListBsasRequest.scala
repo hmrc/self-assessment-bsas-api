@@ -19,4 +19,4 @@ package v1.models.request
 import uk.gov.hmrc.auth.core.Nino
 import v1.models.des.IncomeSourceIdentifier
 
-case class ListBsasRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: IncomeSourceIdentifier, identifierValue: String)
+case class ListBsasRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: Option[IncomeSourceIdentifier], identifierValue: Option[String])
