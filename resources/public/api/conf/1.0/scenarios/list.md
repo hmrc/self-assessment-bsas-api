@@ -20,20 +20,12 @@
             <td><p>Simulates a successful response containing multiple self-employment objects</p></td>
         </tr>
         <tr>
-            <td><p>UK_PROPERTY_FHL_SINGLE</p></td>
+            <td><p>UK_PROPERTY_FHL</p></td>
             <td><p>Simulates a successful response containing a single uk-property-fhl object</p></td>
         </tr>
         <tr>
-            <td><p>UK_PROPERTY_FHL_MULTIPLE</p></td>
-            <td><p>Simulates a successful response containing multiple uk-property-fhl objects</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL_SINGLE</p></td>
+            <td><p>UK_PROPERTY_NON_FHL</p></td>
             <td><p>Simulates a successful response containing a single uk-property-non-fhl object</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL_MULTIPLE</p></td>
-            <td><p>Simulates a successful response containing multiple uk-property-non-fhl objects</p></td>
         </tr>
         <tr>
             <td><p>UK_PROPERTY_MULTIPLE</p></td>
