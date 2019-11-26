@@ -23,7 +23,7 @@ import v1.models.domain.TypeOfBusiness
 case class BusinessSourceSummary(typeOfBusiness: TypeOfBusiness,
                                  selfEmploymentId: Option[String],
                                  accountingPeriod: AccountingPeriodResponse,
-                                 bsasEntries: Seq[BSASEntries])
+                                 bsasEntries: Seq[BsasEntries])
 
 object BusinessSourceSummary {
 
@@ -31,7 +31,7 @@ object BusinessSourceSummary {
     (JsPath \ "incomeSourceType").read[TypeOfBusiness] and
       (JsPath \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriodResponse] and
-      (JsPath \ "ascCalculations").read[Seq[BSASEntries]]
+      (JsPath \ "ascCalculations").read[Seq[BsasEntries]]
     )(BusinessSourceSummary.apply _)
 
   implicit val writes: OWrites[BusinessSourceSummary] = Json.writes[BusinessSourceSummary]

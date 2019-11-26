@@ -18,12 +18,12 @@ package v1.models.response.common
 
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
-import v1.fixtures.ListBSASFixtures._
+import v1.fixtures.ListBsasFixtures._
 
-class BSASEntriesSpec extends UnitSpec{
+class BsasEntriesSpec extends UnitSpec{
 
   val model =
-    BSASEntries(
+    BsasEntries(
       bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       requestedDateTime = "2019-10-14T11:33:27Z",
       summaryStatus = "valid",
@@ -37,7 +37,7 @@ class BSASEntriesSpec extends UnitSpec{
     }
 
     "read correctly to json" in {
-      bsasEntriesFromDesJSON.validate[BSASEntries] shouldBe JsSuccess(model)
+      bsasEntriesFromDesJSON.validate[BsasEntries] shouldBe JsSuccess(model)
     }
   }
 }

@@ -19,7 +19,7 @@ package v1.fixtures
 import play.api.libs.json.{JsArray, JsValue, Json}
 
 
-object ListBSASFixtures {
+object ListBsasFixtures {
 
   val accountingJSON: JsValue = Json.parse(
     """

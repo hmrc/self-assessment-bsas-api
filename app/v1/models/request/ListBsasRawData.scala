@@ -16,4 +16,4 @@
 
 package v1.models.request
 
-case class ListBSASRawData(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])
+case class ListBsasRawData(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])

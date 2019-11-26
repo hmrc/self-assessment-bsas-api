@@ -18,7 +18,7 @@ package v1.models.response.common
 
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import support.UnitSpec
-import v1.fixtures.ListBSASFixtures._
+import v1.fixtures.ListBsasFixtures._
 
 class AccountingPeriodResponseSpec extends UnitSpec {
 

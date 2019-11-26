@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.response
 
-import uk.gov.hmrc.auth.core.Nino
-import v1.models.des.IncomeSourceIdentifier
+import play.api.libs.json.{Json, OWrites, Reads}
+import v1.models.response.common.BusinessSourceSummary
 
-case class ListBSASRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: IncomeSourceIdentifier, identifierValue: String)
+case class ListBsasResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
+
+object ListBsasResponse {
+
+  implicit val reads: Reads[ListBsasResponse] = implicitly[Reads[Seq[BusinessSourceSummary]]].map(ListBsasResponse(_))
+
+  implicit val writes: OWrites[ListBsasResponse] = Json.writes[ListBsasResponse]
+
+}

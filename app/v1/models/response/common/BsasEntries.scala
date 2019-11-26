@@ -19,19 +19,19 @@ package v1.models.response.common
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BSASEntries(bsasId: String,
+case class BsasEntries(bsasId: String,
                        requestedDateTime: String,
                        summaryStatus: String,
                        adjustedSummary: Boolean)
 
-object BSASEntries {
+object BsasEntries {
 
-  implicit val reads: Reads[BSASEntries] = (
+  implicit val reads: Reads[BsasEntries] = (
     (JsPath \ "calculationId").read[String] and
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "status").read[String] and
       (JsPath \ "adjusted").read[Boolean]
-    )(BSASEntries.apply _)
+    )(BsasEntries.apply _)
 
-  implicit val writes: OWrites[BSASEntries] = Json.writes[BSASEntries]
+  implicit val writes: OWrites[BsasEntries] = Json.writes[BsasEntries]
 }

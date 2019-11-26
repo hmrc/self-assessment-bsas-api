@@ -18,14 +18,14 @@ package v1.models.response
 
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
-import v1.fixtures.ListBSASFixtures._
+import v1.fixtures.ListBsasFixtures._
 import v1.models.domain.TypeOfBusiness
-import v1.models.response.common.{AccountingPeriodResponse, BSASEntries, BusinessSourceSummary}
+import v1.models.response.common.{AccountingPeriodResponse, BsasEntries, BusinessSourceSummary}
 
-class ListBSASResponseSpec extends UnitSpec {
+class ListBsasResponseSpec extends UnitSpec {
 
   val model =
-    ListBSASResponse(
+    ListBsasResponse(
       Seq(BusinessSourceSummary(
         typeOfBusiness = TypeOfBusiness.`self-employment`,
         selfEmploymentId = Some("000000000000210"),
@@ -34,7 +34,7 @@ class ListBSASResponseSpec extends UnitSpec {
           endDate = "2019-10-10"
         ),
         Seq(
-          BSASEntries(
+          BsasEntries(
             bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
             requestedDateTime = "2019-10-14T11:33:27Z",
             summaryStatus = "valid",
@@ -51,7 +51,7 @@ class ListBSASResponseSpec extends UnitSpec {
     }
 
     "read correctly to json" in {
-      summariesFromDesJSON.validate[ListBSASResponse] shouldBe JsSuccess(model)
+      summariesFromDesJSON.validate[ListBsasResponse] shouldBe JsSuccess(model)
     }
   }
 }
