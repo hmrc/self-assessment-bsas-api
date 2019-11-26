@@ -20,7 +20,7 @@
             <td><p>The supplied accounting period does not exist</p></td>
         </tr>
         <tr>
-            <td><p>OBLIGATIONS_NOT_MET</p></td>
+            <td><p>PERIODIC_DATA_INCOMPLETE</p></td>
             <td><p>One or more periodic updates are missing for this accounting period</p></td>
         </tr>
     </tbody>
