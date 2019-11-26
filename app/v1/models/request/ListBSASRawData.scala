@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request
 
-import uk.gov.hmrc.auth.core.Nino
-import v1.models.des.IncomeSourceIdentifier
-import v1.models.request.DesTaxYear
-
-case class ListBSASRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: IncomeSourceIdentifier, identifierValue: String)
+case class ListBSASRawData(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])
