@@ -6,7 +6,7 @@
   "required": ["metadata"],
   "properties": {
     "metadata": {
-      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID",
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
       "type": "object",
       "required": [
         "typeOfBusiness",
@@ -19,12 +19,17 @@
         "adjustedSummary"
       ],
       "properties": {
-        "typeOfBusiness": { "$ref": "definitions.json#/definitions/typeOfBusiness" },
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": ["self-employment"]
+        },
         "selfEmploymentId": { "$ref": "definitions.json#/definitions/selfEmploymentId" },
         "accountingPeriod": { "$ref": "definitions.json#/definitions/accountingPeriod" },
         "taxYear": {
           "type": "string",
-          "description": "The tax year into which this accounting period falls",
+          "description": "The tax year into which this accounting period falls.",
           "example": "2019-20"
         },
         "requestedDateTime": { "$ref": "definitions.json#/definitions/requestedDateTime" },
@@ -35,7 +40,7 @@
     },
     "bsas": {
       "type": "object",
-      "description": "Object holding the BSAS for the self employment business income source.",
+      "description": "Object holding the BSAS for the self-employment business income source.",
       "required": [
         "total",
         "incomeBreakdown"

@@ -39,6 +39,8 @@ uses:
         type: string
         example: TC663795B
     get: !include list.raml
+    /trigger:
+      post: !include trigger.raml
     /self-employment/{bsasId}:
       get: !include retrieve_se_bsas.raml
       uriParameters:
@@ -53,5 +55,3 @@ uses:
         example: "2017-18"
       /sampleEndpoint:
        post: !include sample_post.raml
-    /trigger:
-      post: !include trigger.raml
