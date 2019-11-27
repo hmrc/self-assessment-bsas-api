@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers
 
-class ListBSASValidatorSpec {
 
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.ListBsasValidator
+import v1.models.request.{DesTaxYear, ListBsasRawData, ListBsasRequest}
+
+class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator)
+  extends RequestParser[ListBsasRawData, ListBsasRequest] {
+
+  override protected def requestFor(data: ListBsasRawData): ListBsasRequest =
+    ListBsasRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.typeOfBusiness, data.selfEmploymentId)
 }

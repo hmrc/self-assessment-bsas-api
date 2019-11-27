@@ -17,8 +17,9 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
+import v1.models.errors.TypeOfBusinessFormatError
 
-class ListBSASTypeOfBusinessValidationSpec extends UnitSpec {
+class ListBsasTypeOfBusinessValidationSpec extends UnitSpec {
 
   private val typeOfBusiness = "uk-property-fhl"
   private val badTypeOfBusiness = "humidity farmer"

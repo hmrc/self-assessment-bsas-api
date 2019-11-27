@@ -23,10 +23,9 @@ object SelfEmploymentIdValidation {
   private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
 
   def validate(selfEmploymentId: Option[String]): List[MtdError] = {
-
     selfEmploymentId match {
-      case Some(id) if !id.matches(regex) => List(SelfEmploymentIdFormatError)
-      case _ => List()
+      case Some(id) => if (id.matches(regex)) List() else List(SelfEmploymentIdFormatError)
+      case None => List()
     }
   }
 }

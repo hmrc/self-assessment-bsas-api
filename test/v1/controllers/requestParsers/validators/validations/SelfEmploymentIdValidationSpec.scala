@@ -42,5 +42,4 @@ class SelfEmploymentIdValidationSpec extends UnitSpec with JsonErrorValidators  
       }
     }
   }
-
 }

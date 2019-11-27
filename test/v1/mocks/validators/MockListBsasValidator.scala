@@ -14,8 +14,25 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.mocks.validators
 
-class ListBSASValidator {
+import org.scalamock.handlers.CallHandler1
+import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.ListBsasValidator
+import v1.models.errors.MtdError
+import v1.models.request.ListBsasRawData
+
+class MockListBsasValidator extends MockFactory {
+
+  val mockValidator: ListBsasValidator = mock[ListBsasValidator]
+
+  object MockValidator {
+
+    def validate(data: ListBsasRawData): CallHandler1[ListBsasRawData, List[MtdError]] = {
+      (mockValidator
+        .validate(_: ListBsasRawData))
+        .expects(data)
+    }
+  }
 
 }
