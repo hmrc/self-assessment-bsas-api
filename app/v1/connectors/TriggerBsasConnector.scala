@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.TriggerBsasRequestData
+import v1.models.request.{TriggerBsasRequest}
 import v1.models.response.triggerBsas.TriggerBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class TriggerBsasConnector @Inject()(val http: HttpClient,
                                      val appConfig: AppConfig) extends BaseDesConnector {
 
-  def triggerBsas(request: TriggerBsasRequestData)(
+  def triggerBsas(request: TriggerBsasRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[TriggerBsasResponse]] = {
 

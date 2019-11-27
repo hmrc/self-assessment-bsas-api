@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.request.triggerBsas
 
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import play.api.libs.json.{Json, OFormat}
 
-case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
+case class AccountingPeriodRequest(startDate: String, endDate: String)
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+object AccountingPeriodRequest {
+  implicit val format: OFormat[AccountingPeriodRequest] = Json.format[AccountingPeriodRequest]
+}

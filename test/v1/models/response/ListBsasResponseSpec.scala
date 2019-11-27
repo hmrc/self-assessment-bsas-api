@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.response
 
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import play.api.libs.json.{JsSuccess, Json}
+import support.UnitSpec
+import v1.fixtures.ListBsasFixtures._
 
-case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
+class ListBsasResponseSpec extends UnitSpec {
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+  "BusinessSourceSummaries" should {
+
+    "write correctly to json" in {
+      Json.toJson(summaryModel) shouldBe summariesJSON
+    }
+
+    "read correctly to json" in {
+      summariesFromDesJSON.validate[ListBsasResponse] shouldBe JsSuccess(summaryModel)
+    }
+  }
+}

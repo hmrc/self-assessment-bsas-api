@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.response
 
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import play.api.libs.json.{Json, OWrites, Reads}
+import v1.models.response.common.BusinessSourceSummary
 
-case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
+case class ListBsasResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+object ListBsasResponse {
+
+  implicit val reads: Reads[ListBsasResponse] = implicitly[Reads[Seq[BusinessSourceSummary]]].map(ListBsasResponse(_))
+
+  implicit val writes: OWrites[ListBsasResponse] = Json.writes[ListBsasResponse]
+
+}

@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.models.response.common
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AccountingPeriod(startDate: String, endDate: String)
+case class AccountingPeriodResponse(startDate: String, endDate: String)
 
-object AccountingPeriod {
-  implicit val format: OFormat[AccountingPeriod] = Json.format[AccountingPeriod]
+object AccountingPeriodResponse {
+
+  implicit val reads: Reads[AccountingPeriodResponse] = (
+    (JsPath \ "accountingStartDate").read[String] and
+      (JsPath \ "accountingEndDate").read[String]
+  )(AccountingPeriodResponse.apply _)
+
+  implicit val writes: OWrites[AccountingPeriodResponse] = Json.writes[AccountingPeriodResponse]
 }

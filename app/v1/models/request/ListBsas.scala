@@ -16,10 +16,8 @@
 
 package v1.models.request
 
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import uk.gov.hmrc.auth.core.Nino
 
-case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
+case class ListBsasRawData(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+case class ListBsasRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: Option[String], identifierValue: Option[String])

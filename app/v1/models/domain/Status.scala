@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.domain
 
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import play.api.libs.json.Format
+import utils.enums.Enums
 
-case class TriggerBsasRawData(nino: String, body: JsValue) extends RawData
+sealed trait Status {
+}
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+//noinspection ScalaStyle
+object Status {
+
+  case object `valid` extends Status
+
+  case object `invalid` extends Status
+
+  case object `superseded` extends Status
+
+  implicit val format: Format[Status] = Enums.format[Status]
+}
+
+

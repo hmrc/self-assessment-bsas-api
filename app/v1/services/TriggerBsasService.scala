@@ -25,7 +25,7 @@ import v1.connectors.TriggerBsasConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.TriggerBsasRequestData
+import v1.models.request.{TriggerBsasRequest}
 import v1.models.response.triggerBsas.TriggerBsasResponse
 import v1.support.DesResponseMappingSupport
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesResponseMappingSupport with Logging{
 
-  def triggerBsas(request: TriggerBsasRequestData)
+  def triggerBsas(request: TriggerBsasRequest)
                        (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
   Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
 
