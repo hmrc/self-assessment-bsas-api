@@ -43,6 +43,8 @@ uses:
       post: !include trigger.raml
     /self-employment/{bsasId}:
       get: !include retrieve_se_bsas.raml
+    /property/{bsasId}:
+      get: !include retrieve_property_bsas.raml
       uriParameters:
         bsasId:
           description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'

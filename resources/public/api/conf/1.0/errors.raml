@@ -104,6 +104,17 @@ traits:
                 description: The BSAS ID supplied does not relate to a self-employment business
                 value:
                   code: RULE_NOT_SELF_EMPLOYMENT
+  ruleNotUkProperty:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleNotUkProperty:
+                description: The BSAS ID supplied does not relate to a UK property business
+                value:
+                  code: RULE_NOT_UK_PROPERTY
   ruleSelfEmploymentId:
     responses:
       400:
