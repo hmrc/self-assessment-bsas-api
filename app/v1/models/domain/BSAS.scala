@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.models.domain
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import play.api.libs.json.{Json, OFormat}
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+case class BSAS(accountingPeriod:String,
+                startDate: String,
+                endDate: String,
+                typeOfBusiness: String,
+                selfEmploymentId: Option[String])
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+
+object BSAS {
+  implicit val format: OFormat[BSAS] = Json.format[BSAS]
+
+}

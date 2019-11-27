@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.mocks
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import java.time.LocalDate
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
+import utils.CurrentDateProvider
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+
+trait MockCurrentDateProvider extends MockFactory {
+
+  val mockCurrentDateProvider: CurrentDateProvider = mock[CurrentDateProvider]
+
+  object MockCurrentDateProvider {
+
+    def getCurrentDate(): CallHandler[LocalDate] = (mockCurrentDateProvider.getCurrentDate _).expects()
+  }
+}

@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package mocks.validators
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import org.scalamock.handlers.CallHandler1
+import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.TriggerBSASValidator
+import v1.models.errors.MtdError
+import v1.models.request.triggerBsas.TriggerBsasRawData
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+class MockTriggerBSASValidator extends MockFactory {
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+  val mockValidator: TriggerBSASValidator = mock[TriggerBSASValidator]
+
+  object MockValidator {
+    def validate(data: TriggerBsasRawData): CallHandler1[TriggerBsasRawData, List[MtdError]] = {
+      (mockValidator.validate(_: TriggerBsasRawData))
+        .expects(data)
+    }
+  }
+}

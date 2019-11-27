@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package utils
 
-import play.api.libs.json.JsValue
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import java.time.LocalDate
 
-case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
+import javax.inject.{Inject, Singleton}
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+@Singleton
+class CurrentDateProvider @Inject()() {
+  def getCurrentDate(): LocalDate = LocalDate.now()
+}
