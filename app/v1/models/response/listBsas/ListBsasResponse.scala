@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.request.triggerBsas
+package v1.models.response.listBsas
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OWrites, Reads}
 
-case class AccountingPeriodRequest(startDate: String, endDate: String)
+case class ListBsasResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
 
-object AccountingPeriodRequest {
-  implicit val format: OFormat[AccountingPeriodRequest] = Json.format[AccountingPeriodRequest]
+object ListBsasResponse {
+
+  implicit val reads: Reads[ListBsasResponse] = implicitly[Reads[Seq[BusinessSourceSummary]]].map(ListBsasResponse(_))
+
+  implicit val writes: OWrites[ListBsasResponse] = Json.writes[ListBsasResponse]
+
 }

@@ -14,34 +14,31 @@
  * limitations under the License.
  */
 
-package v1.models.response.common
+package v1.models.response.listBsas
 
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v1.fixtures.ListBsasFixtures._
+import v1.models.domain.Status
 
-class AccountingPeriodResponseSpec extends UnitSpec {
+class BsasEntriesSpec extends UnitSpec{
 
   val model =
-    AccountingPeriodResponse(
-      startDate = "2018-10-11",
-      endDate = "2019-10-10"
-    )
+    BsasEntries(
+      bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      requestedDateTime = "2019-10-14T11:33:27Z",
+      summaryStatus = Status.`valid`,
+      adjustedSummary = false
+      )
 
-  "AccountingPeriodResponse" should {
+  "BSAS Entries" should {
 
-    "write correctly to JSON" in {
-      Json.toJson(model) shouldBe accountingJSON
+    "write correctly to json" in {
+      Json.toJson(model) shouldBe bsasEntriesJSON
     }
 
-    "read from valid JSON" in {
-      accountingFromDesJSON.validate[AccountingPeriodResponse] shouldBe JsSuccess(model)
-    }
-
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidAccountingJson.validate[AccountingPeriodResponse] shouldBe a[JsError]
-      }
+    "read correctly to json" in {
+      bsasEntriesFromDesJSON.validate[BsasEntries] shouldBe JsSuccess(model)
     }
   }
 }

@@ -20,8 +20,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, TriggerBsasConnector}
-import v1.models.request.{TriggerBsasRequest}
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.models.request.triggerBsas.TriggerBsasRequest
+import v1.models.response.TriggerBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

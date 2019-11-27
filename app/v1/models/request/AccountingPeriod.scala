@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.response.common
+package v1.models.request
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AccountingPeriodResponse(startDate: String, endDate: String)
+case class AccountingPeriod(startDate: String, endDate: String)
 
-object AccountingPeriodResponse {
+object AccountingPeriod {
+  implicit val reads: Reads[AccountingPeriod] = Json.reads[AccountingPeriod]
+  implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
 
-  implicit val reads: Reads[AccountingPeriodResponse] = (
+  val desReads: Reads[AccountingPeriod] = (
     (JsPath \ "accountingStartDate").read[String] and
       (JsPath \ "accountingEndDate").read[String]
-  )(AccountingPeriodResponse.apply _)
-
-  implicit val writes: OWrites[AccountingPeriodResponse] = Json.writes[AccountingPeriodResponse]
+    )(AccountingPeriod.apply _)
 }

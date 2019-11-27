@@ -16,10 +16,11 @@
 
 package v1.models.request.triggerBsas
 
-import play.api.libs.json.{JsObject, Json, OFormat, OWrites, Reads}
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import v1.models.domain.TypeOfBusiness
+import v1.models.request.AccountingPeriod
 
-case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriodRequest,
+case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod,
                                   typeOfBusiness: TypeOfBusiness,
                                   selfEmploymentId: Option[String])
 

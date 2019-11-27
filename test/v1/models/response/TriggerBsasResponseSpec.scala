@@ -16,9 +16,13 @@
 
 package v1.models.response
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import mocks.MockAppConfig
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.hateoas.HateoasFactory
+import v1.models.domain.TypeOfBusiness
+import v1.models.hateoas.Method.{GET, POST}
+import v1.models.hateoas.{HateoasWrapper, Link}
 
 class TriggerBsasResponseSpec extends UnitSpec {
 
@@ -42,12 +46,12 @@ class TriggerBsasResponseSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val response: TriggerBsasResponse = TriggerBsasResponse("anId")
+  val triggerBsasResponse: TriggerBsasResponse = TriggerBsasResponse("anId")
 
   "TriggerBsasResponse" when {
     "read from valid JSON" should {
       "return the expected TriggerBsasResponse object" in {
-        desJson.as[TriggerBsasResponse] shouldBe response
+        desJson.as[TriggerBsasResponse] shouldBe triggerBsasResponse
       }
     }
 
@@ -59,8 +63,49 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(response) shouldBe mtdJson
+        Json.toJson(triggerBsasResponse) shouldBe mtdJson
       }
     }
+  }
+
+  "HateoasFactory" must {
+    class Test extends MockAppConfig {
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino           = "someNino"
+      val bsasId         = "anId"
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/accounting-summary").anyNumberOfTimes
+    }
+
+    "expose the correct links for triggering a self employment BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/self-employment/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/self-employment/$bsasId/adjust", POST, "submit-accounting-adjustments")
+          )
+        )
+    }
+    "expose the correct links for triggering an FHL property BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId/adjust", POST, "submit-accounting-adjustments")
+          )
+        )
+    }
+    "expose the correct links for triggering a non-FHL property BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-non-fhl`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId/adjust", POST, "submit-accounting-adjustments")
+          )
+        )
+    }
+
   }
 }
