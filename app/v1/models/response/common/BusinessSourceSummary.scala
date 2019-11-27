@@ -18,7 +18,7 @@ package v1.models.response.common
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.models.domain.TypeOfBusiness
+import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 
 case class BusinessSourceSummary(typeOfBusiness: TypeOfBusiness,
                                  selfEmploymentId: Option[String],
@@ -28,7 +28,7 @@ case class BusinessSourceSummary(typeOfBusiness: TypeOfBusiness,
 object BusinessSourceSummary {
 
   implicit val reads: Reads[BusinessSourceSummary] = (
-    (JsPath \ "incomeSourceType").read[TypeOfBusiness] and
+    (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       (JsPath \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriodResponse] and
       (JsPath \ "ascCalculations").read[Seq[BsasEntries]]
@@ -36,5 +36,3 @@ object BusinessSourceSummary {
 
   implicit val writes: OWrites[BusinessSourceSummary] = Json.writes[BusinessSourceSummary]
 }
-
-

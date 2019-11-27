@@ -19,7 +19,7 @@ package v1.models.response.common
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v1.fixtures.ListBsasFixtures._
-import v1.models.domain.TypeOfBusiness
+import v1.models.domain.{Status, TypeOfBusiness}
 
 class BusinessSourceSummarySpec extends UnitSpec {
 
@@ -35,7 +35,7 @@ class BusinessSourceSummarySpec extends UnitSpec {
         BsasEntries(
           bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
           requestedDateTime = "2019-10-14T11:33:27Z",
-          summaryStatus = "valid",
+          summaryStatus = Status.`valid`,
           adjustedSummary = false
         )
       )

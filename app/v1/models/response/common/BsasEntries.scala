@@ -18,10 +18,11 @@ package v1.models.response.common
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.domain.Status
 
 case class BsasEntries(bsasId: String,
                        requestedDateTime: String,
-                       summaryStatus: String,
+                       summaryStatus: Status,
                        adjustedSummary: Boolean)
 
 object BsasEntries {
@@ -29,7 +30,7 @@ object BsasEntries {
   implicit val reads: Reads[BsasEntries] = (
     (JsPath \ "calculationId").read[String] and
       (JsPath \ "requestedDateTime").read[String] and
-      (JsPath \ "status").read[String] and
+      (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean]
     )(BsasEntries.apply _)
 

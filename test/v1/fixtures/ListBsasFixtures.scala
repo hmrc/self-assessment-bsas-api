@@ -17,6 +17,9 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsArray, JsValue, Json}
+import v1.models.domain.{Status, TypeOfBusiness}
+import v1.models.response.ListBsasResponse
+import v1.models.response.common.{AccountingPeriodResponse, BsasEntries, BusinessSourceSummary}
 
 
 object ListBsasFixtures {
@@ -93,7 +96,7 @@ object ListBsasFixtures {
   val summaryFromDesJSON: JsValue = Json.parse(
     """
       |{
-      | "incomeSourceType": "self-employment",
+      | "incomeSourceType": "01",
       | "incomeSourceId": "000000000000210",
       | "accountingStartDate": "2018-10-11",
       | "accountingEndDate": "2019-10-10",
@@ -135,4 +138,25 @@ object ListBsasFixtures {
   )
 
   val summariesFromDesJSON = JsArray(Seq(summaryFromDesJSON))
+
+  val summaryModel =
+    ListBsasResponse(
+      Seq(BusinessSourceSummary(
+        typeOfBusiness = TypeOfBusiness.`self-employment`,
+        selfEmploymentId = Some("000000000000210"),
+        AccountingPeriodResponse(
+          startDate = "2018-10-11",
+          endDate = "2019-10-10"
+        ),
+        Seq(
+          BsasEntries(
+            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+            requestedDateTime = "2019-10-14T11:33:27Z",
+            summaryStatus = Status.`valid`,
+            adjustedSummary = false
+          )
+        )
+      ))
+    )
+
 }

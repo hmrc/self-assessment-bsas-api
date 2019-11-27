@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.domain
 
-case class ListBsasRawData(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])
+import play.api.libs.json.Format
+import utils.enums.Enums
+
+sealed trait Status {
+}
+
+//noinspection ScalaStyle
+object Status {
+
+  case object `valid` extends Status
+
+  case object `invalid` extends Status
+
+  case object `superseded` extends Status
+
+  implicit val format: Format[Status] = Enums.format[Status]
+}
+
+
