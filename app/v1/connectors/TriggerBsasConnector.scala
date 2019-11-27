@@ -16,12 +16,12 @@
 
 package v1.connectors
 
-import javax.inject.{Inject, Singleton}
 import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.{TriggerBsasRequest}
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.models.request.triggerBsas.TriggerBsasRequest
+import v1.models.response.TriggerBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -18,11 +18,11 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{TriggerBsasRequest}
-import v1.fixtures.TriggerBsasRequestBodyFixtures._
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.models.request.triggerBsas.TriggerBsasRequest
+import v1.models.response.TriggerBsasResponse
 
 import scala.concurrent.Future
 

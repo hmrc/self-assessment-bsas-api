@@ -25,8 +25,8 @@ import v1.connectors.TriggerBsasConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{TriggerBsasRequest}
-import v1.models.response.triggerBsas.TriggerBsasResponse
+import v1.models.request.triggerBsas.TriggerBsasRequest
+import v1.models.response.TriggerBsasResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}

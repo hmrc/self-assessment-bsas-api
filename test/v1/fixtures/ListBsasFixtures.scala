@@ -18,7 +18,8 @@ package v1.fixtures
 
 import play.api.libs.json.{JsArray, JsValue, Json}
 import v1.models.domain.{Status, TypeOfBusiness}
-import v1.models.response.listBsas.{AccountingPeriodResponse, BsasEntries, BusinessSourceSummary, ListBsasResponse}
+import v1.models.request.AccountingPeriod
+import v1.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasResponse}
 
 
 object ListBsasFixtures {
@@ -143,7 +144,7 @@ object ListBsasFixtures {
       Seq(BusinessSourceSummary(
         typeOfBusiness = TypeOfBusiness.`self-employment`,
         selfEmploymentId = Some("000000000000210"),
-        AccountingPeriodResponse(
+        AccountingPeriod(
           startDate = "2018-10-11",
           endDate = "2019-10-10"
         ),

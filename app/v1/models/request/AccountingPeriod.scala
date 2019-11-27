@@ -18,17 +18,15 @@ package v1.models.request
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.models.response.listBsas.AccountingPeriodResponse
 
 case class AccountingPeriod(startDate: String, endDate: String)
 
 object AccountingPeriod {
   implicit val reads: Reads[AccountingPeriod] = Json.reads[AccountingPeriod]
-
   implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
 
   val desReads: Reads[AccountingPeriod] = (
     (JsPath \ "accountingStartDate").read[String] and
       (JsPath \ "accountingEndDate").read[String]
-    )(AccountingPeriodResponse.apply _)
+    )(AccountingPeriod.apply _)
 }
