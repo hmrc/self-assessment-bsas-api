@@ -86,15 +86,26 @@ class TriggerBsasResponseSpec extends UnitSpec {
           )
         )
     }
+    "expose the correct links for triggering an FHL property BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId/adjust", POST, "submit-accounting-adjustments")
+          )
+        )
+    }
+    "expose the correct links for triggering a non-FHL property BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-non-fhl`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId/adjust", POST, "submit-accounting-adjustments")
+          )
+        )
+    }
 
-//    "expose the correct links for amend" in new Test {
-//      hateoasFactory.wrap(bfLossResponse, AmendBFLossHateoasData(nino, lossId)) shouldBe
-//        HateoasWrapper(
-//          bfLossResponse,
-//          Seq(
-//            Link(s"/individuals/losses/$nino/brought-forward-losses/lossId", GET, "self")
-//          )
-//        )
-//    }
   }
 }

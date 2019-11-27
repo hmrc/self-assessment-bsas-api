@@ -42,9 +42,11 @@ class TriggerBsasRequestBodySpec extends UnitSpec {
     }
 
     "written to JSON (uk property)" should {
-      "return the expected JsValue" in {
+      "return the expected JsValue for FHL properties" in {
         Json.toJson(fhlBody) shouldBe fhlRequestBodyDes
-        Json.toJson(fhlBody) shouldBe fhlRequestBodyDes
+      }
+      "return the expected JsValue for non-FHL properties" in {
+        Json.toJson(nonFhlBody) shouldBe nonFhlRequestBodyDes
       }
     }
   }
