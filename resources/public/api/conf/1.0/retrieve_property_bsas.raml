@@ -11,7 +11,7 @@ is:
   - queryParameters.adjustedStatusOptional
 displayName: Retrieve a UK Property Business Source Accounting Summary (BSAS) [test only]
 description: This endpoint allows the user to request a specific Business Source Accounting Summary using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted is to be returned.
-(annotations.sandboxData): !include scenarios/retrieve_se.md
+(annotations.sandboxData): !include scenarios/retrieve_property.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:

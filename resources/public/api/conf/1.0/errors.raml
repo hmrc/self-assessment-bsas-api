@@ -148,6 +148,39 @@ traits:
                 description: Tax year range exceeded. A tax year range of one year is required
                 value:
                   code: RULE_TAX_YEAR_RANGE_EXCEEDED
+  ruleRangeInvalid:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleRangeInvalid:
+                description:  One or more values have been added that is outside the accepted value range
+                value:
+                  code: RULE_RANGE_INVALID
+  ruleSummaryStatusInvalid:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSummaryStatusInvalid:
+                description: The summaryStatus of the summary with this BSAS ID is set to 'invalid'
+                value:
+                  code: RULE_SUMMARY_STATUS_INVALID
+  ruleSummaryStatusSuperseded:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSummaryStatusSuperseded:
+                description: A newer BSAS exists for this accounting period
+                value:
+                  code: RULE_SUMMARY_STATUS_SUPERSEDED
   rulePeriodicDataIncomplete:
     responses:
       403:
@@ -192,6 +225,39 @@ traits:
                 description: The accounting period has not ended
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_ENDED
+  ruleAlreadyAdjusted:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleAlreadyAdjusted:
+                description: Adjustments previously submitted against the supplied BSAS ID
+                value:
+                  code: RULE_BSAS_ALREADY_ADJUSTED
+  ruleOverConsolidatedExpensesThreshold:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleOverConsolidatedExpensesThreshold:
+                description: Adjustment to turnover exceeds Consolidated Expenses threshold
+                value:
+                  code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
+  ruleTradingIncomeAllowanceExceeded:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTradingIncomeAllowanceExceeded:
+                description: Adjustment to expenses where Trading Income Allowance claimed
+                value:
+                  code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
   ruleNoAccountingPeriod:
     responses:
       403:

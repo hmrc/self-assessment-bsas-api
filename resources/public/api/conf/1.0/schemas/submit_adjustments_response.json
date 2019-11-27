@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Submit a Self Employment Business' Accounting Adjustments",
+  "description": "Submit a Self Employment Business' Accounting Adjustments",
+  "type": "object",
+  "properties": {
+    "id": { "$ref": "definitions.json#/definitions/bsasId"},
+    "links": { "$ref": "definitions.json#/definitions/hateoasLinks"}
+  },
+  "required": [
+    "id"
+  ]
+}

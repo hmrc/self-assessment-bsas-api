@@ -1,0 +1,41 @@
+{
+  "income": {
+    "turnover": 1000.49,
+    "other": 1000.49
+  },
+  "expenses": {
+    "costOfGoodsBought": -1000.49,
+    "cisPaymentsToSubcontractors": 1000.49,
+    "staffCosts": 1000.49,
+    "travelcosts": 1000.49,
+    "premisesRunningCosts": 1000.49,
+    "maintenanceCosts": -1000.49,
+    "adminCosts": 1000.49,
+    "advertisingCosts": 1000.49,
+    "businessEntertainmentCosts": 1000.49,
+    "interest": 1000.49,
+    "financeCharges": 1000.49,
+    "badDebt": 1000.49,
+    "professionalFees": 1000.49,
+    "depreciation": 1000.49,
+    "otherExpensesAllowable": 1000.49
+
+  },
+  "additions": {
+    "costOfGoodsBoughtDisallowable": 1000.49,
+    "cisPaymentsToSubcontractorsDisallowable": 1000.49,
+    "staffCostsDisallowable": 1000.49,
+    "travelcostsDisallowable": 1000.49,
+    "premisesRunningCostsDisallowable": 1000.49,
+    "maintenanceCostsDisallowable": 1000.49,
+    "adminCostsDisallowable": -1000.49,
+    "advertisingCostsDisallowable": -1000.49,
+    "businessEntertainmentCostsDisallowable": 1000.49,
+    "interestDisallowable": 1000.49,
+    "financialChargesDisallowable": 1000.49,
+    "badDebtsDisallowable": 1000.49,
+    "professionalFeesDisallowable": 1000.49,
+    "depreciationDisallowable": 1000.49,
+    "otherDisallowable": 1000.49
+  }
+}
