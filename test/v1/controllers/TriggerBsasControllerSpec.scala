@@ -141,6 +141,7 @@ class TriggerBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
+          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (StartDateFormatError, BAD_REQUEST),
           (EndDateFormatError, BAD_REQUEST),
