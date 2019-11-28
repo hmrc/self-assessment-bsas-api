@@ -26,16 +26,16 @@ body:
     examples:
       adjustments_full:
         description: Submit A Self Employment Business' Accounting Adjustments - Full
-        value: !include examples/submit_se_adjustments_full.json
+        value: !include examples/adjustments/submit_se_adjustments_full.json
       adjustments_consolidated:
         description: Submit A Self Employment Business' Accounting Adjustments - Consolidated Expenses
-        value: !include examples/submit_se_adjustments_consolidated.json
+        value: !include examples/adjustments/submit_se_adjustments_consolidated.json
 responses:
   200:
     body:
       application/json:
         type: !include schemas/submit_adjustments_response.json
-        example: !include examples/submit_se_adjustment_response.json
+        example: !include examples/adjustments/submit_se_adjustment_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
