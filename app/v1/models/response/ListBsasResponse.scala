@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package v1.models.response.listBsas
+package v1.models.response
 
 import play.api.libs.json.{Json, OWrites, Reads}
+import v1.models.response.listBsas.BusinessSourceSummary
 
 case class ListBsasResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
 

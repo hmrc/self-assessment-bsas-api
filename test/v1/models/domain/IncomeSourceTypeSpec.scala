@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.domain
 
-import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
-import v1.fixtures.ListBsasFixtures._
+import utils.enums.EnumJsonSpecSupport
+import v1.models.domain.IncomeSourceType._
 
-class ListBsasResponseSpec extends UnitSpec {
+class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  "BusinessSourceSummaries" should {
+  testRoundTrip[IncomeSourceType](
+    ("01", `01`),
+    ("02", `02`),
+    ("04", `04`)
+  )
 
-    "write correctly to json" in {
-      Json.toJson(summaryModel) shouldBe summariesJSON
-    }
-
-    "read correctly to json" in {
-      summariesFromDesJSON.validate[ListBsasResponse] shouldBe JsSuccess(summaryModel)
+  "toIdentifierValue" should {
+    "return the correct identifier value" in {
+      IncomeSourceType.`01`.toTypeOfBusiness shouldBe TypeOfBusiness.`self-employment`
+      IncomeSourceType.`02`.toTypeOfBusiness shouldBe TypeOfBusiness.`uk-property-non-fhl`
+      IncomeSourceType.`04`.toTypeOfBusiness shouldBe TypeOfBusiness.`uk-property-fhl`
     }
   }
 }
+
