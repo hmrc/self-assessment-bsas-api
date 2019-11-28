@@ -16,7 +16,6 @@
 
 package v1.models.request.triggerBsas
 
-import play.api.libs.json.JsValue
 import play.api.mvc.AnyContentAsJson
 import uk.gov.hmrc.domain.Nino
 import v1.models.request.RawData

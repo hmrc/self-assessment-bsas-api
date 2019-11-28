@@ -69,4 +69,16 @@ class BaseDesConnectorSpec extends ConnectorSpec {
       await(connector.get(DesUri[Result](url))) shouldBe outcome
     }
   }
+
+  "get (with query parameters)" must {
+    "get with the requred des headers and return the result" in new Test {
+
+      val queryParams: Map[String, String] = Map("aParam" -> "aValue")
+      MockedHttpClient
+        .parameterGet(absoluteUrl, queryParams.toSeq, "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+        .returns(Future.successful(outcome))
+
+      await(connector.get(DesUri[Result](url), queryParams.toSeq)) shouldBe outcome
+    }
+  }
 }
