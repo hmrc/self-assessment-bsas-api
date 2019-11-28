@@ -37,28 +37,26 @@ uses:
       description: National Insurance number, in the format AA999999A.
       type: string
       example: TC663795B
-    bsasId:
-      description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
-      type: string
-      example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
-    taxYear:
-      description: 'The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid.'
-      example: "2017-18"
   /{nino}:
     get: !include list.raml
     /trigger:
       post: !include trigger.raml
     /self-employment/{bsasId}:
-      get: !include retrieve_se_bsas.raml
-    /property/{bsasId}:
-      get: !include retrieve_property_bsas.raml
       uriParameters:
         bsasId:
           description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
           type: string
           example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
-    /self-employment/{bsasId}/adjust:
-      post: !include submit_se_adjustments.raml
-    /property/{bsasId}/adjust:
-      post: !include submit_property_adjustments.raml
-
+      get: !include retrieve_se_bsas.raml
+      /adjust:
+        post: !include submit_se_adjustments.raml
+        get: !include retrieve_se_adjustments.raml
+    /property/{bsasId}:
+      uriParameters:
+        bsasId:
+          description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
+          type: string
+          example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
+      get: !include retrieve_property_bsas.raml
+      /adjust:
+        post: !include submit_property_adjustments.raml
