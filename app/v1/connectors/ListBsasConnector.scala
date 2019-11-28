@@ -43,8 +43,15 @@ class ListBsasConnector @Inject()(val http: HttpClient,
       "identifierValue" -> request.identifierValue
     )
 
+    def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
+      case (k: String, Some(v: String)) => (k, v)
+      case (k: String, v: String) => (k, v)
+    }
+
+    val mappedQueryParams: Map[String, String] = queryMap(queryParams)
+
     get(
-      DesUri[ListBsasResponse](s"income-tax/adjustable-summary-calculation/$nino"), queryParams.toSeq
+      DesUri[ListBsasResponse](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
     )
   }
 }

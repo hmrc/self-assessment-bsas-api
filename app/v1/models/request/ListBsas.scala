@@ -16,7 +16,7 @@
 
 package v1.models.request
 
-import uk.gov.hmrc.auth.core.Nino
+import uk.gov.hmrc.domain.Nino
 
 case class ListBsasRawData(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])
 

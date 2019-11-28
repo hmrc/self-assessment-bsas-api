@@ -19,7 +19,6 @@ package v1.models.response
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v1.fixtures.ListBsasFixtures._
-import v1.models.response.listBsas.ListBsasResponse
 
 class ListBsasResponseSpec extends UnitSpec {
 

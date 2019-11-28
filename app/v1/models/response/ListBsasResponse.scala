@@ -16,11 +16,15 @@
 
 package v1.models.response
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OWrites, Reads}
+import v1.models.response.listBsas.BusinessSourceSummary
 
-// TODO: Replace with actual implementation of case class
-case class ListBsasResponse(id: String = "")
+case class ListBsasResponse(businessSourceSummaries: Seq[BusinessSourceSummary])
 
 object ListBsasResponse {
-  implicit val format: OFormat[ListBsasResponse] = Json.format[ListBsasResponse]
+
+  implicit val reads: Reads[ListBsasResponse] = implicitly[Reads[Seq[BusinessSourceSummary]]].map(ListBsasResponse(_))
+
+  implicit val writes: OWrites[ListBsasResponse] = Json.writes[ListBsasResponse]
+
 }
