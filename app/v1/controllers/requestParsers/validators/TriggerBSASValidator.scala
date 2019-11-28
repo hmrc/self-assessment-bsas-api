@@ -60,7 +60,7 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
   private def selfEmploymentIdValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     val req = data.body.json.as[BSAS]
     List(
-      SelfEmploymentIdValidation.validate(req.selfEmploymentId)
+      req.selfEmploymentId.map(SelfEmploymentIdValidation.validate).getOrElse(Nil)
     )
   }
 

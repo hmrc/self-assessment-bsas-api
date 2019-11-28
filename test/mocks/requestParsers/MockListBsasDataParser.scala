@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package mocks.requestParsers
 
-import v1.models.errors.{MtdError, SelfEmploymentIdFormatError}
+class MockListBsasDataParser {
 
-object SelfEmploymentIdValidation {
-
-  private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
-
-  def validate(selfEmploymentId: String): List[MtdError] = {
-      if (selfEmploymentId.matches(regex)) List() else List(SelfEmploymentIdFormatError)
-  }
 }

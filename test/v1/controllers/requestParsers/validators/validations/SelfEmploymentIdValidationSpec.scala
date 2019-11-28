@@ -22,18 +22,18 @@ import v1.models.utils.JsonErrorValidators
 
 class SelfEmploymentIdValidationSpec extends UnitSpec with JsonErrorValidators  {
 
-  case class SetUp(selfEmploymentId: Option[String], typeOfBusiness: String = "self-employed")
+  case class SetUp(selfEmploymentId: String, typeOfBusiness: String = "self-employed")
 
   "validate" should {
     "return no errors" when {
-      "a valid self employment id is provided" in new SetUp(Some("XAIS12345678901")) {
+      "a valid self employment id is provided" in new SetUp("XAIS12345678901") {
 
         SelfEmploymentIdValidation.validate(selfEmploymentId).isEmpty shouldBe true
       }
     }
 
     "return an error" when {
-      "an invalid self employment id is provided" in new SetUp(Some("XAXAIS65271982AD")){
+      "an invalid self employment id is provided" in new SetUp("XAXAIS65271982AD"){
 
         val validationResult = SelfEmploymentIdValidation.validate(selfEmploymentId)
 

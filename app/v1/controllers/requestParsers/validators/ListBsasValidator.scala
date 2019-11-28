@@ -28,8 +28,8 @@ class ListBsasValidator extends Validator[ListBsasRawData] {
   private def parameterFormatValidation: ListBsasRawData => List[List[MtdError]] = (data: ListBsasRawData) => List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear),
-      TypeOfBusinessValidation.validate(data.typeOfBusiness),
-      SelfEmploymentIdValidation.validate(data.selfEmploymentId)
+      data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
+      data.selfEmploymentId.map(SelfEmploymentIdValidation.validate).getOrElse(Nil)
       )
 
   private def parameterRuleValidation: ListBsasRawData => List[List[MtdError]] = ( data: ListBsasRawData) => List(
