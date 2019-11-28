@@ -149,7 +149,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
         val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody()))
 
         result.length shouldBe 1
-        result shouldBe List(PeriodNotEndedError)
+        result shouldBe List(RuleAccountingPeriodNotEndedError)
       }
     }
 
@@ -206,7 +206,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
         val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(selfEmploymentId = None)))
 
         result.length shouldBe 2
-        result contains List(SelfEmploymentIdFormatError, PeriodNotEndedError)
+        result contains List(SelfEmploymentIdFormatError, RuleAccountingPeriodNotEndedError)
       }
     }
   }

@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
 import v1.mocks.MockCurrentDateProvider
-import v1.models.errors.PeriodNotEndedError
+import v1.models.errors.RuleAccountingPeriodNotEndedError
 import v1.models.utils.JsonErrorValidators
 
 class NotEndedAccountingPeriodValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider {
@@ -36,10 +36,10 @@ class NotEndedAccountingPeriodValidationSpec extends UnitSpec with JsonErrorVali
     "return errors" when {
       "the end date is after the current date" in new SetUp("2020-05-07") {
 
-        val validationResult = NotEndedAccountingPeriodValidation.validate(currentDate, endDate)
+        private val validationResult = NotEndedAccountingPeriodValidation.validate(currentDate, endDate)
 
         validationResult.length shouldBe 1
-        validationResult.head shouldBe PeriodNotEndedError
+        validationResult.head shouldBe RuleAccountingPeriodNotEndedError
       }
     }
   }

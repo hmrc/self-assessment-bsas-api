@@ -24,7 +24,7 @@ import v1.models.domain.{BSAS, TypeOfBusiness}
 import v1.models.request.AccountingPeriod
 import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
 
-class TriggerBSASRequestParser @Inject()(val validator: TriggerBSASValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
+class TriggerBsasRequestParser @Inject()(val validator: TriggerBSASValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
 
   override protected def requestFor(data: TriggerBsasRawData): TriggerBsasRequest = {
     val request = data.body.json.as[BSAS]

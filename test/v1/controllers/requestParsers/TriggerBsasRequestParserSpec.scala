@@ -21,43 +21,17 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
-import v1.models.request.AccountingPeriod
-import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
+import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
-class TriggerBSASRequestParserSpec extends UnitSpec {
-
+class TriggerBsasRequestParserSpec extends UnitSpec {
 
   val nino = "AA123456A"
 
-  def triggerBsasRawDataBody(accountingPeriod: String = "2019-20",
-                             startDate: String = "2019-05-05",
-                             endDate: String = "2020-05-06",
-                             typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
-                             selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
-
-
-    AnyContentAsJson(Json.obj(
-      "accountingPeriod" -> accountingPeriod,
-      "startDate" -> startDate,
-      "endDate" -> endDate,
-      "typeOfBusiness" -> typeOfBusiness
-    ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
-  }
-
-  def triggerBsasRequestDataBody(accountingPeriod: String = "2019-20",
-                                 startDate: String = "2019-05-05",
-                                 endDate: String = "2020-05-06",
-                                 typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
-                                 selfEmploymentId: Option[String] = Some("XAIS12345678901")): TriggerBsasRequestBody = {
-    TriggerBsasRequestBody(AccountingPeriod(startDate, endDate), typeOfBusiness = typeOfBusiness, selfEmploymentId = selfEmploymentId)
-
-  }
-
-
   trait Test extends MockTriggerBSASValidator {
-    lazy val parser = new TriggerBSASRequestParser(mockValidator)
+    lazy val parser = new TriggerBsasRequestParser(mockValidator)
   }
 
   "parser" should {
@@ -73,7 +47,7 @@ class TriggerBSASRequestParserSpec extends UnitSpec {
           .validate(inputData)
           .returns(Nil)
 
-        val result = parser.parseRequest(inputData)
+        private val result = parser.parseRequest(inputData)
         result shouldBe Right(TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
           selfEmploymentId = None)))
       }
@@ -88,7 +62,7 @@ class TriggerBSASRequestParserSpec extends UnitSpec {
           .validate(inputData)
           .returns(Nil)
 
-        val result = parser.parseRequest(inputData)
+        private val result = parser.parseRequest(inputData)
         result shouldBe Right(TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
           selfEmploymentId = None)))
 
@@ -102,7 +76,7 @@ class TriggerBSASRequestParserSpec extends UnitSpec {
           .validate(inputData)
           .returns(Nil)
 
-        val result = parser.parseRequest(inputData)
+        private val result = parser.parseRequest(inputData)
         result shouldBe Right(TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody()))
       }
     }
@@ -116,7 +90,7 @@ class TriggerBSASRequestParserSpec extends UnitSpec {
           .validate(inputData)
           .returns(List(RuleIncorrectOrEmptyBodyError))
 
-        val result = parser.parseRequest(inputData)
+        private val result = parser.parseRequest(inputData)
         result shouldBe Left(ErrorWrapper(None, RuleIncorrectOrEmptyBodyError, None))
       }
 
@@ -128,7 +102,7 @@ class TriggerBSASRequestParserSpec extends UnitSpec {
           .validate(inputData)
           .returns(List(SelfEmploymentIdFormatError, EndBeforeStartDateError))
 
-        val result = parser.parseRequest(inputData)
+        private val result = parser.parseRequest(inputData)
         result shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(SelfEmploymentIdFormatError, EndBeforeStartDateError))))
       }
     }

@@ -81,8 +81,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/self-employment/$bsasId", GET, "self"),
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/self-employment/$bsasId/adjust", POST, "submit-accounting-adjustments")
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/self-employment/$bsasId", GET, "self")
           )
         )
     }
@@ -91,8 +90,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self"),
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId/adjust", POST, "submit-accounting-adjustments")
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }
@@ -101,8 +99,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self"),
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId/adjust", POST, "submit-accounting-adjustments")
+            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }

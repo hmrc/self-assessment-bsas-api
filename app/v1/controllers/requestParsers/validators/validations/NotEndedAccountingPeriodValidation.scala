@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators.validations
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import v1.models.errors.{MtdError, PeriodNotEndedError}
+import v1.models.errors.{MtdError, RuleAccountingPeriodNotEndedError}
 
 object NotEndedAccountingPeriodValidation {
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -28,7 +28,7 @@ object NotEndedAccountingPeriodValidation {
     val currentDateEpochTime = LocalDate.parse(currentDate, dateTimeFormatter).toEpochDay
     val endDateEpochTime = LocalDate.parse (endDate, dateTimeFormatter).toEpochDay
 
-    if((currentDateEpochTime - endDateEpochTime) < 0) List(PeriodNotEndedError) else List()
+    if((currentDateEpochTime - endDateEpochTime) < 0) List(RuleAccountingPeriodNotEndedError) else List()
 
   }
 }
