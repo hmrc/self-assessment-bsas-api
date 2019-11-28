@@ -18,10 +18,10 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.ListBsasFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DesTaxYear, ListBsasRequest}
-import v1.fixtures.ListBsasFixtures._
 
 import scala.concurrent.Future
 
