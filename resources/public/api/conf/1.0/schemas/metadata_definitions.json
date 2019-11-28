@@ -1,0 +1,81 @@
+{
+  "definitions": {
+    "seMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "selfEmploymentId",
+        "accountingPeriod",
+        "requestedDateTime",
+        "taxYear",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": ["self-employment"]
+        },
+        "selfEmploymentId": { "$ref": "definitions.json#/definitions/selfEmploymentId" },
+        "accountingPeriod": { "$ref": "definitions.json#/definitions/accountingPeriod" },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": { "$ref": "definitions.json#/definitions/requestedDateTime" },
+        "bsasId": { "$ref": "definitions.json#/definitions/bsasId" },
+        "summaryStatus": { "$ref": "definitions.json#/definitions/summaryStatus" },
+        "adjustedSummary": { "$ref": "definitions.json#/definitions/adjustedSummary" }
+      }
+    },
+    "propMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "accountingPeriod",
+        "requestedDateTime",
+        "taxYear",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "uk-property-fhl",
+            "uk-property-non-fhl"
+          ]
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      }
+    }
+  }
+}

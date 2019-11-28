@@ -5,50 +5,7 @@
     "metadata"
   ],
   "properties": {
-    "metadata": {
-      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
-      "type": "object",
-      "required": [
-        "typeOfBusiness",
-        "accountingPeriod",
-        "requestedDateTime",
-        "taxYear",
-        "bsasId",
-        "summaryStatus",
-        "adjustedSummary"
-      ],
-      "properties": {
-        "typeOfBusiness": {
-          "title": "typeOfBusiness",
-          "description": "The type of business the summary calculation is for.",
-          "type": "string",
-          "enum": [
-            "uk-property-fhl",
-            "uk-property-non-fhl"
-          ]
-        },
-        "accountingPeriod": {
-          "$ref": "definitions.json#/definitions/accountingPeriod"
-        },
-        "taxYear": {
-          "type": "string",
-          "description": "The tax year into which this accounting period falls.",
-          "example": "2019-20"
-        },
-        "requestedDateTime": {
-          "$ref": "definitions.json#/definitions/requestedDateTime"
-        },
-        "bsasId": {
-          "$ref": "definitions.json#/definitions/bsasId"
-        },
-        "summaryStatus": {
-          "$ref": "definitions.json#/definitions/summaryStatus"
-        },
-        "adjustedSummary": {
-          "$ref": "definitions.json#/definitions/adjustedSummary"
-        }
-      }
-    },
+    "metadata": { "$ref": "metadata_definitions.json#/definitions/propMetadata"},
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for either UK Property non Furnished Holiday Let or for a UK Property Furnished Holiday Let business income source.",
