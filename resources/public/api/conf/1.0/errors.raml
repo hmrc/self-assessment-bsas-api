@@ -93,6 +93,17 @@ traits:
                 description: The format of the supplied adjusted status field is not valid
                 value:
                   code: FORMAT_ADJUSTED_STATUS
+  formatAdjustmentValue:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatAdjustmentValue:
+                description: One or more values has been added with the incorrect format
+                value:
+                  code: FORMAT_ADJUSTMENT_VALUE
   ruleNotSelfEmployment:
     responses:
       400:
@@ -159,6 +170,17 @@ traits:
                 description:  One or more values have been added that is outside the accepted value range
                 value:
                   code: RULE_RANGE_INVALID
+  ruleTypeOfBusinessIncorrect:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTypeOfBusinessIncorrect:
+                description:  The BSAS ID relates to a different Type of Business
+                value:
+                  code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
     responses:
       403:
@@ -258,6 +280,17 @@ traits:
                 description: Adjustment to expenses where Trading Income Allowance claimed
                 value:
                   code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
+  rulePropertyIncomeAllowanceExceeded:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              rulePropertyIncomeAllowanceExceeded:
+                description: Adjustment to expenses where Property Income Allowance claimed
+                value:
+                  code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
   ruleNoAccountingPeriod:
     responses:
       403:

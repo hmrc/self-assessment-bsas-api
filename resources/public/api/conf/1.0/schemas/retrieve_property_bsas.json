@@ -1,7 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve a UK Property Business Source Accounting Summary (BSAS)",
-  "description": "This endpoint allows the user to request a specific Business Source Accounting Summary using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted is to be returned.",
   "type": "object",
   "required": [
     "metadata"
@@ -167,12 +165,12 @@
         "description": "A list of endpoint links that indicate possible actions related to the current resource.",
         "properties": {
           "href": {
-            "description": "The relative url of the endpoint",
+            "description": "The relative url of the endpoint.",
             "type": "string",
             "example": "/sample-context/AA123456A"
           },
           "rel": {
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
               "self",
@@ -180,12 +178,11 @@
             ]
           },
           "method": {
-            "description": "The HTTP method type for the endpoint",
+            "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
               "GET",
-              "POST",
-              "DELETE"
+              "POST"
             ]
           }
         },

@@ -189,7 +189,6 @@
           "example": "1000.45"
         }
       }
-    },
-    "links": { "$ref": "definitions.json#/definitions/hateoasLinks"}
+    }
   }
 }
