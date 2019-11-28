@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.mocks.validators
 
-import v1.models.errors.{MtdError, SelfEmploymentIdFormatError}
+import org.scalamock.handlers.CallHandler1
+import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.ListBsasValidator
+import v1.models.errors.MtdError
+import v1.models.request.ListBsasRawData
 
-object SelfEmploymentIdValidation {
+class MockListBsasValidator extends MockFactory {
 
-  private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
+  val mockValidator: ListBsasValidator = mock[ListBsasValidator]
 
-  def validate(selfEmploymentId: String): List[MtdError] = {
-      if (selfEmploymentId.matches(regex)) List() else List(SelfEmploymentIdFormatError)
+  object MockValidator {
+
+    def validate(data: ListBsasRawData): CallHandler1[ListBsasRawData, List[MtdError]] = {
+      (mockValidator
+        .validate(_: ListBsasRawData))
+        .expects(data)
+    }
   }
+
 }

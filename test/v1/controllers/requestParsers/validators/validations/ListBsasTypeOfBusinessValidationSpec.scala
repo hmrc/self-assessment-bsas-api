@@ -16,13 +16,25 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, SelfEmploymentIdFormatError}
+import support.UnitSpec
+import v1.models.errors.TypeOfBusinessFormatError
 
-object SelfEmploymentIdValidation {
+class ListBsasTypeOfBusinessValidationSpec extends UnitSpec {
 
-  private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
+  private val typeOfBusiness = "uk-property-fhl"
+  private val badTypeOfBusiness = "humidity farmer"
 
-  def validate(selfEmploymentId: String): List[MtdError] = {
-      if (selfEmploymentId.matches(regex)) List() else List(SelfEmploymentIdFormatError)
+  "validate" should {
+    "return no errors" when {
+      "a valid type of business is provided" in {
+        ListBSASTypeOfBusinessValidation.validate(typeOfBusiness) shouldBe Nil
+      }
+    }
+
+    "return an error" when {
+      "an invalid type of business is provided" in {
+        ListBSASTypeOfBusinessValidation.validate(badTypeOfBusiness) shouldBe List(TypeOfBusinessFormatError)
+      }
+    }
   }
 }

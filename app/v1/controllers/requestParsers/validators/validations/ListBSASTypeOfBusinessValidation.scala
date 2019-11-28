@@ -16,13 +16,14 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, SelfEmploymentIdFormatError}
+import v1.models.errors.{MtdError, TypeOfBusinessFormatError}
 
-object SelfEmploymentIdValidation {
+object ListBSASTypeOfBusinessValidation {
 
-  private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
+  val ukPropertyFHL = "uk-property-fhl"
+  val ukPropertyNonFHL = "uk-property-non-fhl"
+  val selfEmployment = "self-employment"
 
-  def validate(selfEmploymentId: String): List[MtdError] = {
-      if (selfEmploymentId.matches(regex)) List() else List(SelfEmploymentIdFormatError)
-  }
+  def validate(typeOfBusiness: String): List[MtdError] =
+    if (typeOfBusiness == ukPropertyFHL || typeOfBusiness == ukPropertyNonFHL || typeOfBusiness == selfEmployment) List() else List(TypeOfBusinessFormatError)
 }

@@ -39,13 +39,9 @@ class TypeOfBusinessValidationSpec extends UnitSpec with JsonErrorValidators {
 
         TypeOfBusinessValidation.validate(typeOfBusiness).isEmpty shouldBe true
       }
-    }
-
-    "return an error" when {
       "an invalid type of business is provided" in new SetUp("selfemployment") {
 
         val validationResult = TypeOfBusinessValidation.validate(typeOfBusiness)
-
         validationResult.length shouldBe 1
         validationResult.head shouldBe TypeOfBusinessFormatError
       }

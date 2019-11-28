@@ -24,7 +24,7 @@ object TypeOfBusinessValidation {
   val ukPropertyFHL = "uk-property-fhl"
   val ukPropertyNonFHL = "uk-property-non-fhl"
   val selfEmployed = "self-employment"
-
+  
   def validate(typeOfBusiness: String): List[MtdError] =
     if (typeOfBusiness == TypeOfBusiness.`uk-property-non-fhl`.toString || typeOfBusiness == TypeOfBusiness.`uk-property-fhl`.toString || typeOfBusiness == TypeOfBusiness.`self-employment`.toString)
       List() else List(TypeOfBusinessFormatError)
