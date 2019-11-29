@@ -52,9 +52,6 @@ class TriggerBSASValidatorSpec extends UnitSpec {
     "return no errors" when {
 
       "a valid self employment is supplied" in new SetUp {
-
-        println(scala.Console.YELLOW + triggerBsasRawDataBody() + scala.Console.RESET)
-
         validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody())).isEmpty shouldBe true
       }
 

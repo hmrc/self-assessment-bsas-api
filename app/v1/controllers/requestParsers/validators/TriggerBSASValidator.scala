@@ -43,8 +43,8 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
   }
 
   private def dateFieldValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val startDate: JsLookupResult = (data.body.json \ "accountingPeriod" \ "startDate")
-    val endDate: JsLookupResult = (data.body.json \ "accountingPeriod" \ "endDate")
+    val startDate: JsLookupResult = data.body.json \ "accountingPeriod" \ "startDate"
+    val endDate: JsLookupResult = data.body.json \ "accountingPeriod" \ "endDate"
     List(
       JsonValidation.validate(startDate)(DateValidation.validate(StartDateFormatError)),
       JsonValidation.validate(endDate)(DateValidation.validate(EndDateFormatError))
