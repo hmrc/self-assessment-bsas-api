@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.AnyContentAsJson
 import v1.models.domain.TypeOfBusiness
 import v1.models.request.AccountingPeriod
@@ -90,13 +90,11 @@ object TriggerBsasRequestBodyFixtures {
 
   val responseObj = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
-  val response = Json.parse(
-    """{
+  val response = Json.parse("""{
       |"id" : "c75f40a6-a3df-4429-a697-471eeec46435"
       |}""".stripMargin)
 
-  val hateoasResponseForSE  = (nino: String) =>
-    s"""
+  val hateoasResponseForSE = (nino: String) => s"""
       |{
       |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
       |  "links":[
@@ -109,8 +107,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
     """.stripMargin
 
-  val hateoasResponseForProperty = (nino: String) =>
-    s"""
+  val hateoasResponseForProperty = (nino: String) => s"""
       |{
       |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
       |  "links":[
@@ -125,18 +122,14 @@ object TriggerBsasRequestBodyFixtures {
 
   val requestBody =
     Json.obj(
-      "accountingPeriod" -> "2019-20",
-      "startDate" -> "2019-05-05",
-      "endDate" -> "2020-05-06",
-      "typeOfBusiness" -> TypeOfBusiness.`self-employment`.toString,
-      "selfEmploymentId" -> "XAIS12345678901")
+      "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "selfEmploymentId" -> "XAIS12345678901"
+    )
 
   val requestBodyForProperty =
-    Json.obj(
-      "accountingPeriod" -> "2019-20",
-      "startDate" -> "2019-05-05",
-      "endDate" -> "2020-05-06",
-      "typeOfBusiness" -> TypeOfBusiness.`uk-property-fhl`.toString)
+    Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+             "typeOfBusiness"   -> TypeOfBusiness.`uk-property-fhl`.toString)
 
   val desResponse =
     """
@@ -236,19 +229,17 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |
     """.stripMargin
-  def triggerBsasRawDataBody(accountingPeriod: String = "2019-20",
-                             startDate: String = "2019-05-05",
+
+  def triggerBsasRawDataBody(startDate: String = "2019-05-05",
                              endDate: String = "2020-05-06",
                              typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
                              selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
 
-
-    AnyContentAsJson(Json.obj(
-      "accountingPeriod" -> accountingPeriod,
-      "startDate" -> startDate,
-      "endDate" -> endDate,
-      "typeOfBusiness" -> typeOfBusiness
-    ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+    AnyContentAsJson(
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+        "typeOfBusiness"   -> typeOfBusiness
+      ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
   }
 
   def triggerBsasRequestDataBody(accountingPeriod: String = "2019-20",

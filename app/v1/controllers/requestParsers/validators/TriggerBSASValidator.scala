@@ -17,18 +17,18 @@
 package v1.controllers.requestParsers.validators
 
 import javax.inject.Inject
-
 import config.FixedConfig
+import play.api.libs.json.JsLookupResult
 import utils.CurrentDateProvider
 import v1.controllers.requestParsers.validators.validations.{DateValidation, _}
-import v1.models.domain.BSAS
+import v1.models.request.triggerBsas.TriggerBsasRequestBody
 import v1.models.errors._
 import v1.models.request.triggerBsas.TriggerBsasRawData
 
 class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, taxYearValidator,selfEmploymentIdValidator,
-    dateFieldValidator, typeOfBusinessValidator, otherBodyFieldsValidator)
+  private val validationSet = List(parameterFormatValidation, selfEmploymentIdValidator,
+    dateFieldValidator, typeOfBusinessValidator, bodyFormatValidator, otherBodyFieldsValidator)
 
   private def parameterFormatValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -38,47 +38,38 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
 
   private def bodyFormatValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[BSAS](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[TriggerBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
     )
   }
 
   private def dateFieldValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val req = data.body.json.as[BSAS]
+    val startDate: JsLookupResult = (data.body.json \ "accountingPeriod" \ "startDate")
+    val endDate: JsLookupResult = (data.body.json \ "accountingPeriod" \ "endDate")
     List(
-      DateValidation.validate(req.startDate, StartDateFormatError),
-      DateValidation.validate(req.endDate, EndDateFormatError)
-    )
-  }
-
-  private def taxYearValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val req = data.body.json.as[BSAS]
-    List(
-      TaxYearValidation.validate(req.accountingPeriod)
+      JsonValidation.validate(startDate)(DateValidation.validate(StartDateFormatError)),
+      JsonValidation.validate(endDate)(DateValidation.validate(EndDateFormatError))
     )
   }
 
   private def selfEmploymentIdValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val req = data.body.json.as[BSAS]
     List(
-      req.selfEmploymentId.map(SelfEmploymentIdValidation.validate).getOrElse(Nil)
+      JsonValidation.validate(data.body.json \ "selfEmploymentId")(SelfEmploymentIdValidation.validate)
     )
   }
 
   private def typeOfBusinessValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val req = data.body.json.as[BSAS]
     List(
-      TypeOfBusinessValidation.validate(req.typeOfBusiness)
+      JsonValidation.validate(data.body.json \ "typeOfBusiness")(TypeOfBusinessValidation.validate)
     )
   }
 
 
   private def otherBodyFieldsValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val req = data.body.json.as[BSAS]
+    val req = data.body.json.as[TriggerBsasRequestBody]
     List(
       SelfEmploymentIdRuleValidation.validate(req.selfEmploymentId, req.typeOfBusiness),
-      EndBeforeStartDateValidation.validate(req.startDate, req.endDate),
-      MtdTaxYearValidation.validate(req.accountingPeriod, RuleTaxYearNotSupportedError),
-      NotEndedAccountingPeriodValidation.validate(currentDateProvider.getCurrentDate().toString, req.endDate)
+      EndBeforeStartDateValidation.validate(req.accountingPeriod.startDate, req.accountingPeriod.endDate),
+      NotEndedAccountingPeriodValidation.validate(currentDateProvider.getCurrentDate().toString, req.accountingPeriod.endDate)
     )
   }
 

@@ -20,18 +20,12 @@ import javax.inject.Inject
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.TriggerBSASValidator
-import v1.models.domain.{BSAS, TypeOfBusiness}
-import v1.models.request.AccountingPeriod
 import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
 
 class TriggerBsasRequestParser @Inject()(val validator: TriggerBSASValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
 
   override protected def requestFor(data: TriggerBsasRawData): TriggerBsasRequest = {
-    val request = data.body.json.as[BSAS]
-
-    val requestBody = TriggerBsasRequestBody(AccountingPeriod(request.startDate, request.endDate),
-      TypeOfBusiness.parser(request.typeOfBusiness),
-      request.selfEmploymentId)
+    val requestBody = data.body.json.as[TriggerBsasRequestBody]
 
     TriggerBsasRequest(Nino(data.nino), requestBody)
   }

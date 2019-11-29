@@ -30,46 +30,48 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
   val nino = "AA123456A"
 
-  def triggerBsasRawDataBody(accountingPeriod: String = "2019-20",
-                             startDate: String = "2019-05-05",
+  def triggerBsasRawDataBody(startDate: String = "2019-05-05",
                              endDate: String = "2020-05-06",
                              typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
                              selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
 
-
-    AnyContentAsJson(Json.obj(
-      "accountingPeriod" -> accountingPeriod,
-      "startDate" -> startDate,
-      "endDate" -> endDate,
-      "typeOfBusiness" -> typeOfBusiness
-    ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+    AnyContentAsJson(
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+        "typeOfBusiness"   -> typeOfBusiness
+      ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
   }
 
-  class SetUp(date:LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
+  class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
     val validator = new TriggerBSASValidator(currentDateProvider = mockCurrentDateProvider)
 
     MockCurrentDateProvider.getCurrentDate().returns(date)
   }
-
 
   "running validation" should {
     "return no errors" when {
 
       "a valid self employment is supplied" in new SetUp {
 
+        println(scala.Console.YELLOW + triggerBsasRawDataBody() + scala.Console.RESET)
+
         validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody())).isEmpty shouldBe true
       }
 
       "a valid property is supplied" in new SetUp {
 
-        validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString,
-          selfEmploymentId = None))).isEmpty shouldBe true
+        validator
+          .validate(
+            TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString, selfEmploymentId = None)))
+          .isEmpty shouldBe true
       }
 
       "a valid fhl-property is supplied" in new SetUp {
 
-        validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString,
-          selfEmploymentId = None))).isEmpty shouldBe true
+        validator
+          .validate(
+            TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString, selfEmploymentId = None)))
+          .isEmpty shouldBe true
       }
 
     }
@@ -85,7 +87,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
     }
 
     "return a EndDateFormat error" when {
-      "the end date format is incorrect" in new SetUp(){
+      "the end date format is incorrect" in new SetUp() {
 
         val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(endDate = "06-05-2020")))
 
@@ -102,34 +104,6 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
         result.length shouldBe 1
         result shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-    }
-
-    "return a MinTaxYear error" when {
-      "the tax year is before the minmal tax year that can be applied" in new SetUp {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(accountingPeriod = "2010-11")))
-
-        result.length shouldBe 1
-        result shouldBe List(RuleTaxYearNotSupportedError)
-      }
-    }
-
-    "return a TaxYearFormat error" when {
-      "the format of the tax year does not match YYYY-YY format" in new SetUp {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(accountingPeriod = "1998-1999")))
-
-        result.length shouldBe 1
-        result shouldBe List(TaxYearFormatError)
-      }
-
-      "the tax year is longer then a year" in new SetUp {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(accountingPeriod = "2018-20")))
-
-        result.length shouldBe 1
-        result shouldBe List(RuleTaxYearRangeExceededError)
       }
     }
 
@@ -164,7 +138,8 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
       "a valid property is supplied with an self employed id" in new SetUp {
 
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString)))
+        val result =
+          validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString)))
 
         result.length shouldBe 1
         result shouldBe List(SelfEmploymentIdRuleError)
@@ -183,7 +158,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
     }
 
     "return a StartDateFormat error" when {
-      "the start date format is incorrect" in new SetUp(){
+      "the start date format is incorrect" in new SetUp() {
 
         val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "06-05-2019")))
 

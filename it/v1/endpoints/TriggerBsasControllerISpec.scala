@@ -20,20 +20,20 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.IntegrationBaseSpec
 import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino             = "AA123456A"
     val selfEmploymentId = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
-    val correlationId = "X-123"
+    val correlationId    = "X-123"
 
     def setupStubs(): StubMapping
 
@@ -58,11 +58,10 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
   val requestBody =
     Json.obj(
-      "accountingPeriod" -> "2019-20",
-      "startDate" -> "2019-01-01",
-      "endDate" -> "2019-10-31",
-      "typeOfBusiness" -> TypeOfBusiness.`self-employment`.toString,
-      "selfEmploymentId" -> "XAIS12345678901")
+      "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "selfEmploymentId" -> "XAIS12345678901"
+    )
 
   "Calling the triggerBsas" should {
 
@@ -104,8 +103,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(
-          ("AA1123A", BAD_REQUEST, NinoFormatError))
+        val input = Seq(("AA1123A", BAD_REQUEST, NinoFormatError))
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -135,7 +133,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package v1.models.domain
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Reads, _}
+import v1.models.errors.MtdError
 
-case class BSAS(accountingPeriod:String,
-                startDate: String,
-                endDate: String,
-                typeOfBusiness: String,
-                selfEmploymentId: Option[String])
+/**
+  * Utilities to assist using validations where the value to validate comes from a JSON element
+  */
+object JsonValidation {
 
-
-object BSAS {
-  implicit val format: OFormat[BSAS] = Json.format[BSAS]
-
+  def validate[T: Reads](jsLookupResult: JsLookupResult)(validation: T => List[MtdError]): List[MtdError] = {
+    jsLookupResult.validate[T] match {
+      case JsSuccess(value, _) => validation(value)
+      case _: JsError        => Nil
+    }
+  }
 }

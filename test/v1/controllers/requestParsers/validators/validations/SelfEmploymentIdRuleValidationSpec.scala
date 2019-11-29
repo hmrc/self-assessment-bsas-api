@@ -29,19 +29,19 @@ class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidato
     "return no errors" when {
       "a valid self employment id is provided" in new SetUp() {
 
-        SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness.toString).isEmpty shouldBe true
+        SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness).isEmpty shouldBe true
       }
 
       "no self employment id is provided for a property" in new SetUp(None, TypeOfBusiness.`uk-property-non-fhl`) {
 
-        SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness.toString).isEmpty shouldBe true
+        SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness).isEmpty shouldBe true
       }
     }
 
     "return an error" when {
       "the business type is self-assessment business however there is no self employment ID " in new SetUp(None) {
 
-        val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness.toString)
+        val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness)
 
         validationResult.length shouldBe 1
         validationResult.head shouldBe SelfEmploymentIdRuleError
@@ -49,7 +49,7 @@ class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidato
 
       "the business type is a property-fhl there is a self employment ID " in new SetUp(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`) {
 
-        val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness.toString)
+        val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness)
 
         validationResult.length shouldBe 1
         validationResult.head shouldBe SelfEmploymentIdRuleError
@@ -57,7 +57,7 @@ class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidato
 
       "the business type is a none property-fhl there is a self employment ID " in new SetUp(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`) {
 
-        val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness.toString)
+        val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness)
 
         validationResult.length shouldBe 1
         validationResult.head shouldBe SelfEmploymentIdRuleError

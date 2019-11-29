@@ -28,7 +28,7 @@ class DateValidationSpec extends UnitSpec with JsonErrorValidators {
     "return no errors" when {
       "when a date in the correct format is supplied" in new SetUp("2018-05-06") {
 
-        val validationResult = DateValidation.validate(date, error)
+        val validationResult = DateValidation.validate(error)(date)
 
         validationResult.isEmpty shouldBe true
       }
@@ -37,7 +37,7 @@ class DateValidationSpec extends UnitSpec with JsonErrorValidators {
     "return an error" when {
       "an invalid start date with dd-mm-yyyy format" in new SetUp("06-05-2019") {
 
-        val validationResult = DateValidation.validate(date, error)
+        val validationResult = DateValidation.validate(error)(date)
 
         validationResult.length shouldBe 1
         validationResult.head shouldBe StartDateFormatError
@@ -45,7 +45,7 @@ class DateValidationSpec extends UnitSpec with JsonErrorValidators {
 
       "an invalid start date with Letters format" in new SetUp("dd-mm-yyyy") {
 
-        val validationResult = DateValidation.validate(date, error)
+        val validationResult = DateValidation.validate(error)(date)
 
         validationResult.length shouldBe 1
         validationResult.head shouldBe StartDateFormatError
@@ -53,7 +53,7 @@ class DateValidationSpec extends UnitSpec with JsonErrorValidators {
 
       "an invalid end date with dd-mm-yyyy format" in new SetUp("06-05-2019") {
 
-        val validationResult = DateValidation.validate(date, EndDateFormatError)
+        val validationResult = DateValidation.validate(EndDateFormatError)(date)
 
         validationResult.length shouldBe 1
         validationResult.head shouldBe EndDateFormatError
