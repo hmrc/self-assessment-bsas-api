@@ -39,13 +39,11 @@ object TriggerBsasResponse extends HateoasLinks {
       data.typeOfBusiness match {
         case `self-employment` =>
           Seq(
-            getSelfEmploymentBsas(appConfig, nino, bsasId),
-            adjustSelfEmploymentBsas(appConfig, nino, bsasId)
+            getSelfEmploymentBsas(appConfig, nino, bsasId)
           )
         case `uk-property-fhl` | `uk-property-non-fhl` =>
           Seq(
-            getPropertyBsas(appConfig, nino, bsasId),
-            adjustPropertyBsas(appConfig, nino, bsasId)
+            getPropertyBsas(appConfig, nino, bsasId)
           )
       }
     }

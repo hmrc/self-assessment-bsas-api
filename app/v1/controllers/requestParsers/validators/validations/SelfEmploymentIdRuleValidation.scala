@@ -21,11 +21,11 @@ import v1.models.errors.{MtdError, SelfEmploymentIdRuleError}
 
 object SelfEmploymentIdRuleValidation {
 
-  def validate(selfEmploymentId: Option[String], typeOfBusiness: String): List[MtdError] =
+  def validate(selfEmploymentId: Option[String], typeOfBusiness: TypeOfBusiness): List[MtdError] =
 
     selfEmploymentId match {
-      case Some(_) if typeOfBusiness != TypeOfBusiness.`self-employment`.toString => List(SelfEmploymentIdRuleError)
-      case None if typeOfBusiness == TypeOfBusiness.`self-employment`.toString => List(SelfEmploymentIdRuleError)
+      case Some(_) if typeOfBusiness != TypeOfBusiness.`self-employment` => List(SelfEmploymentIdRuleError)
+      case None if typeOfBusiness == TypeOfBusiness.`self-employment` => List(SelfEmploymentIdRuleError)
       case _ => List()
     }
 }

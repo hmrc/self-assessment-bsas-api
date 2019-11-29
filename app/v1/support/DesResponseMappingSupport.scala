@@ -43,6 +43,7 @@ trait DesResponseMappingSupport {
           logger.info(
             s"[${logContext.controllerName}] [${logContext.endpointName}] [CorrelationId - $correlationId]" +
               s" - downstream returned ${errorCodes.map(_.code).mkString(",")}. Revert to ISE")
+
           ErrorWrapper(Some(correlationId), DownstreamError, None)
         } else {
           ErrorWrapper(Some(correlationId), BadRequestError, Some(mtdErrors))

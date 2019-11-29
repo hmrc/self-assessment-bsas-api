@@ -16,10 +16,12 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.AnyContentAsJson
 import v1.models.domain.TypeOfBusiness
 import v1.models.request.AccountingPeriod
 import v1.models.request.triggerBsas.TriggerBsasRequestBody
+import v1.models.response.TriggerBsasResponse
 
 object TriggerBsasRequestBodyFixtures {
 
@@ -85,4 +87,168 @@ object TriggerBsasRequestBodyFixtures {
     TypeOfBusiness.`uk-property-non-fhl`,
     None
   )
+
+  val responseObj = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
+
+  val response = Json.parse("""{
+      |"id" : "c75f40a6-a3df-4429-a697-471eeec46435"
+      |}""".stripMargin)
+
+  val hateoasResponseForSE = (nino: String) => s"""
+      |{
+      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
+      |  "links":[
+      |    {
+      |      "href":"/individuals/self-assessment/accounting-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+      |      "rel":"self",
+      |      "method":"GET"
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+
+  val hateoasResponseForProperty = (nino: String) => s"""
+      |{
+      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
+      |  "links":[
+      |    {
+      |      "href":"/individuals/self-assessment/accounting-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+      |      "rel":"self",
+      |      "method":"GET"
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+
+  val requestBody =
+    Json.obj(
+      "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "selfEmploymentId" -> "XAIS12345678901"
+    )
+
+  val requestBodyForProperty =
+    Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+             "typeOfBusiness"   -> TypeOfBusiness.`uk-property-fhl`.toString)
+
+  val desResponse =
+    """
+      |{
+      | "metadata": {
+      |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
+      |  "requestedDateTime": "0000-01-01",
+      |  "taxableEntityId": "0",
+      |  "taxYear": 2020,
+      |  "status": "valid"
+      | },
+      | "inputs": {
+      |  "incomeSourceId": "111111111111111",
+      |  "incomeSourceType": "01",
+      |  "accountingPeriodStartDate": "0000-01-01",
+      |  "accountingPeriodEndDate": "0000-01-01",
+      |  "source": "MTD-SA",
+      |  "submissionPeriods": [
+      |   {
+      |    "periodId": "2222222222222222",
+      |    "startDate": "0000-01-01",
+      |    "endDate": "0000-01-01",
+      |    "receivedDateTime": "0000-01-01"
+      |   }
+      |  ]
+      | },
+      | "adjustableSummaryCalculation": {
+      |  "totalIncome": 0.02,
+      |  "income": {
+      |   "turnover": 0.02,
+      |   "other": 0.02
+      |  },
+      |  "totalExpenses": 0.02,
+      |  "expenses": {
+      |   "consolidatedExpenses": 0.02,
+      |   "costOfGoodsAllowable": 0.02,
+      |   "paymentsToSubcontractorsAllowable": 0.02,
+      |   "wagesAndStaffCostsAllowable": 0.02,
+      |   "carVanTravelExpensesAllowable": 0.02,
+      |   "premisesRunningCostsAllowable": 0.02,
+      |   "maintenanceCostsAllowable": 0.02,
+      |   "adminCostsAllowable": 0.02,
+      |   "interestOnBankOtherLoansAllowable": 0.02,
+      |   "financeChargesAllowable": 0.02,
+      |   "irrecoverableDebtsAllowable": 0.02,
+      |   "professionalFeesAllowable": 0.02,
+      |   "depreciationAllowable": 0.02,
+      |   "otherExpensesAllowable": 0.02,
+      |   "advertisingCostsAllowable": 0.02,
+      |   "businessEntertainmentCostsAllowable": 0.02
+      |  },
+      |  "netProfit": 0.02,
+      |  "netLoss": 0.02,
+      |  "additions": {
+      |   "costOfGoodsDisallowable": 0.02,
+      |   "paymentsToSubcontractorsDisallowable": 0.02,
+      |   "wagesAndStaffCostsDisallowable": 0.02,
+      |   "carVanTravelExpensesDisallowable": 0.02,
+      |   "premisesRunningCostsDisallowable": 0.02,
+      |   "maintenanceCostsDisallowable": 0.02,
+      |   "adminCostsDisallowable": 0.02,
+      |   "interestOnBankOtherLoansDisallowable": 0.02,
+      |   "financeChargesDisallowable": 0.02,
+      |   "irrecoverableDebtsDisallowable": 0.02,
+      |   "professionalFeesDisallowable": 0.02,
+      |   "depreciationDisallowable": 0.02,
+      |   "otherExpensesDisallowable": 0.02,
+      |   "advertisingCostsDisallowable": 0.02,
+      |   "businessEntertainmentCostsDisallowable": 0.02,
+      |   "outstandingBusinessIncome": 0.02,
+      |   "balancingChargeOther": 0.02,
+      |   "balancingChargeBpra": 0.02,
+      |   "goodAndServicesOwnUse": 0.02
+      |  },
+      |  "deductions": {
+      |   "tradingAllowance": 0.02,
+      |   "annualInvestmentAllowance": 0.02,
+      |   "capitalAllowanceMainPool": 0.02,
+      |   "capitalAllowanceSpecialRatePool": 0.02,
+      |   "zeroEmissionGoods": 0.02,
+      |   "businessPremisesRenovationAllowance": 0.02,
+      |   "enhancedCapitalAllowance": 0.02,
+      |   "allowanceOnSales": 0.02,
+      |   "capitalAllowanceSingleAssetPool": 0.02,
+      |   "includedNonTaxableProfits": 0.02
+      |  },
+      |  "accountingAdjustments": 0.02,
+      |  "selfEmploymentAccountingAdjustments": {
+      |   "basisAdjustment": 0.02,
+      |   "overlapReliefUsed": 0.02,
+      |   "accountingAdjustment": 0.02,
+      |   "averagingAdjustment": 0.02
+      |  },
+      |  "taxableProfit": 0.02,
+      |  "adjustedIncomeTaxLoss": 0.02
+      | }
+      |}
+      |
+    """.stripMargin
+
+  def triggerBsasRawDataBody(startDate: String = "2019-05-05",
+                             endDate: String = "2020-05-06",
+                             typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
+                             selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
+
+    AnyContentAsJson(
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+        "typeOfBusiness"   -> typeOfBusiness
+      ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+  }
+
+  def triggerBsasRequestDataBody(accountingPeriod: String = "2019-20",
+                                 startDate: String = "2019-05-05",
+                                 endDate: String = "2020-05-06",
+                                 typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
+                                 selfEmploymentId: Option[String] = Some("XAIS12345678901")): TriggerBsasRequestBody = {
+    TriggerBsasRequestBody(AccountingPeriod(startDate, endDate), typeOfBusiness = typeOfBusiness, selfEmploymentId = selfEmploymentId)
+
+  }
+
 }

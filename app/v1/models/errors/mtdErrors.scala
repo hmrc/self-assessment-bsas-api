@@ -26,26 +26,8 @@ object MtdError {
 
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
-
-
-// Rule Errors
-object RuleTaxYearNotSupportedError
-    extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED", "The accounting period is not supported, because it predates the earliest allowable tax year")
-
-object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
-
-object RuleTaxYearRangeExceededError
-    extends MtdError("RULE_TAX_YEAR_RANGE_EXCEEDED", "Tax year range exceeded. A tax year range of one year is required.")
-
-object RuleAccountingPeriodNotEndedError extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED","The accounting period has not yet ended")
-
-object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCOMPLETE","One or more periodic updates missing for this accounting period")
-
-object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The accounting period given does not exist")
-
-
 object StartDateFormatError
-    extends MtdError("FORMAT_START_DATE","The supplied accounting period start date format is invalid")
+  extends MtdError("FORMAT_START_DATE","The supplied accounting period start date format is invalid")
 
 object EndDateFormatError
   extends MtdError("FORMAT_END_DATE","The supplied accounting period end date format is invalid")
@@ -61,8 +43,20 @@ object SelfEmploymentIdRuleError
 object EndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
 
-object PeriodNotEndedError
-  extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED","The accounting period has not yet ended")
+// Rule Errors
+object RuleTaxYearNotSupportedError
+    extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED", "The accounting period is not supported, because it predates the earliest allowable tax year")
+
+object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
+
+object RuleTaxYearRangeExceededError
+    extends MtdError("RULE_TAX_YEAR_RANGE_EXCEEDED", "Tax year range exceeded. A tax year range of one year is required.")
+
+object RuleAccountingPeriodNotEndedError extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED","The accounting period has not yet ended")
+
+object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCOMPLETE","One or more periodic updates missing for this accounting period")
+
+object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The accounting period given does not exist")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

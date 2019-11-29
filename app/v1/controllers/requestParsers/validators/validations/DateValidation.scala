@@ -22,7 +22,7 @@ object DateValidation {
 
   val dateFormat = "[0-9][0-9][0-9][0-9]\\-[0-1][0-9]\\-[0-3][0-9]"
 
-  def validate(date: String, error: MtdError): List[MtdError] = {
+  def validate(error: MtdError)(date: String): List[MtdError] = {
     if (date.matches(dateFormat)) NoValidationErrors else List(error)
   }
 
