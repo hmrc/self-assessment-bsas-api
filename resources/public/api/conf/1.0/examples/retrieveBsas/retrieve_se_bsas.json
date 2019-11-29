@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "typeOfBusiness": "self-employment",
+    "selfEmploymentId": "X9IS98470026982",
+    "accountingPeriod": {
+      "startDate": "2018-10-11",
+      "endDate": "2019-10-10"
+    },
+    "taxYear": "2019-20",
+    "requestedDateTime": "2019-10-14T11:33:27Z",
+    "bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+    "summaryStatus": "superseded",
+    "adjustedSummary": true
+  },
+  "bsas": {
+    "total": {
+      "income": 100.49,
+      "expenses": 100.49,
+      "additions": 100.49,
+      "deductions": 100.49
+    },
+    "accountingAdjustments": -100.49,
+    "profit": {
+      "net": 100.49,
+      "taxable": 100.49
+    },
+    "loss": {
+      "net": 100.49,
+      "adjustedIncomeTax": 100.49
+    },
+    "incomeBreakdown": {
+      "turnover": 100.49,
+      "other": 100.49
+    },
+    "expensesBreakdown": {
+      "costOfGoodsBought": 100.49,
+      "cisPaymentsToSubcontractors": 100.49,
+      "staffCosts": 100.49,
+      "travelCosts": 100.49,
+      "premisesRunningCosts": 100.49,
+      "maintenanceCosts": 100.49,
+      "adminCosts": 100.49,
+      "advertisingCosts": 100.49,
+      "businessEntertainmentCosts": 100.49,
+      "interest": 100.49,
+      "financialCharges": 100.49,
+      "badDebt": 100.49,
+      "professionalFees": 100.49,
+      "depreciation": 100.49,
+      "other": 100.49
+    },
+    "additionsBreakdown": {
+      "costOfGoodsBoughtDisallowable": 100.49,
+      "cisPaymentsToSubcontractorsDisallowable": 100.49,
+      "staffCostsDisallowable": 100.49,
+      "travelCostsDisallowable": 100.49,
+      "premisesRunningCostsDisallowable": 100.49,
+      "maintenanceCostsDisallowable": 100.49,
+      "adminCostsDisallowable": 100.49,
+      "advertisingCostsDisallowable": 100.49,
+      "businessEntertainmentCostsDisallowable": 100.49,
+      "interestDisallowable": 100.49,
+      "financialChargesDisallowable": 100.49,
+      "badDebtDisallowable": 100.49,
+      "professionalFeesDisallowable": 100.49,
+      "depreciationDisallowable": 100.49,
+      "otherDisallowable": 100.49
+    }
+  },
+  "links": [
+    {
+      "href":"/individuals/self-assessment/accounting-summary/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/self-assessment/accounting-summary/self-employment/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
+      "rel":"submit-accounting-adjustments",
+      "method":"POST"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatBsasId
+  # not in spec but assumed its meant to be here
+  - errors.ruleNotUkProperty
+  - errors.ruleNoAdjustmentsMade
+  - errors.bsasNotFound
+  - errors.clientOrAgentNotAuthorised
+  - queryParameters.adjustedStatusOptional
+displayName: Retrieve a UK Property Business' Accounting Adjustments [test only]
+description: This endpoint allows the user to request the adjustments made to a specific UK Property Business Source Accounting Summary by quoting it's identifier.
+(annotations.sandboxData): !include scenarios/retrieve_property_adjustments.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+responses:
+  200:
+    body:
+      application/json:
+        type: !include schemas/retrieve_property_adjustments.json
+        examples:
+          adjustments_full:
+            description: Retrieve UK Property Business' Accounting Adjustments - non-FHL example
+            value: !include examples/adjustments/retrieve_nonfhl_adjustments.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.

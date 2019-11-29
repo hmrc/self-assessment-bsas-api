@@ -4,15 +4,15 @@
       "type": "array",
       "items": {
         "type": "object",
-        "description": "A list of endpoint links that indicate possible actions related to the current resource",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
         "properties": {
           "href": {
-            "description": "The relative url of the endpoint",
+            "description": "The relative url of the endpoint.",
             "type": "string",
             "example": "/sample-context/AA123456A"
           },
           "rel": {
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
               "self",
@@ -20,11 +20,12 @@
             ]
           },
           "method": {
-            "description": "The HTTP method type for the endpoint",
+            "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
               "GET",
               "POST",
+              "PUT",
               "DELETE"
             ]
           }
@@ -142,6 +143,41 @@
           "example": "1000.45"
         }
       }
+    },
+
+    "bsasProfit" : {
+      "type": "object",
+      "description": "An object of profit values.",
+      "properties": {
+        "net": {
+          "type": "number",
+          "description": "The net profit of income source. The value must be between 0 and 99999999999.99.",
+          "example": "1000.45"
+        },
+        "taxable": {
+          "type": "number",
+          "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999.99.",
+          "example": "1000.45"
+        }
+      }
+    },
+
+    "bsasLoss": {
+      "type": "object",
+      "description": "An object of loss values.",
+      "properties": {
+        "net": {
+          "type": "number",
+          "description": "The net loss of income source. The value must be between 0 and 99999999999.99.",
+          "example": "1000.45"
+        },
+        "adjustedIncomeTax": {
+          "type": "number",
+          "description": "The adjusted income tax loss. The value must be between 0 and 99999999999.99.",
+          "example": "1000.45"
+        }
+      }
     }
+
   }
 }

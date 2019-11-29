@@ -1,7 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Trigger a Business Source Accounting Summary (BSAS)",
-  "description": "Trigger a Business Source Accounting Summary (BSAS)",
   "type": "object",
   "properties": {
     "id": { "$ref": "definitions.json#/definitions/bsasId"},

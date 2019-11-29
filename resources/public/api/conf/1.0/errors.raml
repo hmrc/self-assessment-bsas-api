@@ -93,6 +93,17 @@ traits:
                 description: The format of the supplied adjusted status field is not valid
                 value:
                   code: FORMAT_ADJUSTED_STATUS
+  formatAdjustmentValue:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatAdjustmentValue:
+                description: One or more values has been added with the incorrect format
+                value:
+                  code: FORMAT_ADJUSTMENT_VALUE
   ruleNotSelfEmployment:
     responses:
       400:
@@ -104,6 +115,17 @@ traits:
                 description: The BSAS ID supplied does not relate to a self-employment business
                 value:
                   code: RULE_NOT_SELF_EMPLOYMENT
+  ruleNotUkProperty:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleNotUkProperty:
+                description: The BSAS ID supplied does not relate to a UK property business
+                value:
+                  code: RULE_NOT_UK_PROPERTY
   ruleSelfEmploymentId:
     responses:
       400:
@@ -137,6 +159,50 @@ traits:
                 description: Tax year range exceeded. A tax year range of one year is required
                 value:
                   code: RULE_TAX_YEAR_RANGE_EXCEEDED
+  ruleRangeInvalid:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleRangeInvalid:
+                description:  One or more values have been added that is outside the accepted value range
+                value:
+                  code: RULE_RANGE_INVALID
+  ruleTypeOfBusinessIncorrect:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTypeOfBusinessIncorrect:
+                description:  The BSAS ID relates to a different Type of Business
+                value:
+                  code: RULE_TYPE_OF_BUSINESS_INCORRECT
+  ruleSummaryStatusInvalid:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSummaryStatusInvalid:
+                description: The summaryStatus of the summary with this BSAS ID is set to 'invalid'
+                value:
+                  code: RULE_SUMMARY_STATUS_INVALID
+  ruleSummaryStatusSuperseded:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSummaryStatusSuperseded:
+                description: A newer BSAS exists for this accounting period
+                value:
+                  code: RULE_SUMMARY_STATUS_SUPERSEDED
   rulePeriodicDataIncomplete:
     responses:
       403:
@@ -181,6 +247,50 @@ traits:
                 description: The accounting period has not ended
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_ENDED
+  ruleAlreadyAdjusted:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleAlreadyAdjusted:
+                description: Adjustments previously submitted against the supplied BSAS ID
+                value:
+                  code: RULE_BSAS_ALREADY_ADJUSTED
+  ruleOverConsolidatedExpensesThreshold:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleOverConsolidatedExpensesThreshold:
+                description: Adjustment to turnover exceeds Consolidated Expenses threshold
+                value:
+                  code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
+  ruleTradingIncomeAllowanceExceeded:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTradingIncomeAllowanceExceeded:
+                description: Adjustment to expenses where Trading Income Allowance claimed
+                value:
+                  code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
+  rulePropertyIncomeAllowanceExceeded:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              rulePropertyIncomeAllowanceExceeded:
+                description: Adjustment to expenses where Property Income Allowance claimed
+                value:
+                  code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
   ruleNoAccountingPeriod:
     responses:
       403:
