@@ -19,32 +19,36 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
-import play.api.libs.json.Json
+import play.api.http.Status.OK
+import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.models.request.DesTaxYear
+import v1.fixtures.TriggerBsasRequestBodyFixtures.desResponse
+import v1.models.domain.TypeOfBusiness
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino          = "AA123456A"
-    val taxYear       = "2017-18"
     val data        = "someData"
     val correlationId = "X-123"
 
-    val requestJson: String =
-      s"""
-         |{
-         |"data": "$data"
-         |}
-    """.stripMargin
+    val requestJson: JsObject = Json.obj(
+      "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "selfEmploymentId" -> "XAIS12345678901"
+    )
+
+    def uri: String = s"/$nino/trigger"
+
+    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(s"/$nino/$taxYear/sampleEndpoint")
+      buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
   }
@@ -61,7 +65,7 @@ class AuthISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.internalServerError(nino)
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().post(requestJson))
         response.status shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
@@ -73,11 +77,12 @@ class AuthISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.serviceSuccess(nino, DesTaxYear.fromMtd(taxYear).toString)
+          DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse))
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().post(requestJson))
         response.status shouldBe Status.CREATED
+        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -92,7 +97,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedNotLoggedIn()
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().post(requestJson))
         response.status shouldBe Status.FORBIDDEN
       }
     }
@@ -108,7 +113,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedOther()
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().post(requestJson))
         response.status shouldBe Status.FORBIDDEN
       }
     }

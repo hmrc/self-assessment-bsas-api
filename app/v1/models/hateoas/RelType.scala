@@ -17,9 +17,6 @@
 package v1.models.hateoas
 
 object RelType {
-
-  val SAMPLE_ENDPOINT_REL = "sample-rel"
-
   val TRIGGER = "trigger-business-source-accounting-summary"
   val SUBMIT_ADJUSTMENTS = "submit-accounting-adjustments"
 

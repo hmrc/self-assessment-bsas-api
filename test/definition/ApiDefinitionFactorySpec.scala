@@ -30,6 +30,46 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     MockedAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
+  "definition" when {
+    "called" should {
+      "return a valid Definition case class" in new Test {
+        MockedAppConfig.featureSwitch returns None
+        MockedAppConfig.apiStatus returns "1.0"
+        MockedAppConfig.endpointsEnabled returns true
+
+        apiDefinitionFactory.definition shouldBe Definition(
+          scopes = Seq(
+            Scope(
+              key = "read:self-assessment",
+              name = "View your Self Assessment information",
+              description = "Allow read access to self assessment data"
+            ),
+            Scope(
+              key = "write:self-assessment",
+              name = "Change your Self Assessment information",
+              description = "Allow write access to self assessment data"
+            )
+          ),
+          api = APIDefinition(
+            name = "Business Source Accounting Summary (MTD)",
+            description = "An API for providing business source accounting summary data",
+            context = "api.gateway.context",
+            categories = Seq("INCOME_TAX_MTD"),
+            versions = Seq(
+              APIVersion(
+                version = "1.0",
+                access = None,
+                status = APIStatus.ALPHA,
+                endpointsEnabled = true
+              )
+            ),
+            requiresTrust = None
+          )
+        )
+      }
+    }
+  }
+
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {

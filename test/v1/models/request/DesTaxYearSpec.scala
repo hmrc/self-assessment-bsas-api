@@ -14,12 +14,27 @@
  * limitations under the License.
  */
 
-package v1.models.domain
+package v1.models.request
 
-import play.api.libs.json.{Json, Reads}
+import support.UnitSpec
 
-case class SampleRequestBody(data: String)
+class DesTaxYearSpec extends UnitSpec {
 
-object SampleRequestBody {
-  implicit val reads: Reads[SampleRequestBody] = Json.reads[SampleRequestBody]
+  val mtdValue = "2018-19"
+  val desValue = "2019"
+
+  "DesTaxYear" when {
+    "toString is called" should {
+      "return the value instead of a String representation of the case class" in {
+        DesTaxYear(desValue).toString shouldBe desValue
+      }
+    }
+
+    "fromMtd is called" should {
+      "return the DES representation of the tax year" in {
+        DesTaxYear.fromMtd(mtdValue) shouldBe DesTaxYear(desValue)
+      }
+    }
+  }
+
 }
