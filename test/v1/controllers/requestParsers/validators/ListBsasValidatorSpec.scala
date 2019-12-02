@@ -17,11 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v1.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeExceededError, SelfEmploymentIdFormatError, TypeOfBusinessFormatError}
+import v1.models.errors._
 import v1.models.request.ListBsasRawData
 
-class ListBsasValidatorSpec extends UnitSpec{
+class ListBsasValidatorSpec extends UnitSpec {
 
+  val validator = new ListBsasValidator()
   private val nino = "AA123456B"
   private val taxYear = "2018-19"
   private val typeOfBusiness = "uk-property-fhl"
@@ -31,39 +32,41 @@ class ListBsasValidatorSpec extends UnitSpec{
   private val tooEarlyTaxYear = "2016-17"
   private val invalidTypeOfBusiness = "toothpicks-for-hamsters"
   private val invalidSelfEmploymentId = "Not a SelfEmploymentId"
-
-  val validator = new ListBsasValidator()
-
+  private val rawData: ListBsasRawData = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))
 
   "running the validator" should {
     "return no errors" when {
       "valid parameters are provided with a tax year" in {
-        validator.validate(ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))) shouldBe Nil
+        validator.validate(rawData) shouldBe Nil
+      }
+
+      "a valid request is supplied without a typeOfBusiness or selfEmploymentId" in {
+        validator.validate(rawData.copy(typeOfBusiness = None, selfEmploymentId = None)) shouldBe Nil
       }
     }
 
     "return one error" when {
       "an invalid nino is provided" in {
-        validator.validate(ListBsasRawData(invalidNino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))) shouldBe List(NinoFormatError)
+        validator.validate(rawData.copy(nino = invalidNino)) shouldBe List(NinoFormatError)
       }
       "an invalid tax year is provided" in {
-        validator.validate(ListBsasRawData(nino, invalidTaxYear, Some(typeOfBusiness), Some(selfEmploymentId))) shouldBe List(RuleTaxYearRangeExceededError)
+        validator.validate(rawData.copy(taxYear = invalidTaxYear)) shouldBe List(RuleTaxYearRangeExceededError)
       }
       "a too early tax year is provided" in {
-        validator.validate(ListBsasRawData(nino, tooEarlyTaxYear, Some(typeOfBusiness), Some(selfEmploymentId))) shouldBe List(RuleTaxYearNotSupportedError)
+        validator.validate(rawData.copy(taxYear = tooEarlyTaxYear)) shouldBe List(RuleTaxYearNotSupportedError)
       }
       "an invalid type of business is provided" in {
-        validator.validate(ListBsasRawData(nino, taxYear, Some(invalidTypeOfBusiness), Some(selfEmploymentId))) shouldBe List(TypeOfBusinessFormatError)
+        validator.validate(rawData.copy(typeOfBusiness = Some(invalidTypeOfBusiness))) shouldBe List(TypeOfBusinessFormatError)
       }
       "an invalid self employment id is provided" in {
-        validator.validate(ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(invalidSelfEmploymentId))) shouldBe List(SelfEmploymentIdFormatError)
+        validator.validate(rawData.copy(selfEmploymentId = Some(invalidSelfEmploymentId))) shouldBe List(SelfEmploymentIdFormatError)
       }
     }
 
     "return multiple errors" when {
       "multiple invalid parameters are provided" in {
         val expectedResult = List(NinoFormatError, TypeOfBusinessFormatError)
-        validator.validate(ListBsasRawData(invalidNino, taxYear, Some(invalidTypeOfBusiness), Some(selfEmploymentId))) shouldBe expectedResult
+        validator.validate(rawData.copy(nino = invalidNino, typeOfBusiness = Some(invalidTypeOfBusiness))) shouldBe expectedResult
       }
     }
   }
