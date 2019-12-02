@@ -1,2 +1,3 @@
+GET        /:nino                                          v1.controllers.ListBsasController.listBsas(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String])
+
 POST       /:nino/trigger                                  v1.controllers.TriggerBsasController.triggerBsas(nino: String)
-GET        /:nino                                          v1.controllers.ListBsasController.listBsas(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymendId: Option[String])

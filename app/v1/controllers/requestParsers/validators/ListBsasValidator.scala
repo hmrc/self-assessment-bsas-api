@@ -26,13 +26,14 @@ class ListBsasValidator extends Validator[ListBsasRawData] {
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   private def parameterFormatValidation: ListBsasRawData => List[List[MtdError]] = (data: ListBsasRawData) => List(
-      NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear),
-      data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
-      data.selfEmploymentId.map(SelfEmploymentIdValidation.validate).getOrElse(Nil)
-      )
+    NinoValidation.validate(data.nino),
+    TaxYearValidation.validate(data.taxYear),
+    data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
+    data.selfEmploymentId.map(SelfEmploymentIdValidation.validate).getOrElse(Nil)
+  )
 
-  private def parameterRuleValidation: ListBsasRawData => List[List[MtdError]] = ( data: ListBsasRawData) => List(
+
+  private def parameterRuleValidation: ListBsasRawData => List[List[MtdError]] = (data: ListBsasRawData) => List(
     MtdTaxYearValidation.validate(data.taxYear, RuleTaxYearNotSupportedError)
   )
 

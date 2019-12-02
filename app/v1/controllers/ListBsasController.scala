@@ -50,7 +50,9 @@ class ListBsasController @Inject()(
 
   def listBsas(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+      println(request.request.headers.toMap("Raw-Request-URI"))
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
+      println(rawData)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
