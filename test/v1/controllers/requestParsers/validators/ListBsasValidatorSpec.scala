@@ -53,7 +53,7 @@ class ListBsasValidatorSpec extends UnitSpec {
         validator.validate(rawData.copy(taxYear = invalidTaxYear)) shouldBe List(RuleTaxYearRangeExceededError)
       }
       "a too early tax year is provided" in {
-        validator.validate(rawData.copy(taxYear = tooEarlyTaxYear)) shouldBe List(RuleTaxYearNotSupportedError)
+        validator.validate(rawData.copy(taxYear = tooEarlyTaxYear)) shouldBe List(RuleAccountingPeriodNotSupportedError)
       }
       "an invalid type of business is provided" in {
         validator.validate(rawData.copy(typeOfBusiness = Some(invalidTypeOfBusiness))) shouldBe List(TypeOfBusinessFormatError)

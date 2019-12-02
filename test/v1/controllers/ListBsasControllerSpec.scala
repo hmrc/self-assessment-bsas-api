@@ -25,11 +25,13 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.{Status, TypeOfBusiness}
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeExceededError, SelfEmploymentIdFormatError, TaxYearFormatError, TypeOfBusinessFormatError}
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{AccountingPeriod, DesTaxYear, ListBsasRawData, ListBsasRequest}
-import v1.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasResponse}
+import v1.models.response.ListBsasResponse
+import v1.models.response.listBsas.{BsasEntries, BusinessSourceSummary}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListBsasControllerSpec
@@ -98,7 +100,7 @@ class ListBsasControllerSpec
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe summaryJSON
+        contentAsJson(result) shouldBe summariesJSON
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }

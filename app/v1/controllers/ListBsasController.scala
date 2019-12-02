@@ -17,15 +17,16 @@
 package v1.controllers
 
 import cats.data.EitherT
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
 import v1.controllers.requestParsers.ListBsasRequestDataParser
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearRangeExceededError, TaxYearFormatError, TypeOfBusinessFormatError}
+import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeExceededError, SelfEmploymentIdFormatError, TaxYearFormatError, TypeOfBusinessFormatError}
 import v1.models.request.ListBsasRawData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -67,12 +68,13 @@ class ListBsasController @Inject()(
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         errorResult(errorWrapper).withApiHeaders(correlationId)
-        }.merge
+      }.merge
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | TypeOfBusinessFormatError | RuleTaxYearRangeExceededError=>
+      case BadRequestError | NinoFormatError | TaxYearFormatError | TypeOfBusinessFormatError
+           | RuleTaxYearRangeExceededError | RuleTaxYearNotSupportedError | SelfEmploymentIdFormatError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

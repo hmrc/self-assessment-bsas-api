@@ -142,7 +142,7 @@ class TriggerBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (RuleAccountingPeriodNotSupportedError, BAD_REQUEST),
           (StartDateFormatError, BAD_REQUEST),
           (EndDateFormatError, BAD_REQUEST),
           (TypeOfBusinessFormatError, BAD_REQUEST),

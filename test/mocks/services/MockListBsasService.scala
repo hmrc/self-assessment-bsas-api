@@ -23,7 +23,8 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.ListBsasRequest
-import v1.models.response.listBsas.ListBsasResponse
+import v1.models.response.ListBsasResponse
+import v1.services.ListBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
 

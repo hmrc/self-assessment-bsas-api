@@ -81,10 +81,10 @@ class TriggerBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | RuleTaxYearNotSupportedError
-          | StartDateFormatError | EndDateFormatError | TypeOfBusinessFormatError
-          | SelfEmploymentIdFormatError | SelfEmploymentIdRuleError
-          | EndBeforeStartDateError | RuleIncorrectOrEmptyBodyError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | RuleAccountingPeriodNotSupportedError
+           | StartDateFormatError | EndDateFormatError | TypeOfBusinessFormatError
+           | SelfEmploymentIdFormatError | SelfEmploymentIdRuleError
+           | EndBeforeStartDateError | RuleIncorrectOrEmptyBodyError => BadRequest(Json.toJson(errorWrapper))
       case RuleAccountingPeriodNotEndedError | RulePeriodicDataIncompleteError | RuleNoAccountingPeriodError =>
         Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
