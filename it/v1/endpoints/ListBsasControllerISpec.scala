@@ -1,0 +1,162 @@
+/*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package v1.endpoints
+
+import v1.fixtures.ListBsasFixtures._
+import play.api.http.HeaderNames.ACCEPT
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
+import play.api.libs.json.Json
+import play.api.libs.ws.{WSRequest, WSResponse}
+import support.IntegrationBaseSpec
+import v1.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError, TaxYearFormatError, TypeOfBusinessFormatError}
+import v1.models.request.DesTaxYear
+import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+
+class ListBsasControllerISpec extends IntegrationBaseSpec {
+
+  private trait Test {
+
+    val nino = "AA123456A"
+    val taxYear: String = "2018-19"
+    val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
+    val identifierValue: Option[String] = Some("01")
+    val typeOfBusiness: Option[String] = Some("self-employment")
+    val selfEmploymentId: String = "XAIS12345678901"
+    val correlationId = "X-123"
+    val desTaxYear: DesTaxYear = DesTaxYear("2019")
+
+    def uri: String = s"$nino/"
+
+    def desUrl: String = s"income-tax/adjustable-summary-calculation/$nino"
+
+    def setupStubs(): StubMapping
+
+    def request: WSRequest = {
+      setupStubs()
+      buildRequest(uri)
+        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+    }
+//    def request: WSRequest = {
+//      val queryParams: Seq[(String, String)] = (incomeSourceIdentifier, identifierValue ) match {
+//        case (Some(iSI), Some(iV)) => Seq("incomeSourceIdentifier" -> iSI, "identifierValue" -> iV, "taxYear" -> taxYear)
+//        case (Some(iSI), None) => Seq("incomeSourceIdentifier" -> iSI, "taxYear" -> taxYear)
+//        case (None, Some(iV)) => Seq("identifierValue" -> iV, "taxYear" -> taxYear)
+//        case (None, None) => Seq("taxYear" -> taxYear)
+//      }
+//
+//      setupStubs()
+//      buildRequest(desUrl)
+//        .addQueryStringParameters(queryParams: _*)
+//        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+//    }
+  }
+
+
+  "Calling the list Bsas endpoint" should {
+
+    "return a valid response with status OK" when {
+
+      "valid request is made" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.serviceSuccess(nino, taxYear)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJSON
+      }
+    }
+
+    "return error according to spec" when {
+
+      def validationErrorTest(requestNino: String, requestTaxYear: String,
+                              requestIncomeSourceIdentifier: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"validation fails with ${expectedBody.code} error" in new Test {
+
+          override val nino: String = requestNino
+          override val taxYear: String = requestTaxYear
+          override val incomeSourceIdentifier: Option[String] = requestIncomeSourceIdentifier
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+          }
+
+          val response: WSResponse = await(request.get)
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
+      }
+
+      val input = Seq(
+        ("AA1123A", "2018-19", Some("incomeSourceType"), BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "20177", Some("incomeSourceType"), BAD_REQUEST, TaxYearFormatError)
+      )
+
+      input.foreach(args => (validationErrorTest _).tupled(args))
+    }
+
+        "des service error" when {
+
+          def errorBody(code: String): String =
+            s"""{
+               |  "code": "$code",
+               |  "reason": "des message"
+               |}""".stripMargin
+
+          def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+            s"des returns an $desCode error and status $desStatus" in new Test {
+
+              override def setupStubs(): StubMapping = {
+                AuditStub.audit()
+                AuthStub.authorised()
+                MtdIdLookupStub.ninoFound(nino)
+                DesStub.serviceError(nino, taxYear, desStatus, errorBody(desCode))
+              }
+
+              val response: WSResponse = await(request.get)
+              response.status shouldBe expectedStatus
+              response.json shouldBe Json.toJson(expectedBody)
+              response.header("Content-Type") shouldBe Some("application/json")
+            }
+          }
+
+          val input = Seq(
+            (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
+            (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
+            (BAD_REQUEST, "INVALID_INCOMESOURCETYPE", BAD_REQUEST, TypeOfBusinessFormatError),
+            (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+            (BAD_REQUEST, "INVALID_INCOMESOURCEID", INTERNAL_SERVER_ERROR, DownstreamError),
+            (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
+            (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
+            (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
+            (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError)
+          )
+
+          input.foreach(args => (serviceErrorTest _).tupled(args))
+      }
+  }
+}
