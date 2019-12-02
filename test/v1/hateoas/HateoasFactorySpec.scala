@@ -30,6 +30,8 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
   case class Response(foo: String)
   case class ListResponse[A](items: Seq[A])
 
+  case class NestedListResponse[A](items: Seq[ListResponse[A]])
+
   case class Data1(id: String) extends HateoasData
   case class Data2(id: String) extends HateoasData
 
@@ -74,6 +76,38 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
     "work" in new Test {
       hateoasFactory.wrapList(ListResponse(Seq(response)), Data1("id")) shouldBe
         HateoasWrapper(ListResponse(Seq(HateoasWrapper(response, Seq(Link("context/id/X", GET, "item"))))), Seq(Link("context/id", GET, "rel")))
+    }
+  }
+
+  "wrapNestedList" should {
+    implicit object NestedListResponseFunctor extends Functor[NestedListResponse] {
+      override def map[A, B](fa: NestedListResponse[A])(f: A => B): NestedListResponse[B] = NestedListResponse(fa.items.map {
+          s => ListResponse(s.items.map(f))
+       }
+      )
+    }
+    implicit object LinksFactory extends HateoasListLinksFactory[NestedListResponse, Response, Data1] {
+      override def itemLinks(appConfig: AppConfig, data: Data1, item: Response): Seq[Link] =
+        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}/${item.foo}", GET, "item"))
+
+      override def links(appConfig: AppConfig, data: Data1): Seq[Link] = Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel"))
+    }
+
+    "work" in new Test {
+      val nestedItems = ListResponse(Seq(Data2("id1"), Data2("id2")))
+      val nestedListReponse = NestedListResponse(Seq(nestedItems))
+
+      val hateoasResponse: HateoasWrapper[NestedListResponse[HateoasWrapper[Response]]] =
+        HateoasWrapper(
+          NestedListResponse(
+            Seq(ListResponse(
+              Seq(HateoasWrapper(response, Seq(Link("context/id/X", GET, "item"))))
+            ))
+          ),
+          Seq(Link("context/id", GET, "rel"))
+        )
+
+      hateoasFactory.wrapList(NestedListResponse(Seq(ListResponse(Seq(response)))), Data1("id")) shouldBe hateoasResponse
     }
   }
 }
