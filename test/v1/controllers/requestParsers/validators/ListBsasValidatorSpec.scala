@@ -24,12 +24,12 @@ class ListBsasValidatorSpec extends UnitSpec {
 
   val validator = new ListBsasValidator()
   private val nino = "AA123456B"
-  private val taxYear = "2018-19"
+  private val taxYear = "2019-20"
   private val typeOfBusiness = "uk-property-fhl"
   private val selfEmploymentId = "XAIS12345678901"
   private val invalidNino = "not a nino"
   private val invalidTaxYear = "2018-20"
-  private val tooEarlyTaxYear = "2016-17"
+  private val tooEarlyTaxYear = "2018-19"
   private val invalidTypeOfBusiness = "toothpicks-for-hamsters"
   private val invalidSelfEmploymentId = "Not a SelfEmploymentId"
   private val rawData: ListBsasRawData = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))

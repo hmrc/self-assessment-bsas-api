@@ -32,7 +32,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino = "AA123456B"
-    val taxYear: String = "2018-19"
+    val taxYear: String = "2019-20"
     val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
     val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
@@ -110,12 +110,12 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
+        ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
-        ("AA123456A", "2018-19", Some("self-employment"), Some("XAI901"), BAD_REQUEST, SelfEmploymentIdFormatError),
-        ("AA123456A", "2018-19", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
-        ("AA123456A", "2015-16", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2018-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeExceededError)
+        ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
+        ("AA123456A", "2019-20", Some("self-employment"), Some("XAI901"), BAD_REQUEST, SelfEmploymentIdFormatError),
+        ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
+        ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeExceededError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
