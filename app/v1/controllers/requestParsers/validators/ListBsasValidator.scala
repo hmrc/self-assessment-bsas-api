@@ -16,12 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.FixedConfig
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import v1.models.request.ListBsasRawData
 
 
-class ListBsasValidator extends Validator[ListBsasRawData] {
+class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -34,7 +35,7 @@ class ListBsasValidator extends Validator[ListBsasRawData] {
 
 
   private def parameterRuleValidation: ListBsasRawData => List[List[MtdError]] = (data: ListBsasRawData) => List(
-    MtdTaxYearValidation.validate(data.taxYear, RuleTaxYearNotSupportedError)
+    MtdTaxYearValidation.validate(data.taxYear, RuleTaxYearNotSupportedError, listMinimumTaxYear)
   )
 
   override def validate(data: ListBsasRawData): List[MtdError] = run(validationSet, data).distinct

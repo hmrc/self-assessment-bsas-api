@@ -27,7 +27,7 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
 
 
   private val nino = "AA123456B"
-  private val taxYear = "2018-19"
+  private val taxYear = "2019-20"
   private val typeOfBusiness = "self-employment"
   private val typeOfBusinessTwo = "uk-property-non-fhl"
   private val typeOfBusinessThree = "uk-property-fhl"
