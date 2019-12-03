@@ -7,7 +7,7 @@ traits:
   taxYearOptional:
     queryParameters:
       taxYear:
-        description: 'The tax year to which the data applies, in the format YYYY-YY. If no tax year is supplied, then it will default to the current tax year.'
+        description: 'The tax year the data applies to.<br>The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid. The minimum tax year is 2019-20.'
         example: "2019-20"
         required: false
   selfEmploymentIdOptional:
