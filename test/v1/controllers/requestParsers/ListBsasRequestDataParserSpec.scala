@@ -27,11 +27,11 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
 
   private val nino = "AA123456B"
   private val taxYear = "2018-19"
-  private val typeOfBusiness ="self-employment"
+  private val incomeSourceIdentfier ="incomeSourceId"
   private val selfEmploymentId = "XAIS12345678901"
 
 
-  private val inputData = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))
+  private val inputData = ListBsasRawData(nino, taxYear, Some(incomeSourceIdentfier), Some(selfEmploymentId))
 
   trait Test extends MockListBsasValidator {
     lazy val parser = new ListBsasRequestDataParser(mockValidator)
@@ -44,7 +44,7 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
         MockValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(typeOfBusiness), Some(selfEmploymentId)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceIdentfier), Some(selfEmploymentId)))
       }
     }
 
