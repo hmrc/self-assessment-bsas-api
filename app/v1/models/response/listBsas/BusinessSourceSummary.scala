@@ -21,19 +21,19 @@ import play.api.libs.json._
 import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v1.models.request.AccountingPeriod
 
-case class BusinessSourceSummary(typeOfBusiness: TypeOfBusiness,
+case class BusinessSourceSummary[I](typeOfBusiness: TypeOfBusiness,
                                  selfEmploymentId: Option[String],
                                  accountingPeriod: AccountingPeriod,
-                                 bsasEntries: Seq[BsasEntries])
+                                 bsasEntries: Seq[I])
 
 object BusinessSourceSummary {
 
-  implicit val reads: Reads[BusinessSourceSummary] = (
+  implicit def reads[I: Reads]: Reads[BusinessSourceSummary[I]] = (
     (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       (JsPath \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriod](AccountingPeriod.desReads) and
-      (JsPath \ "ascCalculations").read[Seq[BsasEntries]]
-    )(BusinessSourceSummary.apply _)
+      (JsPath \ "ascCalculations").read[Seq[I]]
+    )(BusinessSourceSummary.apply(_,_,_,_))
 
-  implicit val writes: OWrites[BusinessSourceSummary] = Json.writes[BusinessSourceSummary]
+  implicit def writes[I: Writes]: OWrites[BusinessSourceSummary[I]] = Json.writes[BusinessSourceSummary[I]]
 }

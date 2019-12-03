@@ -37,6 +37,15 @@ class HateoasFactory @Inject()(appConfig: AppConfig) {
 
     HateoasWrapper(hateoasList, lf.links(appConfig, data))
   }
+
+
+  def wrapNestedList[Obj[_]: Functor, Iter[_]: Functor, NestedObj, Data](payload: Obj[Iter[NestedObj]], data: Data)(
+    implicit listFactory: HateoasListLinksFactory[Obj, NestedObj, Data]): HateoasWrapper[Obj[Iter[HateoasWrapper[NestedObj]]]] = {
+
+    val inner = payload.map(_.map(nestedObject => HateoasWrapper(nestedObject, listFactory.itemLinks(appConfig, data, nestedObject))))
+
+    HateoasWrapper(inner, listFactory.links(appConfig, data))
+  }
 }
 
 trait HateoasLinksFactory[A, D] {

@@ -24,8 +24,10 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
 import v1.controllers.requestParsers.ListBsasRequestDataParser
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeExceededError, SelfEmploymentIdFormatError, TaxYearFormatError, TypeOfBusinessFormatError}
+import v1.hateoas.HateoasFactory
+import v1.models.errors._
 import v1.models.request.ListBsasRawData
+import v1.models.response.listBsas.ListBsasHateoasData
 import v1.services.{EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,6 +38,7 @@ class ListBsasController @Inject()(
                                     val lookupService: MtdIdLookupService,
                                     requestParser: ListBsasRequestDataParser,
                                     service: ListBsasService,
+                                    hateoasFactory: HateoasFactory,
                                     cc: ControllerComponents
                                   )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -56,13 +59,18 @@ class ListBsasController @Inject()(
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response <- EitherT(service.listBsas(parsedRequest))
+          hateoasResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrapList(response.responseData, ListBsasHateoasData(nino, Some(taxYear), typeOfBusiness, selfEmploymentId))
+              .asRight[ErrorWrapper]
+          )
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(response.responseData))
+          Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }

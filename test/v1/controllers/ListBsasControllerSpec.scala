@@ -28,8 +28,7 @@ import v1.models.domain.{Status, TypeOfBusiness}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{AccountingPeriod, DesTaxYear, ListBsasRawData, ListBsasRequest}
-import v1.models.response.ListBsasResponse
-import v1.models.response.listBsas.{BsasEntries, BusinessSourceSummary}
+import v1.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

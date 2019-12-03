@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, ListBsasConnector}
 import v1.models.request.ListBsasRequest
-import v1.models.response.ListBsasResponse
+import v1.models.response.listBsas.ListBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
