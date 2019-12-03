@@ -20,11 +20,29 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.ListBsasValidator
+import v1.controllers.requestParsers.validators.validations.TypeOfBusinessValidation
+import v1.models.domain.TypeOfBusiness
 import v1.models.request.{DesTaxYear, ListBsasRawData, ListBsasRequest}
 
 class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator)
   extends RequestParser[ListBsasRawData, ListBsasRequest] {
 
-  override protected def requestFor(data: ListBsasRawData): ListBsasRequest =
-    ListBsasRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.typeOfBusiness, data.selfEmploymentId)
+  override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
+
+    val incomeSourceIdentifier = (data.selfEmploymentId, data.typeOfBusiness) match {
+      case (Some(_), _) => Some("incomeSourceId")
+      case (None, Some(_)) => Some("incomeSourceType")
+      case (None, None) => None
+    }
+    val identifierValue: Option[String] = if(data.selfEmploymentId.isDefined) data.selfEmploymentId else data.typeOfBusiness match {
+      case Some(TypeOfBusinessValidation.selfEmployed) => Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
+      case Some(TypeOfBusinessValidation.ukPropertyFHL) => Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)
+      case Some(TypeOfBusinessValidation.ukPropertyNonFHL) => Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)
+      case _ => None
+    }
+
+
+
+    ListBsasRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), incomeSourceIdentifier, identifierValue)
+  }
 }
