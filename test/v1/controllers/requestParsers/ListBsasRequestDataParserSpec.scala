@@ -36,7 +36,8 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
   private val selfEmploymentId = "XAIS12345678901"
 
 
-  private val inputData = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))
+  private val inputWithSelfEmploymentIdAndTypeOfBusiness = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))
+  private val inputWithSelfEmploymentId = ListBsasRawData(nino, taxYear, None, Some(selfEmploymentId))
   private val inputDataTwo = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), None)
   private val inputDataThree = ListBsasRawData(nino, taxYear, Some(typeOfBusinessTwo), None)
   private val inputDataFour = ListBsasRawData(nino, taxYear, Some(typeOfBusinessThree), None)
@@ -47,16 +48,24 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
   }
 
 
-  "parse" should {
-    "return a request object" when {
-      "valid selfEmploymentId is provided" in new Test {
-        MockValidator.validate(inputData).returns(Nil)
+  "parse" when {
+    "a valid selfEmploymentId is provided" should {
+      "return a valid object if no typeOfBusiness is provided" in new Test {
+        MockValidator.validate(inputWithSelfEmploymentIdAndTypeOfBusiness).returns(Nil)
 
-        parser.parseRequest(inputData) shouldBe
+        parser.parseRequest(inputWithSelfEmploymentIdAndTypeOfBusiness) shouldBe
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(selfEmploymentId)))
       }
+      "return a valid object if a typeOfBusiness is provided" in new Test {
+        MockValidator.validate(inputWithSelfEmploymentId).returns(Nil)
 
-      "valid self-employment is provided" in new Test {
+        parser.parseRequest(inputWithSelfEmploymentId) shouldBe
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(selfEmploymentId)))
+      }
+    }
+
+    "no selfEmploymentId is provided" should {
+      "return a valid object with self-employment" in new Test {
 
         MockValidator.validate(inputDataTwo).returns(Nil)
 
@@ -64,7 +73,7 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`self-employment`.toIdentifierValue)))
       }
 
-      "valid uk property non fhl is provided" in new Test {
+      "return a valid object with uk-property-non-fhl" in new Test {
 
         MockValidator.validate(inputDataThree).returns(Nil)
 
@@ -72,15 +81,17 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)))
       }
 
-      "valid uk property fhl is provided" in new Test {
+      "return a valid object with uk-property-fhl" in new Test {
 
         MockValidator.validate(inputDataFour).returns(Nil)
 
         parser.parseRequest(inputDataFour) shouldBe
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)))
       }
+    }
 
-      "valid data with no optionals is provided" in new Test {
+    "no query parameters are sent" should {
+      "return a valid object with no incomeSourceType or identifierValue" in new Test {
 
         MockValidator.validate(inputDataFive).returns(Nil)
 
@@ -91,15 +102,15 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
 
     "return an ErrorWrapper" when {
       "a single error is found" in new Test {
-        MockValidator.validate(inputData).returns(List(NinoFormatError))
+        MockValidator.validate(inputWithSelfEmploymentIdAndTypeOfBusiness).returns(List(NinoFormatError))
 
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, NinoFormatError))
+        parser.parseRequest(inputWithSelfEmploymentIdAndTypeOfBusiness) shouldBe Left(ErrorWrapper(None, NinoFormatError))
       }
 
       "a multiple errors are found" in new Test {
-        MockValidator.validate(inputData).returns(List(NinoFormatError, TaxYearFormatError))
+        MockValidator.validate(inputWithSelfEmploymentIdAndTypeOfBusiness).returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
+        parser.parseRequest(inputWithSelfEmploymentIdAndTypeOfBusiness) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
       }
     }
   }
