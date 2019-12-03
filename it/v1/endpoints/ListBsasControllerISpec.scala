@@ -110,12 +110,12 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "2018-19", Some("self-employment"), Some("XAIS12345678901"), BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "20177", Some("self-employment"), Some("XAIS12345678901"), BAD_REQUEST, TaxYearFormatError),
+        ("AA1123A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", Some("self-employment"), Some("XAI901"), BAD_REQUEST, SelfEmploymentIdFormatError),
-        ("AA123456A", "2018-19", Some("self-employments-or-not"), Some("XAIS12345678901"), BAD_REQUEST, TypeOfBusinessFormatError),
-        ("AA123456A", "2015-16", Some("self-employment"), Some("XAIS12345678901"), BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2018-20", Some("self-employment"), Some("XAIS12345678901"), BAD_REQUEST, RuleTaxYearRangeExceededError)
+        ("AA123456A", "2018-19", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
+        ("AA123456A", "2015-16", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
+        ("AA123456A", "2018-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeExceededError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
