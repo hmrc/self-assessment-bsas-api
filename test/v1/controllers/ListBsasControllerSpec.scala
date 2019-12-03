@@ -58,7 +58,7 @@ class ListBsasControllerSpec
 
 
   private val nino = "AA123456A"
-  private val taxYear = "2018-19"
+  private val taxYear = Some("2019-20")
   private val typeOfBusiness = Some("uk-property-fhl")
   private val selfEmploymentId = Some("XAIS12345678901")
   private val secondTypeOfBusiness = "uk-property-non-fhl"

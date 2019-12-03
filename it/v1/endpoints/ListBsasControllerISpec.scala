@@ -30,9 +30,8 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class ListBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-
     val nino = "AA123456B"
-    val taxYear: String = "2019-20"
+    val taxYear: Option[String] = Some("2019-20")
     val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
     val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
@@ -48,13 +47,10 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
     def request: WSRequest = {
 
-      val queryParams: Seq[(String, String)] = (typeOfBusiness, selfEmploymentId) match {
-                case (Some(x), Some(y)) => Seq("typeOfBusiness" -> x, "selfEmploymentId" -> y, "taxYear" -> taxYear)
-                case (Some(x), None) => Seq("typeOfBusiness" -> x, "taxYear" -> taxYear)
-                case (None, Some(y)) => Seq("selfEmploymentId" -> y, "taxYear" -> taxYear)
-                case (None, None) => Seq("taxYear" -> taxYear)
-      }
-
+      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "selfEmploymentId" -> selfEmploymentId, "taxYear" -> taxYear)
+        .collect {
+          case (k, Some(v)) => (k, v)
+        }
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
@@ -82,6 +78,24 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe summariesJSON
       }
+
+      "valid request is made without a tax year" in new Test {
+
+        override val taxYear: Option[String] = None
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSON)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJSON
+      }
     }
 
     "return error according to spec" when {
@@ -92,7 +106,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
-          override val taxYear: String = requestTaxYear
+          override val taxYear: Option[String] = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
           override val selfEmploymentId: Option[String] = requestSelfEmploymentID
 
@@ -121,43 +135,43 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
-        "des service error" when {
+    "des service error" when {
 
-          def errorBody(code: String): String =
-            s"""{
-               |  "code": "$code",
-               |  "reason": "des message"
-               |}""".stripMargin
+      def errorBody(code: String): String =
+        s"""{
+           |  "code": "$code",
+           |  "reason": "des message"
+           |}""".stripMargin
 
-          def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-            s"des returns an $desCode error and status $desStatus" in new Test {
+      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"des returns an $desCode error and status $desStatus" in new Test {
 
-              override def setupStubs(): StubMapping = {
-                AuditStub.audit()
-                AuthStub.authorised()
-                MtdIdLookupStub.ninoFound(nino)
-                DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
-              }
-
-              val response: WSResponse = await(request.get)
-              response.status shouldBe expectedStatus
-              response.json shouldBe Json.toJson(expectedBody)
-              response.header("Content-Type") shouldBe Some("application/json")
-            }
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
-          val input = Seq(
-            (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-            (BAD_REQUEST, "INVALID_TAXYEAR", INTERNAL_SERVER_ERROR, DownstreamError),
-            (BAD_REQUEST, "INVALID_INCOMESOURCE_IDENTIFIER", INTERNAL_SERVER_ERROR, DownstreamError),
-            (BAD_REQUEST, "INVALID_IDENTIFIER_VALUE", INTERNAL_SERVER_ERROR, DownstreamError),
-            (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
-            (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-            (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-            (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError)
-          )
-
-          input.foreach(args => (serviceErrorTest _).tupled(args))
+          val response: WSResponse = await(request.get)
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
       }
+
+      val input = Seq(
+        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_TAXYEAR", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_INCOMESOURCE_IDENTIFIER", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_IDENTIFIER_VALUE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError)
+      )
+
+      input.foreach(args => (serviceErrorTest _).tupled(args))
+    }
   }
 }

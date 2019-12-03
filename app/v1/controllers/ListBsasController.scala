@@ -48,8 +48,9 @@ class ListBsasController @Inject()(
       endpointName = "listBsas"
     )
 
-  def listBsas(nino: String, taxYear: String, typeOfBusiness: Option[String], selfEmploymentId: Option[String]): Action[AnyContent] =
+  def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
       val result =
         for {
