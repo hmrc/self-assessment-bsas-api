@@ -41,7 +41,12 @@ class ListBsasConnector @Inject()(val http: HttpClient,
       "taxYear" -> request.taxYear.toString,
       "incomeSourceIdentifier" -> request.incomeSourceIdentifier,
       "identifierValue" -> request.identifierValue
-    ).filterNot { case (_, v) => v.isInstanceOf[Option[String]] && v.asInstanceOf[Option[String]].isEmpty}
+    ).filter { // filter for ...
+      case (_, v) =>
+        v.isInstanceOf[String] || // ... if value is String or ...
+          (v.isInstanceOf[Some[Any]] && // ... not None and ...
+            v.asInstanceOf[Some[Any]].exists(_.isInstanceOf[String])) // ... is Some[String] (need to split up due to type erasure)
+    }
 
     def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
       case (k: String, Some(v: String)) => (k, v)
