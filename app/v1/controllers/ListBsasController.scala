@@ -25,6 +25,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
 import v1.controllers.requestParsers.ListBsasRequestDataParser
 import v1.hateoas.HateoasFactory
+import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.request.ListBsasRawData
 import v1.models.response.listBsas.ListBsasHateoasData
@@ -61,7 +62,7 @@ class ListBsasController @Inject()(
           response <- EitherT(service.listBsas(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrapList(response.responseData, ListBsasHateoasData(nino, Some(taxYear), typeOfBusiness, selfEmploymentId))
+              .wrapList(response.responseData, ListBsasHateoasData(nino, response.responseData))
               .asRight[ErrorWrapper]
           )
         } yield {

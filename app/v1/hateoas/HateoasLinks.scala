@@ -45,18 +45,20 @@ trait HateoasLinks {
     bsasBasUri(appConfig, nino) + s"/property/$bsasId/adjust"
 
   //API resource links
-  def listBsas(appConfig: AppConfig, nino: String): Link =
-    Link(href = listUri(appConfig, nino), method = GET, rel = SELF)
 
+  //L1
   def triggerBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = triggerUri(appConfig, nino), method = POST, rel = TRIGGER)
 
+  //L2
   def getSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 
+  //L3
   def getPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = propertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 
+  //L4
   def adjustSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
       href = selfEmploymentAdjustmentUri(appConfig, nino, bsasId),
@@ -64,6 +66,7 @@ trait HateoasLinks {
       rel = SUBMIT_ADJUSTMENTS
     )
 
+  //L5
   def adjustPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
       href = propertyAdjustmentUri(appConfig, nino, bsasId),
@@ -71,6 +74,7 @@ trait HateoasLinks {
       rel = SUBMIT_ADJUSTMENTS
     )
 
+  //L6
   def getSelfEmploymentBsasAdjustments(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
       href = selfEmploymentAdjustmentUri(appConfig, nino, bsasId),
@@ -78,10 +82,15 @@ trait HateoasLinks {
       rel = SELF
     )
 
+  //L7
   def getPropertyBsasAdjustments(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
       href = propertyAdjustmentUri(appConfig, nino, bsasId),
       method = GET,
       rel = SELF
     )
+
+  //L8
+  def listBsas(appConfig: AppConfig, nino: String): Link =
+    Link(href = listUri(appConfig, nino), method = GET, rel = SELF)
 }

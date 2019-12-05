@@ -26,6 +26,10 @@ sealed trait TypeOfBusiness {
 //noinspection ScalaStyle
 object TypeOfBusiness {
 
+  val ukPropertyFHL: String = "uk-property-fhl"
+  val ukPropertyNonFHL: String = "uk-property-non-fhl"
+  val selfEmployment: String = "self-employment"
+
   case object `self-employment` extends TypeOfBusiness {
     override def toIdentifierValue: String = "01"
   }

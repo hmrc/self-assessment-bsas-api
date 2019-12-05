@@ -19,18 +19,19 @@ package v1.models.response
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v1.fixtures.ListBsasFixtures._
-import v1.models.response.listBsas.ListBsasResponse
+import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 class ListBsasResponseSpec extends UnitSpec {
 
   "BusinessSourceSummaries" should {
 
     "write correctly to json" in {
+
       Json.toJson(summaryModel) shouldBe summariesJSON
     }
 
     "read correctly to json" in {
-      summariesFromDesJSON.validate[ListBsasResponse] shouldBe JsSuccess(summaryModel)
+      summariesFromDesJSONSingle.validate[ListBsasResponse[BsasEntries]] shouldBe JsSuccess(summaryModel)
     }
   }
 }

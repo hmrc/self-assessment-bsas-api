@@ -78,38 +78,4 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
         HateoasWrapper(ListResponse(Seq(HateoasWrapper(response, Seq(Link("context/id/X", GET, "item"))))), Seq(Link("context/id", GET, "rel")))
     }
   }
-
-  "wrapNestedList" should {
-
-    "work" in new Test {
-
-      implicit object NestedListResponseFunctor extends Functor[NestedListResponse] {
-        override def map[A, B](fa: NestedListResponse[A])(f: A => B): NestedListResponse[B] = NestedListResponse(fa.field, fa.items.map(f))
-      }
-
-      implicit object OptionFunctor extends Functor[Option] {
-        override def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa.map(f)
-      }
-
-      implicit object LinksFactory extends HateoasListLinksFactory[NestedListResponse, Response, Data1] {
-        override def itemLinks(appConfig: AppConfig, data: Data1, item: Response): Seq[Link] =
-          Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}/${item.foo}", GET, "item"))
-
-        override def links(appConfig: AppConfig, data: Data1): Seq[Link] = Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel"))
-      }
-
-      val req: NestedListResponse[Option[Response]] = NestedListResponse("foo", Seq(Some(Response("bar")), Some(Response("baz"))))
-      val res: HateoasWrapper[NestedListResponse[Option[HateoasWrapper[Response]]]] =
-        HateoasWrapper(
-          NestedListResponse(
-            "foo", Seq(
-              Some(HateoasWrapper(Response("bar"), Seq(Link("context/id/bar", GET, "item")))),
-              Some(HateoasWrapper(Response("baz"), Seq(Link("context/id/baz", GET, "item"))))
-            )
-          ), Seq(Link("context/id", GET, "rel"))
-        )
-
-      hateoasFactory.wrapNestedList[NestedListResponse, Option, Response, Data1](req, Data1("id")) shouldBe res
-    }
-  }
 }

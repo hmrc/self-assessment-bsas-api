@@ -93,7 +93,7 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val summaryFromDesJSON: JsValue = Json.parse(
+  val summaryFromDesJSONSE: JsValue = Json.parse(
     """
       |{
       | "incomeSourceType": "01",
@@ -103,6 +103,42 @@ object ListBsasFixtures {
       | "ascCalculations": [
       |     {
       |       "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |       "requestedDateTime": "2019-10-14T11:33:27Z",
+      |       "status": "valid",
+      |       "adjusted": false
+      |     }
+      |   ]
+      | }
+      |""".stripMargin
+  )
+
+  val summaryFromDesJSONUkFhl: JsValue = Json.parse(
+    """
+      |{
+      | "incomeSourceType": "04",
+      | "accountingStartDate": "2018-10-11",
+      | "accountingEndDate": "2019-10-10",
+      | "ascCalculations": [
+      |     {
+      |       "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+      |       "requestedDateTime": "2019-10-14T11:33:27Z",
+      |       "status": "valid",
+      |       "adjusted": false
+      |     }
+      |   ]
+      | }
+      |""".stripMargin
+  )
+
+  val summaryFromDesJSONUkNonFhl: JsValue = Json.parse(
+    """
+      |{
+      | "incomeSourceType": "02",
+      | "accountingStartDate": "2018-10-11",
+      | "accountingEndDate": "2019-10-10",
+      | "ascCalculations": [
+      |     {
+      |       "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
       |       "requestedDateTime": "2019-10-14T11:33:27Z",
       |       "status": "valid",
       |       "adjusted": false
@@ -137,7 +173,96 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val summariesFromDesJSON = JsArray(Seq(summaryFromDesJSON))
+  val summariesJSONWithHateoas: String => JsValue = nino => Json.parse(
+    s"""
+      |{
+      |  "businessSourceSummaries": [
+      |    {
+      |      "typeOfBusiness": "self-employment",
+      |      "selfEmploymentId": "000000000000210",
+      |      "accountingPeriod": {
+      |        "startDate": "2018-10-11",
+      |        "endDate": "2019-10-10"
+      |      },
+      |      "bsasEntries": [
+      |        {
+      |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |          "requestedDateTime": "2019-10-14T11:33:27Z",
+      |          "summaryStatus": "valid",
+      |          "adjustedSummary": false,
+      |          "links": [
+      |            {
+      |              "href": "/individuals/self-assessment/accounting-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |              "method": "GET",
+      |              "rel": "self"
+      |            }
+      |          ]
+      |        }
+      |      ]
+      |    },
+      |    {
+      |      "typeOfBusiness": "uk-property-fhl",
+      |      "accountingPeriod": {
+      |        "startDate": "2018-10-11",
+      |        "endDate": "2019-10-10"
+      |      },
+      |      "bsasEntries": [
+      |        {
+      |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+      |          "requestedDateTime": "2019-10-14T11:33:27Z",
+      |          "summaryStatus": "valid",
+      |          "adjustedSummary": false,
+      |          "links": [
+      |            {
+      |              "href": "/individuals/self-assessment/accounting-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+      |              "method": "GET",
+      |              "rel": "self"
+      |            }
+      |          ]
+      |        }
+      |      ]
+      |    },
+      |    {
+      |      "typeOfBusiness": "uk-property-non-fhl",
+      |      "accountingPeriod": {
+      |        "startDate": "2018-10-11",
+      |        "endDate": "2019-10-10"
+      |      },
+      |      "bsasEntries": [
+      |        {
+      |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+      |          "requestedDateTime": "2019-10-14T11:33:27Z",
+      |          "summaryStatus": "valid",
+      |          "adjustedSummary": false,
+      |          "links": [
+      |            {
+      |              "href": "/individuals/self-assessment/accounting-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+      |              "method": "GET",
+      |              "rel": "self"
+      |            }
+      |          ]
+      |        }
+      |      ]
+      |    }
+      |  ],
+      |  "links": [
+      |    {
+      |      "href": "/individuals/self-assessment/accounting-summary/$nino/trigger",
+      |      "method": "POST",
+      |      "rel": "trigger-business-source-accounting-summary"
+      |    },
+      |    {
+      |      "href": "/individuals/self-assessment/accounting-summary/$nino",
+      |      "method": "GET",
+      |      "rel": "self"
+      |    }
+      |  ]
+      |}
+      |""".stripMargin
+  )
+
+  val summariesFromDesJSONSingle = JsArray(Seq(summaryFromDesJSONSE))
+  val summariesFromDesJSONMultiple = JsArray(Seq(summaryFromDesJSONSE, summaryFromDesJSONUkFhl, summaryFromDesJSONUkNonFhl))
 
   val summaryModel =
     ListBsasResponse(

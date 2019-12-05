@@ -49,7 +49,7 @@ class BusinessSourceSummarySpec extends UnitSpec {
     }
 
     "read correctly to json" in {
-      summaryFromDesJSON.validate[BusinessSourceSummary] shouldBe JsSuccess(model)
+      summaryFromDesJSONSE.validate[BusinessSourceSummary[BsasEntries]] shouldBe JsSuccess(model)
     }
   }
 }

@@ -20,8 +20,8 @@ import cats.Functor
 import config.AppConfig
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
 import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
-import v1.models.hateoas.Link
-import v1.models.hateoas.Method.GET
+import v1.models.domain.TypeOfBusiness
+import v1.models.hateoas.{HateoasData, Link}
 
 case class ListBsasResponse[I](businessSourceSummaries: Seq[BusinessSourceSummary[I]])
 
@@ -33,10 +33,20 @@ object ListBsasResponse extends HateoasLinks {
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListBsasResponse, BsasEntries, ListBsasHateoasData] {
     override def links(appConfig: AppConfig, data: ListBsasHateoasData): Seq[Link] =
-      Seq(Link("/foo", GET, ""))
+      Seq(triggerBsas(appConfig, data.nino), listBsas(appConfig, data.nino))
 
-    override def itemLinks(appConfig: AppConfig, data: ListBsasHateoasData, item: BsasEntries): Seq[Link] =
-      Seq(Link("/bar", GET, ""))
+    override def itemLinks(appConfig: AppConfig, data: ListBsasHateoasData, item: BsasEntries): Seq[Link] = {
+      val filteredSummary: Seq[BusinessSourceSummary[BsasEntries]] = data.listBsasResponse.businessSourceSummaries.filter(_.bsasEntries.contains(item))
+
+      filteredSummary.flatMap(summary =>
+        summary.bsasEntries.filter(_ == item).flatMap(_ =>
+          summary.typeOfBusiness match {
+            case TypeOfBusiness.`self-employment` => Seq(getSelfEmploymentBsas(appConfig, data.nino, item.bsasId))
+            case TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` => Seq(getPropertyBsas(appConfig, data.nino, item.bsasId))
+          }
+        )
+      )
+    }
   }
 
   implicit object ResponseFunctor extends Functor[ListBsasResponse] {
@@ -48,4 +58,5 @@ object ListBsasResponse extends HateoasLinks {
 
 }
 
-case class ListBsasHateoasData(nino: String, taxYear: Option[String], selfEmploymentId: Option[String], incomeSourceType: Option[String])
+case class ListBsasHateoasData(nino: String, listBsasResponse: ListBsasResponse[BsasEntries]) extends HateoasData
+

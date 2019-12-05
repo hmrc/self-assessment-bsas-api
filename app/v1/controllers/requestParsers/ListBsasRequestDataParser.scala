@@ -38,9 +38,9 @@ class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator,
       case (None, None) => None
     }
     val identifierValue: Option[String] = if(data.selfEmploymentId.isDefined) data.selfEmploymentId else data.typeOfBusiness match {
-      case Some(TypeOfBusinessValidation.selfEmployed) => Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
-      case Some(TypeOfBusinessValidation.ukPropertyFHL) => Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)
-      case Some(TypeOfBusinessValidation.ukPropertyNonFHL) => Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)
+      case Some(TypeOfBusiness.selfEmployment) => Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
+      case Some(TypeOfBusiness.ukPropertyFHL) => Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)
+      case Some(TypeOfBusiness.ukPropertyNonFHL) => Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)
       case _ => None
     }
 
