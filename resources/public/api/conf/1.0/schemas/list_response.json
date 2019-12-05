@@ -57,11 +57,79 @@
                   "description": "Indicates whether the original summary calculation has had adjustments applied",
                   "type": "boolean",
                   "example": "false"
+                },
+                "links": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+                    "properties": {
+                      "href": {
+                        "description": "The relative url of the endpoint.",
+                        "type": "string",
+                        "example": "/individuals/self-assessment/accounting-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+                      },
+                      "rel": {
+                        "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
+                        "type": "string",
+                        "enum": [
+                          "self"
+                        ]
+                      },
+                      "method": {
+                        "description": "The HTTP method type for the endpoint.",
+                        "type": "string",
+                        "enum": [
+                          "GET"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "href",
+                      "rel",
+                      "method"
+                    ]
+                  }
                 }
               }
             }
           }
         }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative url of the endpoint.",
+            "type": "string",
+            "example": "/individuals/self-assessment/accounting-summary/AA123456A/trigger"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "trigger-business-source-accounting-summary"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
       }
     }
   },
