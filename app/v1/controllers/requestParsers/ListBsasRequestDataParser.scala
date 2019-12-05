@@ -37,16 +37,18 @@ class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator,
       case (None, Some(_)) => Some("incomeSourceType")
       case (None, None) => None
     }
-    val identifierValue: Option[String] = if(data.selfEmploymentId.isDefined) data.selfEmploymentId else data.typeOfBusiness match {
-      case Some(TypeOfBusiness.selfEmployment) => Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
-      case Some(TypeOfBusiness.ukPropertyFHL) => Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)
-      case Some(TypeOfBusiness.ukPropertyNonFHL) => Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)
-      case _ => None
+
+    val identifierValue: Option[String] = if(data.selfEmploymentId.isDefined) data.selfEmploymentId else data.typeOfBusiness.map(TypeOfBusiness.parser).map {
+      case TypeOfBusiness.`self-employment` => TypeOfBusiness.`self-employment`.toIdentifierValue
+      case TypeOfBusiness.`uk-property-fhl` => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
+      case TypeOfBusiness.`uk-property-non-fhl` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
     }
 
-    ListBsasRequest(Nino(data.nino),
-      data.taxYear.fold(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDesTaxYear),
-      incomeSourceIdentifier,
-      identifierValue)
+    ListBsasRequest(
+      nino = Nino(data.nino),
+      taxYear = data.taxYear.fold(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDesTaxYear),
+      incomeSourceIdentifier = incomeSourceIdentifier,
+      identifierValue = identifierValue
+    )
   }
 }
