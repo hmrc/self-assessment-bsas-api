@@ -69,14 +69,14 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSON)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONMultiple)
         }
 
         val response: WSResponse = await(request.get)
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSON
+        response.json shouldBe summariesJSONWithHateoas(nino)
       }
 
       "valid request is made without a tax year" in new Test {
