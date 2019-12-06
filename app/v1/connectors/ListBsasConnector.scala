@@ -38,17 +38,13 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
 
     val queryParams = Map(
-      "taxYear" -> request.taxYear.toString,
+      "taxYear" -> Some(request.taxYear.toString),
       "incomeSourceIdentifier" -> request.incomeSourceIdentifier,
       "identifierValue" -> request.identifierValue
-    ).collect {
-      case (k, v: String) => (k, v)
-      case (k, Some(v: String)) => (k, v)
-    }
+    )
 
-    def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
+    def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {
       case (k: String, Some(v: String)) => (k, v)
-      case (k: String, v: String) => (k, v)
     }
 
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
