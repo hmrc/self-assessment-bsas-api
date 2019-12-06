@@ -16,8 +16,11 @@
 
 package v1.controllers.requestParsers
 
+import java.time.LocalDate
+
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
+import v1.mocks.MockCurrentDateProvider
 import v1.mocks.validators.MockListBsasValidator
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
@@ -36,15 +39,17 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
   private val selfEmploymentId = "XAIS12345678901"
 
 
-  private val inputWithSelfEmploymentIdAndTypeOfBusiness = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))
-  private val inputWithSelfEmploymentId = ListBsasRawData(nino, taxYear, None, Some(selfEmploymentId))
-  private val inputDataTwo = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), None)
-  private val inputDataThree = ListBsasRawData(nino, taxYear, Some(typeOfBusinessTwo), None)
-  private val inputDataFour = ListBsasRawData(nino, taxYear, Some(typeOfBusinessThree), None)
-  private val inputDataFive = ListBsasRawData(nino, taxYear, None, None)
+  private val inputWithSelfEmploymentIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(selfEmploymentId))
+  private val inputWithSelfEmploymentId = ListBsasRawData(nino, Some(taxYear), None, Some(selfEmploymentId))
+  private val inputDataTwo = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), None)
+  private val inputDataThree = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessTwo), None)
+  private val inputDataFour = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessThree), None)
+  private val inputDataFive = ListBsasRawData(nino, Some(taxYear), None, None)
 
-  trait Test extends MockListBsasValidator {
-    lazy val parser = new ListBsasRequestDataParser(mockValidator)
+  class Test(date: LocalDate = LocalDate.of(2019, 6, 18)) extends MockListBsasValidator with MockCurrentDateProvider {
+    lazy val parser = new ListBsasRequestDataParser(mockValidator, mockCurrentDateProvider)
+
+    MockCurrentDateProvider.getCurrentDate().returns(date)
   }
 
 
@@ -97,6 +102,12 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
 
         parser.parseRequest(inputDataFive) shouldBe
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), None, None))
+      }
+
+      "valid data is provided without tax year" in new Test {
+        MockValidator.validate(inputDataFive.copy(taxYear = None)).returns(Nil)
+
+        parser.parseRequest(inputDataFive.copy(taxYear = None)) shouldBe Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), None, None))
       }
     }
 

@@ -32,7 +32,7 @@ class ListBsasValidatorSpec extends UnitSpec {
   private val tooEarlyTaxYear = "2018-19"
   private val invalidTypeOfBusiness = "toothpicks-for-hamsters"
   private val invalidSelfEmploymentId = "Not a SelfEmploymentId"
-  private val rawData: ListBsasRawData = ListBsasRawData(nino, taxYear, Some(typeOfBusiness), Some(selfEmploymentId))
+  private val rawData: ListBsasRawData = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(selfEmploymentId))
 
   "running the validator" should {
     "return no errors" when {
@@ -50,10 +50,10 @@ class ListBsasValidatorSpec extends UnitSpec {
         validator.validate(rawData.copy(nino = invalidNino)) shouldBe List(NinoFormatError)
       }
       "an invalid tax year is provided" in {
-        validator.validate(rawData.copy(taxYear = invalidTaxYear)) shouldBe List(RuleTaxYearRangeExceededError)
+        validator.validate(rawData.copy(taxYear = Some(invalidTaxYear))) shouldBe List(RuleTaxYearRangeExceededError)
       }
       "a too early tax year is provided" in {
-        validator.validate(rawData.copy(taxYear = tooEarlyTaxYear)) shouldBe List(RuleTaxYearNotSupportedError)
+        validator.validate(rawData.copy(taxYear = Some(tooEarlyTaxYear))) shouldBe List(RuleTaxYearNotSupportedError)
       }
       "an invalid type of business is provided" in {
         validator.validate(rawData.copy(typeOfBusiness = Some(invalidTypeOfBusiness))) shouldBe List(TypeOfBusinessFormatError)

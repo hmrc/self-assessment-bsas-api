@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package utils
 
-import uk.gov.hmrc.domain.Nino
+import java.time.{LocalDate, Year}
 
+import v1.models.request.DesTaxYear
 
-case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]) extends RawData
+object DateUtils {
 
-case class ListBsasRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: Option[String], identifierValue: Option[String])
+  def getDesTaxYear(dateProvided: Any): DesTaxYear = dateProvided match {
+    case taxYear: String => DesTaxYear.fromMtd(taxYear)
+    case current: LocalDate =>
+      val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
+
+      if(current.isAfter(fiscalYearStartDate)) DesTaxYear((current.getYear + 1).toString)
+      else DesTaxYear(Year.now().getValue.toString)
+  }
+}

@@ -18,13 +18,16 @@ package v1.controllers.requestParsers
 
 
 import javax.inject.Inject
+
 import uk.gov.hmrc.domain.Nino
+import utils.{CurrentDateProvider, DateUtils}
 import v1.controllers.requestParsers.validators.ListBsasValidator
 import v1.controllers.requestParsers.validators.validations.TypeOfBusinessValidation
 import v1.models.domain.TypeOfBusiness
-import v1.models.request.{DesTaxYear, ListBsasRawData, ListBsasRequest}
+import v1.models.request.{ListBsasRawData, ListBsasRequest}
 
-class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator)
+class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator,
+                                          val currentDateProvider: CurrentDateProvider)
   extends RequestParser[ListBsasRawData, ListBsasRequest] {
 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
@@ -41,8 +44,9 @@ class ListBsasRequestDataParser @Inject()(val validator: ListBsasValidator)
       case _ => None
     }
 
-
-
-    ListBsasRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), incomeSourceIdentifier, identifierValue)
+    ListBsasRequest(Nino(data.nino),
+      data.taxYear.fold(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDesTaxYear),
+      incomeSourceIdentifier,
+      identifierValue)
   }
 }
