@@ -20,10 +20,6 @@ import v1.models.domain.TypeOfBusiness
 import v1.models.errors.{MtdError, TypeOfBusinessFormatError}
 
 object TypeOfBusinessValidation {
-
-  val ukPropertyFHL = "uk-property-fhl"
-  val ukPropertyNonFHL = "uk-property-non-fhl"
-  val selfEmployed = "self-employment"
   
   def validate(typeOfBusiness: String): List[MtdError] =
     if (typeOfBusiness == TypeOfBusiness.`uk-property-non-fhl`.toString

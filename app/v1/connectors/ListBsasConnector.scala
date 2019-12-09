@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.ListBsasRequest
-import v1.models.response.ListBsasResponse
+import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,27 +31,26 @@ class ListBsasConnector @Inject()(val http: HttpClient,
 
   def listBsas(request: ListBsasRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[ListBsasResponse]] = {
+    ec: ExecutionContext): Future[DesOutcome[ListBsasResponse[BsasEntries]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
 
     val queryParams = Map(
-      "taxYear" -> request.taxYear.toString,
+      "taxYear" -> Some(request.taxYear.toString),
       "incomeSourceIdentifier" -> request.incomeSourceIdentifier,
       "identifierValue" -> request.identifierValue
-    ).filterNot { case (_, v) => v.isInstanceOf[Option[String]] && v.asInstanceOf[Option[String]].isEmpty}
+    )
 
-    def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
+    def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {
       case (k: String, Some(v: String)) => (k, v)
-      case (k: String, v: String) => (k, v)
     }
 
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DesUri[ListBsasResponse](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
+      DesUri[ListBsasResponse[BsasEntries]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
     )
   }
 }

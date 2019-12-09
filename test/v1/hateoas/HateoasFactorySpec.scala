@@ -30,6 +30,8 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
   case class Response(foo: String)
   case class ListResponse[A](items: Seq[A])
 
+  case class NestedListResponse[A](field: String, items: Seq[A])
+
   case class Data1(id: String) extends HateoasData
   case class Data2(id: String) extends HateoasData
 

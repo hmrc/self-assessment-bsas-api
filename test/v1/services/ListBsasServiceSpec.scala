@@ -25,7 +25,7 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DesTaxYear, ListBsasRequest}
 import v1.fixtures.ListBsasFixtures._
-import v1.models.response.ListBsasResponse
+import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,7 +39,7 @@ class ListBsasServiceSpec extends UnitSpec {
   private val correlationId = "X-123"
 
   val request: ListBsasRequest = ListBsasRequest(nino, taxYear, incomeSourceIdentifier, identifierValue)
-  val response: ListBsasResponse = summaryModel
+  val response: ListBsasResponse[BsasEntries] = summaryModel
 
   trait Test extends MockListBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
