@@ -84,7 +84,7 @@ class ListBsasController @Inject()(
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | TypeOfBusinessFormatError
-           | RuleTaxYearRangeExceededError | RuleTaxYearNotSupportedError | SelfEmploymentIdFormatError =>
+           | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SelfEmploymentIdFormatError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

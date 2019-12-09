@@ -50,7 +50,7 @@ class ListBsasValidatorSpec extends UnitSpec {
         validator.validate(rawData.copy(nino = invalidNino)) shouldBe List(NinoFormatError)
       }
       "an invalid tax year is provided" in {
-        validator.validate(rawData.copy(taxYear = Some(invalidTaxYear))) shouldBe List(RuleTaxYearRangeExceededError)
+        validator.validate(rawData.copy(taxYear = Some(invalidTaxYear))) shouldBe List(RuleTaxYearRangeInvalidError)
       }
       "a too early tax year is provided" in {
         validator.validate(rawData.copy(taxYear = Some(tooEarlyTaxYear))) shouldBe List(RuleTaxYearNotSupportedError)

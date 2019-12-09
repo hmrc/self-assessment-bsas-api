@@ -230,7 +230,7 @@ class ListBsasControllerSpec
           (SelfEmploymentIdFormatError, BAD_REQUEST),
           (TypeOfBusinessFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeExceededError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
