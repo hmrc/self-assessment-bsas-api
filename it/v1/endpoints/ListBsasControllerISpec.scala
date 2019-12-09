@@ -129,7 +129,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
         ("AA123456A", "2019-20", Some("self-employment"), Some("XAI901"), BAD_REQUEST, SelfEmploymentIdFormatError),
         ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
-        ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeExceededError)
+        ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
