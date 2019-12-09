@@ -46,6 +46,12 @@ object SelfEmploymentIdRuleError
 object EndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
 
+object BothExpensesError
+  extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both Expenses and consolidated expenses cannot be present at the same time")
+
+object SelfEmploymentAdjusted
+  extends MtdError("RULE_SELF_EMPLOYMENT_ADJUSTED", "A self-employment business type was adjusted. Re-trigger an adjustable summary for the self-employment to correct")
+
 object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The provided Business Source Accounting Summary ID format is invalid")
 
 
