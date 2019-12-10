@@ -38,8 +38,8 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       |         "travelCosts": 1000.49,
       |         "costOfServices": -1000.49,
       |         "residentialFinancialCost": 1000.49,
-      |         "other": 1000.49
-      |
+      |         "other": 1000.49,
+      |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
@@ -55,7 +55,8 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       |         "travelCosts": 1000.49,
       |         "costOfServices": -1000.49,
       |         "residentialFinancialCost": 1000.49,
-      |         "other": 1000.49
+      |         "other": 1000.49,
+      |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
@@ -77,7 +78,8 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       |         "travelCosts": "1000.49",
       |         "costOfServices": "-1000.49",
       |         "residentialFinancialCost": "1000.49",
-      |         "other": "1000.49"
+      |         "other": "1000.49",
+      |         "consolidatedExpenses": "1000.49"
       |      }
       |}
       |""".stripMargin)
@@ -99,7 +101,8 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       |         "travelCosts": "1000.49",
       |         "costOfServices": -1000.49,
       |         "residentialFinancialCost": "1000.49",
-      |         "other": "1000.49"
+      |         "other": "1000.49",
+      |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
