@@ -16,25 +16,26 @@
 
 package v1.models.request.submitBsas
 
+import java.io
+
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 
-case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal], financialCosts: Option[BigDecimal],
-                          professionalFees: Option[BigDecimal], travelCosts: Option[BigDecimal], costOfServices: Option[BigDecimal],
-                          residentialFinancialCost: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]) {
+case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal],
+                       financialCosts: Option[BigDecimal], professionalFees: Option[BigDecimal], costOfServices: Option[BigDecimal],
+                       travelCosts: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]){
 
   val params: Map[String, Option[BigDecimal]] = Map(
     "premisesRunningCosts" -> this.premisesRunningCosts,
     "repairsAndMaintenance" -> this.repairsAndMaintenance,
     "financialCosts" -> this.financialCosts,
     "professionalFees" -> this.professionalFees,
-    "travelCosts" -> this.travelCosts,
     "costOfServices" -> this.costOfServices,
-    "residentialFinancialCost" -> this.residentialFinancialCost,
+    "travelCosts" -> this.travelCosts,
     "other" -> this.other,
     "consolidatedExpenses" -> this.consolidatedExpenses
-  ).filterNot { case (_, v) => v.isEmpty }
+  ).filterNot {case (_, v) => v.isEmpty }
 
-  def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
+    def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
     case (k: String, Some(v)) => (k, v.toString)
     case (k: String, v) => (k, v.toString)
   }
@@ -42,10 +43,9 @@ case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMa
   val mappedPresentParams: Map[String, String] = queryMap(params)
 }
 
-object NonFHLExpenses {
-  implicit val reads: Reads[NonFHLExpenses] = Json.reads[NonFHLExpenses]
-  implicit val writes: OWrites[NonFHLExpenses] = new OWrites[NonFHLExpenses] {
-    override def writes(o: NonFHLExpenses): JsObject = Json.toJsObject(o.mappedPresentParams)
+object FHLExpenses {
+  implicit val reads: Reads[FHLExpenses] = Json.reads[FHLExpenses]
+  implicit val writes: OWrites[FHLExpenses] = new OWrites[FHLExpenses] {
+    override def writes(o: FHLExpenses): JsObject = Json.toJsObject(o.mappedPresentParams)
   }
 }
-

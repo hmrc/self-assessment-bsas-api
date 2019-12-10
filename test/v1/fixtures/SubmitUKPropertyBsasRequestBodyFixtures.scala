@@ -21,35 +21,164 @@ import play.api.libs.json.{JsValue, Json}
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
 
-  val nonFHLRequestBodyMtd: JsValue = Json.parse(
+  val nonFHLInputJson: JsValue = Json.parse(
     """
       |{
-      | "income": {
-      |   "rentIncome": 1000.45,
-      |   "premiumsOfLeaseGrant": 1000.45,
-      |   "reversePremiums": 1000.45,
-      |   "otherPropertyIncome": 1000.45
-      | },
-      | "expenses": {
-      |   "premisesRunningCosts": 1000.45,
-      |   "repairsAndMaintenance": 1000.45,
-      |   "financialCosts": 1000.45,
-      |   "professionalFees": 1000.45,
-      |   "travelCosts": 1000.45,
-      |   "costOfServices": 1000.45,
-      |   "residentialFinancialCost": 1000.45,
-      |   "other": 1000.45,
-      |   "consolidatedExpenses": 1000.45
+      | "nonFurnishedHolidayLet": {
+      |   "income": {
+      |     "rentIncome": 1000.45,
+      |     "premiumsOfLeaseGrant": 1000.45,
+      |     "reversePremiums": 1000.45,
+      |     "otherPropertyIncome": 1000.45
+      |   },
+      |   "expenses": {
+      |     "premisesRunningCosts": 1000.45,
+      |     "repairsAndMaintenance": 1000.45,
+      |     "financialCosts": 1000.45,
+      |     "professionalFees": 1000.45,
+      |     "travelCosts": 1000.45,
+      |     "costOfServices": 1000.45,
+      |     "residentialFinancialCost": 1000.45,
+      |     "other": 1000.45,
+      |     "consolidatedExpenses": 1000.45
+      |   }
       | }
+      |}
+      |""".stripMargin)
+
+  val nonFHLRequestJson: JsValue = Json.parse(
+    """
+      |{
+      |  "nonFurnishedHolidayLet": {
+      |     "income": {
+      |       "totalRentsReceived": "1000.45",
+      |       "premiumsOfLeaseGrant": "1000.45",
+      |       "reversePremiums": "1000.45",
+      |       "otherPropertyIncome": "1000.45"
+      |     },
+      |     "expenses": {
+      |       "premisesRunningCosts": "1000.45",
+      |       "repairsAndMaintenance": "1000.45",
+      |       "financialCosts": "1000.45",
+      |       "professionalFees": "1000.45",
+      |       "travelCosts": "1000.45",
+      |       "costOfServices": "1000.45",
+      |       "residentialFinancialCost": "1000.45",
+      |       "other": "1000.45",
+      |       "consolidatedExpenses": "1000.45"
+      |     }
+      |   }
+      |}
+      |""".stripMargin)
+
+
+  val nonFHLInvalidJson: JsValue = Json.parse(
+    """
+      |{
+      |   "nonFurnishedHolidayLet": {
+      |     "income": {
+      |       "totalRentsReceived": 1000.45,
+      |       "premiumsOfLeaseGrant": true,
+      |       "reversePremiums": 1000.45,
+      |       "otherPropertyIncome": "1000.45"
+      |     },
+      |     "expenses": {
+      |       "premisesRunningCosts": 1000.45,
+      |       "repairsAndMaintenance": "1000.45",
+      |       "financialCosts": true,
+      |       "professionalFees": 1000.45,
+      |       "travelCosts": 1000.45,
+      |       "costOfServices": false,
+      |       "residentialFinancialCost": "1000.45",
+      |       "other": 1000.45,
+      |       "consolidatedExpenses": 1000.45
+      |     }
+      |   }
       |}
       |""".stripMargin)
 
   val nonFHLBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(
-      NonFurnishedHolidayLet(
-        None,
-        //Some(NonFHLIncome(Some("1000.45"), Some("1000.45"), Some("1000.45"), Some("1000.45"))),
-        Some(NonFHLExpenses(Some("1000.45"), Some("1000.45"), Some("1000.45"), Some("1000.45"), Some("1000.45"), Some("1000.45"), Some("1000.45")))
-      )
+      Some(NonFurnishedHolidayLet(
+        Some(NonFHLIncome(Some(1000.45), Some(1000.45), Some(1000.45), Some(1000.45))),
+        Some(NonFHLExpenses(Some(1000.45), Some(1000.45), Some(1000.45),
+                            Some(1000.45), Some(1000.45), Some(1000.45),
+                            Some(1000.45), Some(1000.45), Some(1000.45)))
+      )),
+      None
+    )
+
+  val fhlInputJson: JsValue = Json.parse(
+    """
+      |{
+      | "furnishedHolidayLet": {
+      |   "income": {
+      |     "rentIncome": 1000.45
+      |   },
+      |   "expenses": {
+      |     "premisesRunningCosts": 1000.45,
+      |     "repairsAndMaintenance": 1000.45,
+      |     "financialCosts": 1000.45,
+      |     "professionalFees": 1000.45,
+      |     "costOfServices": 1000.45,
+      |     "travelCosts": 1000.45,
+      |     "other": 1000.45,
+      |     "consolidatedExpenses": 1000.45
+      |   }
+      | }
+      |}
+      |""".stripMargin)
+
+  val fhlRequestJson: JsValue = Json.parse(
+    """
+      |{
+      | "furnishedHolidayLet": {
+      |   "income": {
+      |     "totalRentsReceived": "1000.45"
+      |   },
+      |   "expenses": {
+      |     "premisesRunningCosts": "1000.45",
+      |     "repairsAndMaintenance": "1000.45",
+      |     "financialCosts": "1000.45",
+      |     "professionalFees": "1000.45",
+      |     "costOfServices": "1000.45",
+      |     "travelCosts": "1000.45",
+      |     "other": "1000.45",
+      |     "consolidatedExpenses": "1000.45"
+      |   }
+      | }
+      |}
+      |""".stripMargin)
+
+  val fhlInvalidJson: JsValue = Json.parse(
+    """
+      |{
+      | "furnishedHolidayLet": {
+      |   "income": {
+      |     "rentIncome": "1000.45"
+      |   },
+      |   "expenses": {
+      |     "premisesRunningCosts": 1000.45,
+      |     "repairsAndMaintenance": false,
+      |     "financialCosts": 1000.45,
+      |     "professionalFees": 1000.45,
+      |     "costOfServices": true,
+      |     "travelCosts": 1000.45,
+      |     "other": 1000.45,
+      |     "consolidatedExpenses": "1000.45"
+      |   }
+      | }
+      |}
+      |""".stripMargin)
+
+  val fhlBody: SubmitUKPropertyBsasRequestBody =
+    SubmitUKPropertyBsasRequestBody(
+      None,
+      Some(FurnishedHolidayLet(
+        Some(FHLIncome(Some(1000.45))),
+        Some(FHLExpenses(Some(1000.45), Some(1000.45), Some(1000.45),
+          Some(1000.45), Some(1000.45), Some(1000.45),
+          Some(1000.45), Some(1000.45)))
+      ))
     )
 }

@@ -24,8 +24,8 @@ case class NonFurnishedHolidayLet(income: Option[NonFHLIncome], expenses: Option
 object NonFurnishedHolidayLet {
 
   implicit val reads: Reads[NonFurnishedHolidayLet] = (
-    JsPath.readNullable[NonFHLIncome] and
-    JsPath.readNullable[NonFHLExpenses]
+    (JsPath \ "income").readNullable[NonFHLIncome] and
+      (JsPath \ "expenses").readNullable[NonFHLExpenses]
   )(NonFurnishedHolidayLet.apply _)
 
   implicit  val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]

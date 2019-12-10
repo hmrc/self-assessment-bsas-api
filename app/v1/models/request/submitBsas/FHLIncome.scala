@@ -18,16 +18,10 @@ package v1.models.request.submitBsas
 
 import play.api.libs.json._
 
-case class NonFHLIncome(rentIncome: Option[BigDecimal] = None,
-                        premiumsOfLeaseGrant: Option[BigDecimal] = None,
-                        reversePremiums: Option[BigDecimal] = None,
-                        otherPropertyIncome: Option[BigDecimal] = None) {
+case class FHLIncome(rentIncome: Option[BigDecimal]) {
 
   val params: Map[String, Option[BigDecimal]] = Map(
-    "totalRentsReceived" -> this.rentIncome,
-    "premiumsOfLeaseGrant" -> this.premiumsOfLeaseGrant,
-    "reversePremiums" -> this.reversePremiums,
-    "otherPropertyIncome" -> this.otherPropertyIncome
+    "totalRentsReceived" -> this.rentIncome
   ).filterNot {case (_, v) => v.isEmpty }
 
   def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
@@ -38,9 +32,9 @@ case class NonFHLIncome(rentIncome: Option[BigDecimal] = None,
   val mappedPresentParams: Map[String, String] = queryMap(params)
 }
 
-object NonFHLIncome {
-  implicit val reads: Reads[NonFHLIncome] = Json.reads[NonFHLIncome]
-  implicit val writes: Writes[NonFHLIncome] = new OWrites[NonFHLIncome] {
-    override def writes(o: NonFHLIncome): JsObject = Json.toJsObject(o.mappedPresentParams)
+object FHLIncome {
+  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
+  implicit val writes: Writes[FHLIncome] = new OWrites[FHLIncome] {
+    override def writes(o: FHLIncome): JsObject = Json.toJsObject(o.mappedPresentParams)
   }
 }
