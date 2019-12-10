@@ -23,20 +23,19 @@ case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMa
                           residentialFinancialCost: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]) {
 
   val params: Map[String, Option[BigDecimal]] = Map(
-    "premisesRunningCosts" -> this.premisesRunningCosts,
-    "repairsAndMaintenance" -> this.repairsAndMaintenance,
-    "financialCosts" -> this.financialCosts,
-    "professionalFees" -> this.professionalFees,
-    "travelCosts" -> this.travelCosts,
-    "costOfServices" -> this.costOfServices,
-    "residentialFinancialCost" -> this.residentialFinancialCost,
-    "other" -> this.other,
-    "consolidatedExpenses" -> this.consolidatedExpenses
+    "premisesRunningCosts" -> premisesRunningCosts,
+    "repairsAndMaintenance" -> repairsAndMaintenance,
+    "financialCosts" -> financialCosts,
+    "professionalFees" -> professionalFees,
+    "travelCosts" -> travelCosts,
+    "costOfServices" -> costOfServices,
+    "residentialFinancialCost" -> residentialFinancialCost,
+    "other" -> other,
+    "consolidatedExpenses" -> consolidatedExpenses
   ).filterNot { case (_, v) => v.isEmpty }
 
   def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
     case (k: String, Some(v)) => (k, v.toString)
-    case (k: String, v) => (k, v.toString)
   }
 
   val mappedPresentParams: Map[String, String] = queryMap(params)

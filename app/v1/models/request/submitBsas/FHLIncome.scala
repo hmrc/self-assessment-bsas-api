@@ -21,12 +21,11 @@ import play.api.libs.json._
 case class FHLIncome(rentIncome: Option[BigDecimal]) {
 
   val params: Map[String, Option[BigDecimal]] = Map(
-    "totalRentsReceived" -> this.rentIncome
+    "totalRentsReceived" -> rentIncome
   ).filterNot {case (_, v) => v.isEmpty }
 
   def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
     case (k: String, Some(v)) => (k, v.toString)
-    case (k: String, v) => (k, v.toString)
   }
 
   val mappedPresentParams: Map[String, String] = queryMap(params)
