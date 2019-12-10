@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.response.retrieveBsas
 
-/**
-  * Represents a tax year for DES
-  *
-  * @param value the tax year string (where 2018 represents 2017-18)
-  */
-case class DesTaxYear(value: String) extends AnyVal {
-  override def toString: String = value
-}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-object DesTaxYear {
+case class Profit(net: Option[BigDecimal],
+                  taxable: Option[BigDecimal])
 
-  /**
-    * @param taxYear tax year in MTD format (e.g. 2017-18)
-    */
-  def fromMtd(taxYear: String): DesTaxYear =
-    DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+object Profit {
+  implicit val reads: Reads[Profit] = (
+    (JsPath \ "netProfit").readNullable[BigDecimal] and
+      (JsPath \ "taxableProfit").readNullable[BigDecimal]
+    )(Profit.apply _)
 
-  def fromDes(taxYear: String): String = (taxYear.toInt - 1) + "-" + taxYear.drop(2)
+  implicit val writes: OWrites[Profit] = Json.writes[Profit]
 }

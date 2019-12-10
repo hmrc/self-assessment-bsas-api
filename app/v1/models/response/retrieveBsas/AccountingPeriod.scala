@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.response.retrieveBsas
 
-/**
-  * Represents a tax year for DES
-  *
-  * @param value the tax year string (where 2018 represents 2017-18)
-  */
-case class DesTaxYear(value: String) extends AnyVal {
-  override def toString: String = value
-}
+import java.time.LocalDate
 
-object DesTaxYear {
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-  /**
-    * @param taxYear tax year in MTD format (e.g. 2017-18)
-    */
-  def fromMtd(taxYear: String): DesTaxYear =
-    DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+case class AccountingPeriod(startDate: LocalDate, endDate: LocalDate)
 
-  def fromDes(taxYear: String): String = (taxYear.toInt - 1) + "-" + taxYear.drop(2)
+object AccountingPeriod {
+
+  implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
+
+  implicit val reads: Reads[AccountingPeriod] = (
+    (JsPath \ "inputs" \ "accountingPeriodStartDate").read[LocalDate] and
+      (JsPath \ "inputs" \ "accountingPeriodEndDate").read[LocalDate]
+    )(AccountingPeriod.apply _)
 }
