@@ -16,12 +16,17 @@
 
 package v1.models.request.submitBsas
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet])
+case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
 
-object SubmitUKPropertyBsasRequestBody {
-  implicit val reads: Reads[SubmitUKPropertyBsasRequestBody] = Json.reads[SubmitUKPropertyBsasRequestBody]
-  implicit val writes: OWrites[SubmitUKPropertyBsasRequestBody] = Json.writes[SubmitUKPropertyBsasRequestBody]
+object FurnishedHolidayLet {
+
+  implicit val reads: Reads[FurnishedHolidayLet] = (
+    (JsPath \ "income").readNullable[FHLIncome] and
+      (JsPath \ "expenses").readNullable[FHLExpenses]
+    )(FurnishedHolidayLet.apply _)
+
+  implicit  val writes: OWrites[FurnishedHolidayLet] = Json.writes[FurnishedHolidayLet]
 }
-
