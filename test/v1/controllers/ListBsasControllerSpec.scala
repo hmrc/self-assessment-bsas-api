@@ -126,7 +126,7 @@ class ListBsasControllerSpec
     "return successful response with status OK" when {
       "valid request" in new Test {
 
-        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/accounting-summary" anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes()
 
         MockListBsasRequestDataParser
           .parse(rawData)

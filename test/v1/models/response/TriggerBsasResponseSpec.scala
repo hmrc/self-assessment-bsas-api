@@ -73,7 +73,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val bsasId         = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/accounting-summary").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
     }
 
     "expose the correct links for triggering a self employment BSAS" in new Test {
@@ -81,7 +81,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/self-employment/$bsasId", GET, "self")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId", GET, "self")
           )
         )
     }
@@ -90,7 +90,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }
@@ -99,7 +99,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/accounting-summary/$nino/property/$bsasId", GET, "self")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }
