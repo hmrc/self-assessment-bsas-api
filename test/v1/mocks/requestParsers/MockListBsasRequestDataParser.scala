@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package mocks.validators
+package v1.mocks.requestParsers
 
-import org.scalamock.handlers.CallHandler1
+import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.TriggerBSASValidator
-import v1.models.errors.MtdError
-import v1.models.request.triggerBsas.TriggerBsasRawData
+import v1.controllers.requestParsers.ListBsasRequestDataParser
+import v1.models.errors.ErrorWrapper
+import v1.models.request.{ListBsasRawData, ListBsasRequest}
 
-class MockTriggerBSASValidator extends MockFactory {
+trait MockListBsasRequestDataParser extends MockFactory {
 
-  val mockValidator: TriggerBSASValidator = mock[TriggerBSASValidator]
+  val mockRequestParser = mock[ListBsasRequestDataParser]
 
-  object MockValidator {
-    def validate(data: TriggerBsasRawData): CallHandler1[TriggerBsasRawData, List[MtdError]] = {
-      (mockValidator.validate(_: TriggerBsasRawData))
-        .expects(data)
+  object MockListBsasRequestDataParser {
+    def parse(data: ListBsasRawData): CallHandler[Either[ErrorWrapper, ListBsasRequest]] = {
+      (mockRequestParser.parseRequest(_: ListBsasRawData)).expects(data)
     }
   }
 }

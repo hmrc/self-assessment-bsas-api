@@ -35,9 +35,6 @@ object EndDateFormatError
 object TypeOfBusinessFormatError
   extends MtdError("FORMAT_TYPE_OF_BUSINESS","The supplied type of business format is invalid")
 
-object BsasIdFormatError
-  extends MtdError("FORMAT_BSAS_ID", "The supplied BSAS ID format is invalid")
-
 object AdjustedStatusFormatError
   extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
 
@@ -48,6 +45,9 @@ object SelfEmploymentIdRuleError
 
 object EndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
+
+object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The provided Business Source Accounting Summary ID format is invalid")
+
 
 // Rule Errors
 object RuleAccountingPeriodNotSupportedError
@@ -66,6 +66,20 @@ object RuleAccountingPeriodNotEndedError extends MtdError("RULE_ACCOUNTING_PERIO
 object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCOMPLETE","One or more periodic updates missing for this accounting period")
 
 object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The accounting period given does not exist")
+
+object RuleTypeOfBusinessError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The submission is for a different type of business")
+
+object RuleSummaryStatusInvalid extends MtdError( "RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary")
+
+object RuleSummaryStatusSuperseded extends MtdError( "RULE_SUMMARY_STATUS_SUPERSEDED", "A newer summary calculation exists for this accounting period")
+
+object RuleBsasAlreadyAdjusted extends MtdError("RULE_BSAS_ALREADY_ADJUSTED", "A summary may only be adjusted once. Request a new summary")
+
+object RuleOverConsolidatedExpensesThreshold
+  extends MtdError("RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD", "The cumulative turnover amount exceeds the consolidated expenses threshold")
+
+object RulePropertyIncomeAllowanceClaimed
+  extends MtdError("RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED", "A claim for property income allowance was made. Cannot also have expenses")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
