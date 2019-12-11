@@ -48,7 +48,7 @@ class SubmitUKPropertyBsasService @Inject()(connector: SubmitUKPropertyBsasConne
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
     "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
-    "INVALID_INVALID_PAYLOAD"     -> DownstreamError,
+    "INVALID_PAYLOAD"     -> DownstreamError,
     "INVALID_PAYLOAD_REMOTE"      -> DownstreamError,
     "INVALID_FIELD"               -> RuleTypeOfBusinessError,
     "INVALID_MONETARY_FORMAT"     -> DownstreamError,
