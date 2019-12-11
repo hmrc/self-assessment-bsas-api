@@ -20,4 +20,4 @@ import uk.gov.hmrc.domain.Nino
 
 case class RetrieveUkPropertyRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
 
-case class RetrieveUkPropertyRequest(nino: Nino, bsasId: String, adjustedStatus: Option[Boolean])
+case class RetrieveUkPropertyRequest(nino: Nino, bsasId: String, adjustedStatus: Option[String])
