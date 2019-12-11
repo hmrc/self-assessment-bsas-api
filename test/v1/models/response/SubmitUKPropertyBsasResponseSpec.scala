@@ -16,8 +16,13 @@
 
 package v1.models.response
 
+import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1.hateoas.HateoasFactory
+import v1.models.domain.TypeOfBusiness
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.Method.GET
 
 class SubmitUKPropertyBsasResponseSpec extends UnitSpec{
 
@@ -65,4 +70,25 @@ class SubmitUKPropertyBsasResponseSpec extends UnitSpec{
       }
     }
   }
+
+  "HateoasFactory" must {
+    class Test extends MockAppConfig {
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino = "someNino"
+      val bsasId = "anId"
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+    }
+
+    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
+      hateoasFactory.wrap(submitBsasResponse, SubmitPropertyAdjustmentHateoasData(nino, bsasId)) shouldBe
+        HateoasWrapper(
+          submitBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", GET, "self"),
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
+          )
+        )
+    }
+  }
+
 }

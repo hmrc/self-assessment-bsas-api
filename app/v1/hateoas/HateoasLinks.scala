@@ -58,6 +58,10 @@ trait HateoasLinks {
   def getPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = propertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 
+  //L3 with adjusted flag
+  def getAdjustedPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(href = propertyBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
+
   //L4
   def adjustSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
