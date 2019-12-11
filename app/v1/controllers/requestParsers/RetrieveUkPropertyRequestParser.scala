@@ -21,8 +21,6 @@ import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveUkPropertyValidator
 import v1.models.request.{RetrieveUkPropertyRawData, RetrieveUkPropertyRequest}
 
-import scala.util.{Success, Try}
-
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
   extends RequestParser[RetrieveUkPropertyRawData, RetrieveUkPropertyRequest] {
 
