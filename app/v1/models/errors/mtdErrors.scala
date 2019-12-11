@@ -35,9 +35,6 @@ object EndDateFormatError
 object TypeOfBusinessFormatError
   extends MtdError("FORMAT_TYPE_OF_BUSINESS","The supplied type of business format is invalid")
 
-object BsasIdFormatError
-  extends MtdError("FORMAT_BSAS_ID", "The supplied BSAS ID format is invalid")
-
 object AdjustedStatusFormatError
   extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
 

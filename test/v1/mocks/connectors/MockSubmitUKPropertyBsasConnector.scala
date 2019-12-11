@@ -16,7 +16,14 @@
 
 package v1.mocks.connectors
 
+import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.connectors.{DesOutcome, SubmitUKPropertyBsasConnector}
+import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestData
+import v1.models.response.SubmitUKPropertyBsasResponse
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitUKPropertyBsasConnector extends MockFactory {
 
@@ -24,6 +31,10 @@ trait MockSubmitUKPropertyBsasConnector extends MockFactory {
 
   object MockSubmitUKPropertyBsasConnector {
 
+    def submitUKPropertyBsas(requestData: SubmitUKPropertyBsasRequestData): CallHandler[Future[DesOutcome[SubmitUKPropertyBsasResponse]]] = {
+      (mockConnector
+        .submitUKPropertyBsas(_: SubmitUKPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(requestData, *, *)
+    }
   }
-
 }
