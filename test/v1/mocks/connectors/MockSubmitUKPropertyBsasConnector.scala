@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package mocks.validators
+package v1.mocks.connectors
 
-import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.TriggerBSASValidator
-import v1.models.errors.MtdError
-import v1.models.request.triggerBsas.TriggerBsasRawData
 
-class MockTriggerBSASValidator extends MockFactory {
+trait MockSubmitUKPropertyBsasConnector extends MockFactory {
 
-  val mockValidator: TriggerBSASValidator = mock[TriggerBSASValidator]
+  val mockConnector: SubmitUKPropertyBsasConnector = mock[SubmitUKPropertyBsasConnector]
 
-  object MockValidator {
-    def validate(data: TriggerBsasRawData): CallHandler1[TriggerBsasRawData, List[MtdError]] = {
-      (mockValidator.validate(_: TriggerBsasRawData))
-        .expects(data)
-    }
+  object MockSubmitUKPropertyBsasConnector {
+
   }
+
 }
