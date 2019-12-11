@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
 import v1.fixtures.RetrievePropertyBsasFixtures._
 import v1.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators{
+class MetadataUkPropertySpec extends UnitSpec with JsonErrorValidators{
 
   "reads" should {
     "return a valid model" when {
 
       "a valid json with all fields are supplied" in {
-        desRetrieveBsasResponse.as[Metadata] shouldBe metadataModel
+        desRetrieveBsasResponse.as[MetadataUkProperty] shouldBe metadataModel
       }
 
       "a valid json with only adjustable summary fields are supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[Metadata] shouldBe metadataModelWithAdjustableSummary
+        desRetrieveBsasResponseWithAdjustableSummary.as[MetadataUkProperty] shouldBe metadataModelWithAdjustableSummary
       }
     }
   }

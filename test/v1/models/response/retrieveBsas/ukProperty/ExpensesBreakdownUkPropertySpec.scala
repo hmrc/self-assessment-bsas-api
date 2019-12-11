@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.ukProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
 
-class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators{
+class ExpensesBreakdownUkPropertySpec extends UnitSpec with JsonErrorValidators{
 
   val mtdJson = Json.parse(
     """{
@@ -50,74 +50,74 @@ class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators{
       |  "consolidatedExpenses": 100.49
       |}""".stripMargin)
 
-  val model = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
+  val model = ExpensesBreakdownUkProperty(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),Some(100.49))
 
   "reads" should {
     "return a valid model" when {
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/premisesRunningCosts",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/repairsAndMaintenance",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/financialCosts",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/professionalFees",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/travelCosts",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/costOfServices",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/residentialFinancialCost",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/broughtFwdResidentialFinancialCost",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/other",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[ExpensesBreakdown](desJson)(
+      testPropertyType[ExpensesBreakdownUkProperty](desJson)(
         path = "/consolidatedExpenses",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
       "a valid json with all fields are supplied" in {
-        desJson.as[ExpensesBreakdown] shouldBe model
+        desJson.as[ExpensesBreakdownUkProperty] shouldBe model
       }
     }
   }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
 import v1.fixtures.RetrievePropertyBsasFixtures._

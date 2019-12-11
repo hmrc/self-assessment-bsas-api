@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.ukProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import v1.models.response.retrieveBsas._
 
-case class BsasDetail(total: TotalBsas,
-                      profit: Option[Profit],
-                      loss: Option[Loss],
-                      incomeBreakdown: IncomeBreakdown,
-                      expensesBreakdown: Option[ExpensesBreakdown])
+case class BsasDetailUkProperty(total: TotalBsas,
+                                profit: Option[Profit],
+                                loss: Option[Loss],
+                                incomeBreakdown: IncomeBreakdownUkProperty,
+                                expensesBreakdown: Option[ExpensesBreakdownUkProperty])
 
-object BsasDetail {
-  implicit val reads: Reads[BsasDetail] = (
+object BsasDetailUkProperty {
+  implicit val reads: Reads[BsasDetailUkProperty] = (
     JsPath.read[TotalBsas] and
       JsPath.readNullable[Profit] and
       JsPath.readNullable[Loss] and
-      (JsPath \ "income").read[IncomeBreakdown] and
-      (JsPath \ "expenses").readNullable[ExpensesBreakdown]
-    )(BsasDetail.apply _)
+      (JsPath \ "income").read[IncomeBreakdownUkProperty] and
+      (JsPath \ "expenses").readNullable[ExpensesBreakdownUkProperty]
+    )(BsasDetailUkProperty.apply _)
 
-  implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
+  implicit val writes: OWrites[BsasDetailUkProperty] = Json.writes[BsasDetailUkProperty]
 }

@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.ukProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v1.models.request.DesTaxYear
+import v1.models.response.retrieveBsas.AccountingPeriod
 
-case class Metadata(typeOfBusiness: TypeOfBusiness,
-                    accountingPeriod: AccountingPeriod,
-                    taxYear: String,
-                    requestedDateTime: String,
-                    bsasId: String,
-                    summaryStatus: String,
-                    adjustedSummary: Boolean)
+case class MetadataUkProperty(typeOfBusiness: TypeOfBusiness,
+                              accountingPeriod: AccountingPeriod,
+                              taxYear: String,
+                              requestedDateTime: String,
+                              bsasId: String,
+                              summaryStatus: String,
+                              adjustedSummary: Boolean)
 
-object Metadata {
+object MetadataUkProperty {
 
-  implicit val reads: Reads[Metadata] = (
+  implicit val reads: Reads[MetadataUkProperty] = (
     (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       JsPath.read[AccountingPeriod] and
       (JsPath \ "metadata" \ "taxYear").read[String].map(DesTaxYear.fromDes) and
@@ -42,7 +43,7 @@ object Metadata {
         case Some(_) => true
         case _ => false
       }
-    )(Metadata.apply _)
+    )(MetadataUkProperty.apply _)
 
-  implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
+  implicit val writes: OWrites[MetadataUkProperty] = Json.writes[MetadataUkProperty]
 }
