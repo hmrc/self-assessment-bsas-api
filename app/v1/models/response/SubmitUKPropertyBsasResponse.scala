@@ -19,13 +19,13 @@ package v1.models.response
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.hateoas.HateoasLinks
 
-case class SubmitBsasResponse(id: String)
+case class SubmitUKPropertyBsasResponse(id: String)
 
-object SubmitBsasResponse extends HateoasLinks {
+object SubmitUKPropertyBsasResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[SubmitBsasResponse] = Json.writes[SubmitBsasResponse]
+  implicit val writes: OWrites[SubmitUKPropertyBsasResponse] = Json.writes[SubmitUKPropertyBsasResponse]
 
-  implicit val reads: Reads[SubmitBsasResponse] =
-    (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitBsasResponse.apply)
+  implicit val reads: Reads[SubmitUKPropertyBsasResponse] =
+    (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitUKPropertyBsasResponse.apply)
 
 }

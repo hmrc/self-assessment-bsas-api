@@ -19,7 +19,7 @@ package v1.models.response
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
-class SubmitBsasResponseSpec extends UnitSpec{
+class SubmitUKPropertyBsasResponseSpec extends UnitSpec{
 
   val desJson: JsValue = Json.parse(
     """
@@ -44,18 +44,18 @@ class SubmitBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val submitBsasResponse: SubmitBsasResponse = SubmitBsasResponse("anId")
+  val submitBsasResponse: SubmitUKPropertyBsasResponse = SubmitUKPropertyBsasResponse("anId")
 
   "SubmitBsasResponse" when {
     "read from valid JSON" should {
       "return the expected SubmitBsasResponse object" in {
-        desJson.as[SubmitBsasResponse] shouldBe submitBsasResponse
+        desJson.as[SubmitUKPropertyBsasResponse] shouldBe submitBsasResponse
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidDesJson.validate[SubmitBsasResponse] shouldBe a[JsError]
+        invalidDesJson.validate[SubmitUKPropertyBsasResponse] shouldBe a[JsError]
       }
     }
 
