@@ -36,7 +36,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |	"api": {
       |		"name": "Business Source Accounting Summary (MTD)",
       |		"description": "An API for providing business source accounting summary data",
-      |		"context": "individuals/self-assessment/accounting-summary",
+      |		"context": "individuals/self-assessment/adjustable-summary",
       |		"categories": ["INCOME_TAX_MTD"],
       |		"versions": [{
       |			"version": "1.0",
