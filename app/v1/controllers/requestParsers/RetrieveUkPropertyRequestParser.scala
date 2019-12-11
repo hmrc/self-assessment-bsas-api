@@ -24,10 +24,10 @@ import v1.models.request.{RetrieveUkPropertyRawData, RetrieveUkPropertyRequest}
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
   extends RequestParser[RetrieveUkPropertyRawData, RetrieveUkPropertyRequest] {
 
-  val RETURN_TRUE = "03"
-  val RETURN_FALSE = "01"
+  val ADJUSTED_SUMMARY = "03"
+  val ADJUSTABLE_SUMMARY = "01"
 
-  def toDesAdjustedStatus(s: String): String = if(s.toBoolean) RETURN_TRUE else RETURN_FALSE
+  def toDesAdjustedStatus(s: String): String = if(s.toBoolean) ADJUSTED_SUMMARY else ADJUSTABLE_SUMMARY
 
   override protected def requestFor(data: RetrieveUkPropertyRawData): RetrieveUkPropertyRequest = {
     RetrieveUkPropertyRequest(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))
