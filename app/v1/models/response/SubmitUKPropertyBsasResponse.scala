@@ -16,8 +16,10 @@
 
 package v1.models.response
 
+import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.hateoas.HateoasLinks
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class SubmitUKPropertyBsasResponse(id: String)
 
@@ -28,4 +30,18 @@ object SubmitUKPropertyBsasResponse extends HateoasLinks {
   implicit val reads: Reads[SubmitUKPropertyBsasResponse] =
     (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitUKPropertyBsasResponse.apply)
 
+  implicit object SubmitPropertyAdjustmentHateoasFactory
+    extends HateoasLinksFactory[SubmitUKPropertyBsasResponse, SubmitPropertyAdjustmentHateoasData] {
+    override def links(appConfig: AppConfig, data: SubmitPropertyAdjustmentHateoasData): Seq[Link] = {
+      import data._
+
+      Seq(
+        getPropertyBsasAdjustments(appConfig, nino, bsasId),
+        getAdjustedPropertyBsas(appConfig, nino, bsasId)
+      )
+    }
+  }
+
 }
+
+case class SubmitPropertyAdjustmentHateoasData(nino: String, bsasId: String) extends HateoasData
