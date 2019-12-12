@@ -19,7 +19,7 @@ package v1.models.response.retrieveBsas
 import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
-import v1.fixtures.RetrievePropertyBsasFixtures._
+import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 
 class LossSpec extends UnitSpec with JsonErrorValidators{
 

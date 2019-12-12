@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.domain.TypeOfBusiness
-import v1.models.response.{AccountingPeriod, Loss, Profit, TotalBsas}
+import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 import v1.models.response.retrieveBsas.selfEmployment._
 
 object RetrieveSelfEmploymentBsasFixtures {

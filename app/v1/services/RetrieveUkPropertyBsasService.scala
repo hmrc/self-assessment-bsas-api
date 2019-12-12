@@ -26,17 +26,17 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePropertyBsasRequestData
-import v1.models.response.retrieveBsas.RetrievePropertyBsasResponse
+import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePropertyBsasService @Inject()(connector: RetrievePropertyBsasConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveUkPropertyBsasService @Inject()(connector: RetrievePropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def submitUKPropertyBsas(request: RetrievePropertyBsasRequestData)(
     implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrievePropertyBsasResponse]]] = {
+  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrievePropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))

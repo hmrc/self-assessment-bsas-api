@@ -18,7 +18,7 @@ package v1.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v1.models.response.{Loss, Profit, TotalBsas}
+import v1.models.response.retrieveBsas.{Loss, Profit, TotalBsas}
 
 case class BsasDetail(total: TotalBsas,
                       accountingAdjustments: Option[BigDecimal],

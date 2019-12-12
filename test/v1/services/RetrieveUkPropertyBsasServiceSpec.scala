@@ -20,17 +20,17 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.fixtures.RetrievePropertyBsasFixtures._
+import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.models.errors._
-import v1.mocks.connectors.MockRetrievePropertyBsasConnector
+import v1.mocks.connectors.MockRetrieveUkPropertyBsasConnector
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePropertyBsasRequestData
-import v1.models.response.retrieveBsas.RetrievePropertyBsasResponse
+import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class RetrievePropertyBsasServiceSpec extends UnitSpec{
+class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
@@ -39,13 +39,13 @@ class RetrievePropertyBsasServiceSpec extends UnitSpec{
 
   val request = RetrievePropertyBsasRequestData(nino, id, adjustedStatus)
 
-  val response = RetrievePropertyBsasResponse(metadataModel, Some(bsasDetailModel))
+  val response = RetrieveUkPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
-  trait Test extends MockRetrievePropertyBsasConnector {
+  trait Test extends MockRetrieveUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitUKPropertyBsas")
 
-    val service = new RetrievePropertyBsasService(mockConnector)
+    val service = new RetrieveUkPropertyBsasService(mockConnector)
   }
 
   "retrievePropertyBsas" should {

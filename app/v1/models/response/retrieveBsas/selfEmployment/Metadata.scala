@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v1.models.request.DesTaxYear
-import v1.models.response.AccountingPeriod
+import v1.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
                     selfEmploymentId: Option[String], // Optional so we can error if not present with BVR 4

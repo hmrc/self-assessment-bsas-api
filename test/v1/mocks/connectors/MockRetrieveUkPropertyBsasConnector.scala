@@ -21,16 +21,16 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, RetrievePropertyBsasConnector}
 import v1.models.request.RetrievePropertyBsasRequestData
-import v1.models.response.retrieveBsas.RetrievePropertyBsasResponse
+import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrievePropertyBsasConnector extends MockFactory{
+trait MockRetrieveUkPropertyBsasConnector extends MockFactory{
 
   val mockConnector: RetrievePropertyBsasConnector = mock[RetrievePropertyBsasConnector]
 
   object MockRetrievePropertyBsasConnector{
-    def retrievePropertyBsas(requestData: RetrievePropertyBsasRequestData): CallHandler[Future[DesOutcome[RetrievePropertyBsasResponse]]] = {
+    def retrievePropertyBsas(requestData: RetrievePropertyBsasRequestData): CallHandler[Future[DesOutcome[RetrieveUkPropertyBsasResponse]]] = {
       (mockConnector
         .retrievePropertyBsas(_: RetrievePropertyBsasRequestData) (_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, * , *)
