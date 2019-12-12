@@ -25,14 +25,14 @@ import v1.models.request.RetrievePropertyBsasRequestData
 
 import scala.concurrent.Future
 
-class RetrievePropertyBsasConnectorSpec extends ConnectorSpec {
+class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
 
   val queryParams: Map[String, String] = Map("return" -> "03")
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: RetrievePropertyBsasConnector = new RetrievePropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl

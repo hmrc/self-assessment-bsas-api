@@ -26,8 +26,8 @@ import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePropertyBsasConnector @Inject()(val http: HttpClient,
-                                              val appConfig: AppConfig) extends BaseDesConnector {
+class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
+                                                val appConfig: AppConfig) extends BaseDesConnector {
 
   def retrievePropertyBsas(request: RetrievePropertyBsasRequestData)(
     implicit hc: HeaderCarrier,

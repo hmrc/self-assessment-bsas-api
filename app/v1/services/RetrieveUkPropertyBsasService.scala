@@ -21,7 +21,7 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.RetrievePropertyBsasConnector
+import v1.connectors.RetrieveUkPropertyBsasConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -32,7 +32,7 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasService @Inject()(connector: RetrievePropertyBsasConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def submitUKPropertyBsas(request: RetrievePropertyBsasRequestData)(
     implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
