@@ -21,11 +21,11 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
-import v1.mocks.connectors.MockSubmitUKPropertyBsasConnector
+import v1.mocks.connectors.MockSubmitUkPropertyBsasConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestData
-import v1.models.response.SubmitUKPropertyBsasResponse
+import v1.models.request.submitBsas.SubmitPropertyBsasRequestData
+import v1.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,11 +36,11 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
-  val request = SubmitUKPropertyBsasRequestData(nino, id, fhlBody)
+  val request = SubmitPropertyBsasRequestData(nino, id, fhlBody)
 
-  val response = SubmitUKPropertyBsasResponse(id)
+  val response = SubmitUkPropertyBsasResponse(id)
 
-  trait Test extends MockSubmitUKPropertyBsasConnector {
+  trait Test extends MockSubmitUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitUKPropertyBsas")
 

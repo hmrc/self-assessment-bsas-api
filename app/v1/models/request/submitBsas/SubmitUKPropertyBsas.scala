@@ -22,5 +22,5 @@ import v1.models.request.RawData
 
 case class SubmitUKPropertyBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
 
-case class SubmitUKPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitUKPropertyBsasRequestBody)
+case class SubmitPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitUKPropertyBsasRequestBody)
 

@@ -21,18 +21,18 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class SubmitUKPropertyBsasResponse(id: String)
+case class SubmitUkPropertyBsasResponse(id: String)
 
-object SubmitUKPropertyBsasResponse extends HateoasLinks {
+object SubmitUkPropertyBsasResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[SubmitUKPropertyBsasResponse] = Json.writes[SubmitUKPropertyBsasResponse]
+  implicit val writes: OWrites[SubmitUkPropertyBsasResponse] = Json.writes[SubmitUkPropertyBsasResponse]
 
-  implicit val reads: Reads[SubmitUKPropertyBsasResponse] =
-    (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitUKPropertyBsasResponse.apply)
+  implicit val reads: Reads[SubmitUkPropertyBsasResponse] =
+    (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitUkPropertyBsasResponse.apply)
 
   implicit object SubmitPropertyAdjustmentHateoasFactory
-    extends HateoasLinksFactory[SubmitUKPropertyBsasResponse, SubmitPropertyAdjustmentHateoasData] {
-    override def links(appConfig: AppConfig, data: SubmitPropertyAdjustmentHateoasData): Seq[Link] = {
+    extends HateoasLinksFactory[SubmitUkPropertyBsasResponse, SubmitUkPropertyBsasHateoasData] {
+    override def links(appConfig: AppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {
       import data._
 
       Seq(
@@ -44,4 +44,4 @@ object SubmitUKPropertyBsasResponse extends HateoasLinks {
 
 }
 
-case class SubmitPropertyAdjustmentHateoasData(nino: String, bsasId: String) extends HateoasData
+case class SubmitUkPropertyBsasHateoasData(nino: String, bsasId: String) extends HateoasData

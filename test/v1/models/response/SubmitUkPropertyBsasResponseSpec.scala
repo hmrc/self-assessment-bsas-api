@@ -24,7 +24,7 @@ import v1.models.domain.TypeOfBusiness
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
 
-class SubmitUKPropertyBsasResponseSpec extends UnitSpec{
+class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
 
   val desJson: JsValue = Json.parse(
     """
@@ -49,18 +49,18 @@ class SubmitUKPropertyBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val submitBsasResponse: SubmitUKPropertyBsasResponse = SubmitUKPropertyBsasResponse("anId")
+  val submitBsasResponse: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse("anId")
 
   "SubmitBsasResponse" when {
     "read from valid JSON" should {
       "return the expected SubmitBsasResponse object" in {
-        desJson.as[SubmitUKPropertyBsasResponse] shouldBe submitBsasResponse
+        desJson.as[SubmitUkPropertyBsasResponse] shouldBe submitBsasResponse
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidDesJson.validate[SubmitUKPropertyBsasResponse] shouldBe a[JsError]
+        invalidDesJson.validate[SubmitUkPropertyBsasResponse] shouldBe a[JsError]
       }
     }
 
@@ -80,7 +80,7 @@ class SubmitUKPropertyBsasResponseSpec extends UnitSpec{
     }
 
     "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap(submitBsasResponse, SubmitPropertyAdjustmentHateoasData(nino, bsasId)) shouldBe
+      hateoasFactory.wrap(submitBsasResponse, SubmitUkPropertyBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
           submitBsasResponse,
           Seq(

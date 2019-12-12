@@ -20,25 +20,25 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestData
-import v1.models.response.SubmitUKPropertyBsasResponse
+import v1.models.request.submitBsas.SubmitPropertyBsasRequestData
+import v1.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUKPropertyBsasConnector  @Inject()(
+class SubmitUkPropertyBsasConnector @Inject()(
                                     val http: HttpClient,
                                     val appConfig: AppConfig) extends BaseDesConnector {
 
-  def submitUKPropertyBsas(request: SubmitUKPropertyBsasRequestData)(
+  def submitPropertyBsas(request: SubmitPropertyBsasRequestData)(
                           implicit hc: HeaderCarrier,
-                          ec: ExecutionContext): Future[DesOutcome[SubmitUKPropertyBsasResponse]] = {
+                          ec: ExecutionContext): Future[DesOutcome[SubmitUkPropertyBsasResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     post(
       body = request.body,
-      DesUri[SubmitUKPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DesUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
     )
   }
 }
