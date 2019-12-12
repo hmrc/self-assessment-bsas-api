@@ -21,25 +21,25 @@ import java.time.LocalDate
 import play.api.libs.json.Json
 import v1.models.domain.TypeOfBusiness
 import v1.models.response.retrieveBsas._
-import v1.models.response.retrieveBsas.ukProperty.{BsasDetailUkProperty, ExpensesBreakdownUkProperty, IncomeBreakdownUkProperty, MetadataUkProperty, RetrieveUkPropertyBsasResponse}
+import v1.models.response.retrieveBsas.ukProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveUkPropertyBsasResponse}
 
 object RetrievePropertyBsasFixtures {
 
   val totalBsasModel = TotalBsas(100.49,Some(100.49),Some(100.49),Some(100.49))
   val profitModel = Profit(Some(100.49),Some(100.49))
   val lossModel = Loss(Some(100.49),Some(100.49))
-  val incomeBreakdownModel = IncomeBreakdownUkProperty(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
-  val expensesBreakdownModel = ExpensesBreakdownUkProperty(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
+  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
   val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2019-04-06"), LocalDate.parse("2020-04-05"))
 
-  val bsasDetailModel = BsasDetailUkProperty(total = totalBsasModel,
+  val bsasDetailModel = BsasDetail(total = totalBsasModel,
     profit = Some(profitModel),
     loss = Some(lossModel),
     incomeBreakdown = incomeBreakdownModel,
     expensesBreakdown = Some(expensesBreakdownModel))
 
-  val metadataModel = MetadataUkProperty(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+  val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
@@ -48,7 +48,7 @@ object RetrievePropertyBsasFixtures {
     adjustedSummary = true
   )
 
-  val metadataModelWithAdjustableSummary = MetadataUkProperty(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+  val metadataModelWithAdjustableSummary = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",

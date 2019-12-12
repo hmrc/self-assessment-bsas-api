@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
 
-class IncomeBreakdownUkPropertySpec extends UnitSpec with JsonErrorValidators{
+class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
 
   val mtdJson = Json.parse(
     """{
@@ -40,43 +40,43 @@ class IncomeBreakdownUkPropertySpec extends UnitSpec with JsonErrorValidators{
       |  "rarRentReceived": 100.49
       |}""".stripMargin)
 
-  val model = IncomeBreakdownUkProperty(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val model = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
 
   "reads" should {
     "return a valid model" when {
 
-      testPropertyType[IncomeBreakdownUkProperty](desJson)(
+      testPropertyType[IncomeBreakdown](desJson)(
         path = "/totalRentsReceived",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[IncomeBreakdownUkProperty](desJson)(
+      testPropertyType[IncomeBreakdown](desJson)(
         path = "/premiumsOfLeaseGrant",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[IncomeBreakdownUkProperty](desJson)(
+      testPropertyType[IncomeBreakdown](desJson)(
         path = "/reversePremiums",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[IncomeBreakdownUkProperty](desJson)(
+      testPropertyType[IncomeBreakdown](desJson)(
         path = "/otherPropertyIncome",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[IncomeBreakdownUkProperty](desJson)(
+      testPropertyType[IncomeBreakdown](desJson)(
         path = "/rarRentReceived",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
       "a valid json with all fields are supplied" in {
-        desJson.as[IncomeBreakdownUkProperty] shouldBe model
+        desJson.as[IncomeBreakdown] shouldBe model
       }
     }
   }

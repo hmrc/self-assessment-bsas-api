@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas.ukProperty
+package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.RetrievePropertyBsasFixtures._
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desBsasDetailJson, bsasDetailModel, mtdBsasDetailJson}
 import v1.models.utils.JsonErrorValidators
 
-class MetadataUkPropertySpec extends UnitSpec with JsonErrorValidators{
+class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
-  "reads" should {
-    "return a valid model" when {
-
-      "a valid json with all fields are supplied" in {
-        desRetrieveBsasResponse.as[MetadataUkProperty] shouldBe metadataModel
-      }
-
-      "a valid json with only adjustable summary fields are supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[MetadataUkProperty] shouldBe metadataModelWithAdjustableSummary
+  "reads" when {
+    "passed valid JSON" should {
+      "return a valid model" in {
+        desBsasDetailJson.as[BsasDetail] shouldBe bsasDetailModel
       }
     }
   }
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        metadataModel.toJson shouldBe mtdMetadataJson
+  "writes" when {
+    "passed a valid model" should {
+      "return valid JSON" in {
+        bsasDetailModel.toJson shouldBe mtdBsasDetailJson
       }
     }
   }
+
 }

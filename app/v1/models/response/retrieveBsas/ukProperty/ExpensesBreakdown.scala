@@ -19,21 +19,21 @@ package v1.models.response.retrieveBsas.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class ExpensesBreakdownUkProperty(premisesRunningCosts: Option[BigDecimal],
-                                       repairsAndMaintenance: Option[BigDecimal],
-                                       financialCosts: Option[BigDecimal],
-                                       professionalFees: Option[BigDecimal],
-                                       travelCosts: Option[BigDecimal],
-                                       costOfServices: Option[BigDecimal],
-                                       residentialFinancialCost:Option[BigDecimal],
-                                       broughtFwdResidentialFinancialCost: Option[BigDecimal],
-                                       other: Option[BigDecimal],
-                                       consolidatedExpenses: Option[BigDecimal]
+case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal],
+                             repairsAndMaintenance: Option[BigDecimal],
+                             financialCosts: Option[BigDecimal],
+                             professionalFees: Option[BigDecimal],
+                             travelCosts: Option[BigDecimal],
+                             costOfServices: Option[BigDecimal],
+                             residentialFinancialCost:Option[BigDecimal],
+                             broughtFwdResidentialFinancialCost: Option[BigDecimal],
+                             other: Option[BigDecimal],
+                             consolidatedExpenses: Option[BigDecimal]
                             )
 
-object ExpensesBreakdownUkProperty {
+object ExpensesBreakdown {
   //implicit val reads: Reads[ExpensesBreakdown] = Json.reads[ExpensesBreakdown]
-  implicit val reads: Reads[ExpensesBreakdownUkProperty] = (
+  implicit val reads: Reads[ExpensesBreakdown] = (
     (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
       (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and
       (JsPath \ "financialCosts").readNullable[BigDecimal] and
@@ -44,7 +44,7 @@ object ExpensesBreakdownUkProperty {
       (JsPath \ "broughtFwdResidentialFinancialCost").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-    )(ExpensesBreakdownUkProperty.apply _)
+    )(ExpensesBreakdown.apply _)
 
-  implicit val writes: OWrites[ExpensesBreakdownUkProperty] = Json.writes[ExpensesBreakdownUkProperty]
+  implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]
 }

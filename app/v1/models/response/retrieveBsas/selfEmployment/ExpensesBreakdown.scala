@@ -19,27 +19,27 @@ package v1.models.response.retrieveBsas.selfEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class ExpensesBreakdownSelfEmployment(costOfGoodsBought: Option[BigDecimal],
-                                           cisPaymentsToSubcontractors: Option[BigDecimal],
-                                           staffCosts: Option[BigDecimal],
-                                           travelCosts: Option[BigDecimal],
-                                           premisesRunningCosts: Option[BigDecimal],
-                                           maintenanceCosts: Option[BigDecimal],
-                                           adminCosts: Option[BigDecimal],
-                                           advertisingCosts: Option[BigDecimal],
-                                           businessEntertainmentCosts: Option[BigDecimal],
-                                           interest: Option[BigDecimal],
-                                           financialCharges: Option[BigDecimal],
-                                           badDebt: Option[BigDecimal],
-                                           professionalFees: Option[BigDecimal],
-                                           depreciation: Option[BigDecimal],
-                                           other: Option[BigDecimal],
-                                           consolidatedExpenses: Option[BigDecimal])
+case class ExpensesBreakdown(costOfGoodsBought: Option[BigDecimal],
+                             cisPaymentsToSubcontractors: Option[BigDecimal],
+                             staffCosts: Option[BigDecimal],
+                             travelCosts: Option[BigDecimal],
+                             premisesRunningCosts: Option[BigDecimal],
+                             maintenanceCosts: Option[BigDecimal],
+                             adminCosts: Option[BigDecimal],
+                             advertisingCosts: Option[BigDecimal],
+                             businessEntertainmentCosts: Option[BigDecimal],
+                             interest: Option[BigDecimal],
+                             financialCharges: Option[BigDecimal],
+                             badDebt: Option[BigDecimal],
+                             professionalFees: Option[BigDecimal],
+                             depreciation: Option[BigDecimal],
+                             other: Option[BigDecimal],
+                             consolidatedExpenses: Option[BigDecimal])
 
-object ExpensesBreakdownSelfEmployment {
-  implicit val writes: OWrites[ExpensesBreakdownSelfEmployment] = Json.writes[ExpensesBreakdownSelfEmployment]
+object ExpensesBreakdown {
+  implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]
 
-  implicit val reads: Reads[ExpensesBreakdownSelfEmployment] = (
+  implicit val reads: Reads[ExpensesBreakdown] = (
     (JsPath \ "costOfGoodsAllowable").readNullable[BigDecimal] and
       (JsPath \ "paymentsToSubContractorsAllowable").readNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsAllowable").readNullable[BigDecimal] and
@@ -56,5 +56,5 @@ object ExpensesBreakdownSelfEmployment {
       (JsPath \ "depreciationAllowable").readNullable[BigDecimal] and
       (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-  )(ExpensesBreakdownSelfEmployment.apply _)
+  )(ExpensesBreakdown.apply _)
 }

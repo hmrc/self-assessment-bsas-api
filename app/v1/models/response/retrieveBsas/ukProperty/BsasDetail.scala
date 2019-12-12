@@ -20,20 +20,20 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.models.response.retrieveBsas._
 
-case class BsasDetailUkProperty(total: TotalBsas,
-                                profit: Option[Profit],
-                                loss: Option[Loss],
-                                incomeBreakdown: IncomeBreakdownUkProperty,
-                                expensesBreakdown: Option[ExpensesBreakdownUkProperty])
+case class BsasDetail(total: TotalBsas,
+                      profit: Option[Profit],
+                      loss: Option[Loss],
+                      incomeBreakdown: IncomeBreakdown,
+                      expensesBreakdown: Option[ExpensesBreakdown])
 
-object BsasDetailUkProperty {
-  implicit val reads: Reads[BsasDetailUkProperty] = (
+object BsasDetail {
+  implicit val reads: Reads[BsasDetail] = (
     JsPath.read[TotalBsas] and
       JsPath.readNullable[Profit] and
       JsPath.readNullable[Loss] and
-      (JsPath \ "income").read[IncomeBreakdownUkProperty] and
-      (JsPath \ "expenses").readNullable[ExpensesBreakdownUkProperty]
-    )(BsasDetailUkProperty.apply _)
+      (JsPath \ "income").read[IncomeBreakdown] and
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown]
+    )(BsasDetail.apply _)
 
-  implicit val writes: OWrites[BsasDetailUkProperty] = Json.writes[BsasDetailUkProperty]
+  implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }

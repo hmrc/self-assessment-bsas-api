@@ -17,23 +17,31 @@
 package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desBsasDetailSelfEmploymentJson, bsasDetailSelfEmploymentModel, mtdBsasDetailSelfEmploymentJson}
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{
+  desRetrieveBsasResponseJsonAdjustable,
+  desRetrieveBsasResponseJsonAdjusted,
+  metadataModel,
+  mtdMetadataJson
+}
 import v1.models.utils.JsonErrorValidators
 
-class BsasDetailSelfEmploymentSpec extends UnitSpec with JsonErrorValidators {
+class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
-  "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        desBsasDetailSelfEmploymentJson.as[BsasDetailSelfEmployment] shouldBe bsasDetailSelfEmploymentModel
+  "reads" should {
+    "return a valid model" when {
+      "passed valid JSON with adjustedSummaryCalculation" in {
+        desRetrieveBsasResponseJsonAdjusted.as[Metadata] shouldBe metadataModel(true)
+      }
+      "passed valid JSON with adjustableSummaryCalculation" in {
+        desRetrieveBsasResponseJsonAdjustable.as[Metadata] shouldBe metadataModel(false)
       }
     }
   }
 
-  "writes" when {
-    "passed a valid model" should {
-      "return valid JSON" in {
-        bsasDetailSelfEmploymentModel.toJson shouldBe mtdBsasDetailSelfEmploymentJson
+  "writes" should {
+    "return valid JSON" when {
+      "passed a valid model" in {
+        metadataModel(true).toJson shouldBe mtdMetadataJson(true)
       }
     }
   }

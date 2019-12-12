@@ -17,23 +17,23 @@
 package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desIncomeBreakdownSelfEmploymentJson, incomeBreakdownSelfEmploymentModel, mtdIncomeBreakdownSelfEmploymentJson}
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desIncomeBreakdownJson, incomeBreakdownModel, mtdIncomeBreakdownJson}
 import v1.models.utils.JsonErrorValidators
 
-class IncomeBreakdownSelfEmploymentSpec extends UnitSpec with JsonErrorValidators {
+class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        desIncomeBreakdownSelfEmploymentJson.as[IncomeBreakdownSelfEmployment] shouldBe incomeBreakdownSelfEmploymentModel
+        desIncomeBreakdownJson.as[IncomeBreakdown] shouldBe incomeBreakdownModel
       }
     }
-    testPropertyType[IncomeBreakdownSelfEmployment](desIncomeBreakdownSelfEmploymentJson)(
+    testPropertyType[IncomeBreakdown](desIncomeBreakdownJson)(
       path = "/turnover",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[IncomeBreakdownSelfEmployment](desIncomeBreakdownSelfEmploymentJson)(
+    testPropertyType[IncomeBreakdown](desIncomeBreakdownJson)(
       path = "/other",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
@@ -43,7 +43,7 @@ class IncomeBreakdownSelfEmploymentSpec extends UnitSpec with JsonErrorValidator
   "writes" when {
     "passed a valid model" should {
       "return valid JSON" in {
-        incomeBreakdownSelfEmploymentModel.toJson shouldBe mtdIncomeBreakdownSelfEmploymentJson
+        incomeBreakdownModel.toJson shouldBe mtdIncomeBreakdownJson
       }
     }
   }

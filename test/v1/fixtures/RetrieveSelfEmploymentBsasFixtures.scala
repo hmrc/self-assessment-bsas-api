@@ -20,15 +20,15 @@ import java.time.LocalDate
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.domain.TypeOfBusiness
-import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 import v1.models.response.retrieveBsas.selfEmployment._
+import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
 object RetrieveSelfEmploymentBsasFixtures {
 
-  private val now = "2019-04-06"
+  private val now          = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
-  val additionsBreakdownModel = AdditionsBreakdown(
+  val additionsBreakdownModel: AdditionsBreakdown = AdditionsBreakdown(
     costOfGoodsBoughtDisallowable = Some(100.49),
     cisPaymentsToSubcontractorsDisallowable = Some(100.49),
     staffCostsDisallowable = Some(100.49),
@@ -86,26 +86,26 @@ object RetrieveSelfEmploymentBsasFixtures {
       |}""".stripMargin
   )
 
-  val incomeBreakdownSelfEmploymentModel = IncomeBreakdownSelfEmployment(
+  val incomeBreakdownModel: IncomeBreakdown = IncomeBreakdown(
     turnover = 100.49,
     other = Some(100.49)
   )
 
-  val mtdIncomeBreakdownSelfEmploymentJson: JsValue = Json.parse(
+  val mtdIncomeBreakdownJson: JsValue = Json.parse(
     """{
       |  "turnover": 100.49,
       |  "other": 100.49
       |}""".stripMargin
   )
 
-  val desIncomeBreakdownSelfEmploymentJson: JsValue = Json.parse(
+  val desIncomeBreakdownJson: JsValue = Json.parse(
     """{
       |  "turnover": 100.49,
       |  "other": 100.49
       |}""".stripMargin
   )
 
-  val expensesBreakdownSelfEmploymentModel = ExpensesBreakdownSelfEmployment(
+  val expensesBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(
     costOfGoodsBought = Some(100.49),
     cisPaymentsToSubcontractors = Some(100.49),
     staffCosts = Some(100.49),
@@ -124,7 +124,7 @@ object RetrieveSelfEmploymentBsasFixtures {
     consolidatedExpenses = Some(100.49)
   )
 
-  val mtdExpensesBreakdownSelfEmploymentJson: JsValue = Json.parse(
+  val mtdExpensesBreakdownJson: JsValue = Json.parse(
     """{
       |  "costOfGoodsBought": 100.49,
       |  "cisPaymentsToSubcontractors": 100.49,
@@ -145,7 +145,7 @@ object RetrieveSelfEmploymentBsasFixtures {
       |}""".stripMargin
   )
 
-  val desExpensesBreakdownSelfEmploymentJson: JsValue = Json.parse(
+  val desExpensesBreakdownJson: JsValue = Json.parse(
     """{
       |  "costOfGoodsAllowable": 100.49,
       |  "paymentsToSubContractorsAllowable": 100.49,
@@ -166,17 +166,17 @@ object RetrieveSelfEmploymentBsasFixtures {
       |}""".stripMargin
   )
 
-  val bsasDetailSelfEmploymentModel = BsasDetailSelfEmployment(
+  val bsasDetailModel: BsasDetail = BsasDetail(
     total = TotalBsas(100.49, Some(100.49), Some(100.49), Some(100.49)),
     accountingAdjustments = Some(100.49),
     profit = Some(Profit(Some(100.49), Some(100.49))),
     loss = Some(Loss(Some(100.49), Some(100.49))),
-    incomeBreakdown = incomeBreakdownSelfEmploymentModel,
-    expensesBreakdown = Some(expensesBreakdownSelfEmploymentModel),
+    incomeBreakdown = incomeBreakdownModel,
+    expensesBreakdown = Some(expensesBreakdownModel),
     additionsBreakdown = Some(additionsBreakdownModel)
   )
 
-  val mtdBsasDetailSelfEmploymentJson: JsValue = Json.parse(
+  val mtdBsasDetailJson: JsValue = Json.parse(
     s"""{
        |  "total": {
        |    "income": 100.49,
@@ -193,13 +193,13 @@ object RetrieveSelfEmploymentBsasFixtures {
        |    "net": 100.49,
        |    "adjustedIncomeTax": 100.49
        |  },
-       |  "incomeBreakdown": $mtdIncomeBreakdownSelfEmploymentJson,
-       |  "expensesBreakdown": $mtdExpensesBreakdownSelfEmploymentJson,
+       |  "incomeBreakdown": $mtdIncomeBreakdownJson,
+       |  "expensesBreakdown": $mtdExpensesBreakdownJson,
        |  "additionsBreakdown": $mtdAdditionsBreakdownJson
        |}""".stripMargin
   )
 
-  val desBsasDetailSelfEmploymentJson: JsValue = Json.parse(
+  val desBsasDetailJson: JsValue = Json.parse(
     s"""{
        |  "totalIncome": 100.49,
        |  "totalExpenses": 100.49,
@@ -210,25 +210,27 @@ object RetrieveSelfEmploymentBsasFixtures {
        |  "taxableProfit": 100.49,
        |  "netLoss": 100.49,
        |  "adjustedIncomeTaxLoss": 100.49,
-       |  "income": $desIncomeBreakdownSelfEmploymentJson,
-       |  "expenses": $desExpensesBreakdownSelfEmploymentJson,
+       |  "income": $desIncomeBreakdownJson,
+       |  "expenses": $desExpensesBreakdownJson,
        |  "additions": $desAdditionsBreakdownJson
        |}""".stripMargin
   )
 
-  val metadataSelfEmploymentModel: Boolean => MetadataSelfEmployment = adjustedSummary =>  MetadataSelfEmployment(
-    typeOfBusiness = TypeOfBusiness.`self-employment`,
-    selfEmploymentId = Some("X0IS12345678901"),
-    accountingPeriod = AccountingPeriod(LocalDate.parse(now), LocalDate.parse(aYearFromNow)),
-    taxYear = "2019-20",
-    bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-    requestedDateTime = "2020-04-07T23:59:59.000Z",
-    summaryStatus = "valid",
-    adjustedSummary = adjustedSummary
+  val metadataModel: Boolean => Metadata = adjustedSummary =>
+    Metadata(
+      typeOfBusiness = TypeOfBusiness.`self-employment`,
+      selfEmploymentId = Some("X0IS12345678901"),
+      accountingPeriod = AccountingPeriod(LocalDate.parse(now), LocalDate.parse(aYearFromNow)),
+      taxYear = "2019-20",
+      bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      requestedDateTime = "2020-04-07T23:59:59.000Z",
+      summaryStatus = "valid",
+      adjustedSummary = adjustedSummary
   )
 
-  val mtdMetadataSelfEmploymentJson: Boolean => JsValue = adjustedSummary => Json.parse(
-    s"""{
+  val mtdMetadataJson: Boolean => JsValue = adjustedSummary =>
+    Json.parse(
+      s"""{
        |  "typeOfBusiness": "self-employment",
        |  "selfEmploymentId": "X0IS12345678901",
        |  "accountingPeriod": {
@@ -243,24 +245,25 @@ object RetrieveSelfEmploymentBsasFixtures {
        |}""".stripMargin
   )
 
-  val retrieveSelfEmploymentBsasResponseModelAdjusted = RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataSelfEmploymentModel(true),
-    bsas = Some(bsasDetailSelfEmploymentModel)
+  val retrieveBsasResponseModelAdjusted: RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
+    metadata = metadataModel(true),
+    bsas = Some(bsasDetailModel)
   )
 
-  val retrieveSelfEmploymentBsasResponseModelAdjustable = RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataSelfEmploymentModel(false),
-    bsas = Some(bsasDetailSelfEmploymentModel)
+  val retrieveBsasResponseModelAdjustable: RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
+    metadata = metadataModel(false),
+    bsas = Some(bsasDetailModel)
   )
 
-  val mtdRetrieveSelfEmploymentBsasResponseJson: Boolean => JsValue = adjustedSummary => Json.parse(
-    s"""{
-       |  "metadata": ${mtdMetadataSelfEmploymentJson(adjustedSummary)},
-       |  "bsas": $mtdBsasDetailSelfEmploymentJson
+  val mtdRetrieveBsasResponseJson: Boolean => JsValue = adjustedSummary =>
+    Json.parse(
+      s"""{
+       |  "metadata": ${mtdMetadataJson(adjustedSummary)},
+       |  "bsas": $mtdBsasDetailJson
        |}""".stripMargin
   )
 
-  val desRetrieveSelfEmploymentBsasResponseJsonAdjusted: JsValue = Json.parse(
+  val desRetrieveBsasResponseJsonAdjusted: JsValue = Json.parse(
     s"""{
        |  "inputs": {
        |    "incomeSourceType": "01",
@@ -274,11 +277,11 @@ object RetrieveSelfEmploymentBsasFixtures {
        |    "requestedDateTime": "2020-04-07T23:59:59.000Z",
        |    "status": "valid"
        |  },
-       |  "adjustedSummaryCalculation": $desBsasDetailSelfEmploymentJson
+       |  "adjustedSummaryCalculation": $desBsasDetailJson
        |}""".stripMargin
   )
 
-  val desRetrieveSelfEmploymentBsasResponseJsonAdjustable: JsValue = Json.parse(
+  val desRetrieveBsasResponseJsonAdjustable: JsValue = Json.parse(
     s"""{
        |  "inputs": {
        |    "incomeSourceType": "01",
@@ -292,7 +295,7 @@ object RetrieveSelfEmploymentBsasFixtures {
        |    "requestedDateTime": "2020-04-07T23:59:59.000Z",
        |    "status": "valid"
        |  },
-       |  "adjustableSummaryCalculation": $desBsasDetailSelfEmploymentJson
+       |  "adjustableSummaryCalculation": $desBsasDetailJson
        |}""".stripMargin
   )
 }

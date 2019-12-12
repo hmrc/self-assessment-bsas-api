@@ -18,11 +18,11 @@ package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
 import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{
-  desRetrieveSelfEmploymentBsasResponseJsonAdjusted,
-  desRetrieveSelfEmploymentBsasResponseJsonAdjustable,
-  mtdRetrieveSelfEmploymentBsasResponseJson,
-  retrieveSelfEmploymentBsasResponseModelAdjusted,
-  retrieveSelfEmploymentBsasResponseModelAdjustable
+  desRetrieveBsasResponseJsonAdjusted,
+  desRetrieveBsasResponseJsonAdjustable,
+  mtdRetrieveBsasResponseJson,
+  retrieveBsasResponseModelAdjusted,
+  retrieveBsasResponseModelAdjustable
 }
 import v1.models.utils.JsonErrorValidators
 
@@ -31,10 +31,10 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
   "reads" should {
     "return a valid model" when {
       "passed valid JSON with adjustedSummaryCalculation" in {
-        desRetrieveSelfEmploymentBsasResponseJsonAdjusted.as[RetrieveSelfEmploymentBsasResponse] shouldBe retrieveSelfEmploymentBsasResponseModelAdjusted
+        desRetrieveBsasResponseJsonAdjusted.as[RetrieveSelfEmploymentBsasResponse] shouldBe retrieveBsasResponseModelAdjusted
       }
       "passed valid JSON with adjustableSummaryCalculation" in {
-        desRetrieveSelfEmploymentBsasResponseJsonAdjustable.as[RetrieveSelfEmploymentBsasResponse] shouldBe retrieveSelfEmploymentBsasResponseModelAdjustable
+        desRetrieveBsasResponseJsonAdjustable.as[RetrieveSelfEmploymentBsasResponse] shouldBe retrieveBsasResponseModelAdjustable
       }
     }
   }
@@ -42,10 +42,10 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
   "writes" should {
     "return valid JSON" when {
       "passed a valid model with adjustedSummary = true" in {
-         retrieveSelfEmploymentBsasResponseModelAdjusted.toJson shouldBe mtdRetrieveSelfEmploymentBsasResponseJson(true)
+         retrieveBsasResponseModelAdjusted.toJson shouldBe mtdRetrieveBsasResponseJson(true)
       }
       "passed a valid model with adjustedSummary = false" in {
-        retrieveSelfEmploymentBsasResponseModelAdjustable.toJson shouldBe mtdRetrieveSelfEmploymentBsasResponseJson(false)
+        retrieveBsasResponseModelAdjustable.toJson shouldBe mtdRetrieveBsasResponseJson(false)
       }
     }
   }

@@ -21,7 +21,7 @@ import support.UnitSpec
 import v1.fixtures.RetrievePropertyBsasFixtures._
 import v1.models.utils.JsonErrorValidators
 
-class BsasDetailUkPropertySpec extends UnitSpec with JsonErrorValidators{
+class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
 
   val desJson = Json.parse(
     """{
@@ -58,7 +58,7 @@ class BsasDetailUkPropertySpec extends UnitSpec with JsonErrorValidators{
     "return a valid model" when {
 
       "a valid json with all fields are supplied" in {
-        desJson.as[BsasDetailUkProperty] shouldBe bsasDetailModel
+        desJson.as[BsasDetail] shouldBe bsasDetailModel
       }
     }
   }

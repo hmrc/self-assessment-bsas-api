@@ -19,16 +19,16 @@ package v1.models.response.retrieveBsas.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class RetrieveUkPropertyBsasResponse(metadata: MetadataUkProperty,
-                                          bsas: Option[BsasDetailUkProperty])
+case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
+                                          bsas: Option[BsasDetail])
 
 object RetrieveUkPropertyBsasResponse {
 
   implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
-    JsPath.read[MetadataUkProperty] and
+    JsPath.read[Metadata] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-        case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetailUkProperty]
-        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetailUkProperty]
+        case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
+        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
       }
   )(RetrieveUkPropertyBsasResponse.apply _)
 

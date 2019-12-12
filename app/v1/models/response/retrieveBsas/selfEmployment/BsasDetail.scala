@@ -20,25 +20,25 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.models.response.retrieveBsas.{Loss, Profit, TotalBsas}
 
-case class BsasDetailSelfEmployment(total: TotalBsas,
-                                    accountingAdjustments: Option[BigDecimal],
-                                    profit: Option[Profit],
-                                    loss: Option[Loss],
-                                    incomeBreakdown: IncomeBreakdownSelfEmployment,
-                                    expensesBreakdown: Option[ExpensesBreakdownSelfEmployment],
-                                    additionsBreakdown: Option[AdditionsBreakdown])
+case class BsasDetail(total: TotalBsas,
+                      accountingAdjustments: Option[BigDecimal],
+                      profit: Option[Profit],
+                      loss: Option[Loss],
+                      incomeBreakdown: IncomeBreakdown,
+                      expensesBreakdown: Option[ExpensesBreakdown],
+                      additionsBreakdown: Option[AdditionsBreakdown])
 
-object BsasDetailSelfEmployment {
-  implicit val reads: Reads[BsasDetailSelfEmployment] = (
+object BsasDetail {
+  implicit val reads: Reads[BsasDetail] = (
     JsPath.read[TotalBsas] and
       (JsPath \ "accountingAdjustments").readNullable[BigDecimal] and
       JsPath.readNullable[Profit] and
       JsPath.readNullable[Loss] and
-      (JsPath \ "income").read[IncomeBreakdownSelfEmployment] and
-      (JsPath \ "expenses").readNullable[ExpensesBreakdownSelfEmployment] and
+      (JsPath \ "income").read[IncomeBreakdown] and
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown] and
       (JsPath \ "additions").readNullable[AdditionsBreakdown]
-    )(BsasDetailSelfEmployment.apply _)
+    )(BsasDetail.apply _)
 
-  implicit val writes: OWrites[BsasDetailSelfEmployment] = Json.writes[BsasDetailSelfEmployment]
+  implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }
 

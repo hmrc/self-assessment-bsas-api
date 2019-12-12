@@ -19,16 +19,16 @@ package v1.models.response.retrieveBsas.selfEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class RetrieveSelfEmploymentBsasResponse (metadata: MetadataSelfEmployment,
-                                               bsas: Option[BsasDetailSelfEmployment])
+case class RetrieveSelfEmploymentBsasResponse (metadata: Metadata,
+                                               bsas: Option[BsasDetail])
 
 object RetrieveSelfEmploymentBsasResponse {
 
   implicit val reads: Reads[RetrieveSelfEmploymentBsasResponse] = (
-    JsPath.read[MetadataSelfEmployment] and
+    JsPath.read[Metadata] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-        case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetailSelfEmployment]
-        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetailSelfEmployment]
+        case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
+        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
       }
     )(RetrieveSelfEmploymentBsasResponse.apply _)
 

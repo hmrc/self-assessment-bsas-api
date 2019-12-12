@@ -19,20 +19,20 @@ package v1.models.response.retrieveBsas.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class IncomeBreakdownUkProperty(rentIncome: Option[BigDecimal],
-                                     premiumsOfLeaseGrant: Option[BigDecimal],
-                                     reversePremiums: Option[BigDecimal],
-                                     otherPropertyIncome: Option[BigDecimal],
-                                     rarRentReceived: Option[BigDecimal])
+case class IncomeBreakdown(rentIncome: Option[BigDecimal],
+                           premiumsOfLeaseGrant: Option[BigDecimal],
+                           reversePremiums: Option[BigDecimal],
+                           otherPropertyIncome: Option[BigDecimal],
+                           rarRentReceived: Option[BigDecimal])
 
-object IncomeBreakdownUkProperty {
-  implicit val reads: Reads[IncomeBreakdownUkProperty] = (
+object IncomeBreakdown {
+  implicit val reads: Reads[IncomeBreakdown] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
-    )(IncomeBreakdownUkProperty.apply _)
+    )(IncomeBreakdown.apply _)
 
-  implicit val writes: OWrites[IncomeBreakdownUkProperty] = Json.writes[IncomeBreakdownUkProperty]
+  implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }

@@ -17,93 +17,93 @@
 package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desExpensesBreakdownSelfEmploymentJson, expensesBreakdownSelfEmploymentModel, mtdExpensesBreakdownSelfEmploymentJson}
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desExpensesBreakdownJson, expensesBreakdownModel, mtdExpensesBreakdownJson}
 import v1.models.utils.JsonErrorValidators
 
-class ExpensesBreakdownSelfEmploymentSpec extends UnitSpec with JsonErrorValidators {
+class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        desExpensesBreakdownSelfEmploymentJson.as[ExpensesBreakdownSelfEmployment] shouldBe expensesBreakdownSelfEmploymentModel
+        desExpensesBreakdownJson.as[ExpensesBreakdown] shouldBe expensesBreakdownModel
       }
     }
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/costOfGoodsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/paymentsToSubContractorsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/wagesAndStaffCostsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/carVanTravelExpensesAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/premisesRunningCostsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/maintenanceCostsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/adminCostsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/advertisingCostsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/businessEntertainmentCostsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/interestOnBankOtherLoansAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/financeChargesAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/irrecoverableDebtsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/professionalFeesAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/depreciationAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/otherExpensesAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
-    testPropertyType[ExpensesBreakdownSelfEmployment](desExpensesBreakdownSelfEmploymentJson)(
+    testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
       path = "/consolidatedExpenses",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
@@ -113,7 +113,7 @@ class ExpensesBreakdownSelfEmploymentSpec extends UnitSpec with JsonErrorValidat
   "writes" when {
     "passed a valid model" should {
       "return valid JSON" in {
-        expensesBreakdownSelfEmploymentModel.toJson shouldBe mtdExpensesBreakdownSelfEmploymentJson
+        expensesBreakdownModel.toJson shouldBe mtdExpensesBreakdownJson
       }
     }
   }
