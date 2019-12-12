@@ -25,7 +25,7 @@ import v1.models.errors._
 import v1.mocks.connectors.MockRetrievePropertyBsasConnector
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePropertyBsasRequestData
-import v1.models.response.retrievePropertyBsas.RetrievePropertyBsasResponse
+import v1.models.response.retrieveBsas.RetrievePropertyBsasResponse
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

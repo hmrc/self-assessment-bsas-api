@@ -14,44 +14,44 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieveBsas
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.RetrievePropertyBsasFixtures._
 import v1.models.utils.JsonErrorValidators
+import v1.fixtures.RetrievePropertyBsasFixtures._
 
-class LossSpec extends UnitSpec with JsonErrorValidators{
+class ProfitSpec extends UnitSpec with JsonErrorValidators{
 
   val mtdJson = Json.parse(
     """{
       |  "net": 100.49,
-      |  "adjustedIncomeTax": 100.49
+      |  "taxable": 100.49
       |}""".stripMargin)
 
   val desJson = Json.parse(
     """{
-      |  "netLoss": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "netProfit": 100.49,
+      |  "taxableProfit": 100.49
       |}""".stripMargin)
 
   "reads" should {
     "return a valid model" when {
 
-      testPropertyType[Loss](desJson)(
-        path = "/netLoss",
+      testPropertyType[Profit](desJson)(
+        path = "/netProfit",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[Loss](desJson)(
-        path = "/adjustedIncomeTaxLoss",
+      testPropertyType[Profit](desJson)(
+        path = "/taxableProfit",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
       "a valid json with all fields are supplied" in {
-        desJson.as[Loss] shouldBe lossModel
+        desJson.as[Profit] shouldBe profitModel
       }
     }
   }
@@ -59,7 +59,7 @@ class LossSpec extends UnitSpec with JsonErrorValidators{
   "writes" should {
     "return a valid json" when {
       "a valid model is supplied" in {
-        lossModel.toJson shouldBe mtdJson
+        profitModel.toJson shouldBe mtdJson
       }
     }
   }

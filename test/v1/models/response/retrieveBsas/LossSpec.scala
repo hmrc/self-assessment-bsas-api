@@ -14,65 +14,44 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieveBsas
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.RetrievePropertyBsasFixtures._
 import v1.models.utils.JsonErrorValidators
+import v1.fixtures.RetrievePropertyBsasFixtures._
 
-class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
+class LossSpec extends UnitSpec with JsonErrorValidators{
 
   val mtdJson = Json.parse(
     """{
-      |  "income": 100.49,
-      |  "expenses": 100.49,
-      |  "additions": 100.49,
-      |  "deductions": 100.49
+      |  "net": 100.49,
+      |  "adjustedIncomeTax": 100.49
       |}""".stripMargin)
 
   val desJson = Json.parse(
     """{
-      |  "totalIncome": 100.49,
-      |  "totalExpenses": 100.49,
-      |  "totalAdditions": 100.49,
-      |  "totalDeductions": 100.49
-      |}""".stripMargin)
-
-  val desWithOnlyRequiredJson = Json.parse(
-    """{
-      |  "totalIncome": 100.49
+      |  "netLoss": 100.49,
+      |  "adjustedIncomeTaxLoss": 100.49
       |}""".stripMargin)
 
   "reads" should {
     "return a valid model" when {
 
-      testMandatoryProperty[TotalBsas](desJson)("totalIncome")
-
-      testPropertyType[TotalBsas](desJson)(
-        path = "/totalExpenses",
+      testPropertyType[Loss](desJson)(
+        path = "/netLoss",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
-      testPropertyType[TotalBsas](desJson)(
-        path = "/totalAdditions",
-        replacement = "test".toJson,
-        expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
-      )
-
-      testPropertyType[TotalBsas](desJson)(
-        path = "/totalDeductions",
+      testPropertyType[Loss](desJson)(
+        path = "/adjustedIncomeTaxLoss",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
       )
 
       "a valid json with all fields are supplied" in {
-        desJson.as[TotalBsas] shouldBe totalBsasModel
-      }
-
-      "a valid json with only mandatory fields are supplied" in {
-        desWithOnlyRequiredJson.as[TotalBsas] shouldBe new TotalBsas(100.49, None, None, None)
+        desJson.as[Loss] shouldBe lossModel
       }
     }
   }
@@ -80,7 +59,7 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
   "writes" should {
     "return a valid json" when {
       "a valid model is supplied" in {
-        totalBsasModel.toJson shouldBe mtdJson
+        lossModel.toJson shouldBe mtdJson
       }
     }
   }

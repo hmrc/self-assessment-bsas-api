@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, RetrievePropertyBsasConnector}
 import v1.models.request.RetrievePropertyBsasRequestData
-import v1.models.response.retrievePropertyBsas.RetrievePropertyBsasResponse
+import v1.models.response.retrieveBsas.RetrievePropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

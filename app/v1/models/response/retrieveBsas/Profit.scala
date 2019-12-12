@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieveBsas
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class Loss(net: Option[BigDecimal],
-                adjustedIncomeTax: Option[BigDecimal])
+case class Profit(net: Option[BigDecimal],
+                  taxable: Option[BigDecimal])
 
-object Loss {
-  implicit val reads: Reads[Loss] = (
-    (JsPath \ "netLoss").readNullable[BigDecimal] and
-      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
-    )(Loss.apply _)
+object Profit {
+  implicit val reads: Reads[Profit] = (
+    (JsPath \ "netProfit").readNullable[BigDecimal] and
+      (JsPath \ "taxableProfit").readNullable[BigDecimal]
+    )(Profit.apply _)
 
-  implicit val writes: OWrites[Loss] = Json.writes[Loss]
+  implicit val writes: OWrites[Profit] = Json.writes[Profit]
 }

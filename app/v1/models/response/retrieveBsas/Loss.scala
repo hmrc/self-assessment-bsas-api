@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieveBsas
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class TotalBsas(income: BigDecimal,
-                     expenses: Option[BigDecimal],
-                     additions: Option[BigDecimal],
-                     deductions: Option[BigDecimal]
-                    )
+case class Loss(net: Option[BigDecimal],
+                adjustedIncomeTax: Option[BigDecimal])
 
-object TotalBsas {
-  implicit val reads: Reads[TotalBsas] = (
-    (JsPath \ "totalIncome").read[BigDecimal] and
-      (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "totalAdditions").readNullable[BigDecimal] and
-      (JsPath \ "totalDeductions").readNullable[BigDecimal]
-    )(TotalBsas.apply _)
+object Loss {
+  implicit val reads: Reads[Loss] = (
+    (JsPath \ "netLoss").readNullable[BigDecimal] and
+      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
+    )(Loss.apply _)
 
-  implicit val writes: OWrites[TotalBsas] = Json.writes[TotalBsas]
+  implicit val writes: OWrites[Loss] = Json.writes[Loss]
 }
