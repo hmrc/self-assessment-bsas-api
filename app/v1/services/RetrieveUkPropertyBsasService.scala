@@ -25,7 +25,7 @@ import v1.connectors.RetrieveUkPropertyBsasConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrievePropertyBsasRequestData
+import v1.models.request.RetrieveUkPropertyBsasRequestData
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v1.support.DesResponseMappingSupport
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
-  def submitUKPropertyBsas(request: RetrievePropertyBsasRequestData)(
+  def submitUKPropertyBsas(request: RetrieveUkPropertyBsasRequestData)(
     implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
   Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 

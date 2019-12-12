@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrievePropertyBsasRequestData
+import v1.models.request.RetrieveUkPropertyBsasRequestData
 
 import scala.concurrent.Future
 
@@ -45,7 +45,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
 
       "a valid request with queryParams is supplied" in new Test {
-        val request = RetrievePropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
+        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
@@ -57,7 +57,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
       }
 
       "a valid request without queryParams is supplied" in new Test {
-        val request = RetrievePropertyBsasRequestData(nino, "incomeSourceId", None)
+        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", None)
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",

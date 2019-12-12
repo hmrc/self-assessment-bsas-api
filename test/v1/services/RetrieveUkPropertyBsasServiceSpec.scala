@@ -24,7 +24,7 @@ import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.models.errors._
 import v1.mocks.connectors.MockRetrieveUkPropertyBsasConnector
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrievePropertyBsasRequestData
+import v1.models.request.RetrieveUkPropertyBsasRequestData
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
@@ -37,7 +37,7 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
   val adjustedStatus = Some("true")
   private val correlationId = "X-123"
 
-  val request = RetrievePropertyBsasRequestData(nino, id, adjustedStatus)
+  val request = RetrieveUkPropertyBsasRequestData(nino, id, adjustedStatus)
 
   val response = RetrieveUkPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
@@ -71,6 +71,7 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
         }
 
       val input = Seq(
+
 
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
