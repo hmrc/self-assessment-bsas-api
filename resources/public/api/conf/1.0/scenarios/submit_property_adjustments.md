@@ -12,10 +12,6 @@
             <td><p>Simulates the scenario where no data could be found</p></td>
         </tr>
         <tr>
-            <td><p>NOT_FOUND</p></td>
-            <td><p>Simulates the scenario where no data could be found</p></td>
-        </tr>
-        <tr>
             <td><p>UK_PROPERTY_FHL</p></td>
             <td><p>Simulates a successful response for a FHL UK Property</p></td>
         </tr>
