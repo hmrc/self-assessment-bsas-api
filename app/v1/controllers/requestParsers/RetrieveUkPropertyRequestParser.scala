@@ -19,18 +19,18 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v1.models.request.{RetrieveUkPropertyRawData, RetrieveUkPropertyRequest}
+import v1.models.request.{RetrievePropertyBsasRawData, RetrievePropertyBsasRequestData}
 
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
-  extends RequestParser[RetrieveUkPropertyRawData, RetrieveUkPropertyRequest] {
+  extends RequestParser[RetrievePropertyBsasRawData, RetrievePropertyBsasRequestData] {
 
   val ADJUSTED_SUMMARY = "03"
   val ADJUSTABLE_SUMMARY = "01"
 
   def toDesAdjustedStatus(s: String): String = if(s.toBoolean) ADJUSTED_SUMMARY else ADJUSTABLE_SUMMARY
 
-  override protected def requestFor(data: RetrieveUkPropertyRawData): RetrieveUkPropertyRequest = {
-    RetrieveUkPropertyRequest(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))
+  override protected def requestFor(data: RetrievePropertyBsasRawData): RetrievePropertyBsasRequestData = {
+    RetrievePropertyBsasRequestData(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))
   }
 
 }

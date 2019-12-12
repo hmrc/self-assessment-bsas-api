@@ -20,18 +20,18 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.RetrieveUkPropertyRequest
-import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
+import v1.models.request.RetrievePropertyBsasRequestData
+import v1.models.response.retrievePropertyBsas.RetrievePropertyBsasResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrievePropertyBsasConnector @Inject()(val http: HttpClient,
                                               val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrievePropertyBsas(request: RetrieveUkPropertyRequest)(
+  def retrievePropertyBsas(request: RetrievePropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveUkPropertyBsasResponse]] = {
+    ec: ExecutionContext): Future[DesOutcome[RetrievePropertyBsasResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -49,7 +49,7 @@ class RetrievePropertyBsasConnector @Inject()(val http: HttpClient,
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DesUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
+      DesUri[RetrievePropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
     )
   }
 }
