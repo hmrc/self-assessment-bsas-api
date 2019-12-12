@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package mocks.validators
+package v1.models.response.retrieveBsas
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.TriggerBSASValidator
-import v1.models.errors.MtdError
-import v1.models.request.triggerBsas.TriggerBsasRawData
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-class MockTriggerBSASValidator extends MockFactory {
+case class Profit(net: Option[BigDecimal],
+                  taxable: Option[BigDecimal])
 
-  val mockValidator: TriggerBSASValidator = mock[TriggerBSASValidator]
+object Profit {
+  implicit val reads: Reads[Profit] = (
+    (JsPath \ "netProfit").readNullable[BigDecimal] and
+      (JsPath \ "taxableProfit").readNullable[BigDecimal]
+    )(Profit.apply _)
 
-  object MockValidator {
-    def validate(data: TriggerBsasRawData): CallHandler1[TriggerBsasRawData, List[MtdError]] = {
-      (mockValidator.validate(_: TriggerBsasRawData))
-        .expects(data)
-    }
-  }
+  implicit val writes: OWrites[Profit] = Json.writes[Profit]
 }

@@ -192,7 +192,7 @@ object ListBsasFixtures {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/accounting-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -214,7 +214,7 @@ object ListBsasFixtures {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/accounting-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -236,7 +236,7 @@ object ListBsasFixtures {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/accounting-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -247,12 +247,12 @@ object ListBsasFixtures {
       |  ],
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/accounting-summary/$nino/trigger",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
       |      "method": "POST",
       |      "rel": "trigger-business-source-accounting-summary"
       |    },
       |    {
-      |      "href": "/individuals/self-assessment/accounting-summary/$nino",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
       |      "method": "GET",
       |      "rel": "self"
       |    }

@@ -70,10 +70,10 @@ class TriggerBsasControllerSpec
   private val requestRawDataForProperty = TriggerBsasRawData(nino,
     triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString, selfEmploymentId = None))
 
-  val testHateoasLinkSE = Link(href = s"/individuals/self-assessment/accounting-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+  val testHateoasLinkSE = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET, rel = "self")
 
-  val testHateoasLinkProperty = Link(href = s"/individuals/self-assessment/accounting-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+  val testHateoasLinkProperty = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET, rel = "self")
 
   "triggerBsas" should {

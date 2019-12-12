@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieveBsas.selfEmployment
 
-import play.api.libs.json.{JsSuccess, Json}
-import support.UnitSpec
-import v1.fixtures.ListBsasFixtures._
-import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-class ListBsasResponseSpec extends UnitSpec {
+case class IncomeBreakdown(turnover: BigDecimal,
+                           other: Option[BigDecimal])
 
-  "BusinessSourceSummaries" should {
+object IncomeBreakdown {
+  implicit val reads: Reads[IncomeBreakdown] = (
+    (JsPath  \ "turnover").read[BigDecimal] and
+    (JsPath \ "other").readNullable[BigDecimal]
+    )(IncomeBreakdown.apply _)
 
-    "write correctly to json" in {
-
-      Json.toJson(summaryModel) shouldBe summariesJSON
-    }
-
-    "read correctly to json" in {
-      summariesFromDesJSONSingle.validate[ListBsasResponse[BsasEntries]] shouldBe JsSuccess(summaryModel)
-    }
-  }
+  implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }
+
+

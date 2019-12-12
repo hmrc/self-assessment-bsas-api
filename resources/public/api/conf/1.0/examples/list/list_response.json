@@ -15,7 +15,7 @@
           "adjustedSummary": false,
           "links": [
             {
-              "href": "/individuals/self-assessment/accounting-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
               "rel": "self",
               "method": "GET"
             }
@@ -28,7 +28,7 @@
           "adjustedSummary": true,
           "links": [
             {
-              "href": "/individuals/self-assessment/accounting-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
               "rel": "self",
               "method": "GET"
             }
@@ -50,7 +50,7 @@
           "adjustedSummary": false,
           "links": [
             {
-              "href": "/individuals/self-assessment/accounting-summary/AA123456A/property/39307636-dc2e-99d1-2f76-8f8fb8cdccf6",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/39307636-dc2e-99d1-2f76-8f8fb8cdccf6",
               "rel": "self",
               "method": "GET"
             }
@@ -63,7 +63,7 @@
           "adjustedSummary": true,
           "links": [
             {
-              "href": "/individuals/self-assessment/accounting-summary/AA123456A/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
               "rel": "self",
               "method": "GET"
             }
@@ -74,12 +74,12 @@
   ],
   "links": [
     {
-      "href": "/individuals/self-assessment/accounting-summary/AA123456A/trigger",
+      "href": "/individuals/self-assessment/adjustable-summary/AA123456A/trigger",
       "rel": "trigger-business-source-accounting-summary",
       "method": "POST"
     },
     {
-      "href": "/individuals/self-assessment/accounting-summary/AA123456A",
+      "href": "/individuals/self-assessment/adjustable-summary/AA123456A",
       "rel": "self",
       "method": "GET"
     }

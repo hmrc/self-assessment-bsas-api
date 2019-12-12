@@ -32,4 +32,6 @@ object DesTaxYear {
     */
   def fromMtd(taxYear: String): DesTaxYear =
     DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+
+  def fromDes(taxYear: String): String = (taxYear.toInt - 1) + "-" + taxYear.drop(2)
 }

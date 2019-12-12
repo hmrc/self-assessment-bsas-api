@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mocks.requestParsers
+package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
