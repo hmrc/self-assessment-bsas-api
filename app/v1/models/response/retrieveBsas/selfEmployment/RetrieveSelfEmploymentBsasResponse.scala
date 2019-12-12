@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
-                                          bsas: Option[BsasDetail])
+case class RetrieveSelfEmploymentBsasResponse (metadata: Metadata,
+                                               bsas: Option[BsasDetail])
 
-object RetrieveUkPropertyBsasResponse {
+object RetrieveSelfEmploymentBsasResponse {
 
-  implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
+  implicit val reads: Reads[RetrieveSelfEmploymentBsasResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
         case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
         case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
       }
-  )(RetrieveUkPropertyBsasResponse.apply _)
+    )(RetrieveSelfEmploymentBsasResponse.apply _)
 
-  implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]
+  implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
 }

@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.RetrieveUkPropertyRequest
-import v1.models.response.retrieveBsas.RetrieveUkPropertyBsasResponse
+import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

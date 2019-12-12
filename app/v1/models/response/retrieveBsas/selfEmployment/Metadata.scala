@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v1.models.domain.{ IncomeSourceType, TypeOfBusiness }
 import v1.models.request.DesTaxYear
+import v1.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
+                    selfEmploymentId: Option[String], // Optional so we can error if not present with BVR 4
                     accountingPeriod: AccountingPeriod,
                     taxYear: String,
-                    requestedDateTime: String,
                     bsasId: String,
+                    requestedDateTime: String,
                     summaryStatus: String,
                     adjustedSummary: Boolean)
 
@@ -33,16 +35,17 @@ object Metadata {
 
   implicit val reads: Reads[Metadata] = (
     (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
+      (JsPath \ "inputs" \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriod] and
       (JsPath \ "metadata" \ "taxYear").read[String].map(DesTaxYear.fromDes) and
-      (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
+      (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map{
+      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
         case Some(_) => true
-        case _ => false
+        case _       => false
       }
-    )(Metadata.apply _)
+  )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

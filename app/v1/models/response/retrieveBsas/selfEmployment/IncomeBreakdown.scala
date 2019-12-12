@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class IncomeBreakdown(rentIncome: Option[BigDecimal],
-                           premiumsOfLeaseGrant: Option[BigDecimal],
-                           reversePremiums: Option[BigDecimal],
-                           otherPropertyIncome: Option[BigDecimal],
-                           rarRentReceived: Option[BigDecimal])
+case class IncomeBreakdown(turnover: BigDecimal,
+                           other: Option[BigDecimal])
 
 object IncomeBreakdown {
   implicit val reads: Reads[IncomeBreakdown] = (
-    (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
-      (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-      (JsPath \ "reversePremiums").readNullable[BigDecimal] and
-      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      (JsPath \ "rarRentReceived").readNullable[BigDecimal]
+    (JsPath  \ "turnover").read[BigDecimal] and
+    (JsPath \ "other").readNullable[BigDecimal]
     )(IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }
+
+

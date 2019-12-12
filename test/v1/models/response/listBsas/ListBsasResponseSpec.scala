@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.listBsas
 
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v1.fixtures.ListBsasFixtures._
-import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 class ListBsasResponseSpec extends UnitSpec {
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.ukProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.models.utils.JsonErrorValidators
 import v1.fixtures.RetrievePropertyBsasFixtures._
+import v1.models.utils.JsonErrorValidators
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
 

@@ -14,32 +14,36 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsas
+package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.RetrievePropertyBsasFixtures._
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{
+  desRetrieveBsasResponseJsonAdjustable,
+  desRetrieveBsasResponseJsonAdjusted,
+  metadataModel,
+  mtdMetadataJson
+}
 import v1.models.utils.JsonErrorValidators
 
-class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators{
+class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid model" when {
-      "a valid json is supplied" in {
-        desRetrieveBsasResponse.as[RetrieveUkPropertyBsasResponse] shouldBe retrieveUkPropertyBsasResponseModel
+      "passed valid JSON with adjustedSummaryCalculation" in {
+        desRetrieveBsasResponseJsonAdjusted.as[Metadata] shouldBe metadataModel(true)
       }
-
-      "a valid json with out adjusted summary is supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[RetrieveUkPropertyBsasResponse] shouldBe
-          retrieveUkPropertyBsasResponseModel.copy(metadata = metadataModelWithAdjustableSummary)
+      "passed valid JSON with adjustableSummaryCalculation" in {
+        desRetrieveBsasResponseJsonAdjustable.as[Metadata] shouldBe metadataModel(false)
       }
     }
   }
 
   "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        retrieveUkPropertyBsasResponseModel.toJson shouldBe mtdResponse
+    "return valid JSON" when {
+      "passed a valid model" in {
+        metadataModel(true).toJson shouldBe mtdMetadataJson(true)
       }
     }
   }
+
 }
