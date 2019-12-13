@@ -40,18 +40,19 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrievePropertyBsasCon
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrievePropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-    } yield desResponseWrapper.map(des => des)
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateSuccessResponse(desResponseWrapper))
+    } yield mtdResponseWrapper.map(des => des)
 
     result.value
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
-    "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
-    "INVALID_RETURN"              -> DownstreamError,
-    "UNPROCESSABLE_ENTITY"        -> RuleNoAdjustmentsMade,
-    "NOT_FOUND"                   -> NotFoundError,
-    "SERVER_ERROR"                -> DownstreamError,
-    "SERVICE_UNAVAILABLE"         -> DownstreamError
+    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+    "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+    "INVALID_RETURN" -> DownstreamError,
+    "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+    "NOT_FOUND" -> NotFoundError,
+    "SERVER_ERROR" -> DownstreamError,
+    "SERVICE_UNAVAILABLE" -> DownstreamError
   )
 }

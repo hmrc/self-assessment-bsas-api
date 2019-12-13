@@ -18,8 +18,10 @@ package v1.support
 
 import utils.Logging
 import v1.controllers.EndpointLogContext
+import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
+import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -53,4 +55,13 @@ trait DesResponseMappingSupport {
         ErrorWrapper(Some(correlationId), error, errors)
     }
   }
+
+  final def validateSuccessResponse(desResponseWrapper: ResponseWrapper[RetrieveUkPropertyBsasResponse]):
+  Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]] =
+    desResponseWrapper match {
+      case bsasRes: ResponseWrapper[RetrieveUkPropertyBsasResponse]
+        if bsasRes.responseData.metadata.typeOfBusiness == TypeOfBusiness.`self-employment` =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotUkProperty, None))
+      case _ => Right(desResponseWrapper)
+    }
 }

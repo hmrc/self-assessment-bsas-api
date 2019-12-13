@@ -23,6 +23,7 @@ import v1.controllers.EndpointLogContext
 import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.models.errors._
 import v1.mocks.connectors.MockRetrieveUkPropertyBsasConnector
+import v1.models.domain.TypeOfBusiness
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePropertyBsasRequestData
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
@@ -60,6 +61,15 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
 
 
     "return error response" when {
+
+      "des return success response with invalid type of business" in new Test {
+        val response = RetrieveUkPropertyBsasResponse(metadataModel.copy(typeOfBusiness = TypeOfBusiness.`self-employment`),
+          Some(bsasDetailModel))
+        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.submitUKPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleNotUkProperty))
+      }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
