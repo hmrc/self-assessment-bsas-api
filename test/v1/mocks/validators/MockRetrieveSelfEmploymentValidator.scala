@@ -20,14 +20,14 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
 import v1.models.errors.MtdError
-import v1.models.request.RetrieveSelfEmploymentRawData
+import v1.models.request.RetrieveSelfEmploymentBsasRawData
 
 class MockRetrieveSelfEmploymentValidator extends MockFactory {
   val mockValidator: RetrieveSelfEmploymentValidator = mock[RetrieveSelfEmploymentValidator]
 
   object MockValidator {
-    def validate(data: RetrieveSelfEmploymentRawData): CallHandler1[RetrieveSelfEmploymentRawData, List[MtdError]] = {
-      (mockValidator.validate(_: RetrieveSelfEmploymentRawData))
+    def validate(data: RetrieveSelfEmploymentBsasRawData): CallHandler1[RetrieveSelfEmploymentBsasRawData, List[MtdError]] = {
+      (mockValidator.validate(_: RetrieveSelfEmploymentBsasRawData))
         .expects(data)
     }
   }

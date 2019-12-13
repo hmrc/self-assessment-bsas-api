@@ -32,5 +32,4 @@ class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropert
   override protected def requestFor(data: RetrieveUkPropertyBsasRawData): RetrieveUkPropertyBsasRequestData = {
     RetrieveUkPropertyBsasRequestData(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))
   }
-
 }

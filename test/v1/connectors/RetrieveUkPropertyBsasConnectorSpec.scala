@@ -22,7 +22,6 @@ import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveUkPropertyBsasRequestData
-
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {

@@ -20,7 +20,6 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-
 import v1.models.request.RetrieveUkPropertyBsasRequestData
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import scala.concurrent.{ExecutionContext, Future}
