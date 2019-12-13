@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers
+package v1.models.request
 
-import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v1.models.request.{RetrieveUkPropertyRawData, RetrieveUkPropertyRequest}
 
-class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
-  extends RequestParser[RetrieveUkPropertyRawData, RetrieveUkPropertyRequest] {
-
-  override protected def requestFor(data: RetrieveUkPropertyRawData): RetrieveUkPropertyRequest =
-    RetrieveUkPropertyRequest(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))
-
-}
+case class RetrieveSelfEmploymentRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
+case class RetrieveSelfEmploymentRequest(nino: Nino, bsasId: String, adjustedStatus: Option[String])

@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.controllers
 
-import uk.gov.hmrc.domain.Nino
+package object requestParsers {
 
-case class RequestSelfEmploymentBsasRawData (nino: String, bsasId: String, adjustedStatus: Option[String])
-case class RequestSelfEmploymentBsasRequest (nino: Nino, bsasId: String, adjustedStatus: Option[String])
+  val ADJUSTED_SUMMARY   = "03"
+  val ADJUSTABLE_SUMMARY = "01"
+
+  def toDesAdjustedStatus(s: String): String = if (s.toBoolean) ADJUSTED_SUMMARY else ADJUSTABLE_SUMMARY
+
+}
