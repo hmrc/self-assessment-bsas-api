@@ -20,14 +20,14 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.RetrieveUkPropertyValidator
 import v1.models.errors.MtdError
-import v1.models.request.RetrievePropertyBsasRawData
+import v1.models.request.RetrieveUkPropertyBsasRawData
 
 class MockRetrieveUkPropertyValidator extends MockFactory {
   val mockValidator: RetrieveUkPropertyValidator = mock[RetrieveUkPropertyValidator]
 
   object MockValidator {
-    def validate(data: RetrievePropertyBsasRawData): CallHandler1[RetrievePropertyBsasRawData, List[MtdError]] = {
-      (mockValidator.validate(_: RetrievePropertyBsasRawData))
+    def validate(data: RetrieveUkPropertyBsasRawData): CallHandler1[RetrieveUkPropertyBsasRawData, List[MtdError]] = {
+      (mockValidator.validate(_: RetrieveUkPropertyBsasRawData))
         .expects(data)
     }
   }

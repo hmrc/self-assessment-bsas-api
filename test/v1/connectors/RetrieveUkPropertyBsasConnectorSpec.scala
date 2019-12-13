@@ -21,18 +21,18 @@ import uk.gov.hmrc.domain.Nino
 import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrievePropertyBsasRequestData
+import v1.models.request.RetrieveUkPropertyBsasRequestData
 
 import scala.concurrent.Future
 
-class RetrievePropertyBsasConnectorSpec extends ConnectorSpec {
+class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
 
   val queryParams: Map[String, String] = Map("return" -> "03")
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: RetrievePropertyBsasConnector = new RetrievePropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -45,7 +45,7 @@ class RetrievePropertyBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
 
       "a valid request with queryParams is supplied" in new Test {
-        val request = RetrievePropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
+        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
@@ -57,7 +57,7 @@ class RetrievePropertyBsasConnectorSpec extends ConnectorSpec {
       }
 
       "a valid request without queryParams is supplied" in new Test {
-        val request = RetrievePropertyBsasRequestData(nino, "incomeSourceId", None)
+        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", None)
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
