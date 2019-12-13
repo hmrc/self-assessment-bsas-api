@@ -20,7 +20,7 @@
             <td><p>Simulates a successful response for a Non-FHL UK Property</p></td>
         </tr>
         <tr>
-            <td><p>SELF_EMPLOYMENT</p></td>
+            <td><p>NOT_UK_PROPERTY</p></td>
             <td><p>Simulates the error response that may occur if a self-employment BSAS ID is used</p></td>
         </tr>
         <tr>
