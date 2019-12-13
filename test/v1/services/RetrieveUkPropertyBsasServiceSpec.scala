@@ -44,7 +44,7 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
 
   trait Test extends MockRetrieveUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitUKPropertyBsas")
+    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveUkPropertyBsasConnector", "retrieveUkPropertyBsas")
 
     val service = new RetrieveUkPropertyBsasService(mockConnector)
   }
@@ -55,7 +55,7 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
         MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.submitUKPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.retrieveUkPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
 
@@ -68,7 +68,7 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
         MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.submitUKPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleNotUkProperty))
+        await(service.retrieveUkPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleNotUkProperty))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -77,7 +77,7 @@ class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
           MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.submitUKPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveUkPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
       val input = Seq(

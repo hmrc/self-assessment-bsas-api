@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrievePropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
-  def submitUKPropertyBsas(request: RetrievePropertyBsasRequestData)(
+  def retrieveUkPropertyBsas(request: RetrievePropertyBsasRequestData)(
     implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
   Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
