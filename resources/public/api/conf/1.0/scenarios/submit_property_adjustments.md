@@ -25,27 +25,27 @@
         </tr>
         <tr>
             <td><p>SUMMARY_STATUS_INVALID</p></td>
-            <td><p>Simulate the error response where the summary is invalid and cannot be adjusted</p></td>
+            <td><p>Simulates the error response where the summary is invalid and cannot be adjusted</p></td>
         </tr>
         <tr>
             <td><p>SUMMARY_STATUS_SUPERSEDED</p></td>
-            <td><p>Simulate the error response where the summary is superseded and cannot be adjusted</p></td>
+            <td><p>Simulates the error response where the summary is superseded and cannot be adjusted</p></td>
         </tr>
         <tr>
             <td><p>BSAS_ALREADY_ADJUSTED</p></td>
-            <td><p>Simulate the error response where the summary has already been adjusted</p></td>
+            <td><p>Simulates the error response where the summary has already been adjusted</p></td>
         </tr>
         <tr>
             <td><p>PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
-            <td><p>Simulate the error response where the cumulative turnover exceeds the threshold for consolidated expenses</p></td>
+            <td><p>Simulates the error response where the cumulative turnover exceeds the threshold for consolidated expenses</p></td>
         </tr>
         <tr>
             <td><p>PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
-            <td><p>Simulate the error response where property income allowance has been claimed and therefore no further expenses can be claimed</p></td>
+            <td><p>Simulates the error response where property income allowance has been claimed and therefore no further expenses can be claimed</p></td>
         </tr>
         <tr>
             <td><p>PROPERTY_TYPE_OF_BUSINESS_INCORRECT</p></td>
-            <td><p>Simulate the error response where either the fields submitted or the BSAS ID are for an incorrect type of business</p></td>
+            <td><p>Simulates the error response where either the fields submitted or the BSAS ID are for an incorrect type of business</p></td>
         </tr>
     </tbody>
 </table>
