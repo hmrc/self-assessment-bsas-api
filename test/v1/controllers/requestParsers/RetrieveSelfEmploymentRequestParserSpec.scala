@@ -20,7 +20,7 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockRetrieveSelfEmploymentValidator
 import v1.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
-import v1.models.request.{RetrieveSelfEmploymentRawData, RetrieveSelfEmploymentRequest}
+import v1.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
 
@@ -32,8 +32,8 @@ class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("true")
 
-  val inputRawData = RetrieveSelfEmploymentRawData(nino, bsasId, adjustedStatus)
-  val outputRequestData = RetrieveSelfEmploymentRequest(Nino(nino), bsasId, Some("03"))
+  val inputRawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedStatus)
+  val outputRequestData = RetrieveSelfEmploymentBsasRequestData(Nino(nino), bsasId, Some("03"))
 
   "parser" should {
     "return a valid request object" when {
@@ -42,12 +42,12 @@ class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
         parser.parseRequest(inputRawData) shouldBe Right(outputRequestData)
       }
       "passed a valid raw data object with an adjusted summary of 'false'" in new Test {
-        val input: RetrieveSelfEmploymentRawData = inputRawData.copy(adjustedStatus = Some("false"))
+        val input: RetrieveSelfEmploymentBsasRawData = inputRawData.copy(adjustedStatus = Some("false"))
         MockValidator.validate(input).returns(List())
         parser.parseRequest(input) shouldBe Right(outputRequestData.copy(adjustedStatus = Some("01")))
       }
       "passed a valid raw data object without an adjusted summary" in new Test {
-        val input: RetrieveSelfEmploymentRawData = inputRawData.copy(adjustedStatus = None)
+        val input: RetrieveSelfEmploymentBsasRawData = inputRawData.copy(adjustedStatus = None)
         MockValidator.validate(input).returns(List())
         parser.parseRequest(input) shouldBe Right(outputRequestData.copy(adjustedStatus = None))
       }

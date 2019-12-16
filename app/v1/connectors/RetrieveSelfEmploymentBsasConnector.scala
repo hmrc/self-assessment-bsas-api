@@ -20,17 +20,18 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.RetrieveUkPropertyBsasRequestData
-import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v1.models.request.RetrieveSelfEmploymentBsasRequestData
+import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                val appConfig: AppConfig) extends BaseDesConnector {
+class RetrieveSelfEmploymentBsasConnector @Inject()
+      (val http: HttpClient,
+       val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrievePropertyBsas(request: RetrieveUkPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveUkPropertyBsasResponse]] = {
+  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)
+                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -41,14 +42,14 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
       "return" -> request.adjustedStatus
     )
 
-    def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {
+    def queryMap[A](as: Map[String, A]):Map[String, String] = as.collect {
       case (k: String, Some(v: String)) => (k, v)
     }
 
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DesUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
+      DesUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
     )
   }
 }
