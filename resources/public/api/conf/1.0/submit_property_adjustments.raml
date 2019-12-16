@@ -7,16 +7,18 @@ is:
   - errors.incorrectOrEmptyBodySubmitted
   - errors.ruleRangeInvalid
   - errors.ruleTypeOfBusinessIncorrect
+  - errors.ruleBothExpensesSupplied
   - errors.ruleSummaryStatusInvalid
   - errors.ruleSummaryStatusSuperseded
   - errors.ruleAlreadyAdjusted
   - errors.ruleOverConsolidatedExpensesThreshold
   - errors.rulePropertyIncomeAllowanceExceeded
-  - errors.bsasNotFound
+  - errors.ruleSelfEmploymentAdjusted
   - errors.clientOrAgentNotAuthorised
+  - errors.bsasNotFound
   - queryParameters.adjustedStatusOptional
 displayName: Submit a UK Property Business' Accounting Adjustments [test only]
-description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a UK Property Business, and it must not have been adjusted, previously.  Only data for one property business (either FHL or Non-FHL ) should be included in any submission.
+description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a UK Property Business, and it must not have been adjusted, previously.  Only data for one property business (either FHL or Non-FHL) should be included in any submission.
 (annotations.sandboxData): !include scenarios/submit_property_adjustments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
@@ -24,11 +26,17 @@ body:
   application/json:
     type: !include schemas/submit_property_adjustments.json
     examples:
-      adjustments_full:
-        description: Submit A UK Property Business' Accounting Adjustments - Full
+      adjustments_nonfhl_full:
+        description: Non-FHL Property with Full Expenses
         value: !include examples/adjustments/submit_non_fhl_adjustments_full.json
-      adjustments_consolidated:
-        description: Submit A Self Employment Business' Accounting Adjustments - Consolidated Expenses
+      adjustments_nonfhl_onsolidated:
+        description: Non-FHL Property with Consolidated Expenses
+        value: !include examples/adjustments/submit_non_fhl_adjustments_consolidated.json
+      adjustments_fhl_full:
+        description: FHL Property with Full Expenses
+        value: !include examples/adjustments/submit_fhl_adjustments_full.json
+      adjustments_fhl_consolidated:
+        description: FHL Property with Consolidated Expenses
         value: !include examples/adjustments/submit_fhl_adjustments_consolidated.json
 responses:
   200:

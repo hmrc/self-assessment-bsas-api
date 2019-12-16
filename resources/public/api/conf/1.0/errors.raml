@@ -324,6 +324,28 @@ traits:
                 description: An empty or non-matching body was submitted
                 value:
                   code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+  ruleSelfEmploymentAdjusted:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSelfEmploymentAdjusted:
+                description: The BSAS ID used in your adjustment was for a self-employment business type, and an adjustment has been made
+                value:
+                  code: RULE_SELF_EMPLOYMENT_ADJUSTED
+  ruleBothExpensesSupplied:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleBothExpensesSupplied:
+                description: Consolidated expenses adjusted with other unexpected fields
+                value:
+                  code: RULE_BOTH_EXPENSES_SUPPLIED
   triggerNotFound:
     responses:
       404:
