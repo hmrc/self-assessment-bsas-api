@@ -17,13 +17,17 @@
 package v1.controllers.requestParsers
 
 import javax.inject.Inject
+
 import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
-import v1.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v1.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
+import v1.models.request.submitBsas.{SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestBody, SubmitUKPropertyBsasRequestData}
 
-class RetrieveSelfEmploymentRequestParser @Inject()(val validator: RetrieveSelfEmploymentValidator)
-  extends RequestParser[RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData] {
+class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
+  extends RequestParser[SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestData] {
 
-  override protected def requestFor(data: RetrieveSelfEmploymentBsasRawData): RetrieveSelfEmploymentBsasRequestData =
-    RetrieveSelfEmploymentBsasRequestData(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))
+  override protected def requestFor(data: SubmitUKPropertyBsasRawData): SubmitUKPropertyBsasRequestData = {
+    val requestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
+
+    SubmitUKPropertyBsasRequestData(Nino(data.nino), data.bsasId, requestBody)
+  }
 }

@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.controllers.requestParsers.validators.validations
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.RetrieveUkPropertyValidator
 import v1.models.errors.MtdError
-import v1.models.request.RetrieveUkPropertyBsasRawData
 
-class MockRetrieveUkPropertyValidator extends MockFactory {
-  val mockValidator: RetrieveUkPropertyValidator = mock[RetrieveUkPropertyValidator]
+object AdjustmentRangeValidation {
 
-  object MockValidator {
-    def validate(data: RetrieveUkPropertyBsasRawData): CallHandler1[RetrieveUkPropertyBsasRawData, List[MtdError]] = {
-      (mockValidator.validate(_: RetrieveUkPropertyBsasRawData))
-        .expects(data)
+  private val minValue = BigDecimal(-99999999999.99)
+  private val maxValue = BigDecimal(99999999999.99)
+
+  def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
+
+    field match {
+      case Some(value) if value > maxValue || value < minValue  =>
+        List(MtdError("RULE_RANGE_INVALID", s"Adjustment value $fieldName falls outside the accepted range"))
+      case _ => List()
     }
   }
 }

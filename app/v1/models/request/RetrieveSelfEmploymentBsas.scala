@@ -18,5 +18,5 @@ package v1.models.request
 
 import uk.gov.hmrc.domain.Nino
 
-case class RetrieveSelfEmploymentRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
-case class RetrieveSelfEmploymentRequest(nino: Nino, bsasId: String, adjustedStatus: Option[String])
+case class RetrieveSelfEmploymentBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
+case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])

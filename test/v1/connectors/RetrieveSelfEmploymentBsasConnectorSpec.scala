@@ -18,20 +18,22 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
-import v1.fixtures.RetrieveUkPropertyBsasFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrieveUkPropertyBsasRequestData
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures._
+import v1.models.request.RetrieveSelfEmploymentBsasRequestData
+
 import scala.concurrent.Future
 
-class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
+class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
+  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val queryParams: Map[String, String] = Map("return" -> "03")
+  val queryParams: Map[String, String] = Map("return" -> "01")
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveSelfEmploymentBsasConnector = new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -39,32 +41,32 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "retrieve" should {
+  "retrievePropertyBsas" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
+      val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
 
       "a valid request with queryParams is supplied" in new Test {
-        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
+        val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, Some("01"))
 
         MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/${bsasId}",
           queryParams.toSeq,
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))
 
-        await(connector.retrieve(request)) shouldBe outcome
+        await(connector.retrieveSelfEmploymentBsas(request)) shouldBe outcome
       }
 
       "a valid request without queryParams is supplied" in new Test {
-        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", None)
+        val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, None)
 
         MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/${bsasId}",
           Seq.empty,
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))
 
-        await(connector.retrieve(request)) shouldBe outcome
+        await(connector.retrieveSelfEmploymentBsas(request)) shouldBe outcome
       }
     }
   }
