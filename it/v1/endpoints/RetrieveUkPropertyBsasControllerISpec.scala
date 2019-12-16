@@ -36,7 +36,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
     val desQueryParams = Map("return" -> "03")
 
-    def uri: String = s"/$nino/$bsasId"
+    def uri: String = s"/$nino/property/$bsasId"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
@@ -90,7 +90,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get)
 
-        response.status shouldBe BAD_REQUEST
+        response.status shouldBe FORBIDDEN
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe Json.toJson(RuleNotUkProperty)
       }

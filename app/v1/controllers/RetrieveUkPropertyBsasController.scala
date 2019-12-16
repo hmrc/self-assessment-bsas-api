@@ -82,8 +82,8 @@ class RetrieveUkPropertyBsasController @Inject()(
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError
-           | BsasIdFormatError | RuleNotUkProperty
-           | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
+           | BsasIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
+      case RuleNotUkProperty => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError | RuleNoAdjustmentsMade => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
