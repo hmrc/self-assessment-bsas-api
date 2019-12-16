@@ -41,7 +41,7 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
     val result = for {
       desResponseWrapper <- EitherT(connector.retrievePropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateSuccessResponse(desResponseWrapper))
-    } yield mtdResponseWrapper.map(des => des)
+    } yield mtdResponseWrapper
 
     result.value
   }
