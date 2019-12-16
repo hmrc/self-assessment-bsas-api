@@ -18,6 +18,6 @@ package v1.models.request
 
 import uk.gov.hmrc.domain.Nino
 
-case class RetrieveUkPropertyRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
+case class RetrieveUkPropertyBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
 
-case class RetrieveUkPropertyRequest(nino: Nino, bsasId: String, adjustedStatus: Option[String])
+case class RetrieveUkPropertyBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])

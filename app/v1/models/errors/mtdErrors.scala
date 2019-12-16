@@ -81,6 +81,10 @@ object RuleOverConsolidatedExpensesThreshold
 object RulePropertyIncomeAllowanceClaimed
   extends MtdError("RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED", "A claim for property income allowance was made. Cannot also have expenses")
 
+object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An adjusted summary calculation does not exist")
+
+object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The summary calculation requested is not for a UK property business")
+
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
 

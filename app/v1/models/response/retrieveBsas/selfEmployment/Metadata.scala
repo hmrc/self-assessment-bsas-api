@@ -18,7 +18,7 @@ package v1.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v1.models.domain.{ IncomeSourceType, TypeOfBusiness }
+import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v1.models.request.DesTaxYear
 import v1.models.response.retrieveBsas.AccountingPeriod
 

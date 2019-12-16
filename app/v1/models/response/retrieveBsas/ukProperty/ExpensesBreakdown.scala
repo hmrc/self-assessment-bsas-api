@@ -32,7 +32,7 @@ case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal],
                             )
 
 object ExpensesBreakdown {
-  //implicit val reads: Reads[ExpensesBreakdown] = Json.reads[ExpensesBreakdown]
+
   implicit val reads: Reads[ExpensesBreakdown] = (
     (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
       (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and

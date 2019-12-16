@@ -20,10 +20,10 @@ import java.time.LocalDate
 
 import play.api.libs.json.Json
 import v1.models.domain.TypeOfBusiness
-import v1.models.response.retrieveBsas._
-import v1.models.response.retrieveBsas.ukProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveUkPropertyBsasResponse}
+import v1.models.response.retrieveBsas.ukProperty._
+import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
-object RetrievePropertyBsasFixtures {
+object RetrieveUkPropertyBsasFixtures {
 
   val totalBsasModel = TotalBsas(100.49,Some(100.49),Some(100.49),Some(100.49))
   val profitModel = Profit(Some(100.49),Some(100.49))
