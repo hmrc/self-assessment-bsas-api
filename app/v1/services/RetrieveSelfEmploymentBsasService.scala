@@ -21,27 +21,27 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.RetrieveUkPropertyBsasConnector
+import v1.connectors.RetrieveSelfEmploymentBsasConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrieveUkPropertyBsasRequestData
-import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v1.models.request.RetrieveSelfEmploymentBsasRequestData
+import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging{
 
-  def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
+  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
+                                implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateUkPropertySuccessResponse(desResponseWrapper))
-
+      desResponseWrapper <-
+      EitherT(connector.retrieveSelfEmploymentBsas(request))leftMap(mapDesErrors(mappingDesToMtdError))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateSelfEmploymentSuccessResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
