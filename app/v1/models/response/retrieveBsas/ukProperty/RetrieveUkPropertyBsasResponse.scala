@@ -16,13 +16,16 @@
 
 package v1.models.response.retrieveBsas.ukProperty
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
                                           bsas: Option[BsasDetail])
 
-object RetrieveUkPropertyBsasResponse {
+object RetrieveUkPropertyBsasResponse extends HateoasLinks{
 
   implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
     JsPath.read[Metadata] and
@@ -30,7 +33,17 @@ object RetrieveUkPropertyBsasResponse {
         case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
         case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
       }
-  )(RetrieveUkPropertyBsasResponse.apply _)
+    )(RetrieveUkPropertyBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]
+
+  implicit object RetrieveUkPropertyBsasHateoasFactory extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveUkPropertyHateoasData): Seq[Link] = {
+      Seq(
+        getPropertyBsas(appConfig, data.nino, data.bsasId), adjustPropertyBsas(appConfig, data.nino, data.bsasId)
+      )
+    }
+  }
 }
+
+case class RetrieveUkPropertyHateoasData(nino: String, bsasId: String) extends HateoasData

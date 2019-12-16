@@ -14,26 +14,31 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, RetrieveUkPropertyBsasConnector}
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveUkPropertyBsasRequestData
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v1.services.RetrieveUkPropertyBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveUkPropertyBsasConnector extends MockFactory{
+trait MockRetrieveUkPropertyBsasService extends MockFactory{
 
-  val mockConnector: RetrieveUkPropertyBsasConnector = mock[RetrieveUkPropertyBsasConnector]
+  val mockService: RetrieveUkPropertyBsasService = mock[RetrieveUkPropertyBsasService]
 
-  object MockRetrievePropertyBsasConnector{
-    def retrievePropertyBsas(requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DesOutcome[RetrieveUkPropertyBsasResponse]]] = {
-      (mockConnector
-        .retrieve(_: RetrieveUkPropertyBsasRequestData) (_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, * , *)
+  object MockRetrieveUkPropertyBsasService{
+
+    def retrieveBsas(requestData: RetrieveUkPropertyBsasRequestData):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]]] = {
+      (mockService
+        .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
     }
   }
 }

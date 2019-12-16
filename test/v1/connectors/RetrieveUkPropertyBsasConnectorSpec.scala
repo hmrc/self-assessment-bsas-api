@@ -40,7 +40,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "retrievePropertyBsas" should {
+  "retrieve" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
 
@@ -53,7 +53,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))
 
-        await(connector.retrievePropertyBsas(request)) shouldBe outcome
+        await(connector.retrieve(request)) shouldBe outcome
       }
 
       "a valid request without queryParams is supplied" in new Test {
@@ -65,7 +65,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))
 
-        await(connector.retrievePropertyBsas(request)) shouldBe outcome
+        await(connector.retrieve(request)) shouldBe outcome
       }
     }
   }
