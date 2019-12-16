@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
                                                 val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrievePropertyBsas(request: RetrieveUkPropertyBsasRequestData)(
+  def retrieve(request: RetrieveUkPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[RetrieveUkPropertyBsasResponse]] = {
 
