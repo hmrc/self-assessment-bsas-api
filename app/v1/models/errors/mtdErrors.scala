@@ -46,7 +46,7 @@ object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", ""
 
 object SelfEmploymentIdFormatError extends MtdError("FORMAT_SELF_EMPLOYMENT_ID","The supplied self-employment ID format is invalid")
 
-object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The provided Business Source Accounting Summary ID format is invalid")
+object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The provided Business Source Adjustable Summary ID format is invalid")
 
 
 // Rule Errors

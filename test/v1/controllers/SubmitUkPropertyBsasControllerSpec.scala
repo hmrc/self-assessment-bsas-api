@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitUkPropertyBsasService}
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleAccountingPeriodNotSupportedError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
@@ -192,10 +192,28 @@ class SubmitUkPropertyBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (RuleBothExpensesError, BAD_REQUEST),
+          (FormatAdjustmentValueError, BAD_REQUEST),
+          (RuleAdjustmentRangeInvalid, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
+
+        "multiple parser errors occur" in new Test {
+
+          val error = ErrorWrapper(Some(correlationId), BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+
+          MockSubmitUkPropertyBsasDataParser
+            .parse(fhlRawRequest)
+            .returns(Left(error))
+
+          val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+
+          status(result) shouldBe BAD_REQUEST
+          contentAsJson(result) shouldBe Json.toJson(error)
+          header("X-CorrelationId", result) shouldBe Some(correlationId)
+        }
       }
 
       "service errors occur" must {
@@ -221,9 +239,15 @@ class SubmitUkPropertyBsasControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (RuleTypeOfBusinessError, BAD_REQUEST),
+          (RuleSummaryStatusInvalid, FORBIDDEN),
+          (RuleSummaryStatusSuperseded, FORBIDDEN),
+          (RuleBsasAlreadyAdjusted, FORBIDDEN),
+          (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+          (RuleSelfEmploymentAdjusted, FORBIDDEN),
+          (RulePropertyIncomeAllowanceClaimed, FORBIDDEN)
         )
-
         input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
