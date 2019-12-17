@@ -79,8 +79,6 @@ class RetrieveSelfEmploymentBsasServiceSpec extends UnitSpec{
         }
 
       val input = Seq(
-
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVALID_RETURN", DownstreamError),
@@ -91,8 +89,6 @@ class RetrieveSelfEmploymentBsasServiceSpec extends UnitSpec{
       )
 
       input.foreach(args => (serviceError _).tupled(args))
-
     }
-
   }
 }
