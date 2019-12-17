@@ -35,7 +35,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
   "parser" should {
     "accept valid input" when {
-      "a non-fhl-property wth expenses is has full adjustments is passed" in new Test {
+      "a non-fhl-property with expenses with full adjustments is passed" in new Test {
 
         val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validNonFHLInputJson))
 
@@ -47,7 +47,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
         result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validNonFHLBody))
       }
 
-      "a fhl-property wth consolidated expenses has full adjustments is passed" in new Test {
+      "a fhl-property with consolidated expenses has full adjustments is passed" in new Test {
 
         val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validfhlInputJson))
 

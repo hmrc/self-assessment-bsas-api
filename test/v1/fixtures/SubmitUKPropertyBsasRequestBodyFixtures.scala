@@ -61,12 +61,12 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |     "otherPropertyIncome": 1000.45
       |   },
       |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
+      |     "premisesRunningCosts": -1000.45,
       |     "repairsAndMaintenance": 1000.45,
       |     "financialCosts": 1000.45,
       |     "professionalFees": 1000.45,
       |     "travelCosts": 1000.45,
-      |     "costOfServices": 1000.45,
+      |     "costOfServices": -1000.45,
       |     "residentialFinancialCost": 1000.45,
       |     "other": 1000.45
       |   }
@@ -140,8 +140,8 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     SubmitUKPropertyBsasRequestBody(
       Some(NonFurnishedHolidayLet(
         Some(NonFHLIncome(Some(1000.45), Some(1000.45), Some(1000.45), Some(1000.45))),
-        Some(NonFHLExpenses(Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45), Some(1000.45),
+        Some(NonFHLExpenses(Some(-1000.45), Some(1000.45), Some(1000.45),
+          Some(1000.45), Some(1000.45), Some(-1000.45),
           Some(1000.45), Some(1000.45), None))
       )),
       None

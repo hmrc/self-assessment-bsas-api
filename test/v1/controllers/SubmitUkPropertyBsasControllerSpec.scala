@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitUkPropertyBsasService}
+import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleAccountingPeriodNotSupportedError, RuleIncorrectOrEmptyBodyError}
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
@@ -67,7 +68,7 @@ class SubmitUkPropertyBsasControllerSpec
   private val fhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields))
   private val fhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, fhlBody)
 
-  private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
+  private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
   private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
 
   val response = SubmitUkPropertyBsasResponse(bsasId)
@@ -128,73 +129,103 @@ class SubmitUkPropertyBsasControllerSpec
         contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
+
+      "a valid request is supplied for a non-FHL property" in new Test {
+
+        val hateoasResponse: JsValue = Json.parse(
+          s"""
+             |{
+             | "id": "$bsasId",
+             | "links": [
+             | {
+             |  "href":  "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+             |  "method": "GET",
+             |  "rel": "self"
+             | },
+             | {
+             |  "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
+             |  "method": "GET",
+             |  "rel": "retrieve-adjustable-summary"
+             | }
+             | ]
+             |}
+             |""".stripMargin)
+
+        MockSubmitUkPropertyBsasDataParser
+          .parse(nonFhlRawRequest)
+          .returns(Right(nonFhlRequest))
+
+        MockSubmitUkPropertyBsasService
+          .submitPropertyBsas(nonFhlRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        MockHateoasFactory
+          .wrap(response, SubmitUkPropertyBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(response, testHateoasLinks))
+
+        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validNonFHLInputJson)))
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe hateoasResponse
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+      }
     }
 
-//    "return the error as per spec" when {
-//      "parser errors occur" must {
-//        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-//          s"a ${error.code} error is returned from the parser" in new Test {
-//
-//            MockTriggerBsasRequestParser
-//              .parse(requestRawData)
-//              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
-//
-//            val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBody))
-//
-//            status(result) shouldBe expectedStatus
-//            contentAsJson(result) shouldBe Json.toJson(error)
-//            header("X-CorrelationId", result) shouldBe Some(correlationId)
-//          }
-//        }
-//
-//        val input = Seq(
-//          (BadRequestError, BAD_REQUEST),
-//          (NinoFormatError, BAD_REQUEST),
-//          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-//          (RuleAccountingPeriodNotSupportedError, BAD_REQUEST),
-//          (StartDateFormatError, BAD_REQUEST),
-//          (EndDateFormatError, BAD_REQUEST),
-//          (TypeOfBusinessFormatError, BAD_REQUEST),
-//          (SelfEmploymentIdFormatError, BAD_REQUEST),
-//          (SelfEmploymentIdRuleError, BAD_REQUEST),
-//          (EndBeforeStartDateError, BAD_REQUEST),
-//          (DownstreamError, INTERNAL_SERVER_ERROR)
-//        )
-//
-//        input.foreach(args => (errorsFromParserTester _).tupled(args))
-//      }
-//
-//      "service errors occur" must {
-//        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-//          s"a $mtdError error is returned from the service" in new Test {
-//
-//            MockTriggerBsasRequestParser
-//              .parse(requestRawData)
-//              .returns(Right(request))
-//
-//            MockTriggerBsasService
-//              .triggerBsas(request)
-//              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
-//
-//            val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBody))
-//
-//            status(result) shouldBe expectedStatus
-//            contentAsJson(result) shouldBe Json.toJson(mtdError)
-//            header("X-CorrelationId", result) shouldBe Some(correlationId)
-//          }
-//        }
-//
-//        val input = Seq(
-//          (NinoFormatError, BAD_REQUEST),
-//          (RuleAccountingPeriodNotEndedError, FORBIDDEN),
-//          (RulePeriodicDataIncompleteError, FORBIDDEN),
-//          (RuleNoAccountingPeriodError, FORBIDDEN),
-//          (NotFoundError, NOT_FOUND),
-//          (DownstreamError, INTERNAL_SERVER_ERROR)
-//        )
-//
-//        input.foreach(args => (serviceErrors _).tupled(args))
-//      }
-//    }
+    "return the error as per spec" when {
+      "parser errors occur" must {
+        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
+          s"a ${error.code} error is returned from the parser" in new Test {
+
+            MockSubmitUkPropertyBsasDataParser
+              .parse(fhlRawRequest)
+              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+
+            val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(error)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
+        }
+
+        val input = Seq(
+          (BadRequestError, BAD_REQUEST),
+          (NinoFormatError, BAD_REQUEST),
+          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
+          (DownstreamError, INTERNAL_SERVER_ERROR)
+        )
+
+        input.foreach(args => (errorsFromParserTester _).tupled(args))
+      }
+
+      "service errors occur" must {
+        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+          s"a $mtdError error is returned from the service" in new Test {
+
+            MockSubmitUkPropertyBsasDataParser
+              .parse(fhlRawRequest)
+              .returns(Right(fhlRequest))
+
+            MockSubmitUkPropertyBsasService
+              .submitPropertyBsas(fhlRequest)
+              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+
+            val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(mtdError)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
+        }
+
+        val input = Seq(
+          (NinoFormatError, BAD_REQUEST),
+          (NotFoundError, NOT_FOUND),
+          (DownstreamError, INTERNAL_SERVER_ERROR)
+        )
+
+        input.foreach(args => (serviceErrors _).tupled(args))
+      }
+    }
   }
 }
