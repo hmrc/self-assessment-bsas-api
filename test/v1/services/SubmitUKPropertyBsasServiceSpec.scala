@@ -24,7 +24,7 @@ import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.mocks.connectors.MockSubmitUkPropertyBsasConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.SubmitPropertyBsasRequestData
+import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
 import v1.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
-  val request = SubmitPropertyBsasRequestData(nino, id, fhlBody)
+  val request = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
 
   val response = SubmitUkPropertyBsasResponse(id)
 
@@ -44,7 +44,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
     implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitUKPropertyBsas")
 
-    val service = new SubmitUKPropertyBsasService(mockConnector)
+    val service = new SubmitUkPropertyBsasService(mockConnector)
   }
 
   "submitUKPropertyBsas" should {
@@ -53,7 +53,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.submitUKPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
 
@@ -65,7 +65,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
           MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.submitUKPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
       val input = Seq(

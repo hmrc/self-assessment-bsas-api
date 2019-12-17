@@ -22,27 +22,20 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import uk.gov.hmrc.domain.Nino
 import utils.Logging
+import v1.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v1.hateoas.HateoasFactory
-import v1.models.errors._
-import v1.models.request.submitBsas.{SubmitPropertyBsasRequestData, SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
+import v1.models.errors.{RuleAdjustmentRangeInvalid, _}
+import v1.models.request.submitBsas.SubmitUkPropertyBsasRawData
 import v1.models.response.SubmitUkPropertyBsasHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
-
-@Singleton
-class SubmitUkPropertyBsasRequestParser {
-  def parseRequest(data: SubmitUKPropertyBsasRawData): Either[ErrorWrapper, SubmitPropertyBsasRequestData] =
-    Right(SubmitPropertyBsasRequestData(Nino(data.nino), data.bsasId, Json.asInstanceOf[SubmitUKPropertyBsasRequestBody]))
-}
-
 @Singleton
 class SubmitUkPropertyBsasController @Inject()(
                                                 val authService: EnrolmentsAuthService,
                                                 val lookupService: MtdIdLookupService,
-                                                requestparser: SubmitUkPropertyBsasRequestParser,
+                                                requestParser: SubmitUkPropertyBsasDataParser,
                                                 service: SubmitUkPropertyBsasService,
                                                 hateoasFactory: HateoasFactory,
                                                 cc: ControllerComponents
@@ -60,10 +53,10 @@ class SubmitUkPropertyBsasController @Inject()(
   def submitUkPropertyBsas(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit  request =>
 
-      val rawData = SubmitUKPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+      val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestparser.parseRequest(rawData))
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response <- EitherT(service.submitPropertyBsas(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(
@@ -89,14 +82,11 @@ class SubmitUkPropertyBsasController @Inject()(
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | BsasIdFormatError |
-           RuleIncorrectOrEmptyBodyError
-        //AdjustmentFormatError | RuleRangeInvalid | RuleTypeOfBusinessIncorrect
-      => BadRequest(Json.toJson(errorWrapper))
-      case RuleTypeOfBusinessError | RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
-           RuleBsasAlreadyAdjusted | RuleTypeOfBusinessError  | RuleOverConsolidatedExpensesThreshold |
-           RulePropertyIncomeAllowanceClaimed
-        // | RuleSelfEmploymentAdjusted | RuleBothExpensesSupplied | RuleRangeInvalid
-      => Forbidden(Json.toJson(errorWrapper))
+           RuleIncorrectOrEmptyBodyError | FormatAdjustmentValueError | RuleAdjustmentRangeInvalid |
+           RuleTypeOfBusinessError | RuleBothExpensesError=> BadRequest(Json.toJson(errorWrapper))
+      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleBsasAlreadyAdjusted |
+           RuleOverConsolidatedExpensesThreshold | RulePropertyIncomeAllowanceClaimed |
+           RuleSelfEmploymentAdjusted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

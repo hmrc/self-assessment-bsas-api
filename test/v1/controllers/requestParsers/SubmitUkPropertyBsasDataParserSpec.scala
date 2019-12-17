@@ -22,7 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v1.models.errors._
-import v1.models.request.submitBsas.{SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestData}
+import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
@@ -37,45 +37,45 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
     "accept valid input" when {
       "a non-fhl-property wth expenses is has full adjustments is passed" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validNonFHLInputJson))
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validNonFHLInputJson))
 
         MockValidator
           .validate(inputData)
           .returns(Nil)
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitUKPropertyBsasRequestData(Nino(nino), bsasId, validNonFHLBody))
+        result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validNonFHLBody))
       }
 
       "a fhl-property wth consolidated expenses has full adjustments is passed" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validfhlInputJson))
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validfhlInputJson))
 
         MockValidator
           .validate(inputData)
           .returns(Nil)
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitUKPropertyBsasRequestData(Nino(nino), bsasId, validfhlBody))
+        result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validfhlBody))
       }
 
       "minimal adjustment is passed" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL())
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL())
 
         MockValidator
           .validate(inputData)
           .returns(Nil)
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitUKPropertyBsasRequestData(Nino(nino), bsasId, validMinimalBody))
+        result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validMinimalBody))
       }
     }
 
     "reject invalid input" when {
       "a adjustment has zero value" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeZeroValue, nonFHLExpensesAllFields))
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeZeroValue, nonFHLExpensesAllFields))
 
 
         MockValidator
@@ -88,7 +88,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
       "a adjustment has a value over the range" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
 
 
         MockValidator
@@ -101,7 +101,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
       "the bsas id format is incorrect" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
+        val inputData = SubmitUkPropertyBsasRawData(nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
 
 
         MockValidator
@@ -114,20 +114,20 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
       "the input contains consolidated expenses along with other expenses" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlInvalidConsolidatedExpenses))
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlInvalidConsolidatedExpenses))
 
 
           MockValidator
           .validate(inputData)
-          .returns(List(BothExpensesError))
+          .returns(List(RuleBothExpensesError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, BothExpensesError, None))
+        result shouldBe Left(ErrorWrapper(None, RuleBothExpensesError, None))
       }
 
       "the input has multiple invalid feels" in new Test {
 
-        val inputData = SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
+        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
 
         MockValidator
           .validate(inputData)

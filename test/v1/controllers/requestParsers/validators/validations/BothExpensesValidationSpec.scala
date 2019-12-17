@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.BothExpensesError
+import v1.models.errors.RuleBothExpensesError
 import v1.models.utils.JsonErrorValidators
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -78,7 +78,7 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
           val result = BothExpensesValidation.validate(expensesAdjusted)
 
           result.length shouldBe 1
-          result.head shouldBe BothExpensesError
+          result.head shouldBe RuleBothExpensesError
         }
 
       "when consolidated expenses and residential cost is present with another expense" in
@@ -87,7 +87,7 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
           val result = BothExpensesValidation.validate(expensesAdjusted)
 
           result.length shouldBe 1
-          result.head shouldBe BothExpensesError
+          result.head shouldBe RuleBothExpensesError
         }
 
       "when consolidated expenses and residential cost is present with multiple expenses" in
@@ -95,7 +95,7 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
           val result = BothExpensesValidation.validate(expensesAdjusted)
 
           result.length shouldBe 1
-          result.head shouldBe BothExpensesError
+          result.head shouldBe RuleBothExpensesError
         }
     }
   }

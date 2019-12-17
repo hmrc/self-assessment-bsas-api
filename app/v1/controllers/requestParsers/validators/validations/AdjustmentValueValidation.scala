@@ -16,15 +16,17 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.MtdError
+import v1.models.errors.{FormatAdjustmentValueError, MtdError}
 
 object AdjustmentValueValidation {
 
   def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
 
+    lazy val error = FormatAdjustmentValueError.withFieldName(fieldName)
+
     field match {
       case Some(value) if value.toDouble == 0 =>
-        List(MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of $fieldName value is invalid"))
+        List(error)
       case _ => List()
     }
   }

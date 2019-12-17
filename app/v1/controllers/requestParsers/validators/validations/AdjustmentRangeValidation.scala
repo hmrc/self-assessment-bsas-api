@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.MtdError
+import v1.models.errors.{MtdError, RuleAdjustmentRangeInvalid}
 
 object AdjustmentRangeValidation {
 
@@ -25,9 +25,11 @@ object AdjustmentRangeValidation {
 
   def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
 
+    val error = RuleAdjustmentRangeInvalid.withFieldName(fieldName)
+
     field match {
       case Some(value) if value > maxValue || value < minValue  =>
-        List(MtdError("RULE_RANGE_INVALID", s"Adjustment value $fieldName falls outside the accepted range"))
+        List(error)
       case _ => List()
     }
   }

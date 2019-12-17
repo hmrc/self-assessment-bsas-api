@@ -54,14 +54,14 @@ class FHLExpensesSpec extends UnitSpec {
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      |  "premisesRunningCosts": "-1000.49",
-      |  "repairsAndMaintenance": "1000.49",
-      |  "financialCosts": "1000.49",
+      |  "premisesRunningCosts": -1000.45,
+      |  "repairsAndMaintenance": 1000.45,
+      |  "financialCosts": 1000.45,
       |  "professionalFees": true,
-      |  "costOfServices": "-1000.49",
+      |  "costOfServices": -1000.45,
       |  "travelCosts": false,
-      |  "other": "1000.49",
-      |  "consolidatedExpenses": "1000.49"
+      |  "other": 1000.45,
+      |  "consolidatedExpenses": 1000.45
       |}
       |""".stripMargin
   )

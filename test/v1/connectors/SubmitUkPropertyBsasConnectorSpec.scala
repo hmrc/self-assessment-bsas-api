@@ -21,7 +21,7 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.SubmitPropertyBsasRequestData
+import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
 import v1.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
@@ -41,7 +41,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
   }
 
   "submitBsas" must {
-    val request = SubmitPropertyBsasRequestData(nino, bsasId, nonFHLBody)
+    val request = SubmitUkPropertyBsasRequestData(nino, bsasId, nonFHLBody)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId)))

@@ -20,7 +20,7 @@ import play.api.mvc.AnyContentAsJson
 import uk.gov.hmrc.domain.Nino
 import v1.models.request.RawData
 
-case class SubmitUKPropertyBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
+case class SubmitUkPropertyBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
 
-case class SubmitPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitUKPropertyBsasRequestBody)
+case class SubmitUkPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitUKPropertyBsasRequestBody)
 

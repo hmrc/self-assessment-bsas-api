@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, SubmitUkPropertyBsasConnector}
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
 import v1.models.response.SubmitUkPropertyBsasResponse
+import v1.services.SubmitUkPropertyBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitUkPropertyBsasConnector extends MockFactory {
+trait MockSubmitUkPropertyBsasService extends MockFactory {
 
-  val mockConnector: SubmitUkPropertyBsasConnector = mock[SubmitUkPropertyBsasConnector]
+  val mockService: SubmitUkPropertyBsasService = mock[SubmitUkPropertyBsasService]
 
-  object MockSubmitUKPropertyBsasConnector {
+  object MockSubmitUkPropertyBsasService {
 
-    def submitUKPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[DesOutcome[SubmitUkPropertyBsasResponse]]] = {
-      (mockConnector
-        .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+    def submitPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SubmitUkPropertyBsasResponse]]]] = {
+      (mockService
+        .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
     }
   }
+
 }
