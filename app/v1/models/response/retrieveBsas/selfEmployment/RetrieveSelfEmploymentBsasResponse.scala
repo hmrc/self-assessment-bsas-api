@@ -16,13 +16,16 @@
 
 package v1.models.response.retrieveBsas.selfEmployment
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveSelfEmploymentBsasResponse (metadata: Metadata,
                                                bsas: Option[BsasDetail])
 
-object RetrieveSelfEmploymentBsasResponse {
+object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveSelfEmploymentBsasResponse] = (
     JsPath.read[Metadata] and
@@ -33,4 +36,18 @@ object RetrieveSelfEmploymentBsasResponse {
     )(RetrieveSelfEmploymentBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
+
+  implicit object RetrieveSelfAssessmentsAdjustmentHateoasFactory
+    extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentsAdjustmentHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentsAdjustmentHateoasData): Seq[Link] = {
+      import data._
+
+      Seq(
+        getSelfEmploymentBsas(appConfig, nino, bsasId),
+        adjustSelfEmploymentBsas(appConfig, nino, bsasId)
+      )
+    }
+  }
 }
+
+case class RetrieveSelfAssessmentsAdjustmentHateoasData(nino: String, bsasId: String) extends HateoasData
