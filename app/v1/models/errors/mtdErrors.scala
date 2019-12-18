@@ -63,7 +63,7 @@ object EndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
 
 object RuleBothExpensesError
-  extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both Expenses and consolidated expenses cannot be present at the same time")
+  extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both expenses and consolidated expenses cannot be present at the same time")
 
 object RuleSelfEmploymentAdjusted
   extends MtdError("RULE_SELF_EMPLOYMENT_ADJUSTED",
