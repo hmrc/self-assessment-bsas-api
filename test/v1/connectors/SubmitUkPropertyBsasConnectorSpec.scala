@@ -21,18 +21,18 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestData
-import v1.models.response.SubmitUKPropertyBsasResponse
+import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
+import v1.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
-class SubmitUKPropertyBsasConnectorSpec  extends ConnectorSpec {
+class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: SubmitUKPropertyBsasConnector = new SubmitUKPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -41,10 +41,10 @@ class SubmitUKPropertyBsasConnectorSpec  extends ConnectorSpec {
   }
 
   "submitBsas" must {
-    val request = SubmitUKPropertyBsasRequestData(nino, bsasId, nonFHLBody)
+    val request = SubmitUkPropertyBsasRequestData(nino, bsasId, nonFHLBody)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, SubmitUKPropertyBsasResponse(bsasId)))
+      val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId)))
 
       MockedHttpClient.post(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
@@ -52,7 +52,7 @@ class SubmitUKPropertyBsasConnectorSpec  extends ConnectorSpec {
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
       ).returns(Future.successful(outcome))
 
-      await(connector.submitUKPropertyBsas(request)) shouldBe outcome
+      await(connector.submitPropertyBsas(request)) shouldBe outcome
     }
   }
 }

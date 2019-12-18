@@ -19,14 +19,14 @@ package v1.controllers.requestParsers.validators
 import config.FixedConfig
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.submitBsas.{SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
+import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
 
-class SubmitUkPropertyBsasValidator extends Validator[SubmitUKPropertyBsasRawData] with FixedConfig {
+class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidator, bodyFormatValidator, adjustmentFieldValidator,
     otherBodyFieldsValidator)
 
-  private def parameterFormatValidator: SubmitUKPropertyBsasRawData => List[List[MtdError]] = { data =>
+  private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
 
     List(
       NinoValidation.validate(data.nino),
@@ -34,14 +34,14 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUKPropertyBsasRawDat
     )
   }
 
-  private def bodyFormatValidator: SubmitUKPropertyBsasRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
 
     List(
       JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
     )
   }
 
-  private def adjustmentFieldValidator: SubmitUKPropertyBsasRawData => List[List[MtdError]] = { data =>
+  private def adjustmentFieldValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
 
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
@@ -104,7 +104,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUKPropertyBsasRawDat
     }
   }
 
-  private def otherBodyFieldsValidator: SubmitUKPropertyBsasRawData => List[List[MtdError]] = { data =>
+  private def otherBodyFieldsValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
 
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
@@ -114,5 +114,5 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUKPropertyBsasRawDat
     )
   }
 
-  override def validate(data: SubmitUKPropertyBsasRawData): List[MtdError] = run(validationSet, data)
+  override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
 }

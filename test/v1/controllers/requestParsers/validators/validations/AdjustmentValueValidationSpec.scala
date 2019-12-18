@@ -26,7 +26,7 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
   val validNegativeAdjustment = Some(BigDecimal(-2.00))
   val validDecimalAdjustment = Some(BigDecimal(3.46))
 
-  val invaldzero = Some(BigDecimal(0))
+  val invalidzero = Some(BigDecimal(0))
   val invalidDecimalZero = Some(BigDecimal(0.00))
 
   case class SetUp(adjustmentValue: Option[BigDecimal], fieldName: String = "other")
@@ -50,7 +50,7 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
     }
 
     "return errors" when {
-      "the adjustment has a value zero" in new SetUp(invaldzero) {
+      "the adjustment has a value zero" in new SetUp(invalidzero) {
 
         val result = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 

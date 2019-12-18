@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{BothExpensesError, MtdError}
+import v1.models.errors.{RuleBothExpensesError, MtdError}
 
 object BothExpensesValidation {
 
@@ -26,8 +26,8 @@ object BothExpensesValidation {
       case Some(expenses) => (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"),
         expenses.size) match {
         case (true, true, size) if size == 2 => List()
-        case (true, true, size) if size > 2 => List(BothExpensesError)
-        case (true, _, size) if size > 1 => List(BothExpensesError)
+        case (true, true, size) if size > 2 => List(RuleBothExpensesError)
+        case (true, _, size) if size > 1 => List(RuleBothExpensesError)
         case (_, _, _) => List()
       }
       case None => List()

@@ -20,14 +20,14 @@ import javax.inject.Inject
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
-import v1.models.request.submitBsas.{SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestBody, SubmitUKPropertyBsasRequestData}
+import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
 
 class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
-  extends RequestParser[SubmitUKPropertyBsasRawData, SubmitUKPropertyBsasRequestData] {
+  extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
 
-  override protected def requestFor(data: SubmitUKPropertyBsasRawData): SubmitUKPropertyBsasRequestData = {
+  override protected def requestFor(data: SubmitUkPropertyBsasRawData): SubmitUkPropertyBsasRequestData = {
     val requestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
-    SubmitUKPropertyBsasRequestData(Nino(data.nino), data.bsasId, requestBody)
+    SubmitUkPropertyBsasRequestData(Nino(data.nino), data.bsasId, requestBody)
   }
 }

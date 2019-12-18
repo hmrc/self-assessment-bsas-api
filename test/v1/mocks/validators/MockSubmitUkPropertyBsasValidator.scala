@@ -20,16 +20,16 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
 import v1.models.errors.MtdError
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRawData
+import v1.models.request.submitBsas.SubmitUkPropertyBsasRawData
 
 class MockSubmitUkPropertyBsasValidator extends MockFactory {
   val mockValidator: SubmitUkPropertyBsasValidator = mock[SubmitUkPropertyBsasValidator]
 
   object MockValidator {
 
-    def validate(data: SubmitUKPropertyBsasRawData): CallHandler1[SubmitUKPropertyBsasRawData, List[MtdError]] = {
+    def validate(data: SubmitUkPropertyBsasRawData): CallHandler1[SubmitUkPropertyBsasRawData, List[MtdError]] = {
       (mockValidator
-        .validate(_: SubmitUKPropertyBsasRawData))
+        .validate(_: SubmitUkPropertyBsasRawData))
         .expects(data)
     }
   }

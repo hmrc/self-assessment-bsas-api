@@ -20,7 +20,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
-import v1.models.errors.{BothExpensesError, BsasIdFormatError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.{RuleBothExpensesError, BsasIdFormatError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.submitBsas._
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
@@ -34,22 +34,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
   val invalidBody: AnyContentAsJson = AnyContentAsJson(Json.obj("aproperty" -> "25"))
 
-  val fhlExpensesAllFields: Option[JsObject] = Some(Json.obj(
-    "premisesRunningCosts" -> "1000.49",
-    "repairsAndMaintenance" -> "1000.49",
-    "financialCosts" -> "1000.49",
-    "professionalFees" -> "1000.49",
-    "costOfServices" -> "1000.49",
-    "travelCosts" -> "1000.49",
-    "other" -> "1000.49"
-  ))
-
-  val nonFHLIncomeAllFields: Option[JsObject] = Some(Json.obj(
-    "rentIncome" -> "1000.45",
-    "premiumsOfLeaseGrant" -> "1000.45",
-    "reversePremiums" -> "1000.45",
-    "otherPropertyIncome" -> "1000.45"
-  ))
 
   "running validation" should {
     "return no errors" when {
@@ -57,7 +41,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         validator
           .validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields)))
+            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields)))
           .isEmpty shouldBe true
       }
 
@@ -65,7 +49,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         validator
           .validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields)))
+            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields)))
           .isEmpty shouldBe true
       }
 
@@ -73,7 +57,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         validator
           .validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL()))
+            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL()))
           .isEmpty shouldBe true
       }
     }
@@ -82,7 +66,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
       "a single adjustment field is zero" in new SetUp {
 
         private val result = validator.validate(
-          SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeZeroValue, nonFHLExpensesAllFields))
+          SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeZeroValue, nonFHLExpensesAllFields))
         )
 
         result.length shouldBe 1
@@ -92,7 +76,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
       "a single adjustment field is more then 99999999999.99 " in new SetUp {
 
         private val result = validator.validate(
-          SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
+          SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
         )
 
         result.length shouldBe 1
@@ -102,7 +86,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
       "the format of the bsasId is invalid" in new SetUp {
 
         private val result = validator.validate(
-          SubmitUKPropertyBsasRawData(
+          SubmitUkPropertyBsasRawData(
             nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields)
           )
         )
@@ -115,18 +99,18 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result =
           validator.validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlInvalidConsolidatedExpenses))
+            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlInvalidConsolidatedExpenses))
           )
 
         result.length shouldBe 1
-        result shouldBe List(BothExpensesError)
+        result shouldBe List(RuleBothExpensesError)
       }
 
       "multiple adjustment fields are invalid" in new SetUp {
 
         private val result =
           validator.validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
+            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
           )
 
         result.length shouldBe 4
@@ -139,7 +123,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result =
           validator.validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, invalidBody)
+            SubmitUkPropertyBsasRawData(nino, bsasId, invalidBody)
           )
 
         result.length shouldBe 1
@@ -150,7 +134,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result =
           validator.validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))
+            SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))
           )
 
         result.length shouldBe 1
@@ -161,7 +145,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result =
           validator.validate(
-            SubmitUKPropertyBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj(
+            SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj(
               "furnishedHolidayLet" -> "",
               "nonFurnishedHolidayLet" -> ""))
             )

@@ -31,7 +31,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
 
   "validate" should {
     "return no errors" when {
-      "a adjustment is provided which is within bounds" in new SetUp(validAdjustment) {
+      "an adjustment is provided which is within bounds" in new SetUp(validAdjustment) {
 
         AdjustmentRangeValidation.validate(adjustmentValue, fieldName).isEmpty shouldBe true
       }
@@ -39,7 +39,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
 
     "return errors" when {
 
-      "a adjustments below -99999999999.99" in new SetUp(invalidAdjustmentNegative) {
+      "an adjustment is below -99999999999.99" in new SetUp(invalidAdjustmentNegative) {
 
         val result = AdjustmentRangeValidation.validate(adjustmentValue, fieldName)
 

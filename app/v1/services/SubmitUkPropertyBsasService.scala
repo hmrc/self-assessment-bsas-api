@@ -21,25 +21,25 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.SubmitUKPropertyBsasConnector
+import v1.connectors.SubmitUkPropertyBsasConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestData
-import v1.models.response.SubmitUKPropertyBsasResponse
+import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
+import v1.models.response.SubmitUkPropertyBsasResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUKPropertyBsasService @Inject()(connector: SubmitUKPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
+class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
-  def submitUKPropertyBsas(request: SubmitUKPropertyBsasRequestData)(
+  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
                 implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
-  Future[Either[ErrorWrapper, ResponseWrapper[SubmitUKPropertyBsasResponse]]] = {
+  Future[Either[ErrorWrapper, ResponseWrapper[SubmitUkPropertyBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.submitUKPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.submitPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
     } yield desResponseWrapper.map(des => des)
 
     result.value
