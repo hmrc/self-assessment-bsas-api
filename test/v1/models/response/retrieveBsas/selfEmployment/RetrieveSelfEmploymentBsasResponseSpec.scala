@@ -16,14 +16,12 @@
 
 package v1.models.response.retrieveBsas.selfEmployment
 
+import mocks.MockAppConfig
+import v1.models.hateoas.Method._
 import support.UnitSpec
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{
-  desRetrieveBsasResponseJsonAdjusted,
-  desRetrieveBsasResponseJsonAdjustable,
-  mtdRetrieveBsasResponseJson,
-  retrieveBsasResponseModelAdjusted,
-  retrieveBsasResponseModelAdjustable
-}
+import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, mtdRetrieveBsasResponseJson, retrieveBsasResponseModelAdjustable, retrieveBsasResponseModelAdjusted}
+import v1.hateoas.HateoasFactory
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.utils.JsonErrorValidators
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
@@ -47,6 +45,27 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
       "passed a valid model with adjustedSummary = false" in {
         retrieveBsasResponseModelAdjustable.toJson shouldBe mtdRetrieveBsasResponseJson(false)
       }
+    }
+  }
+
+  "HateoasFactory" should {
+    class Test extends MockAppConfig{
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino = "someNino"
+      val bsasId = "anId"
+      val adjustment = "03"
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+    }
+
+    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
+      hateoasFactory.wrap(retrieveBsasResponseModelAdjustable, RetrieveSelfAssessmentsAdjustmentHateoasData(nino, bsasId)) shouldBe
+        HateoasWrapper(
+          retrieveBsasResponseModelAdjustable,
+          Seq(
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust", POST, "submit-summary-adjustments")
+          )
+        )
     }
   }
 
