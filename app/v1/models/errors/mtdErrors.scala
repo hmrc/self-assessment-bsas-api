@@ -65,8 +65,9 @@ object EndBeforeStartDateError
 object RuleBothExpensesError
   extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both Expenses and consolidated expenses cannot be present at the same time")
 
-object SelfEmploymentAdjusted
-  extends MtdError("RULE_SELF_EMPLOYMENT_ADJUSTED", "A self-employment business type was adjusted. Re-trigger an adjustable summary for the self-employment to correct")
+object RuleSelfEmploymentAdjusted
+  extends MtdError("RULE_SELF_EMPLOYMENT_ADJUSTED",
+    "A self-employment business type was adjusted. Re-trigger an adjustable summary for the self-employment to correct")
 
 
 // Rule Errors
