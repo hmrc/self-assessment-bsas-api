@@ -59,25 +59,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   val requestBody: JsValue = validfhlInputJson
 
-  val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
-    s"""
-       |{
-       |  "id": "$bsasId",
-       |  "links":[
-       |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-       |      "rel":"self",
-       |      "method":"GET"
-       |    },
-       |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-       |      "rel":"retrieve-adjustable-summary",
-       |      "method":"GET"
-       |    }
-       |  ]
-       |}
-    """.stripMargin
-
   "Calling the Submit Adjustments to your UK Property Summary endpoint" should {
 
     "return a 200 status code" when {
@@ -88,7 +69,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse(bsasId)))
+          DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(fhlDesResponse(bsasId)))
         }
 
         val result: WSResponse = await(request().post(requestBody))

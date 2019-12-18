@@ -342,7 +342,26 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     )
   }
 
-  val desResponse: String => String = (bsasId: String) =>
+  val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |  "id": "$bsasId",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    },
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
+       |      "rel":"retrieve-adjustable-summary",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+
+  val fhlDesResponse: String => String = (bsasId: String) =>
     s"""
        |{
        |      "metadata":{

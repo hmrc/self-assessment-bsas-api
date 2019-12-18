@@ -20,6 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures.hateoasResponse
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitUkPropertyBsasService}
@@ -92,25 +93,6 @@ class SubmitUkPropertyBsasControllerSpec
     "return a successful hateoas response with status 200 (OK)" when {
       "a valid request is supplied for an FHL property" in new Test {
 
-        val hateoasResponse: JsValue = Json.parse(
-          s"""
-             |{
-             | "id": "$bsasId",
-             | "links": [
-             | {
-             |  "href":  "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-             |  "method": "GET",
-             |  "rel": "self"
-             | },
-             | {
-             |  "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-             |  "method": "GET",
-             |  "rel": "retrieve-adjustable-summary"
-             | }
-             | ]
-             |}
-             |""".stripMargin)
-
         MockSubmitUkPropertyBsasDataParser
           .parse(fhlRawRequest)
           .returns(Right(fhlRequest))
@@ -126,30 +108,11 @@ class SubmitUkPropertyBsasControllerSpec
         val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validfhlInputJson)))
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe hateoasResponse
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
 
       "a valid request is supplied for a non-FHL property" in new Test {
-
-        val hateoasResponse: JsValue = Json.parse(
-          s"""
-             |{
-             | "id": "$bsasId",
-             | "links": [
-             | {
-             |  "href":  "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-             |  "method": "GET",
-             |  "rel": "self"
-             | },
-             | {
-             |  "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-             |  "method": "GET",
-             |  "rel": "retrieve-adjustable-summary"
-             | }
-             | ]
-             |}
-             |""".stripMargin)
 
         MockSubmitUkPropertyBsasDataParser
           .parse(nonFhlRawRequest)
@@ -166,7 +129,7 @@ class SubmitUkPropertyBsasControllerSpec
         val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validNonFHLInputJson)))
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe hateoasResponse
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -190,6 +153,7 @@ class SubmitUkPropertyBsasControllerSpec
       val input = Seq(
         (BadRequestError, BAD_REQUEST),
         (NinoFormatError, BAD_REQUEST),
+        (BsasIdFormatError, BAD_REQUEST),
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleBothExpensesError, BAD_REQUEST),
@@ -260,6 +224,7 @@ class SubmitUkPropertyBsasControllerSpec
 
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
+        (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleTypeOfBusinessError, BAD_REQUEST),
