@@ -25,8 +25,6 @@ object MtdError {
 }
 
 object MtdErrorWithCustomMessage {
-//  implicit val writes: Writes[MtdError] = Json.writes[MtdError]
-
   def unapply(arg: MtdError): Option[String] = Some(arg.code)
 }
 
