@@ -267,7 +267,7 @@ class SubmitUkPropertyBsasControllerSpec
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleBsasAlreadyAdjusted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RuleSelfEmploymentAdjusted, FORBIDDEN),
+        (RuleSelfEmploymentAdjustedError, FORBIDDEN),
         (RulePropertyIncomeAllowanceClaimed, FORBIDDEN)
       )
       input.foreach(args => (serviceErrors _).tupled(args))

@@ -87,7 +87,7 @@ class SubmitUkPropertyBsasController @Inject()(
            MtdErrorWithCustomMessage(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleBsasAlreadyAdjusted |
            RuleOverConsolidatedExpensesThreshold | RulePropertyIncomeAllowanceClaimed |
-           RuleSelfEmploymentAdjusted => Forbidden(Json.toJson(errorWrapper))
+           RuleSelfEmploymentAdjustedError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
