@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.Logging
 import v1.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v1.hateoas.HateoasFactory
-import v1.models.errors.{RuleAdjustmentRangeInvalid, _}
+import v1.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRawData
 import v1.models.response.SubmitUkPropertyBsasHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService}
@@ -82,8 +82,9 @@ class SubmitUkPropertyBsasController @Inject()(
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | BsasIdFormatError |
-           RuleIncorrectOrEmptyBodyError | FormatAdjustmentValueError | RuleAdjustmentRangeInvalid |
-           RuleTypeOfBusinessError | RuleBothExpensesError=> BadRequest(Json.toJson(errorWrapper))
+           RuleIncorrectOrEmptyBodyError | RuleTypeOfBusinessError | RuleBothExpensesError |
+           MtdErrorWithCustomMessage(FormatAdjustmentValueError.code) |
+           MtdErrorWithCustomMessage(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleBsasAlreadyAdjusted |
            RuleOverConsolidatedExpensesThreshold | RulePropertyIncomeAllowanceClaimed |
            RuleSelfEmploymentAdjusted => Forbidden(Json.toJson(errorWrapper))

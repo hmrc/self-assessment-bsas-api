@@ -24,6 +24,12 @@ object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
 }
 
+object MtdErrorWithCustomMessage {
+//  implicit val writes: Writes[MtdError] = Json.writes[MtdError]
+
+  def unapply(arg: MtdError): Option[String] = Some(arg.code)
+}
+
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
@@ -41,7 +47,7 @@ object AdjustedStatusFormatError
   extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
 
 object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "") {
-  def withFieldName(fieldName: String): MtdError = this.copy(message = s"The format of $fieldName value is invalid")
+  def withFieldName(fieldName: String): MtdError = this.copy(message = s"The format of the '$fieldName' value is invalid")
 }
 
 object SelfEmploymentIdFormatError extends MtdError("FORMAT_SELF_EMPLOYMENT_ID","The supplied self-employment ID format is invalid")
@@ -102,7 +108,7 @@ object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The summary c
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The summary calculation requested is not for a self employment business")
 
 object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "") {
-  def withFieldName(fieldName: String): MtdError = this.copy(message = s"Adjustment value $fieldName falls outside the accepted range")
+  def withFieldName(fieldName: String): MtdError = this.copy(message = s"Adjustment value for '$fieldName' falls outside the accepted range")
 }
 
 //Standard Errors

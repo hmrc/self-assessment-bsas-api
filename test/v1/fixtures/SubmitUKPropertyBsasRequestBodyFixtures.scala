@@ -317,10 +317,10 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
 
   def rangeError(fieldName: String): MtdError =
-    MtdError("RULE_RANGE_INVALID", s"Adjustment value $fieldName falls outside the accepted range")
+    MtdError("RULE_RANGE_INVALID", s"Adjustment value for '$fieldName' falls outside the accepted range")
 
   def zeroError(fieldName: String): MtdError =
-    MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of $fieldName value is invalid")
+    MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the '$fieldName' value is invalid")
 
   def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
                                expenses: Option[JsObject] = None): AnyContentAsJson = {

@@ -3,3 +3,5 @@ GET        /:nino                                          v1.controllers.ListBs
 POST       /:nino/trigger                                  v1.controllers.TriggerBsasController.triggerBsas(nino: String)
 
 GET        /:nino/property/:bsasId                         v1.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, bsasId: String, adjustedStatus: Option[String])
+
+POST       /:nino/property/:bsasId/adjust                  v1.controllers.SubmitUkPropertyBsasController.submitUkPropertyBsas(nino: String, bsasId: String)
