@@ -45,7 +45,7 @@ object AdjustedStatusFormatError
   extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
 
 object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "") {
-  def withFieldName(fieldName: String): MtdError = this.copy(message = s"The format of the '$fieldName' value is invalid. The value should be ")
+  def withFieldName(fieldName: String): MtdError = this.copy(message = s"The format of the '$fieldName' value is invalid")
 }
 
 object SelfEmploymentIdFormatError extends MtdError("FORMAT_SELF_EMPLOYMENT_ID","The supplied self-employment ID format is invalid")
