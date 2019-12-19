@@ -54,6 +54,10 @@ trait HateoasLinks {
   def getSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 
+  //L2 with adjusted flag
+  def getAdjustedSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true" , method = GET, rel = RETRIEVE_BSAS)
+
   //L3
   def getPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = propertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
@@ -65,7 +69,7 @@ trait HateoasLinks {
   //L4
   def adjustSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
-      href = selfEmploymentAdjustmentUri(appConfig, nino, bsasId) + "?adjustedStatus=true",
+      href = selfEmploymentAdjustmentUri(appConfig, nino, bsasId),
       method = POST,
       rel = SUBMIT_ADJUSTMENTS
     )

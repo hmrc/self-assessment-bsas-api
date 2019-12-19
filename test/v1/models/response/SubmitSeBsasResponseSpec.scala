@@ -50,7 +50,7 @@ class SubmitSeBsasResponseSpec extends UnitSpec{
 
   val submitSeBsasResponse: SubmitSeBsasResponse = SubmitSeBsasResponse("anId")
 
-  "SubmitBsasResponse" when {
+  "SubmitSeBsasResponse" when {
     "read from valid JSON" should {
       "return the expected SubmitBsasResponse object" in {
         desJson.as[SubmitSeBsasResponse] shouldBe submitSeBsasResponse

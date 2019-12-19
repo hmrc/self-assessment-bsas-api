@@ -37,7 +37,7 @@ object SubmitSeBsasResponse extends HateoasLinks {
 
       Seq(
         getSelfEmploymentBsasAdjustments(appConfig, nino, bsasId),
-        getSelfEmploymentBsas(appConfig, nino, bsasId)
+        getAdjustedSelfEmploymentBsas(appConfig, nino, bsasId)
       )
     }
   }

@@ -51,7 +51,7 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
 
   val submitBsasResponse: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse("anId")
 
-  "SubmitBsasResponse" when {
+  "SubmitUkBsasResponse" when {
     "read from valid JSON" should {
       "return the expected SubmitBsasResponse object" in {
         desJson.as[SubmitUkPropertyBsasResponse] shouldBe submitBsasResponse
