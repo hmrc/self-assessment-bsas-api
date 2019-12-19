@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package v1.models.request.submitBsas.selfEmployment
+package v1.models.request.submitBsas
 
-import play.api.libs.json.{Json, OWrites, Reads}
-
-case class SubmitSeBsasRequestBody(income: Option[SeIncome], additions: Option[SeAdditions], expenses: Option[SeExpenses])
-
-object SubmitSeBsasRequestBody {
-  implicit val reads: Reads[SubmitSeBsasRequestBody] = Json.reads[SubmitSeBsasRequestBody]
-  implicit val writes: OWrites[SubmitSeBsasRequestBody] = Json.writes[SubmitSeBsasRequestBody]
+package object selfEmployment {
+  def queryMap[A](as: Map[String, Option[A]]): Map[String, A] =
+    as.filterNot {
+      case (_, None) => true
+      case _ => false
+    }
+      .map {
+        case (k: String, Some(v)) => (k, v)
+      }
 }
