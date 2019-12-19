@@ -16,4 +16,11 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
+import play.api.libs.json.{Json, OWrites, Reads}
+
 case class SeIncome(turnover: Option[BigDecimal], other: Option[BigDecimal])
+
+object SeIncome{
+
+  implicit val writes: OWrites[SeIncome] = Json.writes[SeIncome]
+}

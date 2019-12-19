@@ -16,4 +16,11 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
+import play.api.libs.json.{Json, OWrites, Reads}
+
 case class SubmitSeBsasRequestBody(income: Option[SeIncome], additions: Option[SeAdditions], expenses: Option[SeExpenses])
+
+object SubmitUKPropertyBsasRequestBody {
+  implicit val reads: Reads[SubmitSeBsasRequestBody] = Json.reads[SubmitSeBsasRequestBody]
+  implicit val writes: OWrites[SubmitSeBsasRequestBody] = Json.writes[SubmitSeBsasRequestBody]
+}

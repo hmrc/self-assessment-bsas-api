@@ -16,6 +16,8 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
+import play.api.libs.json.{Json, OWrites}
+
 case class SeAdditions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
                        cisPaymentsToSubcontractorsDisallowable: Option[BigDecimal],
                        staffCostsDisallowable: Option[BigDecimal],
@@ -31,3 +33,8 @@ case class SeAdditions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
                        professionalFeesDisallowable: Option[BigDecimal],
                        depreciationDisallowable: Option[BigDecimal],
                        otherDisallowable: Option[BigDecimal])
+
+object SeAdditions{
+
+ implicit val writes: OWrites[SeAdditions] = Json.writes[SeAdditions]
+}
