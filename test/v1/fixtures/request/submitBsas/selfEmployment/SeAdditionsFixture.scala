@@ -40,7 +40,7 @@ object SeAdditionsFixture {
       otherDisallowable = Some(3000.8)
     )
 
-  def seAdditionsDesJson(model: SeAdditions): JsValue = {
+  def seAdditionsMtdJson(model: SeAdditions): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =
@@ -65,7 +65,7 @@ object SeAdditionsFixture {
     Json.toJsObject(queryMap(fields))
   }
 
-  def seAdditionsMtdJson(model: SeAdditions): JsValue = {
+  def seAdditionsDesJson(model: SeAdditions): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =

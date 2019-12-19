@@ -41,7 +41,7 @@ object SeExpensesFixture {
       consolidatedExpenses = Some(-2002.25)
     )
 
-  def seExpensesDesJson(model: SeExpenses): JsValue = {
+  def seExpensesMtdJson(model: SeExpenses): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =
@@ -67,7 +67,7 @@ object SeExpensesFixture {
     Json.toJsObject(queryMap(fields))
   }
 
-  def seExpensesMtdJson(model: SeExpenses): JsValue = {
+  def seExpensesDesJson(model: SeExpenses): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =

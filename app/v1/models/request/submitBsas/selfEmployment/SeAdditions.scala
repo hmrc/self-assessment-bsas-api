@@ -36,22 +36,22 @@ case class SeAdditions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
                        otherDisallowable: Option[BigDecimal])
 
 object SeAdditions{
- implicit val writes: OWrites[SeAdditions] = Json.writes[SeAdditions]
- implicit val reads: Reads[SeAdditions] = (
-   (JsPath \ "costOfGoodsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "cisPaymentsToSubcontractorsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "wagesAndStaffCostsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "carVanTravelExpensesDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "premisesRunningCostsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "maintenanceCostsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "adminCostsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "advertisingCostsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "businessEntertainmentCostsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "interestOnBankOtherLoansDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "financeChargesDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "irrecoverableDebtsDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "professionalFeesDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "depreciationDisallowable").readNullable[BigDecimal] and
-     (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal]
-   )(SeAdditions.apply _)
+ implicit val reads: Reads[SeAdditions] = Json.reads[SeAdditions]
+ implicit val writes: OWrites[SeAdditions] = (
+   (JsPath \ "costOfGoodsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "cisPaymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "wagesAndStaffCostsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "carVanTravelExpensesDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "premisesRunningCostsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "maintenanceCostsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "adminCostsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "advertisingCostsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "businessEntertainmentCostsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "interestOnBankOtherLoansDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "financeChargesDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "irrecoverableDebtsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "professionalFeesDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "depreciationDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "otherExpensesDisallowable").writeNullable[BigDecimal]
+   )(unlift(SeAdditions.unapply))
 }
