@@ -65,7 +65,7 @@ trait HateoasLinks {
   //L4
   def adjustSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
-      href = selfEmploymentAdjustmentUri(appConfig, nino, bsasId),
+      href = selfEmploymentAdjustmentUri(appConfig, nino, bsasId) + "?adjustedStatus=true",
       method = POST,
       rel = SUBMIT_ADJUSTMENTS
     )
