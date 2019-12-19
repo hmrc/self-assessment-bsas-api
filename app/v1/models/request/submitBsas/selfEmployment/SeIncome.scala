@@ -16,4 +16,4 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-case class SeIncome(turnover: BigDecimal, other: BigDecimal)
+case class SeIncome(turnover: Option[BigDecimal], other: Option[BigDecimal])

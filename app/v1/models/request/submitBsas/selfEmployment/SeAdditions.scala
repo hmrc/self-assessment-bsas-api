@@ -16,18 +16,18 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-case class SeAdditions(costOfGoodsBoughtDisallowable: BigDecimal,
-                       cisPaymentsToSubcontractorsDisallowable: BigDecimal,
-                       staffCostsDisallowable: BigDecimal,
-                       travelCostsDisallowable: BigDecimal,
-                       premisesRunningCostsDisallowable: BigDecimal,
-                       maintenanceCostsDisallowable: BigDecimal,
-                       adminCostsDisallowable: BigDecimal,
-                       advertisingCostsDisallowable: BigDecimal,
-                       businessEntertainmentCostsDisallowable: BigDecimal,
-                       interestDisallowable: BigDecimal,
-                       financialChargesDisallowable: BigDecimal,
-                       badDebtDisallowable: BigDecimal,
-                       professionalFeesDisallowable: BigDecimal,
-                       depreciationDisallowable: BigDecimal,
-                       otherDisallowable: BigDecimal)
+case class SeAdditions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
+                       cisPaymentsToSubcontractorsDisallowable: Option[BigDecimal],
+                       staffCostsDisallowable: Option[BigDecimal],
+                       travelCostsDisallowable: Option[BigDecimal],
+                       premisesRunningCostsDisallowable: Option[BigDecimal],
+                       maintenanceCostsDisallowable: Option[BigDecimal],
+                       adminCostsDisallowable: Option[BigDecimal],
+                       advertisingCostsDisallowable: Option[BigDecimal],
+                       businessEntertainmentCostsDisallowable: Option[BigDecimal],
+                       interestDisallowable: Option[BigDecimal],
+                       financialChargesDisallowable: Option[BigDecimal],
+                       badDebtDisallowable: Option[BigDecimal],
+                       professionalFeesDisallowable: Option[BigDecimal],
+                       depreciationDisallowable: Option[BigDecimal],
+                       otherDisallowable: Option[BigDecimal])
