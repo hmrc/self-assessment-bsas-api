@@ -16,7 +16,8 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
 
 case class SeExpenses(costOfGoodsBought: Option[BigDecimal],
                       cisPaymentsToSubcontractors: Option[BigDecimal],
@@ -36,6 +37,23 @@ case class SeExpenses(costOfGoodsBought: Option[BigDecimal],
                       consolidatedExpenses: Option[BigDecimal])
 
 object SeExpenses {
-
   implicit val writes: OWrites[SeExpenses] = Json.writes[SeExpenses]
+  implicit val reads: Reads[SeExpenses] = (
+    (JsPath \ "costOfGoodsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "cisPaymentsToSubcontractorsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "wagesAndStaffCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "carVanTravelExpensesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "premisesRunningCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "maintenanceCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "adminCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "advertisingCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "businessEntertainmentCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "interestOnBankOtherLoansAllowable").readNullable[BigDecimal] and
+      (JsPath \ "financeChargesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "irrecoverableDebtsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "professionalFeesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "depreciationAllowable").readNullable[BigDecimal] and
+      (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
+    ) (SeExpenses.apply _)
 }
