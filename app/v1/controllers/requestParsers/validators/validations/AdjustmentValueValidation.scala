@@ -25,7 +25,7 @@ object AdjustmentValueValidation {
     lazy val error = FormatAdjustmentValueError.withFieldName(fieldName)
 
     field match {
-      case Some(value) if value.toDouble == 0 =>
+      case Some(value) if value.toDouble == 0 | (value.toString().split("\\.").last.length > 2) =>
         List(error)
       case _ => List()
     }
