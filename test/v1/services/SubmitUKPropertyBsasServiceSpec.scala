@@ -60,6 +60,30 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
 
     "return error response" when {
 
+      "des return success response with invalid type of business as `self-employment`" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
+
+        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
+      }
+
+      "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
+
+        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+      }
+
+      "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
+
+        await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+      }
+
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 

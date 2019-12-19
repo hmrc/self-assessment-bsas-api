@@ -58,7 +58,7 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]):
+  final def validateSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
   Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case retrieveUkPropertyBsasResponse: RetrieveUkPropertyBsasResponse
@@ -71,6 +71,10 @@ trait DesResponseMappingSupport {
 
       case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
         if submitUkPropertyBsasResponse.typeOfBusiness == TypeOfBusiness.`self-employment` =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
+
+      case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
+        if typeOfBusiness.exists(_ != submitUkPropertyBsasResponse.typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
       case _ => Right(desResponseWrapper)
     }
