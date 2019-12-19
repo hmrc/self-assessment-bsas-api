@@ -19,6 +19,7 @@ package v1.fixtures
 import v1.models.request.submitBsas._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
+import v1.models.domain.TypeOfBusiness
 import v1.models.errors.MtdError
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
@@ -361,7 +362,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |}
     """.stripMargin
 
-  val fhlDesResponse: String => String = (bsasId: String) =>
+  val fhlDesResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
     s"""
        |{
        |      "metadata":{
@@ -373,7 +374,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |      },
        |      "inputs":{
        |        "incomeSourceId":"X2IS01234512345",
-       |        "incomeSourceType":"04",
+       |        "incomeSourceType": "$typeOfBusiness",
        |        "accountingPeriodStartDate":"2019-04-06",
        |        "accountingPeriodEndDate":"2020-04-05",
        |        "source":"MTD-SA",
