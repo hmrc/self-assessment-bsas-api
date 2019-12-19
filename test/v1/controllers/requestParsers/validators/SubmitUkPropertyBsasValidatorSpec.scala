@@ -70,7 +70,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(zeroError("otherPropertyIncome"))
+        result shouldBe List(formatError("otherPropertyIncome"))
       }
 
       "a single adjustment field is more then 99999999999.99 " in new SetUp {

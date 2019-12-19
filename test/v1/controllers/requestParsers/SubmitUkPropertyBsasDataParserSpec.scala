@@ -80,10 +80,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(zeroError("otherPropertyIncome")))
+          .returns(List(formatError("otherPropertyIncome")))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, zeroError("otherPropertyIncome"), None))
+        result shouldBe Left(ErrorWrapper(None, formatError("otherPropertyIncome"), None))
       }
 
       "a adjustment has a value over the range" in new Test {
