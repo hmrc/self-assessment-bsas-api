@@ -20,6 +20,7 @@ import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
+import v1.models.domain.TypeOfBusiness
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
 import v1.models.response.SubmitUkPropertyBsasResponse
@@ -44,7 +45,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
     val request = SubmitUkPropertyBsasRequestData(nino, bsasId, nonFHLBody)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId)))
+      val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)))
 
       MockedHttpClient.post(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",

@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.mocks.connectors.MockSubmitUkPropertyBsasConnector
+import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
@@ -38,7 +39,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
 
   val request = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
 
-  val response = SubmitUkPropertyBsasResponse(id)
+  val response = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
 
   trait Test extends MockSubmitUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -58,6 +59,30 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
     }
 
     "return error response" when {
+
+      "des return success response with invalid type of business as `self-employment`" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
+
+        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
+      }
+
+      "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
+
+        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+      }
+
+      "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
+
+        await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+      }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
