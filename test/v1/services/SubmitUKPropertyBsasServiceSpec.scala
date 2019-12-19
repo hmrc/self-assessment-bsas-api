@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.mocks.connectors.MockSubmitUkPropertyBsasConnector
+import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
@@ -38,7 +39,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
 
   val request = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
 
-  val response = SubmitUkPropertyBsasResponse(id)
+  val response = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
 
   trait Test extends MockSubmitUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()

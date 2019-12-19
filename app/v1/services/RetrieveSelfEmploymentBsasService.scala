@@ -41,7 +41,7 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
     val result = for {
       desResponseWrapper <-
       EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateSelfEmploymentSuccessResponse(desResponseWrapper))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateSuccessResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
