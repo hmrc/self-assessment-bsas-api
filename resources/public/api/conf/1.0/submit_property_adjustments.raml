@@ -17,8 +17,8 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.bsasNotFound
   - queryParameters.adjustedStatusOptional
-displayName: Submit a UK Property Business' Accounting Adjustments [test only]
-description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a UK Property Business, and it must not have been adjusted, previously.  Only data for one property business (either FHL or Non-FHL) should be included in any submission.
+displayName: Submit a UK Property Business' Adjustments [test only]
+description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Adjustable Summary quoting its unique identifier. The BSAS ID quoted must be for a UK Property Business, and it must not have been adjusted, previously.  Only data for one property business (either FHL or Non-FHL ) should be included in any submission.
 (annotations.sandboxData): !include scenarios/submit_property_adjustments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
