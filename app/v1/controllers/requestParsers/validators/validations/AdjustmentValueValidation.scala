@@ -25,9 +25,8 @@ object AdjustmentValueValidation {
     lazy val error = FormatAdjustmentValueError.withFieldName(fieldName)
 
     field match {
-      case Some(value) if value.toDouble == 0 =>
-        List(error)
-      case _ => List()
+      case Some(amount) if amount.scale > 2 | amount == 0 => List(error)
+      case _ => NoValidationErrors
     }
   }
 }

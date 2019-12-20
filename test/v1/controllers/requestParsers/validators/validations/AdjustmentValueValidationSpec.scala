@@ -18,6 +18,7 @@ package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
 import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+import v1.models.errors.MtdError
 import v1.models.utils.JsonErrorValidators
 
 class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -28,6 +29,7 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
 
   val invalidzero = Some(BigDecimal(0))
   val invalidDecimalZero = Some(BigDecimal(0.00))
+  val invalidDecimalPositions = Some(BigDecimal(1.234))
 
   case class SetUp(adjustmentValue: Option[BigDecimal], fieldName: String = "other")
 
@@ -52,18 +54,25 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
     "return errors" when {
       "the adjustment has a value zero" in new SetUp(invalidzero) {
 
-        val result = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
+        val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(zeroError(fieldName))
+        result shouldBe List(formatError(fieldName))
       }
 
       "the adjustment has a value zero decimal" in new SetUp(invalidDecimalZero) {
 
-        val result = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
+        val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(zeroError(fieldName))
+        result shouldBe List(formatError(fieldName))
+      }
+      "the adjustment has more than 2 decimal places" in new SetUp(invalidDecimalPositions) {
+
+        val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
+
+        result.length shouldBe 1
+        result shouldBe List(formatError(fieldName))
       }
     }
   }
