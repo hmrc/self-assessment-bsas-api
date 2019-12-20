@@ -19,25 +19,25 @@ package v1.models.request.submitBsas.selfEmployment
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
 
-case class SeAdditions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
-                       cisPaymentsToSubcontractorsDisallowable: Option[BigDecimal],
-                       staffCostsDisallowable: Option[BigDecimal],
-                       travelCostsDisallowable: Option[BigDecimal],
-                       premisesRunningCostsDisallowable: Option[BigDecimal],
-                       maintenanceCostsDisallowable: Option[BigDecimal],
-                       adminCostsDisallowable: Option[BigDecimal],
-                       advertisingCostsDisallowable: Option[BigDecimal],
-                       businessEntertainmentCostsDisallowable: Option[BigDecimal],
-                       interestDisallowable: Option[BigDecimal],
-                       financialChargesDisallowable: Option[BigDecimal],
-                       badDebtDisallowable: Option[BigDecimal],
-                       professionalFeesDisallowable: Option[BigDecimal],
-                       depreciationDisallowable: Option[BigDecimal],
-                       otherDisallowable: Option[BigDecimal])
+case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
+                     cisPaymentsToSubcontractorsDisallowable: Option[BigDecimal],
+                     staffCostsDisallowable: Option[BigDecimal],
+                     travelCostsDisallowable: Option[BigDecimal],
+                     premisesRunningCostsDisallowable: Option[BigDecimal],
+                     maintenanceCostsDisallowable: Option[BigDecimal],
+                     adminCostsDisallowable: Option[BigDecimal],
+                     advertisingCostsDisallowable: Option[BigDecimal],
+                     businessEntertainmentCostsDisallowable: Option[BigDecimal],
+                     interestDisallowable: Option[BigDecimal],
+                     financialChargesDisallowable: Option[BigDecimal],
+                     badDebtDisallowable: Option[BigDecimal],
+                     professionalFeesDisallowable: Option[BigDecimal],
+                     depreciationDisallowable: Option[BigDecimal],
+                     otherDisallowable: Option[BigDecimal])
 
-object SeAdditions{
- implicit val reads: Reads[SeAdditions] = Json.reads[SeAdditions]
- implicit val writes: OWrites[SeAdditions] = (
+object Additions{
+ implicit val reads: Reads[Additions] = Json.reads[Additions]
+ implicit val writes: OWrites[Additions] = (
    (JsPath \ "costOfGoodsDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "cisPaymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "wagesAndStaffCostsDisallowable").writeNullable[BigDecimal] and
@@ -53,5 +53,5 @@ object SeAdditions{
      (JsPath \ "professionalFeesDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "depreciationDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "otherExpensesDisallowable").writeNullable[BigDecimal]
-   )(unlift(SeAdditions.unapply))
+   )(unlift(Additions.unapply))
 }

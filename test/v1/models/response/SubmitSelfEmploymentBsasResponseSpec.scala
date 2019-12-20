@@ -24,7 +24,7 @@ import v1.models.domain.TypeOfBusiness
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 
-class SubmitSeBsasResponseSpec extends UnitSpec{
+class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
 
   val desJson: JsValue = Json.parse(
     """
@@ -52,24 +52,28 @@ class SubmitSeBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val submitSeBsasResponse: SubmitSeBsasResponse = SubmitSeBsasResponse("anId", TypeOfBusiness.`self-employment`)
+  val submitSelfEmploymentBsasResponseModel: SubmitSelfEmploymentBsasResponse =
+    SubmitSelfEmploymentBsasResponse(
+      id = "anId",
+      typeOfBusiness = TypeOfBusiness.`self-employment`
+    )
 
-  "SubmitSeBsasResponse" when {
+  "SubmitSelfEmploymentBsasResponse" when {
     "read from valid JSON" should {
-      "return the expected SubmitBsasResponse object" in {
-        desJson.as[SubmitSeBsasResponse] shouldBe submitSeBsasResponse
+      "return the expected SubmitSelfEmploymentBsasResponse object" in {
+        desJson.as[SubmitSelfEmploymentBsasResponse] shouldBe submitSelfEmploymentBsasResponseModel
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidDesJson.validate[SubmitSeBsasResponse] shouldBe a[JsError]
+        invalidDesJson.validate[SubmitSelfEmploymentBsasResponse] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(submitSeBsasResponse) shouldBe mtdJson
+        Json.toJson(submitSelfEmploymentBsasResponseModel) shouldBe mtdJson
       }
     }
   }
@@ -82,10 +86,10 @@ class SubmitSeBsasResponseSpec extends UnitSpec{
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
     }
 
-    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap(submitSeBsasResponse, SubmitSeBsasHateoasData(nino, bsasId)) shouldBe
+    "expose the correct links for a response from Submit a Self Employment Summary Adjustment" in new Test {
+      hateoasFactory.wrap(submitSelfEmploymentBsasResponseModel, SubmitSelfEmploymentBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
-          submitSeBsasResponse,
+          submitSelfEmploymentBsasResponseModel,
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust", GET, "self"),
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
@@ -93,5 +97,4 @@ class SubmitSeBsasResponseSpec extends UnitSpec{
         )
     }
   }
-
 }

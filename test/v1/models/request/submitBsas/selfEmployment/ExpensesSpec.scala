@@ -18,25 +18,33 @@ package v1.models.request.submitBsas.selfEmployment
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.request.submitBsas.selfEmployment.SeExpensesFixture._
+import v1.fixtures.request.submitBsas.selfEmployment.ExpensesFixture._
 import v1.models.domain.EmptyJsonBody
 
+class ExpensesSpec extends UnitSpec {
 
-class SeExpensesSpec extends UnitSpec {
-
-  val seExpensesModelWithoutCosts: SeExpenses =
-    seExpensesModel.copy(
+  val expensesModelWithoutCosts: Expenses =
+    Expenses(
+      costOfGoodsBought = None,
+      cisPaymentsToSubcontractors = Some(2000.50),
       staffCosts = None,
       travelCosts = None,
       premisesRunningCosts = None,
       maintenanceCosts = None,
       adminCosts = None,
       advertisingCosts = None,
-      businessEntertainmentCosts = None
+      businessEntertainmentCosts = None,
+      interest = Some(-2001.25),
+      financialCharges = Some(-2001.50),
+      badDebt = Some(-2001.75),
+      professionalFees = Some(2002.25),
+      depreciation = Some(2002.50),
+      other = Some(2002.75),
+      consolidatedExpenses = Some(-2002.25)
     )
 
-  val emptySeExpensesModel: SeExpenses =
-    SeExpenses(
+  val emptyExpensesModel: Expenses =
+    Expenses(
       costOfGoodsBought = None,
       cisPaymentsToSubcontractors = None,
       staffCosts = None,
@@ -55,37 +63,37 @@ class SeExpensesSpec extends UnitSpec {
       consolidatedExpenses = None
     )
 
-  "SeExpenses" when {
+  "Expenses" when {
     "read from valid JSON" should {
-      "produce the expected SeExpenses object" in {
-        seExpensesDesJson(seExpensesModel).as[SeExpenses] shouldBe seExpensesModel
+      "produce the expected Expenses object" in {
+        expensesDesJson(expensesModel).as[Expenses] shouldBe expensesModel
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(seExpensesModel) shouldBe seExpensesMtdJson(seExpensesModel)
+        Json.toJson(expensesModel) shouldBe expensesMtdJson(expensesModel)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        seExpensesDesJson(seExpensesModelWithoutCosts).as[SeExpenses] shouldBe seExpensesModelWithoutCosts
+        expensesDesJson(expensesModelWithoutCosts).as[Expenses] shouldBe expensesModelWithoutCosts
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(seExpensesModelWithoutCosts) shouldBe seExpensesMtdJson(seExpensesModelWithoutCosts)
+        Json.toJson(expensesModelWithoutCosts) shouldBe expensesMtdJson(expensesModelWithoutCosts)
       }
     }
 
 
     "no fields as supplied" should {
-      "read to an empty SeExpenses object" in {
-        seExpensesDesJson(emptySeExpensesModel).as[SeExpenses] shouldBe emptySeExpensesModel
+      "read to an empty Expenses object" in {
+        expensesDesJson(emptyExpensesModel).as[Expenses] shouldBe emptyExpensesModel
       }
 
       "write to empty JSON" in {
-        Json.toJson(emptySeExpensesModel) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(emptyExpensesModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

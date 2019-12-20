@@ -17,12 +17,12 @@
 package v1.fixtures.request.submitBsas.selfEmployment
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.request.submitBsas.selfEmployment.{SeExpenses, queryMap}
+import v1.models.request.submitBsas.selfEmployment.{Expenses, queryMap}
 
-object SeExpensesFixture {
+object ExpensesFixture {
 
-  val seExpensesModel: SeExpenses =
-    SeExpenses(
+  val expensesModel: Expenses =
+    Expenses(
       costOfGoodsBought = Some(2000.25),
       cisPaymentsToSubcontractors = Some(2000.50),
       staffCosts = Some(2000.75),
@@ -41,7 +41,7 @@ object SeExpensesFixture {
       consolidatedExpenses = Some(-2002.25)
     )
 
-  def seExpensesMtdJson(model: SeExpenses): JsValue = {
+  def expensesMtdJson(model: Expenses): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =
@@ -67,7 +67,7 @@ object SeExpensesFixture {
     Json.toJsObject(queryMap(fields))
   }
 
-  def seExpensesDesJson(model: SeExpenses): JsValue = {
+  def expensesDesJson(model: Expenses): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =
