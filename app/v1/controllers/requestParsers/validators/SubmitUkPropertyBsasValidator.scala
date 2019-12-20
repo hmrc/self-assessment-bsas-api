@@ -17,13 +17,17 @@
 package v1.controllers.requestParsers.validators
 
 import config.FixedConfig
-import v1.controllers.requestParsers.validators.validations._
+import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, _}
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
+import v1.models.request.submitBsas._
 
 class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidator, bodyFormatValidator, adjustmentFieldValidator,
+  private val validationSet = List(
+    parameterFormatValidator,
+    bodyFormatValidator,
+    incorrectOrEmptyBodyValidator,
+    adjustmentFieldValidator,
     otherBodyFieldsValidator)
 
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
@@ -35,9 +39,43 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   }
 
   private def bodyFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-
     List(
       JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+    )
+  }
+
+  private def incorrectOrEmptyBodyValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
+    val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
+
+    val fhlBody = model.furnishedHolidayLet
+    val nonFhlBody = model.nonFurnishedHolidayLet
+
+    List(
+      (fhlBody, nonFhlBody) match {
+        // Check all objects not empty
+        case (Some(_), Some(_)) | (None, None) |
+             (Some(FurnishedHolidayLet(None, None)), _) |
+             (_, Some(NonFurnishedHolidayLet(None, None))) => List(RuleIncorrectOrEmptyBodyError)
+        // total FHL fields entered > 0
+        case (Some(fhl), None) =>
+          Seq(fhl.income, fhl.expenses).foldLeft[List[MtdError]](NoValidationErrors){
+            (noErrors, body) => body match {
+              case Some(FHLIncome(None)) |
+                   Some(FHLExpenses(None, None, None, None, None, None, None, None)) => List(RuleIncorrectOrEmptyBodyError)
+              case _ => noErrors
+            }
+          }
+        // total non-FHL fields entered > 0
+        case (None, Some(nonFhl)) =>
+          Seq(nonFhl.income, nonFhl.expenses).foldLeft[List[MtdError]](NoValidationErrors){
+            (noErrors, body) => body match {
+              case Some(NonFHLIncome(None, None, None, None)) |
+                   Some(NonFHLExpenses(None, None, None, None, None, None, None, None, None)) => List(RuleIncorrectOrEmptyBodyError)
+              case _ => noErrors
+            }
+          }
+        case _ => NoValidationErrors
+      }
     )
   }
 
@@ -45,60 +83,45 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
+    def doValidationFor(fieldName: String, withValue: Option[BigDecimal])
+                       (f: Seq[(Option[BigDecimal], String) => List[MtdError]]): List[MtdError] =
+      f.flatMap(validation => validation(withValue, fieldName)).toList
+
+    val withAdjustmentValidations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
+      Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
+
     (model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
       case (None, Some(nonFurnishedHolidayLet)) =>
+        val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
+        val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
         List(
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.rentIncome), "rentIncome"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.premiumsOfLeaseGrant), "premiumsOfLeaseGrant"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.reversePremiums), "reversePremiums"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.otherPropertyIncome), "otherPropertyIncome"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.premisesRunningCosts), "premisesRunningCosts"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.repairsAndMaintenance), "repairsAndMaintenance"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.financialCosts), "financialCosts"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.professionalFees), "professionalFees"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.travelCosts), "travelCosts"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.travelCosts), "travelCosts"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.costOfServices), "costOfServices"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.residentialFinancialCost), "residentialFinancialCost"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.other), "other"),
-          AdjustmentValueValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.consolidatedExpenses), "consolidatedExpensesnonFurnishedHolidayLet"),
-
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.rentIncome), "rentIncome"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.premiumsOfLeaseGrant), "premiumsOfLeaseGrant"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.reversePremiums), "reversePremiums"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.income.flatMap(_.otherPropertyIncome), "otherPropertyIncome"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.premisesRunningCosts), "premisesRunningCosts"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.repairsAndMaintenance), "repairsAndMaintenance"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.financialCosts), "financialCosts"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.professionalFees), "professionalFees"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.travelCosts), "travelCosts"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.travelCosts), "travelCosts"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.costOfServices), "costOfServices"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.residentialFinancialCost), "residentialFinancialCost"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.other), "other"),
-          AdjustmentRangeValidation.validate(nonFurnishedHolidayLet.expenses.flatMap(_.consolidatedExpenses), "consolidatedExpenses")
+          doValidationFor("rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
+          doValidationFor("premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant))(withAdjustmentValidations),
+          doValidationFor("reversePremiums", income.flatMap(_.reversePremiums))(withAdjustmentValidations),
+          doValidationFor("otherPropertyIncome", income.flatMap(_.otherPropertyIncome))(withAdjustmentValidations),
+          doValidationFor("premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+          doValidationFor("repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+          doValidationFor("financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+          doValidationFor("professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+          doValidationFor("travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+          doValidationFor("costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+          doValidationFor("residentialFinancialCost", expenses.flatMap(_.residentialFinancialCost))(withAdjustmentValidations),
+          doValidationFor("other", expenses.flatMap(_.other))(withAdjustmentValidations),
+          doValidationFor("consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
         )
       case (Some(furnishedHolidayLet), None) =>
+        val income: Option[FHLIncome] = furnishedHolidayLet.income
+        val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
         List(
-          AdjustmentValueValidation.validate(furnishedHolidayLet.income.flatMap(_.rentIncome), "rentIncome"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.premisesRunningCosts), "premisesRunningCosts"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.repairsAndMaintenance), "repairsAndMaintenance"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.financialCosts), "financialCosts"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.professionalFees), "professionalFees"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.costOfServices), "costOfServices"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.travelCosts), "travelCosts"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.other), "other"),
-          AdjustmentValueValidation.validate(furnishedHolidayLet.expenses.flatMap(_.consolidatedExpenses), "consolidatedExpense"),
-
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.income.flatMap(_.rentIncome), "rentIncome"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.premisesRunningCosts), "premisesRunningCosts"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.repairsAndMaintenance), "repairsAndMaintenance"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.financialCosts), "financialCosts"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.professionalFees), "professionalFees"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.costOfServices), "costOfServices"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.travelCosts), "travelCosts"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.other), "other"),
-          AdjustmentRangeValidation.validate(furnishedHolidayLet.expenses.flatMap(_.consolidatedExpenses), "consolidatedExpenses")
+          doValidationFor("rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
+          doValidationFor("premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+          doValidationFor("repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+          doValidationFor("financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+          doValidationFor("professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+          doValidationFor("travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+          doValidationFor("costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+          doValidationFor("other", expenses.flatMap(_.other))(withAdjustmentValidations),
+          doValidationFor("consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
         )
       case _ => List(List(RuleIncorrectOrEmptyBodyError))
     }
