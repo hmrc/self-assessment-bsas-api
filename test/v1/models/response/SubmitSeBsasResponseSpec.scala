@@ -20,6 +20,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.hateoas.HateoasFactory
+import v1.models.domain.TypeOfBusiness
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 
@@ -30,6 +31,9 @@ class SubmitSeBsasResponseSpec extends UnitSpec{
       |{
       |   "metadata" : {
       |       "calculationId" : "anId"
+      |   },
+      |   "inputs" : {
+      |     "incomeSourceType" : "01"
       |   }
       |}
   """.stripMargin)
@@ -48,7 +52,7 @@ class SubmitSeBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val submitSeBsasResponse: SubmitSeBsasResponse = SubmitSeBsasResponse("anId")
+  val submitSeBsasResponse: SubmitSeBsasResponse = SubmitSeBsasResponse("anId", TypeOfBusiness.`self-employment`)
 
   "SubmitSeBsasResponse" when {
     "read from valid JSON" should {
