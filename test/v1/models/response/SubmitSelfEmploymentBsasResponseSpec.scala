@@ -21,10 +21,10 @@ import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.hateoas.HateoasFactory
 import v1.models.domain.TypeOfBusiness
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
+import v1.models.hateoas.{HateoasWrapper, Link}
 
-class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
+class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
 
   val desJson: JsValue = Json.parse(
     """
@@ -32,8 +32,8 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
       |   "metadata" : {
       |       "calculationId" : "anId"
       |   },
-      |   "inputs": {
-      |   "incomeSourceType":"04"
+      |   "inputs" : {
+      |     "incomeSourceType" : "01"
       |   }
       |}
   """.stripMargin)
@@ -52,24 +52,28 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val submitBsasResponse: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse("anId", TypeOfBusiness.`uk-property-fhl`)
+  val submitSelfEmploymentBsasResponseModel: SubmitSelfEmploymentBsasResponse =
+    SubmitSelfEmploymentBsasResponse(
+      id = "anId",
+      typeOfBusiness = TypeOfBusiness.`self-employment`
+    )
 
-  "SubmitUkBsasResponse" when {
+  "SubmitSelfEmploymentBsasResponse" when {
     "read from valid JSON" should {
-      "return the expected SubmitBsasResponse object" in {
-        desJson.as[SubmitUkPropertyBsasResponse] shouldBe submitBsasResponse
+      "return the expected SubmitSelfEmploymentBsasResponse object" in {
+        desJson.as[SubmitSelfEmploymentBsasResponse] shouldBe submitSelfEmploymentBsasResponseModel
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidDesJson.validate[SubmitUkPropertyBsasResponse] shouldBe a[JsError]
+        invalidDesJson.validate[SubmitSelfEmploymentBsasResponse] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(submitBsasResponse) shouldBe mtdJson
+        Json.toJson(submitSelfEmploymentBsasResponseModel) shouldBe mtdJson
       }
     }
   }
@@ -82,16 +86,15 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
     }
 
-    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap(submitBsasResponse, SubmitUkPropertyBsasHateoasData(nino, bsasId)) shouldBe
+    "expose the correct links for a response from Submit a Self Employment Summary Adjustment" in new Test {
+      hateoasFactory.wrap(submitSelfEmploymentBsasResponseModel, SubmitSelfEmploymentBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
-          submitBsasResponse,
+          submitSelfEmploymentBsasResponseModel,
           Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust", GET, "self"),
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
           )
         )
     }
   }
-
 }
