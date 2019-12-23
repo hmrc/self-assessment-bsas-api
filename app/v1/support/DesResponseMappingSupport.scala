@@ -21,7 +21,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.SubmitUkPropertyBsasResponse
+import v1.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse}
 import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
@@ -76,6 +76,10 @@ trait DesResponseMappingSupport {
       case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
         if typeOfBusiness.exists(_ != submitUkPropertyBsasResponse.typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
+
+      case submitUkSelfEmploymentBsasResponse: SubmitSelfEmploymentBsasResponse
+        if typeOfBusiness.exists(_ != submitUkSelfEmploymentBsasResponse.typeOfBusiness) =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleErrorPropertyAdjusted, None))
       case _ => Right(desResponseWrapper)
     }
 }
