@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveUkPropertyBsasFixtures._
+import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class AccountingPeriodSpec extends UnitSpec {
 

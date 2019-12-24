@@ -7,7 +7,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 

@@ -16,79 +16,12 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.request.submitBsas.selfEmployment.AdditionsFixture._
-import v1.fixtures.request.submitBsas.selfEmployment.ExpensesFixture._
-import v1.fixtures.request.submitBsas.selfEmployment.IncomeFixture._
+import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v1.models.domain.EmptyJsonBody
 
-import scala.collection.mutable.ListBuffer
-
 class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
-
-  val submitSelfEmploymentBsasRequestBodyModel: SubmitSelfEmploymentBsasRequestBody =
-    SubmitSelfEmploymentBsasRequestBody(
-      income = Some(incomeModel),
-      additions = Some(additionsModel),
-      expenses = Some(expensesModel)
-    )
-
-  val submitSelfEmploymentBsasRequestBodyModelWithoutIncome: SubmitSelfEmploymentBsasRequestBody =
-    SubmitSelfEmploymentBsasRequestBody(
-      income = None,
-      additions = Some(additionsModel),
-      expenses = Some(expensesModel)
-    )
-
-  val emptySubmitSelfEmploymentBsasRequestBodyModel: SubmitSelfEmploymentBsasRequestBody =
-    SubmitSelfEmploymentBsasRequestBody(
-      income = None,
-      additions = None,
-      expenses = None
-    )
-
-  def submitSelfEmploymentBsasRequestBodyDesJson(model: SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import model._
-
-    val jsObjects : ListBuffer[JsObject] = ListBuffer.empty[JsObject]
-
-    if (income.nonEmpty) {
-      jsObjects += Json.obj("income" -> incomeJson(income.get))
-    }
-
-    if (additions.nonEmpty) {
-      jsObjects += Json.obj("additions" -> additionsDesJson(additions.get))
-    }
-
-    if (expenses.nonEmpty) {
-      jsObjects += Json.obj("expenses" -> expensesDesJson(expenses.get))
-    }
-
-    val json = jsObjects.fold(Json.parse("""{}""").as[JsObject])((a: JsObject, b: JsObject) => a ++ b)
-    json
-  }
-
-  def submitSelfEmploymentBsasRequestBodyMtdJson(model: SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import model._
-
-    val jsObjects : ListBuffer[JsObject] = ListBuffer.empty[JsObject]
-
-    if (income.nonEmpty) {
-      jsObjects += Json.obj("income" -> incomeJson(income.get))
-    }
-
-    if (additions.nonEmpty) {
-      jsObjects += Json.obj("additions" -> additionsMtdJson(additions.get))
-    }
-
-    if (expenses.nonEmpty) {
-      jsObjects += Json.obj("expenses" -> expensesMtdJson(expenses.get))
-    }
-
-    val json = jsObjects.fold(Json.parse("""{}""").as[JsObject])((a: JsObject, b: JsObject) => a ++ b)
-    json
-  }
 
   "SubmitSelfEmploymentBsasRequestBody" when {
     "read from valid JSON" should {

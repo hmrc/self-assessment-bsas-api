@@ -17,7 +17,7 @@
 package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
   desRetrieveBsasResponseJsonAdjustable,
   desRetrieveBsasResponseJsonAdjusted,
   metadataModel,

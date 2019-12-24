@@ -20,7 +20,7 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.models.request.RetrieveSelfEmploymentBsasRequestData
 
 import scala.concurrent.Future
@@ -49,7 +49,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, Some("01"))
 
         MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/${bsasId}",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
           queryParams.toSeq,
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))
@@ -61,7 +61,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, None)
 
         MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/${bsasId}",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
           Seq.empty,
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))

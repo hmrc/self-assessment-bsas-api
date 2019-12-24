@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.fixtures.request.submitBsas.selfEmployment
+package v1.fixtures.selfEmployment
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.request.submitBsas.selfEmployment.{Income, queryMap}
