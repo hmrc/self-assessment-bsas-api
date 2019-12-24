@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.models.errors.{RuleBothExpensesError, BsasIdFormatError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.submitBsas._
 

@@ -27,8 +27,8 @@ import v1.models.response.SubmitSelfEmploymentBsasResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitSelfEmploymentConnector @Inject()(val http: HttpClient,
-                                              val appConfig: AppConfig) extends BaseDesConnector {
+class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
+                                                  val appConfig: AppConfig) extends BaseDesConnector {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
     implicit hc: HeaderCarrier,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.fixtures
+package v1.fixtures.ukProperty
 
 import java.time.LocalDate
 

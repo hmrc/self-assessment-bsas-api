@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v1.fixtures
+package v1.fixtures.selfEmployment
 
 import java.time.LocalDate
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.domain.TypeOfBusiness
-import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 import v1.models.response.retrieveBsas.selfEmployment._
+import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
 object RetrieveSelfEmploymentBsasFixtures {
 

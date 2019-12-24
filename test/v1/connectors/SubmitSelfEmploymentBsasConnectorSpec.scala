@@ -18,9 +18,9 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
-import v1.fixtures.request.submitBsas.selfEmployment.AdditionsFixture.additionsModel
-import v1.fixtures.request.submitBsas.selfEmployment.ExpensesFixture.expensesModel
-import v1.fixtures.request.submitBsas.selfEmployment.IncomeFixture.incomeModel
+import v1.fixtures.selfEmployment.AdditionsFixture.additionsModel
+import v1.fixtures.selfEmployment.ExpensesFixture.expensesModel
+import v1.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v1.mocks.MockHttpClient
 import v1.models.domain.TypeOfBusiness
 import v1.models.outcomes.ResponseWrapper
@@ -42,7 +42,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: SubmitSelfEmploymentConnector = new SubmitSelfEmploymentConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
 
     val desRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")

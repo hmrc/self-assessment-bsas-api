@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.models.errors.MtdError
 import v1.models.utils.JsonErrorValidators
 

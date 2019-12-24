@@ -78,7 +78,7 @@ trait DesResponseMappingSupport {
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
 
       case submitUkSelfEmploymentBsasResponse: SubmitSelfEmploymentBsasResponse
-        if typeOfBusiness.exists(_ != submitUkSelfEmploymentBsasResponse.typeOfBusiness) =>
+        if TypeOfBusiness.`self-employment` != submitUkSelfEmploymentBsasResponse.typeOfBusiness =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleErrorPropertyAdjusted, None))
       case _ => Right(desResponseWrapper)
     }

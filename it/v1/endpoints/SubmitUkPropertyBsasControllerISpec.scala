@@ -55,7 +55,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
   }
 
-  import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+  import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
   val requestBody: JsValue = validfhlInputJson
 

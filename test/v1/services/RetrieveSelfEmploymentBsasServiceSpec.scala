@@ -20,7 +20,7 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.models.errors._
 import v1.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
 import v1.models.domain.TypeOfBusiness

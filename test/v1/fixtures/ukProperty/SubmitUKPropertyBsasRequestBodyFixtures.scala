@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package v1.fixtures
+package v1.fixtures.ukProperty
 
-import v1.models.request.submitBsas._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
-import v1.models.domain.TypeOfBusiness
 import v1.models.errors.MtdError
+import v1.models.request.submitBsas._
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
 
