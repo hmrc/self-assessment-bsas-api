@@ -19,33 +19,32 @@ package v1.controllers.requestParsers.validators
 import config.FixedConfig
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
-import v1.models.request.submitBsas.selfEmployment.{SubmitSeBsasRawData, SubmitSeBsasRequestBody}
+import v1.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
 
-class SubmitSeBsasValidator extends Validator[SubmitSeBsasRawData] with FixedConfig {
+class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidator, bodyFormatValidator, adjustmentFieldValidator)
 
-  private def parameterFormatValidator: SubmitSeBsasRawData => List[List[MtdError]] = { data =>
+  private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
       BsasIdValidation.validate(data.bsasId)
     )
   }
 
-  private def bodyFormatValidator: SubmitSeBsasRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[SubmitSeBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[SubmitSelfEmploymentBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
     )
   }
 
-  private def adjustmentFieldValidator: SubmitSeBsasRawData => List[List[MtdError]] = { data =>
+  private def adjustmentFieldValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
 
     def toFieldNameMap[T <: Product](r: T): Map[String, Option[BigDecimal]] = {
       for ((k, Some(v)) <- r.getClass.getDeclaredFields.map(_.getName).zip(r.productIterator.to).toMap) yield k -> Some(v.asInstanceOf[BigDecimal])
     }
 
-    val model: SubmitSeBsasRequestBody = data.body.json.as[SubmitSeBsasRequestBody]
+    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
 
     val allFields: Option[List[(String, Option[BigDecimal])]] = for {
       incomeFields <- model.income.map(toFieldNameMap).map(_.map { case(k, v) => s"income.$k" -> v})
@@ -62,5 +61,5 @@ class SubmitSeBsasValidator extends Validator[SubmitSeBsasRawData] with FixedCon
     allFields.map(callValidation).getOrElse(Nil)
   }
 
-  override def validate(data: SubmitSeBsasRawData): List[MtdError] = run(validationSet, data)
+  override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)
 }

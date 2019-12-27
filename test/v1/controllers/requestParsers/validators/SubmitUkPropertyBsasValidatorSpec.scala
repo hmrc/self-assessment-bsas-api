@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.models.errors.{RuleBothExpensesError, BsasIdFormatError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.submitBsas._
 
@@ -52,14 +52,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
             SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields)))
           .isEmpty shouldBe true
       }
-
-      "minimal fields are submitted for adjustments" in new SetUp {
-
-        validator
-          .validate(
-            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL()))
-          .isEmpty shouldBe true
-      }
     }
 
     "return errors" when {
@@ -70,7 +62,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(zeroError("otherPropertyIncome"))
+        result shouldBe List(formatError("otherPropertyIncome"))
       }
 
       "a single adjustment field is more then 99999999999.99 " in new SetUp {
@@ -141,7 +133,87 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         result shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
-      "both furnished and non furnished are supplies" in new SetUp {
+
+      "an empty FHL body is submitted" in new SetUp {
+
+        val body: AnyContentAsJson = AnyContentAsJson(Json.obj("furnishedHolidayLet" -> Json.obj()))
+
+        private val result =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(nino, bsasId, body)
+          )
+
+        result.length shouldBe 1
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+
+      "an FHL body is submitted with an empty income body" in new SetUp {
+
+        val body: AnyContentAsJson = submitBsasRawDataBodyFHL(income = Some(Json.obj()), expenses = None)
+
+        private val result =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(nino, bsasId, body)
+          )
+
+        result.length shouldBe 1
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+
+      "an FHL body is submitted with an empty expenses body" in new SetUp {
+
+        val body: AnyContentAsJson = submitBsasRawDataBodyFHL(income = None, expenses = Some(Json.obj()))
+
+        private val result =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(nino, bsasId, body)
+          )
+
+        result.length shouldBe 1
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+
+
+      "an empty non-FHL body is submitted" in new SetUp {
+
+        val body: AnyContentAsJson = AnyContentAsJson(Json.obj("nonFurnishedHolidayLet" -> Json.obj()))
+
+        private val result =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(nino, bsasId, body)
+          )
+
+        result.length shouldBe 1
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+
+      "a non-FHL body is submitted with an empty income body" in new SetUp {
+
+        val body: AnyContentAsJson = submitBsasRawDataBodyNonFHL(income = Some(Json.obj()), expenses = None)
+
+        private val result =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(nino, bsasId, body)
+          )
+
+        result.length shouldBe 1
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+
+      "a non-FHL body is submitted with an empty expenses body" in new SetUp {
+
+        val body: AnyContentAsJson = submitBsasRawDataBodyNonFHL(income = None, expenses = Some(Json.obj()))
+
+        private val result =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(nino, bsasId, body)
+          )
+
+        result.length shouldBe 1
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+
+      "both furnished and non furnished are supplied" in new SetUp {
 
         private val result =
           validator.validate(

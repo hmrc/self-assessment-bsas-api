@@ -14,28 +14,13 @@
  * limitations under the License.
  */
 
-package v1.fixtures.request.submitBsas.selfEmployment
+package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{JsValue, Json}
-import v1.models.request.submitBsas.selfEmployment.{SeIncome, queryMap}
+import play.api.libs.json.{Json, OWrites, Reads}
 
-object SeIncomeFixture {
+case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses])
 
-  val seIncomeModel: SeIncome =
-    SeIncome(
-      turnover = Some(1000.25),
-      other = Some(1000.50)
-    )
-
-  def seIncomeJson(model: SeIncome): JsValue = {
-    import model._
-
-    val fields: Map[String, Option[BigDecimal]] =
-      Map(
-        "turnover" -> turnover,
-        "other" -> other
-      )
-
-    Json.toJsObject(queryMap(fields))
-  }
+object SubmitSelfEmploymentBsasRequestBody {
+  implicit val reads: Reads[SubmitSelfEmploymentBsasRequestBody] = Json.reads[SubmitSelfEmploymentBsasRequestBody]
+  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = Json.writes[SubmitSelfEmploymentBsasRequestBody]
 }

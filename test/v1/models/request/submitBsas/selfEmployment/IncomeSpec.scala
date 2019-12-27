@@ -18,54 +18,53 @@ package v1.models.request.submitBsas.selfEmployment
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.request.submitBsas.selfEmployment.SeIncomeFixture._
+import v1.fixtures.selfEmployment.IncomeFixture._
 import v1.models.domain.EmptyJsonBody
 
-class SeIncomeSpec extends UnitSpec {
+class IncomeSpec extends UnitSpec {
 
-  val seIncomeModelWithoutOther: SeIncome =
-    SeIncome(
+  val incomeModelWithoutOther: Income =
+    Income(
       turnover = Some(1000.75),
       other = None
     )
 
-  val seIncomeModelEmpty: SeIncome =
-    SeIncome(
+  val incomeModelEmpty: Income =
+    Income(
       turnover = None,
       other = None
     )
 
-  "SeIncome" when {
+  "Income" when {
     "read from valid JSON" should {
-      "produce the expected SeIncome object" in {
-        seIncomeJson(seIncomeModel).as[SeIncome] shouldBe seIncomeModel
+      "produce the expected Income object" in {
+        incomeJson(incomeModel).as[Income] shouldBe incomeModel
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(seIncomeModel) shouldBe seIncomeJson(seIncomeModel)
+        Json.toJson(incomeModel) shouldBe incomeJson(incomeModel)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        seIncomeJson(seIncomeModelWithoutOther).as[SeIncome] shouldBe seIncomeModelWithoutOther
+        incomeJson(incomeModelWithoutOther).as[Income] shouldBe incomeModelWithoutOther
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(seIncomeModelWithoutOther) shouldBe seIncomeJson(seIncomeModelWithoutOther)
+        Json.toJson(incomeModelWithoutOther) shouldBe incomeJson(incomeModelWithoutOther)
       }
     }
 
-
     "no fields as supplied" should {
-      "read to an empty SeIncome object" in {
-        seIncomeJson(seIncomeModelEmpty).as[SeIncome] shouldBe seIncomeModelEmpty
+      "read to an empty Income object" in {
+        incomeJson(incomeModelEmpty).as[Income] shouldBe incomeModelEmpty
       }
 
       "write to empty JSON" in {
-        Json.toJson(seIncomeModelEmpty) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(incomeModelEmpty) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

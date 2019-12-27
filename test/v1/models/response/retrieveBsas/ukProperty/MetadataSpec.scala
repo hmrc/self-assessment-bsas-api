@@ -17,7 +17,7 @@
 package v1.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
-import v1.fixtures.RetrieveUkPropertyBsasFixtures._
+import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v1.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators{

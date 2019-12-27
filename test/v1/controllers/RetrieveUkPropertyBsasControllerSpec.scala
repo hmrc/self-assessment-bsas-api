@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveUkPropertyBsasFixtures._
+import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}

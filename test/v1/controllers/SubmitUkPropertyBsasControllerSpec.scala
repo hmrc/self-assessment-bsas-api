@@ -20,10 +20,11 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures.hateoasResponse
+import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures.hateoasResponse
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitUkPropertyBsasService}
+import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -58,7 +59,7 @@ class SubmitUkPropertyBsasControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
-  import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+  import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
   private val nino          = "AA123456A"
   private val correlationId = "X-123"
@@ -72,7 +73,7 @@ class SubmitUkPropertyBsasControllerSpec
   private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
   private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
 
-  val response = SubmitUkPropertyBsasResponse(bsasId)
+  val response = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
 
 
   val testHateoasLinks: Seq[Link] = Seq(

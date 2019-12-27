@@ -19,7 +19,7 @@ package v1.controllers.requestParsers
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.fixtures.SubmitUKPropertyBsasRequestBodyFixtures._
+import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v1.models.errors._
 import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
@@ -80,10 +80,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(zeroError("otherPropertyIncome")))
+          .returns(List(formatError("otherPropertyIncome")))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, zeroError("otherPropertyIncome"), None))
+        result shouldBe Left(ErrorWrapper(None, formatError("otherPropertyIncome"), None))
       }
 
       "a adjustment has a value over the range" in new Test {

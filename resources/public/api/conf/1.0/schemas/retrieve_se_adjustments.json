@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Retrieve a Self Employment Business' Accounting Adjustments",
-  "description": "This endpoint allows the user to request the adjustments made to a specific Self Employment Business Source Accounting Summary by quoting it's identifier.",
+  "description": "This endpoint allows the user to request the adjustments made to a specific Self Employment Business Source Adjustable Summary by quoting it's identifier.",
   "type": "object",
   "properties": {
     "metadata": { "$ref": "metadata_definitions.json#/definitions/seMetadata"},

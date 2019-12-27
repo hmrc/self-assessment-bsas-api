@@ -19,26 +19,26 @@ package v1.models.request.submitBsas.selfEmployment
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
 
-case class SeExpenses(costOfGoodsBought: Option[BigDecimal],
-                      cisPaymentsToSubcontractors: Option[BigDecimal],
-                      staffCosts: Option[BigDecimal],
-                      travelCosts: Option[BigDecimal],
-                      premisesRunningCosts: Option[BigDecimal],
-                      maintenanceCosts: Option[BigDecimal],
-                      adminCosts: Option[BigDecimal],
-                      advertisingCosts: Option[BigDecimal],
-                      businessEntertainmentCosts: Option[BigDecimal],
-                      interest: Option[BigDecimal],
-                      financialCharges: Option[BigDecimal],
-                      badDebt: Option[BigDecimal],
-                      professionalFees: Option[BigDecimal],
-                      depreciation: Option[BigDecimal],
-                      other: Option[BigDecimal],
-                      consolidatedExpenses: Option[BigDecimal])
+case class Expenses(costOfGoodsBought: Option[BigDecimal],
+                    cisPaymentsToSubcontractors: Option[BigDecimal],
+                    staffCosts: Option[BigDecimal],
+                    travelCosts: Option[BigDecimal],
+                    premisesRunningCosts: Option[BigDecimal],
+                    maintenanceCosts: Option[BigDecimal],
+                    adminCosts: Option[BigDecimal],
+                    advertisingCosts: Option[BigDecimal],
+                    businessEntertainmentCosts: Option[BigDecimal],
+                    interest: Option[BigDecimal],
+                    financialCharges: Option[BigDecimal],
+                    badDebt: Option[BigDecimal],
+                    professionalFees: Option[BigDecimal],
+                    depreciation: Option[BigDecimal],
+                    other: Option[BigDecimal],
+                    consolidatedExpenses: Option[BigDecimal])
 
-object SeExpenses {
-  implicit val reads: Reads[SeExpenses] = Json.reads[SeExpenses]
-  implicit val writes: OWrites[SeExpenses] = (
+object Expenses {
+  implicit val reads: Reads[Expenses] = Json.reads[Expenses]
+  implicit val writes: OWrites[Expenses] = (
     (JsPath \ "costOfGoodsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "cisPaymentsToSubcontractorsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsAllowable").writeNullable[BigDecimal] and
@@ -55,5 +55,5 @@ object SeExpenses {
       (JsPath \ "depreciationAllowable").writeNullable[BigDecimal] and
       (JsPath \ "otherExpensesAllowable").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").writeNullable[BigDecimal]
-    )(unlift(SeExpenses.unapply))
+    )(unlift(Expenses.unapply))
 }

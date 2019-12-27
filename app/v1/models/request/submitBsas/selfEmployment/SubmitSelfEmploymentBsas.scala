@@ -16,11 +16,10 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.mvc.AnyContentAsJson
+import uk.gov.hmrc.domain.Nino
+import v1.models.request.RawData
 
-case class SubmitSeBsasRequestBody(income: Option[SeIncome], additions: Option[SeAdditions], expenses: Option[SeExpenses])
+case class SubmitSelfEmploymentBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
 
-object SubmitSeBsasRequestBody {
-  implicit val reads: Reads[SubmitSeBsasRequestBody] = Json.reads[SubmitSeBsasRequestBody]
-  implicit val writes: OWrites[SubmitSeBsasRequestBody] = Json.writes[SubmitSeBsasRequestBody]
-}
+case class SubmitSelfEmploymentBsasRequestData(nino: Nino, bsasId: String, body: SubmitSelfEmploymentBsasRequestBody)

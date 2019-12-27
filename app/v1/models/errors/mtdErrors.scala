@@ -104,6 +104,12 @@ object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The summary c
 
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The summary calculation requested is not for a self employment business")
 
+object RuleIncorrectPropertyAdjusted extends MtdError("RULE_INCORRECT_PROPERTY_ADJUSTED",
+  "An adjustment has been made to an incorrect property type. Re-trigger an adjustable summary for this BSAS ID to correct")
+
+object RuleErrorPropertyAdjusted extends MtdError("RULE_UK_PROPERTY_ADJUSTED",
+  "A UK Property business type was adjusted. Re-trigger an adjustable summary for the affected UK Property business to correct")
+
 object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "") {
   def withFieldName(fieldName: String): MtdError = this.copy(message = s"Adjustment value for '$fieldName' falls outside the accepted range")
 }

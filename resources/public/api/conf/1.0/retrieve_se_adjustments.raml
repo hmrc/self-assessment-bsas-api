@@ -9,8 +9,8 @@ is:
   - errors.bsasNotFound
   - errors.clientOrAgentNotAuthorised
   - queryParameters.adjustedStatusOptional
-displayName: Retrieve a Self Employment Business' Accounting Adjustments [test only]
-description: This endpoint allows the user to request the adjustments made to a specific Self Employment Business Source Accounting Summary by quoting it's identifier.
+displayName: Retrieve a Self-Employment Business' Summary Adjustments [test only]
+description: This endpoint allows the user to request the adjustments made to a specific Self Employment Business Source Adjustable Summary by quoting it's identifier.  The BSAS ID quoted must be for a UK Property Business and previously adjusted.
 (annotations.sandboxData): !include scenarios/retrieve_se_adjustments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
@@ -21,7 +21,7 @@ responses:
         type: !include schemas/retrieve_se_adjustments.json
         examples:
           adjustments_full:
-            description: Retrieve A Self Employment Business' Accounting Adjustments - Full
+            description: Retrieve A Self Employment Business' Summary Adjustments - Full
             value: !include examples/adjustments/retrieve_se_adjustments.json
     headers:
       X-CorrelationId:

@@ -16,10 +16,11 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v1.models.request.RawData
+import play.api.libs.json.{Json, OWrites, Reads}
 
-case class SubmitSeBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
+case class Income(turnover: Option[BigDecimal], other: Option[BigDecimal])
 
-case class SubmitSeBsasRequestData(nino: Nino, bsasId: String, body: SubmitSeBsasRequestBody)
+object Income {
+  implicit val writes: OWrites[Income] = Json.writes[Income]
+  implicit val reads: Reads[Income] = Json.reads[Income]
+}

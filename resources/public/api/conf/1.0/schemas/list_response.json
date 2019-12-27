@@ -6,7 +6,7 @@
   "properties": {
     "businessSourceSummaries": {
       "title": "Business Source Summaries",
-      "description": "The array holding Business Source Accounting Summary (BSAS) Entries, by Business Income Source",
+      "description": "The array holding Business Source Adjustable Summary (BSAS) Entries, by Business Income Source",
       "type": "array",
       "items": {
         "type": "object",
@@ -23,7 +23,7 @@
           "accountingPeriod": {"$ref": "definitions.json#/definitions/accountingPeriod"},
           "bsasEntries": {
             "title": "BSAS Entries",
-            "description": "The array holding Business Source Accounting Summary (BSAS) Entries",
+            "description": "The array holding Business Source Adjustable Summary (BSAS) Entries",
             "type": "array",
             "items": {
               "type": "object",

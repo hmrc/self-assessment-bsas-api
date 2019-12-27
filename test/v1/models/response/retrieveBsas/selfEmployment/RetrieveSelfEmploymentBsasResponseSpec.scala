@@ -19,7 +19,7 @@ package v1.models.response.retrieveBsas.selfEmployment
 import mocks.MockAppConfig
 import v1.models.hateoas.Method._
 import support.UnitSpec
-import v1.fixtures.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, mtdRetrieveBsasResponseJson, retrieveBsasResponseModelAdjustable, retrieveBsasResponseModelAdjusted}
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, mtdRetrieveBsasResponseJson, retrieveBsasResponseModelAdjustable, retrieveBsasResponseModelAdjusted}
 import v1.hateoas.HateoasFactory
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.utils.JsonErrorValidators

@@ -18,25 +18,32 @@ package v1.models.request.submitBsas.selfEmployment
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.request.submitBsas.selfEmployment.SeAdditionsFixture._
+import v1.fixtures.selfEmployment.AdditionsFixture._
 import v1.models.domain.EmptyJsonBody
 
-class SeAdditionsSpec extends UnitSpec {
+class AdditionsSpec extends UnitSpec {
 
-  val seAdditionsModelWithoutCosts: SeAdditions =
-    seAdditionsModel.copy(
+  val additionsModelWithoutCosts: Additions =
+    Additions(
       costOfGoodsBoughtDisallowable = None,
+      cisPaymentsToSubcontractorsDisallowable = Some(3000.2),
       staffCostsDisallowable = None,
       travelCostsDisallowable = None,
       premisesRunningCostsDisallowable = None,
       maintenanceCostsDisallowable = None,
       adminCostsDisallowable = None,
       advertisingCostsDisallowable = None,
-      businessEntertainmentCostsDisallowable = None
+      businessEntertainmentCostsDisallowable = None,
+      interestDisallowable = Some(-3000.5),
+      financialChargesDisallowable = Some(3000.6),
+      badDebtDisallowable = Some(-3000.6),
+      professionalFeesDisallowable = Some(3000.7),
+      depreciationDisallowable = Some(-3000.7),
+      otherDisallowable = Some(3000.8)
     )
 
-  val emptySeAdditionsModel: SeAdditions =
-    SeAdditions(
+  val emptyAdditionsModel: Additions =
+    Additions(
       costOfGoodsBoughtDisallowable = None,
       cisPaymentsToSubcontractorsDisallowable = None,
       staffCostsDisallowable = None,
@@ -54,37 +61,37 @@ class SeAdditionsSpec extends UnitSpec {
       otherDisallowable = None
     )
 
-  "SeAdditions" when {
+  "Additions" when {
     "read from valid JSON" should {
-      "produce the expected SeAdditions object" in {
-        seAdditionsDesJson(seAdditionsModel).as[SeAdditions] shouldBe seAdditionsModel
+      "produce the expected Additions object" in {
+        additionsDesJson(additionsModel).as[Additions] shouldBe additionsModel
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(seAdditionsModel) shouldBe seAdditionsMtdJson(seAdditionsModel)
+        Json.toJson(additionsModel) shouldBe additionsMtdJson(additionsModel)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        seAdditionsDesJson(seAdditionsModelWithoutCosts).as[SeAdditions] shouldBe seAdditionsModelWithoutCosts
+        additionsDesJson(additionsModelWithoutCosts).as[Additions] shouldBe additionsModelWithoutCosts
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(seAdditionsModelWithoutCosts) shouldBe seAdditionsMtdJson(seAdditionsModelWithoutCosts)
+        Json.toJson(additionsModelWithoutCosts) shouldBe additionsMtdJson(additionsModelWithoutCosts)
       }
     }
 
 
     "no fields as supplied" should {
-      "read to an empty SeAdditions object" in {
-        seAdditionsDesJson(emptySeAdditionsModel).as[SeAdditions] shouldBe emptySeAdditionsModel
+      "read to an empty Additions object" in {
+        additionsDesJson(emptyAdditionsModel).as[Additions] shouldBe emptyAdditionsModel
       }
 
       "write to empty JSON" in {
-        Json.toJson(emptySeAdditionsModel) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(emptyAdditionsModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

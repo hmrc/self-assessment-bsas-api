@@ -18,18 +18,18 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.SubmitSeBsasValidator
+import v1.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
 import v1.models.errors.MtdError
-import v1.models.request.submitBsas.selfEmployment.SubmitSeBsasRawData
+import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
 
-class MockSubmitSeBsasValidator extends MockFactory {
-  val mockValidator: SubmitSeBsasValidator = mock[SubmitSeBsasValidator]
+class MockSubmitSelfEmploymentBsasValidator extends MockFactory {
+  val mockValidator: SubmitSelfEmploymentBsasValidator = mock[SubmitSelfEmploymentBsasValidator]
 
   object MockValidator {
 
-    def validate(data: SubmitSeBsasRawData): CallHandler1[SubmitSeBsasRawData, List[MtdError]] = {
+    def validate(data: SubmitSelfEmploymentBsasRawData): CallHandler1[SubmitSelfEmploymentBsasRawData, List[MtdError]] = {
       (mockValidator
-        .validate(_: SubmitSeBsasRawData))
+        .validate(_: SubmitSelfEmploymentBsasRawData))
         .expects(data)
     }
   }

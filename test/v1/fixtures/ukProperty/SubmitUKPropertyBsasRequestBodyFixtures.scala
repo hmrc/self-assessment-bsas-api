@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.fixtures
+package v1.fixtures.ukProperty
 
-import v1.models.request.submitBsas._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v1.models.errors.MtdError
+import v1.models.request.submitBsas._
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
 
@@ -319,7 +319,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
   def rangeError(fieldName: String): MtdError =
     MtdError("RULE_RANGE_INVALID", s"Adjustment value for '$fieldName' falls outside the accepted range")
 
-  def zeroError(fieldName: String): MtdError =
+  def formatError(fieldName: String): MtdError =
     MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the '$fieldName' value is invalid")
 
   def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
@@ -361,7 +361,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |}
     """.stripMargin
 
-  val fhlDesResponse: String => String = (bsasId: String) =>
+  val fhlDesResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
     s"""
        |{
        |      "metadata":{
@@ -373,7 +373,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |      },
        |      "inputs":{
        |        "incomeSourceId":"X2IS01234512345",
-       |        "incomeSourceType":"04",
+       |        "incomeSourceType": "$typeOfBusiness",
        |        "accountingPeriodStartDate":"2019-04-06",
        |        "accountingPeriodEndDate":"2020-04-05",
        |        "source":"MTD-SA",

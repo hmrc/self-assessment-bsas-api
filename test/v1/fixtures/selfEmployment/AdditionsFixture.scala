@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package v1.fixtures.request.submitBsas.selfEmployment
+package v1.fixtures.selfEmployment
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.request.submitBsas.selfEmployment.{SeAdditions, queryMap}
+import v1.models.request.submitBsas.selfEmployment.{Additions, queryMap}
 
-object SeAdditionsFixture {
+object AdditionsFixture {
 
-  val seAdditionsModel: SeAdditions =
-    SeAdditions(
+  val additionsModel: Additions =
+    Additions(
       costOfGoodsBoughtDisallowable = Some(3000.1),
       cisPaymentsToSubcontractorsDisallowable = Some(3000.2),
       staffCostsDisallowable = Some(3000.3),
@@ -40,7 +40,7 @@ object SeAdditionsFixture {
       otherDisallowable = Some(3000.8)
     )
 
-  def seAdditionsMtdJson(model: SeAdditions): JsValue = {
+  def additionsMtdJson(model: Additions): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =
@@ -65,7 +65,7 @@ object SeAdditionsFixture {
     Json.toJsObject(queryMap(fields))
   }
 
-  def seAdditionsDesJson(model: SeAdditions): JsValue = {
+  def additionsDesJson(model: Additions): JsValue = {
     import model._
 
     val fields: Map[String, Option[BigDecimal]] =

@@ -31,6 +31,9 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
       |{
       |   "metadata" : {
       |       "calculationId" : "anId"
+      |   },
+      |   "inputs": {
+      |   "incomeSourceType":"04"
       |   }
       |}
   """.stripMargin)
@@ -49,7 +52,7 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val submitBsasResponse: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse("anId")
+  val submitBsasResponse: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse("anId", TypeOfBusiness.`uk-property-fhl`)
 
   "SubmitUkBsasResponse" when {
     "read from valid JSON" should {
