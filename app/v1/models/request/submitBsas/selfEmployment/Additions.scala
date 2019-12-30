@@ -33,7 +33,24 @@ case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
                      badDebtDisallowable: Option[BigDecimal],
                      professionalFeesDisallowable: Option[BigDecimal],
                      depreciationDisallowable: Option[BigDecimal],
-                     otherDisallowable: Option[BigDecimal])
+                     otherDisallowable: Option[BigDecimal]){
+
+  def isEmpty: Boolean =  costOfGoodsBoughtDisallowable.isEmpty &&
+                          cisPaymentsToSubcontractorsDisallowable.isEmpty &&
+                          staffCostsDisallowable.isEmpty &&
+                          travelCostsDisallowable.isEmpty &&
+                          premisesRunningCostsDisallowable.isEmpty &&
+                          maintenanceCostsDisallowable.isEmpty &&
+                          adminCostsDisallowable.isEmpty &&
+                          advertisingCostsDisallowable.isEmpty &&
+                          businessEntertainmentCostsDisallowable.isEmpty &&
+                          interestDisallowable.isEmpty &&
+                          financialChargesDisallowable.isEmpty &&
+                          badDebtDisallowable.isEmpty &&
+                          professionalFeesDisallowable.isEmpty &&
+                          depreciationDisallowable.isEmpty &&
+                          otherDisallowable.isEmpty
+}
 
 object Additions{
  implicit val reads: Reads[Additions] = Json.reads[Additions]

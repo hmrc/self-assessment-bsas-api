@@ -59,5 +59,34 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
         Json.toJson(emptySubmitSelfEmploymentBsasRequestBodyModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
+
+    "isEmpty is called" should {
+      "return true when all empty fields are supplied" in {
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel).as[SubmitSelfEmploymentBsasRequestBody]
+          .isEmpty shouldBe true
+      }
+
+      "return false when non-empty fields is supplied" in {
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome).as[SubmitSelfEmploymentBsasRequestBody]
+          .isEmpty shouldBe false
+      }
+    }
+
+    "isIncorrectOrEmptyBodyError is called" should {
+      "return true when all fields are empty is supplied" in {
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel).as[SubmitSelfEmploymentBsasRequestBody]
+          .isIncorrectOrEmptyBodyError shouldBe true
+      }
+
+      "return true when empty income fields are supplied" in {
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel.copy(Some(Income(None, None)))).as[SubmitSelfEmploymentBsasRequestBody]
+          .isIncorrectOrEmptyBodyError shouldBe true
+      }
+
+      "return false when non-empty fields is supplied" in {
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome).as[SubmitSelfEmploymentBsasRequestBody]
+          .isIncorrectOrEmptyBodyError shouldBe false
+      }
+    }
   }
 }

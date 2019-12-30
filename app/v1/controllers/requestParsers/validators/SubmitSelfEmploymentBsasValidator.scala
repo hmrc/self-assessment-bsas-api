@@ -23,7 +23,7 @@ import v1.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawD
 
 class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidator, bodyFormatValidator, adjustmentFieldValidator)
+  private val validationSet = List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, adjustmentFieldValidator)
 
   private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -35,6 +35,14 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private def bodyFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       JsonFormatValidation.validate[SubmitSelfEmploymentBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+    )
+  }
+
+  private def incorrectOrEmptyBodyValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
+    List(
+      if(model.isIncorrectOrEmptyBodyError) List(RuleIncorrectOrEmptyBodyError)
+      else NoValidationErrors
     )
   }
 

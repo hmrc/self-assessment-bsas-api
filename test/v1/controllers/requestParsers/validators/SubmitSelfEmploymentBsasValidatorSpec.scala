@@ -87,6 +87,8 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
       }
       "passed an invalid body" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
       val inputs: Seq[(String, BigDecimal => SubmitSelfEmploymentBsasRequestBody)] = Seq(

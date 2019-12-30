@@ -96,5 +96,15 @@ class ExpensesSpec extends UnitSpec {
         Json.toJson(emptyExpensesModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
+
+    "isEmpty is called" should {
+      "return true when all empty fields are supplied" in {
+        expensesDesJson(emptyExpensesModel).as[Expenses].isEmpty shouldBe true
+      }
+
+      "return false when non-empty fields is supplied" in {
+        expensesDesJson(emptyExpensesModel.copy(Some(1000.49))).as[Expenses].isEmpty shouldBe false
+      }
+    }
   }
 }

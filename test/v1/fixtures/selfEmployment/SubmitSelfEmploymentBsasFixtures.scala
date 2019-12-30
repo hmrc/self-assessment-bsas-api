@@ -17,11 +17,9 @@
 package v1.fixtures.selfEmployment
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import AdditionsFixture.{additionsDesJson, additionsModel, additionsMtdJson}
-import ExpensesFixture.{expensesDesJson, expensesModel, expensesMtdJson}
-import IncomeFixture.{incomeJson, incomeModel}
-import v1.models.hateoas.Link
-import v1.models.hateoas.Method.GET
+import v1.fixtures.selfEmployment.AdditionsFixture.{additionsDesJson, additionsModel, additionsMtdJson}
+import v1.fixtures.selfEmployment.ExpensesFixture.{expensesDesJson, expensesModel, expensesMtdJson}
+import v1.fixtures.selfEmployment.IncomeFixture.{incomeJson, incomeModel}
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.collection.mutable.ListBuffer
