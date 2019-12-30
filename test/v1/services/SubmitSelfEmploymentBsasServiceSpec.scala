@@ -54,7 +54,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends UnitSpec {
         MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
 
@@ -65,7 +65,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends UnitSpec {
         MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleErrorPropertyAdjusted))
+        await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleErrorPropertyAdjusted))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -74,7 +74,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends UnitSpec {
           MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
       val input = Seq(
@@ -88,10 +88,10 @@ class SubmitSelfEmploymentBsasServiceSpec extends UnitSpec {
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
-        ("BVR_FAILURE_C55316", RuleTypeOfBusinessError),
-        ("BVR_FAILURE_C15320", RuleTypeOfBusinessError),
-        ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
-        ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
+        ("BVR_FAILURE_C55316", RuleOverConsolidatedExpensesThreshold),
+        ("BVR_FAILURE_C15320", RuleTradingIncomeAllowanceClaimed),
+        ("BVR_FAILURE_C55503", RuleNotSelfEmployment),
+        ("BVR_FAILURE_C55509", RuleNotSelfEmployment),
         ("NOT_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)

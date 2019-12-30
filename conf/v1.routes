@@ -6,4 +6,6 @@ GET        /:nino/property/:bsasId                         v1.controllers.Retrie
 
 POST       /:nino/property/:bsasId/adjust                  v1.controllers.SubmitUkPropertyBsasController.submitUkPropertyBsas(nino: String, bsasId: String)
 
-GET         /:nino/self-employment/:bsasId                 v1.controllers.RetrieveSelfEmploymentBsasController.retrieve(nino:String, bsasId: String, adjustedStatus: Option[String])
+GET        /:nino/self-employment/:bsasId                  v1.controllers.RetrieveSelfEmploymentBsasController.retrieve(nino:String, bsasId: String, adjustedStatus: Option[String])
+
+POST       /:nino/self-employment/:bsasId/adjust           v1.controllers.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, bsasId: String)

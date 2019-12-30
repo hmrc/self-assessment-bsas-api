@@ -20,6 +20,8 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import AdditionsFixture.{additionsDesJson, additionsModel, additionsMtdJson}
 import ExpensesFixture.{expensesDesJson, expensesModel, expensesMtdJson}
 import IncomeFixture.{incomeJson, incomeModel}
+import v1.models.hateoas.Link
+import v1.models.hateoas.Method.GET
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.collection.mutable.ListBuffer
@@ -130,4 +132,51 @@ object SubmitSelfEmploymentBsasFixtures {
                       |		"consolidatedExpenses": -2002.25
                       |	}
                       |}""".stripMargin)
+
+  val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |  "id": "$bsasId",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    },
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
+       |      "rel":"retrieve-adjustable-summary",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+
+  val desResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
+    s"""
+       |{
+       |      "metadata":{
+       |        "calculationId":"$bsasId",
+       |        "requestedDateTime":"2019-12-01T12:00:00.000Z",
+       |        "taxableEntityId":"AB123456C",
+       |        "taxYear":2020,
+       |        "status":"valid"
+       |      },
+       |      "inputs":{
+       |        "incomeSourceId":"X2IS01234512345",
+       |        "incomeSourceType": "$typeOfBusiness",
+       |        "accountingPeriodStartDate":"2019-04-06",
+       |        "accountingPeriodEndDate":"2020-04-05",
+       |        "source":"MTD-SA",
+       |        "submissionPeriods":[
+       |          {
+       |            "periodId":"2019040620190705",
+       |            "startDate":"2019-04-06",
+       |            "endDate":"2019-07-05",
+       |            "receivedDateTime":"2019-08-01T12:00:00.000Z"
+       |          }
+       |        ]
+       |      }
+       |}
+       |""".stripMargin
 }

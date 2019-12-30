@@ -95,6 +95,9 @@ object RuleBsasAlreadyAdjusted extends MtdError("RULE_BSAS_ALREADY_ADJUSTED", "A
 object RuleOverConsolidatedExpensesThreshold
   extends MtdError("RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD", "The cumulative turnover amount exceeds the consolidated expenses threshold")
 
+object RuleTradingIncomeAllowanceClaimed
+  extends MtdError("RULE_TRADING_INCOME_ALLOWANCE_CLAIMED", "A claim for trading income allowance was made. Cannot also have expenses")
+
 object RulePropertyIncomeAllowanceClaimed
   extends MtdError("RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED", "A claim for property income allowance was made. Cannot also have expenses")
 

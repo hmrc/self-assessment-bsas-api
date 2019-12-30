@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging {
 
-  def submitPropertyBsas(request: SubmitSelfEmploymentBsasRequestData)(
+  def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
                 implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
   Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]] = {
 
@@ -49,17 +49,17 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
     "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
-    "INVALID_PAYLOAD"     -> DownstreamError,
+    "INVALID_PAYLOAD"             -> DownstreamError,
     "INVALID_PAYLOAD_REMOTE"      -> DownstreamError,
     "INVALID_FIELD"               -> RuleTypeOfBusinessError,
     "INVALID_MONETARY_FORMAT"     -> DownstreamError,
     "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
     "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
-    "BVR_FAILURE_C55316"          -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C15320"          -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C55503"          -> RuleOverConsolidatedExpensesThreshold,
-    "BVR_FAILURE_C55509"          -> RulePropertyIncomeAllowanceClaimed,
+    "BVR_FAILURE_C55316"          -> RuleOverConsolidatedExpensesThreshold,
+    "BVR_FAILURE_C15320"          -> RuleTradingIncomeAllowanceClaimed,
+    "BVR_FAILURE_C55503"          -> RuleNotSelfEmployment,
+    "BVR_FAILURE_C55509"          -> RuleNotSelfEmployment,
     "NOT_FOUND"                   -> NotFoundError,
     "SERVER_ERROR"                -> DownstreamError,
     "SERVICE_UNAVAILABLE"         -> DownstreamError
