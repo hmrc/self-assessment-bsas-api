@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
+import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import v1.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v1.fixtures.selfEmployment.ExpensesFixture.expensesModel
@@ -63,6 +64,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
       ).returns(Future.successful(outcome))
 
+      println(Json.toJson(submitSelfEmploymentBsasRequestBodyModel))
       await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome
     }
   }
