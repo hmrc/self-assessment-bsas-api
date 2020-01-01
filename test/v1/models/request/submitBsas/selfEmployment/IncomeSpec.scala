@@ -67,5 +67,15 @@ class IncomeSpec extends UnitSpec {
         Json.toJson(incomeModelEmpty) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
+
+    "isEmpty is called" should {
+      "return true when all empty fields are supplied" in {
+        incomeJson(incomeModelEmpty).as[Income].isEmpty shouldBe true
+      }
+
+      "return false when non-empty fields is supplied" in {
+        incomeJson(incomeModelEmpty.copy(Some(1000.49))).as[Income].isEmpty shouldBe false
+      }
+    }
   }
 }

@@ -17,9 +17,9 @@
 package v1.fixtures.selfEmployment
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import AdditionsFixture.{additionsDesJson, additionsModel, additionsMtdJson}
-import ExpensesFixture.{expensesDesJson, expensesModel, expensesMtdJson}
-import IncomeFixture.{incomeJson, incomeModel}
+import v1.fixtures.selfEmployment.AdditionsFixture.{additionsDesJson, additionsModel, additionsMtdJson}
+import v1.fixtures.selfEmployment.ExpensesFixture.{expensesDesJson, expensesModel, expensesMtdJson}
+import v1.fixtures.selfEmployment.IncomeFixture.{incomeJson, incomeModel}
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.collection.mutable.ListBuffer
@@ -88,4 +88,93 @@ object SubmitSelfEmploymentBsasFixtures {
     val json = jsObjects.fold(Json.parse("""{}""").as[JsObject])((a: JsObject, b: JsObject) => a ++ b)
     json
   }
+
+  val mtdRequest = Json.parse("""{
+                      |	"income": {
+                      |		"turnover": 1000.25,
+                      |		"other": 1000.5
+                      |	},
+                      |	"additions": {
+                      |		"costOfGoodsBoughtDisallowable": 3000.1,
+                      |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
+                      |		"staffCostsDisallowable": 3000.3,
+                      |		"travelCostsDisallowable": 3000.4,
+                      |		"premisesRunningCostsDisallowable": 3000.5,
+                      |		"maintenanceCostsDisallowable": -3000.1,
+                      |		"adminCostsDisallowable": -3000.2,
+                      |		"advertisingCostsDisallowable": -3000.3,
+                      |		"businessEntertainmentCostsDisallowable": -3000.4,
+                      |		"interestDisallowable": -3000.5,
+                      |		"financialChargesDisallowable": 3000.6,
+                      |		"badDebtDisallowable": -3000.6,
+                      |		"professionalFeesDisallowable": 3000.7,
+                      |		"depreciationDisallowable": -3000.7,
+                      |		"otherDisallowable": 3000.8
+                      |	},
+                      |	"expenses": {
+                      |		"costOfGoodsBought": 2000.25,
+                      |		"cisPaymentsToSubcontractors": 2000.5,
+                      |		"staffCosts": 2000.75,
+                      |		"travelCosts": -2000.25,
+                      |		"premisesRunningCosts": -2000.5,
+                      |		"maintenanceCosts": -2000.75,
+                      |		"adminCosts": 2001.25,
+                      |		"advertisingCosts": 2001.5,
+                      |		"businessEntertainmentCosts": 2001.75,
+                      |		"interest": -2001.25,
+                      |		"financialCharges": -2001.5,
+                      |		"badDebt": -2001.75,
+                      |		"professionalFees": 2002.25,
+                      |		"depreciation": 2002.5,
+                      |		"other": 2002.75,
+                      |		"consolidatedExpenses": -2002.25
+                      |	}
+                      |}""".stripMargin)
+
+  val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |  "id": "$bsasId",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    },
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
+       |      "rel":"retrieve-adjustable-summary",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+
+  val desResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
+    s"""
+       |{
+       |      "metadata":{
+       |        "calculationId":"$bsasId",
+       |        "requestedDateTime":"2019-12-01T12:00:00.000Z",
+       |        "taxableEntityId":"AB123456C",
+       |        "taxYear":2020,
+       |        "status":"valid"
+       |      },
+       |      "inputs":{
+       |        "incomeSourceId":"X2IS01234512345",
+       |        "incomeSourceType": "$typeOfBusiness",
+       |        "accountingPeriodStartDate":"2019-04-06",
+       |        "accountingPeriodEndDate":"2020-04-05",
+       |        "source":"MTD-SA",
+       |        "submissionPeriods":[
+       |          {
+       |            "periodId":"2019040620190705",
+       |            "startDate":"2019-04-06",
+       |            "endDate":"2019-07-05",
+       |            "receivedDateTime":"2019-08-01T12:00:00.000Z"
+       |          }
+       |        ]
+       |      }
+       |}
+       |""".stripMargin
 }

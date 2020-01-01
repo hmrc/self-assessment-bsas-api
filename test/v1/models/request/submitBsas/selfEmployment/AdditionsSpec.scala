@@ -94,5 +94,15 @@ class AdditionsSpec extends UnitSpec {
         Json.toJson(emptyAdditionsModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
+
+    "isEmpty is called" should {
+      "return true when all empty fields are supplied" in {
+        additionsDesJson(emptyAdditionsModel).as[Additions].isEmpty shouldBe true
+      }
+
+      "return false when non-empty fields is supplied" in {
+        additionsDesJson(emptyAdditionsModel.copy(Some(1000.49))).as[Additions].isEmpty shouldBe false
+      }
+    }
   }
 }

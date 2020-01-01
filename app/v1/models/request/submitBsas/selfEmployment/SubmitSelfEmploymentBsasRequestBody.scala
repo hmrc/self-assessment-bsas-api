@@ -18,9 +18,16 @@ package v1.models.request.submitBsas.selfEmployment
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
-case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses])
+case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses]){
+
+  def isEmpty: Boolean = !(income.isDefined || additions.isDefined || expenses.isDefined)
+  def isIncorrectOrEmptyBodyError: Boolean = isEmpty || (income.isDefined && income.get.isEmpty ||
+    additions.isDefined && additions.get.isEmpty ||
+    expenses.isDefined && expenses.get.isEmpty)
+}
 
 object SubmitSelfEmploymentBsasRequestBody {
+
   implicit val reads: Reads[SubmitSelfEmploymentBsasRequestBody] = Json.reads[SubmitSelfEmploymentBsasRequestBody]
   implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = Json.writes[SubmitSelfEmploymentBsasRequestBody]
 }
