@@ -18,7 +18,7 @@
     "badDebt": 1000.49,
     "professionalFees": 1000.49,
     "depreciation": 1000.49,
-    "otherExpensesAllowable": 1000.49
+    "other": 1000.49
 
   },
   "additions": {
