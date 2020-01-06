@@ -83,7 +83,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends UnitSpec {
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVALID_PAYLOAD", DownstreamError),
         ("INVALID_PAYLOAD_REMOTE", DownstreamError),
-        ("INVALID_FIELD", RuleTypeOfBusinessError),
+        ("INVALID_FIELD", RuleNotSelfEmployment),
         ("INVALID_MONETARY_FORMAT", DownstreamError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),

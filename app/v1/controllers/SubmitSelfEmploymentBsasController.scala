@@ -83,7 +83,7 @@ class SubmitSelfEmploymentBsasController @Inject()(
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | BsasIdFormatError |
-           RuleIncorrectOrEmptyBodyError | RuleTypeOfBusinessError |
+           RuleIncorrectOrEmptyBodyError |
            MtdErrorWithCustomMessage(FormatAdjustmentValueError.code) |
            MtdErrorWithCustomMessage(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleBsasAlreadyAdjusted |
