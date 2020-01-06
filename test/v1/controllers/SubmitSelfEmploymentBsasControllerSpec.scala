@@ -201,7 +201,6 @@ class SubmitSelfEmploymentBsasControllerSpec
         (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
-        (RuleTypeOfBusinessError, BAD_REQUEST),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleBsasAlreadyAdjusted, FORBIDDEN),

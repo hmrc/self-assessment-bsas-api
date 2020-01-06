@@ -138,7 +138,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
-          (BAD_REQUEST, "INVALID_FIELD", BAD_REQUEST, RuleTypeOfBusinessError),
+          (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleNotSelfEmployment),
           (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
           (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
           (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
