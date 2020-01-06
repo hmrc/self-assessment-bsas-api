@@ -23,5 +23,9 @@
             <td><p>SELF_EMPLOYMENT_UNADJUSTED</p></td>
             <td><p>Simulates an unsuccessful response where adjustments are not present for a self-employment</p></td>
         </tr>
+        <tr>
+            <td><p>NOT_SELF_EMPLOYMENT</p></td>
+            <td><p>Simulates an unsuccessful response where returned adjustments do not belong to a self-employment</p></td>
+        </tr>
     </tbody>
 </table>
