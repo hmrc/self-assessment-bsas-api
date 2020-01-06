@@ -64,7 +64,6 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
       ).returns(Future.successful(outcome))
 
-      println(Json.toJson(submitSelfEmploymentBsasRequestBodyModel))
       await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome
     }
   }
