@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
+import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,9 +37,10 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends UnitSpec {
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
+
   val request = RetrieveSelfEmploymentAdjustmentsRequestData(nino, id)
 
-  val response = RetrieveSelfEmploymentsAdjustmentsResponse()
+  val response = RetrieveSelfEmploymentAdjustmentResponse(metaDataModel, bsasDetailModel)
 
   trait Test extends MockRetrieveSelfEmploymentAdjustmentsConnector {
 

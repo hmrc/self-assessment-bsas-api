@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, RetrieveSelfEmploymentAdjustmentsConnector}
 import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +32,7 @@ trait MockRetrieveSelfEmploymentAdjustmentsConnector extends MockFactory {
 
   object MockRetrieveSelfEmploymentAdjustmentsConnector{
     def retrieveSelfEmploymentAdjustments(requestData: RetrieveSelfEmploymentAdjustmentsRequestData):
-    CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
+    CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentResponse]]] = {
       (mockConnector
         .retrieveSelfEmploymentAdjustments(_: RetrieveSelfEmploymentAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)

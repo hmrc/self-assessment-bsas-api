@@ -24,6 +24,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse}
 import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -61,7 +62,7 @@ trait DesResponseMappingSupport {
   final def validateRetrieveSelfEmploymentAdjustmentsSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
   Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case retrieveSelfEmploymentAdjustmentsResponse: RetrieveSelfEmploymentAdjustmentsResponse
+      case retrieveSelfEmploymentAdjustmentsResponse: RetrieveSelfEmploymentAdjustmentResponse
         if retrieveSelfEmploymentAdjustmentsResponse.metadata.typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
 
@@ -104,6 +105,10 @@ trait DesResponseMappingSupport {
       case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
         if submitUkPropertyBsasResponse.typeOfBusiness == TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
+
+      case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
+        if typeOfBusiness.exists(_ != submitUkPropertyBsasResponse.typeOfBusiness) =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
     }

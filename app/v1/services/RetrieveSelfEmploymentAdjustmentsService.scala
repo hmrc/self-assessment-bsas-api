@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +36,7 @@ class RetrieveSelfEmploymentAdjustmentsService @Inject()(connector: RetrieveSelf
 
   def retrieveSelfEmploymentsAdjustments(request: RetrieveSelfEmploymentAdjustmentsRequestData)(
                                         implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
+  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentAdjustments(request)).leftMap(mapDesErrors(mappingDesToMtdError))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
 import scala.concurrent.Future
 
@@ -33,7 +34,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: RetrieveSelfEmploymentAdjustmentsConnector =
-      new RetrieveSelfEmploymentAdjustmentsConnectorSpec( http = mockHttpClient, appConfig = mockAppConfig)
+      new RetrieveSelfEmploymentAdjustmentsConnector( http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer-des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -43,13 +44,13 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
 
   "retrieveSelfEmploymentAdjustments" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, ???))
+      val outcome = Right(ResponseWrapper(correlationId, mtdJson))
 
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveSelfEmploymentAdjustmentsRequestData(nino, bsasId)
 
         MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/${bsasId}",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
           queryParams.toSeq,
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))

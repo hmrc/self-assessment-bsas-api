@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
 
   def retrieveSelfEmploymentAdjustments(request: RetrieveSelfEmploymentAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
+                                       ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -38,7 +39,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveSelfEmploymentsAdustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId/?return=2")
+      DesUri[RetrieveSelfEmploymentAdjustmentResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
     )
   }
 }
