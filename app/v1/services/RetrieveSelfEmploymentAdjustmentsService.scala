@@ -21,29 +21,27 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.RetrieveSelfEmploymentBsasConnector
+import v1.connectors.RetrieveSelfEmploymentAdjustmentsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrieveSelfEmploymentBsasRequestData
-import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging{
+class RetrieveSelfEmploymentAdjustmentsService @Inject()(connector: RetrieveSelfEmploymentAdjustmentsConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-                                implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
+  def retrieveSelfEmploymentsAdjustments(request: RetrieveSelfEmploymentAdjustmentsRequestData)(
+                                        implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentResponse]]] = {
 
     val result = for {
-      desResponseWrapper <-
-      EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveSelfEmploymentBsasSuccessResponse(desResponseWrapper, None))
+      desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentAdjustments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(desResponseWrapper, None))
     } yield mtdResponseWrapper
-
     result.value
   }
 

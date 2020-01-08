@@ -24,6 +24,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse}
 import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -58,17 +59,49 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
+  final def validateRetrieveSelfEmploymentAdjustmentsSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
+  Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case retrieveSelfEmploymentAdjustmentsResponse: RetrieveSelfEmploymentAdjustmentResponse
+        if retrieveSelfEmploymentAdjustmentsResponse.metadata.typeOfBusiness != TypeOfBusiness.`self-employment` =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
+  final def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
+  Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case retrieveSelfEmploymentBsasResponse: RetrieveSelfEmploymentBsasResponse
+        if retrieveSelfEmploymentBsasResponse.metadata.typeOfBusiness != TypeOfBusiness.`self-employment` =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
+  final def validateSubmitSelfEmploymentSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
+  Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case submitSelfEmploymentBsasResponse: SubmitSelfEmploymentBsasResponse
+        if TypeOfBusiness.`self-employment` != submitSelfEmploymentBsasResponse.typeOfBusiness =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleErrorPropertyAdjusted, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
+  final def validateRetrieveUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
   Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case retrieveUkPropertyBsasResponse: RetrieveUkPropertyBsasResponse
         if retrieveUkPropertyBsasResponse.metadata.typeOfBusiness == TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotUkProperty, None))
 
-      case retrieveSelfEmploymentBsasResponse: RetrieveSelfEmploymentBsasResponse
-        if retrieveSelfEmploymentBsasResponse.metadata.typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
+      case _ => Right(desResponseWrapper)
+    }
 
+  final def validateSubmitUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
+  Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
       case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
         if submitUkPropertyBsasResponse.typeOfBusiness == TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
@@ -77,9 +110,6 @@ trait DesResponseMappingSupport {
         if typeOfBusiness.exists(_ != submitUkPropertyBsasResponse.typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
 
-      case submitUkSelfEmploymentBsasResponse: SubmitSelfEmploymentBsasResponse
-        if TypeOfBusiness.`self-employment` != submitUkSelfEmploymentBsasResponse.typeOfBusiness =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleErrorPropertyAdjusted, None))
       case _ => Right(desResponseWrapper)
     }
 }
