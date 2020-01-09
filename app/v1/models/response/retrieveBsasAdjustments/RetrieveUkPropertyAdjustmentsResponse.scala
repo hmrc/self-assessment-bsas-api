@@ -19,17 +19,15 @@ package v1.models.response.retrieveBsasAdjustments
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-case class RetrieveSelfEmploymentAdjustmentResponse(metadata: Metadata,
-                                                    adjustments: BsasDetail)
+case class RetrieveUkPropertyAdjustmentsResponse(metadata: Metadata, adjustments: BsasDetail)
 
+object RetrieveUkPropertyAdjustmentsResponse {
 
-object RetrieveSelfEmploymentAdjustmentResponse {
-
-  implicit val reads: Reads[RetrieveSelfEmploymentAdjustmentResponse] = (
+  implicit val reads: Reads[RetrieveUkPropertyAdjustmentsResponse] = (
     JsPath.read[Metadata] and
       JsPath.read[BsasDetail]
-    ) (RetrieveSelfEmploymentAdjustmentResponse.apply _)
+    ) (RetrieveUkPropertyAdjustmentsResponse.apply _)
 
-  implicit val writes: OWrites[RetrieveSelfEmploymentAdjustmentResponse] = Json.writes[RetrieveSelfEmploymentAdjustmentResponse]
+  implicit val writes: OWrites[RetrieveUkPropertyAdjustmentsResponse] = Json.writes[RetrieveUkPropertyAdjustmentsResponse]
 
 }

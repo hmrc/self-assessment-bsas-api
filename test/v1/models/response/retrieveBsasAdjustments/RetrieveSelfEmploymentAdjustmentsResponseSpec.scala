@@ -16,15 +16,15 @@
 
 package v1.models.response.retrieveBsasAdjustments
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
-import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 
 
-class RetrieveSelfEmploymentAdjustmentResponseSpec extends UnitSpec with JsonErrorValidators {
+class RetrieveSelfEmploymentAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "01",
@@ -85,13 +85,13 @@ class RetrieveSelfEmploymentAdjustmentResponseSpec extends UnitSpec with JsonErr
       |}
     """.stripMargin)
 
-  val retrieveSelfEmploymentAdjustmentResponseModel = RetrieveSelfEmploymentAdjustmentResponse(metaDataModel, bsasDetailModel)
+  val retrieveSelfEmploymentAdjustmentResponseModel = RetrieveSelfEmploymentAdjustmentsResponse(metaDataModel, bsasDetailModel)
 
   "RetrieveSelfEmploymentAdjustmentResponse" when {
     "reading from valid JSON" should {
       "return the appropriate model" in {
 
-        desJson.as[RetrieveSelfEmploymentAdjustmentResponse] shouldBe retrieveSelfEmploymentAdjustmentResponseModel
+        desJson.as[RetrieveSelfEmploymentAdjustmentsResponse] shouldBe retrieveSelfEmploymentAdjustmentResponseModel
       }
     }
 
