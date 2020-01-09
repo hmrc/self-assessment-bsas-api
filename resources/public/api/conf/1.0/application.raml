@@ -42,6 +42,9 @@ uses:
     /trigger:
       post: !include trigger.raml
     /self-employment/{bsasId}:
+      (annotations.group):
+          name: Self-employment business
+          description: ""
       uriParameters:
         bsasId:
           description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
@@ -52,6 +55,9 @@ uses:
         post: !include submit_se_adjustments.raml
         get: !include retrieve_se_adjustments.raml
     /property/{bsasId}:
+      (annotations.group):
+          name: UK property business
+          description: ""
       uriParameters:
         bsasId:
           description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
