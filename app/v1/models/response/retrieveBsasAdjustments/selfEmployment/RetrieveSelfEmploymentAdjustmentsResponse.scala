@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsasAdjustments
+package v1.models.response.retrieveBsasAdjustments.selfEmployment
 
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v1.hateoas.{HateoasLinksFactory, HateoasLinks}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveSelfEmploymentAdjustmentsResponse(metadata: Metadata,

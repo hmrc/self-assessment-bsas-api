@@ -23,7 +23,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v1.services.RetrieveSelfEmploymentAdjustmentsService
 
 import scala.concurrent.{ExecutionContext, Future}
