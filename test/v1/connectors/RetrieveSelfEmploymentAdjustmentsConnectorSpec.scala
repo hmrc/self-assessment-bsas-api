@@ -20,7 +20,7 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.request.RetrieveAdjustmentsRequestData
 import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
 import scala.concurrent.Future
@@ -47,7 +47,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, mtdJson))
 
       "a valid request with queryParams is supplied" in new Test {
-        val request = RetrieveSelfEmploymentAdjustmentsRequestData(nino, bsasId)
+        val request = RetrieveAdjustmentsRequestData(nino, bsasId)
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",

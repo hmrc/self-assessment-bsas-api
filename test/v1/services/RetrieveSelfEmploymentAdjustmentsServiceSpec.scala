@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.request.RetrieveAdjustmentsRequestData
 import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
@@ -38,7 +38,7 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends UnitSpec {
   private val correlationId = "X-123"
 
 
-  val request = RetrieveSelfEmploymentAdjustmentsRequestData(nino, id)
+  val request = RetrieveAdjustmentsRequestData(nino, id)
 
   val response = RetrieveSelfEmploymentAdjustmentResponse(metaDataModel, bsasDetailModel)
 
