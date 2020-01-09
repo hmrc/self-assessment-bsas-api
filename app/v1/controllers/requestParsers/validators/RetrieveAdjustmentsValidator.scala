@@ -20,7 +20,7 @@ import v1.controllers.requestParsers.validators.validations.{BsasIdValidation, N
 import v1.models.errors.MtdError
 import v1.models.request.RetrieveAdjustmentsRawData
 
-class RetrieveAdjustmentsValidator extends Validator[RetrieveAdjustmentsRawData] {
+class RetrieveSelfEmploymentAdjustmentsValidator extends Validator[RetrieveAdjustmentsRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
