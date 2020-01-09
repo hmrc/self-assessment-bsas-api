@@ -13,7 +13,7 @@
   },
   "adjustments": {
     "incomes": {
-      "rentIncome": {"amount": 100.49},
+      "rentIncome": 100.49,
       "premiumsOfLeaseGrant": 100.49,
       "reversePremiums": 100.49,
       "otherPropertyIncome": 100.49
