@@ -16,15 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
-
-import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 
 class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       |   "adjustments" : {
       |     "income": {
@@ -36,7 +35,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
     """.stripMargin
   )
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       | "turnover": 100.49,
       | "other": 100.49

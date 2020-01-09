@@ -16,22 +16,22 @@
 
 package v1.connectors
 
-import javax.inject.{Inject, Singleton}
 import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.models.response.retrieveBsasAdjustments.RetrieveUkPropertyAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
-                                                          val appConfig: AppConfig) extends BaseDesConnector {
+class RetrieveUkPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
+                                                       val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveSelfEmploymentAdjustments(request: RetrieveAdjustmentsRequestData)(
+  def retrieveUkPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
+                                       ec: ExecutionContext): Future[DesOutcome[RetrieveUkPropertyAdjustmentsResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -39,7 +39,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveSelfEmploymentAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
+      DesUri[RetrieveUkPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
     )
   }
 }

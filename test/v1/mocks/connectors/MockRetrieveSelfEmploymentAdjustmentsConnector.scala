@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, RetrieveSelfEmploymentAdjustmentsConnector}
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +32,7 @@ trait MockRetrieveSelfEmploymentAdjustmentsConnector extends MockFactory {
 
   object MockRetrieveSelfEmploymentAdjustmentsConnector{
     def retrieveSelfEmploymentAdjustments(requestData: RetrieveAdjustmentsRequestData):
-    CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentResponse]]] = {
+    CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
       (mockConnector
         .retrieveSelfEmploymentAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)

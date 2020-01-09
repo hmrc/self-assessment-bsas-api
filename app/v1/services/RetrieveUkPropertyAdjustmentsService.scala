@@ -32,7 +32,7 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentAdjustmentsService @Inject()(connector: RetrieveSelfEmploymentAdjustmentsConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveSelfEmploymentAdjustmentsConnector) extends DesResponseMappingSupport with Logging {
 
   def retrieveSelfEmploymentsAdjustments(request: RetrieveAdjustmentsRequestData)(
                                         implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
