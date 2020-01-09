@@ -58,7 +58,7 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
     }
 
     "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap(retrieveBsasResponseModelAdjustable, RetrieveSelfAssessmentsAdjustmentHateoasData(nino, bsasId)) shouldBe
+      hateoasFactory.wrap(retrieveBsasResponseModelAdjustable, RetrieveSelfAssessmentBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
           retrieveBsasResponseModelAdjustable,
           Seq(

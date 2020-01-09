@@ -16,31 +16,30 @@
 
 package v1.controllers
 
-import javax.inject.{Inject, Singleton}
-
 import cats.data.EitherT
 import cats.implicits._
+import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
-import v1.controllers.requestParsers.RetrieveSelfEmploymentRequestParser
+import v1.controllers.requestParsers.RetrieveSelfEmploymentAdjustmentsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
-import v1.models.request.RetrieveSelfEmploymentBsasRawData
-import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentBsasService}
+import v1.models.request.RetrieveSelfEmploymentAdjustmentsRawData
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfAssessmentAdjustmentsHateoasData
+import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentAdjustmentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasController @Inject()(
-                                                      val authService: EnrolmentsAuthService,
-                                                      val lookupService: MtdIdLookupService,
-                                                      requestParser: RetrieveSelfEmploymentRequestParser,
-                                                      service: RetrieveSelfEmploymentBsasService,
-                                                      hateoasFactory: HateoasFactory,
-                                                      cc: ControllerComponents
+class RetrieveSelfEmploymentAdjustmentsController @Inject()(
+                                                             val authService: EnrolmentsAuthService,
+                                                             val lookupService: MtdIdLookupService,
+                                                             requestParser: RetrieveSelfEmploymentAdjustmentsRequestParser,
+                                                             service: RetrieveSelfEmploymentAdjustmentsService,
+                                                             hateoasFactory: HateoasFactory,
+                                                             cc: ControllerComponents
                                                     )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
@@ -49,21 +48,21 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveSelfEmploymentBsasController",
+      controllerName = "RetrieveSelfEmploymentAdjustmentsController",
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, bsasId: String, adjustedStatus: Option[String]): Action[AnyContent] =
+  def retrieve(nino: String, bsasId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedStatus)
+      val rawData = RetrieveSelfEmploymentAdjustmentsRawData(nino, bsasId)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
+          response <- EitherT(service.retrieveSelfEmploymentsAdjustments(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
-              RetrieveSelfAssessmentBsasHateoasData(nino, bsasId)).asRight[ErrorWrapper])
+              RetrieveSelfAssessmentAdjustmentsHateoasData(nino, bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -82,8 +81,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | AdjustedStatusFormatError |
-           BsasIdFormatError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | BsasIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case RuleNotSelfEmployment | RuleNoAdjustmentsMade  => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

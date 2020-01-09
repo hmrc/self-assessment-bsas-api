@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, RetrieveSelfEmploymentAdjustmentsConnector}
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
 import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.services.RetrieveSelfEmploymentAdjustmentsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveSelfEmploymentAdjustmentsConnector extends MockFactory {
+trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
 
-  val mockConnector: RetrieveSelfEmploymentAdjustmentsConnector = mock[RetrieveSelfEmploymentAdjustmentsConnector]
+  val mockService: RetrieveSelfEmploymentAdjustmentsService = mock[RetrieveSelfEmploymentAdjustmentsService]
 
+  object MockRetrieveSelfEmploymentBsasService {
 
-  object MockRetrieveSelfEmploymentAdjustmentsConnector{
-    def retrieveSelfEmploymentAdjustments(requestData: RetrieveSelfEmploymentAdjustmentsRequestData):
-    CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
-      (mockConnector
-        .retrieveSelfEmploymentAdjustments(_: RetrieveSelfEmploymentAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+    def retrieveAdjustments(requestData: RetrieveSelfEmploymentAdjustmentsRequestData):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
+      (mockService.retrieveSelfEmploymentsAdjustments(_: RetrieveSelfEmploymentAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
     }
   }
 }
