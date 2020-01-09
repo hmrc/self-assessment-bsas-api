@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.models.errors.{BsasIdFormatError, NinoFormatError}
-import v1.models.request.RetrieveSelfEmploymentAdjustmentsRawData
+import v1.models.request.RetrieveAdjustmentsRawData
 
 class RetrieveSelfEmploymentAdjustmentsValidatorSpec extends UnitSpec {
 
@@ -32,23 +32,23 @@ class RetrieveSelfEmploymentAdjustmentsValidatorSpec extends UnitSpec {
   "validator" should {
     "return no errors" when {
       "passed valid raw data" in {
-        val input = RetrieveSelfEmploymentAdjustmentsRawData(validNino, validBsasId)
+        val input = RetrieveAdjustmentsRawData(validNino, validBsasId)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveSelfEmploymentAdjustmentsRawData(invalidNino, validBsasId)
+        val input = RetrieveAdjustmentsRawData(invalidNino, validBsasId)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed raw data with an invalid bsas id" in {
-        val input = RetrieveSelfEmploymentAdjustmentsRawData(validNino, invalidBsasId)
+        val input = RetrieveAdjustmentsRawData(validNino, invalidBsasId)
         validator.validate(input) shouldBe List(BsasIdFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveSelfEmploymentAdjustmentsRawData(invalidNino, invalidBsasId)
+        val input = RetrieveAdjustmentsRawData(invalidNino, invalidBsasId)
         validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError)
       }
     }
