@@ -19,21 +19,21 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, RetrieveSelfEmploymentAdjustmentsConnector}
+import v1.connectors.{DesOutcome, RetrieveUkPropertyAdjustmentsConnector}
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.models.response.retrieveBsasAdjustments.RetrieveUkPropertyAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveSelfEmploymentAdjustmentsConnector extends MockFactory {
+trait MockRetrieveUkPropertyAdjustmentsConnector extends MockFactory {
 
-  val mockConnector: RetrieveSelfEmploymentAdjustmentsConnector = mock[RetrieveSelfEmploymentAdjustmentsConnector]
+  val mockConnector: RetrieveUkPropertyAdjustmentsConnector = mock[RetrieveUkPropertyAdjustmentsConnector]
 
-  object MockRetrieveSelfEmploymentAdjustmentsConnector{
-    def retrieveSelfEmploymentAdjustments(requestData: RetrieveAdjustmentsRequestData):
-    CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
+  object MockRetrieveUkPropertyAdjustmentsConnector {
+    def retrieveUkPropertyAdjustments(requestData: RetrieveAdjustmentsRequestData):
+    CallHandler[Future[DesOutcome[RetrieveUkPropertyAdjustmentsResponse]]] = {
       (mockConnector
-        .retrieveSelfEmploymentAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
+        .retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)
     }
   }
