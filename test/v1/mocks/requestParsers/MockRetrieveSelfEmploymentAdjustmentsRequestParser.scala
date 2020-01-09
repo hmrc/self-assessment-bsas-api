@@ -18,18 +18,18 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.RetrieveSelfEmploymentAdjustmentsRequestParser
+import v1.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v1.models.errors.ErrorWrapper
-import v1.models.request.{RetrieveSelfEmploymentAdjustmentsRawData, RetrieveSelfEmploymentAdjustmentsRequestData}
+import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
 trait MockRetrieveSelfEmploymentAdjustmentsRequestParser extends MockFactory {
 
-  val mockRequestParser: RetrieveSelfEmploymentAdjustmentsRequestParser = mock[RetrieveSelfEmploymentAdjustmentsRequestParser]
+  val mockRequestParser: RetrieveAdjustmentsRequestParser = mock[RetrieveAdjustmentsRequestParser]
 
   object MockRetrieveSelfEmploymentAdjustmentsRequestParser {
 
-    def parse(data: RetrieveSelfEmploymentAdjustmentsRawData): CallHandler[Either[ErrorWrapper, RetrieveSelfEmploymentAdjustmentsRequestData]] = {
-      (mockRequestParser.parseRequest(_: RetrieveSelfEmploymentAdjustmentsRawData)).expects(data)
+    def parse(data: RetrieveAdjustmentsRawData): CallHandler[Either[ErrorWrapper, RetrieveAdjustmentsRequestData]] = {
+      (mockRequestParser.parseRequest(_: RetrieveAdjustmentsRawData)).expects(data)
     }
   }
 }

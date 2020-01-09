@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
+import v1.models.request.RetrieveAdjustmentsRequestData
 import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
 import v1.services.RetrieveSelfEmploymentAdjustmentsService
 
@@ -34,9 +34,9 @@ trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
 
   object MockRetrieveSelfEmploymentBsasService {
 
-    def retrieveAdjustments(requestData: RetrieveSelfEmploymentAdjustmentsRequestData):
+    def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
-      (mockService.retrieveSelfEmploymentsAdjustments(_: RetrieveSelfEmploymentAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+      (mockService.retrieveSelfEmploymentsAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
     }
   }

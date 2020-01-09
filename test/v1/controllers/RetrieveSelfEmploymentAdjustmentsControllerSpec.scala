@@ -28,7 +28,7 @@ import v1.models.errors._
 import v1.models.hateoas.Method.{GET, POST}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{RetrieveSelfEmploymentAdjustmentsRawData, RetrieveSelfEmploymentAdjustmentsRequestData}
+import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 import v1.models.response.retrieveBsasAdjustments.RetrieveSelfAssessmentAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -61,8 +61,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
   private val correlationId = "X-123"
   private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request = RetrieveSelfEmploymentAdjustmentsRequestData(Nino(nino), bsasId)
-  private val requestRawData = RetrieveSelfEmploymentAdjustmentsRawData(nino, bsasId)
+  private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
+  private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
   val testHateoasLinkSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
     method = GET, rel = "retrieve-adjustable-summary")

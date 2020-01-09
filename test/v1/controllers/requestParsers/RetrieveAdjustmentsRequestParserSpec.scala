@@ -18,27 +18,27 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockRetrieveSelfEmploymentAdjustmentsValidator
+import v1.mocks.validators.MockRetrieveAdjustmentsValidator
 import v1.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
-import v1.models.request.{RetrieveSelfEmploymentAdjustmentsRawData, RetrieveSelfEmploymentAdjustmentsRequestData}
+import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
-class RetrieveSelfEmploymentAdjustmentsRequestParserSpec extends UnitSpec {
+class RetrieveAdjustmentsRequestParserSpec extends UnitSpec {
 
-  trait Test extends MockRetrieveSelfEmploymentAdjustmentsValidator {
-    lazy val parser = new RetrieveSelfEmploymentAdjustmentsRequestParser(mockValidator)
+  trait Test extends MockRetrieveAdjustmentsValidator {
+    lazy val parser = new RetrieveAdjustmentsRequestParser(mockValidator)
   }
 
   val nino = "AA123456A"
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("true")
 
-  val inputRawData = RetrieveSelfEmploymentAdjustmentsRawData(nino, bsasId)
-  val outputRequestData = RetrieveSelfEmploymentAdjustmentsRequestData(Nino(nino), bsasId)
+  val inputRawData = RetrieveAdjustmentsRawData(nino, bsasId)
+  val outputRequestData = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
 
   "parser" should {
     "return a valid request object" when {
       "passed a valid raw data object" in new Test {
-        val input: RetrieveSelfEmploymentAdjustmentsRawData = inputRawData
+        val input: RetrieveAdjustmentsRawData = inputRawData
         MockValidator.validate(input).returns(List())
         parser.parseRequest(input) shouldBe Right(outputRequestData)
       }

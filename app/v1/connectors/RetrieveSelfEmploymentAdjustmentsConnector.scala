@@ -20,8 +20,8 @@ import javax.inject.{Inject, Singleton}
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.RetrieveSelfEmploymentAdjustmentsRequestData
 import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.models.request.RetrieveAdjustmentsRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
                                                           val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveSelfEmploymentAdjustments(request: RetrieveSelfEmploymentAdjustmentsRequestData)(
+  def retrieveSelfEmploymentAdjustments(request: RetrieveAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
                                        ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
 

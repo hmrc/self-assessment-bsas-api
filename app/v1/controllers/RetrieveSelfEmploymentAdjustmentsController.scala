@@ -23,10 +23,10 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
-import v1.controllers.requestParsers.RetrieveSelfEmploymentAdjustmentsRequestParser
+import v1.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
-import v1.models.request.RetrieveSelfEmploymentAdjustmentsRawData
+import v1.models.request.RetrieveAdjustmentsRawData
 import v1.models.response.retrieveBsasAdjustments.RetrieveSelfAssessmentAdjustmentsHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentAdjustmentsService}
 
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveSelfEmploymentAdjustmentsController @Inject()(
                                                              val authService: EnrolmentsAuthService,
                                                              val lookupService: MtdIdLookupService,
-                                                             requestParser: RetrieveSelfEmploymentAdjustmentsRequestParser,
+                                                             requestParser: RetrieveAdjustmentsRequestParser,
                                                              service: RetrieveSelfEmploymentAdjustmentsService,
                                                              hateoasFactory: HateoasFactory,
                                                              cc: ControllerComponents
@@ -55,7 +55,7 @@ class RetrieveSelfEmploymentAdjustmentsController @Inject()(
   def retrieve(nino: String, bsasId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawData = RetrieveSelfEmploymentAdjustmentsRawData(nino, bsasId)
+      val rawData = RetrieveAdjustmentsRawData(nino, bsasId)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))

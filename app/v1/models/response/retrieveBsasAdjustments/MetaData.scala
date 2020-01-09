@@ -28,8 +28,7 @@ case class Metadata(typeOfBusiness: TypeOfBusiness,
                     taxYear: String,
                     requestedDateTime: String,
                     bsasId: String,
-                    summaryStatus: String,
-                    adjustedSummary: Boolean)
+                    summaryStatus: String)
 
 object Metadata {
 
@@ -40,11 +39,7 @@ object Metadata {
       (JsPath \ "metadata" \ "taxYear").read[String].map(DesTaxYear.fromDes) and
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
-      (JsPath \ "metadata" \ "status").read[String] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
-        case Some(_) => true
-        case _       => false
-      }
+      (JsPath \ "metadata" \ "status").read[String]
     )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
