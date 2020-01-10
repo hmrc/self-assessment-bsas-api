@@ -20,8 +20,8 @@ import javax.inject.{Inject, Singleton}
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +31,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
 
   def retrieveSelfEmploymentAdjustments(request: RetrieveAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentResponse]] = {
+                                       ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -39,7 +39,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveSelfEmploymentAdjustmentResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
+      DesUri[RetrieveSelfEmploymentAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
     )
   }
 }

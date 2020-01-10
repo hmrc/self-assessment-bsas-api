@@ -22,9 +22,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
 import v1.models.outcomes.ResponseWrapper
+
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentResponse
-import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,7 +41,7 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends UnitSpec {
 
   val request = RetrieveAdjustmentsRequestData(nino, id)
 
-  val response = RetrieveSelfEmploymentAdjustmentResponse(metaDataModel, bsasDetailModel)
+  val response = RetrieveSelfEmploymentAdjustmentsResponse(metaDataModel, bsasDetailModel)
 
   trait Test extends MockRetrieveSelfEmploymentAdjustmentsConnector {
 

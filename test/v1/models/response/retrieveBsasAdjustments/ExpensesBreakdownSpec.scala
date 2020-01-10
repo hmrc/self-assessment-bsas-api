@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
 
-import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
 class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
 

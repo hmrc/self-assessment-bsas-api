@@ -16,46 +16,24 @@
 
 package v1.models.response.retrieveBsasAdjustments
 
-import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
-
 import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 
-class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
+class RetrieveSelfEmploymentAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
-    """{
-      |   "adjustments" : {
-      |     "income": {
-      |       "turnover": 100.49,
-      |       "other": 100.49
-      |     }
-      |   }
-      | }
-    """.stripMargin
-  )
-
-  val mtdJson = Json.parse(
-    """{
-      | "turnover": 100.49,
-      | "other": 100.49
-      | }
-    """.stripMargin
-  )
-
-  "IncomeBreakdown" when {
+  "RetrieveSelfEmploymentAdjustmentsResponse" when {
     "reading from valid JSON" should {
       "return the appropriate model" in {
 
-        desJson.as[IncomeBreakdown] shouldBe incomeModel
+        desJson.as[RetrieveSelfEmploymentAdjustmentsResponse] shouldBe retrieveSelfEmploymentAdjustmentResponseModel
       }
     }
 
     "writing to valid json" should {
       "return valid json" in {
 
-        incomeModel.toJson shouldBe mtdJson
+        retrieveSelfEmploymentAdjustmentResponseModel.toJson shouldBe mtdJson
       }
     }
   }

@@ -37,9 +37,9 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
 
-  implicit object RetrieveSelfAssessmentsAdjustmentHateoasFactory
-    extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentsAdjustmentHateoasData] {
-    override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentsAdjustmentHateoasData): Seq[Link] = {
+  implicit object RetrieveSelfAssessmentBsasHateoasFactory
+    extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentBsasHateoasData): Seq[Link] = {
       import data._
 
       Seq(
@@ -50,4 +50,4 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
   }
 }
 
-case class RetrieveSelfAssessmentsAdjustmentHateoasData(nino: String, bsasId: String) extends HateoasData
+case class RetrieveSelfAssessmentBsasHateoasData(nino: String, bsasId: String) extends HateoasData

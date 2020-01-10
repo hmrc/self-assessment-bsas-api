@@ -18,7 +18,7 @@ package v1.models.response.retrieveBsasAdjustments
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 import v1.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
@@ -36,9 +36,6 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |   "requestedDateTime" : "2019-10-14T11:33:27Z",
       |   "status" : "superseded"
-      | },
-      | "adjustedSummaryCalculation" : {
-      |
       | }
       |}
     """.stripMargin)
@@ -54,8 +51,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |   "taxYear": "2019-20",
       |   "requestedDateTime": "2019-10-14T11:33:27Z",
       |   "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |   "summaryStatus": "superseded",
-      |   "adjustedSummary": true
+      |   "summaryStatus": "superseded"
       |}
     """.stripMargin)
 

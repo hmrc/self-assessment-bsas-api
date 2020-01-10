@@ -20,31 +20,31 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
+import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
+import v1.mocks.requestParsers.MockRetrieveSelfEmploymentAdjustmentsRequestParser
+import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{GET, POST}
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
-import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
+import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
+import v1.models.response.retrieveBsasAdjustments.RetrieveSelfAssessmentAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
+class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
-  with MockRetrieveSelfEmploymentRequestParser
-  with MockRetrieveSelfEmploymentBsasService
+  with MockRetrieveSelfEmploymentAdjustmentsRequestParser
+  with MockRetrieveSelfEmploymentAdjustmentsService
   with MockHateoasFactory {
 
   trait Test {
     val hc = HeaderCarrier()
 
-    val controller = new RetrieveSelfEmploymentBsasController(
+    val controller = new RetrieveSelfEmploymentAdjustmentsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
@@ -60,39 +60,37 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
   private val nino = "AA123456A"
   private val correlationId = "X-123"
   private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val adjustedMtdStatus = Some("true")
-  private val adjustedDesStatus = Some("03")
 
-  private val request = RetrieveSelfEmploymentBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
-  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedMtdStatus)
+  private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
+  private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
-  val testHateoasLinkSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId",
+  val testHateoasLinkSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
+    method = GET, rel = "retrieve-adjustable-summary")
+
+  val testHateoasLinkAdjustSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
     method = GET, rel = "self")
-
-  val testHateoasLinkAdjustSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
-    method = POST, rel = "submit-summary-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for self-assessment with status OK" when {
       "a valid request supplied" in new Test {
 
-        MockRetrieveSelfEmploymentRequestParser
+        MockRetrieveSelfEmploymentAdjustmentsRequestParser
           .parse(requestRawData)
           .returns(Right(request))
 
         MockRetrieveSelfEmploymentBsasService
-          .retrieveBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModelAdjusted))))
+          .retrieveAdjustments(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSelfEmploymentAdjustmentResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseModelAdjusted, RetrieveSelfAssessmentBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(retrieveBsasResponseModelAdjusted , Seq(testHateoasLinkSelf, testHateoasLinkAdjustSubmit))
+          .wrap(retrieveSelfEmploymentAdjustmentResponseModel, RetrieveSelfAssessmentAdjustmentsHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(retrieveSelfEmploymentAdjustmentResponseModel , Seq(testHateoasLinkSubmit, testHateoasLinkAdjustSelf))
         )
 
-        val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))
+        contentAsJson(result) shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -102,11 +100,11 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockRetrieveSelfEmploymentRequestParser
+            MockRetrieveSelfEmploymentAdjustmentsRequestParser
               .parse(requestRawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -115,7 +113,6 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
         }
 
         val input = Seq(
-          (AdjustedStatusFormatError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (BsasIdFormatError, BAD_REQUEST)
         )
@@ -127,15 +124,15 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockRetrieveSelfEmploymentRequestParser
+            MockRetrieveSelfEmploymentAdjustmentsRequestParser
               .parse(requestRawData)
               .returns(Right(request))
 
             MockRetrieveSelfEmploymentBsasService
-              .retrieveBsas(request)
+              .retrieveAdjustments(request)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
