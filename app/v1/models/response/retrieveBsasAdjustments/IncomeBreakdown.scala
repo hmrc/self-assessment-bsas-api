@@ -18,16 +18,19 @@ package v1.models.response.retrieveBsasAdjustments
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import utils.NestedJsonReads
 
 
 case class IncomeBreakdown( turnover: Option[BigDecimal],
                             other: Option[BigDecimal])
 
-object IncomeBreakdown {
+object IncomeBreakdown extends NestedJsonReads {
+
+  val empty = IncomeBreakdown(None, None)
 
   implicit val reads: Reads[IncomeBreakdown] = (
-    (JsPath \ "adjustments" \ "income" \ "turnover").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "income" \ "other").readNullable[BigDecimal]
+    (JsPath \ "adjustments" \ "income" \ "turnover").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "income" \ "other").readNestedNullable[BigDecimal]
     )(IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
