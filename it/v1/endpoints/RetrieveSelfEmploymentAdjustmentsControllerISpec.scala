@@ -54,7 +54,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
     "return a valid response with status OK" when {
 
-      "valid request is made" in new Test {
+      "a valid response is received from des" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -68,6 +68,22 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
+      }
+
+      "a valid response without Additions details is received from des" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desJsonWithoutAdditions)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe Json.parse(hateoasResponseWithoutAdditionsSEAdjustments(nino, bsasId))
       }
     }
 

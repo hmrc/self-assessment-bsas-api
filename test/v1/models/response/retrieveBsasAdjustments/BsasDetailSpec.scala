@@ -70,6 +70,71 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
+  val desJsonWithoutAdditions = Json.parse(
+    """{
+      | "adjustments" : {
+      |    "income": {
+      |       "turnover": 100.49,
+      |       "other": 100.49
+      |    },
+      |    "expenses" : {
+      |     "costOfGoodsAllowable" : 100.49,
+      |     "paymentsToSubContractorsAllowable" :100.49,
+      |     "wagesAndStaffCostsAllowable" :100.49,
+      |     "carVanTravelExpensesAllowable" :100.49,
+      |     "premisesRunningCostsAllowable" :100.49,
+      |     "maintenanceCostsAllowable" :100.49,
+      |     "adminCostsAllowable" :100.49,
+      |     "advertisingCostsAllowable" :100.49,
+      |     "businessEntertainmentCostsAllowable" :100.49,
+      |     "interestOnBankOtherLoansAllowable" :100.49,
+      |     "financeChargesAllowable" :100.49,
+      |     "irrecoverableDebtsAllowable" :100.49,
+      |     "professionalFeesAllowable" :100.49,
+      |     "depreciationAllowable" :100.49,
+      |     "otherExpensesAllowable" :100.49,
+      |     "consolidatedExpenses" :100.49
+      |   }
+      | }
+      |}
+    """.stripMargin)
+
+  val desJsonWithoutExpenses = Json.parse(
+    """{
+      | "adjustments" : {
+      |    "income": {
+      |       "turnover": 100.49,
+      |       "other": 100.49
+      |    },
+      |   "additions" :{
+      |     "costOfGoodsDisallowable" : 100.49,
+      |     "paymentsToSubContractorsDisallowable" : 100.49,
+      |     "wagesAndStaffCostsDisallowable" : 100.49,
+      |     "carVanTravelExpensesDisallowable" : 100.49,
+      |     "premisesRunningCostsDisallowable" : 100.49,
+      |     "maintenanceCostsDisallowable" : 100.49,
+      |     "adminCostsDisallowable" : 100.49,
+      |     "advertisingCostsDisallowable" : 100.49,
+      |     "businessEntertainmentCostsDisallowable" : 100.49,
+      |     "interestOnBankOtherLoansDisallowable" : 100.49,
+      |     "financeChargesDisallowable" : 100.49,
+      |     "irrecoverableDebtsDisallowable" : 100.49,
+      |     "professionalFeesDisallowable" : 100.49,
+      |     "depreciationDisallowable" : 100.49,
+      |     "otherExpensesDisallowable" : 100.49
+      |   }
+      | }
+      |}
+    """.stripMargin)
+
+  val desJsonWithNoAdjustments = Json.parse(
+    """{
+      | "adjustments" : {
+      |
+      | }
+      |}
+    """.stripMargin)
+
   val mtdJson = Json.parse(
     """
       | {
@@ -119,6 +184,18 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
     "reading from valid JSON" should {
       "return the appropriate model" in {
         desJson.as[BsasDetail] shouldBe bsasDetailModel
+      }
+
+      "return the appropriate model when adjustments have no additions" in {
+        desJsonWithoutAdditions.as[BsasDetail] shouldBe bsasDetailModel.copy(additions = None)
+      }
+
+      "return the appropriate model when adjustments have no expenses" in {
+        desJsonWithoutExpenses.as[BsasDetail] shouldBe bsasDetailModel.copy(expenses = None)
+      }
+
+      "return the appropriate model with no adjustments" in {
+        desJsonWithNoAdjustments.as[BsasDetail] shouldBe BsasDetail(None, None, None)
       }
     }
 

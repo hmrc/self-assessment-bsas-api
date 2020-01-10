@@ -18,6 +18,7 @@ package v1.models.response.retrieveBsasAdjustments
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import utils.NestedJsonReads
 
 case class ExpensesBreakdown(
                               costOfGoodsBought: Option[BigDecimal],
@@ -38,25 +39,27 @@ case class ExpensesBreakdown(
                               consolidatedExpenses: Option[BigDecimal]
                             )
 
-object ExpensesBreakdown {
+object ExpensesBreakdown extends NestedJsonReads {
+
+  val empty = ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   implicit val reads: Reads[ExpensesBreakdown] = (
-    (JsPath \ "adjustments" \ "expenses" \ "costOfGoodsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "paymentsToSubContractorsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "wagesAndStaffCostsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "carVanTravelExpensesAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "premisesRunningCostsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "maintenanceCostsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "adminCostsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "advertisingCostsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "businessEntertainmentCostsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "interestOnBankOtherLoansAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "financeChargesAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "irrecoverableDebtsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "professionalFeesAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "depreciationAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "otherExpensesAllowable").readNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "consolidatedExpenses").readNullable[BigDecimal]
+    (JsPath \ "adjustments" \ "expenses" \ "costOfGoodsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "paymentsToSubContractorsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "wagesAndStaffCostsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "carVanTravelExpensesAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "premisesRunningCostsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "maintenanceCostsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "adminCostsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "advertisingCostsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "businessEntertainmentCostsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "interestOnBankOtherLoansAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "financeChargesAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "irrecoverableDebtsAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "professionalFeesAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "depreciationAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "otherExpensesAllowable").readNestedNullable[BigDecimal] and
+      (JsPath \ "adjustments" \ "expenses" \ "consolidatedExpenses").readNestedNullable[BigDecimal]
     ) (ExpensesBreakdown.apply _)
 
   implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]

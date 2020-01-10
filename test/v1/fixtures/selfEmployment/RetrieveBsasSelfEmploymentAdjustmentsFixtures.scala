@@ -161,6 +161,47 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
       |}
     """.stripMargin)
 
+  val desJsonWithoutAdditions = Json.parse(
+    """{
+      | "inputs": {
+      |   "incomeSourceType" : "01",
+      |   "incomeSourceId" : "000000000000210",
+      |   "accountingPeriodStartDate" : "2018-10-11",
+      |   "accountingPeriodEndDate" : "2019-10-10"
+      | },
+      | "metadata": {
+      |   "taxYear" : "2020",
+      |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |   "requestedDateTime" : "2019-10-14T11:33:27Z",
+      |   "status" : "superseded"
+      | },
+      | "adjustments" : {
+      |    "income": {
+      |       "turnover": 100.49,
+      |       "other": 100.49
+      |    },
+      |    "expenses" : {
+      |     "costOfGoodsAllowable" : 100.49,
+      |     "paymentsToSubContractorsAllowable" :100.49,
+      |     "wagesAndStaffCostsAllowable" :100.49,
+      |     "carVanTravelExpensesAllowable" :100.49,
+      |     "premisesRunningCostsAllowable" :100.49,
+      |     "maintenanceCostsAllowable" :100.49,
+      |     "adminCostsAllowable" :100.49,
+      |     "advertisingCostsAllowable" :100.49,
+      |     "businessEntertainmentCostsAllowable" :100.49,
+      |     "interestOnBankOtherLoansAllowable" :100.49,
+      |     "financeChargesAllowable" :100.49,
+      |     "irrecoverableDebtsAllowable" :100.49,
+      |     "professionalFeesAllowable" :100.49,
+      |     "depreciationAllowable" :100.49,
+      |     "otherExpensesAllowable" :100.49,
+      |     "consolidatedExpenses" :100.49
+      |   }
+      | }
+      |}
+    """.stripMargin)
+
   val desJsonWithWrongTypeOfBusiness = Json.parse(
     """{
       | "inputs": {
@@ -275,6 +316,57 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
        |         "professionalFeesDisallowable": 100.49,
        |         "depreciationDisallowable": 100.49,
        |         "otherDisallowable": 100.49
+       |      }
+       |   },
+       |	"links": [{
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
+       |		"method": "GET",
+       |		"rel": "retrieve-adjustable-summary"
+       |	}, {
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
+       |		"method": "GET",
+       |		"rel": "self"
+       |	}]
+       |}
+    """.stripMargin
+
+  val hateoasResponseWithoutAdditionsSEAdjustments = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |   "metadata": {
+       |      "typeOfBusiness": "self-employment",
+       |      "selfEmploymentId": "000000000000210",
+       |      "accountingPeriod": {
+       |         "startDate": "2018-10-11",
+       |         "endDate": "2019-10-10"
+       |      },
+       |      "taxYear": "2019-20",
+       |      "requestedDateTime": "2019-10-14T11:33:27Z",
+       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       |      "summaryStatus": "superseded"
+       |   },
+       |   "adjustments": {
+       |      "income": {
+       |         "turnover": 100.49,
+       |         "other": 100.49
+       |      },
+       |      "expenses": {
+       |         "costOfGoodsBought": 100.49,
+       |         "cisPaymentsToSubcontractors": 100.49,
+       |         "staffCosts": 100.49,
+       |         "travelCosts": 100.49,
+       |         "premisesRunningCosts": 100.49,
+       |         "maintenanceCosts": 100.49,
+       |         "adminCosts": 100.49,
+       |         "advertisingCosts": 100.49,
+       |         "businessEntertainmentCosts": 100.49,
+       |         "interest": 100.49,
+       |         "financialCharges": 100.49,
+       |         "badDebt": 100.49,
+       |         "professionalFees": 100.49,
+       |         "depreciation": 100.49,
+       |         "other": 100.49,
+       |         "consolidatedExpenses" :100.49
        |      }
        |   },
        |	"links": [{
