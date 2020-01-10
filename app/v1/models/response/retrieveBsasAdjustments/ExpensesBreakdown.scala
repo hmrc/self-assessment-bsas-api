@@ -41,25 +41,23 @@ case class ExpensesBreakdown(
 
 object ExpensesBreakdown extends NestedJsonReads {
 
-  val empty = ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
-
   implicit val reads: Reads[ExpensesBreakdown] = (
-    (JsPath \ "adjustments" \ "expenses" \ "costOfGoodsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "paymentsToSubContractorsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "wagesAndStaffCostsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "carVanTravelExpensesAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "premisesRunningCostsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "maintenanceCostsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "adminCostsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "advertisingCostsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "businessEntertainmentCostsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "interestOnBankOtherLoansAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "financeChargesAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "irrecoverableDebtsAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "professionalFeesAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "depreciationAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "otherExpensesAllowable").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "expenses" \ "consolidatedExpenses").readNestedNullable[BigDecimal]
+    (JsPath \ "costOfGoodsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "paymentsToSubContractorsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "wagesAndStaffCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "carVanTravelExpensesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "premisesRunningCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "maintenanceCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "adminCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "advertisingCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "businessEntertainmentCostsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "interestOnBankOtherLoansAllowable").readNullable[BigDecimal] and
+      (JsPath \ "financeChargesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "irrecoverableDebtsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "professionalFeesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "depreciationAllowable").readNullable[BigDecimal] and
+      (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
+      (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
     ) (ExpensesBreakdown.apply _)
 
   implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]

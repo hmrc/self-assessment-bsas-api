@@ -41,7 +41,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
 
   val metaDataModel = Metadata(TypeOfBusiness.`self-employment`, Some("000000000000210"),
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
-    "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded")
+    "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", true)
 
   val mtdJson = Json.parse(
     """
@@ -56,7 +56,8 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
       |      "taxYear": "2019-20",
       |      "requestedDateTime": "2019-10-14T11:33:27Z",
       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |      "summaryStatus": "superseded"
+      |      "summaryStatus": "superseded",
+      |      "adjustedSummary": true
       |   },
       |   "adjustments": {
       |      "income": {
@@ -275,7 +276,8 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
        |      "taxYear": "2019-20",
        |      "requestedDateTime": "2019-10-14T11:33:27Z",
        |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-       |      "summaryStatus": "superseded"
+       |      "summaryStatus": "superseded",
+       |      "adjustedSummary": true
        |   },
        |   "adjustments": {
        |      "income": {
@@ -343,7 +345,8 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
        |      "taxYear": "2019-20",
        |      "requestedDateTime": "2019-10-14T11:33:27Z",
        |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-       |      "summaryStatus": "superseded"
+       |      "summaryStatus": "superseded",
+       |      "adjustedSummary": true
        |   },
        |   "adjustments": {
        |      "income": {

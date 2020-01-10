@@ -26,13 +26,10 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   val desJson = Json.parse(
     """{
-      |   "adjustments" : {
-      |     "income": {
-      |       "turnover": 100.49,
-      |       "other": 100.49
-      |     }
-      |   }
-      | }
+      |
+      |   "turnover": 100.49,
+      |   "other": 100.49
+      |}
     """.stripMargin
   )
 
