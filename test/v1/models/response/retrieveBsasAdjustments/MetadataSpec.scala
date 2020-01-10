@@ -51,7 +51,8 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |   "taxYear": "2019-20",
       |   "requestedDateTime": "2019-10-14T11:33:27Z",
       |   "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |   "summaryStatus": "superseded"
+      |   "summaryStatus": "superseded",
+      |   "adjustedSummary": true
       |}
     """.stripMargin)
 

@@ -26,11 +26,9 @@ case class IncomeBreakdown( turnover: Option[BigDecimal],
 
 object IncomeBreakdown extends NestedJsonReads {
 
-  val empty = IncomeBreakdown(None, None)
-
   implicit val reads: Reads[IncomeBreakdown] = (
-    (JsPath \ "adjustments" \ "income" \ "turnover").readNestedNullable[BigDecimal] and
-      (JsPath \ "adjustments" \ "income" \ "other").readNestedNullable[BigDecimal]
+    (JsPath \ "turnover").readNullable[BigDecimal] and
+      (JsPath \ "other").readNullable[BigDecimal]
     )(IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]

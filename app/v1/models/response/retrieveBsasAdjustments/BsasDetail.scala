@@ -25,18 +25,9 @@ case class BsasDetail(income: Option[IncomeBreakdown],
 
 object BsasDetail {
   implicit val reads: Reads[BsasDetail] = (
-    JsPath.readNullable[IncomeBreakdown].map {
-      case Some(IncomeBreakdown.empty) => None
-      case other => other
-    } and
-      JsPath.readNullable[ExpensesBreakdown].map {
-        case Some(ExpensesBreakdown.empty) => None
-        case other => other
-      } and
-      JsPath.readNullable[AdditionsBreakdown].map {
-        case Some(AdditionsBreakdown.empty) => None
-        case other => other
-      }
+    (JsPath \ "adjustments" \ "income").readNullable[IncomeBreakdown] and
+    (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown] and
+      (JsPath \ "adjustments" \ "additions").readNullable[AdditionsBreakdown]
     ) (BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
