@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsasAdjustments
+package v1.models.response.retrieveBsasAdjustments.ukProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BsasDetail(income: Option[IncomeBreakdown],
-                      expenses: Option[ExpensesBreakdown],
-                      additions: Option[AdditionsBreakdown])
+case class BsasDetail (incomes: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown])
 
 object BsasDetail {
+
   implicit val reads: Reads[BsasDetail] = (
-    (JsPath \ "adjustments" \ "income").readNullable[IncomeBreakdown] and
-    (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown] and
-      (JsPath \ "adjustments" \ "additions").readNullable[AdditionsBreakdown]
+    (JsPath   \ "adjustments" \ "incomes").readNullable[IncomeBreakdown] and
+      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown]
     ) (BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]

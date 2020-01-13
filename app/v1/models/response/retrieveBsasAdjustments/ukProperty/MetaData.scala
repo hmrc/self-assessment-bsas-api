@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsasAdjustments
+package v1.models.response.retrieveBsasAdjustments.ukProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -41,7 +41,10 @@ object Metadata {
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and
-      Reads.pure(true)
+      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
+        case Some(_) => true
+        case _       => false
+      }
     )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]

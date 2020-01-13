@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveBsasAdjustments
+package v1.models.response.retrieveBsasAdjustments.selfEmployment
 
 import support.UnitSpec
-import v1.models.utils.JsonErrorValidators
 import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.models.utils.JsonErrorValidators
 
 class RetrieveSelfEmploymentAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 

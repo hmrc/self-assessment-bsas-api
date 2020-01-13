@@ -17,11 +17,12 @@
 package v1.connectors
 
 import javax.inject.{Inject, Singleton}
+
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfEmploymentAdjustmentsResponse
 import v1.models.request.RetrieveAdjustmentsRequestData
+import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

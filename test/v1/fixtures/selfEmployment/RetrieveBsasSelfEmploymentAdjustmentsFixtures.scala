@@ -22,6 +22,7 @@ import play.api.libs.json.Json
 import v1.models.domain.TypeOfBusiness
 import v1.models.response.retrieveBsas.AccountingPeriod
 import v1.models.response.retrieveBsasAdjustments._
+import v1.models.response.retrieveBsasAdjustments.selfEmployment._
 
 object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
 

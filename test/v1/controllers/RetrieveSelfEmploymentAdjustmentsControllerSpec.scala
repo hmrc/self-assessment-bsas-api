@@ -29,7 +29,7 @@ import v1.models.hateoas.Method.{GET, POST}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfAssessmentAdjustmentsHateoasData
+import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfAssessmentAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

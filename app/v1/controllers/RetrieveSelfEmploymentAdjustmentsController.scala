@@ -19,6 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import cats.implicits._
 import javax.inject.{Inject, Singleton}
+
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -27,7 +28,7 @@ import v1.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.RetrieveAdjustmentsRawData
-import v1.models.response.retrieveBsasAdjustments.RetrieveSelfAssessmentAdjustmentsHateoasData
+import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfAssessmentAdjustmentsHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentAdjustmentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
