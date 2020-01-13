@@ -35,11 +35,11 @@ case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaint
     "consolidatedExpenses" -> consolidatedExpenses
   ).filterNot {case (_, v) => v.isEmpty }
 
-    def queryMap[A](as: Map[String, A]): Map[String, String] = as.map {
-    case (k: String, Some(v)) => (k, v.toString)
+    def queryMap[A](as: Map[String, A]): Map[String, BigDecimal] = as.map {
+    case (k: String, Some(v: BigDecimal)) => (k, v)
   }
 
-  val mappedPresentParams: Map[String, String] = queryMap(params)
+  val mappedPresentParams: Map[String, BigDecimal] = queryMap(params)
 }
 
 object FHLExpenses {

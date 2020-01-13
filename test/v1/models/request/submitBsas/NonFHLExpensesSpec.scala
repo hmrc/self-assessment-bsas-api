@@ -54,15 +54,15 @@ class NonFHLExpensesSpec extends UnitSpec{
   val requestJson: JsValue = Json.parse(
     """
       |{
-      |  "premisesRunningCosts": "-1000.49",
-      |  "repairsAndMaintenance": "1000.49",
-      |  "financialCosts": "1000.49",
-      |  "professionalFees": "1000.49",
-      |  "travelCosts": "1000.49",
-      |  "costOfServices": "-1000.49",
-      |  "residentialFinancialCost": "1000.49",
-      |  "other": "1000.49",
-      |    "consolidatedExpenses": "1000.49"
+      |  "premisesRunningCosts": -1000.49,
+      |  "repairsAndMaintenance": 1000.49,
+      |  "financialCosts": 1000.49,
+      |  "professionalFees": 1000.49,
+      |  "travelCosts": 1000.49,
+      |  "costOfServices": -1000.49,
+      |  "residentialFinancialCost": 1000.49,
+      |  "other": 1000.49,
+      |    "consolidatedExpenses": 1000.49
       |}
       |""".stripMargin
   )
@@ -70,13 +70,13 @@ class NonFHLExpensesSpec extends UnitSpec{
   val requestWithMissingValuesJson: JsValue = Json.parse(
     """
       |{
-      |  "repairsAndMaintenance": "1000.49",
-      |  "financialCosts": "1000.49",
-      |  "professionalFees": "1000.49",
-      |  "costOfServices": "-1000.49",
-      |  "residentialFinancialCost": "1000.49",
-      |  "other": "1000.49",
-      |  "consolidatedExpenses": "1000.49"
+      |  "repairsAndMaintenance": 1000.49,
+      |  "financialCosts": 1000.49,
+      |  "professionalFees": 1000.49,
+      |  "costOfServices": -1000.49,
+      |  "residentialFinancialCost": 1000.49,
+      |  "other": 1000.49,
+      |  "consolidatedExpenses": 1000.49
       |}
       |""".stripMargin
   )

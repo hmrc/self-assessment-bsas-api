@@ -65,21 +65,21 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
     """
       |{
       |      "income": {
-      |         "totalRentsReceived": "1000.49",
-      |         "premiumsOfLeaseGrant": "1000.49",
-      |         "reversePremiums": "1000.49",
-      |         "otherPropertyIncome": "1000.49"
+      |         "totalRentsReceived": 1000.49,
+      |         "premiumsOfLeaseGrant": 1000.49,
+      |         "reversePremiums": 1000.49,
+      |         "otherPropertyIncome": 1000.49
       |      },
       |      "expenses": {
-      |         "premisesRunningCosts": "-1000.49",
-      |         "repairsAndMaintenance": "1000.49",
-      |         "financialCosts": "1000.49",
-      |         "professionalFees": "1000.49",
-      |         "travelCosts": "1000.49",
-      |         "costOfServices": "-1000.49",
-      |         "residentialFinancialCost": "1000.49",
-      |         "other": "1000.49",
-      |         "consolidatedExpenses": "1000.49"
+      |         "premisesRunningCosts": -1000.49,
+      |         "repairsAndMaintenance": 1000.49,
+      |         "financialCosts": 1000.49,
+      |         "professionalFees": 1000.49,
+      |         "travelCosts": 1000.49,
+      |         "costOfServices": -1000.49,
+      |         "residentialFinancialCost": 1000.49,
+      |         "other": 1000.49,
+      |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)

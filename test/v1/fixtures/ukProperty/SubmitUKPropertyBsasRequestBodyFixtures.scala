@@ -79,21 +79,21 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |{
       |  "nonFurnishedHolidayLet": {
       |     "income": {
-      |       "totalRentsReceived": "1000.45",
-      |       "premiumsOfLeaseGrant": "1000.45",
-      |       "reversePremiums": "1000.45",
-      |       "otherPropertyIncome": "1000.45"
+      |       "totalRentsReceived": 1000.45,
+      |       "premiumsOfLeaseGrant": 1000.45,
+      |       "reversePremiums": 1000.45,
+      |       "otherPropertyIncome": 1000.45
       |     },
       |     "expenses": {
-      |       "premisesRunningCosts": "1000.45",
-      |       "repairsAndMaintenance": "1000.45",
-      |       "financialCosts": "1000.45",
-      |       "professionalFees": "1000.45",
-      |       "travelCosts": "1000.45",
-      |       "costOfServices": "1000.45",
-      |       "residentialFinancialCost": "1000.45",
-      |       "other": "1000.45",
-      |       "consolidatedExpenses": "1000.45"
+      |       "premisesRunningCosts": 1000.45,
+      |       "repairsAndMaintenance": 1000.45,
+      |       "financialCosts": 1000.45,
+      |       "professionalFees": 1000.45,
+      |       "travelCosts": 1000.45,
+      |       "costOfServices": 1000.45,
+      |       "residentialFinancialCost": 1000.45,
+      |       "other": 1000.45,
+      |       "consolidatedExpenses": 1000.45
       |     }
       |   }
       |}
@@ -218,17 +218,17 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |{
       | "furnishedHolidayLet": {
       |   "income": {
-      |     "totalRentsReceived": "1000.45"
+      |     "totalRentsReceived": 1000.45
       |   },
       |   "expenses": {
-      |     "premisesRunningCosts": "1000.45",
-      |     "repairsAndMaintenance": "1000.45",
-      |     "financialCosts": "1000.45",
-      |     "professionalFees": "1000.45",
-      |     "costOfServices": "1000.45",
-      |     "travelCosts": "1000.45",
-      |     "other": "1000.45",
-      |     "consolidatedExpenses": "1000.45"
+      |     "premisesRunningCosts": 1000.45,
+      |     "repairsAndMaintenance": 1000.45,
+      |     "financialCosts": 1000.45,
+      |     "professionalFees": 1000.45,
+      |     "costOfServices": 1000.45,
+      |     "travelCosts": 1000.45,
+      |     "other": 1000.45,
+      |     "consolidatedExpenses": 1000.45
       |   }
       | }
       |}
@@ -242,13 +242,13 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |     "rentIncome": "1000.45"
       |   },
       |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
+      |     "premisesRunningCosts": "1000.45",
       |     "repairsAndMaintenance": false,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
+      |     "financialCosts": "1000.45",
+      |     "professionalFees": "1000.45",
       |     "costOfServices": true,
-      |     "travelCosts": 1000.45,
-      |     "other": 1000.45,
+      |     "travelCosts": "1000.45",
+      |     "other": "1000.45",
       |     "consolidatedExpenses": "1000.45"
       |   }
       | }
@@ -263,10 +263,10 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
   ))
 
   val fhlMultipleInvalidExpenses: Option[JsObject] = Some(Json.obj(
-    "premisesRunningCosts" -> "100000000000.00",
-    "repairsAndMaintenance" -> "-100000000000.00",
-    "financialCosts" -> "1000230800000.00",
-    "professionalFees" -> "-2001200034500.00",
+    "premisesRunningCosts" -> 100000000000.00,
+    "repairsAndMaintenance" -> -100000000000.00,
+    "financialCosts" -> 1000230800000.00,
+    "professionalFees" -> -2001200034500.00,
     "costOfServices" -> 1000.45,
     "travelCosts" -> 1000.45,
     "other" -> 1000.45
@@ -442,17 +442,17 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |      },
        |      "adjustments":{
        |        "income":{
-       |          "rentReceived":"-1.23"
+       |          "rentReceived":-1.23
        |        },
        |        "expenses":{
-       |          "consolidatedExpenses":"-1.23",
-       |          "repairsAndMaintenance":"-1.23",
-       |          "financialCosts":"-1.23",
-       |          "professionalFees":"-1.23",
-       |          "costOfServices":"-1.23",
-       |          "travelCosts":"-1.23",
-       |          "other":"-1.23",
-       |          "premisesRunningCosts":"-1.23"
+       |          "consolidatedExpenses":-1.23,
+       |          "repairsAndMaintenance":-1.23,
+       |          "financialCosts":-1.23,
+       |          "professionalFees":-1.23,
+       |          "costOfServices":-1.23,
+       |          "travelCosts":-1.23,
+       |          "other":-1.23,
+       |          "premisesRunningCosts":-1.23
        |        }
        |      },
        |      "adjustedSummaryCalculation":{
