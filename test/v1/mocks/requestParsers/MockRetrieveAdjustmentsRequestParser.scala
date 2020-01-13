@@ -22,11 +22,11 @@ import v1.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v1.models.errors.ErrorWrapper
 import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
-trait MockRetrieveSelfEmploymentAdjustmentsRequestParser extends MockFactory {
+trait MockRetrieveAdjustmentsRequestParser extends MockFactory {
 
   val mockRequestParser: RetrieveAdjustmentsRequestParser = mock[RetrieveAdjustmentsRequestParser]
 
-  object MockRetrieveSelfEmploymentAdjustmentsRequestParser {
+  object MockRetrieveAdjustmentsRequestParser {
 
     def parse(data: RetrieveAdjustmentsRawData): CallHandler[Either[ErrorWrapper, RetrieveAdjustmentsRequestData]] = {
       (mockRequestParser.parseRequest(_: RetrieveAdjustmentsRawData)).expects(data)
