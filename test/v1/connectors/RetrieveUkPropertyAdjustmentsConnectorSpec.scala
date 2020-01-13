@@ -18,14 +18,14 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 
 import scala.concurrent.Future
 
-class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
+class RetrieveUkPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
@@ -33,8 +33,8 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
   val queryParams: Map[String, String] = Map("return" -> "02")
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: RetrieveSelfEmploymentAdjustmentsConnector =
-      new RetrieveSelfEmploymentAdjustmentsConnector( http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveUkPropertyAdjustmentsConnector =
+      new RetrieveUkPropertyAdjustmentsConnector( http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer-des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -42,7 +42,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "retrieveSelfEmploymentAdjustments" should {
+  "RetrieveUkPropertyAdjustments" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdJson))
 
@@ -55,7 +55,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
           requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
         ).returns(Future.successful(outcome))
 
-        await(connector.retrieveSelfEmploymentAdjustments(request)) shouldBe outcome
+        await(connector.retrieveUkPropertyAdjustments(request)) shouldBe outcome
       }
     }
   }
