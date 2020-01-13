@@ -16,16 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments.selfEmployment
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.models.utils.JsonErrorValidators
 
 class AdditionsBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
-
-
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       |     "costOfGoodsBoughtDisallowable": 100.49,
       |     "cisPaymentsToSubcontractorsDisallowable": 100.49,
@@ -45,7 +43,7 @@ class AdditionsBreakdownSpec extends UnitSpec with JsonErrorValidators {
       | }
     """.stripMargin)
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       |   "costOfGoodsDisallowable" : 100.49,
       |   "paymentsToSubContractorsDisallowable" : 100.49,

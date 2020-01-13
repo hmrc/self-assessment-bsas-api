@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveSelfEmploymentAdjustmentsRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
@@ -29,7 +29,7 @@ import v1.models.hateoas.Method.{GET, POST}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
-import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfAssessmentAdjustmentsHateoasData
+import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -83,7 +83,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSelfEmploymentAdjustmentResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveSelfEmploymentAdjustmentResponseModel, RetrieveSelfAssessmentAdjustmentsHateoasData(nino, bsasId))
+          .wrap(retrieveSelfEmploymentAdjustmentResponseModel, RetrieveSelfEmploymentAdjustmentsHateoasData(nino, bsasId))
           .returns(HateoasWrapper(retrieveSelfEmploymentAdjustmentResponseModel , Seq(testHateoasLinkSubmit, testHateoasLinkAdjustSelf))
         )
 
