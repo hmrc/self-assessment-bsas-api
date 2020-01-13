@@ -34,10 +34,10 @@ class NonFHLIncomeSpec extends UnitSpec {
   val requestJson: JsValue = Json.parse(
     """
       |{
-      | "totalRentsReceived": "1000.45",
-      | "premiumsOfLeaseGrant": "1000.45",
-      | "reversePremiums": "1000.45",
-      | "otherPropertyIncome": "1000.45"
+      | "totalRentsReceived": 1000.45,
+      | "premiumsOfLeaseGrant": 1000.45,
+      | "reversePremiums": 1000.45,
+      | "otherPropertyIncome": 1000.45
       |}
       |""".stripMargin)
 
