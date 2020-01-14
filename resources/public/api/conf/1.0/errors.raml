@@ -106,7 +106,7 @@ traits:
                   code: FORMAT_ADJUSTMENT_VALUE
   ruleNotSelfEmployment:
     responses:
-      400:
+      403:
         body:
           application/json:
             type: types.errorResponse
@@ -291,6 +291,17 @@ traits:
                 description: Adjustment to expenses where Property Income Allowance claimed
                 value:
                   code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
+  ruleIncorrectPropertyAdjusted:
+      responses:
+        403:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                ruleIncorrectPropertyAdjusted:
+                  description: An adjustment has been made to a BSAS ID that doesn't match the property type in the request
+                  value:
+                    code: RULE_INCORRECT_PROPERTY_ADJUSTED
   ruleNoAccountingPeriod:
     responses:
       403:
@@ -302,9 +313,9 @@ traits:
                 description: The supplied accounting period does not exist
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
-  ruleNoAdjustmentsMade:
+  ruleNoAdjustmentsMade404:
     responses:
-      400:
+      404:
         body:
           application/json:
             type: types.errorResponse
@@ -313,6 +324,17 @@ traits:
                 description: An adjusted calculation doesn't exist
                 value:
                   code: RULE_NO_ADJUSTMENTS_MADE
+  ruleNoAdjustmentsMade:
+      responses:
+        403:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                ruleNoAdjustmentsMade:
+                  description: An adjusted calculation doesn't exist
+                  value:
+                    code: RULE_NO_ADJUSTMENTS_MADE
   incorrectOrEmptyBodySubmitted:
     responses:
       400:
@@ -390,3 +412,4 @@ traits:
                 description: 'The client and/or agent is not authorised. This is normally because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf'
                 value:
                   code: CLIENT_OR_AGENT_NOT_AUTHORISED
+

@@ -1,12 +1,45 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve a Self Employment Business' Accounting Adjustments",
-  "description": "This endpoint allows the user to request the adjustments made to a specific Self Employment Business Source Adjustable Summary by quoting it's identifier.",
+  "title": "Retrieve a Self-Employment Business' Accounting Adjustments",
+  "description": "This endpoint allows the user to request the adjustments made to a specific Self-Employment Business Source Adjustable Summary by quoting it's identifier.",
   "type": "object",
   "properties": {
     "metadata": { "$ref": "metadata_definitions.json#/definitions/seMetadata"},
     "income": { "$ref": "adjustment_definitions.json#/definitions/seIncome"},
     "expenses": { "$ref": "adjustment_definitions.json#/definitions/seExpenses"},
-    "additions": { "$ref": "adjustment_definitions.json#/definitions/seAdditions"}
+    "additions": { "$ref": "adjustment_definitions.json#/definitions/seAdditions"},
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative url of the endpoint.",
+            "type": "string",
+            "example": "/individuals/self-assessment/adjustable-summary/AA123456A"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "retrieve-adjustable-summary"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
   }
 }

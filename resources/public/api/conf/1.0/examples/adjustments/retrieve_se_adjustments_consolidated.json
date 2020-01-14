@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "typeOfBusiness": "self-employment",
+    "selfEmploymentId": "X9IS98470026982",
+    "accountingPeriod": {
+      "startDate": "2018-10-11",
+      "endDate": "2019-10-10"
+    },
+    "taxYear": "2019-20",
+    "requestedDateTime": "2019-10-14T11:33:27Z",
+    "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    "summaryStatus": "superseded",
+    "adjustedSummary": true
+  },
+  "adjustments": {
+    "income": {
+      "turnover": 100.49,
+      "other": 100.49
+    },
+    "expenses": {
+      "consolidatedExpenses": 100.49
+    }
+  },
+  "links":[
+    {
+      "href": "/individuals/self-assessment/adjustable-summary/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4/adjust",
+      "rel": "self",
+      "method": "GET"
+    },
+    {
+      "href": "/individuals/self-assessment/adjustable-summary/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      "rel": "retrieve-adjustable-summary",
+      "method": "GET"
+    }
+  ]
+}
