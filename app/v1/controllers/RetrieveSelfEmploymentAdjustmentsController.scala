@@ -28,7 +28,7 @@ import v1.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.RetrieveAdjustmentsRawData
-import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfAssessmentAdjustmentsHateoasData
+import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentAdjustmentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -63,7 +63,7 @@ class RetrieveSelfEmploymentAdjustmentsController @Inject()(
           response <- EitherT(service.retrieveSelfEmploymentsAdjustments(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
-              RetrieveSelfAssessmentAdjustmentsHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
+              RetrieveSelfEmploymentAdjustmentsHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

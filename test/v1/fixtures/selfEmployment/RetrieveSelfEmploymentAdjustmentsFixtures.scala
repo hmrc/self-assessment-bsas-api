@@ -18,33 +18,84 @@ package v1.fixtures.selfEmployment
 
 import java.time.LocalDate
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import v1.models.domain.TypeOfBusiness
 import v1.models.response.retrieveBsas.AccountingPeriod
-import v1.models.response.retrieveBsasAdjustments._
 import v1.models.response.retrieveBsasAdjustments.selfEmployment._
 
-object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
+object RetrieveSelfEmploymentAdjustmentsFixtures {
 
-  val additionsBreakdownModel = AdditionsBreakdown(
-    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), Some(100.49))
+  val incomeModel: IncomeBreakdown =
+    IncomeBreakdown(
+      turnover = Some(100.49),
+      other = Some(100.49)
+    )
 
-  val expenseBreakdownModel = ExpensesBreakdown(
-    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49)
-  )
+  val expenseBreakdownModel: ExpensesBreakdown =
+    ExpensesBreakdown(
+      costOfGoodsBought = Some(100.49),
+      cisPaymentsToSubcontractors = Some(100.49),
+      staffCosts = Some(100.49),
+      travelCosts = Some(100.49),
+      premisesRunningCosts = Some(100.49),
+      maintenanceCosts = Some(100.49),
+      adminCosts = Some(100.49),
+      advertisingCosts = Some(100.49),
+      businessEntertainmentCosts = Some(100.49),
+      interest = Some(100.49),
+      financialCharges = Some(100.49),
+      badDebt = Some(100.49),
+      professionalFees = Some(100.49),
+      depreciation = Some(100.49),
+      other = Some(100.49),
+      consolidatedExpenses = Some(100.49)
+    )
 
-  val incomeModel = IncomeBreakdown(Some(100.49), Some(100.49))
+  val additionsBreakdownModel: AdditionsBreakdown =
+    AdditionsBreakdown(
+      costOfGoodsBoughtDisallowable = Some(100.49),
+      cisPaymentsToSubcontractorsDisallowable = Some(100.49),
+      staffCostsDisallowable = Some(100.49),
+      travelCostsDisallowable = Some(100.49),
+      premisesRunningCostsDisallowable = Some(100.49),
+      maintenanceCostsDisallowable = Some(100.49),
+      adminCostsDisallowable = Some(100.49),
+      advertisingCostsDisallowable = Some(100.49),
+      businessEntertainmentCostsDisallowable = Some(100.49),
+      interestDisallowable = Some(100.49),
+      financialChargesDisallowable = Some(100.49),
+      badDebtDisallowable = Some(100.49),
+      professionalFeesDisallowable = Some(100.49),
+      depreciationDisallowable = Some(100.49),
+      otherDisallowable = Some(100.49)
+    )
 
-  val bsasDetailModel = BsasDetail(Some(incomeModel), Some(expenseBreakdownModel), Some(additionsBreakdownModel))
+  val bsasDetailModel: BsasDetail =
+    BsasDetail(
+      income = Some(incomeModel),
+      expenses = Some(expenseBreakdownModel),
+      additions = Some(additionsBreakdownModel)
+    )
 
-  val metaDataModel = Metadata(TypeOfBusiness.`self-employment`, Some("000000000000210"),
-    AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
-    "2019-10-14T11:33:27Z", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "superseded", true)
+  val accountPeriodModel: AccountingPeriod =
+    AccountingPeriod(
+      startDate = LocalDate.parse("2018-10-11"),
+      endDate = LocalDate.parse("2019-10-10")
+    )
 
-  val mtdJson = Json.parse(
+  val metaDataModel: Metadata =
+    Metadata(
+      typeOfBusiness = TypeOfBusiness.`self-employment`,
+      selfEmploymentId = Some("000000000000210"),
+      accountingPeriod = accountPeriodModel,
+      taxYear = "2019-20",
+      requestedDateTime = "2019-10-14T11:33:27Z",
+      bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      summaryStatus = "superseded",
+      adjustedSummary = true
+    )
+
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |   "metadata": {
@@ -105,7 +156,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
     """.stripMargin
   )
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "01",
@@ -163,7 +214,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
       |}
     """.stripMargin)
 
-  val desJsonWithoutAdditions = Json.parse(
+  val desJsonWithoutAdditions: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "01",
@@ -204,7 +255,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
       |}
     """.stripMargin)
 
-  val desJsonWithWrongTypeOfBusiness = Json.parse(
+  val desJsonWithWrongTypeOfBusiness: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "02",
@@ -264,7 +315,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
 
   val retrieveSelfEmploymentAdjustmentResponseModel = RetrieveSelfEmploymentAdjustmentsResponse(metaDataModel, bsasDetailModel)
 
-  val hateoasResponseForSelfEmploymentAdjustments = (nino: String, bsasId: String) =>
+  val hateoasResponseForSelfEmploymentAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
        |{
        |   "metadata": {
@@ -333,7 +384,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
        |}
     """.stripMargin
 
-  val hateoasResponseWithoutAdditionsSEAdjustments = (nino: String, bsasId: String) =>
+  val hateoasResponseWithoutAdditionsSEAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
        |{
        |   "metadata": {

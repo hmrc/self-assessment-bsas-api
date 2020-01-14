@@ -16,15 +16,15 @@
 
 package v1.models.response.retrieveBsasAdjustments.selfEmployment
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.models.utils.JsonErrorValidators
 
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       | "adjustments" : {
       |    "income": {
@@ -70,7 +70,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
-  val desJsonWithoutAdditions = Json.parse(
+  val desJsonWithoutAdditions: JsValue = Json.parse(
     """{
       | "adjustments" : {
       |    "income": {
@@ -99,7 +99,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
-  val desJsonWithoutExpenses = Json.parse(
+  val desJsonWithoutExpenses: JsValue = Json.parse(
     """{
       | "adjustments" : {
       |    "income": {
@@ -127,7 +127,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
-  val desJsonWithNoAdjustments = Json.parse(
+  val desJsonWithNoAdjustments: JsValue = Json.parse(
     """{
       | "adjustments" : {
       |
@@ -135,7 +135,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       | {
       | "income": {

@@ -20,43 +20,39 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
+import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
+import v1.mocks.connectors.MockRetrieveUkPropertyAdjustmentsConnector
 import v1.models.outcomes.ResponseWrapper
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-
-class RetrieveSelfEmploymentAdjustmentsServiceSpec extends UnitSpec {
-
+class RetrieveUkPropertyAdjustmentsServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
-
+  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val request = RetrieveAdjustmentsRequestData(nino, id)
+  val response = RetrieveUkPropertyAdjustmentsResponse(metaDataModel, bsasDetailModel)
 
-  val response = RetrieveSelfEmploymentAdjustmentsResponse(metaDataModel, bsasDetailModel)
-
-  trait Test extends MockRetrieveSelfEmploymentAdjustmentsConnector {
+  trait Test extends MockRetrieveUkPropertyAdjustmentsConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveSelfEmploymentAdjustmentsController", "RetrieveSelfEmploymentAdjustments")
+    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveUkPropertyAdjustmentsController", "RetrieveUkPropertyAdjustments")
 
-    val service = new RetrieveSelfEmploymentAdjustmentsService(mockConnector)
+    val service = new RetrieveUkPropertyAdjustmentsService(mockConnector)
   }
 
-  "retrieveSelfEmploymentAdjustments" should {
+  "retrieveUkPropertyAdjustments" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrieveSelfEmploymentAdjustmentsConnector.retrieveSelfEmploymentAdjustments(request)
+        MockRetrieveUkPropertyAdjustmentsConnector.retrieveUkPropertyAdjustments(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.retrieveSelfEmploymentsAdjustments(request) ) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.retrieveUkPropertyAdjustments(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
   }
