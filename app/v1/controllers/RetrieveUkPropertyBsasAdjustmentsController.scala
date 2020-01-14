@@ -57,7 +57,8 @@ class RetrieveUkPropertyBsasAdjustmentsController @Inject()(val authService: Enr
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveUkPropertyAdjustments(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData, RetrieveUkPropertyAdjustmentsHateoasData(nino, bsasId)).asRight[ErrorWrapper])
+            hateoasFactory.wrap(response.responseData,
+              RetrieveUkPropertyAdjustmentsHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
