@@ -61,7 +61,7 @@ class SubmitUkPropertyBsasController @Inject()(
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(
               response.responseData,
-              SubmitUkPropertyBsasHateoasData(nino, bsasId)
+              SubmitUkPropertyBsasHateoasData(nino, response.responseData.id)
             ).asRight[ErrorWrapper])
         } yield {
           logger.info(

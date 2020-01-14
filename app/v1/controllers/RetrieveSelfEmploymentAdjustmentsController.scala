@@ -63,7 +63,7 @@ class RetrieveSelfEmploymentAdjustmentsController @Inject()(
           response <- EitherT(service.retrieveSelfEmploymentsAdjustments(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
-              RetrieveSelfEmploymentAdjustmentsHateoasData(nino, bsasId)).asRight[ErrorWrapper])
+              RetrieveSelfEmploymentAdjustmentsHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
