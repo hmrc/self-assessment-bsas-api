@@ -43,7 +43,7 @@ object RetrieveUkPropertyBsasFixtures {
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
-    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
     summaryStatus = "valid",
     adjustedSummary = true
   )
@@ -52,7 +52,7 @@ object RetrieveUkPropertyBsasFixtures {
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
-    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
     summaryStatus = "valid",
     adjustedSummary = false
   )
@@ -69,7 +69,7 @@ object RetrieveUkPropertyBsasFixtures {
       |      },
       |      "taxYear": "2019-20",
       |      "requestedDateTime": "2020-10-14T11:33:27.111Z",
-      |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |      "bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |      "summaryStatus": "valid",
       |      "adjustedSummary": true
       |   },
@@ -154,7 +154,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  },
       |    "taxYear": "2019-20",
       |    "requestedDateTime": "2020-10-14T11:33:27.111Z",
-      |    "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |    "bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |    "summaryStatus": "valid",
       |    "adjustedSummary": true
       |}""".stripMargin)
@@ -162,7 +162,7 @@ object RetrieveUkPropertyBsasFixtures {
   val desRetrieveBsasResponse = Json.parse(
     """{
       | "metadata": {
-      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2020-10-14T11:33:27.111Z",
       |  "taxableEntityId": "0",
       |  "taxYear": "2020",
@@ -246,7 +246,7 @@ object RetrieveUkPropertyBsasFixtures {
   val desRetrieveBsasResponseWithAdjustableSummary = Json.parse(
     """{
       | "metadata": {
-      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2020-10-14T11:33:27.111Z",
       |  "taxableEntityId": "0",
       |  "taxYear": "2020",
@@ -318,7 +318,7 @@ object RetrieveUkPropertyBsasFixtures {
   val desRetrieveBsasResponseWithInvalidTypeOfBusiness = Json.parse(
     """{
       | "metadata": {
-      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2020-10-14T11:33:27.111Z",
       |  "taxableEntityId": "0",
       |  "taxYear": "2020",
@@ -409,7 +409,7 @@ object RetrieveUkPropertyBsasFixtures {
                                                         |      },
                                                         |      "taxYear": "2019-20",
                                                         |      "requestedDateTime": "2020-10-14T11:33:27.111Z",
-                                                        |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+                                                        |      "bsasId": "$bsasId",
                                                         |      "summaryStatus": "valid",
                                                         |      "adjustedSummary": true
                                                         |   },

@@ -62,7 +62,7 @@ class RetrieveUkPropertyBsasController @Inject()(
           response <- EitherT(service.retrieve(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
-              RetrieveUkPropertyHateoasData(nino, bsasId)).asRight[ErrorWrapper])
+              RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

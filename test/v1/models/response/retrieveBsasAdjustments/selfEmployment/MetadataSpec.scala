@@ -33,7 +33,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       | },
       | "metadata": {
       |   "taxYear" : "2020",
-      |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |   "calculationId" : "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |   "requestedDateTime" : "2019-10-14T11:33:27Z",
       |   "status" : "superseded"
       | }
@@ -50,7 +50,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |   },
       |   "taxYear": "2019-20",
       |   "requestedDateTime": "2019-10-14T11:33:27Z",
-      |   "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |   "bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |   "summaryStatus": "superseded",
       |   "adjustedSummary": true
       |}
