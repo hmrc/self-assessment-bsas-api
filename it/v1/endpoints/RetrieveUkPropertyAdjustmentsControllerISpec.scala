@@ -31,7 +31,7 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
   private trait Test {
     val nino = "AA123456B"
     val correlationId = "X-123"
-    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
     def uri: String = s"/$nino/property/$bsasId/adjust"
 
