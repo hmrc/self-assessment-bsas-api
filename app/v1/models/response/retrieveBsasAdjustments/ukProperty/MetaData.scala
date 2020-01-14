@@ -41,10 +41,7 @@ object Metadata {
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
-        case Some(_) => true
-        case _       => false
-      }
+      Reads.pure(true)
     )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]

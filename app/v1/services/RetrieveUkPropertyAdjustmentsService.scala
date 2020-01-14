@@ -40,7 +40,7 @@ class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkProper
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveUkPropertyAdjustments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(desResponseWrapper))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveUkPropertyAdjustmentsSuccessResponse(desResponseWrapper))
     } yield mtdResponseWrapper
     result.value
   }

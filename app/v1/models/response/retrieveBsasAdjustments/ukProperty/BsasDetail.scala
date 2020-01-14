@@ -24,7 +24,7 @@ case class BsasDetail (incomes: Option[IncomeBreakdown], expenses: Option[Expens
 object BsasDetail {
 
   implicit val reads: Reads[BsasDetail] = (
-    (JsPath   \ "adjustments" \ "incomes").readNullable[IncomeBreakdown] and
+    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown] and
       (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown]
     ) (BsasDetail.apply _)
 

@@ -39,7 +39,7 @@ object RetrieveUkPropertyAdjustmentsResponse extends HateoasLinks {
       import data._
 
       Seq(
-        getPropertyBsas(appConfig, nino, bsasId),
+        getAdjustedPropertyBsas(appConfig, nino, bsasId),
         getPropertyBsasAdjustments(appConfig, nino, bsasId)
       )
     }

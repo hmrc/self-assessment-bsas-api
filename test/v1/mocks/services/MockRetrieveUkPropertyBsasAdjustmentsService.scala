@@ -23,7 +23,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveAdjustmentsRequestData
-import v1.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustments
+import v1.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 import v1.services.RetrieveUkPropertyAdjustmentsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +34,7 @@ trait MockRetrieveUkPropertyBsasAdjustmentsService extends MockFactory {
   object MockRetrieveUkPropertyBsasAdjustmentsService {
 
     def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustments]]]] = {
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]]] = {
       (mockService.retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
     }
