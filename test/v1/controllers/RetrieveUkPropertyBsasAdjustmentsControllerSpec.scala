@@ -59,7 +59,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
   private val nino = "AA123456A"
   private val correlationId = "X-123"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
