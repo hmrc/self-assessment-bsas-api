@@ -16,14 +16,14 @@
 
 package v1.models.response.retrieveBsas
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.utils.JsonErrorValidators
 import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v1.models.utils.JsonErrorValidators
 
 class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       |  "income": 100.49,
       |  "expenses": 100.49,
@@ -31,7 +31,7 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
       |  "deductions": 100.49
       |}""".stripMargin)
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       |  "totalIncome": 100.49,
       |  "totalExpenses": 100.49,
@@ -39,7 +39,7 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
       |  "totalDeductions": 100.49
       |}""".stripMargin)
 
-  val desWithOnlyRequiredJson = Json.parse(
+  val desWithOnlyRequiredJson: JsValue = Json.parse(
     """{
       |  "totalIncome": 100.49
       |}""".stripMargin)

@@ -19,10 +19,10 @@ package v1.controllers.requestParsers
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v1.mocks.validators.MockSubmitSelfEmploymentBsasValidator
 import v1.models.errors._
 import v1.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
-import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 

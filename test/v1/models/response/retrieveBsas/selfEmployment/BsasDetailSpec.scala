@@ -17,7 +17,7 @@
 package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desBsasDetailJson, bsasDetailModel, mtdBsasDetailJson}
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{bsasDetailModel, desBsasDetailJson, mtdBsasDetailJson}
 import v1.models.utils.JsonErrorValidators
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators {

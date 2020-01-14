@@ -28,8 +28,8 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
 import v1.models.response.SubmitUkPropertyBsasResponse
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
 

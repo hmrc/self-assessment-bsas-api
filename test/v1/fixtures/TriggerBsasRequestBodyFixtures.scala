@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v1.models.domain.TypeOfBusiness
 import v1.models.request.AccountingPeriod
@@ -90,11 +90,11 @@ object TriggerBsasRequestBodyFixtures {
 
   val responseObj = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
-  val response = Json.parse("""{
+  val response: JsValue = Json.parse("""{
       |"id" : "c75f40a6-a3df-4429-a697-471eeec46435"
       |}""".stripMargin)
 
-  val hateoasResponseForSE = (nino: String) => s"""
+  val hateoasResponseForSE: String => String = (nino: String) => s"""
       |{
       |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
       |  "links":[
@@ -107,7 +107,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
     """.stripMargin
 
-  val hateoasResponseForProperty = (nino: String) => s"""
+  val hateoasResponseForProperty: String => String = (nino: String) => s"""
       |{
       |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
       |  "links":[
@@ -120,18 +120,18 @@ object TriggerBsasRequestBodyFixtures {
       |}
     """.stripMargin
 
-  val requestBody =
+  val requestBody: JsObject =
     Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
       "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
       "selfEmploymentId" -> "XAIS12345678901"
     )
 
-  val requestBodyForProperty =
+  val requestBodyForProperty: JsObject =
     Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
              "typeOfBusiness"   -> TypeOfBusiness.`uk-property-fhl`.toString)
 
-  val desResponse =
+  val desResponse: String =
     """
       |{
       | "metadata": {

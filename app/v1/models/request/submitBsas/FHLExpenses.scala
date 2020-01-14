@@ -16,9 +16,7 @@
 
 package v1.models.request.submitBsas
 
-import java.io
-
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal],
                        financialCosts: Option[BigDecimal], professionalFees: Option[BigDecimal], costOfServices: Option[BigDecimal],
@@ -44,7 +42,5 @@ case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaint
 
 object FHLExpenses {
   implicit val reads: Reads[FHLExpenses] = Json.reads[FHLExpenses]
-  implicit val writes: OWrites[FHLExpenses] = new OWrites[FHLExpenses] {
-    override def writes(o: FHLExpenses): JsObject = Json.toJsObject(o.mappedPresentParams)
-  }
+  implicit val writes: OWrites[FHLExpenses] = (o: FHLExpenses) => Json.toJsObject(o.mappedPresentParams)
 }

@@ -16,8 +16,6 @@
 
 package v1.models.response.retrieveBsas
 
-import java.time.LocalDate
-
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
@@ -51,7 +49,7 @@ class AccountingPeriodSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       |    "startDate": "2019-04-06",
       |    "endDate": "2020-04-05"

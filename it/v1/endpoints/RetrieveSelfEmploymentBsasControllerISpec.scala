@@ -17,11 +17,11 @@
 package v1.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import support.IntegrationBaseSpec
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.libs.ws.{WSRequest, WSResponse}
+import support.IntegrationBaseSpec
 import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
@@ -34,7 +34,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     val adjustedStatus: Option[String] = Some("true")
     val correlationId = "X-123"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "03")
+    val desQueryParams: Map[String, String] = Map("return" -> "03")
 
     def uri: String = s"/$nino/self-employment/$bsasId"
 
