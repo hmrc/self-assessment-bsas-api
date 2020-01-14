@@ -1,1 +1,1 @@
-**Add overview documentation here**
+The self assessment BSAS API allows users to retrieve an adjustable summary calculation for a specified self-employment or UK property business, for a given accounting period.
