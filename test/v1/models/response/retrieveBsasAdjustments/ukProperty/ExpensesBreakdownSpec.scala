@@ -16,14 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments.ukProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveBsasUKPropertyAdjustmentsFixtures.expenseBreakdownModel
+import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v1.models.utils.JsonErrorValidators
 
 class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       |         "premisesRunningCosts": 100.49,
       |         "repairsAndMaintenance": 100.49,
@@ -36,7 +36,7 @@ class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
       |         "consolidatedExpenses": 100.49
       |}""".stripMargin)
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       |  "premisesRunningCosts": 100.49,
       |  "repairsAndMaintenance": 100.49,

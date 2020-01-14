@@ -16,14 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments.selfEmployment
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveBsasSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "01",
@@ -40,7 +40,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       | "typeOfBusiness": "self-employment",
       |   "selfEmploymentId": "000000000000210",

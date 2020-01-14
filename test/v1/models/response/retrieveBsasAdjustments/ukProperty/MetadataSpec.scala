@@ -16,15 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments.ukProperty
 
-
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveBsasUKPropertyAdjustmentsFixtures.metaDataModel
+import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v1.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "04",
@@ -43,7 +42,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |}
     """.stripMargin)
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       | "typeOfBusiness": "uk-property-fhl",
       |   "accountingPeriod": {
@@ -65,12 +64,10 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       }
     }
 
-
     "writing to valid json" should {
       "return valid json" in {
         metaDataModel.toJson shouldBe mtdJson
       }
     }
   }
-
 }

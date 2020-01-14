@@ -16,14 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments.ukProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.utils.JsonErrorValidators
-import v1.fixtures.RetrieveBsasUKPropertyAdjustmentsFixtures._
+import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 
-class RetrieveUKPropertyAdjustmentsSpec extends UnitSpec with JsonErrorValidators {
+class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 
-  val fullDesJson = Json.parse(
+  val fullDesJson: JsValue = Json.parse(
     """
       |{
       | "inputs": {
@@ -62,7 +62,7 @@ class RetrieveUKPropertyAdjustmentsSpec extends UnitSpec with JsonErrorValidator
       |}
     """.stripMargin)
 
-  val minimalDesJson = Json.parse(
+  val minimalDesJson: JsValue = Json.parse(
     """
       |{
       | "inputs": {
@@ -85,7 +85,7 @@ class RetrieveUKPropertyAdjustmentsSpec extends UnitSpec with JsonErrorValidator
       |}
     """.stripMargin)
 
-  val fullMtdJson = Json.parse(
+  val fullMtdJson: JsValue = Json.parse(
     """
       |{
       | "metadata": {
@@ -122,7 +122,7 @@ class RetrieveUKPropertyAdjustmentsSpec extends UnitSpec with JsonErrorValidator
       |}
     """.stripMargin)
 
-  val minimalMtdJson = Json.parse(
+  val minimalMtdJson: JsValue = Json.parse(
     """
       |{
       | "metadata": {
@@ -144,27 +144,22 @@ class RetrieveUKPropertyAdjustmentsSpec extends UnitSpec with JsonErrorValidator
   "RetrieveSelfEmploymentAdjustmentResponse" when {
     "reading from valid JSON" should {
       "return the appropriate model when the most data has been provided" in {
-
-        fullDesJson.as[RetrieveUKPropertyAdjustments] shouldBe retrieveUKPropertyAdjustmentResponseModel
+        fullDesJson.as[RetrieveUkPropertyAdjustmentsResponse] shouldBe retrieveUKPropertyAdjustmentResponseModel
       }
 
       "return the appropriate model when the minimal data has been provided" in {
-
-        minimalDesJson.as[RetrieveUKPropertyAdjustments] shouldBe minimalRetrieveUKPropertyAdjustmentResponseModel
+        minimalDesJson.as[RetrieveUkPropertyAdjustmentsResponse] shouldBe minimalRetrieveUKPropertyAdjustmentResponseModel
       }
     }
 
     "writing to valid json" should {
       "return valid json with most data provided" in {
-
         retrieveUKPropertyAdjustmentResponseModel.toJson shouldBe fullMtdJson
       }
 
       "return valid Json when the minimal data has been provided" in {
-
         minimalRetrieveUKPropertyAdjustmentResponseModel.toJson shouldBe minimalMtdJson
       }
     }
   }
-
 }
