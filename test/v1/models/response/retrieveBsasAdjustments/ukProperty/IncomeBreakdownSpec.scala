@@ -16,14 +16,14 @@
 
 package v1.models.response.retrieveBsasAdjustments.ukProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.utils.JsonErrorValidators
 import v1.fixtures.RetrieveBsasUKPropertyAdjustmentsFixtures.incomeModel
+import v1.models.utils.JsonErrorValidators
 
 class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       |         "rentReceived": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,
@@ -33,7 +33,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
     """.stripMargin
   )
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       |         "rentIncome": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,

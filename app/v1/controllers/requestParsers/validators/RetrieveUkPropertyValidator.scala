@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{ AdjustedStatusValidation, BsasIdValidation, NinoValidation }
+import v1.controllers.requestParsers.validators.validations.{AdjustedStatusValidation, BsasIdValidation, NinoValidation}
 import v1.models.errors.MtdError
 import v1.models.request.RetrieveUkPropertyBsasRawData
 

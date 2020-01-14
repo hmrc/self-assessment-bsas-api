@@ -21,10 +21,10 @@ import v1.controllers.EndpointLogContext
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse}
 import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
+import v1.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse}
 
 trait DesResponseMappingSupport {
   self: Logging =>

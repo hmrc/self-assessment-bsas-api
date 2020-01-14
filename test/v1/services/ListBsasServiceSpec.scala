@@ -20,11 +20,11 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
+import v1.fixtures.ListBsasFixtures._
 import v1.mocks.connectors.MockListBsasConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DesTaxYear, ListBsasRequest}
-import v1.fixtures.ListBsasFixtures._
 import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global

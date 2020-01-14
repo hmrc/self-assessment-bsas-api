@@ -16,20 +16,20 @@
 
 package v1.models.response.retrieveBsas
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.utils.JsonErrorValidators
 import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v1.models.utils.JsonErrorValidators
 
 class LossSpec extends UnitSpec with JsonErrorValidators{
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """{
       |  "net": 100.49,
       |  "adjustedIncomeTax": 100.49
       |}""".stripMargin)
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       |  "netLoss": 100.49,
       |  "adjustedIncomeTaxLoss": 100.49

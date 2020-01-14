@@ -17,23 +17,20 @@
 package v1.models.response
 
 import config.AppConfig
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v1.models.hateoas.{HateoasData, Link}
-import play.api.libs.functional.syntax._
 
 case class SubmitUkPropertyBsasResponse(id: String, typeOfBusiness: TypeOfBusiness)
 
 object SubmitUkPropertyBsasResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[SubmitUkPropertyBsasResponse] = new OWrites[SubmitUkPropertyBsasResponse] {
-    def writes(response: SubmitUkPropertyBsasResponse): JsObject =
-      Json.obj(
-        "id" -> response.id
-      )
-  }
-
+  implicit val writes: OWrites[SubmitUkPropertyBsasResponse] = (response: SubmitUkPropertyBsasResponse) =>
+    Json.obj(
+    "id" -> response.id
+  )
 
   implicit val reads: Reads[SubmitUkPropertyBsasResponse] = (
     (JsPath \ "metadata" \ "calculationId").read[String] and

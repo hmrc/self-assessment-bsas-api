@@ -18,10 +18,9 @@ package v1.fixtures.selfEmployment
 
 import java.time.LocalDate
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import v1.models.domain.TypeOfBusiness
 import v1.models.response.retrieveBsas.AccountingPeriod
-import v1.models.response.retrieveBsasAdjustments._
 import v1.models.response.retrieveBsasAdjustments.selfEmployment._
 
 object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
@@ -42,9 +41,9 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
 
   val metaDataModel = Metadata(TypeOfBusiness.`self-employment`, Some("000000000000210"),
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
-    "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", true)
+    "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 
-  val mtdJson = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |   "metadata": {
@@ -105,7 +104,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
     """.stripMargin
   )
 
-  val desJson = Json.parse(
+  val desJson: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "01",
@@ -163,7 +162,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
       |}
     """.stripMargin)
 
-  val desJsonWithoutAdditions = Json.parse(
+  val desJsonWithoutAdditions: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "01",
@@ -204,7 +203,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
       |}
     """.stripMargin)
 
-  val desJsonWithWrongTypeOfBusiness = Json.parse(
+  val desJsonWithWrongTypeOfBusiness: JsValue = Json.parse(
     """{
       | "inputs": {
       |   "incomeSourceType" : "02",
@@ -264,7 +263,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
 
   val retrieveSelfEmploymentAdjustmentResponseModel = RetrieveSelfEmploymentAdjustmentsResponse(metaDataModel, bsasDetailModel)
 
-  val hateoasResponseForSelfEmploymentAdjustments = (nino: String, bsasId: String) =>
+  val hateoasResponseForSelfEmploymentAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
        |{
        |   "metadata": {
@@ -333,7 +332,7 @@ object RetrieveBsasSelfEmploymentAdjustmentsFixtures {
        |}
     """.stripMargin
 
-  val hateoasResponseWithoutAdditionsSEAdjustments = (nino: String, bsasId: String) =>
+  val hateoasResponseWithoutAdditionsSEAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
        |{
        |   "metadata": {

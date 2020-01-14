@@ -16,14 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
-import javax.inject.Inject
 import config.FixedConfig
+import javax.inject.Inject
 import play.api.libs.json.JsLookupResult
 import utils.CurrentDateProvider
 import v1.controllers.requestParsers.validators.validations.{DateValidation, _}
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
 import v1.models.errors._
-import v1.models.request.triggerBsas.TriggerBsasRawData
+import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
 class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 

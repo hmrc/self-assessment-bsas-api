@@ -21,8 +21,8 @@ import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.hateoas.HateoasFactory
 import v1.models.domain.TypeOfBusiness
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
+import v1.models.hateoas.{HateoasWrapper, Link}
 
 class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
 

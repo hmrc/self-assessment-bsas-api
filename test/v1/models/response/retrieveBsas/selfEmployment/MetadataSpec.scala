@@ -17,12 +17,7 @@
 package v1.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
-  desRetrieveBsasResponseJsonAdjustable,
-  desRetrieveBsasResponseJsonAdjusted,
-  metadataModel,
-  mtdMetadataJson
-}
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, metadataModel, mtdMetadataJson}
 import v1.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {

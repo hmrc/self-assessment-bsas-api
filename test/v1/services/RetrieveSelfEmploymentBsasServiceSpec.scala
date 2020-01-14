@@ -21,15 +21,15 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v1.models.errors._
 import v1.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
 import v1.models.domain.TypeOfBusiness
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrieveSelfEmploymentBsasRequestData
 import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasServiceSpec extends UnitSpec{
 
