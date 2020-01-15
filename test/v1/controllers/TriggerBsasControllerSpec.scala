@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockTriggerBsasRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
@@ -36,12 +36,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class TriggerBsasControllerSpec
-    extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
-    with MockTriggerBsasRequestParser
-    with MockTriggerBsasService
-    with MockHateoasFactory {
+  extends ControllerBaseSpec
+      with MockEnrolmentsAuthService
+      with MockMtdIdLookupService
+      with MockTriggerBsasRequestParser
+      with MockTriggerBsasService
+      with MockHateoasFactory
+      with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -52,6 +53,7 @@ class TriggerBsasControllerSpec
       requestParser = mockRequestParser,
       triggerBsasService = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 

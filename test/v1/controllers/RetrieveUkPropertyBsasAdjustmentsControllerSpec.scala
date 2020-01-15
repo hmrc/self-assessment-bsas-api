@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasAdjustmentsService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasAdjustmentsService}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -39,7 +39,8 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockRetrieveAdjustmentsRequestParser
   with MockRetrieveUkPropertyBsasAdjustmentsService
-  with MockHateoasFactory {
+  with MockHateoasFactory
+  with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -50,6 +51,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
