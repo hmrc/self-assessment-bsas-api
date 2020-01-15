@@ -22,13 +22,16 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.TriggerBsasRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.triggerBsas.TriggerBsasRawData
 import v1.models.response.TriggerBsasHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, TriggerBsasService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, TriggerBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,6 +42,7 @@ class TriggerBsasController @Inject()(
                                        requestParser: TriggerBsasRequestParser,
                                        triggerBsasService: TriggerBsasService,
                                        hateoasFactory: HateoasFactory,
+                                       auditService: AuditService,
                                        cc: ControllerComponents
                           )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -59,7 +63,7 @@ class TriggerBsasController @Inject()(
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response   <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
+          hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
               TriggerBsasHateoasData(nino, parsedRequest.body.typeOfBusiness, response.responseData.id)).asRight[ErrorWrapper])
         } yield {
@@ -68,14 +72,36 @@ class TriggerBsasController @Inject()(
               s"Success response received with CorrelationId: ${response.correlationId}"
           )
 
-          Created(Json.toJson(vendorResponse))
+          auditSubmission(
+            GenericAuditDetail(
+              userDetails = request.userDetails,
+              pathParams = Map("nino" -> nino),
+              requestBody = Some(request.body),
+              `X-CorrelationId` = response.correlationId,
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+            )
+          )
+
+          Created(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }
 
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
-        errorResult(errorWrapper).withApiHeaders(correlationId)
+        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            pathParams = Map("nino" -> nino),
+            requestBody = Some(request.body),
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
+
+        result
       }.merge
     }
 
@@ -90,5 +116,18 @@ class TriggerBsasController @Inject()(
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: GenericAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+
+    val event = AuditEvent(
+      auditType = "triggerABusinessSourceAdjustableSummary",
+      transactionName = "adjustable-summary-api",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
   }
 }
