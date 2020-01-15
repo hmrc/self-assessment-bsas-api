@@ -17,19 +17,21 @@
 package v1.controllers
 
 import javax.inject.{Inject, Singleton}
-
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveSelfEmploymentRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.RetrieveSelfEmploymentBsasRawData
 import v1.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentBsasService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveSelfEmploymentBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +42,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
                                                       requestParser: RetrieveSelfEmploymentRequestParser,
                                                       service: RetrieveSelfEmploymentBsasService,
                                                       hateoasFactory: HateoasFactory,
+                                                      auditService: AuditService,
                                                       cc: ControllerComponents
                                                     )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -61,7 +64,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response <- EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
+          hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
               RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
         } yield {
@@ -70,13 +73,35 @@ class RetrieveSelfEmploymentBsasController @Inject()(
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(vendorResponse))
+          auditSubmission(
+            GenericAuditDetail(
+              userDetails = request.userDetails,
+              pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+              requestBody = None,
+              `X-CorrelationId` = response.correlationId,
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+            )
+          )
+
+          Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
-        errorResult(errorWrapper).withApiHeaders(correlationId)
+        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            requestBody = None,
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
+
+        result
       }.merge
     }
 
@@ -88,5 +113,18 @@ class RetrieveSelfEmploymentBsasController @Inject()(
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: GenericAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+
+    val event = AuditEvent(
+      auditType = "retrieveABusinessSourceAdjustableSummary",
+      transactionName = "adjustable-summary-api",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
   }
 }
