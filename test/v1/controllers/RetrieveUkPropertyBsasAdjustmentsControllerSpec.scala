@@ -20,31 +20,31 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v1.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
+import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasAdjustmentsService}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
-import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
+import v1.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
+class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
   with MockRetrieveAdjustmentsRequestParser
-  with MockRetrieveSelfEmploymentAdjustmentsService
+  with MockRetrieveUkPropertyBsasAdjustmentsService
   with MockHateoasFactory {
 
   trait Test {
     val hc = HeaderCarrier()
 
-    val controller = new RetrieveSelfEmploymentAdjustmentsController(
+    val controller = new RetrieveUkPropertyBsasAdjustmentsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
@@ -59,38 +59,60 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
 
   private val nino = "AA123456A"
   private val correlationId = "X-123"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
-  val testHateoasLinkSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
+  val testHateoasLinkRetrieve = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
     method = GET, rel = "retrieve-adjustable-summary")
 
-  val testHateoasLinkAdjustSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
+  val testHateoasLinkRetrieveAdjustments = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
     method = GET, rel = "self")
 
-  "retrieve" should {
-    "return successful hateoas response for self-assessment with status OK" when {
-      "a valid request supplied" in new Test {
+  "retrieve" when {
+    "a valid request is supplied" should {
+      "return successful hateoas response for uk-property-non-fhl with status OK" in new Test {
 
         MockRetrieveAdjustmentsRequestParser
           .parse(requestRawData)
           .returns(Right(request))
 
-        MockRetrieveSelfEmploymentBsasService
+        MockRetrieveUkPropertyBsasAdjustmentsService
           .retrieveAdjustments(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSelfEmploymentAdjustmentResponseModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkPropertyNonFhlAdjustmentsResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveSelfEmploymentAdjustmentResponseModel, RetrieveSelfEmploymentAdjustmentsHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(retrieveSelfEmploymentAdjustmentResponseModel , Seq(testHateoasLinkSubmit, testHateoasLinkAdjustSelf))
+          .wrap(retrieveUkPropertyNonFhlAdjustmentsResponseModel, RetrieveUkPropertyAdjustmentsHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(retrieveUkPropertyNonFhlAdjustmentsResponseModel , Seq(testHateoasLinkRetrieve, testHateoasLinkRetrieveAdjustments))
         )
 
         val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
+        contentAsJson(result) shouldBe Json.parse(hateoasResponseForUkPropertyNonFhlAdjustments(nino, bsasId))
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+      }
+
+      "return successful hateoas response for uk-property-fhl with status OK" in new Test {
+
+        MockRetrieveAdjustmentsRequestParser
+          .parse(requestRawData)
+          .returns(Right(request))
+
+        MockRetrieveUkPropertyBsasAdjustmentsService
+          .retrieveAdjustments(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkPropertyFhlAdjustmentsResponseModel))))
+
+        MockHateoasFactory
+          .wrap(retrieveUkPropertyFhlAdjustmentsResponseModel, RetrieveUkPropertyAdjustmentsHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(retrieveUkPropertyFhlAdjustmentsResponseModel , Seq(testHateoasLinkRetrieve, testHateoasLinkRetrieveAdjustments))
+        )
+
+        val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.parse(hateoasResponseForUkPropertyFhlAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -128,7 +150,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
               .parse(requestRawData)
               .returns(Right(request))
 
-            MockRetrieveSelfEmploymentBsasService
+            MockRetrieveUkPropertyBsasAdjustmentsService
               .retrieveAdjustments(request)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
@@ -146,7 +168,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
           (DownstreamError, INTERNAL_SERVER_ERROR),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (RuleNotSelfEmployment, FORBIDDEN)
+          (RuleNotUkProperty, FORBIDDEN)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

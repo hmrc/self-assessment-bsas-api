@@ -27,7 +27,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
     """{
       |         "rentReceived": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,
-      |         "reversePremums": 100.49,
+      |         "reversePremiums": 100.49,
       |         "otherPropertyIncome": 100.49
       | }
     """.stripMargin

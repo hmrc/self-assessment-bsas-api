@@ -26,10 +26,10 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
   val desJson: JsValue = Json.parse(
     """{
       | "adjustments" : {
-      |    "incomes": {
+      |    "income": {
       |      "rentReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "reversePremums": 100.49,
+      |      "reversePremiums": 100.49,
       |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses" : {

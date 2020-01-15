@@ -28,7 +28,7 @@ object IncomeBreakdown {
   implicit val reads: Reads[IncomeBreakdown] = (
     (JsPath \ "rentReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-      (JsPath \ "reversePremums").readNullable[BigDecimal] and
+      (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
     ) (IncomeBreakdown.apply _)
 
