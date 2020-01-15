@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListBsasRequestDataParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
 import v1.models.domain.{Status, TypeOfBusiness}
 import v1.models.errors._
 import v1.models.hateoas.HateoasWrapper
@@ -44,7 +44,8 @@ class ListBsasControllerSpec
     with MockListBsasService
     with MockHateoasFactory
     with MockAppConfig
-    with HateoasLinks {
+    with HateoasLinks
+    with MockAuditService {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -55,6 +56,7 @@ class ListBsasControllerSpec
       requestParser = mockRequestParser,
       service = mockService,
       cc = cc,
+      auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory
     )
 
@@ -67,7 +69,6 @@ class ListBsasControllerSpec
   private val taxYear = Some("2019-20")
   private val typeOfBusiness = Some("uk-property-fhl")
   private val selfEmploymentId = Some("XAIS12345678901")
-  private val secondTypeOfBusiness = "uk-property-non-fhl"
   private val correlationId = "X-123"
 
   val response: ListBsasResponse[BsasEntries] =

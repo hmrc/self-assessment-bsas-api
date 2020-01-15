@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{GET, POST}
@@ -39,7 +39,8 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockRetrieveSelfEmploymentRequestParser
   with MockRetrieveSelfEmploymentBsasService
-  with MockHateoasFactory {
+  with MockHateoasFactory
+  with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -50,6 +51,7 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
