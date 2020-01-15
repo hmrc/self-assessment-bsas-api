@@ -90,7 +90,7 @@ object RuleSummaryStatusInvalid extends MtdError( "RULE_SUMMARY_STATUS_INVALID",
 
 object RuleSummaryStatusSuperseded extends MtdError( "RULE_SUMMARY_STATUS_SUPERSEDED", "A newer summary calculation exists for this accounting period")
 
-object RuleBsasAlreadyAdjusted extends MtdError("RULE_BSAS_ALREADY_ADJUSTED", "A summary may only be adjusted once. Request a new summary")
+object  RuleBsasAlreadyAdjusted extends MtdError("RULE_BSAS_ALREADY_ADJUSTED", "A summary may only be adjusted once. Request a new summary")
 
 object RuleOverConsolidatedExpensesThreshold
   extends MtdError("RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD", "The cumulative turnover amount exceeds the consolidated expenses threshold")
@@ -116,6 +116,9 @@ object RuleErrorPropertyAdjusted extends MtdError("RULE_UK_PROPERTY_ADJUSTED",
 object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "") {
   def withFieldName(fieldName: String): MtdError = this.copy(message = s"Adjustment value for '$fieldName' falls outside the accepted range")
 }
+
+object RuleResultingValueNotPermitted
+  extends MtdError("RULE_RESULTING_VALUE_NOT_PERMITTED","The adjustments provided would produce an unacceptable negative monetary value")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
