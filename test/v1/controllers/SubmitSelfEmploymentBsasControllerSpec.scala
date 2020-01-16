@@ -204,6 +204,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleBsasAlreadyAdjusted, FORBIDDEN),
+        (RuleResultingValueNotPermitted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
         (RuleNotSelfEmployment, FORBIDDEN),
         (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
