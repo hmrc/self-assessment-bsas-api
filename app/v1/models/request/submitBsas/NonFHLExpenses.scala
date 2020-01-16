@@ -16,13 +16,13 @@
 
 package v1.models.request.submitBsas
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal], financialCosts: Option[BigDecimal],
                           professionalFees: Option[BigDecimal], travelCosts: Option[BigDecimal], costOfServices: Option[BigDecimal],
                           residentialFinancialCost: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]) {
 
-  val params: Map[String, Option[BigDecimal]] = Map(
+  val params: Map[String, BigDecimal] = Map(
     "premisesRunningCosts" -> premisesRunningCosts,
     "repairsAndMaintenance" -> repairsAndMaintenance,
     "financialCosts" -> financialCosts,
@@ -32,19 +32,11 @@ case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMa
     "residentialFinancialCost" -> residentialFinancialCost,
     "other" -> other,
     "consolidatedExpenses" -> consolidatedExpenses
-  ).filterNot { case (_, v) => v.isEmpty }
-
-  def queryMap[A](as: Map[String, A]): Map[String, BigDecimal] = as.map {
-    case (k: String, Some(v: BigDecimal)) => (k, v)
-  }
-
-  val mappedPresentParams: Map[String, BigDecimal] = queryMap(params)
+  ).collect {case (k, Some(v)) => (k, v) }
 }
 
 object NonFHLExpenses {
   implicit val reads: Reads[NonFHLExpenses] = Json.reads[NonFHLExpenses]
-  implicit val writes: OWrites[NonFHLExpenses] = new OWrites[NonFHLExpenses] {
-    override def writes(o: NonFHLExpenses): JsObject = Json.toJsObject(o.mappedPresentParams)
-  }
+  implicit val writes: OWrites[NonFHLExpenses] = (o: NonFHLExpenses) => Json.toJsObject(o.params)
 }
 

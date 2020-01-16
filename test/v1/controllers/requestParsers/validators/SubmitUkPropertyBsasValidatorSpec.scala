@@ -16,11 +16,11 @@
 
 package v1.controllers.requestParsers.validators
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v1.models.errors.{RuleBothExpensesError, BsasIdFormatError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.{BsasIdFormatError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.submitBsas._
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {

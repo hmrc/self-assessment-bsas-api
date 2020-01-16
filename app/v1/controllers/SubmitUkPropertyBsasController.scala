@@ -80,7 +80,7 @@ class SubmitUkPropertyBsasController @Inject()(
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | BsasIdFormatError |
            RuleIncorrectOrEmptyBodyError | RuleTypeOfBusinessError | RuleBothExpensesError |
            MtdErrorWithCustomMessage(FormatAdjustmentValueError.code) |
