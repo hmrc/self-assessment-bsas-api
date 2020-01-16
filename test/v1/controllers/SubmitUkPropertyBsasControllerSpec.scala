@@ -24,6 +24,7 @@ import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures.hateoasRes
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitUkPropertyBsasService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
@@ -113,6 +114,25 @@ class SubmitUkPropertyBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val detail: GenericAuditDetail =
+          GenericAuditDetail(
+            userType = "Individual",
+            agentReferenceNumber = None,
+            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            requestBody = Some(Json.toJson(validfhlInputJson)),
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+          )
+
+        val event: AuditEvent[GenericAuditDetail] =
+          AuditEvent(
+            auditType = "submitBusinessSourceAccountingAdjustments",
+            transactionName = "adjustable-summary-api",
+            detail = detail
+          )
+
+        MockedAuditService.verifyAuditEvent(event).once
       }
 
       "a valid request is supplied for a non-FHL property" in new Test {
@@ -134,6 +154,25 @@ class SubmitUkPropertyBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val detail: GenericAuditDetail =
+          GenericAuditDetail(
+            userType = "Individual",
+            agentReferenceNumber = None,
+            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            requestBody = Some(Json.toJson(validNonFHLInputJson)),
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+          )
+
+        val event: AuditEvent[GenericAuditDetail] =
+          AuditEvent(
+            auditType = "submitBusinessSourceAccountingAdjustments",
+            transactionName = "adjustable-summary-api",
+            detail = detail
+          )
+
+        MockedAuditService.verifyAuditEvent(event).once
       }
     }
 
@@ -150,6 +189,25 @@ class SubmitUkPropertyBsasControllerSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val detail: GenericAuditDetail =
+            GenericAuditDetail(
+              userType = "Individual",
+              agentReferenceNumber = None,
+              pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+              requestBody = Some(Json.toJson(validfhlInputJson)),
+              `X-CorrelationId` = correlationId,
+              auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            )
+
+          val event: AuditEvent[GenericAuditDetail] =
+            AuditEvent(
+              auditType = "submitBusinessSourceAccountingAdjustments",
+              transactionName = "adjustable-summary-api",
+              detail = detail
+            )
+
+          MockedAuditService.verifyAuditEvent(event).once
         }
       }
 
@@ -179,6 +237,25 @@ class SubmitUkPropertyBsasControllerSpec
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val detail: GenericAuditDetail =
+          GenericAuditDetail(
+            userType = "Individual",
+            agentReferenceNumber = None,
+            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            requestBody = Some(Json.toJson(validfhlInputJson)),
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
+          )
+
+        val event: AuditEvent[GenericAuditDetail] =
+          AuditEvent(
+            auditType = "submitBusinessSourceAccountingAdjustments",
+            transactionName = "adjustable-summary-api",
+            detail = detail
+          )
+
+        MockedAuditService.verifyAuditEvent(event).once
       }
 
       "multiple errors occur for the customised errors" in new Test {
@@ -202,6 +279,28 @@ class SubmitUkPropertyBsasControllerSpec
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val detail: GenericAuditDetail =
+          GenericAuditDetail(
+            userType = "Individual",
+            agentReferenceNumber = None,
+            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            requestBody = Some(Json.toJson(validfhlInputJson)),
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(BAD_REQUEST, Some(Seq(
+              AuditError(FormatAdjustmentValueError.withFieldName("doesntMatter").code),
+              AuditError(RuleAdjustmentRangeInvalid.withFieldName("thePatternMatchIgnoresMe").code)
+            )), None)
+          )
+
+        val event: AuditEvent[GenericAuditDetail] =
+          AuditEvent(
+            auditType = "submitBusinessSourceAccountingAdjustments",
+            transactionName = "adjustable-summary-api",
+            detail = detail
+          )
+
+        MockedAuditService.verifyAuditEvent(event).once
       }
     }
 
@@ -222,6 +321,25 @@ class SubmitUkPropertyBsasControllerSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val detail: GenericAuditDetail =
+            GenericAuditDetail(
+              userType = "Individual",
+              agentReferenceNumber = None,
+              pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+              requestBody = Some(Json.toJson(validfhlInputJson)),
+              `X-CorrelationId` = correlationId,
+              auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            )
+
+          val event: AuditEvent[GenericAuditDetail] =
+            AuditEvent(
+              auditType = "submitBusinessSourceAccountingAdjustments",
+              transactionName = "adjustable-summary-api",
+              detail = detail
+            )
+
+          MockedAuditService.verifyAuditEvent(event).once
         }
       }
 

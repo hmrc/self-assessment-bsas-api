@@ -78,7 +78,7 @@ class TriggerBsasController @Inject()(
               pathParams = Map("nino" -> nino),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+              auditResponse = AuditResponse(httpStatus = CREATED, response = Right(Some(Json.toJson(hateoasResponse))))
             )
           )
 

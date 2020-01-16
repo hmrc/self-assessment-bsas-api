@@ -24,6 +24,7 @@ import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{GET, POST}
@@ -96,6 +97,25 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val detail: GenericAuditDetail =
+          GenericAuditDetail(
+            userType = "Individual",
+            agentReferenceNumber = None,
+            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            requestBody = None,
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))))
+          )
+
+        val event: AuditEvent[GenericAuditDetail] =
+          AuditEvent(
+            auditType = "retrieveABusinessSourceAdjustableSummary",
+            transactionName = "adjustable-summary-api",
+            detail = detail
+          )
+
+        MockedAuditService.verifyAuditEvent(event).once
       }
     }
 
@@ -113,6 +133,25 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val detail: GenericAuditDetail =
+              GenericAuditDetail(
+                userType = "Individual",
+                agentReferenceNumber = None,
+                pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+                requestBody = None,
+                `X-CorrelationId` = correlationId,
+                auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+              )
+
+            val event: AuditEvent[GenericAuditDetail] =
+              AuditEvent(
+                auditType = "retrieveABusinessSourceAdjustableSummary",
+                transactionName = "adjustable-summary-api",
+                detail = detail
+              )
+
+            MockedAuditService.verifyAuditEvent(event).once
           }
         }
 
@@ -142,6 +181,25 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val detail: GenericAuditDetail =
+              GenericAuditDetail(
+                userType = "Individual",
+                agentReferenceNumber = None,
+                pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+                requestBody = None,
+                `X-CorrelationId` = correlationId,
+                auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+              )
+
+            val event: AuditEvent[GenericAuditDetail] =
+              AuditEvent(
+                auditType = "retrieveABusinessSourceAdjustableSummary",
+                transactionName = "adjustable-summary-api",
+                detail = detail
+              )
+
+            MockedAuditService.verifyAuditEvent(event).once
           }
         }
 
