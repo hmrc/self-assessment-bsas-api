@@ -106,7 +106,7 @@ class RetrieveUkPropertyBsasController @Inject()(
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError
            | BsasIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
       case RuleNotUkProperty => Forbidden(Json.toJson(errorWrapper))

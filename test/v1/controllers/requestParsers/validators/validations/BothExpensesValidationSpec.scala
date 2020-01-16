@@ -24,29 +24,29 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
   val figure = BigDecimal(100.20)
 
-  def inputData(mapedData: Map[String, Option[BigDecimal]]): Option[Map[String, Option[BigDecimal]]] = {
-    Some(mapedData)
+  def inputData(mappedData: Map[String, BigDecimal]): Option[Map[String, BigDecimal]] = {
+    Some(mappedData)
   }
 
   val validConsolidatedExpensesOnly =
-    Map("consolidatedExpenses" -> Some(figure))
+    Map("consolidatedExpenses" -> figure)
 
   val validConsolidatedExpenses =
     Map(
-      "consolidatedExpenses" -> Some(figure),
-      "residentialFinancialCost" -> Some(figure)
+      "consolidatedExpenses" -> figure,
+      "residentialFinancialCost" -> figure
     )
 
   val validOtherExpense =
-    Map("testfield1" -> Some(figure))
+    Map("testfield1" -> figure)
 
   val multipleValidOtherExpenses =
     Map(
-      "testfield1" -> Some(figure),
-      "testfield2" -> Some(figure)
+      "testfield1" -> figure,
+      "testfield2" -> figure
     )
 
-  case class SetUp(expensesAdjusted: Option[Map[String, Option[BigDecimal]]])
+  case class SetUp(expensesAdjusted: Option[Map[String, BigDecimal]])
 
   "validate" should {
     "return no errors" when {

@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
-import v1.controllers.requestParsers.ListBsasRequestDataParser
+import v1.controllers.requestParsers.ListBsasRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                     val lookupService: MtdIdLookupService,
-                                    requestParser: ListBsasRequestDataParser,
+                                    requestParser: ListBsasRequestParser,
                                     service: ListBsasService,
                                     hateoasFactory: HateoasFactory,
                                     auditService: AuditService,
@@ -106,7 +106,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | TypeOfBusinessFormatError
            | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SelfEmploymentIdFormatError =>
         BadRequest(Json.toJson(errorWrapper))

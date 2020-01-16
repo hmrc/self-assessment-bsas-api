@@ -23,23 +23,15 @@ case class NonFHLIncome(rentIncome: Option[BigDecimal] = None,
                         reversePremiums: Option[BigDecimal] = None,
                         otherPropertyIncome: Option[BigDecimal] = None) {
 
-  val params: Map[String, Option[BigDecimal]] = Map(
+  val params: Map[String, BigDecimal] = Map(
     "totalRentsReceived" -> rentIncome,
     "premiumsOfLeaseGrant" -> premiumsOfLeaseGrant,
     "reversePremiums" -> reversePremiums,
     "otherPropertyIncome" -> otherPropertyIncome
-  ).filterNot {case (_, v) => v.isEmpty }
-
-  def queryMap[A](as: Map[String, A]): Map[String, BigDecimal] = as.map {
-    case (k: String, Some(v: BigDecimal)) => (k, v)
-  }
-
-  val mappedPresentParams: Map[String, BigDecimal] = queryMap(params)
+  ).collect {case (k, Some(v)) => (k, v) }
 }
 
 object NonFHLIncome {
   implicit val reads: Reads[NonFHLIncome] = Json.reads[NonFHLIncome]
-  implicit val writes: Writes[NonFHLIncome] = new OWrites[NonFHLIncome] {
-    override def writes(o: NonFHLIncome): JsObject = Json.toJsObject(o.mappedPresentParams)
-  }
+  implicit val writes: Writes[NonFHLIncome] = (o: NonFHLIncome) => Json.toJsObject(o.params)
 }

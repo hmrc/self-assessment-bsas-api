@@ -70,7 +70,7 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
   )
 
   private def retrieveTypeOfBusiness(body: SubmitUKPropertyBsasRequestBody): TypeOfBusiness = {
-    body match {
+    (body: @unchecked) match {
       case SubmitUKPropertyBsasRequestBody(Some(_), None) => TypeOfBusiness.`uk-property-non-fhl`
       case SubmitUKPropertyBsasRequestBody(None, Some(_)) => TypeOfBusiness.`uk-property-fhl`
     }
