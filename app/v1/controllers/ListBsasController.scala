@@ -23,9 +23,8 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
-import v1.controllers.requestParsers.ListBsasRequestDataParser
+import v1.controllers.requestParsers.ListBsasRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.request.ListBsasRawData
 import v1.models.response.listBsas.ListBsasHateoasData
@@ -37,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ListBsasController @Inject()(
                                     val authService: EnrolmentsAuthService,
                                     val lookupService: MtdIdLookupService,
-                                    requestParser: ListBsasRequestDataParser,
+                                    requestParser: ListBsasRequestParser,
                                     service: ListBsasService,
                                     hateoasFactory: HateoasFactory,
                                     cc: ControllerComponents
@@ -82,7 +81,7 @@ class ListBsasController @Inject()(
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | TypeOfBusinessFormatError
            | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SelfEmploymentIdFormatError =>
         BadRequest(Json.toJson(errorWrapper))

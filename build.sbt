@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import TestPhases.oneForkedJvmPerTest
+import sbt._
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings}
 import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
@@ -30,7 +30,7 @@ lazy val microservice = Project(appName, file("."))
     dependencyOverrides ++= AppDependencies.overrides,
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
-    scalaVersion := "2.11.12"
+    scalaVersion := "2.12.10"
   )
   .settings(
     unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
@@ -44,7 +44,6 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     Keys.fork in IntegrationTest := false,
     unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it", base / "test")).value,
-    testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
     javaOptions in IntegrationTest += "-Dlogger.resource=logback-test.xml",
     parallelExecution in IntegrationTest := false,
     addTestReportOption(IntegrationTest, "int-test-reports")

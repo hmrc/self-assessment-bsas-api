@@ -81,7 +81,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | AdjustedStatusFormatError |
            BsasIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case RuleNotSelfEmployment | RuleNoAdjustmentsMade  => Forbidden(Json.toJson(errorWrapper))

@@ -20,7 +20,7 @@ import v1.models.errors.{RuleBothExpensesError, MtdError}
 
 object BothExpensesValidation {
 
-  def validate(expensesAdjustments: Option[Map[String, Option[BigDecimal]]]): List[MtdError] = {
+  def validate(expensesAdjustments: Option[Map[String, BigDecimal]]): List[MtdError] = {
 
     expensesAdjustments match {
       case Some(expenses) => (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"),

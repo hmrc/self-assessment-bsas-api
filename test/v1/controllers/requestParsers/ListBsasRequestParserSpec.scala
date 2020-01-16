@@ -26,7 +26,7 @@ import v1.models.domain.TypeOfBusiness
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v1.models.request.{DesTaxYear, ListBsasRawData, ListBsasRequest}
 
-class ListBsasRequestDataParserSpec extends UnitSpec{
+class ListBsasRequestParserSpec extends UnitSpec{
 
 
   private val nino = "AA123456B"
@@ -47,7 +47,7 @@ class ListBsasRequestDataParserSpec extends UnitSpec{
   private val inputDataFive = ListBsasRawData(nino, Some(taxYear), None, None)
 
   class Test(date: LocalDate = LocalDate.of(2019, 6, 18)) extends MockListBsasValidator with MockCurrentDateProvider {
-    lazy val parser = new ListBsasRequestDataParser(mockValidator, mockCurrentDateProvider)
+    lazy val parser = new ListBsasRequestParser(mockValidator, mockCurrentDateProvider)
 
     MockCurrentDateProvider.getCurrentDate().returns(date)
   }

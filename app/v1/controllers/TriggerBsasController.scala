@@ -80,7 +80,7 @@ class TriggerBsasController @Inject()(
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | RuleAccountingPeriodNotSupportedError
            | StartDateFormatError | EndDateFormatError | TypeOfBusinessFormatError
            | SelfEmploymentIdFormatError | SelfEmploymentIdRuleError

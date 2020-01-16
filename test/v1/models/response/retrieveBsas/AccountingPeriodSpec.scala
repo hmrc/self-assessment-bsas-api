@@ -16,8 +16,6 @@
 
 package v1.models.response.retrieveBsas
 
-import java.time.LocalDate
-
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
