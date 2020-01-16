@@ -159,7 +159,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
           (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
           (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
-          (FORBIDDEN, "UNALLOWABLE_AMOUNT", FORBIDDEN, RuleResultingValueNotPermitted),
+          (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
           (FORBIDDEN, "BVR_FAILURE_C55316", BAD_REQUEST, RuleTypeOfBusinessError),
           (FORBIDDEN, "BVR_FAILURE_C15320", BAD_REQUEST, RuleTypeOfBusinessError),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),

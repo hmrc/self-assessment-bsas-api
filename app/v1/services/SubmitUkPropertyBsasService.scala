@@ -58,7 +58,7 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
     "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
     "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_AMOUNT"          -> RuleResultingValueNotPermitted,
+    "UNALLOWABLE_VALUE"          -> RuleResultingValueNotPermitted,
     "BVR_FAILURE_C55316"          -> RuleTypeOfBusinessError,
     "BVR_FAILURE_C15320"          -> RuleTypeOfBusinessError,
     "BVR_FAILURE_C55503"          -> RuleOverConsolidatedExpensesThreshold,
