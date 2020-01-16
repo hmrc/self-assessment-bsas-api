@@ -47,5 +47,9 @@
             <td><p>PROPERTY_TYPE_OF_BUSINESS_INCORRECT</p></td>
             <td><p>Simulates the error response where either the fields submitted or the BSAS ID are for an incorrect type of business</p></td>
         </tr>
+        <tr>
+            <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
+            <td><p>Simulates the error response that may occur if one of more adjustments submitted would result in a negative value</p></td>
+        </tr>
     </tbody>
 </table>

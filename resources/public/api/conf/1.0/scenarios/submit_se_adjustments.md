@@ -43,5 +43,9 @@
             <td><p>UK_PROPERTY_ADJUSTED</p></td>
             <td><p>Simulates the error response that may occur if a UK property BSAS ID is used</p></td>
         </tr>
+        <tr>
+            <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
+            <td><p>Simulates the error response that may occur if one of more adjustments submitted would result in a negative value</p></td>
+        </tr>
     </tbody>
 </table>

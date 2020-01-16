@@ -86,9 +86,10 @@ class SubmitSelfEmploymentBsasController @Inject()(
            RuleIncorrectOrEmptyBodyError |
            MtdErrorWithCustomMessage(FormatAdjustmentValueError.code) |
            MtdErrorWithCustomMessage(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
-      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleBsasAlreadyAdjusted |
-           RuleOverConsolidatedExpensesThreshold | RuleTradingIncomeAllowanceClaimed |
-           RuleNotSelfEmployment | RuleErrorPropertyAdjusted => Forbidden(Json.toJson(errorWrapper))
+      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
+           RuleBsasAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
+           RuleTradingIncomeAllowanceClaimed | RuleNotSelfEmployment |
+           RuleErrorPropertyAdjusted | RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

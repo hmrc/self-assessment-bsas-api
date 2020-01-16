@@ -117,6 +117,9 @@ object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "") {
   def withFieldName(fieldName: String): MtdError = this.copy(message = s"Adjustment value for '$fieldName' falls outside the accepted range")
 }
 
+object RuleResultingValueNotPermitted
+  extends MtdError("RULE_RESULTING_VALUE_NOT_PERMITTED","The adjustments provided would produce an unacceptable negative monetary value")
+
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
 

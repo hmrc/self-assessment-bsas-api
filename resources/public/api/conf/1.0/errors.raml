@@ -357,6 +357,17 @@ traits:
                 description: Consolidated expenses adjusted with other unexpected fields
                 value:
                   code: RULE_BOTH_EXPENSES_SUPPLIED
+  ruleResultingValueNotPermitted:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleResultingValueNotPermitted:
+                description: One or more adjustments would result in a negative value that is not permitted
+                value:
+                  code: RULE_RESULTING_VALUE_NOT_PERMITTED
   triggerNotFound:
     responses:
       404:
