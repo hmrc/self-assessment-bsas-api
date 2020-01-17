@@ -122,6 +122,23 @@ class ListBsasControllerSpec
   private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
   private val requestData = ListBsasRequest(Nino(nino), DesTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
 
+  def detail(auditResponse: AuditResponse): GenericAuditDetail =
+    GenericAuditDetail(
+      userType = "Individual",
+      agentReferenceNumber = None,
+      pathParams = Map("nino" -> nino),
+      requestBody = None,
+      `X-CorrelationId` = correlationId,
+      auditResponse = auditResponse
+    )
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "listBusinessSourceAdjustableSummaries",
+      transactionName = "adjustable-summary-api",
+      detail = detail(auditResponse)
+    )
+
   "list bsas" should {
     "return successful response with status OK" when {
       "valid request" in new Test {
@@ -205,24 +222,8 @@ class ListBsasControllerSpec
         contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val detail: GenericAuditDetail =
-          GenericAuditDetail(
-          userType = "Individual",
-            agentReferenceNumber = None,
-            pathParams = Map("nino" -> nino),
-            requestBody = None,
-            `X-CorrelationId` = correlationId,
-            auditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
-          )
-
-        val event: AuditEvent[GenericAuditDetail] =
-          AuditEvent(
-            auditType = "listBusinessSourceAdjustableSummaries",
-            transactionName = "adjustable-summary-api",
-            detail = detail
-          )
-
-        MockedAuditService.verifyAuditEvent(event).once
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -241,24 +242,8 @@ class ListBsasControllerSpec
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val detail: GenericAuditDetail =
-              GenericAuditDetail(
-                userType = "Individual",
-                agentReferenceNumber = None,
-                pathParams = Map("nino" -> nino),
-                requestBody = None,
-                `X-CorrelationId` = correlationId,
-                auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-              )
-
-            val event: AuditEvent[GenericAuditDetail] =
-              AuditEvent(
-                auditType = "listBusinessSourceAdjustableSummaries",
-                transactionName = "adjustable-summary-api",
-                detail = detail
-              )
-
-            MockedAuditService.verifyAuditEvent(event).once
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -294,23 +279,8 @@ class ListBsasControllerSpec
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val detail: GenericAuditDetail =
-              GenericAuditDetail(
-                userType = "Individual",
-                agentReferenceNumber = None,
-                pathParams = Map("nino" -> nino),
-                requestBody = None,
-                `X-CorrelationId` = correlationId,
-                auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None))
-
-            val event: AuditEvent[GenericAuditDetail] =
-              AuditEvent(
-                auditType = "listBusinessSourceAdjustableSummaries",
-                transactionName = "adjustable-summary-api",
-                detail = detail
-              )
-
-            MockedAuditService.verifyAuditEvent(event).once
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

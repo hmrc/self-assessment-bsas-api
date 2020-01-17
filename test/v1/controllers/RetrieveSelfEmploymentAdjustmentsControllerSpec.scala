@@ -73,6 +73,23 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
   val testHateoasLinkAdjustSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
     method = GET, rel = "self")
 
+  def detail(auditResponse: AuditResponse): GenericAuditDetail =
+    GenericAuditDetail(
+      userType = "Individual",
+      agentReferenceNumber = None,
+      pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+      requestBody = None,
+      `X-CorrelationId` = correlationId,
+      auditResponse = auditResponse
+    )
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "retrieveBusinessSourceAccountingAdjustments",
+      transactionName = "adjustable-summary-api",
+      detail = detail(auditResponse)
+    )
+
   "retrieve" should {
     "return successful hateoas response for self-assessment with status OK" when {
       "a valid request supplied" in new Test {
@@ -96,24 +113,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val detail: GenericAuditDetail =
-          GenericAuditDetail(
-            userType = "Individual",
-            agentReferenceNumber = None,
-            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-            requestBody = None,
-            `X-CorrelationId` = correlationId,
-            auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))))
-          )
-
-        val event: AuditEvent[GenericAuditDetail] =
-          AuditEvent(
-            auditType = "retrieveBusinessSourceAccountingAdjustments",
-            transactionName = "adjustable-summary-api",
-            detail = detail
-          )
-
-        MockedAuditService.verifyAuditEvent(event).once
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -132,24 +133,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val detail: GenericAuditDetail =
-              GenericAuditDetail(
-                userType = "Individual",
-                agentReferenceNumber = None,
-                pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-                requestBody = None,
-                `X-CorrelationId` = correlationId,
-                auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-              )
-
-            val event: AuditEvent[GenericAuditDetail] =
-              AuditEvent(
-                auditType = "retrieveBusinessSourceAccountingAdjustments",
-                transactionName = "adjustable-summary-api",
-                detail = detail
-              )
-
-            MockedAuditService.verifyAuditEvent(event).once
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -179,24 +164,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val detail: GenericAuditDetail =
-              GenericAuditDetail(
-                userType = "Individual",
-                agentReferenceNumber = None,
-                pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-                requestBody = None,
-                `X-CorrelationId` = correlationId,
-                auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-              )
-
-            val event: AuditEvent[GenericAuditDetail] =
-              AuditEvent(
-                auditType = "retrieveBusinessSourceAccountingAdjustments",
-                transactionName = "adjustable-summary-api",
-                detail = detail
-              )
-
-            MockedAuditService.verifyAuditEvent(event).once
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
