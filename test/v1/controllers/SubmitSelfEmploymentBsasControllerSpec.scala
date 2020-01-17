@@ -87,21 +87,18 @@ class SubmitSelfEmploymentBsasControllerSpec
     )
   )
 
-  def detail(auditResponse: AuditResponse): GenericAuditDetail =
-    GenericAuditDetail(
-      userType = "Individual",
-      agentReferenceNumber = None,
-      pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-      requestBody = Some(Json.toJson(mtdRequest)),
-      `X-CorrelationId` = correlationId,
-      auditResponse = auditResponse
-    )
-
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse)
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = Some(Json.toJson(mtdRequest)),
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
     )
 
   "submitSelfEmploymentBsas" should {

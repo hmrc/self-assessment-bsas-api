@@ -76,21 +76,18 @@ class RetrieveUkPropertyBsasControllerSpec
   val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
     method = POST, rel = "submit-summary-adjustments")
 
-  def detail(auditResponse: AuditResponse): GenericAuditDetail =
-    GenericAuditDetail(
-      userType = "Individual",
-      agentReferenceNumber = None,
-      pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-      requestBody = None,
-      `X-CorrelationId` = correlationId,
-      auditResponse = auditResponse
-    )
-
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveABusinessSourceAdjustableSummary",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse)
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
     )
 
   "retrieve" should {

@@ -79,21 +79,18 @@ class TriggerBsasControllerSpec
   val testHateoasLinkProperty = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET, rel = "self")
 
-  def detail(auditResponse: AuditResponse, requestBody: Option[JsValue]): GenericAuditDetail =
-    GenericAuditDetail(
-      userType = "Individual",
-      agentReferenceNumber = None,
-      pathParams = Map("nino" -> nino),
-      requestBody = requestBody,
-      `X-CorrelationId` = correlationId,
-      auditResponse = auditResponse
-    )
-
   def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "triggerABusinessSourceAdjustableSummary",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse, requestBody)
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino),
+        requestBody = requestBody,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
     )
 
   "triggerBsas" should {

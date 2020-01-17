@@ -89,21 +89,18 @@ class SubmitUkPropertyBsasControllerSpec
     )
   )
 
-  def detail(auditResponse: AuditResponse, requestBody: Option[JsValue]): GenericAuditDetail =
-    GenericAuditDetail(
-      userType = "Individual",
-      agentReferenceNumber = None,
-      pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-      requestBody = requestBody,
-      `X-CorrelationId` = correlationId,
-      auditResponse = auditResponse
-    )
-
   def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse, requestBody)
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = requestBody,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
     )
 
   "submitUkPropertyBsas" should {

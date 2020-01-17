@@ -122,21 +122,18 @@ class ListBsasControllerSpec
   private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
   private val requestData = ListBsasRequest(Nino(nino), DesTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
 
-  def detail(auditResponse: AuditResponse): GenericAuditDetail =
-    GenericAuditDetail(
-      userType = "Individual",
-      agentReferenceNumber = None,
-      pathParams = Map("nino" -> nino),
-      requestBody = None,
-      `X-CorrelationId` = correlationId,
-      auditResponse = auditResponse
-    )
-
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "listBusinessSourceAdjustableSummaries",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse)
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
     )
 
   "list bsas" should {
