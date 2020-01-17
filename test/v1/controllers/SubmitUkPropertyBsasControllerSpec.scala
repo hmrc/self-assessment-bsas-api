@@ -227,7 +227,7 @@ class SubmitUkPropertyBsasControllerSpec
         (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
-        (RuleTypeOfBusinessError, BAD_REQUEST),
+        (RuleTypeOfBusinessError, FORBIDDEN),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleBsasAlreadyAdjusted, FORBIDDEN),

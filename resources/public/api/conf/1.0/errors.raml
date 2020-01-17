@@ -172,7 +172,7 @@ traits:
                   code: RULE_RANGE_INVALID
   ruleTypeOfBusinessIncorrect:
     responses:
-      400:
+      403:
         body:
           application/json:
             type: types.errorResponse
@@ -313,17 +313,6 @@ traits:
                 description: The supplied accounting period does not exist
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
-  ruleNoAdjustmentsMade404:
-    responses:
-      404:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleNoAdjustmentsMade:
-                description: An adjusted calculation doesn't exist
-                value:
-                  code: RULE_NO_ADJUSTMENTS_MADE
   ruleNoAdjustmentsMade:
       responses:
         403:
