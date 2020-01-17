@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -89,21 +89,21 @@ class SubmitUkPropertyBsasControllerSpec
     )
   )
 
-  def detail(auditResponse: AuditResponse): GenericAuditDetail =
+  def detail(auditResponse: AuditResponse, requestBody: Option[JsValue]): GenericAuditDetail =
     GenericAuditDetail(
       userType = "Individual",
       agentReferenceNumber = None,
       pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
-      requestBody = Some(Json.toJson(validfhlInputJson)),
+      requestBody = requestBody,
       `X-CorrelationId` = correlationId,
       auditResponse = auditResponse
     )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse)
+      detail = detail(auditResponse, requestBody)
     )
 
   "submitUkPropertyBsas" should {
@@ -129,7 +129,7 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson) )).once
       }
 
       "a valid request is supplied for a non-FHL property" in new Test {
@@ -153,7 +153,7 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validNonFHLInputJson))).once
       }
     }
 
@@ -172,7 +172,7 @@ class SubmitUkPropertyBsasControllerSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
         }
       }
 
@@ -204,7 +204,7 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
 
       "multiple errors occur for the customised errors" in new Test {
@@ -234,7 +234,7 @@ class SubmitUkPropertyBsasControllerSpec
               AuditError(RuleAdjustmentRangeInvalid.withFieldName("thePatternMatchIgnoresMe").code)
             )), None)
 
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
     }
 
@@ -257,7 +257,7 @@ class SubmitUkPropertyBsasControllerSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
         }
       }
 
@@ -278,5 +278,4 @@ class SubmitUkPropertyBsasControllerSpec
       input.foreach(args => (serviceErrors _).tupled(args))
     }
   }
-
 }

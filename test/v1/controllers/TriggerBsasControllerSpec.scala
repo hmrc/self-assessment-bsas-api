@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -79,21 +79,21 @@ class TriggerBsasControllerSpec
   val testHateoasLinkProperty = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET, rel = "self")
 
-  def detail(auditResponse: AuditResponse): GenericAuditDetail =
+  def detail(auditResponse: AuditResponse, requestBody: Option[JsValue]): GenericAuditDetail =
     GenericAuditDetail(
       userType = "Individual",
       agentReferenceNumber = None,
       pathParams = Map("nino" -> nino),
-      requestBody = Some(Json.toJson(requestBodyForProperty)),
+      requestBody = requestBody,
       `X-CorrelationId` = correlationId,
       auditResponse = auditResponse
     )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "triggerABusinessSourceAdjustableSummary",
       transactionName = "adjustable-summary-api",
-      detail = detail(auditResponse)
+      detail = detail(auditResponse, requestBody)
     )
 
   "triggerBsas" should {
@@ -119,7 +119,7 @@ class TriggerBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForSE(nino))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
       }
 
       "a valid request supplied for business type uk-property" in new Test {
@@ -143,7 +143,7 @@ class TriggerBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForProperty(nino))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBodyForProperty))).once
       }
     }
 
@@ -163,7 +163,7 @@ class TriggerBsasControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
           }
         }
 
@@ -203,7 +203,7 @@ class TriggerBsasControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
           }
         }
 
