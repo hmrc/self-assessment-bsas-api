@@ -60,8 +60,7 @@ object ExpensesFixture {
         "irrecoverableDebtsAllowable" -> badDebt,
         "professionalFeesAllowable" -> professionalFees,
         "depreciationAllowable" -> depreciation,
-        "otherExpensesAllowable" -> other,
-        "consolidatedExpenses" -> consolidatedExpenses
+        "otherExpensesAllowable" -> other
       )
 
     Json.toJsObject(queryMap(fields))
@@ -86,8 +85,7 @@ object ExpensesFixture {
         "badDebt" -> badDebt,
         "professionalFees" -> professionalFees,
         "depreciation" -> depreciation,
-        "other" -> other,
-        "consolidatedExpenses" -> consolidatedExpenses
+        "other" -> other
       )
 
     Json.toJsObject(queryMap(fields))

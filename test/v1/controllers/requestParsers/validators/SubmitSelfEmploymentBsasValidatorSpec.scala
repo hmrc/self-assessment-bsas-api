@@ -78,6 +78,14 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
       "valid parameters are provided" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))) shouldBe List()
       }
+
+      "valid parameters are provided with only consolidated expenses" in {
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequestWithOnlyConsolidatedExpenses))) shouldBe List()
+      }
+
+      "valid parameters are provided with only additions expenses" in {
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
+      }
     }
     "return a single error" when {
       "passed an invalid nino" in {
@@ -95,6 +103,8 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
           AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
           AnyContentAsJson(mtdRequestWithBothExpenses))) shouldBe List(RuleBothExpensesError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
+          AnyContentAsJson(mtdRequestWithAdditionsAndExpenses))) shouldBe List(RuleBothExpensesError)
       }
 
       val inputs: Seq[(String, BigDecimal => SubmitSelfEmploymentBsasRequestBody)] = Seq(

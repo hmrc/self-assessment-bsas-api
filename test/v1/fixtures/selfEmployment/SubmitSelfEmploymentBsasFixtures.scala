@@ -130,6 +130,67 @@ object SubmitSelfEmploymentBsasFixtures {
                       |	}
                       |}""".stripMargin)
 
+  val mtdRequestWithOnlyConsolidatedExpenses = Json.parse("""{
+                                |	"income": {
+                                |		"turnover": 1000.25,
+                                |		"other": 1000.5
+                                |	},
+                                |	"expenses": {
+                                |		"consolidatedExpenses": 2002.75
+                                |	}
+                                |}""".stripMargin)
+
+  val mtdRequestWithOnlyAdditionsExpenses = Json.parse("""{
+                                                |	"income": {
+                                                |		"turnover": 1000.25,
+                                                |		"other": 1000.5
+                                                |	},
+                                                |	"additions": {
+                                                |		"costOfGoodsBoughtDisallowable": 3000.1,
+                                                |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
+                                                |		"staffCostsDisallowable": 3000.3,
+                                                |		"travelCostsDisallowable": 3000.4,
+                                                |		"premisesRunningCostsDisallowable": 3000.5,
+                                                |		"maintenanceCostsDisallowable": -3000.1,
+                                                |		"adminCostsDisallowable": -3000.2,
+                                                |		"advertisingCostsDisallowable": -3000.3,
+                                                |		"businessEntertainmentCostsDisallowable": -3000.4,
+                                                |		"interestDisallowable": -3000.5,
+                                                |		"financialChargesDisallowable": 3000.6,
+                                                |		"badDebtDisallowable": -3000.6,
+                                                |		"professionalFeesDisallowable": 3000.7,
+                                                |		"depreciationDisallowable": -3000.7,
+                                                |		"otherDisallowable": 3000.8
+                                                |	}
+                                                |}""".stripMargin)
+
+  val mtdRequestWithAdditionsAndExpenses = Json.parse("""{
+                                                         |	"income": {
+                                                         |		"turnover": 1000.25,
+                                                         |		"other": 1000.5
+                                                         |	},
+                                                         |	"additions": {
+                                                         |		"costOfGoodsBoughtDisallowable": 3000.1,
+                                                         |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
+                                                         |		"staffCostsDisallowable": 3000.3,
+                                                         |		"travelCostsDisallowable": 3000.4,
+                                                         |		"premisesRunningCostsDisallowable": 3000.5,
+                                                         |		"maintenanceCostsDisallowable": -3000.1,
+                                                         |		"adminCostsDisallowable": -3000.2,
+                                                         |		"advertisingCostsDisallowable": -3000.3,
+                                                         |		"businessEntertainmentCostsDisallowable": -3000.4,
+                                                         |		"interestDisallowable": -3000.5,
+                                                         |		"financialChargesDisallowable": 3000.6,
+                                                         |		"badDebtDisallowable": -3000.6,
+                                                         |		"professionalFeesDisallowable": 3000.7,
+                                                         |		"depreciationDisallowable": -3000.7,
+                                                         |		"otherDisallowable": 3000.8
+                                                         |	},
+                                                         |	"expenses": {
+                                                         |		"consolidatedExpenses": 2002.75
+                                                         |	}
+                                                         |}""".stripMargin)
+
   val mtdRequestWithBothExpenses = Json.parse("""{
                                 |	"income": {
                                 |		"turnover": 1000.25,

@@ -37,7 +37,7 @@ case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]){
 
   //noinspection ScalaStyle
-  private def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsBought.isEmpty &&
+  def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsBought.isEmpty &&
                         cisPaymentsToSubcontractors.isEmpty &&
                         staffCosts.isEmpty &&
                         travelCosts.isEmpty &&
@@ -53,7 +53,7 @@ case class Expenses(costOfGoodsBought: Option[BigDecimal],
                         depreciation.isEmpty &&
                         other.isEmpty
 
-  private def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
+  def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
 
   def isEmpty: Boolean = isNonConsolidatedExpensesEmpty && isConsolidatedExpensesEmpty
 
