@@ -154,6 +154,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
         (FormatAdjustmentValueError, BAD_REQUEST),
         (RuleAdjustmentRangeInvalid, BAD_REQUEST),
+        (RuleBothExpensesError, BAD_REQUEST),
         (DownstreamError, INTERNAL_SERVER_ERROR)
       )
 

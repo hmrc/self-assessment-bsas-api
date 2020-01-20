@@ -21,6 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.models.errors._
 import v1.models.request.submitBsas.selfEmployment._
+import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
   val validator = new SubmitSelfEmploymentBsasValidator()
@@ -75,7 +76,15 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
   "validator" should {
     "return no errors" when {
       "valid parameters are provided" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List()
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))) shouldBe List()
+      }
+
+      "valid parameters are provided with only consolidated expenses" in {
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequestWithOnlyConsolidatedExpenses))) shouldBe List()
+      }
+
+      "valid parameters are provided with only additions expenses" in {
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
       }
     }
     "return a single error" when {
@@ -86,9 +95,16 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, "beans", AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(BsasIdFormatError)
       }
       "passed an invalid body" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
+          AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
+          AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
+          AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
+          AnyContentAsJson(mtdRequestWithBothExpenses))) shouldBe List(RuleBothExpensesError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
+          AnyContentAsJson(mtdRequestWithAdditionsAndExpenses))) shouldBe List(RuleBothExpensesError)
       }
 
       val inputs: Seq[(String, BigDecimal => SubmitSelfEmploymentBsasRequestBody)] = Seq(
@@ -111,14 +127,16 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
         ("expenses.other", i => defaultBody(expenses = Some(seExpenses.copy(other = Some(i))))),
         ("expenses.consolidatedExpenses", i => defaultBody(expenses = Some(seExpenses.copy(consolidatedExpenses = Some(i))))),
         ("additions.costOfGoodsBoughtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(costOfGoodsBoughtDisallowable = Some(i))))),
-        ("additions.cisPaymentsToSubcontractorsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(cisPaymentsToSubcontractorsDisallowable = Some(i))))),
+        ("additions.cisPaymentsToSubcontractorsDisallowable", i => defaultBody(additions =
+          Some(seAdditions.copy(cisPaymentsToSubcontractorsDisallowable = Some(i))))),
         ("additions.staffCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(staffCostsDisallowable = Some(i))))),
         ("additions.travelCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(travelCostsDisallowable = Some(i))))),
         ("additions.premisesRunningCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(premisesRunningCostsDisallowable = Some(i))))),
         ("additions.maintenanceCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(maintenanceCostsDisallowable = Some(i))))),
         ("additions.adminCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(adminCostsDisallowable = Some(i))))),
         ("additions.advertisingCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(advertisingCostsDisallowable = Some(i))))),
-        ("additions.businessEntertainmentCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(businessEntertainmentCostsDisallowable = Some(i))))),
+        ("additions.businessEntertainmentCostsDisallowable", i => defaultBody(additions =
+          Some(seAdditions.copy(businessEntertainmentCostsDisallowable = Some(i))))),
         ("additions.interestDisallowable", i => defaultBody(additions = Some(seAdditions.copy(interestDisallowable = Some(i))))),
         ("additions.financialChargesDisallowable", i => defaultBody(additions = Some(seAdditions.copy(financialChargesDisallowable = Some(i))))),
         ("additions.badDebtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(badDebtDisallowable = Some(i))))),

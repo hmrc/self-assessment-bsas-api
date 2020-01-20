@@ -38,7 +38,7 @@ object ExpensesFixture {
       professionalFees = Some(2002.25),
       depreciation = Some(2002.50),
       other = Some(2002.75),
-      consolidatedExpenses = Some(-2002.25)
+      None
     )
 
   def expensesMtdJson(model: Expenses): JsValue = {
@@ -60,8 +60,7 @@ object ExpensesFixture {
         "irrecoverableDebtsAllowable" -> badDebt,
         "professionalFeesAllowable" -> professionalFees,
         "depreciationAllowable" -> depreciation,
-        "otherExpensesAllowable" -> other,
-        "consolidatedExpenses" -> consolidatedExpenses
+        "otherExpensesAllowable" -> other
       )
 
     Json.toJsObject(queryMap(fields))
@@ -86,8 +85,7 @@ object ExpensesFixture {
         "badDebt" -> badDebt,
         "professionalFees" -> professionalFees,
         "depreciation" -> depreciation,
-        "other" -> other,
-        "consolidatedExpenses" -> consolidatedExpenses
+        "other" -> other
       )
 
     Json.toJsObject(queryMap(fields))

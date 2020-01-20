@@ -16,8 +16,8 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     cisPaymentsToSubcontractors: Option[BigDecimal],
@@ -36,7 +36,8 @@ case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     other: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]){
 
-def isEmpty: Boolean =  costOfGoodsBought.isEmpty &&
+  //noinspection ScalaStyle
+  def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsBought.isEmpty &&
                         cisPaymentsToSubcontractors.isEmpty &&
                         staffCosts.isEmpty &&
                         travelCosts.isEmpty &&
@@ -50,8 +51,13 @@ def isEmpty: Boolean =  costOfGoodsBought.isEmpty &&
                         badDebt.isEmpty &&
                         professionalFees.isEmpty &&
                         depreciation.isEmpty &&
-                        other.isEmpty &&
-                        consolidatedExpenses.isEmpty
+                        other.isEmpty
+
+  def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
+
+  def isEmpty: Boolean = isNonConsolidatedExpensesEmpty && isConsolidatedExpensesEmpty
+
+  def isBothSupplied: Boolean = !isNonConsolidatedExpensesEmpty && !isConsolidatedExpensesEmpty
 }
 
 object Expenses {

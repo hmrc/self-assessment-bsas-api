@@ -18,12 +18,13 @@ package v1.controllers.requestParsers.validators
 
 import config.FixedConfig
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.{MtdError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
 
 class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, adjustmentFieldValidator)
+  private val validationSet = List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator,
+    adjustmentFieldValidator, bothExpensesValidator)
 
   private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -41,8 +42,12 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private def incorrectOrEmptyBodyValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
     List(
-      if(model.isIncorrectOrEmptyBodyError) List(RuleIncorrectOrEmptyBodyError)
-      else NoValidationErrors
+      if(model.isIncorrectOrEmptyBodyError) {
+        List(RuleIncorrectOrEmptyBodyError)
+      }
+      else {
+        NoValidationErrors
+      }
     )
   }
 
@@ -67,6 +72,20 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     }
 
     allFields.map(callValidation).getOrElse(Nil)
+  }
+
+  private def bothExpensesValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
+
+    List(
+      if(model.expenses.exists(_.isBothSupplied)
+        || (!(model.additions.isEmpty || model.additions.exists(_.isEmpty))
+        && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))){
+        List(RuleBothExpensesError)
+      } else {
+        NoValidationErrors
+      }
+    )
   }
 
   override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)
