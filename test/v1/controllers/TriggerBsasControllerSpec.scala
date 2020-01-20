@@ -16,14 +16,15 @@
 
 package v1.controllers
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockTriggerBsasRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
@@ -36,12 +37,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class TriggerBsasControllerSpec
-    extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
-    with MockTriggerBsasRequestParser
-    with MockTriggerBsasService
-    with MockHateoasFactory {
+  extends ControllerBaseSpec
+      with MockEnrolmentsAuthService
+      with MockMtdIdLookupService
+      with MockTriggerBsasRequestParser
+      with MockTriggerBsasService
+      with MockHateoasFactory
+      with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -52,6 +54,7 @@ class TriggerBsasControllerSpec
       requestParser = mockRequestParser,
       triggerBsasService = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -76,6 +79,20 @@ class TriggerBsasControllerSpec
   val testHateoasLinkProperty = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET, rel = "self")
 
+  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "triggerABusinessSourceAdjustableSummary",
+      transactionName = "adjustable-summary-api",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino),
+        requestBody = requestBody,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
+
   "triggerBsas" should {
     "return successful hateoas response for SE with status CREATED" when {
       "a valid request supplied for business type self-employment" in new Test {
@@ -97,6 +114,9 @@ class TriggerBsasControllerSpec
         status(result) shouldBe CREATED
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForSE(nino))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForSE(nino))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
       }
 
       "a valid request supplied for business type uk-property" in new Test {
@@ -118,6 +138,9 @@ class TriggerBsasControllerSpec
         status(result) shouldBe CREATED
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForProperty(nino))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForProperty(nino))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBodyForProperty))).once
       }
     }
 
@@ -135,6 +158,9 @@ class TriggerBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
           }
         }
 
@@ -172,6 +198,9 @@ class TriggerBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
           }
         }
 

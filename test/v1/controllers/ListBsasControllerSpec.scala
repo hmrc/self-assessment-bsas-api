@@ -24,8 +24,9 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.mocks.requestParsers.MockListBsasRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
 import v1.models.domain.{Status, TypeOfBusiness}
 import v1.models.errors._
 import v1.models.hateoas.HateoasWrapper
@@ -44,7 +45,8 @@ class ListBsasControllerSpec
     with MockListBsasService
     with MockHateoasFactory
     with MockAppConfig
-    with HateoasLinks {
+    with HateoasLinks
+    with MockAuditService {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -54,14 +56,14 @@ class ListBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
       service = mockService,
-      cc = cc,
-      hateoasFactory = mockHateoasFactory
+      auditService = mockAuditService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
   }
-
 
   private val nino = "AA123456A"
   private val taxYear = Some("2019-20")
@@ -119,6 +121,20 @@ class ListBsasControllerSpec
 
   private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
   private val requestData = ListBsasRequest(Nino(nino), DesTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "listBusinessSourceAdjustableSummaries",
+      transactionName = "adjustable-summary-api",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   "list bsas" should {
     "return successful response with status OK" when {
@@ -202,6 +218,9 @@ class ListBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -219,6 +238,9 @@ class ListBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -253,6 +275,9 @@ class ListBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

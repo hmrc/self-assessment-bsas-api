@@ -22,7 +22,8 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitSelfEmploymentBsasService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitSelfEmploymentBsasService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
@@ -40,7 +41,8 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentRequestParser
     with MockSubmitSelfEmploymentBsasService
-    with MockHateoasFactory {
+    with MockHateoasFactory
+    with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -51,6 +53,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -84,6 +87,19 @@ class SubmitSelfEmploymentBsasControllerSpec
     )
   )
 
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "submitBusinessSourceAccountingAdjustments",
+      transactionName = "adjustable-summary-api",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = Some(Json.toJson(mtdRequest)),
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   "submitSelfEmploymentBsas" should {
     "return a successful hateoas response with status 200 (OK)" when {
@@ -106,6 +122,9 @@ class SubmitSelfEmploymentBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -122,6 +141,9 @@ class SubmitSelfEmploymentBsasControllerSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
         }
       }
 
@@ -150,6 +172,18 @@ class SubmitSelfEmploymentBsasControllerSpec
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse =
+          AuditResponse(
+            httpStatus = BAD_REQUEST,
+            errors = Some(Seq(
+              AuditError(NinoFormatError.code),
+              AuditError(BsasIdFormatError.code)
+            )),
+            body = None
+          )
+
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
 
       "multiple errors occur for the customised errors" in new Test {
@@ -173,6 +207,17 @@ class SubmitSelfEmploymentBsasControllerSpec
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse =
+          AuditResponse(
+            httpStatus = BAD_REQUEST,
+            errors = Some(Seq(
+              AuditError(FormatAdjustmentValueError.withFieldName("turnover").code),
+              AuditError(RuleAdjustmentRangeInvalid.withFieldName("other").code)
+            )),
+            body = None)
+
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -193,6 +238,9 @@ class SubmitSelfEmploymentBsasControllerSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
         }
       }
 

@@ -16,10 +16,23 @@
 
 package v1.models.audit
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import support.UnitSpec
+import v1.fixtures.audit.GenericAuditDetailFixture._
 
-case class AuditError(errorCode: String)
+class GenericAuditDetailSpec extends UnitSpec {
 
-object AuditError {
-  implicit val format: OFormat[AuditError] = Json.format[AuditError]
+  "GenericAuditDetail" when {
+    "written to JSON (success)" should {
+      "produce the expected JsObject" in {
+        Json.toJson(genericAuditDetailModelSuccess) shouldBe genericAuditDetailJsonSuccess
+      }
+    }
+
+    "written to JSON (error)" should {
+      "produce the expected JsObject" in {
+        Json.toJson(genericAuditDetailModelError) shouldBe genericAuditDetailJsonError
+      }
+    }
+  }
 }

@@ -22,23 +22,26 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.ListBsasRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.ListBsasRawData
 import v1.models.response.listBsas.ListBsasHateoasData
-import v1.services.{EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
+import v1.services.{AuditService, EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasController @Inject()(
-                                    val authService: EnrolmentsAuthService,
+class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                     val lookupService: MtdIdLookupService,
                                     requestParser: ListBsasRequestParser,
                                     service: ListBsasService,
                                     hateoasFactory: HateoasFactory,
+                                    auditService: AuditService,
                                     cc: ControllerComponents
                                   )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -70,13 +73,35 @@ class ListBsasController @Inject()(
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
+          auditSubmission(
+            GenericAuditDetail(
+              userDetails = request.userDetails,
+              pathParams = Map("nino" -> nino),
+              requestBody = None,
+              `X-CorrelationId` = response.correlationId,
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+            )
+          )
+
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
-        errorResult(errorWrapper).withApiHeaders(correlationId)
+        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            pathParams = Map("nino" -> nino),
+            requestBody = None,
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            )
+          )
+
+        result
       }.merge
     }
 
@@ -90,5 +115,16 @@ class ListBsasController @Inject()(
     }
   }
 
+  private def auditSubmission(details: GenericAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
 
+    val event = AuditEvent(
+      auditType = "listBusinessSourceAdjustableSummaries",
+      transactionName = "adjustable-summary-api",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
+  }
 }
