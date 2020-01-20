@@ -23,7 +23,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasAdjustmentsService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasAdjustmentsService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -39,7 +40,8 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockRetrieveAdjustmentsRequestParser
   with MockRetrieveUkPropertyBsasAdjustmentsService
-  with MockHateoasFactory {
+  with MockHateoasFactory
+  with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -50,6 +52,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -69,6 +72,20 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
   val testHateoasLinkRetrieveAdjustments = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
     method = GET, rel = "self")
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "retrieveBusinessSourceAccountingAdjustments",
+      transactionName = "adjustable-summary-api",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   "retrieve" when {
     "a valid request is supplied" should {
@@ -92,6 +109,9 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForUkPropertyNonFhlAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForUkPropertyNonFhlAdjustments(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
 
       "return successful hateoas response for uk-property-fhl with status OK" in new Test {
@@ -114,6 +134,9 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForUkPropertyFhlAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForUkPropertyFhlAdjustments(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -131,6 +154,9 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -159,6 +185,9 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

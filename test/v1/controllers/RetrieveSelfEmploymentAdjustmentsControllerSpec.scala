@@ -23,7 +23,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -39,7 +40,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockRetrieveAdjustmentsRequestParser
   with MockRetrieveSelfEmploymentAdjustmentsService
-  with MockHateoasFactory {
+  with MockHateoasFactory
+  with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -50,6 +52,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -69,6 +72,20 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
 
   val testHateoasLinkAdjustSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
     method = GET, rel = "self")
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "retrieveBusinessSourceAccountingAdjustments",
+      transactionName = "adjustable-summary-api",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   "retrieve" should {
     "return successful hateoas response for self-assessment with status OK" when {
@@ -92,6 +109,9 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -109,6 +129,9 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -137,6 +160,9 @@ class RetrieveSelfEmploymentAdjustmentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

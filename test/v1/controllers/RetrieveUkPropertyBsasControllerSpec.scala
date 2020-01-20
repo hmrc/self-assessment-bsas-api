@@ -23,7 +23,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, RuleNoAdjustmentsMade, RuleNotUkProperty, _}
 import v1.models.hateoas.Method.{GET, POST}
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -40,7 +41,8 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveUkPropertyRequestParser
     with MockRetrieveUkPropertyBsasService
-    with MockHateoasFactory {
+    with MockHateoasFactory
+      with MockAuditService  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -51,6 +53,7 @@ class RetrieveUkPropertyBsasControllerSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -73,6 +76,20 @@ class RetrieveUkPropertyBsasControllerSpec
   val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
     method = POST, rel = "submit-summary-adjustments")
 
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "retrieveABusinessSourceAdjustableSummary",
+      transactionName = "adjustable-summary-api",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
+
   "retrieve" should {
     "return successful hateoas response for property with status OK" when {
       "a valid request supplied" in new Test {
@@ -94,6 +111,9 @@ class RetrieveUkPropertyBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForProperty(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForProperty(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -111,6 +131,9 @@ class RetrieveUkPropertyBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -142,6 +165,9 @@ class RetrieveUkPropertyBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
