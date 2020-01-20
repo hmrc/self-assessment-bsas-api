@@ -40,7 +40,7 @@ class ExpensesSpec extends UnitSpec {
       professionalFees = Some(2002.25),
       depreciation = Some(2002.50),
       other = Some(2002.75),
-      consolidatedExpenses = Some(-2002.25)
+      None
     )
 
   val emptyExpensesModel: Expenses =
@@ -104,6 +104,16 @@ class ExpensesSpec extends UnitSpec {
 
       "return false when non-empty fields is supplied" in {
         expensesDesJson(emptyExpensesModel.copy(Some(1000.49))).as[Expenses].isEmpty shouldBe false
+      }
+    }
+
+    "isNonConsolidatedExpensesEmpty is called" should {
+      "return true if non consolidated expenses is present" in {
+        emptyExpensesModel.copy(costOfGoodsBought = Some(100.49)).isConsolidatedExpensesEmpty shouldBe true
+      }
+
+      "return true if only consolidated expenses is present" in {
+        emptyExpensesModel.copy(consolidatedExpenses = Some(100.49)).isNonConsolidatedExpensesEmpty shouldBe true
       }
     }
   }

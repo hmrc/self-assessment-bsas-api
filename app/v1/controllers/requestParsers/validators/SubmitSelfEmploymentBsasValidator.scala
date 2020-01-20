@@ -78,7 +78,9 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
 
     List(
-      if(model.expenses.exists(_.isBothSupplied)){
+      if((!model.additions.exists(_.isEmpty)
+        || !model.expenses.exists(_.isNonConsolidatedExpensesEmpty))
+        && !model.expenses.exists(_.isConsolidatedExpensesEmpty)){
         List(RuleBothExpensesError)
       }
       else {
