@@ -96,7 +96,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError, requestBodyJson: JsValue): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
@@ -107,13 +107,16 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request().post(requestBody))
+            val response: WSResponse = await(request().post(requestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
-        val input = Seq(("AA1234A", BAD_REQUEST, NinoFormatError))
+        val input = Seq(
+          ("AA1234A", BAD_REQUEST, NinoFormatError, requestBody),
+          ("AA123456A", BAD_REQUEST, RuleBothExpensesError, mtdRequestWithBothExpenses),
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
