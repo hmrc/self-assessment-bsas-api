@@ -272,7 +272,7 @@ object RetrieveSelfEmploymentBsasFixtures {
        |    "accountingPeriodEndDate": "$aYearFromNow"
        |  },
        |  "metadata": {
-       |    "taxYear": "2020",
+       |    "taxYear": 2020,
        |    "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
        |    "requestedDateTime": "2020-04-07T23:59:59.000Z",
        |    "status": "valid"
@@ -290,7 +290,7 @@ object RetrieveSelfEmploymentBsasFixtures {
        |    "accountingPeriodEndDate": "$aYearFromNow"
        |  },
        |  "metadata": {
-       |    "taxYear": "2020",
+       |    "taxYear": 2020,
        |    "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
        |    "requestedDateTime": "2020-04-07T23:59:59.000Z",
        |    "status": "valid"
@@ -461,7 +461,7 @@ object RetrieveSelfEmploymentBsasFixtures {
       | 		"accountingPeriodEndDate": "2020-04-05"
       | 	},
       | 	"metadata": {
-      | 		"taxYear": "2020",
+      | 		"taxYear": 2020,
       | 		"calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       | 		"requestedDateTime": "2020-04-07T23:59:59.000Z",
       | 		"status": "valid"
@@ -547,7 +547,7 @@ object RetrieveSelfEmploymentBsasFixtures {
       | 		"accountingPeriodEndDate": "2020-04-05"
       | 	},
       | 	"metadata": {
-      | 		"taxYear": "2020",
+      | 		"taxYear": 2020,
       | 		"calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       | 		"requestedDateTime": "2020-04-07T23:59:59.000Z",
       | 		"status": "valid"

@@ -165,7 +165,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2020-10-14T11:33:27.111Z",
       |  "taxableEntityId": "0",
-      |  "taxYear": "2020",
+      |  "taxYear": 2020,
       |  "status": "valid"
       | },
       | "inputs": {
@@ -249,7 +249,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2020-10-14T11:33:27.111Z",
       |  "taxableEntityId": "0",
-      |  "taxYear": "2020",
+      |  "taxYear": 2020,
       |  "status": "valid"
       | },
       | "inputs": {
@@ -321,7 +321,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2020-10-14T11:33:27.111Z",
       |  "taxableEntityId": "0",
-      |  "taxYear": "2020",
+      |  "taxYear": 2020,
       |  "status": "valid"
       | },
       | "inputs": {

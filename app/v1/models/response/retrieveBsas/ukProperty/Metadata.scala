@@ -35,7 +35,7 @@ object Metadata {
   implicit val reads: Reads[Metadata] = (
     (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       JsPath.read[AccountingPeriod] and
-      (JsPath \ "metadata" \ "taxYear").read[String].map(DesTaxYear.fromDes) and
+      (JsPath \ "metadata" \ "taxYear").read[Int].map(DesTaxYear.fromDesIntToString) and
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and
