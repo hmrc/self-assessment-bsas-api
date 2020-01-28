@@ -33,7 +33,7 @@ class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
   val adjustedStatus = Some("true")
 
   val inputRawData = RetrieveUkPropertyBsasRawData(nino, bsasId, adjustedStatus)
-  val outputRequestData = RetrieveUkPropertyBsasRequestData(Nino(nino), bsasId, Some("03"))
+  val outputRequestData = RetrieveUkPropertyBsasRequestData(Nino(nino), bsasId, Some("3"))
 
   "parser" should {
     "return a valid request object" when {
@@ -44,7 +44,7 @@ class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
       "passed a valid raw data object with an adjusted summary of 'false'" in new Test {
         val input: RetrieveUkPropertyBsasRawData = inputRawData.copy(adjustedStatus = Some("false"))
         MockValidator.validate(input).returns(List())
-        parser.parseRequest(input) shouldBe Right(outputRequestData.copy(adjustedStatus = Some("01")))
+        parser.parseRequest(input) shouldBe Right(outputRequestData.copy(adjustedStatus = Some("1")))
       }
       "passed a valid raw data object without an adjusted summary" in new Test {
         val input: RetrieveUkPropertyBsasRawData = inputRawData.copy(adjustedStatus = None)
