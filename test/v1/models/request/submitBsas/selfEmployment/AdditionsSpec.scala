@@ -62,32 +62,32 @@ class AdditionsSpec extends UnitSpec {
     )
 
   "Additions" when {
-    "read from valid JSON" should {
+    "read from valid vendor JSON" should {
       "produce the expected Additions object" in {
-        additionsDesJson(additionsModel).as[Additions] shouldBe additionsModel
+        additionsFromVendorJson(additionsModel).as[Additions] shouldBe additionsModel
       }
     }
 
-    "written to JSON" should {
+    "written to DES JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(additionsModel) shouldBe additionsMtdJson(additionsModel)
+        Json.toJson(additionsModel) shouldBe additionsToDesJson(additionsModel)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        additionsDesJson(additionsModelWithoutCosts).as[Additions] shouldBe additionsModelWithoutCosts
+        additionsFromVendorJson(additionsModelWithoutCosts).as[Additions] shouldBe additionsModelWithoutCosts
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(additionsModelWithoutCosts) shouldBe additionsMtdJson(additionsModelWithoutCosts)
+        Json.toJson(additionsModelWithoutCosts) shouldBe additionsToDesJson(additionsModelWithoutCosts)
       }
     }
 
 
     "no fields as supplied" should {
       "read to an empty Additions object" in {
-        additionsDesJson(emptyAdditionsModel).as[Additions] shouldBe emptyAdditionsModel
+        additionsFromVendorJson(emptyAdditionsModel).as[Additions] shouldBe emptyAdditionsModel
       }
 
       "write to empty JSON" in {
@@ -97,11 +97,11 @@ class AdditionsSpec extends UnitSpec {
 
     "isEmpty is called" should {
       "return true when all empty fields are supplied" in {
-        additionsDesJson(emptyAdditionsModel).as[Additions].isEmpty shouldBe true
+        additionsFromVendorJson(emptyAdditionsModel).as[Additions].isEmpty shouldBe true
       }
 
       "return false when non-empty fields is supplied" in {
-        additionsDesJson(emptyAdditionsModel.copy(Some(1000.49))).as[Additions].isEmpty shouldBe false
+        additionsFromVendorJson(emptyAdditionsModel.copy(Some(1000.49))).as[Additions].isEmpty shouldBe false
       }
     }
   }

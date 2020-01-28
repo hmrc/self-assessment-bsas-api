@@ -64,32 +64,32 @@ class ExpensesSpec extends UnitSpec {
     )
 
   "Expenses" when {
-    "read from valid JSON" should {
+    "read from valid vendor JSON" should {
       "produce the expected Expenses object" in {
-        expensesDesJson(expensesModel).as[Expenses] shouldBe expensesModel
+        expensesFromMtdJson(expensesModel).as[Expenses] shouldBe expensesModel
       }
     }
 
-    "written to JSON" should {
+    "written to DES JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(expensesModel) shouldBe expensesMtdJson(expensesModel)
+        Json.toJson(expensesModel) shouldBe expensesToDesJson(expensesModel)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        expensesDesJson(expensesModelWithoutCosts).as[Expenses] shouldBe expensesModelWithoutCosts
+        expensesFromMtdJson(expensesModelWithoutCosts).as[Expenses] shouldBe expensesModelWithoutCosts
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(expensesModelWithoutCosts) shouldBe expensesMtdJson(expensesModelWithoutCosts)
+        Json.toJson(expensesModelWithoutCosts) shouldBe expensesToDesJson(expensesModelWithoutCosts)
       }
     }
 
 
     "no fields as supplied" should {
       "read to an empty Expenses object" in {
-        expensesDesJson(emptyExpensesModel).as[Expenses] shouldBe emptyExpensesModel
+        expensesFromMtdJson(emptyExpensesModel).as[Expenses] shouldBe emptyExpensesModel
       }
 
       "write to empty JSON" in {
@@ -99,11 +99,11 @@ class ExpensesSpec extends UnitSpec {
 
     "isEmpty is called" should {
       "return true when all empty fields are supplied" in {
-        expensesDesJson(emptyExpensesModel).as[Expenses].isEmpty shouldBe true
+        expensesFromMtdJson(emptyExpensesModel).as[Expenses].isEmpty shouldBe true
       }
 
       "return false when non-empty fields is supplied" in {
-        expensesDesJson(emptyExpensesModel.copy(Some(1000.49))).as[Expenses].isEmpty shouldBe false
+        expensesFromMtdJson(emptyExpensesModel.copy(Some(1000.49))).as[Expenses].isEmpty shouldBe false
       }
     }
 
