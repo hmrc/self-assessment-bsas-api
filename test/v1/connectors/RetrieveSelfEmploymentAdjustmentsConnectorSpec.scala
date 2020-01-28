@@ -30,7 +30,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
   val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val queryParams: Map[String, String] = Map("return" -> "02")
+  val queryParams: Map[String, String] = Map("return" -> "2")
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: RetrieveSelfEmploymentAdjustmentsConnector =

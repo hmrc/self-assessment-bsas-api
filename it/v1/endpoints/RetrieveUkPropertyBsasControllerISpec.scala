@@ -34,7 +34,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val adjustedStatus: Option[String] = Some("true")
     val correlationId = "X-123"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "03")
+    val desQueryParams = Map("return" -> "3")
 
     def uri: String = s"/$nino/property/$bsasId"
 

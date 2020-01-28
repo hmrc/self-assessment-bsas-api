@@ -40,7 +40,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveSelfEmploymentAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
+      DesUri[RetrieveSelfEmploymentAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
     )
   }
 }
