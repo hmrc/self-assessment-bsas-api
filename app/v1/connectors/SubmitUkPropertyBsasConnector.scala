@@ -36,7 +36,7 @@ class SubmitUkPropertyBsasConnector @Inject()(
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    post(
+    put(
       body = request.body,
       DesUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
     )

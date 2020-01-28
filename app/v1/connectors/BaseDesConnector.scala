@@ -35,6 +35,16 @@ trait BaseDesConnector {
     hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnv)
 
+  def put[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
+                                                             hc: HeaderCarrier,
+                                                             httpReads: HttpReads[DesOutcome[Resp]]): Future[DesOutcome[Resp]] = {
+    def doPut(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] = {
+      http.PUT(s"${appConfig.desBaseUrl}/${uri.value}", body)
+    }
+
+    doPut(desHeaderCarrier(hc))
+  }
+
   def post[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
                                                               hc: HeaderCarrier,
                                                               httpReads: HttpReads[DesOutcome[Resp]]): Future[DesOutcome[Resp]] = {

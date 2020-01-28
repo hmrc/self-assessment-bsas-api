@@ -69,7 +69,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse(bsasId, "01")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse(bsasId, "01")))
         }
 
         val result: WSResponse = await(request().post(requestBody))
@@ -87,7 +87,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse(bsasId, "04")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse(bsasId, "04")))
         }
 
         val result: WSResponse = await(request().post(requestBody))
@@ -129,7 +129,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.POST, desUrl, desStatus, errorBody(desCode))
+              DesStub.onError(DesStub.PUT, desUrl, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().post(requestBody))
