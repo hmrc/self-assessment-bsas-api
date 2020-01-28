@@ -31,7 +31,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
       | "metadata": {
-      |   "taxYear" : "2020",
+      |   "taxYear" : 2020,
       |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |   "requestedDateTime" : "2019-10-14T11:33:27Z",
       |   "status" : "superseded"
