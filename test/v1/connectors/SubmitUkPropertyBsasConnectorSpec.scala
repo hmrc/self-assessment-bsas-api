@@ -47,7 +47,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)))
 
-      MockedHttpClient.post(
+      MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
         body = nonFHLBody,
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
