@@ -16,11 +16,53 @@
 
 package v1.models.request.submitBsas
 
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import support.UnitSpec
 
 class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
+
+  val nonFHLDesJson: JsValue = Json.parse(
+    """
+      |{
+      |  "income": {
+      |       "totalRentsReceived": 1000.45,
+      |       "premiumsOfLeaseGrant": 1000.45,
+      |       "reversePremiums": 1000.45,
+      |       "otherPropertyIncome": 1000.45
+      |     },
+      |     "expenses": {
+      |       "premisesRunningCosts": 1000.45,
+      |       "repairsAndMaintenance": 1000.45,
+      |       "financialCosts": 1000.45,
+      |       "professionalFees": 1000.45,
+      |       "travelCosts": 1000.45,
+      |       "costOfServices": 1000.45,
+      |       "residentialFinancialCost": 1000.45,
+      |       "other": 1000.45,
+      |       "consolidatedExpenses": 1000.45
+      |     }
+      |   }
+      |""".stripMargin)
+
+  val fhlDesJson: JsValue = Json.parse(
+    """
+      |{
+      | "income": {
+      |     "totalRentsReceived": 1000.45
+      |   },
+      |   "expenses": {
+      |     "premisesRunningCosts": 1000.45,
+      |     "repairsAndMaintenance": 1000.45,
+      |     "financialCosts": 1000.45,
+      |     "professionalFees": 1000.45,
+      |     "costOfServices": 1000.45,
+      |     "travelCosts": 1000.45,
+      |     "other": 1000.45,
+      |     "consolidatedExpenses": 1000.45
+      |   }
+      |}
+      |""".stripMargin)
 
   "SubmitUKPropertyBsasRequestBody" when {
     "read from valid JSON" should {
@@ -45,11 +87,11 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
 
     "written to JSON" should {
       "return the expected SubmitUKPropertyRequestBody with a nonFHL" in {
-        Json.toJson(nonFHLBody) shouldBe nonFHLRequestJson
+        Json.toJson(nonFHLBody) shouldBe nonFHLDesJson
       }
 
       "return the expected SubmitUKPropertyRequestBody with a FHL" in {
-        Json.toJson(fhlBody) shouldBe fhlRequestJson
+        Json.toJson(fhlBody) shouldBe fhlDesJson
       }
     }
   }
