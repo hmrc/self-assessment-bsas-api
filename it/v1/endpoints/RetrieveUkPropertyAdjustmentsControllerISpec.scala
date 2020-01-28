@@ -50,7 +50,7 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve UK Property Adjustments endpoint" should {
 
-    val desQueryParams = Map("return" -> "02")
+    val desQueryParams = Map("return" -> "2")
 
     "return a valid response with status OK" when {
 

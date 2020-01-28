@@ -50,7 +50,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
   "Calling the retrieve Self Employment Adjustments endpoint" should {
 
-    val desQueryParams = Map("return" -> "02")
+    val desQueryParams = Map("return" -> "2")
 
     "return a valid response with status OK" when {
 

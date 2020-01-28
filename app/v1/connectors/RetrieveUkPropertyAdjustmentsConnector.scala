@@ -39,7 +39,7 @@ class RetrieveUkPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveUkPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "02")
+      DesUri[RetrieveUkPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
     )
   }
 }
