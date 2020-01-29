@@ -40,13 +40,13 @@ object AdditionsFixture {
       otherDisallowable = Some(3000.8)
     )
 
-  def additionsMtdJson(model: Additions): JsValue = {
+  def additionsToDesJson(model: Additions): JsValue = {
     import model._
 
-    val fields: Map[String, Option[BigDecimal]] =
+    val desFields: Map[String, Option[BigDecimal]] =
       Map(
         "costOfGoodsDisallowable" -> costOfGoodsBoughtDisallowable,
-        "cisPaymentsToSubcontractorsDisallowable" -> cisPaymentsToSubcontractorsDisallowable,
+        "paymentsToSubcontractorsDisallowable" -> cisPaymentsToSubcontractorsDisallowable,
         "wagesAndStaffCostsDisallowable" -> staffCostsDisallowable,
         "carVanTravelExpensesDisallowable" -> travelCostsDisallowable,
         "premisesRunningCostsDisallowable" -> premisesRunningCostsDisallowable,
@@ -62,13 +62,13 @@ object AdditionsFixture {
         "otherExpensesDisallowable" -> otherDisallowable
       )
 
-    Json.toJsObject(queryMap(fields))
+    Json.toJsObject(queryMap(desFields))
   }
 
-  def additionsDesJson(model: Additions): JsValue = {
+  def additionsFromVendorJson(model: Additions): JsValue = {
     import model._
 
-    val fields: Map[String, Option[BigDecimal]] =
+    val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(
         "costOfGoodsBoughtDisallowable" -> costOfGoodsBoughtDisallowable,
         "cisPaymentsToSubcontractorsDisallowable" -> cisPaymentsToSubcontractorsDisallowable,
@@ -87,6 +87,6 @@ object AdditionsFixture {
         "otherDisallowable" -> otherDisallowable
       )
 
-    Json.toJsObject(queryMap(fields))
+    Json.toJsObject(queryMap(vendorSuppliedFields))
   }
 }

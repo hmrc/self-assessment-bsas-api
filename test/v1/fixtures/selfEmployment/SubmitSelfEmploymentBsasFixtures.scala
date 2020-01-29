@@ -17,8 +17,8 @@
 package v1.fixtures.selfEmployment
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v1.fixtures.selfEmployment.AdditionsFixture.{additionsDesJson, additionsModel, additionsMtdJson}
-import v1.fixtures.selfEmployment.ExpensesFixture.{expensesDesJson, expensesModel, expensesMtdJson}
+import v1.fixtures.selfEmployment.AdditionsFixture.{additionsFromVendorJson, additionsModel, additionsToDesJson}
+import v1.fixtures.selfEmployment.ExpensesFixture.{expensesFromMtdJson, expensesModel, expensesToDesJson}
 import v1.fixtures.selfEmployment.IncomeFixture.{incomeJson, incomeModel}
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
@@ -57,11 +57,11 @@ object SubmitSelfEmploymentBsasFixtures {
     }
 
     if (additions.nonEmpty) {
-      jsObjects += Json.obj("additions" -> additionsDesJson(additions.get))
+      jsObjects += Json.obj("additions" -> additionsFromVendorJson(additions.get))
     }
 
     if (expenses.nonEmpty) {
-      jsObjects += Json.obj("expenses" -> expensesDesJson(expenses.get))
+      jsObjects += Json.obj("expenses" -> expensesFromMtdJson(expenses.get))
     }
 
     val json = jsObjects.fold(Json.parse("""{}""").as[JsObject])((a: JsObject, b: JsObject) => a ++ b)
@@ -78,11 +78,11 @@ object SubmitSelfEmploymentBsasFixtures {
     }
 
     if (additions.nonEmpty) {
-      jsObjects += Json.obj("additions" -> additionsMtdJson(additions.get))
+      jsObjects += Json.obj("additions" -> additionsToDesJson(additions.get))
     }
 
     if (expenses.nonEmpty) {
-      jsObjects += Json.obj("expenses" -> expensesMtdJson(expenses.get))
+      jsObjects += Json.obj("expenses" -> expensesToDesJson(expenses.get))
     }
 
     val json = jsObjects.fold(Json.parse("""{}""").as[JsObject])((a: JsObject, b: JsObject) => a ++ b)

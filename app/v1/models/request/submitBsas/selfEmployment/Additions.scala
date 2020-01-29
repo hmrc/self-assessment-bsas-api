@@ -56,7 +56,7 @@ object Additions{
  implicit val reads: Reads[Additions] = Json.reads[Additions]
  implicit val writes: OWrites[Additions] = (
    (JsPath \ "costOfGoodsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "cisPaymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
+     (JsPath \ "paymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "wagesAndStaffCostsDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "carVanTravelExpensesDisallowable").writeNullable[BigDecimal] and
      (JsPath \ "premisesRunningCostsDisallowable").writeNullable[BigDecimal] and

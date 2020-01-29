@@ -41,13 +41,13 @@ object ExpensesFixture {
       None
     )
 
-  def expensesMtdJson(model: Expenses): JsValue = {
+  def expensesToDesJson(model: Expenses): JsValue = {
     import model._
 
-    val fields: Map[String, Option[BigDecimal]] =
+    val desFields: Map[String, Option[BigDecimal]] =
       Map(
         "costOfGoodsAllowable" -> costOfGoodsBought,
-        "cisPaymentsToSubcontractorsAllowable" -> cisPaymentsToSubcontractors,
+        "paymentsToSubcontractorsAllowable" -> cisPaymentsToSubcontractors,
         "wagesAndStaffCostsAllowable" -> staffCosts,
         "carVanTravelExpensesAllowable" -> travelCosts,
         "premisesRunningCostsAllowable" -> premisesRunningCosts,
@@ -63,13 +63,13 @@ object ExpensesFixture {
         "otherExpensesAllowable" -> other
       )
 
-    Json.toJsObject(queryMap(fields))
+    Json.toJsObject(queryMap(desFields))
   }
 
-  def expensesDesJson(model: Expenses): JsValue = {
+  def expensesFromMtdJson(model: Expenses): JsValue = {
     import model._
 
-    val fields: Map[String, Option[BigDecimal]] =
+    val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(
         "costOfGoodsBought" -> costOfGoodsBought,
         "cisPaymentsToSubcontractors" -> cisPaymentsToSubcontractors,
@@ -88,6 +88,6 @@ object ExpensesFixture {
         "other" -> other
       )
 
-    Json.toJsObject(queryMap(fields))
+    Json.toJsObject(queryMap(vendorSuppliedFields))
   }
 }

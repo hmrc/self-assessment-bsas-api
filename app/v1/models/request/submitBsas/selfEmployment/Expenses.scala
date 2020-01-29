@@ -64,7 +64,7 @@ object Expenses {
   implicit val reads: Reads[Expenses] = Json.reads[Expenses]
   implicit val writes: OWrites[Expenses] = (
     (JsPath \ "costOfGoodsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "cisPaymentsToSubcontractorsAllowable").writeNullable[BigDecimal] and
+      (JsPath \ "paymentsToSubcontractorsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "carVanTravelExpensesAllowable").writeNullable[BigDecimal] and
       (JsPath \ "premisesRunningCostsAllowable").writeNullable[BigDecimal] and
