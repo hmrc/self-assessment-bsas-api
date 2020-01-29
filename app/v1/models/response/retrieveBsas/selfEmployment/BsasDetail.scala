@@ -24,7 +24,7 @@ case class BsasDetail(total: TotalBsas,
                       accountingAdjustments: Option[BigDecimal],
                       profit: Option[Profit],
                       loss: Option[Loss],
-                      incomeBreakdown: IncomeBreakdown,
+                      incomeBreakdown: Option[IncomeBreakdown],
                       expensesBreakdown: Option[ExpensesBreakdown],
                       additionsBreakdown: Option[AdditionsBreakdown])
 
@@ -32,9 +32,15 @@ object BsasDetail {
   implicit val reads: Reads[BsasDetail] = (
     JsPath.read[TotalBsas] and
       (JsPath \ "accountingAdjustments").readNullable[BigDecimal] and
-      JsPath.readNullable[Profit] and
-      JsPath.readNullable[Loss] and
-      (JsPath \ "income").read[IncomeBreakdown] and
+      JsPath.readNullable[Profit].map{
+        case Some(Profit(None, None)) => None
+        case other => other
+      } and
+      JsPath.readNullable[Loss].map{
+        case Some(Loss(None, None)) => None
+        case other => other
+      } and
+      (JsPath \ "income").readNullable[IncomeBreakdown] and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown] and
       (JsPath \ "additions").readNullable[AdditionsBreakdown]
     )(BsasDetail.apply _)

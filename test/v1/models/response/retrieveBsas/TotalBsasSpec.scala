@@ -39,15 +39,14 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
       |  "totalDeductions": 100.49
       |}""".stripMargin)
 
-  val desWithOnlyRequiredJson = Json.parse(
-    """{
-      |  "totalIncome": 100.49
-      |}""".stripMargin)
-
   "reads" should {
     "return a valid model" when {
 
-      testMandatoryProperty[TotalBsas](desJson)("totalIncome")
+      testPropertyType[TotalBsas](desJson)(
+        path = "/totalIncome",
+        replacement = "test".toJson,
+        expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
+      )
 
       testPropertyType[TotalBsas](desJson)(
         path = "/totalExpenses",
@@ -69,10 +68,6 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
 
       "a valid json with all fields are supplied" in {
         desJson.as[TotalBsas] shouldBe totalBsasModel
-      }
-
-      "a valid json with only mandatory fields are supplied" in {
-        desWithOnlyRequiredJson.as[TotalBsas] shouldBe new TotalBsas(100.49, None, None, None)
       }
     }
   }

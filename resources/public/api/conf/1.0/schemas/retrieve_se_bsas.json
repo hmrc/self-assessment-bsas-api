@@ -7,10 +7,6 @@
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for the self-employment business income source.",
-      "required": [
-        "total",
-        "incomeBreakdown"
-      ],
       "properties": {
         "total": { "$ref": "definitions.json#/definitions/bsasTotal"},
         "accountingAdjustments": {
@@ -23,7 +19,6 @@
         "incomeBreakdown": {
           "type": "object",
           "description": "Total income broken down by type for the accounting period.",
-          "required": ["turnover"],
           "properties": {
             "turnover": {
               "type": "number",

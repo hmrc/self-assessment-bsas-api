@@ -87,7 +87,7 @@ object RetrieveSelfEmploymentBsasFixtures {
   )
 
   val incomeBreakdownModel: IncomeBreakdown = IncomeBreakdown(
-    turnover = 100.49,
+    turnover = Some(100.49),
     other = Some(100.49)
   )
 
@@ -167,11 +167,11 @@ object RetrieveSelfEmploymentBsasFixtures {
   )
 
   val bsasDetailModel: BsasDetail = BsasDetail(
-    total = TotalBsas(100.49, Some(100.49), Some(100.49), Some(100.49)),
+    total = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49)),
     accountingAdjustments = Some(100.49),
     profit = Some(Profit(Some(100.49), Some(100.49))),
     loss = Some(Loss(Some(100.49), Some(100.49))),
-    incomeBreakdown = incomeBreakdownModel,
+    incomeBreakdown = Some(incomeBreakdownModel),
     expensesBreakdown = Some(expensesBreakdownModel),
     additionsBreakdown = Some(additionsBreakdownModel)
   )

@@ -79,7 +79,8 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
       }
 
       "return true when empty income fields are supplied" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel.copy(Some(Income(None, None)))).as[SubmitSelfEmploymentBsasRequestBody]
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel.
+          copy(Some(Income(None, None)))).as[SubmitSelfEmploymentBsasRequestBody]
           .isIncorrectOrEmptyBodyError shouldBe true
       }
 
