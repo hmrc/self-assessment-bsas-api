@@ -36,7 +36,7 @@ object RetrieveUkPropertyBsasFixtures {
   val bsasDetailModel = BsasDetail(total = totalBsasModel,
     profit = Some(profitModel),
     loss = Some(lossModel),
-    incomeBreakdown = incomeBreakdownModel,
+    incomeBreakdown = Some(incomeBreakdownModel),
     expensesBreakdown = Some(expensesBreakdownModel))
 
   val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,

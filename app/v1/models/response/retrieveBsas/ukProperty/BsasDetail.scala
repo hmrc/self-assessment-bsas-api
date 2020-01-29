@@ -23,16 +23,28 @@ import v1.models.response.retrieveBsas.{Loss, Profit, TotalBsas}
 case class BsasDetail(total: TotalBsas,
                       profit: Option[Profit],
                       loss: Option[Loss],
-                      incomeBreakdown: IncomeBreakdown,
+                      incomeBreakdown: Option[IncomeBreakdown],
                       expensesBreakdown: Option[ExpensesBreakdown])
 
 object BsasDetail {
   implicit val reads: Reads[BsasDetail] = (
     JsPath.read[TotalBsas] and
-      JsPath.readNullable[Profit] and
-      JsPath.readNullable[Loss] and
-      (JsPath \ "income").read[IncomeBreakdown] and
-      (JsPath \ "expenses").readNullable[ExpensesBreakdown]
+      JsPath.readNullable[Profit].map {
+        case Some(Profit(None, None)) => None
+        case profit => profit
+      } and
+      JsPath.readNullable[Loss].map {
+        case Some(Loss(None, None)) => None
+        case loss => loss
+      } and
+      (JsPath \ "income").readNullable[IncomeBreakdown].map {
+        case Some(IncomeBreakdown(None, None, None, None, None)) => None
+        case income => income
+      } and
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown].map {
+        case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
+        case expenses => expenses
+      }
     )(BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]

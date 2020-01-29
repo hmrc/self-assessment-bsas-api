@@ -61,6 +61,17 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
         desJson.as[BsasDetail] shouldBe bsasDetailModel
       }
     }
+    "not return fields when all nested object optional fields are not present" in {
+      val desJson = Json.parse(
+        """{
+          |  "totalIncome": 100.49,
+          |  "totalExpenses": 100.49,
+          |  "totalAdditions": 100.49,
+          |  "totalDeductions": 100.49
+          |}""".stripMargin)
+
+      desJson.as[BsasDetail] shouldBe BsasDetail(totalBsasModel, None, None, None, None)
+    }
   }
 
   "writes" should {
