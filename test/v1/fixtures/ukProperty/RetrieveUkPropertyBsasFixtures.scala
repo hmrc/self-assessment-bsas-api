@@ -25,7 +25,7 @@ import v1.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsa
 
 object RetrieveUkPropertyBsasFixtures {
 
-  val totalBsasModel = TotalBsas(100.49,Some(100.49),Some(100.49),Some(100.49))
+  val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
   val profitModel = Profit(Some(100.49),Some(100.49))
   val lossModel = Loss(Some(100.49),Some(100.49))
   val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))

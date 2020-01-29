@@ -19,7 +19,7 @@ package v1.models.response.retrieveBsas
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class TotalBsas(income: BigDecimal,
+case class TotalBsas(income: Option[BigDecimal],
                      expenses: Option[BigDecimal],
                      additions: Option[BigDecimal],
                      deductions: Option[BigDecimal]
@@ -27,7 +27,7 @@ case class TotalBsas(income: BigDecimal,
 
 object TotalBsas {
   implicit val reads: Reads[TotalBsas] = (
-    (JsPath \ "totalIncome").read[BigDecimal] and
+    (JsPath \ "totalIncome").readNullable[BigDecimal] and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal]

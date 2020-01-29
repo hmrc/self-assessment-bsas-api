@@ -19,12 +19,12 @@ package v1.models.response.retrieveBsas.selfEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class IncomeBreakdown(turnover: BigDecimal,
+case class IncomeBreakdown(turnover: Option[BigDecimal],
                            other: Option[BigDecimal])
 
 object IncomeBreakdown {
   implicit val reads: Reads[IncomeBreakdown] = (
-    (JsPath  \ "turnover").read[BigDecimal] and
+    (JsPath  \ "turnover").readNullable[BigDecimal] and
     (JsPath \ "other").readNullable[BigDecimal]
     )(IncomeBreakdown.apply _)
 
