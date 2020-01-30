@@ -9,10 +9,6 @@
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for either UK Property non Furnished Holiday Let or for a UK Property Furnished Holiday Let business income source.",
-      "required": [
-        "total",
-        "incomeBreakdown"
-      ],
       "properties": {
         "total": {
           "$ref": "definitions.json#/definitions/bsasTotal"
@@ -26,9 +22,6 @@
         "incomeBreakdown": {
           "type": "object",
           "description": "Total income broken down by type for the accounting period.",
-          "required": [
-            "rentIncome"
-          ],
           "properties": {
             "rentIncome": {
               "type": "number",
