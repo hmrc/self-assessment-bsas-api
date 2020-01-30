@@ -49,7 +49,7 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
     """
       |{
       | "income": {
-      |     "totalRentsReceived": 1000.45
+      |     "rentReceived": 1000.45
       |   },
       |   "expenses": {
       |     "premisesRunningCosts": 1000.45,

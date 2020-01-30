@@ -25,14 +25,14 @@ class FHLIncomeSpec extends UnitSpec {
   val inputJson: JsValue = Json.parse(
     """
       |{
-      | "totalRentsReceived": 1000.45
+      | "rentIncome": 1000.45
       |}
       |""".stripMargin)
 
   val requestJson: JsValue = Json.parse(
     """
       |{
-      | "totalRentsReceived": 1000.45
+      | "rentReceived": 1000.45
       |}
       |""".stripMargin)
 
@@ -50,7 +50,7 @@ class FHLIncomeSpec extends UnitSpec {
   "NonFHLIncome" when {
     "read from valid JSON" should {
       "return the expected NonFHLIncome object" in {
-        inputJson.validate[FHLIncome] shouldBe JsSuccess(modelWithNoneValues)
+        inputJson.as[FHLIncome] shouldBe model
       }
     }
 
