@@ -118,9 +118,6 @@
     "bsasTotal": {
       "type": "object",
       "description": "Object of total values.",
-      "required": [
-        "income"
-      ],
       "properties": {
         "income": {
           "type": "number",
