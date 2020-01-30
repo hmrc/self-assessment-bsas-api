@@ -26,7 +26,7 @@ class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
   val desJson: JsValue = Json.parse(
     """{
       |     "costOfGoodsAllowable" : 100.49,
-      |     "paymentsToSubContractorsAllowable" :100.49,
+      |     "paymentsToSubcontractorsAllowable" :100.49,
       |     "wagesAndStaffCostsAllowable" :100.49,
       |     "carVanTravelExpensesAllowable" :100.49,
       |     "premisesRunningCostsAllowable" :100.49,

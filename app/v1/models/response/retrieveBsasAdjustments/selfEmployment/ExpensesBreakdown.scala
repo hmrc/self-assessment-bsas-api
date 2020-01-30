@@ -43,7 +43,7 @@ object ExpensesBreakdown extends NestedJsonReads {
 
   implicit val reads: Reads[ExpensesBreakdown] = (
     (JsPath \ "costOfGoodsAllowable").readNullable[BigDecimal] and
-      (JsPath \ "paymentsToSubContractorsAllowable").readNullable[BigDecimal] and
+      (JsPath \ "paymentsToSubcontractorsAllowable").readNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsAllowable").readNullable[BigDecimal] and
       (JsPath \ "carVanTravelExpensesAllowable").readNullable[BigDecimal] and
       (JsPath \ "premisesRunningCostsAllowable").readNullable[BigDecimal] and

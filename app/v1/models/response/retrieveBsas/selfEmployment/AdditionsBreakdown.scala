@@ -40,7 +40,7 @@ object AdditionsBreakdown {
 
   implicit val reads: Reads[AdditionsBreakdown] = (
     (JsPath \ "costOfGoodsDisallowable").readNullable[BigDecimal] and
-      (JsPath \ "paymentsToSubContractorsDisallowable").readNullable[BigDecimal] and
+      (JsPath \ "paymentsToSubcontractorsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "carVanTravelExpensesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "premisesRunningCostsDisallowable").readNullable[BigDecimal] and

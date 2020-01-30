@@ -46,7 +46,7 @@ class AdditionsBreakdownSpec extends UnitSpec with JsonErrorValidators {
   val desJson: JsValue = Json.parse(
     """{
       |   "costOfGoodsDisallowable" : 100.49,
-      |   "paymentsToSubContractorsDisallowable" : 100.49,
+      |   "paymentsToSubcontractorsDisallowable" : 100.49,
       |    "wagesAndStaffCostsDisallowable" : 100.49,
       |    "carVanTravelExpensesDisallowable" : 100.49,
       |    "premisesRunningCostsDisallowable" : 100.49,
