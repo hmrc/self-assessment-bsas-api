@@ -14,12 +14,11 @@
     "advertisingCosts": 1000.49,
     "businessEntertainmentCosts": 1000.49,
     "interest": 1000.49,
-    "financeCharges": 1000.49,
+    "financialCharges": 1000.49,
     "badDebt": 1000.49,
     "professionalFees": 1000.49,
     "depreciation": 1000.49,
     "other": 1000.49
-
   },
   "additions": {
     "costOfGoodsBoughtDisallowable": 1000.49,
@@ -33,7 +32,7 @@
     "businessEntertainmentCostsDisallowable": 1000.49,
     "interestDisallowable": 1000.49,
     "financialChargesDisallowable": 1000.49,
-    "badDebtsDisallowable": 1000.49,
+    "badDebtDisallowable": 1000.49,
     "professionalFeesDisallowable": 1000.49,
     "depreciationDisallowable": 1000.49,
     "otherDisallowable": 1000.49
