@@ -16,8 +16,10 @@
 
 package v1.models.response.retrieveBsas.selfEmployment
 
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desBsasDetailJson, bsasDetailModel, mtdBsasDetailJson}
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{bsasDetailModel, desAdditionsBreakdownJson, desBsasDetailJson, desExpensesBreakdownJson, desIncomeBreakdownJson, mtdBsasDetailJson}
+import v1.models.response.retrieveBsas.TotalBsas
 import v1.models.utils.JsonErrorValidators
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
@@ -26,6 +28,21 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
     "passed valid JSON" should {
       "return a valid model" in {
         desBsasDetailJson.as[BsasDetail] shouldBe bsasDetailModel
+      }
+
+      "not return fields when all nested object optional fields are not present" in {
+
+        val desBsasJson: JsValue = Json.parse(
+          s"""{
+             |  "totalIncome": 100.49,
+             |  "totalExpenses": 100.49,
+             |  "totalAdditions": 100.49,
+             |  "totalDeductions": 100.49
+             |}""".stripMargin
+        )
+
+        val totalBsasModel = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+        desBsasJson.as[BsasDetail] shouldBe BsasDetail(totalBsasModel, None, None, None, None, None, None)
       }
     }
   }
