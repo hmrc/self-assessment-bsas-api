@@ -21,7 +21,7 @@ import play.api.libs.json._
 case class FHLIncome(rentIncome: Option[BigDecimal]) {
 
   val params: Map[String, BigDecimal] = Map(
-    "totalRentsReceived" -> rentIncome
+    "rentReceived" -> rentIncome
   ).collect {case (k, Some(v)) => (k, v) }
 }
 

@@ -34,8 +34,7 @@ class FurnishedHolidayLetSpec extends UnitSpec{
       |         "professionalFees": 1000.49,
       |         "costOfServices": -1000.49,
       |         "travelCosts": 1000.49,
-      |         "other": 1000.49,
-      |         "consolidatedExpenses": 1000.49
+      |         "other": 1000.49
       |      }
       |}
       |""".stripMargin)
@@ -57,11 +56,11 @@ class FurnishedHolidayLetSpec extends UnitSpec{
       |}
       |""".stripMargin)
 
-  val requestJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |      "income": {
-      |         "totalRentsReceived": 1000.49
+      |         "rentReceived": 1000.49
       |      },
       |      "expenses": {
       |         "premisesRunningCosts": -1000.49,
@@ -70,8 +69,7 @@ class FurnishedHolidayLetSpec extends UnitSpec{
       |         "professionalFees": 1000.49,
       |         "costOfServices": -1000.49,
       |         "travelCosts": 1000.49,
-      |         "other": 1000.49,
-      |         "consolidatedExpenses": 1000.49
+      |         "other": 1000.49
       |      }
       |}
       |""".stripMargin)
@@ -107,7 +105,7 @@ class FurnishedHolidayLetSpec extends UnitSpec{
       Some(-1000.49),
       Some(1000.49),
       Some(1000.49),
-      Some(1000.49)
+      None
     ))
   )
 
@@ -129,11 +127,11 @@ class FurnishedHolidayLetSpec extends UnitSpec{
   "FurnishedHolidayLet" when {
     "read from valid Json" should {
       "return the expected FurnishedHolidayLet object" in {
-        inputJson.validate[FurnishedHolidayLet] shouldBe JsSuccess(model)
+        inputJson.as[FurnishedHolidayLet] shouldBe model
       }
 
       "return the expected FurnishedHolidayLet object without income" in {
-        inputWithExpensesOnlyJson.validate[FurnishedHolidayLet] shouldBe JsSuccess(modelWithExpensesOnly)
+        inputWithExpensesOnlyJson.as[FurnishedHolidayLet] shouldBe modelWithExpensesOnly
       }
     }
 
@@ -145,7 +143,7 @@ class FurnishedHolidayLetSpec extends UnitSpec{
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+        Json.toJson(model) shouldBe desJson
       }
     }
   }
