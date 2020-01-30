@@ -33,7 +33,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |    },
       |    "expenses" : {
       |     "costOfGoodsAllowable" : 100.49,
-      |     "paymentsToSubContractorsAllowable" :100.49,
+      |     "paymentsToSubcontractorsAllowable" :100.49,
       |     "wagesAndStaffCostsAllowable" :100.49,
       |     "carVanTravelExpensesAllowable" :100.49,
       |     "premisesRunningCostsAllowable" :100.49,
@@ -51,7 +51,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |   },
       |   "additions" :{
       |     "costOfGoodsDisallowable" : 100.49,
-      |     "paymentsToSubContractorsDisallowable" : 100.49,
+      |     "paymentsToSubcontractorsDisallowable" : 100.49,
       |     "wagesAndStaffCostsDisallowable" : 100.49,
       |     "carVanTravelExpensesDisallowable" : 100.49,
       |     "premisesRunningCostsDisallowable" : 100.49,
@@ -79,7 +79,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |    },
       |    "expenses" : {
       |     "costOfGoodsAllowable" : 100.49,
-      |     "paymentsToSubContractorsAllowable" :100.49,
+      |     "paymentsToSubcontractorsAllowable" :100.49,
       |     "wagesAndStaffCostsAllowable" :100.49,
       |     "carVanTravelExpensesAllowable" :100.49,
       |     "premisesRunningCostsAllowable" :100.49,
@@ -108,7 +108,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |    },
       |   "additions" :{
       |     "costOfGoodsDisallowable" : 100.49,
-      |     "paymentsToSubContractorsDisallowable" : 100.49,
+      |     "paymentsToSubcontractorsDisallowable" : 100.49,
       |     "wagesAndStaffCostsDisallowable" : 100.49,
       |     "carVanTravelExpensesDisallowable" : 100.49,
       |     "premisesRunningCostsDisallowable" : 100.49,

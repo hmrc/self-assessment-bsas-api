@@ -34,7 +34,7 @@ class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
     testPropertyType[ExpensesBreakdown](desExpensesBreakdownJson)(
-      path = "/paymentsToSubContractorsAllowable",
+      path = "/paymentsToSubcontractorsAllowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )

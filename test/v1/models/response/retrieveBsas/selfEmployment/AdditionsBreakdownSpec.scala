@@ -35,7 +35,7 @@ class AdditionsBreakdownSpec extends UnitSpec with JsonErrorValidators {
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
     testPropertyType[AdditionsBreakdown](desAdditionsBreakdownJson)(
-      path = "/paymentsToSubContractorsDisallowable",
+      path = "/paymentsToSubcontractorsDisallowable",
       replacement = "test".toJson,
       expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
     )
