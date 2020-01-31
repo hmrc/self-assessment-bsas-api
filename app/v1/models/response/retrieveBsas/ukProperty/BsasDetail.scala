@@ -27,7 +27,8 @@ case class BsasDetail(total: TotalBsas,
                       expensesBreakdown: Option[ExpensesBreakdown])
 
 object BsasDetail {
-  implicit val reads: Reads[BsasDetail] = (
+
+  val fhlReads: Reads[BsasDetail] = (
     JsPath.read[TotalBsas] and
       JsPath.readNullable[Profit].map {
         case Some(Profit(None, None)) => None
@@ -37,7 +38,27 @@ object BsasDetail {
         case Some(Loss(None, None)) => None
         case loss => loss
       } and
-      (JsPath \ "income").readNullable[IncomeBreakdown].map {
+      (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
+        case Some(IncomeBreakdown(None, None, None, None, None)) => None
+        case income => income
+      } and
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown].map {
+        case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
+        case expenses => expenses
+      }
+    )(BsasDetail.apply _)
+
+  val nonFhlReads: Reads[BsasDetail] = (
+    JsPath.read[TotalBsas] and
+      JsPath.readNullable[Profit].map {
+        case Some(Profit(None, None)) => None
+        case profit => profit
+      } and
+      JsPath.readNullable[Loss].map {
+        case Some(Loss(None, None)) => None
+        case loss => loss
+      } and
+      (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None, None, None)) => None
         case income => income
       } and

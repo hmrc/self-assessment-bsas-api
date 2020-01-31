@@ -186,7 +186,7 @@ object RetrieveUkPropertyBsasFixtures {
       | "adjustableSummaryCalculation": {
       |  "totalIncome": 100.49,
       |  "income": {
-      |   "totalRentsReceived": 100.49,
+      |   "rentReceived": 100.49,
       |   "premiumsOfLeaseGrant": 100.49,
       |   "reversePremiums": 100.49,
       |   "otherPropertyIncome": 100.49,
@@ -215,7 +215,7 @@ object RetrieveUkPropertyBsasFixtures {
       | "adjustedSummaryCalculation": {
       |  "totalIncome": 100.49,
       |  "income": {
-      |   "totalRentsReceived": 100.49,
+      |   "rentReceived": 100.49,
       |   "premiumsOfLeaseGrant": 100.49,
       |   "reversePremiums": 100.49,
       |   "otherPropertyIncome": 100.49,
@@ -270,7 +270,7 @@ object RetrieveUkPropertyBsasFixtures {
       | "adjustableSummaryCalculation": {
       |  "totalIncome": 100.49,
       |  "income": {
-      |   "totalRentsReceived": 100.49,
+      |   "rentReceived": 100.49,
       |   "premiumsOfLeaseGrant": 100.49,
       |   "reversePremiums": 100.49,
       |   "otherPropertyIncome": 100.49,

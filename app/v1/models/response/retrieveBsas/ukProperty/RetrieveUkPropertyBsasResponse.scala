@@ -20,6 +20,7 @@ import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
@@ -29,11 +30,22 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks{
 
   implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
     JsPath.read[Metadata] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-        case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
-        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
+      (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
+        case TypeOfBusiness.`uk-property-fhl` => fhlBsasDetailReads
+        case TypeOfBusiness.`uk-property-non-fhl` => nonFhlBsasDetailReads
+        case TypeOfBusiness.`self-employment` => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
       }
     )(RetrieveUkPropertyBsasResponse.apply _)
+
+  private val fhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
+    case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
+    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
+  }
+
+  private val nonFhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
+    case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
+    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
+  }
 
   implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]
 

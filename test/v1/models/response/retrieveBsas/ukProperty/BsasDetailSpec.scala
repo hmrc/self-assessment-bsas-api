@@ -23,7 +23,7 @@ import v1.models.utils.JsonErrorValidators
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
 
-  val desJson = Json.parse(
+  val desNonFhlJson = Json.parse(
     """{
       |  "totalIncome": 100.49,
       |  "income": {
@@ -53,14 +53,48 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "adjustedIncomeTaxLoss": 100.49
       |}""".stripMargin)
 
+  val desFhlJson = Json.parse(
+    """{
+      |  "totalIncome": 100.49,
+      |  "income": {
+      |   "rentReceived": 100.49,
+      |   "premiumsOfLeaseGrant": 100.49,
+      |   "reversePremiums": 100.49,
+      |   "otherPropertyIncome": 100.49,
+      |   "rarRentReceived": 100.49
+      |  },
+      |  "totalExpenses": 100.49,
+      |  "expenses": {
+      |   "premisesRunningCosts": 100.49,
+      |   "repairsAndMaintenance": 100.49,
+      |   "financialCosts": 100.49,
+      |   "professionalFees": 100.49,
+      |   "travelCosts": 100.49,
+      |   "costOfServices": 100.49,
+      |   "residentialFinancialCost": 100.49,
+      |   "broughtFwdResidentialFinancialCost": 100.49,
+      |   "other": 100.49
+      |  },
+      |  "netProfit": 100.49,
+      |  "netLoss": 100.49,
+      |  "totalAdditions": 100.49,
+      |  "totalDeductions": 100.49,
+      |  "taxableProfit": 100.49,
+      |  "adjustedIncomeTaxLoss": 100.49
+      |}""".stripMargin)
 
   "reads" should {
     "return a valid model" when {
 
-      "a valid json with all fields are supplied" in {
-        desJson.as[BsasDetail] shouldBe bsasDetailModel
+      "a valid non-FHL json with all fields are supplied" in {
+        desNonFhlJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe bsasDetailModel
+      }
+
+      "a valid FHL json with all fields are supplied" in {
+        desFhlJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe bsasDetailModel
       }
     }
+
     "not return fields when all nested object optional fields are not present" in {
       val desJson = Json.parse(
         """{
@@ -70,7 +104,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
           |  "totalDeductions": 100.49
           |}""".stripMargin)
 
-      desJson.as[BsasDetail] shouldBe BsasDetail(totalBsasModel, None, None, None, None)
+      desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(totalBsasModel, None, None, None, None)
     }
   }
 
