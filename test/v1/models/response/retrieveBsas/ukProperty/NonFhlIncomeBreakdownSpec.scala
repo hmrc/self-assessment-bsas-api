@@ -31,7 +31,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
       |  "rarRentReceived": 100.49
       |}""".stripMargin)
 
-  val desJson = Json.parse(
+  val desJsonforNonFhl = Json.parse(
     """{
       |  "totalRentsReceived": 100.49,
       |  "premiumsOfLeaseGrant": 100.49,
@@ -45,38 +45,38 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
   "reads" should {
     "return a valid model" when {
 
-      testPropertyType[IncomeBreakdown](desJson)(
+      testPropertyType[IncomeBreakdown](desJsonforNonFhl)(
         path = "/totalRentsReceived",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
-      )
+      )(IncomeBreakdown.nonFhlReads)
 
-      testPropertyType[IncomeBreakdown](desJson)(
+      testPropertyType[IncomeBreakdown](desJsonforNonFhl)(
         path = "/premiumsOfLeaseGrant",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
-      )
+      )(IncomeBreakdown.nonFhlReads)
 
-      testPropertyType[IncomeBreakdown](desJson)(
+      testPropertyType[IncomeBreakdown](desJsonforNonFhl)(
         path = "/reversePremiums",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
-      )
+      )(IncomeBreakdown.nonFhlReads)
 
-      testPropertyType[IncomeBreakdown](desJson)(
+      testPropertyType[IncomeBreakdown](desJsonforNonFhl)(
         path = "/otherPropertyIncome",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
-      )
+      )(IncomeBreakdown.nonFhlReads)
 
-      testPropertyType[IncomeBreakdown](desJson)(
+      testPropertyType[IncomeBreakdown](desJsonforNonFhl)(
         path = "/rarRentReceived",
         replacement = "test".toJson,
         expectedError = JsonError.NUMBER_FORMAT_EXCEPTION
-      )
+      )(IncomeBreakdown.nonFhlReads)
 
-      "a valid json with all fields are supplied" in {
-        desJson.as[IncomeBreakdown] shouldBe model
+      "a valid NonFhl json with all fields are supplied" in {
+        desJsonforNonFhl.as[IncomeBreakdown](IncomeBreakdown.nonFhlReads) shouldBe model
       }
     }
   }
