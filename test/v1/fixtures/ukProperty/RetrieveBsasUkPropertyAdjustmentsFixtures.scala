@@ -39,7 +39,7 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
       |  },
       |  "adjustments" : {
       |     "income": {
-      |        "rentReceived": 100.49,
+      |        "totalRentsReceived": 100.49,
       |        "premiumsOfLeaseGrant": 100.49,
       |        "reversePremiums": 100.49,
       |        "otherPropertyIncome": 100.49

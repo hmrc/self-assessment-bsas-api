@@ -23,8 +23,19 @@ case class BsasDetail (incomes: Option[IncomeBreakdown], expenses: Option[Expens
 
 object BsasDetail {
 
-  implicit val reads: Reads[BsasDetail] = (
-    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown].map {
+   val fhlReads: Reads[BsasDetail] = (
+    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
+      case Some(IncomeBreakdown(None, None, None, None)) => None
+      case incomeBreakdown => incomeBreakdown
+    } and
+      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
+        case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
+        case expensesBreakdown => expensesBreakdown
+      }
+    ) (BsasDetail.apply _)
+
+  val nonFhlReads: Reads[BsasDetail] = (
+    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
       case Some(IncomeBreakdown(None, None, None, None)) => None
       case incomeBreakdown => incomeBreakdown
     } and
