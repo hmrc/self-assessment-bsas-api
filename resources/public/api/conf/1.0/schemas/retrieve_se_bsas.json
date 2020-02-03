@@ -22,12 +22,12 @@
           "properties": {
             "turnover": {
               "type": "number",
-              "description": "The takings, fees, sales or money earned by your business. Income associated with the running of the business. The value must be between 0 and 99999999999.99.",
+              "description": "The takings, fees, sales or money earned by the business. Income associated with the running of the business. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             },
             "other": {
               "type": "number",
-              "description": "Any other business income not included in turnover. Income associated with the running of the business. The value must be between 0 and 99999999999.99.",
+              "description": "Any other business income not included in the turnover. Income associated with the running of the business. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
           }
@@ -103,7 +103,7 @@
             },
             "depreciation": {
               "type": "number",
-              "description": "Depreciation and loss/profit on sales of assets. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99.",
+              "description": "Depreciation and loss or profit on sales of assets. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99.",
               "example": "1000.45"
             },
             "other": {
@@ -208,12 +208,12 @@
         "description": "A list of endpoint links that indicate possible actions related to the current resource.",
         "properties": {
           "href": {
-            "description": "The relative url of the endpoint",
+            "description": "The relative URL of the endpoint.",
             "type": "string",
             "example": "/sample-context/AA123456A"
           },
           "rel": {
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
             "type": "string",
             "enum": [
               "self",
