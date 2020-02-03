@@ -148,7 +148,7 @@
     },
     "seIncome": {
       "type": "object",
-      "description": "An object containing the adjustments to the income values.",
+      "description": "An object containing the adjustments to expense values.",
       "properties": {
         "turnover": {
           "type": "number",

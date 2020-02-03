@@ -1,4 +1,4 @@
-<p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+<p>Scenario simulations using Gov-Test-Scenario headers are only available in the sandbox environment.</p>
 <table>
     <thead>
         <tr>
@@ -37,7 +37,7 @@
         </tr>
         <tr>
             <td><p>RULE_TRADING_INCOME_ALLOWANCE_CLAIMED</p></td>
-            <td><p>Simulates the error response where a claim for trading income allowance was made. Cannot also have expenses.</p></td>
+            <td><p>Simulates the error response where a claim for trading income allowance was made - cannot also have expenses</p></td>
         </tr>
         <tr>
             <td><p>UK_PROPERTY_ADJUSTED</p></td>
@@ -45,7 +45,7 @@
         </tr>
         <tr>
             <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
-            <td><p>Simulates the error response that may occur if one of more adjustments submitted would result in a negative value</p></td>
+            <td><p>Simulates the error response that may occur if one or more adjustments submitted would result in a negative value</p></td>
         </tr>
     </tbody>
 </table>
