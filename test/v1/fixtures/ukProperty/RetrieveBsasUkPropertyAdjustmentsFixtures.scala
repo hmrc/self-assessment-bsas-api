@@ -142,7 +142,6 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
 
   val metaDataModel: Metadata = Metadata(
     TypeOfBusiness.`uk-property-non-fhl`,
-    None,
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")),
     "2019-20",
     "2019-10-14T11:33:27Z",

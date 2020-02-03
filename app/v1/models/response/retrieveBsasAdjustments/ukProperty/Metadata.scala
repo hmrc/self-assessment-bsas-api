@@ -23,7 +23,6 @@ import v1.models.request.DesTaxYear
 import v1.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
-                    selfEmploymentId: Option[String], // Optional so we can error if not present with BVR 4
                     accountingPeriod: AccountingPeriod,
                     taxYear: String,
                     requestedDateTime: String,
@@ -35,7 +34,6 @@ object Metadata {
 
   implicit val reads: Reads[Metadata] = (
     (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
-      (JsPath \ "inputs" \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriod] and
       (JsPath \ "metadata" \ "taxYear").read[Int].map(DesTaxYear.fromDesIntToString) and
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
