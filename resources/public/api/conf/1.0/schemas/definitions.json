@@ -65,12 +65,12 @@
         "startDate": {
           "type": "string",
           "description": "The date the accounting period started.",
-          "example": "2018-04-06"
+          "example": "2019-04-06"
         },
         "endDate": {
           "type": "string",
           "description": "The date the accounting period ended.",
-          "example": "2018-04-06"
+          "example": "2020-04-05"
         }
       }
     },
