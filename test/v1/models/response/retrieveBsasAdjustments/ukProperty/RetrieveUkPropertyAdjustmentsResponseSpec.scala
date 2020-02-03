@@ -23,7 +23,7 @@ import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 
 class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 
-  val fullDesJson: JsValue = Json.parse(
+  val fhlDesJson: JsValue = Json.parse(
     """
       |{
       | "inputs": {
@@ -43,6 +43,45 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       | "adjustments" : {
       |    "income": {
       |      "rentReceived": 100.49,
+      |      "premiumsOfLeaseGrant": 100.49,
+      |      "reversePremiums": 100.49,
+      |      "otherPropertyIncome": 100.49
+      |    },
+      |    "expenses" : {
+      |      "premisesRunningCosts": 100.49,
+      |      "repairsAndMaintenance": 100.49,
+      |      "financialCosts": 100.49,
+      |      "professionalFees": 100.49,
+      |      "travelCosts": 100.49,
+      |      "costOfServices": 100.49,
+      |      "residentialFinancialCost" : 100.49,
+      |      "other": 100.49,
+      |      "consolidatedExpenses": 100.49
+      |    }
+      | }
+      |}
+    """.stripMargin)
+
+  val nonFhlDesJson: JsValue = Json.parse(
+    """
+      |{
+      | "inputs": {
+      |   "incomeSourceType" : "02",
+      |   "accountingPeriodStartDate" : "2018-10-11",
+      |   "accountingPeriodEndDate" : "2019-10-10"
+      | },
+      | "metadata": {
+      |   "taxYear" : 2020,
+      |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |   "requestedDateTime" : "2019-10-14T11:33:27Z",
+      |   "status" : "superseded"
+      | },
+      | "adjustedSummaryCalculation" : {
+      |
+      | },
+      | "adjustments" : {
+      |    "income": {
+      |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "reversePremiums": 100.49,
       |      "otherPropertyIncome": 100.49
@@ -143,8 +182,12 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
 
   "RetrieveSelfEmploymentAdjustmentResponse" when {
     "reading from valid JSON" should {
-      "return the appropriate model when the most data has been provided" in {
-        fullDesJson.as[RetrieveUkPropertyAdjustmentsResponse] shouldBe retrieveUKPropertyAdjustmentResponseModel
+      "return the appropriate FHL model when the most data has been provided" in {
+        fhlDesJson.as[RetrieveUkPropertyAdjustmentsResponse] shouldBe retrieveUKPropertyAdjustmentResponseModel
+      }
+
+      "return the appropriate non-FHL model when the most data has been provided" in {
+        fhlDesJson.as[RetrieveUkPropertyAdjustmentsResponse] shouldBe retrieveUKPropertyAdjustmentResponseModel
       }
 
       "return the appropriate model when the minimal data has been provided" in {

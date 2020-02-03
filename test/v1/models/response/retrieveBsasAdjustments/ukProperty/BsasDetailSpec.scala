@@ -23,11 +23,35 @@ import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson: JsValue = Json.parse(
+  val fhlDesJson: JsValue = Json.parse(
     """{
       | "adjustments" : {
       |    "income": {
       |      "rentReceived": 100.49,
+      |      "premiumsOfLeaseGrant": 100.49,
+      |      "reversePremiums": 100.49,
+      |      "otherPropertyIncome": 100.49
+      |    },
+      |    "expenses" : {
+      |      "premisesRunningCosts": 100.49,
+      |      "repairsAndMaintenance": 100.49,
+      |      "financialCosts": 100.49,
+      |      "professionalFees": 100.49,
+      |      "travelCosts": 100.49,
+      |      "costOfServices": 100.49,
+      |      "residentialFinancialCost" : 100.49,
+      |      "other": 100.49,
+      |      "consolidatedExpenses": 100.49
+      |   }
+      | }
+      |}
+    """.stripMargin)
+
+  val nonFhlDesJson: JsValue = Json.parse(
+    """{
+      | "adjustments" : {
+      |    "income": {
+      |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "reversePremiums": 100.49,
       |      "otherPropertyIncome": 100.49
@@ -71,8 +95,12 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
   "BsasDetail" when {
     "reading from valid JSON" should {
-      "return the appropriate model" in {
-        desJson.as[BsasDetail] shouldBe bsasDetailModel
+      "return the appropriate FHL model" in {
+        fhlDesJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe bsasDetailModel
+      }
+
+      "return the appropriate non-FHL model" in {
+        nonFhlDesJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe bsasDetailModel
       }
 
       "not return fields when nested object optional fields are not present" in {
@@ -86,7 +114,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
             |}
             |""".stripMargin)
 
-        desJson.as[BsasDetail] shouldBe BsasDetail(None, None)
+        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(None, None)
       }
     }
 

@@ -23,9 +23,19 @@ import v1.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 
 class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
-  val desJson: JsValue = Json.parse(
+  val fhlDesJson: JsValue = Json.parse(
     """{
       |         "rentReceived": 100.49,
+      |         "premiumsOfLeaseGrant": 100.49,
+      |         "reversePremiums": 100.49,
+      |         "otherPropertyIncome": 100.49
+      | }
+    """.stripMargin
+  )
+
+  val nonFhlDesJson: JsValue = Json.parse(
+    """{
+      |         "totalRentsReceived": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,
       |         "reversePremiums": 100.49,
       |         "otherPropertyIncome": 100.49
@@ -45,8 +55,12 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   "IncomeBreakdown" when {
     "reading from valid JSON" should {
-      "return the appropriate model" in {
-        desJson.as[IncomeBreakdown] shouldBe incomeModel
+      "return the fhl model" in {
+        fhlDesJson.as[IncomeBreakdown](IncomeBreakdown.fhlReads) shouldBe incomeModel
+      }
+
+      "return the non-fhl model" in {
+        nonFhlDesJson.as[IncomeBreakdown](IncomeBreakdown.nonFhlReads) shouldBe incomeModel
       }
     }
 
