@@ -23,7 +23,7 @@ import v1.models.request.DesTaxYear
 import v1.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
-                    selfEmploymentId: Option[String], // Optional so we can error if not present with BVR 4
+                    selfEmploymentId: Option[String],
                     accountingPeriod: AccountingPeriod,
                     taxYear: String,
                     requestedDateTime: String,
