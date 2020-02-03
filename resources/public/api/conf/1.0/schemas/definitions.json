@@ -56,7 +56,7 @@
     "accountingPeriod": {
       "type": "object",
       "title": "The accounting period",
-      "description": "Object containing the accounting period start and end dates.",
+      "description": "An object containing the accounting period start and end dates.",
       "required": [
         "startDate",
         "endDate"
