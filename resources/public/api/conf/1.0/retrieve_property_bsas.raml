@@ -10,7 +10,7 @@ is:
   - errors.bsasNotFound
   - queryParameters.adjustedStatusOptional
 displayName: Retrieve a UK Property Business Source Adjustable Summary (BSAS) [test only]
-description: This endpoint allows the user to request a specific Business Source Adjustable Summary using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted is to be returned.
+description: This endpoint allows a developer to request a specific Business Source Adjustable Summary (BSAS) using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted summary is returned.
 (annotations.sandboxData): !include scenarios/retrieve_property.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
