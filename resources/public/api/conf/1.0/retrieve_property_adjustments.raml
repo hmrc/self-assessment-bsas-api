@@ -9,7 +9,7 @@ is:
   - errors.bsasNotFound
   - errors.clientOrAgentNotAuthorised
 displayName: Retrieve a UK Property Business' Summary Adjustments [test only]
-description: This endpoint allows the user to request the adjustments made to a specific UK Property Business Source Adjustable Summary, by quoting it's identifier. The BSAS ID quoted must be for a UK Property Business that has been previously adjusted.
+description: This endpoint allows a developer to request the adjustments made to a specific UK property Business Source Adjustable Summary (BSAS) by using its identifier. The BSAS ID used must be for a UK property business that has been previously adjusted.
 (annotations.sandboxData): !include scenarios/retrieve_property_adjustments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]

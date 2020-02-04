@@ -8,7 +8,7 @@
     "metadata": { "$ref": "metadata_definitions.json#/definitions/propMetadata"},
     "bsas": {
       "type": "object",
-      "description": "Object holding the BSAS for either UK Property non Furnished Holiday Let or for a UK Property Furnished Holiday Let business income source.",
+      "description": "Object holding the BSAS for either a UK property non-Furnished Holiday Let (non-FHL) or for a UK Property Furnished Holiday Let (FHL) business income source.",
       "properties": {
         "total": {
           "$ref": "definitions.json#/definitions/bsasTotal"
@@ -25,7 +25,7 @@
           "properties": {
             "rentIncome": {
               "type": "number",
-              "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99.",
+              "description": "The total amount of property rental income. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             },
             "premiumsOfLeaseGrant": {
@@ -45,7 +45,7 @@
             },
             "rarRentReceived": {
               "type": "number",
-              "description": "Rental income received under the Rent a Room scheme for the perion. The value must be between 0 and 99999999999.99.",
+              "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
           }
@@ -115,12 +115,12 @@
         "description": "A list of endpoint links that indicate possible actions related to the current resource.",
         "properties": {
           "href": {
-            "description": "The relative url of the endpoint.",
+            "description": "The relative URL of the endpoint.",
             "type": "string",
             "example": "/sample-context/AA123456A"
           },
           "rel": {
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource.",
+            "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
               "self",

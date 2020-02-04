@@ -101,7 +101,7 @@ traits:
             type: types.errorResponse
             examples:
               formatAdjustmentValue:
-                description: One or more values has been added with the incorrect format
+                description: One or more values have been added with the incorrect format
                 value:
                   code: FORMAT_ADJUSTMENT_VALUE
   ruleNotSelfEmployment:
@@ -145,7 +145,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTaxYearNotSupported:
-                description: The specified tax year is not supported, that is, the tax year specified is before the minimum tax year value
+                description: The specified tax year is not supported - the tax year specified is before the minimum tax year value
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearRangeInvalid:
@@ -167,7 +167,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleRangeInvalid:
-                description:  One or more values have been added that is outside the accepted value range
+                description:  One or more values have been added that are outside the accepted value range
                 value:
                   code: RULE_RANGE_INVALID
   ruleTypeOfBusinessIncorrect:
@@ -178,7 +178,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTypeOfBusinessIncorrect:
-                description:  The BSAS ID relates to a different Type of Business
+                description:  The BSAS ID relates to a different type of business
                 value:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
@@ -189,7 +189,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSummaryStatusInvalid:
-                description: The summaryStatus of the summary with this BSAS ID is set to 'invalid'
+                description: The ‘summaryStatus’ of the summary with this BSAS ID is set to 'invalid'
                 value:
                   code: RULE_SUMMARY_STATUS_INVALID
   ruleSummaryStatusSuperseded:
@@ -233,7 +233,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleAccountingPeriodNotSupported:
-                description: The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value
+                description: The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
   ruleAccountingPeriodNotEnded:
@@ -299,7 +299,7 @@ traits:
               type: types.errorResponse
               examples:
                 ruleIncorrectPropertyAdjusted:
-                  description: An adjustment has been made to a BSAS ID that doesn't match the property type in the request
+                  description: An adjustment made to a BSAS ID that does not match the property type in the request
                   value:
                     code: RULE_INCORRECT_PROPERTY_ADJUSTED
   ruleNoAccountingPeriod:
@@ -321,7 +321,7 @@ traits:
               type: types.errorResponse
               examples:
                 ruleNoAdjustmentsMade:
-                  description: An adjusted calculation doesn't exist
+                  description: An adjusted calculation does not exist
                   value:
                     code: RULE_NO_ADJUSTMENTS_MADE
   incorrectOrEmptyBodySubmitted:
@@ -343,7 +343,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSelfEmploymentAdjusted:
-                description: The BSAS ID used in your adjustment was for a self-employment business type, and an adjustment has been made
+                description: The BSAS ID used in the adjustment was for a self-employment business type, and an adjustment has been made
                 value:
                   code: RULE_SELF_EMPLOYMENT_ADJUSTED
   ruleBothExpensesSupplied:
@@ -409,7 +409,7 @@ traits:
             type: types.errorResponse
             examples:
               clientOrAgentNotAuthorised:
-                description: 'The client and/or agent is not authorised. This is normally because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf'
+                description: The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf
                 value:
                   code: CLIENT_OR_AGENT_NOT_AUTHORISED
 

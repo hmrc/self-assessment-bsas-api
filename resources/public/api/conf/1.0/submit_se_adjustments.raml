@@ -17,7 +17,7 @@ is:
   - errors.bsasNotFound
   - errors.clientOrAgentNotAuthorised
 displayName: Submit an Adjustment to a Self-Employment Business Summary [test only]
-description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Adjustable Summary quoting its unique identifier. The BSAS ID quoted must be for a Self-Employment Business and it must not have been adjusted, previously.
+description: This endpoint allows a developer to provide accounting adjustments against a specified Business Source Adjustable Summary (BSAS) using its unique identifier. The BSAS ID used must be for a self-employment business that has not been previously adjusted.
 (annotations.sandboxData): !include scenarios/submit_se_adjustments.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
