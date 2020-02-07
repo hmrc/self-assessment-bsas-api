@@ -17,29 +17,26 @@
 package v1.models.request.submitBsas
 
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
-import utils.JsonWritesUtil
 
 case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet],
                                            furnishedHolidayLet: Option[FurnishedHolidayLet])
 
-object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil{
+object SubmitUKPropertyBsasRequestBody {
 
   implicit val reads: Reads[SubmitUKPropertyBsasRequestBody] = Json.reads[SubmitUKPropertyBsasRequestBody]
   implicit val writes: OWrites[SubmitUKPropertyBsasRequestBody] = new OWrites[SubmitUKPropertyBsasRequestBody] {
     override def writes(o: SubmitUKPropertyBsasRequestBody): JsObject =
       o.nonFurnishedHolidayLet.map { x =>
-        filterNull(Json.obj(
-          "incomeSourceType" -> "02",
+        Json.obj(
           "income" -> x.income,
           "expenses"-> x.expenses
-        ))
+        )
       }.getOrElse(
         o.furnishedHolidayLet.map(x =>
-          filterNull(Json.obj(
-            "incomeSourceType" -> "04",
+          Json.obj(
             "income" -> x.income,
             "expenses"-> x.expenses
-          ))).get
+          )).get
       )
   }
 }

@@ -33,7 +33,7 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToDes
+        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel)
       }
     }
 
@@ -44,7 +44,7 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToDes
+        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel)
       }
     }
 

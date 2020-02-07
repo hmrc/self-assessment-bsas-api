@@ -16,8 +16,7 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
-import utils.JsonWritesUtil
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses]){
 
@@ -27,15 +26,8 @@ case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions
     expenses.isDefined && expenses.get.isEmpty)
 }
 
-object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil{
+object SubmitSelfEmploymentBsasRequestBody {
 
   implicit val reads: Reads[SubmitSelfEmploymentBsasRequestBody] = Json.reads[SubmitSelfEmploymentBsasRequestBody]
-  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = (o: SubmitSelfEmploymentBsasRequestBody) =>
-    if(o.isEmpty) JsObject.empty
-    else filterNull(Json.obj(
-    "incomeSourceType" -> "01",
-    "income" -> o.income,
-    "expenses" -> o.expenses,
-    "additions" -> o.additions
-  ))
+  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = Json.writes[SubmitSelfEmploymentBsasRequestBody]
 }
