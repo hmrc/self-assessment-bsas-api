@@ -25,6 +25,7 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
   val nonFHLDesJson: JsValue = Json.parse(
     """
       |{
+      |  "incomeSourceType":"02",
       |  "income": {
       |       "totalRentsReceived": 1000.45,
       |       "premiumsOfLeaseGrant": 1000.45,
@@ -48,6 +49,7 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
   val fhlDesJson: JsValue = Json.parse(
     """
       |{
+      | "incomeSourceType":"04",
       | "income": {
       |     "rentReceived": 1000.45
       |   },
