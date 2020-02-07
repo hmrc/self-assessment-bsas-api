@@ -252,50 +252,6 @@ object SubmitSelfEmploymentBsasFixtures {
        |}
     """.stripMargin
 
-  val requestToDes = Json.parse(
-    """
-      |{
-      |	"incomeSourceType": "01",
-      |	"income": {
-      |		"turnover": 1000.25,
-      |		"other": 1000.5
-      |	},
-      |	"expenses": {
-      |		"costOfGoodsAllowable": 2000.25,
-      |		"paymentsToSubcontractorsAllowable": 2000.5,
-      |		"wagesAndStaffCostsAllowable": 2000.75,
-      |		"carVanTravelExpensesAllowable": -2000.25,
-      |		"premisesRunningCostsAllowable": -2000.5,
-      |		"maintenanceCostsAllowable": -2000.75,
-      |		"adminCostsAllowable": 2001.25,
-      |		"advertisingCostsAllowable": 2001.5,
-      |		"businessEntertainmentCostsAllowable": 2001.75,
-      |		"interestOnBankOtherLoansAllowable": -2001.25,
-      |		"financeChargesAllowable": -2001.5,
-      |		"irrecoverableDebtsAllowable": -2001.75,
-      |		"professionalFeesAllowable": 2002.25,
-      |		"depreciationAllowable": 2002.5,
-      |		"otherExpensesAllowable": 2002.75
-      |	},
-      |	"additions": {
-      |		"costOfGoodsDisallowable": 3000.1,
-      |		"paymentsToSubcontractorsDisallowable": 3000.2,
-      |		"wagesAndStaffCostsDisallowable": 3000.3,
-      |		"carVanTravelExpensesDisallowable": 3000.4,
-      |		"premisesRunningCostsDisallowable": 3000.5,
-      |		"maintenanceCostsDisallowable": -3000.1,
-      |		"adminCostsDisallowable": -3000.2,
-      |		"advertisingCostsDisallowable": -3000.3,
-      |		"businessEntertainmentCostsDisallowable": -3000.4,
-      |		"interestOnBankOtherLoansDisallowable": -3000.5,
-      |		"financeChargesDisallowable": 3000.6,
-      |		"irrecoverableDebtsDisallowable": -3000.6,
-      |		"professionalFeesDisallowable": 3000.7,
-      |		"depreciationDisallowable": -3000.7,
-      |		"otherExpensesDisallowable": 3000.8
-      |	}
-      |}""".stripMargin)
-
   val desResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
     s"""
        |{
