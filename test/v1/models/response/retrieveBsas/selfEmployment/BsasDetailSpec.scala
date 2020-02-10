@@ -18,7 +18,7 @@ package v1.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{bsasDetailModel, desAdditionsBreakdownJson, desBsasDetailJson, desExpensesBreakdownJson, desIncomeBreakdownJson, mtdBsasDetailJson}
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{bsasDetailModel, desBsasDetailJson, mtdBsasDetailJson}
 import v1.models.response.retrieveBsas.TotalBsas
 import v1.models.utils.JsonErrorValidators
 
