@@ -121,7 +121,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
 
     val event = AuditEvent(
       auditType = "listBusinessSourceAdjustableSummaries",
-      transactionName = "adjustable-summary-api",
+      transactionName = "list-business-source-adjustable-summaries",
       detail = details
     )
 

@@ -121,7 +121,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
     val event = AuditEvent(
       auditType = "retrieveABusinessSourceAdjustableSummary",
-      transactionName = "adjustable-summary-api",
+      transactionName = "retrieve-a-self-employment-bsas",
       detail = details
     )
 

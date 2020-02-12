@@ -116,7 +116,7 @@ class RetrieveUkPropertyBsasAdjustmentsController @Inject()(val authService: Enr
 
     val event = AuditEvent(
       auditType = "retrieveBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "retrieve-a-uk-property-business-accounting-adjustments",
       detail = details
     )
 

@@ -120,7 +120,7 @@ class RetrieveSelfEmploymentAdjustmentsController @Inject()(
 
     val event = AuditEvent(
       auditType = "retrieveBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "retrieve-a-self-employment-business-accounting-adjustments",
       detail = details
     )
 

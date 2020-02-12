@@ -76,7 +76,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "retrieve-a-uk-property-business-accounting-adjustments",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
