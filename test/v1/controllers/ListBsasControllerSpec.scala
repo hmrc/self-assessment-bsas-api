@@ -125,7 +125,7 @@ class ListBsasControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "listBusinessSourceAdjustableSummaries",
-      transactionName = "adjustable-summary-api",
+      transactionName = "list-business-source-adjustable-summaries",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

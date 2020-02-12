@@ -123,7 +123,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
 
     val event = AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "submit-self-employment-accounting-adjustments",
       detail = details
     )
 

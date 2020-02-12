@@ -78,7 +78,7 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveABusinessSourceAdjustableSummary",
-      transactionName = "adjustable-summary-api",
+      transactionName = "retrieve-a-self-employment-bsas",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

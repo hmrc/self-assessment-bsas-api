@@ -79,7 +79,7 @@ class RetrieveUkPropertyBsasControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveABusinessSourceAdjustableSummary",
-      transactionName = "adjustable-summary-api",
+      transactionName = "retrieve-a-uk-property-bsas",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

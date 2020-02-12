@@ -125,7 +125,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
 
     val event = AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "submit-uk-property-accounting-adjustments",
       detail = details
     )
 

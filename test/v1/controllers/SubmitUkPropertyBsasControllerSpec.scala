@@ -92,7 +92,7 @@ class SubmitUkPropertyBsasControllerSpec
   def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "submit-uk-property-accounting-adjustments",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

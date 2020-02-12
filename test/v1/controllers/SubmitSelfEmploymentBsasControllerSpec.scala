@@ -90,7 +90,7 @@ class SubmitSelfEmploymentBsasControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
-      transactionName = "adjustable-summary-api",
+      transactionName = "submit-self-employment-accounting-adjustments",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

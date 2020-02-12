@@ -124,7 +124,7 @@ class TriggerBsasController @Inject()(
 
     val event = AuditEvent(
       auditType = "triggerABusinessSourceAdjustableSummary",
-      transactionName = "adjustable-summary-api",
+      transactionName = "trigger-a-business-source-adjustable-Summary",
       detail = details
     )
 
