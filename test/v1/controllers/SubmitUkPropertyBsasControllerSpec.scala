@@ -96,7 +96,7 @@ class SubmitUkPropertyBsasControllerSpec
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        params = Map("nino" -> nino, "bsasId" -> bsasId),
         requestBody = requestBody,
         `X-CorrelationId` = correlationId,
         auditResponse = auditResponse

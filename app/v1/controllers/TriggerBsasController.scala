@@ -75,7 +75,7 @@ class TriggerBsasController @Inject()(
           auditSubmission(
             GenericAuditDetail(
               userDetails = request.userDetails,
-              pathParams = Map("nino" -> nino),
+              params = Map("nino" -> nino),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
               auditResponse = AuditResponse(httpStatus = CREATED, response = Right(Some(Json.toJson(hateoasResponse))))
@@ -94,7 +94,7 @@ class TriggerBsasController @Inject()(
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
-            pathParams = Map("nino" -> nino),
+            params = Map("nino" -> nino),
             requestBody = Some(request.body),
             `X-CorrelationId` = correlationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

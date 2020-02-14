@@ -86,7 +86,7 @@ class TriggerBsasControllerSpec
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        pathParams = Map("nino" -> nino),
+        params = Map("nino" -> nino),
         requestBody = requestBody,
         `X-CorrelationId` = correlationId,
         auditResponse = auditResponse

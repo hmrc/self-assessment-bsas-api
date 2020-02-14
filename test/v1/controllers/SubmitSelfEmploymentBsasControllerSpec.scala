@@ -94,7 +94,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+        params = Map("nino" -> nino, "bsasId" -> bsasId),
         requestBody = Some(Json.toJson(mtdRequest)),
         `X-CorrelationId` = correlationId,
         auditResponse = auditResponse
