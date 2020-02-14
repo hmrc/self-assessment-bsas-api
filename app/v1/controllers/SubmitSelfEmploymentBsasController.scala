@@ -74,7 +74,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
           auditSubmission(
             GenericAuditDetail(
               userDetails = request.userDetails,
-              pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+              params = Map("nino" -> nino, "bsasId" -> bsasId),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
               auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
@@ -93,7 +93,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
-            pathParams = Map("nino" -> nino, "bsasId" -> bsasId),
+            params = Map("nino" -> nino, "bsasId" -> bsasId),
             requestBody = Some(request.body),
             `X-CorrelationId` = correlationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

@@ -22,7 +22,7 @@ import v1.models.auth.UserDetails
 
 case class GenericAuditDetail(userType: String,
                               agentReferenceNumber: Option[String],
-                              pathParams: Map[String, String],
+                              params: Map[String, String],
                               requestBody: Option[JsValue],
                               `X-CorrelationId`: String,
                               auditResponse: AuditResponse)
@@ -39,7 +39,7 @@ object GenericAuditDetail {
     ) (unlift(GenericAuditDetail.unapply))
 
   def apply(userDetails: UserDetails,
-            pathParams: Map[String, String],
+            params: Map[String, String],
             requestBody: Option[JsValue],
             `X-CorrelationId`: String,
             auditResponse: AuditResponse): GenericAuditDetail = {
@@ -47,7 +47,7 @@ object GenericAuditDetail {
     GenericAuditDetail(
       userType = userDetails.userType,
       agentReferenceNumber = userDetails.agentReferenceNumber,
-      pathParams = pathParams,
+      params = params,
       requestBody = requestBody,
       `X-CorrelationId` = `X-CorrelationId`,
       auditResponse = auditResponse

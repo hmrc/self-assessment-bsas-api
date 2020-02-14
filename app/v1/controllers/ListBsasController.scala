@@ -24,12 +24,12 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{CurrentDateProvider, DateUtils, Logging}
 import v1.controllers.requestParsers.ListBsasRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
-import v1.models.request.ListBsasRawData
+import v1.models.request.{DesTaxYear, ListBsasRawData}
 import v1.models.response.listBsas.ListBsasHateoasData
 import v1.services.{AuditService, EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
 
@@ -37,12 +37,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                    val lookupService: MtdIdLookupService,
-                                    requestParser: ListBsasRequestParser,
-                                    service: ListBsasService,
-                                    hateoasFactory: HateoasFactory,
-                                    auditService: AuditService,
-                                    cc: ControllerComponents
+                                   val lookupService: MtdIdLookupService,
+                                   requestParser: ListBsasRequestParser,
+                                   service: ListBsasService,
+                                   hateoasFactory: HateoasFactory,
+                                   auditService: AuditService,
+                                   cc: ControllerComponents,
+                                   val currentDateProvider: CurrentDateProvider
                                   )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
@@ -56,6 +57,8 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+
+      lazy val currentMtdTaxYear = DesTaxYear.fromDes(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()).toString)
 
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
       val result =
@@ -76,9 +79,8 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
           auditSubmission(
             GenericAuditDetail(
               userDetails = request.userDetails,
-              pathParams = Map("nino" -> nino),
-              requestBody = None,
-              `X-CorrelationId` = response.correlationId,
+              params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
+              requestBody = None, `X-CorrelationId` = response.correlationId,
               auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
             )
           )
@@ -94,7 +96,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
-            pathParams = Map("nino" -> nino),
+            params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
             requestBody = None,
             `X-CorrelationId` = correlationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
