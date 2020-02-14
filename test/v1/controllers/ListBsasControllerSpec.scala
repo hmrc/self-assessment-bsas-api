@@ -391,29 +391,6 @@ class ListBsasControllerSpec
         MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once
       }
 
-      "the taxYear parameter is provided (failure)" in new Test {
-
-        val desTaxYear: DesTaxYear = DateUtils.getDesTaxYear(mockCurrentDateProvider.getCurrentDate())
-        val mtdTaxYear: String = DesTaxYear.fromDes(desTaxYear.toString)
-
-        MockListBsasRequestDataParser
-          .parse(rawData.copy(taxYear = Some(mtdTaxYear)))
-          .returns(Right(requestData.copy(taxYear = desTaxYear)))
-
-        MockListBsasService
-          .listBsas(requestData.copy(taxYear = desTaxYear))
-          .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), NinoFormatError))))
-
-        val result: Future[Result] = controller.listBsas(nino, Some(mtdTaxYear), typeOfBusiness, selfEmploymentId)(fakeGetRequest)
-
-        status(result) shouldBe BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson(NinoFormatError)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code))), None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once
-      }
-
       "the taxYear parameter is not provided (failure)" in new Test {
 
         val desTaxYear: DesTaxYear = DateUtils.getDesTaxYear(mockCurrentDateProvider.getCurrentDate())
