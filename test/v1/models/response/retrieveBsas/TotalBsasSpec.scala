@@ -39,6 +39,24 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
       |  "totalDeductions": 100.49
       |}""".stripMargin)
 
+  val mtdJsonWithNegativeValues = Json.parse(
+    """{
+      |  "income": 100.49,
+      |  "expenses": -100.49,
+      |  "additions": -100.49,
+      |  "deductions": 100.49
+      |}""".stripMargin)
+
+  val desJsonWithNegativeValues = Json.parse(
+    """{
+      |  "totalIncome": 100.49,
+      |  "totalExpenses": -100.49,
+      |  "totalAdditions": -100.49,
+      |  "totalDeductions": 100.49
+      |}""".stripMargin)
+
+  val totalBsasModelWithNegativeValues = TotalBsas(Some(100.49),Some(-100.49),Some(-100.49),Some(100.49))
+
   "reads" should {
     "return a valid model" when {
 
@@ -68,6 +86,7 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
 
       "a valid json with all fields are supplied" in {
         desJson.as[TotalBsas] shouldBe totalBsasModel
+        desJsonWithNegativeValues.as[TotalBsas] shouldBe totalBsasModelWithNegativeValues
       }
     }
   }
@@ -76,6 +95,7 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
     "return a valid json" when {
       "a valid model is supplied" in {
         totalBsasModel.toJson shouldBe mtdJson
+        totalBsasModelWithNegativeValues.toJson shouldBe mtdJsonWithNegativeValues
       }
     }
   }
