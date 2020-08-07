@@ -110,7 +110,7 @@ class TriggerBsasController @Inject()(
       case BadRequestError | NinoFormatError | RuleAccountingPeriodNotSupportedError
            | StartDateFormatError | EndDateFormatError | TypeOfBusinessFormatError
            | SelfEmploymentIdFormatError | SelfEmploymentIdRuleError
-           | EndBeforeStartDateError | RuleIncorrectOrEmptyBodyError => BadRequest(Json.toJson(errorWrapper))
+           | EndBeforeStartDateError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleAccountingPeriodNotEndedError | RulePeriodicDataIncompleteError | RuleNoAccountingPeriodError =>
         Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
