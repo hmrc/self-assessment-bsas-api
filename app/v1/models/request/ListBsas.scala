@@ -17,6 +17,7 @@
 package v1.models.request
 
 import uk.gov.hmrc.domain.Nino
+import utils.DesTaxYear
 
 
 case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]) extends RawData

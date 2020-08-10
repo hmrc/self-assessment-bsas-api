@@ -18,8 +18,6 @@ package utils
 
 import java.time.LocalDate
 
-import v1.models.request.DesTaxYear
-
 object DateUtils {
 
   def getDesTaxYear(dateProvided: Any): DesTaxYear = dateProvided match {

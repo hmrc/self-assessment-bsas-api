@@ -24,12 +24,12 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{CurrentDateProvider, DateUtils, Logging}
+import utils.{CurrentDateProvider, DateUtils, DesTaxYear, Logging}
 import v1.controllers.requestParsers.ListBsasRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
-import v1.models.request.{DesTaxYear, ListBsasRawData}
+import v1.models.request.ListBsasRawData
 import v1.models.response.listBsas.ListBsasHateoasData
 import v1.services.{AuditService, EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
 

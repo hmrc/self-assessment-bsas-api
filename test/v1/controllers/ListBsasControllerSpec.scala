@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DateUtils
+import utils.{DateUtils, DesTaxYear}
 import v1.hateoas.HateoasLinks
 import v1.mocks.MockCurrentDateProvider
 import v1.mocks.hateoas.MockHateoasFactory
@@ -35,7 +35,7 @@ import v1.models.domain.{Status, TypeOfBusiness}
 import v1.models.errors._
 import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{AccountingPeriod, DesTaxYear, ListBsasRawData, ListBsasRequest}
+import v1.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
 import v1.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
