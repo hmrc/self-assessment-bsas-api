@@ -18,6 +18,7 @@ package definition
 
 import com.typesafe.config.ConfigFactory
 import definition.APIStatus.{ALPHA, BETA}
+import definition.Versions.{VERSION_1, VERSION_2}
 import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
@@ -35,7 +36,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
       "return a valid Definition case class" in new Test {
         MockedAppConfig.featureSwitch returns None
         MockedAppConfig.apiStatus returns "1.0"
-        MockedAppConfig.endpointsEnabled returns true
 
         apiDefinitionFactory.definition shouldBe Definition(
           scopes = Seq(
@@ -57,11 +57,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
             categories = Seq("INCOME_TAX_MTD"),
             versions = Seq(
               APIVersion(
-                version = "1.0",
-                access = None,
-                status = APIStatus.ALPHA,
-                endpointsEnabled = true
-              )
+                version = VERSION_1, access = None, status = APIStatus.ALPHA),
+              APIVersion(
+                version = VERSION_2, access = None, status = APIStatus.ALPHA)
             ),
             requiresTrust = None
           )
