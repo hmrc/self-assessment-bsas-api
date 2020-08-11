@@ -23,8 +23,8 @@ import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, 
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
+import utils.DesTaxYear
 import v2.models.errors._
-import v2.models.request.DesTaxYear
 import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class ListBsasControllerISpec extends IntegrationBaseSpec {
