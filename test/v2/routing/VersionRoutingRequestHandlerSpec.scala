@@ -111,10 +111,10 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Matchers with MockF
     }
   }
 
-  "Routing requests with v2" should {
+  "Routing requests with v1" should {
     implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.1.0+json")
 
-    handleWithVersionRoutes(v2Router)
+    handleWithVersionRoutes(v1Router)
   }
 
   "Routing requests with v2" should {
