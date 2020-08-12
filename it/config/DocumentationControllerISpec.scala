@@ -41,13 +41,11 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |   "versions":[
       |     {
       |       "version":"1.0",
-      |       "status":"ALPHA",
-      |       "endpointsEnabled":true
+      |       "status":"ALPHA"
       |     },
       |     {
       |       "version":"2.0",
-      |       "status":"ALPHA",
-      |       "endpointsEnabled":true
+      |       "status":"ALPHA"
       |     }
       |   ]
       |	}
