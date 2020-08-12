@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import play.api.Logger
-import play.api.libs.json.{Reads, _}
+import play.api.libs.json._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 
 /**
@@ -25,11 +25,12 @@ import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
   */
 object JsonValidation {
 
-  def validate[T: Reads](jsLookupResult: JsLookupResult)(validation: T => List[MtdError]): List[MtdError] = {
-    jsLookupResult.validate[T] match {
-      case JsSuccess(value, _) => validation(value)
-      case _: JsError        => Nil
-    }
+  def validate[A: OFormat](data: JsValue): List[MtdError] = {
+    if (data == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else
+      data.validate[A] match {
+        case JsSuccess(body, _) => if (Json.toJson(body) == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
+        case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) => handleErrors(errors)
+      }
   }
 
   private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): List[MtdError] = {

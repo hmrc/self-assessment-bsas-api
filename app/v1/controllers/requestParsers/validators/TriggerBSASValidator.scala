@@ -16,19 +16,17 @@
 
 package v1.controllers.requestParsers.validators
 
-import javax.inject.Inject
 import config.FixedConfig
-import play.api.libs.json.JsLookupResult
+import javax.inject.Inject
 import utils.CurrentDateProvider
 import v1.controllers.requestParsers.validators.validations.{DateValidation, _}
-import v1.models.request.triggerBsas.TriggerBsasRequestBody
 import v1.models.errors._
-import v1.models.request.triggerBsas.TriggerBsasRawData
+import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
 class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidation, selfEmploymentIdValidator,
-    dateFieldValidator, typeOfBusinessValidator, bodyFormatValidator, otherBodyFieldsValidator)
+  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, typeOfBusinessValidator,
+    selfEmploymentIdValidator, dateFieldValidator, otherBodyFieldsValidator)
 
   private def parameterFormatValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -43,23 +41,23 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
   }
 
   private def dateFieldValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val startDate: JsLookupResult = data.body.json \ "accountingPeriod" \ "startDate"
-    val endDate: JsLookupResult = data.body.json \ "accountingPeriod" \ "endDate"
+    val requestBodyData = data.body.json.as[TriggerBsasRequestBody]
+
     List(
-      JsonValidation.validate(startDate)(DateValidation.validate(StartDateFormatError)),
-      JsonValidation.validate(endDate)(DateValidation.validate(EndDateFormatError))
+      DateValidation.validate(StartDateFormatError)(requestBodyData.accountingPeriod.startDate),
+      DateValidation.validate(EndDateFormatError)(requestBodyData.accountingPeriod.endDate)
     )
   }
 
   private def selfEmploymentIdValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      JsonValidation.validate(data.body.json \ "selfEmploymentId")(SelfEmploymentIdValidation.validate)
+      SelfEmploymentIdValidation.validateOption(data.body.json.as[TriggerBsasRequestBody].selfEmploymentId)
     )
   }
 
   private def typeOfBusinessValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      JsonValidation.validate(data.body.json \ "typeOfBusiness")(TypeOfBusinessValidation.validate)
+      TypeOfBusinessValidation.validate(data.body.json.as[TriggerBsasRequestBody].typeOfBusiness.toString),
     )
   }
 
