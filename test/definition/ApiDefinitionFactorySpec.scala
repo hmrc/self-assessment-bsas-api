@@ -34,8 +34,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockedAppConfig.featureSwitch returns None
-        MockedAppConfig.apiStatus returns "1.0"
+        MockedAppConfig.featureSwitch returns None anyNumberOfTimes()
+        MockedAppConfig.apiStatus1 returns "1.0"
+        MockedAppConfig.apiStatus2 returns "2.0"
 
         apiDefinitionFactory.definition shouldBe Definition(
           scopes = Seq(
@@ -71,14 +72,14 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
-        MockedAppConfig.apiStatus returns "BETA"
+        MockedAppConfig.apiStatus1 returns "BETA"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
       "default to alpha" in new Test {
-        MockedAppConfig.apiStatus returns "ALPHO"
+        MockedAppConfig.apiStatus1 returns "ALPHO"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
       }
     }
