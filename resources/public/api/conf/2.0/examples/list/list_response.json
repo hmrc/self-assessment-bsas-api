@@ -2,7 +2,7 @@
   "businessSourceSummaries": [
     {
       "typeOfBusiness": "self-employment",
-      "selfEmploymentId": "XAIS12345678910",
+      "businessId": "XAIS12345678910",
       "accountingPeriod": {
         "startDate": "2018-10-11",
         "endDate": "2019-10-10"

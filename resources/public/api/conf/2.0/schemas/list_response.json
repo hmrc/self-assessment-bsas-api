@@ -18,7 +18,7 @@
         "properties": {
           "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
 
-          "selfEmploymentId": {"$ref": "definitions.json#/definitions/selfEmploymentId"},
+          "businessId": {"$ref": "definitions.json#/definitions/businessId"},
 
           "accountingPeriod": {"$ref": "definitions.json#/definitions/accountingPeriod"},
           "bsasEntries": {

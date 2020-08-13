@@ -16,10 +16,16 @@ traits:
         description: 'An identifier for the self-employment business, unique to the customer. Must conform to the regular expression `^X[A-Z0-9]{1}IS[0-9]{11}$`'
         example: "X9IS98470026982"
         required: false
+  businessIdOptional:
+    queryParameters:
+      businessId:
+        description: 'An identifier for the business, unique to the customer. Must conform to the regular expression ^X[A-Z0-9]{1}IS[0-9]{11}$'
+        example: "X9IS98470026982"
+        required: true
   typeOfBusinessOptional:
     queryParameters:
       typeOfBusiness:
-        description: "The type of business the summary calculation is for.<br><br>Limited to the following possible values: <br>`self-employment`<br>`uk-property-non-fhl`<br>`uk-property-fhl`"
+        description: "The type of business the summary calculation is for.<br><br>Limited to the following possible values: <br>`self-employment`<br>`uk-property-non-fhl`<br>`uk-property-fhl`<br>`foreign-property-fhl-eea`<br>`foreign-property`"
         required: false
   taxYearRequired:
     queryParameters:
