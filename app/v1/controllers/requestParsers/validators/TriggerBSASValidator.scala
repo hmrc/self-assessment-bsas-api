@@ -25,8 +25,8 @@ import v1.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody
 
 class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, typeOfBusinessValidator,
-    selfEmploymentIdValidator, dateFieldValidator, otherBodyFieldsValidator)
+  private val validationSet = List(parameterFormatValidation, selfEmploymentIdValidator, dateFieldValidator,
+    typeOfBusinessValidator, bodyFormatValidator, otherBodyFieldsValidator)
 
   private def parameterFormatValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -41,23 +41,21 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
   }
 
   private def dateFieldValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val requestBodyData = data.body.json.as[TriggerBsasRequestBody]
-
     List(
-      DateValidation.validate(StartDateFormatError)(requestBodyData.accountingPeriod.startDate),
-      DateValidation.validate(EndDateFormatError)(requestBodyData.accountingPeriod.endDate)
+      DateValidation.validateOpt(StartDateFormatError)((data.body.json \ "accountingPeriod" \ "startDate").asOpt[String]),
+      DateValidation.validateOpt(EndDateFormatError)((data.body.json \ "accountingPeriod" \ "endDate").asOpt[String])
     )
   }
 
   private def selfEmploymentIdValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      SelfEmploymentIdValidation.validateOption(data.body.json.as[TriggerBsasRequestBody].selfEmploymentId)
+      SelfEmploymentIdValidation.validateOption(data.body.json.\("selfEmploymentId").asOpt[String])
     )
   }
 
   private def typeOfBusinessValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      TypeOfBusinessValidation.validate(data.body.json.as[TriggerBsasRequestBody].typeOfBusiness.toString),
+      TypeOfBusinessValidation.validateOption(data.body.json.\("typeOfBusiness").asOpt[String]),
     )
   }
 
