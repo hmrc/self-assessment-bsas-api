@@ -18,7 +18,7 @@ package definition
 
 import play.api.libs.json.{Json, OFormat}
 
-case class APIVersion(version: String, access: Option[Access] = None, status: APIStatus) {
+case class APIVersion(version: String, access: Option[Access] = None, status: APIStatus, endpointsEnabled: Boolean) {
   require(version.nonEmpty, "version is required")
 }
 

@@ -24,31 +24,35 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
 
   val apiDefinitionJson: JsValue = Json.parse("""
       |{
-      |	"scopes": [{
-      |		"key": "read:self-assessment",
-      |		"name": "View your Self Assessment information",
-      |		"description": "Allow read access to self assessment data"
-      |	}, {
-      |		"key": "write:self-assessment",
-      |		"name": "Change your Self Assessment information",
-      |		"description": "Allow write access to self assessment data"
-      |	}],
-      |	"api": {
-      |		"name": "Business Source Adjustable Summary (MTD)",
-      |		"description": "An API for providing business source adjustable summary data",
-      |		"context": "individuals/self-assessment/adjustable-summary",
-      |		"categories": ["INCOME_TAX_MTD"],
-      |   "versions":[
-      |     {
-      |       "version":"1.0",
-      |       "status":"ALPHA"
-      |     },
-      |     {
-      |       "version":"2.0",
-      |       "status":"ALPHA"
-      |     }
-      |   ]
-      |	}
+      |  "scopes": [
+      |    {
+      |      "key": "read:self-assessment",
+      |      "name": "View your Self Assessment information",
+      |      "description": "Allow read access to self assessment data"
+      |    }, {
+      |      "key": "write:self-assessment",
+      |      "name": "Change your Self Assessment information",
+      |      "description": "Allow write access to self assessment data"
+      |    }
+      |  ],
+      |  "api": {
+      |    "name": "Business Source Adjustable Summary (MTD)",
+      |    "description": "An API for providing business source adjustable summary data",
+      |    "context": "individuals/self-assessment/adjustable-summary",
+      |    "categories": ["INCOME_TAX_MTD"],
+      |    "versions":[
+      |      {
+      |        "version":"1.0",
+      |        "status":"ALPHA",
+      |        "endpointsEnabled":true
+      |      },
+      |      {
+      |        "version":"2.0",
+      |        "status":"ALPHA",
+      |        "endpointsEnabled":true
+      |      }
+      |    ]
+      |  }
       |}
     """.stripMargin)
 

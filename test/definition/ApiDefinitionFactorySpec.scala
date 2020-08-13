@@ -37,6 +37,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.featureSwitch returns None anyNumberOfTimes()
         MockedAppConfig.apiStatus1 returns "1.0"
         MockedAppConfig.apiStatus2 returns "2.0"
+        MockedAppConfig.endpointsEnabled returns true anyNumberOfTimes()
 
         apiDefinitionFactory.definition shouldBe Definition(
           scopes = Seq(
@@ -58,9 +59,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
             categories = Seq("INCOME_TAX_MTD"),
             versions = Seq(
               APIVersion(
-                version = VERSION_1, access = None, status = APIStatus.ALPHA),
+                version = VERSION_1, access = None, status = APIStatus.ALPHA, endpointsEnabled = true),
               APIVersion(
-                version = VERSION_2, access = None, status = APIStatus.ALPHA)
+                version = VERSION_2, access = None, status = APIStatus.ALPHA, endpointsEnabled = true)
             ),
             requiresTrust = None
           )
