@@ -48,10 +48,9 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         categories = Seq("INCOME_TAX_MTD"),
         versions = Seq(
           APIVersion(
-            version = VERSION_1,
-            access = buildWhiteListingAccess(),
-            status = buildAPIStatus(VERSION_1),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_1))
+            version = VERSION_1, access = buildWhiteListingAccess(), status = buildAPIStatus(VERSION_1)),
+          APIVersion(
+            version = VERSION_2, access = buildWhiteListingAccess(), status = buildAPIStatus(VERSION_2))
         ),
         requiresTrust = None
       )

@@ -18,8 +18,8 @@ package v1.models.response.retrieveBsasAdjustments.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import utils.DesTaxYear
 import v1.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v1.models.request.DesTaxYear
 import v1.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,

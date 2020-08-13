@@ -17,7 +17,7 @@
 package utils
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Reads, _}
+import play.api.libs.json._
 import support.UnitSpec
 import utils.NestedJsonReads._
 
@@ -95,6 +95,22 @@ class NestedJsonReadsSpec extends UnitSpec {
 
     "return a None " in {
       thirdOutput.validate[Test] shouldBe a[JsError]
+    }
+  }
+  val fourthOutput: JsValue = Json.parse(
+    """{
+      | "a" : {
+      |   "b" : {
+      |     "c" : "string"
+      |   },
+      |   "c" : {
+      |   }
+      |  }
+      |}""".stripMargin)
+  "Empty path" should {
+
+    "return a None " in {
+      fourthOutput.validate[Test] shouldBe a[JsSuccess[_]]
     }
   }
 }

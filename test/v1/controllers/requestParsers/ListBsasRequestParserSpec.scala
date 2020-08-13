@@ -20,11 +20,12 @@ import java.time.LocalDate
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
+import utils.DesTaxYear
 import v1.mocks.MockCurrentDateProvider
 import v1.mocks.validators.MockListBsasValidator
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import v1.models.request.{DesTaxYear, ListBsasRawData, ListBsasRequest}
+import v1.models.request.{ListBsasRawData, ListBsasRequest}
 
 class ListBsasRequestParserSpec extends UnitSpec{
 

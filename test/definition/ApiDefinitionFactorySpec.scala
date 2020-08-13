@@ -18,6 +18,7 @@ package definition
 
 import com.typesafe.config.ConfigFactory
 import definition.APIStatus.{ALPHA, BETA}
+import definition.Versions.{VERSION_1, VERSION_2}
 import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
@@ -33,9 +34,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockedAppConfig.featureSwitch returns None
-        MockedAppConfig.apiStatus returns "1.0"
-        MockedAppConfig.endpointsEnabled returns true
+        MockedAppConfig.featureSwitch returns None anyNumberOfTimes()
+        MockedAppConfig.apiStatus1 returns "1.0"
+        MockedAppConfig.apiStatus2 returns "2.0"
 
         apiDefinitionFactory.definition shouldBe Definition(
           scopes = Seq(
@@ -57,11 +58,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
             categories = Seq("INCOME_TAX_MTD"),
             versions = Seq(
               APIVersion(
-                version = "1.0",
-                access = None,
-                status = APIStatus.ALPHA,
-                endpointsEnabled = true
-              )
+                version = VERSION_1, access = None, status = APIStatus.ALPHA),
+              APIVersion(
+                version = VERSION_2, access = None, status = APIStatus.ALPHA)
             ),
             requiresTrust = None
           )
@@ -73,14 +72,14 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
-        MockedAppConfig.apiStatus returns "BETA"
+        MockedAppConfig.apiStatus1 returns "BETA"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
       "default to alpha" in new Test {
-        MockedAppConfig.apiStatus returns "ALPHO"
+        MockedAppConfig.apiStatus1 returns "ALPHO"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
       }
     }

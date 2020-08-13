@@ -1,0 +1,15 @@
+GET        /:nino                                          v2.controllers.ListBsasController.listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String])
+
+POST       /:nino/trigger                                  v2.controllers.TriggerBsasController.triggerBsas(nino: String)
+
+GET        /:nino/property/:bsasId                         v2.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, bsasId: String, adjustedStatus: Option[String])
+
+POST       /:nino/property/:bsasId/adjust                  v2.controllers.SubmitUkPropertyBsasController.submitUkPropertyBsas(nino: String, bsasId: String)
+
+GET        /:nino/property/:bsasId/adjust                  v2.controllers.RetrieveUkPropertyBsasAdjustmentsController.retrieve(nino: String, bsasId: String)
+
+GET        /:nino/self-employment/:bsasId                  v2.controllers.RetrieveSelfEmploymentBsasController.retrieve(nino:String, bsasId: String, adjustedStatus: Option[String])
+
+POST       /:nino/self-employment/:bsasId/adjust           v2.controllers.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, bsasId: String)
+
+GET        /:nino/self-employment/:bsasId/adjust           v2.controllers.RetrieveSelfEmploymentAdjustmentsController.retrieve(nino:String, bsasId: String)

@@ -38,11 +38,16 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |		"description": "An API for providing business source adjustable summary data",
       |		"context": "individuals/self-assessment/adjustable-summary",
       |		"categories": ["INCOME_TAX_MTD"],
-      |		"versions": [{
-      |			"version": "1.0",
-      |			"status": "ALPHA",
-      |			"endpointsEnabled": false
-      |		}]
+      |   "versions":[
+      |     {
+      |       "version":"1.0",
+      |       "status":"ALPHA"
+      |     },
+      |     {
+      |       "version":"2.0",
+      |       "status":"ALPHA"
+      |     }
+      |   ]
       |	}
       |}
     """.stripMargin)
