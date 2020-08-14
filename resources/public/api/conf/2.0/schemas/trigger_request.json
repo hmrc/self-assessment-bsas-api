@@ -6,11 +6,12 @@
   "properties": {
     "accountingPeriod": {"$ref": "definitions.json#/definitions/accountingPeriod"},
     "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
-    "selfEmploymentId": {"$ref": "definitions.json#/definitions/selfEmploymentId"}
+    "businessId": {"$ref": "definitions.json#/definitions/businessId"}
   },
   "required": [
     "accountingPeriod",
-    "typeOfBusiness"
+    "typeOfBusiness",
+    "businessId"
   ]
 }
 

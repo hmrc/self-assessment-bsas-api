@@ -75,6 +75,14 @@
       }
     },
 
+    "businessId": {
+      "title": "businessId",
+      "description": "",
+      "type": "string",
+      "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
+      "example": "X9IS98470026982"
+    },
+
     "selfEmploymentId": {
       "title": "selfEmploymentId",
       "description": "An identifier for the self-employment business, unique to the customer.",
@@ -87,7 +95,7 @@
       "title": "typeOfBusiness",
       "description": "The type of business the summary calculation is for.",
       "type": "string",
-      "enum": ["self-employment", "uk-property-fhl", "uk-property-non-fhl"]
+      "enum": ["self-employment", "uk-property-fhl", "uk-property-non-fhl", "foreign-property-fhl-eea", "foreign-property"]
     },
 
     "summaryStatus": {

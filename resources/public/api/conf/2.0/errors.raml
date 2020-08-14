@@ -82,6 +82,17 @@ traits:
                 description: The format of the supplied BSAS ID is not valid
                 value:
                   code: FORMAT_BSAS_ID
+  formatBusinessId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatBusinessId:
+                description: The format of the supplied business ID is invalid.
+                value:
+                  code: FORMAT_BUSINESS_ID
   formatAdjustedStatus:
     responses:
       400:
