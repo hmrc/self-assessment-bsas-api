@@ -24,26 +24,35 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
 
   val apiDefinitionJson: JsValue = Json.parse("""
       |{
-      |	"scopes": [{
-      |		"key": "read:self-assessment",
-      |		"name": "View your Self Assessment information",
-      |		"description": "Allow read access to self assessment data"
-      |	}, {
-      |		"key": "write:self-assessment",
-      |		"name": "Change your Self Assessment information",
-      |		"description": "Allow write access to self assessment data"
-      |	}],
-      |	"api": {
-      |		"name": "Business Source Adjustable Summary (MTD)",
-      |		"description": "An API for providing business source adjustable summary data",
-      |		"context": "individuals/self-assessment/adjustable-summary",
-      |		"categories": ["INCOME_TAX_MTD"],
-      |		"versions": [{
-      |			"version": "1.0",
-      |			"status": "ALPHA",
-      |			"endpointsEnabled": false
-      |		}]
-      |	}
+      |  "scopes": [
+      |    {
+      |      "key": "read:self-assessment",
+      |      "name": "View your Self Assessment information",
+      |      "description": "Allow read access to self assessment data"
+      |    }, {
+      |      "key": "write:self-assessment",
+      |      "name": "Change your Self Assessment information",
+      |      "description": "Allow write access to self assessment data"
+      |    }
+      |  ],
+      |  "api": {
+      |    "name": "Business Source Adjustable Summary (MTD)",
+      |    "description": "An API for providing business source adjustable summary data",
+      |    "context": "individuals/self-assessment/adjustable-summary",
+      |    "categories": ["INCOME_TAX_MTD"],
+      |    "versions":[
+      |      {
+      |        "version":"1.0",
+      |        "status":"ALPHA",
+      |        "endpointsEnabled":true
+      |      },
+      |      {
+      |        "version":"2.0",
+      |        "status":"ALPHA",
+      |        "endpointsEnabled":true
+      |      }
+      |    ]
+      |  }
       |}
     """.stripMargin)
 
@@ -56,8 +65,14 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "a documentation request" must {
-    "return the documentation" in {
+    "return the documentation for v1" in {
       val response: WSResponse = await(buildRequest("/api/conf/1.0/application.raml").get())
+      response.status shouldBe Status.OK
+      response.body[String] should startWith("#%RAML 1.0")
+    }
+
+    "return the documentation for v2" in {
+      val response: WSResponse = await(buildRequest("/api/conf/2.0/application.raml").get())
       response.status shouldBe Status.OK
       response.body[String] should startWith("#%RAML 1.0")
     }
