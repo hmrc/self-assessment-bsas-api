@@ -7,39 +7,39 @@ We use standard HTTP status codes to show whether an API request succeeded or no
 Errors specific to each API are shown in the Endpoints section, under Response. See our [reference guide](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#errors) for more on errors.
 
 Single errors will be returned in the following format:<br>
-`{
-    "code": "FORMAT_FIELD_NAME",
-    "message": "The provided FieldName is invalid"
-}`
+  `{
+      "code": "FORMAT_FIELD_NAME",
+      "message": "The provided FieldName is invalid"
+  }`
 
 Where possible, multiple errors will be returned with `INVALID_REQUEST` in the following format:<br>
-`{
-    "code": "INVALID_REQUEST",
-    "message": "Invalid request",
-    "errors": [
-        {
-            "code": "RULE_FIELD_NAME",
-            "message": "The provided FieldName is not allowed"
-        },
-        {
-            "code": "FORMAT_FIELD_NAME",
-            "message": "The provided FieldName is invalid"
-        }
-    ]
-}`
-
+  `{
+      "code": "INVALID_REQUEST",
+      "message": "Invalid request",
+      "errors": [
+          {
+              "code": "RULE_FIELD_NAME",
+              "message": "The provided FieldName is not allowed"
+          },
+          {
+              "code": "FORMAT_FIELD_NAME",
+              "message": "The provided FieldName is invalid"
+          }
+      ]
+  }`
+  
 Where it is possible for the same error to be returned multiple times, `message` will describe the expected format and `paths` will show the fields which are invalid.<br>
 <br>
 Where arrays are submitted a number indicates the object in the array sequence, for example, `/arrayName/1/fieldName`
 
-An example with single error:  
+An example with single error:<br>
    `{
-      "code": "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED",
-      "message": "An empty or non-matching body was submitted",
+      "code": "FORMAT_STRING_NAME",
+      "message": "The provided field is not valid",
       "paths": [ "/arrayName/0/fieldName" ]
    }`
 
-An example with multiple errors:
+An example with multiple errors:<br>
   `{
       "code": "INVALID_REQUEST",
       "message": "Invalid request",
