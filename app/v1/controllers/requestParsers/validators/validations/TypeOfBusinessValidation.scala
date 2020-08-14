@@ -26,4 +26,8 @@ object TypeOfBusinessValidation {
       || typeOfBusiness == TypeOfBusiness.`uk-property-fhl`.toString
       || typeOfBusiness == TypeOfBusiness.`self-employment`.toString) List()
     else List(TypeOfBusinessFormatError)
+
+  def validateOption(typeOfBusiness: Option[String]): List[MtdError] = {
+    if(typeOfBusiness.isDefined) validate(typeOfBusiness.get) else List()
+  }
 }

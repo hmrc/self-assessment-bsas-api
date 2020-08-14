@@ -108,9 +108,9 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | BsasIdFormatError |
-           RuleIncorrectOrEmptyBodyError | RuleBothExpensesError |
-           MtdErrorWithCustomMessage(FormatAdjustmentValueError.code) |
-           MtdErrorWithCustomMessage(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | RuleBothExpensesError |
+           CustomMtdError(FormatAdjustmentValueError.code) |
+           CustomMtdError(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
            RuleBsasAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
            RulePropertyIncomeAllowanceClaimed | RuleResultingValueNotPermitted |

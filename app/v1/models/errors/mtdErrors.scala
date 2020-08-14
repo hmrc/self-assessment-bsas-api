@@ -18,13 +18,13 @@ package v1.models.errors
 
 import play.api.libs.json.{Json, Writes}
 
-case class MtdError(code: String, message: String)
+case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
 
 object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
 }
 
-object MtdErrorWithCustomMessage {
+object CustomMtdError {
   def unapply(arg: MtdError): Option[String] = Some(arg.code)
 }
 

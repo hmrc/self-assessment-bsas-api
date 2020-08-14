@@ -40,7 +40,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
   private def bodyFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json)
     )
   }
 
