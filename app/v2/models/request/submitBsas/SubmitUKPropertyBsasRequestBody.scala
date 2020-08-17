@@ -39,7 +39,7 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil{
             "incomeSourceType" -> "04",
             "income" -> x.income,
             "expenses"-> x.expenses
-          ))).get
+          ))).getOrElse(Json.obj())
       )
   }
 }

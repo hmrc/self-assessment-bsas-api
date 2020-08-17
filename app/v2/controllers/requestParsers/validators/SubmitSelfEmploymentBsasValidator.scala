@@ -35,7 +35,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
 
   private def bodyFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[SubmitSelfEmploymentBsasRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[SubmitSelfEmploymentBsasRequestBody](data.body.json)
     )
   }
 

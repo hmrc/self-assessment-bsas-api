@@ -16,38 +16,36 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{Json, OFormat}
 import support.UnitSpec
-import v2.models.errors.MtdError
+import v2.models.errors.RuleIncorrectOrEmptyBodyError
 import v2.models.utils.JsonErrorValidators
 
 class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
   case class TestDataObject(fieldOne: String, fieldTwo: String)
 
-  implicit val testDataObjectReads: Reads[TestDataObject] = Json.reads[TestDataObject]
-
-  val someError = MtdError("SOME_CODE", "some message")
+  implicit val testDataObjectReads: OFormat[TestDataObject] = Json.format[TestDataObject]
 
   "validate" should {
     "return no errors" when {
-      "when a valid JSON object with all the necessary fields is supplied" in {
+      "a valid JSON object with all the necessary fields is supplied" in {
 
         val validJson = Json.parse("""{ "fieldOne" : "Something", "fieldTwo" : "SomethingElse" }""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](validJson, someError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](validJson)
         validationResult shouldBe empty
       }
     }
 
     "return an error " when {
-      "when a required field is missing" in {
+      "a required field is missing" in {
 
         // fieldTwo is missing
         val json = Json.parse("""{ "fieldOne" : "Something" }""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](json, someError)
-        validationResult shouldBe List(someError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json)
+        validationResult shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
     }
