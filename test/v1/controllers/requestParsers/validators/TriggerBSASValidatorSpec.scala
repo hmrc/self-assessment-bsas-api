@@ -42,16 +42,6 @@ class TriggerBSASValidatorSpec extends UnitSpec {
       ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
   }
 
-  def triggerBsasRawDataBodyMissingField(startDate: String = "2019-05-05",
-                             endDate: String = "2020-05-06",
-                             selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
-
-    AnyContentAsJson(
-      Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate)
-      ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
-  }
-
   class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
     val validator = new TriggerBSASValidator(currentDateProvider = mockCurrentDateProvider)
 
@@ -115,10 +105,20 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
       "there is a missing field" in new SetUp() {
 
+        def triggerBsasRawDataBodyMissingField(startDate: String = "2019-05-05",
+                                               endDate: String = "2020-05-06",
+                                               selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
+
+          AnyContentAsJson(
+            Json.obj(
+              "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate)
+            ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+        }
+
         val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBodyMissingField()))
 
         result.length shouldBe 1
-        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+        result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/typeOfBusiness"))))
       }
     }
 

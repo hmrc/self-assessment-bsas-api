@@ -96,9 +96,9 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
       }
       "passed an invalid body" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+          AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+          AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
           AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
