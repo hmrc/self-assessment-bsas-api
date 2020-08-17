@@ -47,7 +47,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
     def request: WSRequest = {
 
-      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "selfEmploymentId" -> selfEmploymentId, "taxYear" -> taxYear)
+      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> selfEmploymentId, "taxYear" -> taxYear)
         .collect {
           case (k, Some(v)) => (k, v)
         }
@@ -127,7 +127,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2019-20", Some("self-employment"), Some("XAI901"), BAD_REQUEST, BusinessIdFormatError),
+        ("AA123456A", "2019-20", Some("self-employment"), Some("X0IS00"), BAD_REQUEST, BusinessIdFormatError),
         ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
         ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
