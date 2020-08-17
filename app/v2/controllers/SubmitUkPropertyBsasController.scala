@@ -18,22 +18,22 @@ package v2.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v2.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v2.hateoas.HateoasFactory
-import v2.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import v2.models.errors.{ FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _ }
-import v2.models.request.submitBsas.SubmitUkPropertyBsasRawData
+import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v2.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
+import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v2.models.response.SubmitUkPropertyBsasHateoasData
-import v2.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService }
+import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,

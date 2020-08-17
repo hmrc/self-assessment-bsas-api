@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v2.models.request.RawData
+import play.api.libs.json._
 
-case class SubmitUkPropertyBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
+case class FHLIncome(rentIncome: Option[BigDecimal]) {
 
-case class SubmitUkPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitUKPropertyBsasRequestBody)
+  val params: Map[String, BigDecimal] = Map(
+    "rentReceived" -> rentIncome
+  ).collect {case (k, Some(v)) => (k, v) }
+}
 
+object FHLIncome {
+  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
+  implicit val writes: Writes[FHLIncome] = (o: FHLIncome) => Json.toJsObject(o.params)
+}

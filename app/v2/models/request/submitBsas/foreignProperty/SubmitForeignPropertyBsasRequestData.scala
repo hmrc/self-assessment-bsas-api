@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitForeignProperty
+package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.domain.Nino
 
-case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty],
-                                                fhlEea: Option[FhlEea])
-
-object SubmitForeignPropertyBsasRequestBody {
-  implicit val format: OFormat[SubmitForeignPropertyBsasRequestBody] = Json.format[SubmitForeignPropertyBsasRequestBody]
-}
+case class SubmitForeignPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitForeignPropertyBsasRequestBody)

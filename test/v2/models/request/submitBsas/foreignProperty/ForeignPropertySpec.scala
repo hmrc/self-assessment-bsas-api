@@ -14,41 +14,72 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitForeignProperty
+package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class IncomeSpec extends UnitSpec {
+class ForeignPropertySpec extends UnitSpec {
 
   val validJson = Json.parse(
     """
       |{
-      |   "rentIncome": 123.12,
-      |   "premiumsOfLeaseGrant": 123.12,
-      |   "foreignTaxTakenOff": 123.12,
-      |   "otherPropertyIncome": 123.12
+      |        "income": {
+      |            "rentIncome": 123.12,
+      |            "premiumsOfLeaseGrant": 123.12,
+      |            "foreignTaxTakenOff": 123.12,
+      |            "otherPropertyIncome": 123.12
+      |        },
+      |        "expenses": {
+      |            "premisesRunningCosts": 123.12,
+      |            "repairsAndMaintenance": 123.12,
+      |            "financialCosts": 123.12,
+      |            "professionalFees": 123.12,
+      |            "travelCosts": 123.12,
+      |            "costOfServices": 123.12,
+      |            "residentialFinancialCost": 123.12,
+      |            "other": 123.12,
+      |            "consolidatedExpenses": 123.12
+      |        }
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = Income(Some(123.12),Some(123.12),Some(123.12),Some(123.12))
+  val validModel = ForeignProperty(
+    Some(Income(
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12)
+    )),
+    Some(Expenses(
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12),
+      Some(123.12)
+    ))
+  )
 
-  val emptyModel = Income(None,None,None,None)
+  val emptyModel = ForeignProperty(None, None)
 
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[Income]
+        validModel shouldBe validJson.as[ForeignProperty]
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[Income]
+        emptyModel shouldBe emptyJson.as[ForeignProperty]
       }
     }
   }

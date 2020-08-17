@@ -16,7 +16,7 @@
 
 package v2.models.response
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
@@ -28,12 +28,24 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
+  val desJson: JsValue = Json.parse(
+    """
+      |{
+      |   "metadata" : {
+      |       "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+      |   },
+      |   "inputs": {
+      |   "incomeSourceType":"03"
+      |   }
+      |}
+  """.stripMargin)
+
   val responseModel = SubmitForeignPropertyBsasResponse("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4")
 
   "SubmitForeignPropertyBsasResponseSpec" when {
     "read from valid JSON" should {
       "return the expected SubmitForeignPropertyBsasResponse object" in {
-        mtdJson.as[SubmitForeignPropertyBsasResponse] shouldBe responseModel
+        desJson.as[SubmitForeignPropertyBsasResponse] shouldBe responseModel
       }
     }
     "written to JSON" should {

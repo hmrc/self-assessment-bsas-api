@@ -14,57 +14,49 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
-class NonFHLIncomeSpec extends UnitSpec {
+class FHLIncomeSpec extends UnitSpec {
+
 
   val inputJson: JsValue = Json.parse(
     """
       |{
-      | "totalRentsReceived": 1000.45,
-      | "premiumsOfLeaseGrant": 1000.45,
-      | "reversePremiums": 1000.45,
-      | "otherPropertyIncome": 1000.45
+      | "rentIncome": 1000.45
       |}
       |""".stripMargin)
 
   val requestJson: JsValue = Json.parse(
     """
       |{
-      | "totalRentsReceived": 1000.45,
-      | "premiumsOfLeaseGrant": 1000.45,
-      | "reversePremiums": 1000.45,
-      | "otherPropertyIncome": 1000.45
+      | "rentReceived": 1000.45
       |}
       |""".stripMargin)
 
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      |"rentIncome": 1000.45,
-      |"premiumsOfLeaseGrant": true,
-      |"reversePremiums": 809,
-      |"otherPropertyIncome": 20101
+      |"rentIncome": true
       |}
       |""".stripMargin
   )
 
-  val modelWithNoneValues: NonFHLIncome = NonFHLIncome(None,Some(1000.45),Some(1000.45),Some(1000.45))
-  val model: NonFHLIncome = NonFHLIncome(Some(1000.45),Some(1000.45),Some(1000.45),Some(1000.45))
+  val modelWithNoneValues: FHLIncome = FHLIncome(None)
+  val model: FHLIncome = FHLIncome(Some(1000.45))
 
   "NonFHLIncome" when {
     "read from valid JSON" should {
       "return the expected NonFHLIncome object" in {
-        inputJson.validate[NonFHLIncome] shouldBe JsSuccess(modelWithNoneValues)
+        inputJson.as[FHLIncome] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidJson.validate[NonFHLIncome] shouldBe a[JsError]
+        invalidJson.validate[FHLIncome] shouldBe a[JsError]
       }
     }
 

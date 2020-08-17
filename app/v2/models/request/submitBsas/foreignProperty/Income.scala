@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitForeignProperty
+package v2.models.request.submitBsas.foreignProperty
 
-import uk.gov.hmrc.domain.Nino
+import play.api.libs.json.{Json, OFormat}
 
-case class SubmitForeignPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitForeignPropertyBsasRequestBody)
+case class Income(rentIncome: Option[BigDecimal],
+                  premiumsOfLeaseGrant: Option[BigDecimal],
+                  foreignTaxTakenOff: Option[BigDecimal],
+                  otherPropertyIncome: Option[BigDecimal])
+
+object Income {
+  implicit val format: OFormat[Income] = Json.format[Income]
+}

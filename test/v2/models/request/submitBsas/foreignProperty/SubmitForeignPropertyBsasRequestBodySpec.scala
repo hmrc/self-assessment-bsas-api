@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitForeignProperty
+package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec

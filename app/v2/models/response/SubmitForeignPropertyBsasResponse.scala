@@ -16,10 +16,13 @@
 
 package v2.models.response
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SubmitForeignPropertyBsasResponse(id: String)
 
 object SubmitForeignPropertyBsasResponse {
-  implicit val format: OFormat[SubmitForeignPropertyBsasResponse] = Json.format[SubmitForeignPropertyBsasResponse]
+  implicit val reads: Reads[SubmitForeignPropertyBsasResponse] =
+    (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitForeignPropertyBsasResponse.apply)
+
+  implicit val writes: OWrites[SubmitForeignPropertyBsasResponse] = Json.writes[SubmitForeignPropertyBsasResponse]
 }

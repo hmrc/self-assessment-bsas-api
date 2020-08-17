@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitForeignProperty
+package v2.models.request.submitBsas.ukProperty
 
-import play.api.mvc.AnyContentAsJson
-import v2.models.request.RawData
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SubmitForeignPropertyRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
+case class NonFurnishedHolidayLet(income: Option[NonFHLIncome], expenses: Option[NonFHLExpenses])
+
+object NonFurnishedHolidayLet {
+
+  implicit val reads: Reads[NonFurnishedHolidayLet] = (
+    (JsPath \ "income").readNullable[NonFHLIncome] and
+      (JsPath \ "expenses").readNullable[NonFHLExpenses]
+  )(NonFurnishedHolidayLet.apply _)
+
+  implicit  val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
+}

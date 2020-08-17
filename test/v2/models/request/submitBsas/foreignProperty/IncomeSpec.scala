@@ -14,47 +14,41 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitForeignProperty
+package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class ExpensesSpec extends UnitSpec {
+class IncomeSpec extends UnitSpec {
 
   val validJson = Json.parse(
     """
       |{
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "travelCosts": 123.12,
-      |            "costOfServices": 123.12,
-      |            "residentialFinancialCost": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
+      |   "rentIncome": 123.12,
+      |   "premiumsOfLeaseGrant": 123.12,
+      |   "foreignTaxTakenOff": 123.12,
+      |   "otherPropertyIncome": 123.12
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = Expenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12))
+  val validModel = Income(Some(123.12),Some(123.12),Some(123.12),Some(123.12))
 
-  val emptyModel = Expenses(None,None,None,None,None,None,None,None,None)
-
+  val emptyModel = Income(None,None,None,None)
 
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[Expenses]
+        validModel shouldBe validJson.as[Income]
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[Expenses]
+        emptyModel shouldBe emptyJson.as[Income]
       }
     }
   }

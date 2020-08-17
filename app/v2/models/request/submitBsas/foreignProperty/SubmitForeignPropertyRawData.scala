@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json._
+import play.api.mvc.AnyContentAsJson
+import v2.models.request.RawData
 
-case class FHLIncome(rentIncome: Option[BigDecimal]) {
-
-  val params: Map[String, BigDecimal] = Map(
-    "rentReceived" -> rentIncome
-  ).collect {case (k, Some(v)) => (k, v) }
-}
-
-object FHLIncome {
-  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
-  implicit val writes: Writes[FHLIncome] = (o: FHLIncome) => Json.toJsObject(o.params)
-}
+case class SubmitForeignPropertyRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData

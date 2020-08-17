@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
 import play.api.libs.json._
 
