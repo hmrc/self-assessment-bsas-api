@@ -6,19 +6,17 @@ We use standard HTTP status codes to show whether an API request succeeded or no
 
 Errors specific to each API are shown in the Endpoints section, under Response. See our [reference guide](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#errors) for more on errors.
 
-Single errors will be returned in the following format:<br>
+Single errors will be returned in the following format:
 
-```
-{
+`{
     "code": "FORMAT_FIELD_NAME",
     "message": "The provided FieldName is invalid"
 }
-```
+`
 
-Where possible, multiple errors will be returned with `INVALID_REQUEST` in the following format:<br>
+Where possible, multiple errors will be returned with `INVALID_REQUEST` in the following format:
 
-```
-{
+`{
     "code": "INVALID_REQUEST",
     "message": "Invalid request",
     "errors": [
@@ -32,26 +30,24 @@ Where possible, multiple errors will be returned with `INVALID_REQUEST` in the f
         }
     ]
 }
-```
+`
   
 Where it is possible for the same error to be returned multiple times, `message` will describe the expected format and `paths` will show the fields which are invalid.<br>
-<br>
-Where arrays are submitted a number indicates the object in the array sequence, for example, `/arrayName/1/fieldName`
 
-An example with single error:<br>
+Where arrays are submitted a number indicates the object in the array sequence, for example, `/arrayName/1/fieldName`.
 
-```
-{
+An example with single error:
+
+`{
     "code": "FORMAT_STRING_NAME",
     "message": "The provided field is not valid",
     "paths": [ "/arrayName/0/fieldName" ]
 }
-```
+`
 
-An example with multiple errors:<br>
+An example with multiple errors:
 
-```
-{
+`{
     "code": "INVALID_REQUEST",
     "message": "Invalid request",
     "errors": [
@@ -67,4 +63,4 @@ An example with multiple errors:<br>
         }
     ]
 }
-```
+`
