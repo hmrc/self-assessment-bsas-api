@@ -17,12 +17,13 @@
 package v2.models.request.submitBsas
 
 package object selfEmployment {
+
   def queryMap[A](as: Map[String, Option[A]]): Map[String, A] =
     as.filterNot {
-      case (_, None) => true
-      case _ => false
-    }
-      .map {
+        case (_, None) => true
+        case _         => false
+      }
+      .collect {
         case (k: String, Some(v)) => (k, v)
       }
 }

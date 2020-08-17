@@ -35,8 +35,11 @@ trait HateoasLinks {
   private def selfEmploymentBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
     bsasBasUri(appConfig, nino) + s"/self-employment/$bsasId"
 
-  private def propertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+  private def ukPropertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
     bsasBasUri(appConfig, nino) + s"/property/$bsasId"
+
+  private def foreignPropertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId"
 
   private def selfEmploymentAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
     bsasBasUri(appConfig, nino) + s"/self-employment/$bsasId/adjust"
@@ -59,12 +62,12 @@ trait HateoasLinks {
     Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true" , method = GET, rel = RETRIEVE_BSAS)
 
   //L3
-  def getPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
-    Link(href = propertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
+  def getUkPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(href = ukPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 
   //L3 with adjusted flag
   def getAdjustedPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
-    Link(href = propertyBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
+    Link(href = ukPropertyBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
 
   //L4
   def adjustSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
@@ -101,4 +104,7 @@ trait HateoasLinks {
   //L8
   def listBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = listUri(appConfig, nino), method = GET, rel = SELF)
+
+  def getForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 }

@@ -25,7 +25,9 @@ class TypeOfBusinessSpec extends UnitSpec with EnumJsonSpecSupport {
   testRoundTrip[TypeOfBusiness](
     ("self-employment", `self-employment`),
     ("uk-property-fhl", `uk-property-fhl`),
-    ("uk-property-non-fhl", `uk-property-non-fhl`)
+    ("uk-property-non-fhl", `uk-property-non-fhl`),
+    ("foreign-property-fhl-eea", `foreign-property-fhl-eea`),
+    ("foreign-property", `foreign-property`)
   )
 
   "toIdentifierValue" should {
@@ -33,6 +35,8 @@ class TypeOfBusinessSpec extends UnitSpec with EnumJsonSpecSupport {
       TypeOfBusiness.`self-employment`.toIdentifierValue shouldBe "01"
       TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue shouldBe "02"
       TypeOfBusiness.`uk-property-fhl`.toIdentifierValue shouldBe "04"
+      TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue shouldBe "03"
+      TypeOfBusiness.`foreign-property`.toIdentifierValue shouldBe "15"
     }
   }
 }

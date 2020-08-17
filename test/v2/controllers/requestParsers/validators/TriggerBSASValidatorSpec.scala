@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.mocks.MockCurrentDateProvider
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.request.triggerBsas.TriggerBsasRawData
 
@@ -30,16 +29,16 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
   val nino = "AA123456A"
 
-  def triggerBsasRawDataBody(startDate: String = "2019-05-05",
-                             endDate: String = "2020-05-06",
-                             typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
-                             selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
+  def triggerBsasRawDataBody(startDate: String = "2021-05-05",
+                             endDate: String = "2022-05-06",
+                             typeOfBusiness: String = "self-employment",
+                             businessId: String = "XAIS12345678901"): AnyContentAsJson = {
 
     AnyContentAsJson(
-      Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness"   -> typeOfBusiness
-      ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+      Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+               "typeOfBusiness"   -> typeOfBusiness,
+               "businessId"       -> businessId)
+    )
   }
 
   class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
@@ -51,152 +50,98 @@ class TriggerBSASValidatorSpec extends UnitSpec {
   "running validation" should {
     "return no errors" when {
 
-      "a valid self employment is supplied" in new SetUp {
-        validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody())).isEmpty shouldBe true
-      }
-
-      "a valid property is supplied" in new SetUp {
-
-        validator
-          .validate(
-            TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString, selfEmploymentId = None)))
-          .isEmpty shouldBe true
-      }
-
-      "a valid fhl-property is supplied" in new SetUp {
-
-        validator
-          .validate(
-            TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString, selfEmploymentId = None)))
-          .isEmpty shouldBe true
-      }
-
-    }
-
-    "return a EndBeforeStartDate error" when {
-      "the end date is before the start date" in new SetUp {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2020-05-07")))
-
-        result.length shouldBe 1
-        result shouldBe List(EndBeforeStartDateError)
-      }
-    }
-
-    "return a EndDateFormat error" when {
-      "the end date format is incorrect" in new SetUp() {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(endDate = "06-05-2020")))
-
-        result.length shouldBe 1
-        result shouldBe List(EndDateFormatError)
-      }
-
-    }
-
-    "return a JsonFormat error" when {
-      "there is no body" in new SetUp() {
-
-        val result = validator.validate(TriggerBsasRawData(nino, AnyContentAsJson(Json.obj())))
-
-        result.length shouldBe 1
-        result shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-
-      "there is a missing field" in new SetUp() {
-
-        def triggerBsasRawDataBodyMissingField(startDate: String = "2019-05-05",
-                                               endDate: String = "2020-05-06",
-                                               selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
-
-          AnyContentAsJson(
-            Json.obj(
-              "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate)
-            ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+      List(
+        "self-employment",
+        "uk-property-fhl",
+        "uk-property-non-fhl",
+        "foreign-property-fhl-eea",
+        "foreign-property"
+      ).foreach { typeOfBusiness =>
+        s"$typeOfBusiness is supplied" in new SetUp {
+          validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = typeOfBusiness))) shouldBe Nil
         }
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBodyMissingField()))
-
-        result.length shouldBe 1
-        result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/typeOfBusiness"))))
       }
+
     }
 
-    "return a NinoFormat error" when {
+    "return a FORMAT_NINO error" when {
       "the nino is invalid" in new SetUp {
-
         val result = validator.validate(TriggerBsasRawData("123456789", triggerBsasRawDataBody()))
 
-        result.length shouldBe 1
         result shouldBe List(NinoFormatError)
       }
     }
 
-    "return a NotEndedBefore error" when {
-      "the end date for the accounting period is in the future" in new SetUp(LocalDate.of(2020, 5, 4)) {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody()))
-
-        result.length shouldBe 1
-        result shouldBe List(RuleAccountingPeriodNotEndedError)
-      }
-    }
-
-    "return a selfEmploymentIdRule error" when {
-      "a valid self employment is supplied with no self employment ID value" in new SetUp() {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(selfEmploymentId = None)))
-
-        result.length shouldBe 1
-        result shouldBe List(SelfEmploymentIdRuleError)
-      }
-
-      "a valid property is supplied with an self employed id" in new SetUp {
-
-        val result =
-          validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString)))
-
-        result.length shouldBe 1
-        result shouldBe List(SelfEmploymentIdRuleError)
-      }
-    }
-
-    "return a SelfEmploymentIdValue error" when {
-      "a self emploment id is provided with wrong formatting" in new SetUp() {
-
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(selfEmploymentId = Some("XISS2646382"))))
-
-        result.length shouldBe 1
-        result shouldBe List(SelfEmploymentIdFormatError)
-      }
-
-    }
-
-    "return a StartDateFormat error" when {
+    "return a FORMAT_START_DATE error" when {
       "the start date format is incorrect" in new SetUp() {
-
         val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "06-05-2019")))
 
-        result.length shouldBe 1
         result shouldBe List(StartDateFormatError)
       }
     }
 
-    "return a TypeOfBusinessFormat Error" when {
-      "a incorrect business type is given" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "selfEmployed")))
+    "return a FORMAT_END_DATE error" when {
+      "the end date format is incorrect" in new SetUp() {
+        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(endDate = "06-05-2020")))
 
-        result.length shouldBe 1
+        result shouldBe List(EndDateFormatError)
+      }
+    }
+
+    "return a FORMAT_TYPE_OF_BUSINESS Error" when {
+      "a incorrect business type is given" in new SetUp() {
+        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "nonsense typeOfBusiness")))
+
         result shouldBe List(TypeOfBusinessFormatError)
       }
     }
 
-    "return multiple errors" when {
-      "a request has muliple issues with the data" in new SetUp(LocalDate.of(2020, 5, 4)) {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(selfEmploymentId = None)))
+    "return a FORMAT_BUSINESS_ID error" when {
+      "a business id is provided with wrong formatting" in new SetUp() {
+        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(businessId = "nonsense businessId")))
 
-        result.length shouldBe 2
-        result contains List(SelfEmploymentIdFormatError, RuleAccountingPeriodNotEndedError)
+        result shouldBe List(BusinessIdFormatError)
+      }
+    }
+
+    "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
+      "an empty body is submitted" in new SetUp() {
+        val result = validator.validate(TriggerBsasRawData(nino, AnyContentAsJson(Json.obj())))
+
+        result shouldBe List(RuleIncorrectOrEmptyBodyError)
+      }
+      "mandatory fields are missing" in new SetUp() {
+        val result = validator.validate(
+          TriggerBsasRawData(nino,
+                             AnyContentAsJson(
+                               Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
+                             )))
+
+        result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/startDate", "/typeOfBusiness", "/businessId"))))
+      }
+    }
+
+    "return a RULE_END_DATE_BEFORE_START_DATE error" when {
+      "the end date is before the start date" in new SetUp {
+        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2022-05-07")))
+
+        result shouldBe List(RuleEndBeforeStartDateError)
+      }
+    }
+
+    "return a RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED error" when {
+      "the accounting period is before the minimum tax year" in new SetUp() {
+        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2015-05-05", endDate = "2016-05-06")))
+
+        result shouldBe List(RuleAccountingPeriodNotSupportedError)
+      }
+    }
+
+    "return multiple errors" when {
+      "a request has muliple issues with the data" in new SetUp() {
+        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "", businessId = "")))
+
+        result shouldBe List(BusinessIdFormatError, TypeOfBusinessFormatError)
       }
     }
   }

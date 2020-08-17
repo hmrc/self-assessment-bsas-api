@@ -16,35 +16,23 @@
 
 package v2.models.request.triggerBsas
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 import v2.models.domain.TypeOfBusiness
 import v2.models.request.AccountingPeriod
 
-case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod,
-                                  typeOfBusiness: TypeOfBusiness,
-                                  selfEmploymentId: Option[String])
+case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod, typeOfBusiness: String, businessId: String)
 
 object TriggerBsasRequestBody {
 
   implicit val reads: Reads[TriggerBsasRequestBody] = Json.reads[TriggerBsasRequestBody]
 
-  implicit val writes: OWrites[TriggerBsasRequestBody] = new OWrites[TriggerBsasRequestBody] {
-    def writes(triggerBsasRequestBody: TriggerBsasRequestBody): JsObject = {
-      if (triggerBsasRequestBody.typeOfBusiness == TypeOfBusiness.`self-employment`) {
-        Json.obj(
-          "incomeSourceIdentifier" -> "incomeSourceId",
-          "identifierValue" -> triggerBsasRequestBody.selfEmploymentId,
-          "accountingPeriodStartDate" -> triggerBsasRequestBody.accountingPeriod.startDate,
-          "accountingPeriodEndDate" -> triggerBsasRequestBody.accountingPeriod.endDate
-        )
-      } else {
-        Json.obj(
-          "incomeSourceIdentifier" -> "incomeSourceType",
-          "identifierValue" -> triggerBsasRequestBody.typeOfBusiness.toIdentifierValue,
-          "accountingPeriodStartDate" -> triggerBsasRequestBody.accountingPeriod.startDate,
-          "accountingPeriodEndDate" -> triggerBsasRequestBody.accountingPeriod.endDate
-        )
-      }
-    }
+  implicit val writes: OWrites[TriggerBsasRequestBody] = (requestBody: TriggerBsasRequestBody) => {
+    val typeOfBusiness = TypeOfBusiness.parser(requestBody.typeOfBusiness)
+    Json.obj(
+      "incomeSourceType"          -> typeOfBusiness.toIdentifierValue,
+      "incomeSourceId"            -> requestBody.businessId,
+      "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
+      "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate
+    )
   }
 }

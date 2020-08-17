@@ -103,6 +103,24 @@ class TriggerBsasResponseSpec extends UnitSpec {
           )
         )
     }
+    "expose the correct links for triggering a foreign property BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`foreign-property`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", GET, "self")
+          )
+        )
+    }
+    "expose the correct links for triggering a foreign property fhl eea BSAS" in new Test {
+      hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, TypeOfBusiness.`foreign-property-fhl-eea`, bsasId)) shouldBe
+        HateoasWrapper(
+          triggerBsasResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", GET, "self")
+          )
+        )
+    }
 
   }
 }

@@ -22,7 +22,6 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.validators.MockTriggerBSASValidator
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
@@ -35,40 +34,8 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
   }
 
   "parser" should {
-    "accept a valid input" when {
-      s"convert ${TypeOfBusiness.`uk-property-non-fhl`.toString} to incomeSourceType 04" in new Test {
-        val inputData = TriggerBsasRawData(nino,
-          triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`.toString,
-            selfEmploymentId = None)
-        )
-
-
-        MockValidator
-          .validate(inputData)
-          .returns(Nil)
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Right(TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-          selfEmploymentId = None)))
-      }
-
-      s"convert ${TypeOfBusiness.`uk-property-fhl`.toString} to incomeSourceType 02" in new Test {
-        val inputData = TriggerBsasRawData(nino,
-          triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString,
-            selfEmploymentId = None))
-
-
-        MockValidator
-          .validate(inputData)
-          .returns(Nil)
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Right(TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-          selfEmploymentId = None)))
-
-      }
-
-      s"convert ${TypeOfBusiness.`self-employment`.toString} to self employment Id" in new Test {
+    "parse request" when {
+      s"passed valid input" in new Test {
         val inputData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
 
 
@@ -95,15 +62,15 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
       }
 
       "multiple errors are present" in new Test {
-        val inputData = TriggerBsasRawData(nino, triggerBsasRawDataBody(selfEmploymentId = None, startDate = "2020-05-07"))
+        val inputData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
 
 
         MockValidator
           .validate(inputData)
-          .returns(List(SelfEmploymentIdFormatError, EndBeforeStartDateError))
+          .returns(List(BusinessIdFormatError, RuleEndBeforeStartDateError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(SelfEmploymentIdFormatError, EndBeforeStartDateError))))
+        result shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(BusinessIdFormatError, RuleEndBeforeStartDateError))))
       }
     }
   }

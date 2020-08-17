@@ -19,14 +19,14 @@ package v2.controllers.requestParsers.validators
 import config.FixedConfig
 import javax.inject.Inject
 import utils.CurrentDateProvider
-import v2.controllers.requestParsers.validators.validations.{DateValidation, _}
+import v2.controllers.requestParsers.validators.validations._
+import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
 class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidation, selfEmploymentIdValidator, dateFieldValidator,
-    typeOfBusinessValidator, bodyFormatValidator, otherBodyFieldsValidator)
+  private val validationSet = List(parameterFormatValidation, incorrectOrEmptyBodyValidation, bodyFormatValidation, bodyRuleValidation)
 
   private def parameterFormatValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -34,38 +34,29 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
     )
   }
 
-  private def bodyFormatValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    List(flattenErrors(List(
+  private def incorrectOrEmptyBodyValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
+    List(
       JsonFormatValidation.validate[TriggerBsasRequestBody](data.body.json)
-    )))
-  }
-
-  private def dateFieldValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    List(
-      DateValidation.validateOpt(StartDateFormatError)((data.body.json \ "accountingPeriod" \ "startDate").asOpt[String]),
-      DateValidation.validateOpt(EndDateFormatError)((data.body.json \ "accountingPeriod" \ "endDate").asOpt[String])
     )
   }
 
-  private def selfEmploymentIdValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    List(
-      SelfEmploymentIdValidation.validateOption((data.body.json \ "selfEmploymentId").asOpt[String])
-    )
-  }
-
-  private def typeOfBusinessValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    List(
-      TypeOfBusinessValidation.validateOption((data.body.json \ "typeOfBusiness").asOpt[String]),
-    )
-  }
-
-
-  private def otherBodyFieldsValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
     val req = data.body.json.as[TriggerBsasRequestBody]
+
     List(
-      SelfEmploymentIdRuleValidation.validate(req.selfEmploymentId, req.typeOfBusiness),
+      DateValidation.validate(StartDateFormatError)(req.accountingPeriod.startDate),
+      DateValidation.validate(EndDateFormatError)(req.accountingPeriod.endDate),
+      BusinessIdValidation.validate(req.businessId),
+      TypeOfBusinessValidation.validate(req.typeOfBusiness)
+    )
+  }
+
+  private def bodyRuleValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
+    val req            = data.body.json.as[TriggerBsasRequestBody]
+    val typeOfBusiness = TypeOfBusiness.parser(req.typeOfBusiness)
+    List(
       EndBeforeStartDateValidation.validate(req.accountingPeriod.startDate, req.accountingPeriod.endDate),
-      NotEndedAccountingPeriodValidation.validate(currentDateProvider.getCurrentDate().toString, req.accountingPeriod.endDate)
+      AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, req.accountingPeriod.endDate)
     )
   }
 

@@ -59,7 +59,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
       "return the Retrieve Property BSAS link" in new Test {
         val link = Link(href = s"/context/$nino/property/$bsasId", method = GET, rel = SELF)
-        Target.getPropertyBsas(mockAppConfig, nino, bsasId) shouldBe link
+        Target.getUkPropertyBsas(mockAppConfig, nino, bsasId) shouldBe link
       }
 
       "return the Retrieve Property BSAS link with adjustedStatus parameter set" in new Test {

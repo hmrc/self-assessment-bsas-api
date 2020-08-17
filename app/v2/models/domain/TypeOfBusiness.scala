@@ -38,6 +38,14 @@ object TypeOfBusiness {
     override def toIdentifierValue: String = "02"
   }
 
+  case object `foreign-property-fhl-eea` extends TypeOfBusiness {
+    override def toIdentifierValue: String = "03"
+  }
+
+  case object `foreign-property` extends TypeOfBusiness {
+    override def toIdentifierValue: String = "15"
+  }
+
   implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
   val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 }

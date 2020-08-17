@@ -19,7 +19,7 @@ package v2.controllers.requestParsers.validators.validations
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import v2.models.errors.{EndBeforeStartDateError, MtdError}
+import v2.models.errors.{RuleEndBeforeStartDateError, MtdError}
 
 object EndBeforeStartDateValidation {
 
@@ -30,6 +30,6 @@ object EndBeforeStartDateValidation {
     val startDateEpochTime = LocalDate.parse(startDate, dateTimeFormatter).toEpochDay
     val endDateEpochTime = LocalDate.parse (endDate, dateTimeFormatter).toEpochDay
 
-    if((endDateEpochTime - startDateEpochTime) <= 0) List(EndBeforeStartDateError) else List()
+    if((endDateEpochTime - startDateEpochTime) <= 0) List(RuleEndBeforeStartDateError) else List()
   }
 }

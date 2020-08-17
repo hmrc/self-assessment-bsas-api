@@ -19,16 +19,15 @@ package v2.controllers.requestParsers.validators.validations
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors.{MtdError, TypeOfBusinessFormatError}
 
+import scala.util.{Failure, Success, Try}
+
 object TypeOfBusinessValidation {
-  
+
   def validate(typeOfBusiness: String): List[MtdError] =
-    if (typeOfBusiness == TypeOfBusiness.`uk-property-non-fhl`.toString
-      || typeOfBusiness == TypeOfBusiness.`uk-property-fhl`.toString
-      || typeOfBusiness == TypeOfBusiness.`self-employment`.toString) List()
-    else List(TypeOfBusinessFormatError)
-
-
-  def validateOption(typeOfBusiness: Option[String]): List[MtdError] = {
-    if(typeOfBusiness.isDefined) validate(typeOfBusiness.get) else List()
-  }
+    Try {
+      TypeOfBusiness.parser(typeOfBusiness)
+    } match {
+      case Failure(_) => List(TypeOfBusinessFormatError)
+      case Success(_) => NoValidationErrors
+    }
 }

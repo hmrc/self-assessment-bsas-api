@@ -69,9 +69,9 @@ class TriggerBsasControllerSpec
   private val requestRawData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
 
   private val requestForProperty = TriggerBsasRequest(Nino(nino),
-    triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`, selfEmploymentId = None))
+    triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`))
   private val requestRawDataForProperty = TriggerBsasRawData(nino,
-    triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString, selfEmploymentId = None))
+    triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString))
 
   val testHateoasLinkSE = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET, rel = "self")
@@ -172,9 +172,9 @@ class TriggerBsasControllerSpec
           (StartDateFormatError, BAD_REQUEST),
           (EndDateFormatError, BAD_REQUEST),
           (TypeOfBusinessFormatError, BAD_REQUEST),
-          (SelfEmploymentIdFormatError, BAD_REQUEST),
-          (SelfEmploymentIdRuleError, BAD_REQUEST),
-          (EndBeforeStartDateError, BAD_REQUEST),
+          (BusinessIdFormatError, BAD_REQUEST),
+          (RuleSelfEmploymentIdError, BAD_REQUEST),
+          (RuleEndBeforeStartDateError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

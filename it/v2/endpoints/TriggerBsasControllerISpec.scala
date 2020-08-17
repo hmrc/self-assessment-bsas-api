@@ -19,21 +19,18 @@ package v2.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
     val nino             = "AA123456A"
-    val selfEmploymentId = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
-    val correlationId    = "X-123"
 
     def setupStubs(): StubMapping
 
@@ -54,39 +51,62 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
          |        "reason": "des message"
          |      }
     """.stripMargin
-  }
 
-  val requestBody =
-    Json.obj(
-      "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
-      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
-      "selfEmploymentId" -> "XAIS12345678901"
-    )
+
+    def requestBody(typeOfBusiness: String): JsObject =
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2022-10-31"),
+        "typeOfBusiness"   -> typeOfBusiness,
+        "businessId" -> "XAIS12345678901"
+      )
+
+    def responseBody(hateoasLinkPath: String): String = s"""
+      |{
+      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
+      |  "links":[
+      |    {
+      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435",
+      |      "rel":"self",
+      |      "method":"GET"
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+  }
 
   "Calling the triggerBsas" should {
 
     "return a 201 status code" when {
 
-      "any valid request is made" in new Test {
+      List(
+        ("self-employment", "self-employment"),
+        ("uk-property-fhl", "property"),
+        ("uk-property-non-fhl", "property"),
+        ("foreign-property-fhl-eea", "foreign-property"),
+        ("foreign-property", "foreign-property"),
+      ).foreach {
+        case (typeOfBusiness, hateoasLinkPath) =>
+          s"any valid request is made with typeOfBusiness: $typeOfBusiness" in new Test {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse))
-        }
+            override def setupStubs(): StubMapping = {
+              AuditStub.audit()
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+              DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse))
+            }
 
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe CREATED
-        result.json shouldBe Json.parse(hateoasResponseForSE(nino))
-        result.header("Content-Type") shouldBe Some("application/json")
+            val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
+            result.status shouldBe CREATED
+            result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
+            result.header("Content-Type") shouldBe Some("application/json")
+          }
       }
-    }
+      }
 
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String, json: JsObject, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
@@ -97,13 +117,47 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request().post(requestBody))
+            val response: WSResponse = await(request().post(json))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
-        val input = Seq(("AA1123A", BAD_REQUEST, NinoFormatError))
+        val input = Seq(
+          ("AA1123A", requestBody, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02")),
+            BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/endDate", "/typeOfBusiness", "/businessId")))),
+          ("AA123456A", Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "20180202", "endDate" -> "2019-05-06"),
+            "typeOfBusiness" -> "self-employment",
+            "businessId" -> "XAIS12345678901"
+          ), BAD_REQUEST, StartDateFormatError),
+          ("AA123456A", Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "20190506"),
+            "typeOfBusiness" -> "self-employment",
+            "businessId" -> "XAIS12345678901"
+          ), BAD_REQUEST, EndDateFormatError),
+          ("AA123456A", Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
+            "typeOfBusiness" -> "selfemployment",
+            "businessId" -> "XAIS12345678901"
+          ), BAD_REQUEST, TypeOfBusinessFormatError),
+          ("AA123456A", Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
+            "typeOfBusiness" -> "self-employment",
+            "businessId" -> "XAIS12345678901234"
+          ), BAD_REQUEST, BusinessIdFormatError),
+          ("AA123456A", Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "2020-02-02", "endDate" -> "2019-05-06"),
+            "typeOfBusiness" -> "self-employment",
+            "businessId" -> "XAIS12345678901"
+          ), BAD_REQUEST, RuleEndBeforeStartDateError),
+          ("AA123456A", Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2018-05-06"),
+            "typeOfBusiness" -> "self-employment",
+            "businessId" -> "XAIS12345678901"
+          ), BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -119,7 +173,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               DesStub.onError(DesStub.POST, desUrl, desStatus, errorBody(desCode))
             }
 
-            val response: WSResponse = await(request().post(requestBody))
+            val response: WSResponse = await(request().post(requestBody("self-employment")))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }

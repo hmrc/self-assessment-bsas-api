@@ -36,7 +36,7 @@ class TriggerBsasServiceSpec extends UnitSpec {
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
-  val request = TriggerBsasRequest(nino, seBody)
+  val request = TriggerBsasRequest(nino, model)
 
   val response = TriggerBsasResponse(id)
 

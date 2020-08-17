@@ -25,8 +25,4 @@ object DateValidation {
   def validate(error: MtdError)(date: String): List[MtdError] = {
     if (date.matches(dateFormat)) NoValidationErrors else List(error)
   }
-
-  def validateOpt(error: MtdError)(date: Option[String]): List[MtdError] = {
-    if(date.isEmpty) NoValidationErrors else validate(error)(date.get)
-  }
 }

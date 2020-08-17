@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.EndBeforeStartDateError
+import v2.models.errors.RuleEndBeforeStartDateError
 import v2.models.utils.JsonErrorValidators
 
 class EndBeforeDateValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -40,7 +40,7 @@ class EndBeforeDateValidationSpec extends UnitSpec with JsonErrorValidators {
         val validationResult = EndBeforeStartDateValidation.validate(startDate, endDate)
 
         validationResult.length shouldBe 1
-        validationResult.head shouldBe EndBeforeStartDateError
+        validationResult.head shouldBe RuleEndBeforeStartDateError
       }
     }
   }

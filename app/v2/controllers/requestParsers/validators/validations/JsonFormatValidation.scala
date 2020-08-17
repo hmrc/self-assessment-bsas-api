@@ -26,7 +26,7 @@ object JsonFormatValidation {
   def validate[A: OFormat](data: JsValue): List[MtdError] = {
     if (data == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else
       data.validate[A] match {
-        case JsSuccess(body, _) => if (Json.toJson(body) == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
+        case JsSuccess(body, _) => if (data == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
         case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) => handleErrors(errors)
       }
   }

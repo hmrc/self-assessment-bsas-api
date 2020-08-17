@@ -193,7 +193,7 @@ class ListBsasControllerSpec
                     summaryStatus = Status.`valid`,
                     adjustedSummary = false
                   ),
-                  Seq(getPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3"))
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3"))
                 ))
               ),
               BusinessSourceSummary(
@@ -210,7 +210,7 @@ class ListBsasControllerSpec
                     summaryStatus = Status.`valid`,
                     adjustedSummary = false
                   ),
-                  Seq(getPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2"))
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2"))
                 ))
               )
             )
@@ -352,7 +352,7 @@ class ListBsasControllerSpec
                     summaryStatus = Status.`valid`,
                     adjustedSummary = false
                   ),
-                  Seq(getPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3"))
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3"))
                 ))
               ),
               BusinessSourceSummary(
@@ -369,7 +369,7 @@ class ListBsasControllerSpec
                     summaryStatus = Status.`valid`,
                     adjustedSummary = false
                   ),
-                  Seq(getPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2"))
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2"))
                 ))
               )
             )

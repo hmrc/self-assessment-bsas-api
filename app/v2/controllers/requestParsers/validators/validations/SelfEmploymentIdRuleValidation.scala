@@ -17,15 +17,15 @@
 package v2.controllers.requestParsers.validators.validations
 
 import v2.models.domain.TypeOfBusiness
-import v2.models.errors.{MtdError, SelfEmploymentIdRuleError}
+import v2.models.errors.{MtdError, RuleSelfEmploymentIdError}
 
 object SelfEmploymentIdRuleValidation {
 
   def validate(selfEmploymentId: Option[String], typeOfBusiness: TypeOfBusiness): List[MtdError] =
 
     selfEmploymentId match {
-      case Some(_) if typeOfBusiness != TypeOfBusiness.`self-employment` => List(SelfEmploymentIdRuleError)
-      case None if typeOfBusiness == TypeOfBusiness.`self-employment` => List(SelfEmploymentIdRuleError)
+      case Some(_) if typeOfBusiness != TypeOfBusiness.`self-employment` => List(RuleSelfEmploymentIdError)
+      case None if typeOfBusiness == TypeOfBusiness.`self-employment` => List(RuleSelfEmploymentIdError)
       case _ => List()
     }
 }

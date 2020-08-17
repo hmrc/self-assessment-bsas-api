@@ -52,7 +52,7 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks{
   implicit object RetrieveUkPropertyBsasHateoasFactory extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveUkPropertyHateoasData): Seq[Link] = {
       Seq(
-        getPropertyBsas(appConfig, data.nino, data.bsasId), adjustPropertyBsas(appConfig, data.nino, data.bsasId)
+        getUkPropertyBsas(appConfig, data.nino, data.bsasId), adjustPropertyBsas(appConfig, data.nino, data.bsasId)
       )
     }
   }
