@@ -77,7 +77,7 @@ class ListBsasControllerSpec
   private val nino = "AA123456A"
   private val taxYear = Some("2019-20")
   private val typeOfBusiness = Some("uk-property-fhl")
-  private val selfEmploymentId = Some("XAIS12345678901")
+  private val businessId = Some("XAIS12345678901")
   private val correlationId = "X-123"
 
   val response: ListBsasResponse[BsasEntries] =
@@ -128,7 +128,7 @@ class ListBsasControllerSpec
       )
     )
 
-  private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
+  private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
   private val requestData = ListBsasRequest(Nino(nino), DesTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
 
   def event(auditResponse: AuditResponse, taxYear: String = "2019-20"): AuditEvent[GenericAuditDetail] =
@@ -222,7 +222,7 @@ class ListBsasControllerSpec
           .wrapList(response, ListBsasHateoasData(nino, response))
           .returns(responseWithHateoas)
 
-        val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
+        val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
@@ -242,7 +242,7 @@ class ListBsasControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
+            val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -256,7 +256,7 @@ class ListBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (SelfEmploymentIdFormatError, BAD_REQUEST),
+          (BusinessIdFormatError, BAD_REQUEST),
           (TypeOfBusinessFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
@@ -279,7 +279,7 @@ class ListBsasControllerSpec
               .listBsas(requestData)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
+            val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -381,7 +381,7 @@ class ListBsasControllerSpec
           .wrapList(response, ListBsasHateoasData(nino, response))
           .returns(responseWithHateoas)
 
-        val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
+        val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, businessId)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
@@ -404,7 +404,7 @@ class ListBsasControllerSpec
           .listBsas(requestData.copy(taxYear = desTaxYear))
           .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), NinoFormatError))))
 
-        val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
+        val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, businessId)(fakeGetRequest)
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(NinoFormatError)

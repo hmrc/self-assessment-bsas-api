@@ -37,11 +37,11 @@ class ListBsasRequestParserSpec extends UnitSpec{
   private val typeOfBusinessThree = "uk-property-fhl"
   private val incomeSourceId ="incomeSourceId"
   private val incomeSourceType ="incomeSourceType"
-  private val selfEmploymentId = "XAIS12345678901"
+  private val businessId = "XAIS12345678901"
 
 
-  private val inputWithSelfEmploymentIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(selfEmploymentId))
-  private val inputWithSelfEmploymentId = ListBsasRawData(nino, Some(taxYear), None, Some(selfEmploymentId))
+  private val inputWithSelfEmploymentIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(businessId))
+  private val inputWithSelfEmploymentId = ListBsasRawData(nino, Some(taxYear), None, Some(businessId))
   private val inputDataTwo = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), None)
   private val inputDataThree = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessTwo), None)
   private val inputDataFour = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessThree), None)
@@ -55,22 +55,22 @@ class ListBsasRequestParserSpec extends UnitSpec{
 
 
   "parse" when {
-    "a valid selfEmploymentId is provided" should {
+    "a valid businessId is provided" should {
       "return a valid object if no typeOfBusiness is provided" in new Test {
         MockValidator.validate(inputWithSelfEmploymentIdAndTypeOfBusiness).returns(Nil)
 
         parser.parseRequest(inputWithSelfEmploymentIdAndTypeOfBusiness) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(selfEmploymentId)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(businessId)))
       }
       "return a valid object if a typeOfBusiness is provided" in new Test {
         MockValidator.validate(inputWithSelfEmploymentId).returns(Nil)
 
         parser.parseRequest(inputWithSelfEmploymentId) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(selfEmploymentId)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(businessId)))
       }
     }
 
-    "no selfEmploymentId is provided" should {
+    "no businessId is provided" should {
       "return a valid object with self-employment" in new Test {
 
         MockValidator.validate(inputDataTwo).returns(Nil)

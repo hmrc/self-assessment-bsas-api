@@ -20,6 +20,6 @@ import uk.gov.hmrc.domain.Nino
 import utils.DesTaxYear
 
 
-case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]) extends RawData
+case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]) extends RawData
 
 case class ListBsasRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceIdentifier: Option[String], identifierValue: Option[String])

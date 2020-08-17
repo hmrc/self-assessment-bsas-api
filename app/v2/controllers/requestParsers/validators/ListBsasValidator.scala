@@ -30,7 +30,7 @@ class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
     NinoValidation.validate(data.nino),
     data.taxYear.map(TaxYearValidation.validate).getOrElse(Nil),
     data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
-    data.selfEmploymentId.map(SelfEmploymentIdValidation.validate).getOrElse(Nil)
+    data.businessId.map(BusinessIdValidation.validate).getOrElse(Nil)
   )
 
 
