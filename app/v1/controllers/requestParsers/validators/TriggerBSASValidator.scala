@@ -35,9 +35,9 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
   }
 
   private def bodyFormatValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    List(
+    List(Validator.flattenErrors(List(
       JsonFormatValidation.validate[TriggerBsasRequestBody](data.body.json)
-    )
+    )))
   }
 
   private def dateFieldValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
