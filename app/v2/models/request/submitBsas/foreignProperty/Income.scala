@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
-case class NonFurnishedHolidayLet(income: Option[NonFHLIncome], expenses: Option[NonFHLExpenses])
+case class Income(rentIncome: Option[BigDecimal],
+                  premiumsOfLeaseGrant: Option[BigDecimal],
+                  foreignTaxTakenOff: Option[BigDecimal],
+                  otherPropertyIncome: Option[BigDecimal])
 
-object NonFurnishedHolidayLet {
-
-  implicit val reads: Reads[NonFurnishedHolidayLet] = (
-    (JsPath \ "income").readNullable[NonFHLIncome] and
-      (JsPath \ "expenses").readNullable[NonFHLExpenses]
-  )(NonFurnishedHolidayLet.apply _)
-
-  implicit  val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
+object Income {
+  implicit val format: OFormat[Income] = Json.format[Income]
 }

@@ -14,56 +14,45 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.response
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class FHLIncomeSpec extends UnitSpec {
+class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
 
-
-  val inputJson: JsValue = Json.parse(
+  val mtdJson = Json.parse(
     """
       |{
-      | "rentIncome": 1000.45
+      | "id": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
       |}
       |""".stripMargin)
 
-  val requestJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
-      | "rentReceived": 1000.45
+      |   "metadata" : {
+      |       "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+      |   },
+      |   "inputs": {
+      |   "incomeSourceType":"03"
+      |   }
       |}
-      |""".stripMargin)
+  """.stripMargin)
 
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |"rentIncome": true
-      |}
-      |""".stripMargin
-  )
+  val responseModel = SubmitForeignPropertyBsasResponse("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4")
 
-  val modelWithNoneValues: FHLIncome = FHLIncome(None)
-  val model: FHLIncome = FHLIncome(Some(1000.45))
-
-  "NonFHLIncome" when {
+  "SubmitForeignPropertyBsasResponseSpec" when {
     "read from valid JSON" should {
-      "return the expected NonFHLIncome object" in {
-        inputJson.as[FHLIncome] shouldBe model
+      "return the expected SubmitForeignPropertyBsasResponse object" in {
+        desJson.as[SubmitForeignPropertyBsasResponse] shouldBe responseModel
       }
     }
-
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[FHLIncome] shouldBe a[JsError]
-      }
-    }
-
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+        Json.toJson(responseModel) shouldBe mtdJson
       }
     }
   }
+
 }

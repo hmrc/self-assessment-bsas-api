@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
-import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
-import v2.models.request.RawData
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SubmitUkPropertyBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
+case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
 
-case class SubmitUkPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitUKPropertyBsasRequestBody)
+object FurnishedHolidayLet {
 
+  implicit val reads: Reads[FurnishedHolidayLet] = (
+    (JsPath \ "income").readNullable[FHLIncome] and
+      (JsPath \ "expenses").readNullable[FHLExpenses]
+    )(FurnishedHolidayLet.apply _)
+
+  implicit  val writes: OWrites[FurnishedHolidayLet] = Json.writes[FurnishedHolidayLet]
+}

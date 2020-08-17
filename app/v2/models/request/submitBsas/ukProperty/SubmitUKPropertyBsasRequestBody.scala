@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil

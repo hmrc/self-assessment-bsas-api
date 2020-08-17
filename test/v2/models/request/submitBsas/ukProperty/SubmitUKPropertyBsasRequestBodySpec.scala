@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import support.UnitSpec
+import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
 

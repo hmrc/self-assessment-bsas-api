@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import uk.gov.hmrc.domain.Nino
 
-case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
-
-object FurnishedHolidayLet {
-
-  implicit val reads: Reads[FurnishedHolidayLet] = (
-    (JsPath \ "income").readNullable[FHLIncome] and
-      (JsPath \ "expenses").readNullable[FHLExpenses]
-    )(FurnishedHolidayLet.apply _)
-
-  implicit  val writes: OWrites[FurnishedHolidayLet] = Json.writes[FurnishedHolidayLet]
-}
+case class SubmitForeignPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitForeignPropertyBsasRequestBody)

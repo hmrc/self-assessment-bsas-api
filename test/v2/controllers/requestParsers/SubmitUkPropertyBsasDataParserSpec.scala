@@ -22,7 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v2.models.errors._
-import v2.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 

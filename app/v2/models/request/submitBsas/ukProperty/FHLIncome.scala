@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.ukProperty
 
 import play.api.libs.json._
 
-case class NonFHLIncome(rentIncome: Option[BigDecimal] = None,
-                        premiumsOfLeaseGrant: Option[BigDecimal] = None,
-                        reversePremiums: Option[BigDecimal] = None,
-                        otherPropertyIncome: Option[BigDecimal] = None) {
+case class FHLIncome(rentIncome: Option[BigDecimal]) {
 
   val params: Map[String, BigDecimal] = Map(
-    "totalRentsReceived" -> rentIncome,
-    "premiumsOfLeaseGrant" -> premiumsOfLeaseGrant,
-    "reversePremiums" -> reversePremiums,
-    "otherPropertyIncome" -> otherPropertyIncome
+    "rentReceived" -> rentIncome
   ).collect {case (k, Some(v)) => (k, v) }
 }
 
-object NonFHLIncome {
-  implicit val reads: Reads[NonFHLIncome] = Json.reads[NonFHLIncome]
-  implicit val writes: Writes[NonFHLIncome] = (o: NonFHLIncome) => Json.toJsObject(o.params)
+object FHLIncome {
+  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
+  implicit val writes: Writes[FHLIncome] = (o: FHLIncome) => Json.toJsObject(o.params)
 }
