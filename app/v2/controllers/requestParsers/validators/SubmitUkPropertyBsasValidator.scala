@@ -39,9 +39,9 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   }
 
   private def bodyFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-    List(
+    List(flattenErrors(List(
       JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json)
-    )
+    )))
   }
 
   private def incorrectOrEmptyBodyValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>

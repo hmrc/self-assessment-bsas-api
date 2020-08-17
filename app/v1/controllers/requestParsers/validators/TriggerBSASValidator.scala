@@ -35,7 +35,7 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
   }
 
   private def bodyFormatValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    List(Validator.flattenErrors(List(
+    List(flattenErrors(List(
       JsonFormatValidation.validate[TriggerBsasRequestBody](data.body.json)
     )))
   }
@@ -49,13 +49,13 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvide
 
   private def selfEmploymentIdValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      SelfEmploymentIdValidation.validateOption(data.body.json.\("selfEmploymentId").asOpt[String])
+      SelfEmploymentIdValidation.validateOption((data.body.json \ "selfEmploymentId").asOpt[String])
     )
   }
 
   private def typeOfBusinessValidator: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
-      TypeOfBusinessValidation.validateOption(data.body.json.\("typeOfBusiness").asOpt[String]),
+      TypeOfBusinessValidation.validateOption((data.body.json \ "typeOfBusiness").asOpt[String]),
     )
   }
 

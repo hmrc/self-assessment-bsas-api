@@ -47,9 +47,9 @@ object JsonFormatValidation {
   }
 
   private class JsonFormatValidationFailure(path: JsPath, failure: String) {
-    val failureReason: String = this.failure
+    val failureReason: String = failure
 
-    def fromJsPath: String = this.path
+    def fromJsPath: String = path
       .toString()
       .replace("(", "/")
       .replace(")", "")
