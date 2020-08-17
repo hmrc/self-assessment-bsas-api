@@ -19,7 +19,7 @@ package v2.controllers.requestParsers.validators
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations.{JsonFormatValidation, _}
 import v2.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v2.models.request.submitBsas._
+import v2.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawData] with FixedConfig {
 

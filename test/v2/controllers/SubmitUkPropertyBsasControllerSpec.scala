@@ -29,8 +29,9 @@ import v2.models.errors._
 import v2.models.hateoas.Method.GET
 import v2.models.hateoas.{HateoasWrapper, Link}
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 import v2.models.response.{SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse}
+import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -60,8 +61,6 @@ class SubmitUkPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
   }
-
-  import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
   private val nino          = "AA123456A"
   private val correlationId = "X-123"

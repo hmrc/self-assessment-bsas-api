@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas
+package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json._
+import play.api.libs.json.{Json, OFormat}
 
-case class FHLIncome(rentIncome: Option[BigDecimal]) {
+case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty],
+                                                fhlEea: Option[FhlEea])
 
-  val params: Map[String, BigDecimal] = Map(
-    "rentReceived" -> rentIncome
-  ).collect {case (k, Some(v)) => (k, v) }
-}
-
-object FHLIncome {
-  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
-  implicit val writes: Writes[FHLIncome] = (o: FHLIncome) => Json.toJsObject(o.params)
+object SubmitForeignPropertyBsasRequestBody {
+  implicit val format: OFormat[SubmitForeignPropertyBsasRequestBody] = Json.format[SubmitForeignPropertyBsasRequestBody]
 }

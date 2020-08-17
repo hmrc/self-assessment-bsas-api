@@ -17,10 +17,9 @@
 package v2.controllers.requestParsers
 
 import javax.inject.Inject
-
 import uk.gov.hmrc.domain.Nino
 import v2.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
-import v2.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
+import v2.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
   extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {

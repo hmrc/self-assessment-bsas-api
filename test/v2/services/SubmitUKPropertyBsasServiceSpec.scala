@@ -25,7 +25,7 @@ import v2.mocks.connectors.MockSubmitUkPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.SubmitUkPropertyBsasRequestData
+import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
