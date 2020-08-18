@@ -35,7 +35,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
     val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val selfEmploymentId: Option[String] = None
+    val businessId: Option[String] = None
     val correlationId = "X-123"
     val desTaxYear: DesTaxYear = DesTaxYear("2019")
 
@@ -47,7 +47,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
     def request: WSRequest = {
 
-      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> selfEmploymentId, "taxYear" -> taxYear)
+      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
         .collect {
           case (k, Some(v)) => (k, v)
         }
@@ -108,7 +108,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           override val nino: String = requestNino
           override val taxYear: Option[String] = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val selfEmploymentId: Option[String] = requestSelfEmploymentID
+          override val businessId: Option[String] = requestSelfEmploymentID
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
