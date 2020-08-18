@@ -19,7 +19,7 @@ package v2.models.request.submitBsas.foreignProperty
 import play.api.libs.json.{Json, OFormat}
 
 case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty],
-                                                fhlEea: Option[FhlEea])
+                                                foreignFhlEea: Option[FhlEea])
 
 object SubmitForeignPropertyBsasRequestBody {
   implicit val format: OFormat[SubmitForeignPropertyBsasRequestBody] = Json.format[SubmitForeignPropertyBsasRequestBody]
