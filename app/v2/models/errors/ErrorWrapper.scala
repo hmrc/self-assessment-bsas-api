@@ -34,10 +34,12 @@ object ErrorWrapper {
   implicit val writes: Writes[ErrorWrapper] = new Writes[ErrorWrapper] {
     override def writes(errorResponse: ErrorWrapper): JsValue = {
 
+      val paths = errorResponse.error.paths.fold(Json.obj()){ paths => Json.obj("paths" -> paths)}
+
       val json = Json.obj(
         "code"    -> errorResponse.error.code,
         "message" -> errorResponse.error.message
-      )
+      ).++(paths)
 
       errorResponse.errors match {
         case Some(errors) if errors.nonEmpty => json + ("errors" -> Json.toJson(errors))
