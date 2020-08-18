@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
+import v2.models.request.submitBsas.foreignProperty.{Expenses, FhlEea, FhlIncome, ForeignProperty, ForeignPropertyIncome, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet = List(
@@ -36,9 +36,9 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
   }
 
   private def bodyFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
-    List(
-      JsonFormatValidation.validate[SubmitForeignPropertyBsasRequestBody](data.body, RuleIncorrectOrEmptyBodyError)
-    )
+    List(flattenErrors(List(
+      JsonFormatValidation.validate[SubmitForeignPropertyBsasRequestBody](data.body)
+    )))
   }
 
   private def incorrectOrEmptyBodySubmittedValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
@@ -53,8 +53,8 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
       List(
         body.foreignProperty.map(validateForeignPropertyRange).getOrElse(NoValidationErrors),
         body.foreignProperty.map(validateForeignPropertyValue).getOrElse(NoValidationErrors),
-        body.fhlEea.map(validateFhlEeaRange).getOrElse(NoValidationErrors),
-        body.fhlEea.map(validateFhlEeaValue).getOrElse(NoValidationErrors)
+        body.foreignFhlEea.map(validateFhlEeaRange).getOrElse(NoValidationErrors),
+        body.foreignFhlEea.map(validateFhlEeaValue).getOrElse(NoValidationErrors)
       )
     ))
   }
@@ -65,7 +65,7 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
 
     List(
       BothExpensesValidation.validate(model.foreignProperty.flatMap(_.expenses.map(_.params))),
-      BothExpensesValidation.validate(model.fhlEea.flatMap(_.expenses.map(_.params)))
+      BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
     )
   }
 
