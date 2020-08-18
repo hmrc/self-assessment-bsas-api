@@ -43,11 +43,8 @@ class FhlEeaSpec extends UnitSpec {
   val emptyJson = Json.parse("""{}""")
 
   val validModel = FhlEea(
-    Some(Income(
-      Some(123.12),
-      None,
-      None,
-      None
+    Some(FhlIncome(
+      Some(123.12)
     )),
     Some(Expenses(
       Some(123.12),

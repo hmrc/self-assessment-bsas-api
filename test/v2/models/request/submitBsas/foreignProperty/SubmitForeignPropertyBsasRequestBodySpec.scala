@@ -66,7 +66,7 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
   val validModel = SubmitForeignPropertyBsasRequestBody(
     Some(ForeignProperty(
-      Some(Income(
+      Some(ForeignPropertyIncome(
         Some(123.12),
         Some(123.12),
         Some(123.12),
@@ -85,11 +85,8 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       ))
     )),
     Some(FhlEea(
-      Some(Income(
-        Some(123.12),
-        None,
-        None,
-        None
+      Some(FhlIncome(
+        Some(123.12)
       )),
       Some(Expenses(
         Some(123.12),

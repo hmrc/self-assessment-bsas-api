@@ -26,8 +26,30 @@ case class Expenses(premisesRunningCosts: Option[BigDecimal],
                     costOfServices: Option[BigDecimal],
                     residentialFinancialCost: Option[BigDecimal],
                     other: Option[BigDecimal],
-                    consolidatedExpenses: Option[BigDecimal])
+                    consolidatedExpenses: Option[BigDecimal]) {
 
+  def isEmpty: Boolean = premisesRunningCosts.isEmpty &&
+    repairsAndMaintenance.isEmpty &&
+    financialCosts.isEmpty &&
+    professionalFees.isEmpty &&
+    travelCosts.isEmpty &&
+    costOfServices.isEmpty &&
+    residentialFinancialCost.isEmpty &&
+    other.isEmpty &&
+    consolidatedExpenses.isEmpty
+
+  val params: Map[String, BigDecimal] = Map(
+    "premisesRunningCosts" -> premisesRunningCosts,
+    "repairsAndMaintenance" -> repairsAndMaintenance,
+    "financialCosts" -> financialCosts,
+    "professionalFees" -> professionalFees,
+    "costOfServices" -> costOfServices,
+    "travelCosts" -> travelCosts,
+    "other" -> other,
+    "consolidatedExpenses" -> consolidatedExpenses
+  ).collect {case (k, Some(v)) => (k, v)
+  }
+}
 
 object Expenses {
   implicit val format: OFormat[Expenses] = Json.format[Expenses]

@@ -20,9 +20,9 @@ import v2.models.errors.{FormatAdjustmentValueError, MtdError}
 
 object AdjustmentValueValidation {
 
-  def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
+  def validate(field: Option[BigDecimal], fieldName: String, path: String): List[MtdError] = {
 
-    lazy val error = FormatAdjustmentValueError.withFieldName(fieldName)
+    lazy val error = FormatAdjustmentValueError.withFieldName(fieldName).copy(paths = Some(Seq(path)))
 
     field match {
       case Some(amount) if amount.scale > 2 | amount == 0 => List(error)

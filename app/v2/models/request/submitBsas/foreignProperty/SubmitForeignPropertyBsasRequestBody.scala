@@ -18,8 +18,12 @@ package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{Json, OFormat}
 
-case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty],
-                                                foreignFhlEea: Option[FhlEea])
+case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty], foreignFhlEea: Option[FhlEea]) {
+
+  def isIncorrectOrEmptyBody: Boolean = foreignProperty.isEmpty &&
+    foreignFhlEea.isEmpty
+}
+
 
 object SubmitForeignPropertyBsasRequestBody {
   implicit val format: OFormat[SubmitForeignPropertyBsasRequestBody] = Json.format[SubmitForeignPropertyBsasRequestBody]

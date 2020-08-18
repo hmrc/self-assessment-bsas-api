@@ -39,7 +39,6 @@ trait Validator[A <: RawData] {
 
   def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
     errors.flatten.groupBy(_.message).map { case (_, errors) =>
-
       val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
 
       errors.fold(baseError)(

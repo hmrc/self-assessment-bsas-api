@@ -16,14 +16,15 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 
-case class ForeignProperty(income: Option[ForeignPropertyIncome],
-                           expenses: Option[Expenses]) {
+case class FhlIncome(rentIncome: Option[BigDecimal]) {
 
-  def isEmpty: Boolean = income.isEmpty && expenses.isEmpty
+  def isEmpty: Boolean = rentIncome.isEmpty
 }
 
-object ForeignProperty {
-  implicit val format: OFormat[ForeignProperty] = Json.format[ForeignProperty]
+object FhlIncome {
+  implicit val format = Json.format[FhlIncome]
 }
+
+
