@@ -27,7 +27,7 @@ class BusinessSourceSummarySpec extends UnitSpec {
   val model =
     BusinessSourceSummary(
       typeOfBusiness = TypeOfBusiness.`self-employment`,
-      selfEmploymentId = Some("000000000000210"),
+      businessId = Some("000000000000210"),
       AccountingPeriod(
         startDate = "2018-10-11",
         endDate = "2019-10-10"

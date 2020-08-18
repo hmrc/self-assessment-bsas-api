@@ -85,7 +85,7 @@ class ListBsasControllerSpec
       Seq(
         BusinessSourceSummary(
           typeOfBusiness = TypeOfBusiness.`self-employment`,
-          selfEmploymentId = Some("000000000000210"),
+          businessId = Some("000000000000210"),
           AccountingPeriod(
             startDate = "2018-10-11",
             endDate = "2019-10-10"
@@ -99,7 +99,7 @@ class ListBsasControllerSpec
         ),
         BusinessSourceSummary(
           typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-          selfEmploymentId = None,
+          businessId = None,
           AccountingPeriod(
             startDate = "2018-10-11",
             endDate = "2019-10-10"
@@ -113,7 +113,7 @@ class ListBsasControllerSpec
         ),
         BusinessSourceSummary(
           typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-          selfEmploymentId = None,
+          businessId = None,
           AccountingPeriod(
             startDate = "2018-10-11",
             endDate = "2019-10-10"
@@ -164,7 +164,7 @@ class ListBsasControllerSpec
             Seq(
               BusinessSourceSummary(
                 typeOfBusiness = TypeOfBusiness.`self-employment`,
-                selfEmploymentId = Some("000000000000210"),
+                businessId = Some("000000000000210"),
                 AccountingPeriod(
                   startDate = "2018-10-11",
                   endDate = "2019-10-10"
@@ -181,7 +181,7 @@ class ListBsasControllerSpec
               ),
               BusinessSourceSummary(
                 typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                selfEmploymentId = None,
+                businessId = None,
                 AccountingPeriod(
                   startDate = "2018-10-11",
                   endDate = "2019-10-10"
@@ -198,7 +198,7 @@ class ListBsasControllerSpec
               ),
               BusinessSourceSummary(
                 typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                selfEmploymentId = None,
+                businessId = None,
                 AccountingPeriod(
                   startDate = "2018-10-11",
                   endDate = "2019-10-10"
@@ -323,7 +323,7 @@ class ListBsasControllerSpec
             Seq(
               BusinessSourceSummary(
                 typeOfBusiness = TypeOfBusiness.`self-employment`,
-                selfEmploymentId = Some("000000000000210"),
+                businessId = Some("000000000000210"),
                 AccountingPeriod(
                   startDate = "2018-10-11",
                   endDate = "2019-10-10"
@@ -340,7 +340,7 @@ class ListBsasControllerSpec
               ),
               BusinessSourceSummary(
                 typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                selfEmploymentId = None,
+                businessId = None,
                 AccountingPeriod(
                   startDate = "2018-10-11",
                   endDate = "2019-10-10"
@@ -357,7 +357,7 @@ class ListBsasControllerSpec
               ),
               BusinessSourceSummary(
                 typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                selfEmploymentId = None,
+                businessId = None,
                 AccountingPeriod(
                   startDate = "2018-10-11",
                   endDate = "2019-10-10"

@@ -76,7 +76,7 @@ object ListBsasFixtures {
     """
       |{
       | "typeOfBusiness": "self-employment",
-      | "selfEmploymentId": "000000000000210",
+      | "businessId": "000000000000210",
       | "accountingPeriod": {
       |     "startDate": "2018-10-11",
       |     "endDate": "2019-10-10"
@@ -154,7 +154,7 @@ object ListBsasFixtures {
       |   "businessSourceSummaries": [
       |     {
       |       "typeOfBusiness": "self-employment",
-      |       "selfEmploymentId": "000000000000210",
+      |       "businessId": "000000000000210",
       |       "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
@@ -179,7 +179,7 @@ object ListBsasFixtures {
       |  "businessSourceSummaries": [
       |    {
       |      "typeOfBusiness": "self-employment",
-      |      "selfEmploymentId": "000000000000210",
+      |      "businessId": "000000000000210",
       |      "accountingPeriod": {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
@@ -249,7 +249,7 @@ object ListBsasFixtures {
       |    {
       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
       |      "method": "POST",
-      |      "rel": "trigger-business-source-accounting-summary"
+      |      "rel": "trigger-business-source-adjustable-summary"
       |    },
       |    {
       |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
@@ -268,7 +268,7 @@ object ListBsasFixtures {
     ListBsasResponse(
       Seq(BusinessSourceSummary(
         typeOfBusiness = TypeOfBusiness.`self-employment`,
-        selfEmploymentId = Some("000000000000210"),
+        businessId = Some("000000000000210"),
         AccountingPeriod(
           startDate = "2018-10-11",
           endDate = "2019-10-10"

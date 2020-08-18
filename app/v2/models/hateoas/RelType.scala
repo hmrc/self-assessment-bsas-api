@@ -17,7 +17,7 @@
 package v2.models.hateoas
 
 object RelType {
-  val TRIGGER = "trigger-business-source-accounting-summary"
+  val TRIGGER = "trigger-business-source-adjustable-summary"
   val SUBMIT_ADJUSTMENTS = "submit-summary-adjustments"
   val RETRIEVE_BSAS = "retrieve-adjustable-summary"
 

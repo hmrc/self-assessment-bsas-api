@@ -22,7 +22,7 @@ import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.request.AccountingPeriod
 
 case class BusinessSourceSummary[I](typeOfBusiness: TypeOfBusiness,
-                                 selfEmploymentId: Option[String],
+                                    businessId: Option[String],
                                  accountingPeriod: AccountingPeriod,
                                  bsasEntries: Seq[I])
 
