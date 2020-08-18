@@ -43,7 +43,7 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       |            "consolidatedExpenses": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
