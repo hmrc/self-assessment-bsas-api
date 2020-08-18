@@ -289,7 +289,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     "otherPropertyIncome" -> 1000.45
   ))
 
-
   val fhlBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(
       None,
