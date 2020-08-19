@@ -21,17 +21,17 @@ import v2.controllers.EndpointLogContext
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse}
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
+import v2.models.response.{SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
 
 trait DesResponseMappingSupport {
   self: Logging =>
 
   final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DesError])(
-    implicit logContext: EndpointLogContext): ErrorWrapper = {
+      implicit logContext: EndpointLogContext): ErrorWrapper = {
 
     lazy val defaultErrorCodeMapping: String => MtdError = { code =>
       logger.info(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
@@ -60,65 +60,60 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateRetrieveUkPropertyAdjustmentsSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]):
-  Either[ErrorWrapper, ResponseWrapper[T]] =
+  final def validateRetrieveUkPropertyAdjustmentsSuccessResponse[T](
+      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case retrieveUkPropertyAdjustmentsResponse: RetrieveUkPropertyAdjustmentsResponse
-        if retrieveUkPropertyAdjustmentsResponse.metadata.typeOfBusiness == TypeOfBusiness.`self-employment` =>
+      case RetrieveUkPropertyAdjustmentsResponse(retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
+          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotUkProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
 
-  final def validateRetrieveSelfEmploymentAdjustmentsSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]):
-  Either[ErrorWrapper, ResponseWrapper[T]] =
+  final def validateRetrieveSelfEmploymentAdjustmentsSuccessResponse[T](
+      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case retrieveSelfEmploymentAdjustmentsResponse: RetrieveSelfEmploymentAdjustmentsResponse
-        if retrieveSelfEmploymentAdjustmentsResponse.metadata.typeOfBusiness != TypeOfBusiness.`self-employment` =>
+      case RetrieveSelfEmploymentAdjustmentsResponse(retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
+          if typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
 
       case _ => Right(desResponseWrapper)
     }
 
-  final def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]):
-  Either[ErrorWrapper, ResponseWrapper[T]] =
+  final def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case retrieveSelfEmploymentBsasResponse: RetrieveSelfEmploymentBsasResponse
-        if retrieveSelfEmploymentBsasResponse.metadata.typeOfBusiness != TypeOfBusiness.`self-employment` =>
+      case RetrieveSelfEmploymentBsasResponse(retrieveBsas.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
+          if typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
 
       case _ => Right(desResponseWrapper)
     }
 
-  final def validateSubmitSelfEmploymentSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]):
-  Either[ErrorWrapper, ResponseWrapper[T]] =
+  final def validateSubmitSelfEmploymentSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case submitSelfEmploymentBsasResponse: SubmitSelfEmploymentBsasResponse
-        if TypeOfBusiness.`self-employment` != submitSelfEmploymentBsasResponse.typeOfBusiness =>
+      case SubmitSelfEmploymentBsasResponse(_, typeOfBusiness) if typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleErrorPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
     }
 
-  final def validateRetrieveUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]):
-  Either[ErrorWrapper, ResponseWrapper[T]] =
+  final def validateRetrieveUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case retrieveUkPropertyBsasResponse: RetrieveUkPropertyBsasResponse
-        if retrieveUkPropertyBsasResponse.metadata.typeOfBusiness == TypeOfBusiness.`self-employment` =>
+      case RetrieveUkPropertyBsasResponse(retrieveBsas.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
+          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotUkProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
 
-  final def validateSubmitUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
-  Either[ErrorWrapper, ResponseWrapper[T]] =
+  final def validateSubmitUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T],
+                                                           optionalTypeOfBusiness: Option[TypeOfBusiness]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
-        if submitUkPropertyBsasResponse.typeOfBusiness == TypeOfBusiness.`self-employment` =>
+      case SubmitUkPropertyBsasResponse(_, typeOfBusiness)
+          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
 
-      case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
-        if typeOfBusiness.exists(_ != submitUkPropertyBsasResponse.typeOfBusiness) =>
+      case SubmitUkPropertyBsasResponse(_, typeOfBusiness) if optionalTypeOfBusiness.exists(_ != typeOfBusiness) =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
