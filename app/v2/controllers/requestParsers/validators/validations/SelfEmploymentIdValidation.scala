@@ -25,8 +25,4 @@ object SelfEmploymentIdValidation {
   def validate(selfEmploymentId: String): List[MtdError] = {
       if (selfEmploymentId.matches(regex)) List() else List(SelfEmploymentIdFormatError)
   }
-
-  def validateOption(selfEmploymentId: Option[String]): List[MtdError] = {
-    if (selfEmploymentId.isEmpty) List() else validate(selfEmploymentId.get)
-  }
 }

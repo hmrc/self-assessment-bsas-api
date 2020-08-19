@@ -37,7 +37,7 @@ class AuthISpec extends IntegrationBaseSpec {
     val requestJson: JsObject = Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
       "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
-      "selfEmploymentId" -> "XAIS12345678901"
+      "businessId" -> "XAIS12345678901"
     )
 
     def uri: String = s"/$nino/trigger"

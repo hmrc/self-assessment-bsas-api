@@ -16,37 +16,22 @@
 
 package v2.models.request.triggerBsas
 
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 
 class TriggerBsasRequestBodySpec extends UnitSpec {
 
   "TriggerBsasRequestBody" when {
-    "read from valid JSON" should {
+    "reads" should {
       "return the expected TriggerBsasRequestBody object" in {
-        seRequestBodyMtd.validate[TriggerBsasRequestBody] shouldBe JsSuccess(seBody)
+        mtdJson.as[TriggerBsasRequestBody] shouldBe model
       }
     }
 
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[TriggerBsasRequestBody] shouldBe a[JsError]
-      }
-    }
-
-    "written to JSON (self-employment)" should {
-      "return the expected JsValue" in {
-        Json.toJson(seBody) shouldBe seRequestBodyDes
-      }
-    }
-
-    "written to JSON (uk property)" should {
-      "return the expected JsValue for FHL properties" in {
-        Json.toJson(fhlBody) shouldBe fhlRequestBodyDes
-      }
-      "return the expected JsValue for non-FHL properties" in {
-        Json.toJson(nonFhlBody) shouldBe nonFhlRequestBodyDes
+    "writes" should {
+      "return the expected JSON" in {
+        Json.toJson(model) shouldBe desJson
       }
     }
   }

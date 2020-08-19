@@ -52,12 +52,14 @@ object SelfEmploymentIdFormatError extends MtdError("FORMAT_SELF_EMPLOYMENT_ID",
 
 object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
 
+object BusinessIdFormatError extends  MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
+
 
 // Rule Errors
-object SelfEmploymentIdRuleError
+object RuleSelfEmploymentIdError
   extends MtdError("RULE_SELF_EMPLOYMENT_ID","A self-employment ID should be supplied for a self-employment business type")
 
-object EndBeforeStartDateError
+object RuleEndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
 
 object RuleBothExpensesError
@@ -132,7 +134,7 @@ object BVRError extends MtdError("BUSINESS_ERROR", "Business validation error")
 object ServiceUnavailableError extends MtdError("SERVICE_UNAVAILABLE", "Internal server error")
 
 //Authorisation Errors
-object UnauthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client and/or agent is not authorised")
+object UnauthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client or agent is not authorised")
 
 object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is missing or not authorized")
 

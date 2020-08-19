@@ -18,9 +18,9 @@ package v2.models.response
 
 import config.AppConfig
 import play.api.libs.json._
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v2.hateoas.{ HateoasLinks, HateoasLinksFactory }
 import v2.models.domain.TypeOfBusiness
-import v2.models.hateoas.{HateoasData, Link}
+import v2.models.hateoas.{ HateoasData, Link }
 
 case class TriggerBsasResponse(id: String)
 
@@ -43,7 +43,11 @@ object TriggerBsasResponse extends HateoasLinks {
           )
         case `uk-property-fhl` | `uk-property-non-fhl` =>
           Seq(
-            getPropertyBsas(appConfig, nino, bsasId)
+            getUkPropertyBsas(appConfig, nino, bsasId)
+          )
+        case `foreign-property` | `foreign-property-fhl-eea` =>
+          Seq(
+            getForeignPropertyBsas(appConfig, nino, bsasId)
           )
       }
     }

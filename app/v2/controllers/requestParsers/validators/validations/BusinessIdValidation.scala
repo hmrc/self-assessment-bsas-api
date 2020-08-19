@@ -16,19 +16,13 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import v2.models.errors.{BusinessIdFormatError, MtdError}
 
-import v2.models.errors.{MtdError, RuleAccountingPeriodNotEndedError}
+object BusinessIdValidation {
 
-object NotEndedAccountingPeriodValidation {
-  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  private val regex = "^X[A-Z0-9]{1}IS[0-9]{11}$"
 
-  def validate(currentDate: String, endDate: String): List[MtdError] = {
-    val currentDateEpochTime = LocalDate.parse(currentDate, dateTimeFormatter).toEpochDay
-    val endDateEpochTime = LocalDate.parse (endDate, dateTimeFormatter).toEpochDay
-
-    if((currentDateEpochTime - endDateEpochTime) < 0) List(RuleAccountingPeriodNotEndedError) else List()
-
+  def validate(selfEmploymentId: String): List[MtdError] = {
+      if (selfEmploymentId.matches(regex)) List() else List(BusinessIdFormatError)
   }
 }

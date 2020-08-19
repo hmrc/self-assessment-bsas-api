@@ -25,67 +25,30 @@ import v2.models.response.TriggerBsasResponse
 
 object TriggerBsasRequestBodyFixtures {
 
-  val seRequestBodyMtd: JsValue = Json.parse("""
+  val mtdJson: JsValue = Json.parse("""
       |{
       |  "accountingPeriod" : {
       |     "startDate" : "2018-11-25",
       |     "endDate" : "2018-11-26"
       |  },
       |  "typeOfBusiness" : "self-employment",
-      |  "selfEmploymentId" : "anId"
+      |  "businessId" : "anId"
       |}
   """.stripMargin)
 
-  val seRequestBodyDes: JsValue = Json.parse("""
+  val desJson: JsValue = Json.parse("""
       |{
-      |   "incomeSourceIdentifier" : "incomeSourceId",
-      |   "identifierValue" : "anId",
+      |   "incomeSourceType" : "01",
+      |   "incomeSourceId" : "anId",
       |   "accountingPeriodStartDate" : "2018-11-25",
       |   "accountingPeriodEndDate" : "2018-11-26"
       |}
   """.stripMargin)
 
-  val fhlRequestBodyDes: JsValue = Json.parse("""
-      |{
-      |   "incomeSourceIdentifier" : "incomeSourceType",
-      |   "identifierValue" : "04",
-      |   "accountingPeriodStartDate" : "2018-11-25",
-      |   "accountingPeriodEndDate" : "2018-11-26"
-      |}
-  """.stripMargin)
-
-  val nonFhlRequestBodyDes: JsValue = Json.parse("""
-      |{
-      |   "incomeSourceIdentifier" : "incomeSourceType",
-      |   "identifierValue" : "02",
-      |   "accountingPeriodStartDate" : "2018-11-25",
-      |   "accountingPeriodEndDate" : "2018-11-26"
-      |}
-  """.stripMargin)
-
-  val invalidJson: JsValue = Json.parse("""
-      |{
-      |  "startDate" : 4,
-      |  "endDate" : true
-      |}
-  """.stripMargin)
-
-  val seBody: TriggerBsasRequestBody = TriggerBsasRequestBody(
+  val model: TriggerBsasRequestBody = TriggerBsasRequestBody(
     AccountingPeriod("2018-11-25", "2018-11-26"),
-    TypeOfBusiness.`self-employment`,
-    Some("anId")
-  )
-
-  val fhlBody: TriggerBsasRequestBody = TriggerBsasRequestBody(
-    AccountingPeriod("2018-11-25", "2018-11-26"),
-    TypeOfBusiness.`uk-property-fhl`,
-    None
-  )
-
-  val nonFhlBody: TriggerBsasRequestBody = TriggerBsasRequestBody(
-    AccountingPeriod("2018-11-25", "2018-11-26"),
-    TypeOfBusiness.`uk-property-non-fhl`,
-    None
+    TypeOfBusiness.`self-employment`.toString,
+    "anId"
   )
 
   val responseObj = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
@@ -123,13 +86,16 @@ object TriggerBsasRequestBodyFixtures {
   val requestBody =
     Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
-      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
-      "selfEmploymentId" -> "XAIS12345678901"
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`,
+      "businessId"       -> "XAIS12345678901"
     )
 
   val requestBodyForProperty =
-    Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
-             "typeOfBusiness"   -> TypeOfBusiness.`uk-property-fhl`.toString)
+    Json.obj(
+      "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+      "typeOfBusiness"   -> TypeOfBusiness.`uk-property-fhl`,
+      "businessId"       -> "XAIS12345678901"
+    )
 
   val desResponse =
     """
@@ -233,21 +199,20 @@ object TriggerBsasRequestBodyFixtures {
   def triggerBsasRawDataBody(startDate: String = "2019-05-05",
                              endDate: String = "2020-05-06",
                              typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
-                             selfEmploymentId: Option[String] = Some("XAIS12345678901")): AnyContentAsJson = {
+                             businessId: String = "XAIS12345678901"): AnyContentAsJson = {
 
     AnyContentAsJson(
-      Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness"   -> typeOfBusiness
-      ) ++ selfEmploymentId.fold(Json.obj())(selfEmploymentId => Json.obj("selfEmploymentId" -> selfEmploymentId)))
+      Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+               "typeOfBusiness"   -> typeOfBusiness,
+               "businessId" -> businessId)
+    )
   }
 
-  def triggerBsasRequestDataBody(accountingPeriod: String = "2019-20",
-                                 startDate: String = "2019-05-05",
+  def triggerBsasRequestDataBody(startDate: String = "2019-05-05",
                                  endDate: String = "2020-05-06",
                                  typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
-                                 selfEmploymentId: Option[String] = Some("XAIS12345678901")): TriggerBsasRequestBody = {
-    TriggerBsasRequestBody(AccountingPeriod(startDate, endDate), typeOfBusiness = typeOfBusiness, selfEmploymentId = selfEmploymentId)
+                                 businessId: String = "XAIS12345678901"): TriggerBsasRequestBody = {
+    TriggerBsasRequestBody(AccountingPeriod(startDate, endDate), typeOfBusiness = typeOfBusiness.toString, businessId = businessId)
 
   }
 

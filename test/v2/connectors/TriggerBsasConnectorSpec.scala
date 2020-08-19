@@ -41,14 +41,14 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   }
 
   "triggerBsas" must {
-    val request = TriggerBsasRequest(nino, seBody)
+    val request = TriggerBsasRequest(nino, model)
 
     "post a TriggerBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
 
       MockedHttpClient.post(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-        body = seBody,
+        body = model,
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
       ).returns(Future.successful(outcome))
 

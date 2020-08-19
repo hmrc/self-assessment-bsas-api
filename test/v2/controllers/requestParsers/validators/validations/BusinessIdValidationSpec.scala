@@ -17,29 +17,28 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.mocks.MockCurrentDateProvider
-import v2.models.errors.RuleAccountingPeriodNotEndedError
+import v2.models.errors.BusinessIdFormatError
 import v2.models.utils.JsonErrorValidators
 
-class NotEndedAccountingPeriodValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider {
+class BusinessIdValidationSpec extends UnitSpec with JsonErrorValidators  {
 
-  case class SetUp(endDate: String, currentDate: String = "2020-05-06" )
+  case class SetUp(BusinessId: String, typeOfBusiness: String = "self-employed")
 
   "validate" should {
     "return no errors" when {
-      "the end date of the accounting period is before the current date" in new SetUp("2020-05-05") {
+      "a valid self employment id is provided" in new SetUp("XAIS12345678901") {
 
-        NotEndedAccountingPeriodValidation.validate(currentDate, endDate).isEmpty shouldBe true
+        BusinessIdValidation.validate(BusinessId).isEmpty shouldBe true
       }
     }
 
-    "return errors" when {
-      "the end date is after the current date" in new SetUp("2020-05-07") {
+    "return an error" when {
+      "an invalid self employment id is provided" in new SetUp("XAXAIS65271982AD"){
 
-        private val validationResult = NotEndedAccountingPeriodValidation.validate(currentDate, endDate)
+        val validationResult = BusinessIdValidation.validate(BusinessId)
 
         validationResult.length shouldBe 1
-        validationResult.head shouldBe RuleAccountingPeriodNotEndedError
+        validationResult.head shouldBe BusinessIdFormatError
       }
     }
   }

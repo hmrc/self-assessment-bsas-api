@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
 import v2.models.domain.TypeOfBusiness
-import v2.models.errors.SelfEmploymentIdRuleError
+import v2.models.errors.RuleSelfEmploymentIdError
 import v2.models.utils.JsonErrorValidators
 
 class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidators  {
@@ -44,7 +44,7 @@ class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidato
         val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness)
 
         validationResult.length shouldBe 1
-        validationResult.head shouldBe SelfEmploymentIdRuleError
+        validationResult.head shouldBe RuleSelfEmploymentIdError
       }
 
       "the business type is a property-fhl there is a self employment ID " in new SetUp(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`) {
@@ -52,7 +52,7 @@ class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidato
         val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness)
 
         validationResult.length shouldBe 1
-        validationResult.head shouldBe SelfEmploymentIdRuleError
+        validationResult.head shouldBe RuleSelfEmploymentIdError
       }
 
       "the business type is a none property-fhl there is a self employment ID " in new SetUp(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`) {
@@ -60,7 +60,7 @@ class SelfEmploymentIdRuleValidationSpec extends UnitSpec with JsonErrorValidato
         val validationResult = SelfEmploymentIdRuleValidation.validate(selfEmploymentId, typeOfBusiness)
 
         validationResult.length shouldBe 1
-        validationResult.head shouldBe SelfEmploymentIdRuleError
+        validationResult.head shouldBe RuleSelfEmploymentIdError
       }
     }
   }
