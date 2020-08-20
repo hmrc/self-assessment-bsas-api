@@ -118,4 +118,18 @@ trait DesResponseMappingSupport {
 
       case _ => Right(desResponseWrapper)
     }
+
+  final def validateSubmitForeignPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T], typeOfBusiness: Option[TypeOfBusiness]):
+  Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case submitForeignPropertyBsasResponse: SubmitUkPropertyBsasResponse
+        if submitForeignPropertyBsasResponse.typeOfBusiness == TypeOfBusiness.`self-employment` =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
+
+      case submitUkPropertyBsasResponse: SubmitUkPropertyBsasResponse
+        if typeOfBusiness.exists(_ != submitUkPropertyBsasResponse.typeOfBusiness) =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
+
+      case _ => Right(desResponseWrapper)
+    }
 }

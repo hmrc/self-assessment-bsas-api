@@ -18,6 +18,7 @@ package v2.models.response
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
+import v2.models.domain.TypeOfBusiness
 
 class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
 
@@ -40,7 +41,7 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val responseModel = SubmitForeignPropertyBsasResponse("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4")
+  val responseModel = SubmitForeignPropertyBsasResponse("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", TypeOfBusiness.`foreign-property-fhl-eea`)
 
   "SubmitForeignPropertyBsasResponseSpec" when {
     "read from valid JSON" should {

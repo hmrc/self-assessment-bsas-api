@@ -16,13 +16,24 @@
 
 package v2.models.response
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
+import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
+import play.api.libs.functional.syntax._
 
-case class SubmitForeignPropertyBsasResponse(id: String)
+case class SubmitForeignPropertyBsasResponse(id: String, typeOfBusiness: TypeOfBusiness)
 
 object SubmitForeignPropertyBsasResponse {
-  implicit val reads: Reads[SubmitForeignPropertyBsasResponse] =
-    (JsPath \ "metadata" \ "calculationId").read[String].map(SubmitForeignPropertyBsasResponse.apply)
 
-  implicit val writes: OWrites[SubmitForeignPropertyBsasResponse] = Json.writes[SubmitForeignPropertyBsasResponse]
+  implicit val writes: OWrites[SubmitForeignPropertyBsasResponse] = new OWrites[SubmitForeignPropertyBsasResponse] {
+    def writes(response: SubmitForeignPropertyBsasResponse): JsObject =
+      Json.obj(
+        "id" -> response.id
+      )
+  }
+
+  implicit val reads: Reads[SubmitForeignPropertyBsasResponse] = (
+    (JsPath \ "metadata" \ "calculationId").read[String] and
+      (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
+    )(SubmitForeignPropertyBsasResponse.apply _)
+
 }

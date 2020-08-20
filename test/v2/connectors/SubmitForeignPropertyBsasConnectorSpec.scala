@@ -24,7 +24,7 @@ import v2.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
+import v2.models.request.submitBsas.foreignProperty.{Expenses, FhlEea, ForeignProperty, Income, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
 import scala.concurrent.Future
@@ -34,13 +34,51 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPrtopety =
-    SubmitForeignPropertyBsasResponse(bsasId)
-
-
+  val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPropertyBsasRequestBody = {
+    SubmitForeignPropertyBsasRequestBody(
+      Some(ForeignProperty(
+        Some(Income(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        )),
+        Some(Expenses(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        ))
+      )),
+      Some(FhlEea(
+        Some(Income(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        )),
+        Some(Expenses(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        ))
+      ))
+    )
+  }
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
 
     val desRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
@@ -53,15 +91,15 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, submitForeignPropertyBsasRequestBodyModel)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, SubmitForeignPropertyBsasResponse(bsasId, TypeOfBusiness.`self-employment`)))
+      val outcome = Right(ResponseWrapper(correlationId, SubmitForeignPropertyBsasResponse(bsasId, TypeOfBusiness.`foreign-property`)))
 
-      MockedHttpClient.put(
+      MockedHttpClient.post(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-        body = submitSelfEmploymentBsasRequestBodyModel,
+        body = submitForeignPropertyBsasRequestBodyModel,
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
       ).returns(Future.successful(outcome))
 
-      await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome
+      await(connector.submitForeignPropertyAdjustments(request)) shouldBe outcome
     }
   }
 }
