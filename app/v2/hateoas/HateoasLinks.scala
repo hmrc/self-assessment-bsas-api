@@ -47,6 +47,9 @@ trait HateoasLinks {
   private def propertyAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
     bsasBasUri(appConfig, nino) + s"/property/$bsasId/adjust"
 
+  private def foreignPropertyAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId/adjust"
+
   //API resource links
 
   //L1
@@ -107,4 +110,16 @@ trait HateoasLinks {
 
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
+
+
+  def getAdjustedForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
+
+  def getForeignPropertyBsasAdjustments(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(
+      href = foreignPropertyAdjustmentUri(appConfig, nino, bsasId),
+      method = GET,
+      rel = SELF
+    )
+
 }

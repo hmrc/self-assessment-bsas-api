@@ -19,6 +19,7 @@ package v2.models.response
 import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import play.api.libs.functional.syntax._
+import v2.models.hateoas.HateoasData
 
 case class SubmitForeignPropertyBsasResponse(id: String, typeOfBusiness: TypeOfBusiness)
 
@@ -37,3 +38,5 @@ object SubmitForeignPropertyBsasResponse {
     )(SubmitForeignPropertyBsasResponse.apply _)
 
 }
+
+case class SubmitForeignPropertyBsasHateoasData(nino: String, bsasId: String) extends HateoasData
