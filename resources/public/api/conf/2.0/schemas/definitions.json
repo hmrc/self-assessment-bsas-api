@@ -77,7 +77,7 @@
 
     "businessId": {
       "title": "businessId",
-      "description": "",
+      "description": "The unique identifier of the income source the claim relates to.",
       "type": "string",
       "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
       "example": "X9IS98470026982"
