@@ -18,7 +18,8 @@ package v2.controllers.requestParsers.validators
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, NinoFormatError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v2.fixtures.foreignProperty.SubmitForeignPropertyBsasRequestBodyFixtures.{formatError, rangeError}
+import v2.models.errors.{BsasIdFormatError, NinoFormatError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
@@ -46,7 +47,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -78,7 +79,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "consolidatedExpenses": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -110,7 +111,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123
       |        },
@@ -154,7 +155,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonNoForeignProperty = Json.parse(
     """
       |{
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -186,7 +187,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -214,7 +215,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "otherPropertyIncome": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -252,7 +253,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "expenses": {
       |            "premisesRunningCosts": 123.12,
       |            "repairsAndMaintenance": 123.12,
@@ -287,7 +288,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        }
@@ -299,7 +300,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     """
       |{
       |    "foreignProperty": {},
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -338,7 +339,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {}
+      |    "foreignFhlEea": {}
       |}
       |""".stripMargin
   )
@@ -347,7 +348,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     """
       |{
       |    "foreignProperty": {},
-      |    "fhlEea": {}
+      |    "foreignFhlEea": {}
       |}
       |""".stripMargin
   )
@@ -368,7 +369,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -397,7 +398,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |        },
       |        "expenses": {}
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -436,7 +437,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {},
       |        "expenses": {
       |            "premisesRunningCosts": 123.12,
@@ -473,7 +474,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |            "other": 123.12
       |        }
       |    },
-      |    "fhlEea": {
+      |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
       |        },
@@ -517,6 +518,9 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       }
       "a valid request is supplied without an fhlEea.expenses object" in {
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonNoFhlEeaExpenses)) shouldBe Nil
+      }
+      "a valid consolidated expenses request is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonConsolidatedExpenses)) shouldBe Nil
       }
     }
 
@@ -580,7 +584,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |            "other": 123.12
             |        }
             |    },
-            |    "fhlEea": {
+            |    "foreignFhlEea": {
             |        "income": {
             |            "rentIncome": 123.12
             |        },
@@ -596,9 +600,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    }
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(
-          FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignProperty/income/rentIncome")))
-        )
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(formatError("/foreignProperty/income/rentIncome"))
       }
       "multiple fields have more than 2 decimal points" in {
         val badjson = Json.parse(
@@ -607,61 +609,42 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    "foreignProperty": {
             |        "income": {
             |            "rentIncome": 123.456,
-            |            "premiumsOfLeaseGrant": 123.456,
-            |            "foreignTaxTakenOff": 123.456,
-            |            "otherPropertyIncome": 123.456
+            |            "premiumsOfLeaseGrant": 123.45,
+            |            "foreignTaxTakenOff": 123.45,
+            |            "otherPropertyIncome": 123.45
             |        },
             |        "expenses": {
             |            "premisesRunningCosts": 123.456,
-            |            "repairsAndMaintenance": 123.456,
-            |            "financialCosts": 123.456,
-            |            "professionalFees": 123.456,
-            |            "travelCosts": 123.456,
-            |            "costOfServices": 123.456,
-            |            "residentialFinancialCost": 123.456,
-            |            "other": 123.456
+            |            "repairsAndMaintenance": 123.45,
+            |            "financialCosts": 123.45,
+            |            "professionalFees": 123.45,
+            |            "travelCosts": 123.45,
+            |            "costOfServices": 123.45,
+            |            "residentialFinancialCost": 123.45,
+            |            "other": 123.45
             |        }
             |    },
-            |    "fhlEea": {
+            |    "foreignFhlEea": {
             |        "income": {
             |            "rentIncome": 123.456
             |        },
             |        "expenses": {
             |            "premisesRunningCosts": 123.456,
-            |            "repairsAndMaintenance": 123.456,
-            |            "financialCosts": 123.456,
-            |            "professionalFees": 123.456,
-            |            "costOfServices": 123.456,
-            |            "travelCosts": 123.456,
-            |            "other": 123.456
+            |            "repairsAndMaintenance": 123.45,
+            |            "financialCosts": 123.45,
+            |            "professionalFees": 123.45,
+            |            "costOfServices": 123.45,
+            |            "travelCosts": 123.45,
+            |            "other": 123.45
             |        }
             |    }
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          FormatAdjustmentValueError.copy(paths = Some(Seq(
-            "/foreignProperty/income/rentIncome",
-            "/foreignProperty/income/premiumsOfLeaseGrant",
-            "/foreignProperty/income/foreignTaxTakenOff",
-            "/foreignProperty/income/otherPropertyIncome",
-            "/foreignProperty/expenses/premisesRunningCosts",
-            "/foreignProperty/expenses/repairsAndMaintenance",
-            "/foreignProperty/expenses/financialCosts",
-            "/foreignProperty/expenses/professionalFees",
-            "/foreignProperty/expenses/travelCosts",
-            "/foreignProperty/expenses/costOfServices",
-            "/foreignProperty/expenses/residentialFinancialCost",
-            "/foreignProperty/expenses/other",
-            "/fhlEea/income/rentIncome",
-            "/fhlEea/expenses/premisesRunningCosts",
-            "/fhlEea/expenses/repairsAndMaintenance",
-            "/fhlEea/expenses/financialCosts",
-            "/fhlEea/expenses/professionalFees",
-            "/fhlEea/expenses/costOfServices",
-            "/fhlEea/expenses/travelCosts",
-            "/fhlEea/expenses/other"
-          )))
-        )
+          formatError("/foreignProperty/income/rentIncome"),
+          formatError("/foreignProperty/expenses/premisesRunningCosts"),
+          formatError("/foreignFhlEea/income/rentIncome"),
+          formatError("/foreignFhlEea/expenses/premisesRunningCosts"))
       }
     }
     "return a RULE_RANGE_INVALID error" when {
@@ -687,7 +670,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |            "other": 123.12
             |        }
             |    },
-            |    "fhlEea": {
+            |    "foreignFhlEea": {
             |        "income": {
             |            "rentIncome": 123.12
             |        },
@@ -703,9 +686,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    }
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(
-          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/income/rentIncome")))
-        )
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(rangeError("/foreignProperty/income/rentIncome"))
       }
       "multiple fields are below 0" in {
         val badjson = Json.parse(
@@ -714,61 +695,42 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    "foreignProperty": {
             |        "income": {
             |            "rentIncome": 100000000000.99,
-            |            "premiumsOfLeaseGrant": 100000000000.99,
-            |            "foreignTaxTakenOff": 100000000000.99,
-            |            "otherPropertyIncome": 100000000000.99
+            |            "premiumsOfLeaseGrant": 100.99,
+            |            "foreignTaxTakenOff": 100.99,
+            |            "otherPropertyIncome": 100.99
             |        },
             |        "expenses": {
             |            "premisesRunningCosts": 100000000000.99,
-            |            "repairsAndMaintenance": 100000000000.99,
-            |            "financialCosts": 100000000000.99,
-            |            "professionalFees": 100000000000.99,
-            |            "travelCosts": 100000000000.99,
-            |            "costOfServices": 100000000000.99,
-            |            "residentialFinancialCost": 100000000000.99,
-            |            "other": 100000000000.99
+            |            "repairsAndMaintenance": 100.99,
+            |            "financialCosts": 100.99,
+            |            "professionalFees": 100.99,
+            |            "travelCosts": 100.99,
+            |            "costOfServices": 100.99,
+            |            "residentialFinancialCost": 100.99,
+            |            "other": 100.99
             |        }
             |    },
-            |    "fhlEea": {
+            |    "foreignFhlEea": {
             |        "income": {
             |            "rentIncome": 100000000000.99
             |        },
             |        "expenses": {
             |            "premisesRunningCosts": 100000000000.99,
-            |            "repairsAndMaintenance": 100000000000.99,
-            |            "financialCosts": 100000000000.99,
-            |            "professionalFees": 100000000000.99,
-            |            "costOfServices": 100000000000.99,
-            |            "travelCosts": 100000000000.99,
-            |            "other": 100000000000.99
+            |            "repairsAndMaintenance": 100.99,
+            |            "financialCosts": 100.99,
+            |            "professionalFees": 100.99,
+            |            "costOfServices": 100.99,
+            |            "travelCosts": 100.99,
+            |            "other": 100.99
             |        }
             |    }
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(
-            "/foreignProperty/income/rentIncome",
-            "/foreignProperty/income/premiumsOfLeaseGrant",
-            "/foreignProperty/income/foreignTaxTakenOff",
-            "/foreignProperty/income/otherPropertyIncome",
-            "/foreignProperty/expenses/premisesRunningCosts",
-            "/foreignProperty/expenses/repairsAndMaintenance",
-            "/foreignProperty/expenses/financialCosts",
-            "/foreignProperty/expenses/professionalFees",
-            "/foreignProperty/expenses/travelCosts",
-            "/foreignProperty/expenses/costOfServices",
-            "/foreignProperty/expenses/residentialFinancialCost",
-            "/foreignProperty/expenses/other",
-            "/fhlEea/income/rentIncome",
-            "/fhlEea/expenses/premisesRunningCosts",
-            "/fhlEea/expenses/repairsAndMaintenance",
-            "/fhlEea/expenses/financialCosts",
-            "/fhlEea/expenses/professionalFees",
-            "/fhlEea/expenses/costOfServices",
-            "/fhlEea/expenses/travelCosts",
-            "/fhlEea/expenses/other"
-          )))
-        )
+          rangeError("/foreignFhlEea/expenses/premisesRunningCosts"),
+          rangeError("/foreignFhlEea/income/rentIncome"),
+          rangeError("/foreignProperty/income/rentIncome"),
+          rangeError("/foreignProperty/expenses/premisesRunningCosts"))
       }
     }
     "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {
@@ -795,7 +757,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |            "consolidatedExpenses": 123.12
             |        }
             |    },
-            |    "fhlEea": {
+            |    "foreignFhlEea": {
             |        "income": {
             |            "rentIncome": 123.12
             |        },
@@ -836,7 +798,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |            "consolidatedExpenses": 123.12
             |        }
             |    },
-            |    "fhlEea": {
+            |    "foreignFhlEea": {
             |        "income": {
             |            "rentIncome": 123.12
             |        },

@@ -19,7 +19,7 @@ package v2.models.request.submitBsas.foreignProperty
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class ExpensesSpec extends UnitSpec {
+class ForeignPropertyExpensesSpec extends UnitSpec {
 
   val validJson = Json.parse(
     """
@@ -38,23 +38,23 @@ class ExpensesSpec extends UnitSpec {
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = Expenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12))
+  val validModel = ForeignPropertyExpenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12))
 
-  val emptyModel = Expenses(None,None,None,None,None,None,None,None,None)
+  val emptyModel = ForeignPropertyExpenses(None,None,None,None,None,None,None,None,None)
 
 
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[Expenses]
+        validModel shouldBe validJson.as[ForeignPropertyExpenses]
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[Expenses]
+        emptyModel shouldBe emptyJson.as[ForeignPropertyExpenses]
       }
     }
   }

@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers.validators.validations
+package v2.fixtures.foreignProperty
 
-import v2.models.errors.{MtdError, RuleAdjustmentRangeInvalid}
+import v2.models.errors.MtdError
 
-object AdjustmentRangeValidation {
+object SubmitForeignPropertyBsasRequestBodyFixtures {
 
-  private val minValue = BigDecimal(-99999999999.99)
-  private val maxValue = BigDecimal(99999999999.99)
+  def rangeError(fieldName: String): MtdError =
+    MtdError("RULE_RANGE_INVALID", s"Adjustment value for '$fieldName' falls outside the accepted range")
 
-  def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
-
-    val error = RuleAdjustmentRangeInvalid.withFieldName(fieldName)
-
-    field match {
-      case Some(value) if value > maxValue || value < minValue  =>
-        List(error)
-      case _ => List()
-    }
-  }
+  def formatError(fieldName: String): MtdError =
+    MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the '$fieldName' value is invalid")
 }

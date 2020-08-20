@@ -20,8 +20,13 @@ import play.api.libs.json.{Json, OFormat}
 
 case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty], foreignFhlEea: Option[FhlEea]) {
 
-  def isIncorrectOrEmptyBody: Boolean = foreignProperty.isEmpty &&
-    foreignFhlEea.isEmpty
+  def isEmpty: Boolean = (foreignProperty.isEmpty && foreignFhlEea.isEmpty) ||
+    foreignFhlEea.flatMap(_.income.map(_.isEmpty)).getOrElse(false) ||
+    foreignFhlEea.flatMap(_.expenses.map(_.isEmpty)).getOrElse(false) ||
+    foreignFhlEea.exists(_.isEmpty) ||
+    foreignProperty.flatMap(_.income.map(_.isEmpty)).getOrElse(false) ||
+    foreignProperty.flatMap(_.expenses.map(_.isEmpty)).getOrElse(false) ||
+    foreignProperty.exists(_.isEmpty)
 }
 
 

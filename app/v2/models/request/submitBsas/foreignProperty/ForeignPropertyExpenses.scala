@@ -18,15 +18,15 @@ package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Expenses(premisesRunningCosts: Option[BigDecimal],
-                    repairsAndMaintenance: Option[BigDecimal],
-                    financialCosts: Option[BigDecimal],
-                    professionalFees: Option[BigDecimal],
-                    travelCosts: Option[BigDecimal],
-                    costOfServices: Option[BigDecimal],
-                    residentialFinancialCost: Option[BigDecimal],
-                    other: Option[BigDecimal],
-                    consolidatedExpenses: Option[BigDecimal]) {
+case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
+                              repairsAndMaintenance: Option[BigDecimal],
+                              financialCosts: Option[BigDecimal],
+                              professionalFees: Option[BigDecimal],
+                              travelCosts: Option[BigDecimal],
+                              costOfServices: Option[BigDecimal],
+                              residentialFinancialCost: Option[BigDecimal],
+                              other: Option[BigDecimal],
+                              consolidatedExpenses: Option[BigDecimal]) {
 
   def isEmpty: Boolean = premisesRunningCosts.isEmpty &&
     repairsAndMaintenance.isEmpty &&
@@ -46,11 +46,12 @@ case class Expenses(premisesRunningCosts: Option[BigDecimal],
     "costOfServices" -> costOfServices,
     "travelCosts" -> travelCosts,
     "other" -> other,
+    "residentialFinancialCost" -> residentialFinancialCost,
     "consolidatedExpenses" -> consolidatedExpenses
   ).collect {case (k, Some(v)) => (k, v)
   }
 }
 
-object Expenses {
-  implicit val format: OFormat[Expenses] = Json.format[Expenses]
+object ForeignPropertyExpenses {
+  implicit val format: OFormat[ForeignPropertyExpenses] = Json.format[ForeignPropertyExpenses]
 }

@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v2.models.request.submitBsas.foreignProperty.{Expenses, FhlEea, FhlIncome, ForeignProperty, ForeignPropertyIncome, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
+import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet = List(
@@ -43,280 +43,68 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
 
   private def incorrectOrEmptyBodySubmittedValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
     val body = data.body.as[SubmitForeignPropertyBsasRequestBody]
-    if (body.isIncorrectOrEmptyBody) List(List(RuleIncorrectOrEmptyBodyError)) else NoValidationErrors
+    if (body.isEmpty) List(List(RuleIncorrectOrEmptyBodyError)) else NoValidationErrors
   }
 
   private def bodyFieldValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
-    val body = data.body.as[SubmitForeignPropertyBsasRequestBody]
-
-    List(flattenErrors(
-      List(
-        body.foreignProperty.map(validateForeignPropertyRange).getOrElse(NoValidationErrors),
-        body.foreignProperty.map(validateForeignPropertyValue).getOrElse(NoValidationErrors),
-        body.foreignFhlEea.map(validateFhlEeaRange).getOrElse(NoValidationErrors),
-        body.foreignFhlEea.map(validateFhlEeaValue).getOrElse(NoValidationErrors)
-      )
-    ))
-  }
-
-  private def otherBodyFieldsValidator: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
 
     val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
-    List(
-      BothExpensesValidation.validate(model.foreignProperty.flatMap(_.expenses.map(_.params))),
-      BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
-    )
+    def doValidationFor(fieldName: String, withValue: Option[BigDecimal])
+                       (f: Seq[(Option[BigDecimal], String) => List[MtdError]]): List[MtdError] =
+      f.flatMap(validation => validation(withValue, fieldName)).toList
+
+    val withAdjustmentValidations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
+      Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
+
+    def validateForeignProperty(foreignProperty: ForeignProperty): List[MtdError] = {
+      List(
+        doValidationFor("/foreignProperty/income/rentIncome", foreignProperty.income.flatMap(_.rentIncome))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/income/premiumsOfLeaseGrant", foreignProperty.income.flatMap(_.premiumsOfLeaseGrant))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/income/foreignTaxTakenOff", foreignProperty.income.flatMap(_.foreignTaxTakenOff))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/income/otherPropertyIncome", foreignProperty.income.flatMap(_.otherPropertyIncome))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/premisesRunningCosts", foreignProperty.expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/repairsAndMaintenance", foreignProperty.expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/financialCosts", foreignProperty.expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/professionalFees", foreignProperty.expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/travelCosts", foreignProperty.expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/costOfServices", foreignProperty.expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/residentialFinancialCost", foreignProperty.expenses.flatMap(_.residentialFinancialCost))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/other", foreignProperty.expenses.flatMap(_.other))(withAdjustmentValidations),
+        doValidationFor("/foreignProperty/expenses/consolidatedExpenses", foreignProperty.expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
+      ).flatten
+    }
+
+    def validateForeignFhlEea(foreignFhlEea: FhlEea): List[MtdError] = {
+      List(
+        doValidationFor("/foreignFhlEea/income/rentIncome", foreignFhlEea.income.flatMap(_.rentIncome))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/financialCosts", foreignFhlEea.expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/professionalFees", foreignFhlEea.expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/travelCosts", foreignFhlEea.expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/costOfServices", foreignFhlEea.expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/other", foreignFhlEea.expenses.flatMap(_.other))(withAdjustmentValidations),
+        doValidationFor("/foreignFhlEea/expenses/consolidatedExpenses", foreignFhlEea.expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
+      ).flatten
+    }
+
+    List(flattenErrors(List(
+      model.foreignFhlEea.map(validateForeignFhlEea).getOrElse(NoValidationErrors),
+      model.foreignProperty.map(validateForeignProperty).getOrElse(NoValidationErrors)
+    )))
+
   }
 
-  private def validateForeignPropertyRange(foreignProperty: ForeignProperty): List[MtdError] = {
-    List(
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.income.flatMap(_.rentIncome),
-        fieldName = "rentIncome",
-        path = s"/foreignProperty/income/rentIncome"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.income.flatMap(_.premiumsOfLeaseGrant),
-        fieldName = "premiumsOfLeaseGrant",
-        path = s"/foreignProperty/income/premiumsOfLeaseGrant"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.income.flatMap(_.foreignTaxTakenOff),
-        fieldName = "foreignTaxTakenOff",
-        path = s"/foreignProperty/income/foreignTaxTakenOff"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.income.flatMap(_.otherPropertyIncome),
-        fieldName = "otherPropertyIncome",
-        path = s"/foreignProperty/income/otherPropertyIncome"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.premisesRunningCosts),
-        fieldName = "premisesRunningCosts",
-        path = s"/foreignProperty/expenses/premisesRunningCosts"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.repairsAndMaintenance),
-        fieldName = "repairsAndMaintenance",
-        path = s"/foreignProperty/expenses/repairsAndMaintenance"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.financialCosts),
-        fieldName = "financialCosts",
-        path = s"/foreignProperty/expenses/financialCosts"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.professionalFees),
-        fieldName = "professionalFees",
-        path = s"/foreignProperty/expenses/professionalFees"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.travelCosts),
-        fieldName = "travelCosts",
-        path = s"/foreignProperty/expenses/travelCosts"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.costOfServices),
-        fieldName = "costOfServices",
-        path = s"/foreignProperty/expenses/costOfServices"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.residentialFinancialCost),
-        fieldName = "residentialFinancialCost",
-        path = s"/foreignProperty/expenses/residentialFinancialCost"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.other),
-        fieldName = "other",
-        path = s"/foreignProperty/expenses/other"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.consolidatedExpenses),
-        fieldName = "consolidatedExpenses",
-        path = s"/foreignProperty/expenses/consolidatedExpenses"
-      )
-    ).flatten
-  }
+  private def otherBodyFieldsValidator: SubmitForeignPropertyRawData => List[List[MtdError]] = {
+    data =>
 
-  private def validateForeignPropertyValue(foreignProperty: ForeignProperty): List[MtdError] = {
-    List(
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.income.flatMap(_.rentIncome),
-        fieldName = "rentIncome",
-        path = s"/foreignProperty/income/rentIncome"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.income.flatMap(_.premiumsOfLeaseGrant),
-        fieldName = "premiumsOfLeaseGrant",
-        path = s"/foreignProperty/income/premiumsOfLeaseGrant"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.income.flatMap(_.foreignTaxTakenOff),
-        fieldName = "foreignTaxTakenOff",
-        path = s"/foreignProperty/income/foreignTaxTakenOff"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.income.flatMap(_.otherPropertyIncome),
-        fieldName = "otherPropertyIncome",
-        path = s"/foreignProperty/income/otherPropertyIncome"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.premisesRunningCosts),
-        fieldName = "premisesRunningCosts",
-        path = s"/foreignProperty/expenses/premisesRunningCosts"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.repairsAndMaintenance),
-        fieldName = "repairsAndMaintenance",
-        path = s"/foreignProperty/expenses/repairsAndMaintenance"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.financialCosts),
-        fieldName = "financialCosts",
-        path = s"/foreignProperty/expenses/financialCosts"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.professionalFees),
-        fieldName = "professionalFees",
-        path = s"/foreignProperty/expenses/professionalFees"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.travelCosts),
-        fieldName = "travelCosts",
-        path = s"/foreignProperty/expenses/travelCosts"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.costOfServices),
-        fieldName = "costOfServices",
-        path = s"/foreignProperty/expenses/costOfServices"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.residentialFinancialCost),
-        fieldName = "residentialFinancialCost",
-        path = s"/foreignProperty/expenses/residentialFinancialCost"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.other),
-        fieldName = "other",
-        path = s"/foreignProperty/expenses/other"
-      ),
-      AdjustmentValueValidation.validate(
-        field = foreignProperty.expenses.flatMap(_.consolidatedExpenses),
-        fieldName = "consolidatedExpenses",
-        path = s"/foreignProperty/expenses/consolidatedExpenses"
-      )
-    ).flatten
-  }
+      val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
-  private def validateFhlEeaRange(fhlEea: FhlEea): List[MtdError] = {
-    List(
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.income.flatMap(_.rentIncome),
-        fieldName = "rentIncome",
-        path = s"/fhlEea/income/rentIncome"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.premisesRunningCosts),
-        fieldName = "premisesRunningCosts",
-        path = s"/fhlEea/expenses/premisesRunningCosts"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.repairsAndMaintenance),
-        fieldName = "repairsAndMaintenance",
-        path = s"/fhlEea/expenses/repairsAndMaintenance"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.financialCosts),
-        fieldName = "financialCosts",
-        path = s"/fhlEea/expenses/financialCosts"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.professionalFees),
-        fieldName = "professionalFees",
-        path = s"/fhlEea/expenses/professionalFees"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.travelCosts),
-        fieldName = "travelCosts",
-        path = s"/fhlEea/expenses/travelCosts"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.costOfServices),
-        fieldName = "costOfServices",
-        path = s"/fhlEea/expenses/costOfServices"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.residentialFinancialCost),
-        fieldName = "residentialFinancialCost",
-        path = s"/fhlEea/expenses/residentialFinancialCost"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.other),
-        fieldName = "other",
-        path = s"/fhlEea/expenses/other"
-      ),
-      AdjustmentRangeValidation.validate(
-        field = fhlEea.expenses.flatMap(_.consolidatedExpenses),
-        fieldName = "consolidatedExpenses",
-        path = s"/fhlEea/expenses/consolidatedExpenses"
+      List(
+        BothExpensesValidation.validate(model.foreignProperty.flatMap(_.expenses.map(_.params))),
+        BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
       )
-    ).flatten
-  }
-
-  private def validateFhlEeaValue(fhlEea: FhlEea): List[MtdError] = {
-    List(
-      AdjustmentValueValidation.validate(
-        field = fhlEea.income.flatMap(_.rentIncome),
-        fieldName = "rentIncome",
-        path = s"/fhlEea/income/rentIncome"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.premisesRunningCosts),
-        fieldName = "premisesRunningCosts",
-        path = s"/fhlEea/expenses/premisesRunningCosts"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.repairsAndMaintenance),
-        fieldName = "repairsAndMaintenance",
-        path = s"/fhlEea/expenses/repairsAndMaintenance"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.financialCosts),
-        fieldName = "financialCosts",
-        path = s"/fhlEea/expenses/financialCosts"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.professionalFees),
-        fieldName = "professionalFees",
-        path = s"/fhlEea/expenses/professionalFees"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.travelCosts),
-        fieldName = "travelCosts",
-        path = s"/fhlEea/expenses/travelCosts"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.costOfServices),
-        fieldName = "costOfServices",
-        path = s"/fhlEea/expenses/costOfServices"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.residentialFinancialCost),
-        fieldName = "residentialFinancialCost",
-        path = s"/fhlEea/expenses/residentialFinancialCost"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.other),
-        fieldName = "other",
-        path = s"/fhlEea/expenses/other"
-      ),
-      AdjustmentValueValidation.validate(
-        field = fhlEea.expenses.flatMap(_.consolidatedExpenses),
-        fieldName = "consolidatedExpenses",
-        path = s"/fhlEea/expenses/consolidatedExpenses"
-      )
-    ).flatten
   }
 
   override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {

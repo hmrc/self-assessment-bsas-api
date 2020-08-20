@@ -72,7 +72,7 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
         Some(123.12),
         Some(123.12)
       )),
-      Some(Expenses(
+      Some(ForeignPropertyExpenses(
         Some(123.12),
         Some(123.12),
         Some(123.12),
@@ -88,14 +88,13 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       Some(FhlIncome(
         Some(123.12)
       )),
-      Some(Expenses(
+      Some(FhlEeaExpenses(
         Some(123.12),
         Some(123.12),
         Some(123.12),
         Some(123.12),
         Some(123.12),
         Some(123.12),
-        None,
         Some(123.12),
         Some(123.12)
       ))

@@ -19,7 +19,7 @@ package v2.models.request.submitBsas.foreignProperty
 import play.api.libs.json.{Json, OFormat}
 
 case class FhlEea(income: Option[FhlIncome],
-                  expenses: Option[Expenses]) {
+                  expenses: Option[FhlEeaExpenses]) {
 
   def isEmpty: Boolean = income.isEmpty &&
     expenses.isEmpty
