@@ -15,13 +15,13 @@ description: This endpoint allows the developer to request the adjustments made 
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:
   200:
-      body:
-        application/json:
-          type: !include schemas/retrieve_foreign_property_adjustments.json
-          examples:
-            adjustments_full:
-              description: Retrieve Foreign Property Business' Summary Adjustments example
-              value: !include examples/adjustments/retrieve_foreign_property_adjustments.json
+    body:
+      application/json:
+        type: !include schemas/retrieve_foreign_property_adjustments.json
+        examples:
+          adjustments_full:
+            description: Retrieve Foreign Property Business' Summary Adjustments example
+            value: !include examples/adjustments/retrieve_foreign_property_adjustments.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
