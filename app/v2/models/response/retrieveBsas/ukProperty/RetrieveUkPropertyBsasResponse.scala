@@ -33,7 +33,7 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks{
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
         case TypeOfBusiness.`uk-property-fhl` => fhlBsasDetailReads
         case TypeOfBusiness.`uk-property-non-fhl` => nonFhlBsasDetailReads
-        case TypeOfBusiness.`self-employment` => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
+        case _ => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
       }
     )(RetrieveUkPropertyBsasResponse.apply _)
 

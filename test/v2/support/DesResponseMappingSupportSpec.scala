@@ -16,15 +16,20 @@
 
 package v2.support
 
+import java.time.LocalDate
+
 import support.UnitSpec
 import utils.Logging
 import v2.controllers.EndpointLogContext
+import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
+import v2.models.response.{ SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments }
+import v2.models.response.retrieveBsas.AccountingPeriod
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
-  implicit val logContext: EndpointLogContext = EndpointLogContext("ctrl", "ep")
+  implicit val logContext: EndpointLogContext         = EndpointLogContext("ctrl", "ep")
   val mapping: DesResponseMappingSupport with Logging = new DesResponseMappingSupport with Logging {}
 
   val correlationId = "someCorrelationId"
@@ -37,11 +42,13 @@ class DesResponseMappingSupportSpec extends UnitSpec {
 
   object ErrorBvr extends MtdError("msg", "bvr")
 
-  val errorCodeMap : PartialFunction[String, MtdError] = {
+  val errorCodeMap: PartialFunction[String, MtdError] = {
     case "ERR1" => Error1
     case "ERR2" => Error2
-    case "DS" => DownstreamError
+    case "DS"   => DownstreamError
   }
+
+  lazy val date: LocalDate = LocalDate.now()
 
   "mapping Des errors" when {
     "single error" when {
@@ -54,7 +61,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
 
       "the error code is not in the map provided" must {
         "default to DownstreamError and wrap" in {
-          mapping.mapDesErrors (errorCodeMap)(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("UNKNOWN")))) shouldBe
+          mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("UNKNOWN")))) shouldBe
             ErrorWrapper(Some(correlationId), DownstreamError)
         }
       }
@@ -94,6 +101,237 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       "return the error as is (in an ErrorWrapper)" in {
         mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, OutboundError(ErrorBvrMain, Some(Seq(ErrorBvr))))) shouldBe
           ErrorWrapper(Some(correlationId), ErrorBvrMain, Some(Seq(ErrorBvr)))
+      }
+    }
+  }
+
+  "validateRetrieveUkPropertyAdjustmentsSuccessResponse" should {
+    def generateResponseWrapper(
+        typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse] =
+      ResponseWrapper(
+        correlationId = "",
+        responseData = retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse(
+          retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
+          retrieveBsasAdjustments.ukProperty.BsasDetail(None, None)
+        )
+      )
+    "return Left" when {
+      List(TypeOfBusiness.`self-employment`, TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveUkPropertyAdjustmentsSuccessResponse(input) shouldBe {
+            Left(ErrorWrapper(Some(""), RuleNotUkProperty, None))
+          }
+        }
+      }
+    }
+    "return Right" when {
+      List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveUkPropertyAdjustmentsSuccessResponse(input) shouldBe {
+            Right(input)
+          }
+        }
+      }
+    }
+  }
+
+  "validateRetrieveSelfEmploymentAdjustmentsSuccessResponse" should {
+    def generateResponseWrapper(
+        typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse] =
+      ResponseWrapper(
+        correlationId = "",
+        responseData = retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse(
+          retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, None, AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
+          retrieveBsasAdjustments.selfEmployment.BsasDetail(None, None, None)
+        )
+      )
+    "return Left" when {
+      List(
+        TypeOfBusiness.`uk-property-fhl`,
+        TypeOfBusiness.`uk-property-non-fhl`,
+        TypeOfBusiness.`foreign-property`,
+        TypeOfBusiness.`foreign-property-fhl-eea`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(input) shouldBe {
+            Left(ErrorWrapper(Some(""), RuleNotSelfEmployment, None))
+          }
+        }
+      }
+    }
+    "return Right" when {
+      List(TypeOfBusiness.`self-employment`).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(input) shouldBe {
+            Right(input)
+          }
+        }
+      }
+    }
+  }
+
+  "validateRetrieveSelfEmploymentBsasSuccessResponse" should {
+    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse] =
+      ResponseWrapper(
+        correlationId = "",
+        responseData = retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse(
+          retrieveBsas.selfEmployment.Metadata(typeOfBusiness, None, AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
+          None
+        )
+      )
+    "return Left" when {
+      List(
+        TypeOfBusiness.`uk-property-fhl`,
+        TypeOfBusiness.`uk-property-non-fhl`,
+        TypeOfBusiness.`foreign-property`,
+        TypeOfBusiness.`foreign-property-fhl-eea`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveSelfEmploymentBsasSuccessResponse(input) shouldBe {
+            Left(ErrorWrapper(Some(""), RuleNotSelfEmployment, None))
+          }
+        }
+      }
+    }
+    "return Right" when {
+      List(TypeOfBusiness.`self-employment`).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveSelfEmploymentBsasSuccessResponse(input) shouldBe {
+            Right(input)
+          }
+        }
+      }
+    }
+  }
+
+  "validateSubmitSelfEmploymentSuccessResponse" should {
+    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitSelfEmploymentBsasResponse] =
+      ResponseWrapper(
+        correlationId = "",
+        responseData = SubmitSelfEmploymentBsasResponse(
+          "",
+          typeOfBusiness
+        )
+      )
+    "return Left" when {
+      List(
+        TypeOfBusiness.`uk-property-fhl`,
+        TypeOfBusiness.`uk-property-non-fhl`,
+        TypeOfBusiness.`foreign-property`,
+        TypeOfBusiness.`foreign-property-fhl-eea`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateSubmitSelfEmploymentSuccessResponse(input) shouldBe {
+            Left(ErrorWrapper(Some(""), RuleErrorPropertyAdjusted, None))
+          }
+        }
+      }
+    }
+    "return Right" when {
+      List(TypeOfBusiness.`self-employment`).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateSubmitSelfEmploymentSuccessResponse(input) shouldBe {
+            Right(input)
+          }
+        }
+      }
+    }
+  }
+
+  "validateRetrieveUkPropertyBsasSuccessResponse" should {
+    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse] =
+      ResponseWrapper(
+        correlationId = "",
+        responseData = retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse(
+          retrieveBsas.ukProperty.Metadata(
+            typeOfBusiness,
+            AccountingPeriod(date, date),
+            "",
+            "",
+            "",
+            "",
+            adjustedSummary = true
+          ),
+          None
+        )
+      )
+    "return Left" when {
+      List(
+        TypeOfBusiness.`self-employment`,
+        TypeOfBusiness.`foreign-property`,
+        TypeOfBusiness.`foreign-property-fhl-eea`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveUkPropertyBsasSuccessResponse(input) shouldBe {
+            Left(ErrorWrapper(Some(""), RuleNotUkProperty, None))
+          }
+        }
+      }
+    }
+    "return Right" when {
+      List(
+        TypeOfBusiness.`uk-property-fhl`,
+        TypeOfBusiness.`uk-property-non-fhl`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateRetrieveUkPropertyBsasSuccessResponse(input) shouldBe {
+            Right(input)
+          }
+        }
+      }
+    }
+  }
+
+  "validateSubmitUkPropertyBsasSuccessResponse" should {
+    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitUkPropertyBsasResponse] =
+      ResponseWrapper(
+        correlationId = "",
+        responseData = SubmitUkPropertyBsasResponse(
+          "",
+          typeOfBusiness
+        )
+      )
+    "return Left" when {
+      List(
+        TypeOfBusiness.`self-employment`,
+        TypeOfBusiness.`foreign-property`,
+        TypeOfBusiness.`foreign-property-fhl-eea`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(typeOfBusiness)) shouldBe {
+            Left(ErrorWrapper(Some(""), RuleSelfEmploymentAdjustedError, None))
+          }
+        }
+      }
+      "the property type returned was not the property type submitted" in {
+        val input = generateResponseWrapper(TypeOfBusiness.`uk-property-fhl`)
+        mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(TypeOfBusiness.`uk-property-non-fhl`)) shouldBe {
+          Left(ErrorWrapper(Some(""), RuleIncorrectPropertyAdjusted, None))
+        }
+      }
+    }
+    "return Right" when {
+      List(
+        TypeOfBusiness.`uk-property-fhl`,
+        TypeOfBusiness.`uk-property-non-fhl`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(typeOfBusiness)) shouldBe {
+            Right(input)
+          }
+        }
       }
     }
   }
