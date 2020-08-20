@@ -41,8 +41,6 @@ class FhlEeaExpensesSpec extends UnitSpec {
 
   val emptyModel = FhlEeaExpenses(None,None,None,None,None,None,None,None)
 
-
-
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
@@ -68,6 +66,19 @@ class FhlEeaExpensesSpec extends UnitSpec {
     "passed an empty model" should {
       "return an empty JSON" in {
         Json.toJson(emptyModel) shouldBe emptyJson
+      }
+    }
+  }
+
+  "isEmpty" when {
+    "passed a non empty model" should {
+      "return false" in {
+        validModel.isEmpty shouldBe false
+      }
+    }
+    "passed an empty model" should {
+      "return true" in {
+        emptyModel.isEmpty shouldBe true
       }
     }
   }

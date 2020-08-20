@@ -97,4 +97,17 @@ class ForeignPropertySpec extends UnitSpec {
       }
     }
   }
+
+  "isEmpty" when {
+    "passed a non empty model" should {
+      "return false" in {
+        validModel.isEmpty shouldBe false
+      }
+    }
+    "passed an empty model" should {
+      "return true" in {
+        emptyModel.isEmpty shouldBe true
+      }
+    }
+  }
 }
