@@ -116,8 +116,7 @@ class TriggerBsasController @Inject()(
            EndDateFormatError |
           TypeOfBusinessFormatError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           BusinessIdFormatError |
-          RuleSelfEmploymentIdError | RuleEndBeforeStartDateError => BadRequest(Json.toJson(errorWrapper))
+           BusinessIdFormatError | RuleEndBeforeStartDateError => BadRequest(Json.toJson(errorWrapper))
       case RuleAccountingPeriodNotEndedError | RulePeriodicDataIncompleteError | RuleNoAccountingPeriodError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError                                                                                     => NotFound(Json.toJson(errorWrapper))
       case DownstreamError                                                                                   => InternalServerError(Json.toJson(errorWrapper))

@@ -55,12 +55,12 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
       endpointName = "listBsas"
     )
 
-  def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]): Action[AnyContent] =
+  def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
       lazy val currentMtdTaxYear = DesTaxYear.fromDes(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()).toString)
 
-      val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, selfEmploymentId)
+      val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))

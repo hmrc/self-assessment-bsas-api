@@ -101,14 +101,14 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       def validationErrorTest(requestNino: String, requestTaxYear: String,
-                              requestTypeOfBusiness: Option[String], requestSelfEmploymentID: Option[String],
+                              requestTypeOfBusiness: Option[String], requestBusinessId: Option[String],
                               expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
           override val taxYear: Option[String] = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String] = requestSelfEmploymentID
+          override val businessId: Option[String] = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()

@@ -31,7 +31,7 @@ class ListBsasValidatorSpec extends UnitSpec {
   private val invalidTaxYear = "2018-20"
   private val tooEarlyTaxYear = "2018-19"
   private val invalidTypeOfBusiness = "toothpicks-for-hamsters"
-  private val invalidBusinessId = "Not a SelfEmploymentId"
+  private val invalidBusinessId = "Not a businessId"
   private val rawData: ListBsasRawData = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(businessId))
 
   "running the validator" should {

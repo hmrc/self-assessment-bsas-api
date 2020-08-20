@@ -23,7 +23,7 @@ import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
-                    selfEmploymentId: Option[String],
+                    businessId: Option[String],
                     accountingPeriod: AccountingPeriod,
                     taxYear: String,
                     requestedDateTime: String,

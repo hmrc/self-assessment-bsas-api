@@ -173,7 +173,6 @@ class TriggerBsasControllerSpec
           (EndDateFormatError, BAD_REQUEST),
           (TypeOfBusinessFormatError, BAD_REQUEST),
           (BusinessIdFormatError, BAD_REQUEST),
-          (RuleSelfEmploymentIdError, BAD_REQUEST),
           (RuleEndBeforeStartDateError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
