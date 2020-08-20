@@ -2,12 +2,12 @@
   "id": "c75f40a6-a3df-4429-a697-471eeec46435",
   "links":[
     {
-      "href":"/individuals/self-assessment/adjustable-summary/property/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
+      "href":"/individuals/self-assessment/adjustable-summary/TC663795B/property/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
       "rel":"self",
       "method":"GET"
     },
     {
-      "href":"/individuals/self-assessment/adjustable-summary/property/c75f40a6-a3df-4429-a697-471eeec46435?adjustedStatus=true",
+      "href":"/individuals/self-assessment/adjustable-summary/TC663795B/property/c75f40a6-a3df-4429-a697-471eeec46435?adjustedStatus=true",
       "rel":"retrieve-adjustable-summary",
       "method":"GET"
     }
