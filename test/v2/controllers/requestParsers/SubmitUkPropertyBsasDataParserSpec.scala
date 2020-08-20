@@ -80,10 +80,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(formatError("otherPropertyIncome")))
+          .returns(List(formatError(Seq("otherPropertyIncome"))))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, formatError("otherPropertyIncome"), None))
+        result shouldBe Left(ErrorWrapper(None, formatError(Seq("otherPropertyIncome")), None))
       }
 
       "a adjustment has a value over the range" in new Test {
@@ -93,10 +93,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(rangeError("rentIncome")))
+          .returns(List(rangeError(Seq("rentIncome"))))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, rangeError("rentIncome"), None))
+        result shouldBe Left(ErrorWrapper(None, rangeError(Seq("rentIncome")), None))
       }
 
       "the bsas id format is incorrect" in new Test {
@@ -131,13 +131,16 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
-            rangeError("financialCosts"), rangeError("professionalFees")))
+          .returns(List(rangeError(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")), formatError(Seq("professionalFees"))))
 
         private val result = parser.parseRequest(inputData)
         result shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
-            rangeError("financialCosts"), rangeError("professionalFees")))))
+          Left(ErrorWrapper(None, BadRequestError,
+            Some(Seq(
+              rangeError(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")),
+              formatError(Seq("professionalFees"))
+            ))
+          ))
       }
     }
   }

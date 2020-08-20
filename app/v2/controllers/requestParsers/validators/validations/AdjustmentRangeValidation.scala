@@ -25,7 +25,7 @@ object AdjustmentRangeValidation {
 
   def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
 
-    val error = RuleAdjustmentRangeInvalid.withFieldName(fieldName)
+    val error = RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(fieldName)))
 
     field match {
       case Some(value) if value > maxValue || value < minValue  =>

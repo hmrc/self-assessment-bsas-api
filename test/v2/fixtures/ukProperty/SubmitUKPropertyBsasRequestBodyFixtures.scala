@@ -257,6 +257,8 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val fhlIncomeAllFields: Option[JsObject] = Some(Json.obj("rentIncome" -> 1000.45))
 
+  val fhlIncomeInvalidRentIncome: Option[JsObject] = Some(Json.obj("rentIncome" -> 0))
+
   val fhlInvalidConsolidatedExpenses: Option[JsObject] = Some(Json.obj(
     "consolidatedExpenses" -> 1000.45,
     "premisesRunningCosts" -> 1000.45
@@ -316,11 +318,11 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
   val validMinimalBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
 
-  def rangeError(fieldName: String): MtdError =
-    MtdError("RULE_RANGE_INVALID", s"Adjustment value for '$fieldName' falls outside the accepted range")
+  def rangeError(paths: Seq[String]): MtdError =
+    MtdError("RULE_RANGE_INVALID", "Range bad", Some(paths))
 
-  def formatError(fieldName: String): MtdError =
-    MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the '$fieldName' value is invalid")
+  def formatError(paths: Seq[String]): MtdError =
+    MtdError("FORMAT_ADJUSTMENT_VALUE", "Format bad", Some(paths))
 
   def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
                                expenses: Option[JsObject] = None): AnyContentAsJson = {

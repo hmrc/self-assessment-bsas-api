@@ -60,9 +60,9 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
 
     val allFields: Option[List[(String, Option[BigDecimal])]] = for {
-      incomeFields <- model.income.map(toFieldNameMap).map(_.map { case(k, v) => s"income.$k" -> v})
-      expensesFields <- model.expenses.map(toFieldNameMap).map(_.map { case(k, v) => s"expenses.$k" -> v})
-      additionsFields <- model.additions.map(toFieldNameMap).map(_.map { case(k, v) => s"additions.$k" -> v})
+      incomeFields <- model.income.map(toFieldNameMap).map(_.map { case(k, v) => s"/income/$k" -> v})
+      expensesFields <- model.expenses.map(toFieldNameMap).map(_.map { case(k, v) => s"/expenses/$k" -> v})
+      additionsFields <- model.additions.map(toFieldNameMap).map(_.map { case(k, v) => s"/additions/$k" -> v})
     } yield {
       (incomeFields ++ expensesFields ++ additionsFields).toList
     }
@@ -71,7 +71,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
       case (fieldName, value) => AdjustmentValueValidation.validate(value, fieldName) ++ AdjustmentRangeValidation.validate(value, fieldName)
     }
 
-    allFields.map(callValidation).getOrElse(Nil)
+    List(flattenErrors(allFields.map(callValidation).getOrElse(Nil)))
   }
 
   private def bothExpensesValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>

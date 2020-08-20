@@ -193,8 +193,8 @@ class SubmitSelfEmploymentBsasControllerSpec
           BadRequestError,
           Some(
             Seq(
-              FormatAdjustmentValueError.withFieldName("turnover"),
-              RuleAdjustmentRangeInvalid.withFieldName("other")
+              FormatAdjustmentValueError,
+              RuleAdjustmentRangeInvalid
             )
           )
         )
@@ -213,8 +213,8 @@ class SubmitSelfEmploymentBsasControllerSpec
           AuditResponse(
             httpStatus = BAD_REQUEST,
             errors = Some(Seq(
-              AuditError(FormatAdjustmentValueError.withFieldName("turnover").code),
-              AuditError(RuleAdjustmentRangeInvalid.withFieldName("other").code)
+              AuditError(FormatAdjustmentValueError.code),
+              AuditError(RuleAdjustmentRangeInvalid.code)
             )),
             body = None)
 

@@ -90,41 +90,41 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     val withAdjustmentValidations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
       Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
 
-    (model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
+    List(flattenErrors( (model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
       case (None, Some(nonFurnishedHolidayLet)) =>
         val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
         val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
         List(
-          doValidationFor("rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
-          doValidationFor("premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant))(withAdjustmentValidations),
-          doValidationFor("reversePremiums", income.flatMap(_.reversePremiums))(withAdjustmentValidations),
-          doValidationFor("otherPropertyIncome", income.flatMap(_.otherPropertyIncome))(withAdjustmentValidations),
-          doValidationFor("premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
-          doValidationFor("repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
-          doValidationFor("financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
-          doValidationFor("professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
-          doValidationFor("travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
-          doValidationFor("costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
-          doValidationFor("residentialFinancialCost", expenses.flatMap(_.residentialFinancialCost))(withAdjustmentValidations),
-          doValidationFor("other", expenses.flatMap(_.other))(withAdjustmentValidations),
-          doValidationFor("consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
+          doValidationFor("/income/rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
+          doValidationFor("/income/premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant))(withAdjustmentValidations),
+          doValidationFor("/income/reversePremiums", income.flatMap(_.reversePremiums))(withAdjustmentValidations),
+          doValidationFor("/income/otherPropertyIncome", income.flatMap(_.otherPropertyIncome))(withAdjustmentValidations),
+          doValidationFor("/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+          doValidationFor("/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+          doValidationFor("/expenses/financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+          doValidationFor("/expenses/professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+          doValidationFor("/expenses/travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+          doValidationFor("/expenses/costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+          doValidationFor("/expenses/residentialFinancialCost", expenses.flatMap(_.residentialFinancialCost))(withAdjustmentValidations),
+          doValidationFor("/expenses/other", expenses.flatMap(_.other))(withAdjustmentValidations),
+          doValidationFor("/expenses/consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
         )
       case (Some(furnishedHolidayLet), None) =>
         val income: Option[FHLIncome] = furnishedHolidayLet.income
         val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
         List(
-          doValidationFor("rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
-          doValidationFor("premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
-          doValidationFor("repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
-          doValidationFor("financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
-          doValidationFor("professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
-          doValidationFor("travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
-          doValidationFor("costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
-          doValidationFor("other", expenses.flatMap(_.other))(withAdjustmentValidations),
-          doValidationFor("consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
+          doValidationFor("/income/rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
+          doValidationFor("/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+          doValidationFor("/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+          doValidationFor("/expenses/financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+          doValidationFor("/expenses/professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+          doValidationFor("/expenses/travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+          doValidationFor("/expenses/costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+          doValidationFor("/expenses/other", expenses.flatMap(_.other))(withAdjustmentValidations),
+          doValidationFor("/expenses/consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
         )
       case _ => List(List(RuleIncorrectOrEmptyBodyError))
-    }
+    }))
   }
 
   private def otherBodyFieldsValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>

@@ -57,7 +57,7 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
         val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(formatError(fieldName))
+        result shouldBe List(formatError(Seq(fieldName)))
       }
 
       "the adjustment has a value zero decimal" in new SetUp(invalidDecimalZero) {
@@ -65,14 +65,14 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
         val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(formatError(fieldName))
+        result shouldBe List(formatError(Seq(fieldName)))
       }
       "the adjustment has more than 2 decimal places" in new SetUp(invalidDecimalPositions) {
 
         val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(formatError(fieldName))
+        result shouldBe List(formatError(Seq(fieldName)))
       }
     }
   }

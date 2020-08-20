@@ -22,7 +22,7 @@ object AdjustmentValueValidation {
 
   def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
 
-    lazy val error = FormatAdjustmentValueError.withFieldName(fieldName)
+    lazy val error = FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName)))
 
     field match {
       case Some(amount) if amount.scale > 2 | amount == 0 => List(error)

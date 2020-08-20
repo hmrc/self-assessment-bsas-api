@@ -44,7 +44,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
         val result = AdjustmentRangeValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(rangeError(fieldName))
+        result shouldBe List(rangeError(Seq(fieldName)))
       }
 
       "a adjustment is above 99999999999.99" in new SetUp(invaldAdjustmentPositive) {
@@ -52,7 +52,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
         val result = AdjustmentRangeValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(rangeError(fieldName))
+        result shouldBe List(rangeError(Seq(fieldName)))
       }
     }
   }

@@ -62,7 +62,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(formatError("otherPropertyIncome"))
+        result shouldBe List(formatError(Seq("/income/otherPropertyIncome")))
       }
 
       "a single adjustment field is more then 99999999999.99 " in new SetUp {
@@ -72,7 +72,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(rangeError("rentIncome"))
+        result shouldBe List(rangeError(Seq("/income/rentIncome")))
       }
 
       "the format of the bsasId is invalid" in new SetUp {
@@ -102,12 +102,14 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result =
           validator.validate(
-            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
+            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeInvalidRentIncome, fhlMultipleInvalidExpenses))
           )
 
-        result.length shouldBe 4
-        result shouldBe List(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
-          rangeError("financialCosts"), rangeError("professionalFees"))
+        result.length shouldBe 2
+        result shouldBe List(
+          formatError(Seq("/income/rentIncome")),
+          rangeError(Seq("/expenses/premisesRunningCosts", "/expenses/repairsAndMaintenance", "/expenses/financialCosts", "/expenses/professionalFees"))
+        )
       }
 
 
