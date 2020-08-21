@@ -40,7 +40,7 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
   Future[Either[ErrorWrapper, ResponseWrapper[SubmitForeignPropertyBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.submitForeignPropertyAdjustments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
       mtdResponseWrapper <-
         EitherT.fromEither[Future](validateSubmitForeignPropertyBsasSuccessResponse(desResponseWrapper, Some(retrieveTypeOfBusiness(request.body))))
     } yield mtdResponseWrapper

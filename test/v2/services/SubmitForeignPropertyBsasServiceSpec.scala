@@ -22,18 +22,71 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
 import v2.mocks.connectors.MockSubmitForeignPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
+import v2.models.errors._
+import v2.models.outcomes.ResponseWrapper
+import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
+
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class SubmitForeignPropertyBsasServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
-  val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlBody)
+  private val fhlEeaBody =
+    SubmitForeignPropertyBsasRequestBody(
+      None,
+      Some(FhlEea(
+        Some(Income(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        )),
+        Some(Expenses(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        ))
+      ))
+    )
 
-  val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property`)
+  private val foreignPropertyBody =
+    SubmitForeignPropertyBsasRequestBody(
+      Some(ForeignProperty(
+        Some(Income(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        )),
+        Some(Expenses(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        ))
+      )),
+      None
+    )
+
+  private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
+
+  private val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property-fhl-eea`)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -45,10 +98,10 @@ class SubmitForeignPropertyBsasServiceSpec extends UnitSpec {
   "submitForeignPropertyBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitForeignPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
 
@@ -56,35 +109,51 @@ class SubmitForeignPropertyBsasServiceSpec extends UnitSpec {
 
       "des return success response with invalid type of business as `self-employment`" in new Test {
 
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
+        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
       }
 
-      "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
+      "des return success response with invalid type of business as `uk-property-fhl`" in new Test {
 
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
-
-        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
-      }
-
-      "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
-
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
+        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
 
-        await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
+      }
+
+      "des return success response with invalid type of business as `uk-property-non-fhl`" in new Test {
+
+        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
+
+        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
+      }
+
+      "des return success response with invalid type of business as `foreign-property` where foreign-property-fhl-eea is expected" in new Test {
+
+        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`foreign-property`)))))
+
+        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+      }
+
+      "des return success response with invalid type of business as `foreign-property-fhl-eea` where foreign-property is expected" in new Test {
+
+        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request.copy(body = foreignPropertyBody))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`)))))
+
+        await(service.submitForeignPropertyBsas(request.copy(body = foreignPropertyBody))) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
       val input = Seq(

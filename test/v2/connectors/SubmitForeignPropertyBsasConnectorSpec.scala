@@ -18,13 +18,10 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
-import v2.fixtures.selfEmployment.AdditionsFixture.additionsModel
-import v2.fixtures.selfEmployment.ExpensesFixture.expensesModel
-import v2.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.foreignProperty.{Expenses, FhlEea, ForeignProperty, Income, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
+import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
 import scala.concurrent.Future
