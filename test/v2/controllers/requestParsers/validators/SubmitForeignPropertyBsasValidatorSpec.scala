@@ -688,7 +688,47 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(rangeError("/foreignProperty/income/rentIncome"))
       }
-      "multiple fields are below 0" in {
+      "a value field is below -99999999999.99" in {
+        val badJson = Json.parse(
+          """
+            |{
+            |    "foreignProperty": {
+            |        "income": {
+            |            "rentIncome": -100000000000.00,
+            |            "premiumsOfLeaseGrant": 123.12,
+            |            "foreignTaxTakenOff": 123.12,
+            |            "otherPropertyIncome": 123.12
+            |        },
+            |        "expenses": {
+            |            "premisesRunningCosts": 123.12,
+            |            "repairsAndMaintenance": 123.12,
+            |            "financialCosts": 123.12,
+            |            "professionalFees": 123.12,
+            |            "travelCosts": 123.12,
+            |            "costOfServices": 123.12,
+            |            "residentialFinancialCost": 123.12,
+            |            "other": 123.12
+            |        }
+            |    },
+            |    "foreignFhlEea": {
+            |        "income": {
+            |            "rentIncome": 123.12
+            |        },
+            |        "expenses": {
+            |            "premisesRunningCosts": 123.12,
+            |            "repairsAndMaintenance": 123.12,
+            |            "financialCosts": 123.12,
+            |            "professionalFees": 123.12,
+            |            "costOfServices": 123.12,
+            |            "travelCosts": 123.12,
+            |            "other": 123.12
+            |        }
+            |    }
+            |}
+            |""".stripMargin)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(rangeError("/foreignProperty/income/rentIncome"))
+      }
+      "multiple fields are above 99999999999.99" in {
         val badjson = Json.parse(
           """
             |{
@@ -716,6 +756,50 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |        },
             |        "expenses": {
             |            "premisesRunningCosts": 100000000000.99,
+            |            "repairsAndMaintenance": 100.99,
+            |            "financialCosts": 100.99,
+            |            "professionalFees": 100.99,
+            |            "costOfServices": 100.99,
+            |            "travelCosts": 100.99,
+            |            "other": 100.99
+            |        }
+            |    }
+            |}
+            |""".stripMargin)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
+          rangeError("/foreignFhlEea/expenses/premisesRunningCosts"),
+          rangeError("/foreignFhlEea/income/rentIncome"),
+          rangeError("/foreignProperty/income/rentIncome"),
+          rangeError("/foreignProperty/expenses/premisesRunningCosts"))
+      }
+      "multiple fields are below -99999999999.99" in {
+        val badjson = Json.parse(
+          """
+            |{
+            |    "foreignProperty": {
+            |        "income": {
+            |            "rentIncome": -100000000000.00,
+            |            "premiumsOfLeaseGrant": 100.99,
+            |            "foreignTaxTakenOff": 100.99,
+            |            "otherPropertyIncome": 100.99
+            |        },
+            |        "expenses": {
+            |            "premisesRunningCosts": -100000000000.00,
+            |            "repairsAndMaintenance": 100.99,
+            |            "financialCosts": 100.99,
+            |            "professionalFees": 100.99,
+            |            "travelCosts": 100.99,
+            |            "costOfServices": 100.99,
+            |            "residentialFinancialCost": 100.99,
+            |            "other": 100.99
+            |        }
+            |    },
+            |    "foreignFhlEea": {
+            |        "income": {
+            |            "rentIncome": -100000000000.00
+            |        },
+            |        "expenses": {
+            |            "premisesRunningCosts": -100000000000.00,
             |            "repairsAndMaintenance": 100.99,
             |            "financialCosts": 100.99,
             |            "professionalFees": 100.99,
