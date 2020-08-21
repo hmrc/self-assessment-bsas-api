@@ -19,19 +19,11 @@ package v2.models.request.submitBsas.foreignProperty
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
+class ForeignPropertyExpensesSpec extends UnitSpec {
 
   val validJson = Json.parse(
     """
       |{
-      |    "foreignProperty": {
-      |        "income": {
-      |            "rentIncome": 123.12,
-      |            "premiumsOfLeaseGrant": 123.12,
-      |            "foreignTaxTakenOff": 123.12,
-      |            "otherPropertyIncome": 123.12
-      |        },
-      |        "expenses": {
       |            "premisesRunningCosts": 123.12,
       |            "repairsAndMaintenance": 123.12,
       |            "financialCosts": 123.12,
@@ -41,79 +33,28 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       |            "residentialFinancialCost": 123.12,
       |            "other": 123.12,
       |            "consolidatedExpenses": 123.12
-      |        }
-      |    },
-      |    "foreignFhlEea": {
-      |        "income": {
-      |            "rentIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "costOfServices": 123.12,
-      |            "travelCosts": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
-      |        }
-      |    }
-      |
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = SubmitForeignPropertyBsasRequestBody(
-    Some(ForeignProperty(
-      Some(ForeignPropertyIncome(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12)
-      )),
-      Some(ForeignPropertyExpenses(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12)
-      ))
-    )),
-    Some(FhlEea(
-      Some(FhlIncome(
-        Some(123.12)
-      )),
-      Some(FhlEeaExpenses(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12)
-      ))
-    ))
-  )
+  val validModel = ForeignPropertyExpenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12))
 
-  val emptyModel = SubmitForeignPropertyBsasRequestBody(None, None)
+  val emptyModel = ForeignPropertyExpenses(None,None,None,None,None,None,None,None,None)
+
+
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[SubmitForeignPropertyBsasRequestBody]
+        validModel shouldBe validJson.as[ForeignPropertyExpenses]
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[SubmitForeignPropertyBsasRequestBody]
+        emptyModel shouldBe emptyJson.as[ForeignPropertyExpenses]
       }
     }
   }

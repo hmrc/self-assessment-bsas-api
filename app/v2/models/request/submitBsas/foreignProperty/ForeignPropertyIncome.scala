@@ -18,17 +18,17 @@ package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Expenses(premisesRunningCosts: Option[BigDecimal],
-                    repairsAndMaintenance: Option[BigDecimal],
-                    financialCosts: Option[BigDecimal],
-                    professionalFees: Option[BigDecimal],
-                    travelCosts: Option[BigDecimal],
-                    costOfServices: Option[BigDecimal],
-                    residentialFinancialCost: Option[BigDecimal],
-                    other: Option[BigDecimal],
-                    consolidatedExpenses: Option[BigDecimal])
+case class ForeignPropertyIncome(rentIncome: Option[BigDecimal],
+                                 premiumsOfLeaseGrant: Option[BigDecimal],
+                                 foreignTaxTakenOff: Option[BigDecimal],
+                                 otherPropertyIncome: Option[BigDecimal]) {
 
+  def isEmpty: Boolean = rentIncome.isEmpty &&
+    premiumsOfLeaseGrant.isEmpty &&
+    foreignTaxTakenOff.isEmpty &&
+    otherPropertyIncome.isEmpty
+}
 
-object Expenses {
-  implicit val format: OFormat[Expenses] = Json.format[Expenses]
+object ForeignPropertyIncome {
+  implicit val format: OFormat[ForeignPropertyIncome] = Json.format[ForeignPropertyIncome]
 }

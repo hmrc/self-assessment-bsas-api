@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.request.submitBsas.selfEmployment
+package v2.models.request.submitBsas.selfEmployment
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.fixtures.selfEmployment.IncomeFixture._
-import v1.models.domain.EmptyJsonBody
+import v2.fixtures.selfEmployment.IncomeFixture._
+import v2.models.domain.EmptyJsonBody
 
-class IncomeSpec extends UnitSpec {
+class ForeignPropertyIncomeSpec extends UnitSpec {
 
   val incomeModelWithoutOther: Income =
     Income(

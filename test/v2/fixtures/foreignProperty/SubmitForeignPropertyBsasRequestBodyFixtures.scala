@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas.foreignProperty
+package v2.fixtures.foreignProperty
 
-import play.api.libs.json.JsValue
-import v2.models.request.RawData
+import v2.models.errors.MtdError
 
-case class SubmitForeignPropertyRawData(nino: String, bsasId: String, body: JsValue) extends RawData
+object SubmitForeignPropertyBsasRequestBodyFixtures {
+
+  def rangeError(fieldName: String): MtdError =
+    MtdError("RULE_RANGE_INVALID", s"Adjustment value for '$fieldName' falls outside the accepted range")
+
+  def formatError(fieldName: String): MtdError =
+    MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the '$fieldName' value is invalid")
+}

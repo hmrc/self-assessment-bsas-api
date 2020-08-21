@@ -47,13 +47,13 @@ class ForeignPropertySpec extends UnitSpec {
   val emptyJson = Json.parse("""{}""")
 
   val validModel = ForeignProperty(
-    Some(Income(
+    Some(ForeignPropertyIncome(
       Some(123.12),
       Some(123.12),
       Some(123.12),
       Some(123.12)
     )),
-    Some(Expenses(
+    Some(ForeignPropertyExpenses(
       Some(123.12),
       Some(123.12),
       Some(123.12),
@@ -94,6 +94,19 @@ class ForeignPropertySpec extends UnitSpec {
     "passed an empty model" should {
       "return an empty JSON" in {
         Json.toJson(emptyModel) shouldBe emptyJson
+      }
+    }
+  }
+
+  "isEmpty" when {
+    "passed a non empty model" should {
+      "return false" in {
+        validModel.isEmpty shouldBe false
+      }
+    }
+    "passed an empty model" should {
+      "return true" in {
+        emptyModel.isEmpty shouldBe true
       }
     }
   }

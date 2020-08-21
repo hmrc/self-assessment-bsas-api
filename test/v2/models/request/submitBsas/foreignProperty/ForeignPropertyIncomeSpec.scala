@@ -19,58 +19,36 @@ package v2.models.request.submitBsas.foreignProperty
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class FhlEeaSpec extends UnitSpec {
+class ForeignPropertyIncomeSpec extends UnitSpec {
 
   val validJson = Json.parse(
     """
       |{
-      |        "income": {
-      |            "rentIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "costOfServices": 123.12,
-      |            "travelCosts": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
-      |        }
+      |   "rentIncome": 123.12,
+      |   "premiumsOfLeaseGrant": 123.12,
+      |   "foreignTaxTakenOff": 123.12,
+      |   "otherPropertyIncome": 123.12
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = FhlEea(
-    Some(FhlIncome(
-      Some(123.12)
-    )),
-    Some(FhlEeaExpenses(
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12)
-    ))
-  )
+  val validModel = ForeignPropertyIncome(Some(123.12),Some(123.12),Some(123.12),Some(123.12))
 
-  val emptyModel = FhlEea(None, None)
+  val emptyModel = ForeignPropertyIncome(None,None,None,None)
+
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[FhlEea]
+        validModel shouldBe validJson.as[ForeignPropertyIncome]
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[FhlEea]
+        emptyModel shouldBe emptyJson.as[ForeignPropertyIncome]
       }
     }
   }
