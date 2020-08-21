@@ -8,10 +8,6 @@
       "type": "object",
       "title": "The accounting period",
       "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned.",
-      "required": [
-        "startDate",
-        "endDate"
-      ],
       "properties": {
         "startDate": {
           "type": "string",
@@ -20,10 +16,15 @@
         },
         "endDate": {
           "type": "string",
-          "description": "The date the accounting period finished. for example 2019-04-30. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
+          "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
           "example": "2020-04-05"
         }
-      }
+      },
+      "required": [
+        "startDate",
+        "endDate"
+      ],
+      "additionalProperties": false
     },
     "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
     "businessId": {"$ref": "definitions.json#/definitions/businessId"}
@@ -32,6 +33,7 @@
     "accountingPeriod",
     "typeOfBusiness",
     "businessId"
-  ]
+  ],
+  "additionalProperties": false
 }
 
