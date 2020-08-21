@@ -90,10 +90,12 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
     }
 
     List(flattenErrors(List(
-      model.foreignFhlEea.map(validateForeignFhlEea).getOrElse(NoValidationErrors),
-      model.foreignProperty.map(validateForeignProperty).getOrElse(NoValidationErrors)
+      (model.foreignFhlEea, model.foreignProperty) match {
+        case (Some(foreignFhlEea), None) => validateForeignFhlEea(foreignFhlEea)
+        case (None, Some(foreignProperty)) => validateForeignProperty(foreignProperty)
+        case _ => List(RuleIncorrectOrEmptyBodyError)
+      }
     )))
-
   }
 
   private def otherBodyFieldsValidator: SubmitForeignPropertyRawData => List[List[MtdError]] = {
