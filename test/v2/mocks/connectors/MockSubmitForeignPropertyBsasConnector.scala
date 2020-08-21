@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package v2.connectors
+package v2.mocks.connectors
 
-import config.AppConfig
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import v2.connectors.{DesOutcome, SubmitForeignPropertyBsasConnector}
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v2.models.response.SubmitForeignPropertyBsasResponse
-import v2.connectors.httpparsers.StandardDesHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                   val appConfig: AppConfig) extends BaseDesConnector {
+trait MockSubmitForeignPropertyBsasConnector extends MockFactory {
 
-  def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[SubmitForeignPropertyBsasResponse]] = {
+  val mockConnector: SubmitForeignPropertyBsasConnector = mock[SubmitForeignPropertyBsasConnector]
 
-    post(
-      body = request.body,
-      DesUri[SubmitForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
-    )
+  object MockSubmitForeignPropertyBsasConnector {
+
+    def submitForeignPropertyBsas(requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[DesOutcome[SubmitForeignPropertyBsasResponse]]] = {
+      (mockConnector
+        .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(requestData, *, *)
+    }
   }
 }

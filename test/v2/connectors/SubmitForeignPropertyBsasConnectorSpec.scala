@@ -99,7 +99,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
       ).returns(Future.successful(outcome))
 
-      await(connector.submitForeignPropertyAdjustments(request)) shouldBe outcome
+      await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
     }
   }
 }
