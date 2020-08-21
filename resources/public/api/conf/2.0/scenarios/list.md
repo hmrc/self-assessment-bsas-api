@@ -33,7 +33,7 @@
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
-            <td><p>Simulate scenario where no data can be found</p></td>
+            <td><p>Simulates a scenario where no data can be found</p></td>
         </tr>
     </tbody>
 </table>
