@@ -48,7 +48,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendForeignProperty(parsedRequest))
+          serviceResponse <- EitherT(service.submitForeignPropertyBsas(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(serviceResponse.responseData, SubmitForeignPropertyBsasHateoasData(nino, bsasId)).asRight[ErrorWrapper])
         } yield {
