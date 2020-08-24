@@ -126,7 +126,7 @@
         }
       }
     },
-    "fhlEea": {
+    "foreignFhlEea": {
       "type": "object",
       "description": "Object holding FHL adjustments.",
       "properties": {
