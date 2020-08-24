@@ -219,7 +219,7 @@ object RetrieveSelfEmploymentBsasFixtures {
   val metadataModel: Boolean => Metadata = adjustedSummary =>
     Metadata(
       typeOfBusiness = TypeOfBusiness.`self-employment`,
-      selfEmploymentId = Some("X0IS12345678901"),
+      businessId = Some("X0IS12345678901"),
       accountingPeriod = AccountingPeriod(LocalDate.parse(now), LocalDate.parse(aYearFromNow)),
       taxYear = "2019-20",
       bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -232,7 +232,7 @@ object RetrieveSelfEmploymentBsasFixtures {
     Json.parse(
       s"""{
          |  "typeOfBusiness": "self-employment",
-         |  "selfEmploymentId": "X0IS12345678901",
+         |  "businessId": "X0IS12345678901",
          |  "accountingPeriod": {
          |    "startDate": "$now",
          |    "endDate": "$aYearFromNow"
@@ -304,7 +304,7 @@ object RetrieveSelfEmploymentBsasFixtures {
        |	{
        |		"metadata": {
        |			"typeOfBusiness": "self-employment",
-       |			"selfEmploymentId": "X0IS12345678901",
+       |			"businessId": "X0IS12345678901",
        |			"accountingPeriod": {
        |				"startDate": "2019-04-06",
        |				"endDate": "2020-04-05"
@@ -373,7 +373,7 @@ object RetrieveSelfEmploymentBsasFixtures {
        {
        |	"metadata": {
        |		"typeOfBusiness": "self-employment",
-       |		"selfEmploymentId": "X0IS12345678901",
+       |		"businessId": "X0IS12345678901",
        |		"accountingPeriod": {
        |			"startDate": "2019-04-06",
        |			"endDate": "2020-04-05"
