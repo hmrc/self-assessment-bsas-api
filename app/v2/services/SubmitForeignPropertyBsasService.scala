@@ -42,7 +42,7 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
     val result = for {
       desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
       mtdResponseWrapper <-
-        EitherT.fromEither[Future](validateSubmitForeignPropertyBsasSuccessResponse(desResponseWrapper, Some(retrieveTypeOfBusiness(request.body))))
+        EitherT.fromEither[Future](validateSubmitForeignPropertyBsasSuccessResponse(desResponseWrapper, retrieveTypeOfBusiness(request.body)))
     } yield mtdResponseWrapper
 
     result.value
@@ -69,10 +69,11 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
     "SERVICE_UNAVAILABLE"         -> DownstreamError
   )
 
+  //The validator should make sure that it is always one or the other.
   private def retrieveTypeOfBusiness(body: SubmitForeignPropertyBsasRequestBody): TypeOfBusiness = {
-    (body: @unchecked) match {
+    body match {
       case SubmitForeignPropertyBsasRequestBody(Some(_), None) => TypeOfBusiness.`foreign-property`
-      case SubmitForeignPropertyBsasRequestBody(None, Some(_)) => TypeOfBusiness.`foreign-property-fhl-eea`
+      case _ => TypeOfBusiness.`foreign-property-fhl-eea`
     }
   }
 }

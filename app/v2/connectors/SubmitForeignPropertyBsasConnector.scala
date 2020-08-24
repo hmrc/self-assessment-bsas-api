@@ -34,7 +34,7 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[SubmitForeignPropertyBsasResponse]] = {
 
-    post(
+    put(
       body = request.body,
       DesUri[SubmitForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
     )
