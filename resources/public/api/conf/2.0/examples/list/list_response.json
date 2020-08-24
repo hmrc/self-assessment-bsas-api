@@ -70,6 +70,42 @@
           ]
         }
       ]
+    },
+    {
+      "typeOfBusiness": "foreign-property",
+      "businessId": "XAIS12345678912",
+      "accountingPeriod": {
+        "startDate": "2021-04-06",
+        "endDate": "2022-04-05"
+      },
+      "bsasEntries": [
+        {
+          "bsasId": "16332284-c01b-4046-a055-6c00454467a2",
+          "requestedDateTime": "2022-05-14T12:17:15.000Z",
+          "summaryStatus": "valid",
+          "adjustedSummary": false,
+          "links": [
+            {
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/foreign-property/16332284-c01b-4046-a055-6c00454467a2",
+              "rel": "self",
+              "method": "GET"
+            }
+          ]
+        },
+        {
+          "bsasId": "7ef31d49-ce57-4622-94fc-f4248b72b2cd",
+          "requestedDateTime": "2020-04-10T13:03:17.000Z",
+          "summaryStatus": "superseded",
+          "adjustedSummary": true,
+          "links": [
+            {
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/foreign-property/7ef31d49-ce57-4622-94fc-f4248b72b2cd",
+              "rel": "self",
+              "method": "GET"
+            }
+          ]
+        }
+      ]
     }
   ],
   "links": [
