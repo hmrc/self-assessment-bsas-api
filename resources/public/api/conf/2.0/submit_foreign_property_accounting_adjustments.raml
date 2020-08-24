@@ -30,8 +30,15 @@ body:
     type: !include schemas/foreign_property_accounting_adjustments_submit_request.json
     examples:
       example-1x:
-        description: Example Request
-        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_request.json
+        description: Example Request Consilidated
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_consolidated_request.json
+      example-2x:
+        description: Example Request Unconsilidated
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_unconsolidated_request.json
+      example-3x:
+        description: Example Request foreignFhlEea
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_foreignFhlEea.json
+
 responses:
   200:
     body:
