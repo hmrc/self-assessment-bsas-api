@@ -21,11 +21,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import utils.Logging
+import v2.controllers.requestParsers.SubmitForeignPropertyBsasRequestParser
 import v2.hateoas.HateoasFactory
 import v2.models.errors._
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v2.models.response.SubmitForeignPropertyBsasHateoasData
-import v2.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v2.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,6 +42,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitForeignPropertyBsasController", endpointName = "SubmitForeignPropertyBsas")
   def handleRequest(nino: String, bsasId: String): Action[JsValue] =
+
     authorisedAction(nino).async(parse.json) { implicit request =>
       val rawData = SubmitForeignPropertyRawData(nino, bsasId, request.body)
       val result =
