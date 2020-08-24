@@ -13,7 +13,7 @@ traits:
             type: types.errorResponse
             examples:
               formatNino:
-                description: The format of the supplied NINO field is not valid
+                description: The format of the supplied NINO field is not valid.
                 value:
                   code: FORMAT_NINO
   formatTaxYear:
@@ -24,7 +24,7 @@ traits:
             type: types.errorResponse
             examples:
               formatTaxYear:
-                description: The format of the supplied tax year is not valid
+                description: The format of the supplied tax year is not valid.
                 value:
                   code: FORMAT_TAX_YEAR
   formatSelfEmploymentId:
@@ -35,7 +35,7 @@ traits:
             type: types.errorResponse
             examples:
               formatSelfEmploymentId:
-                description: The format of the self-employment ID is not valid
+                description: The format of the self-employment ID is not valid.
                 value:
                   code: FORMAT_SELF_EMPLOYMENT_ID
   formatStartDate:
@@ -46,7 +46,7 @@ traits:
             type: types.errorResponse
             examples:
               formatStartDate:
-                description: The format of the supplied accounting period start date is not valid
+                description: The format of the supplied accounting period start date is not valid.
                 value:
                   code: FORMAT_START_DATE
   formatEndDate:
@@ -57,7 +57,7 @@ traits:
             type: types.errorResponse
             examples:
               formatEndDate:
-                description: The format of the supplied accounting period end date is not valid
+                description: The format of the supplied accounting period end date is not valid.
                 value:
                   code: FORMAT_END_DATE
   formatTypeOfBusiness:
@@ -68,7 +68,7 @@ traits:
             type: types.errorResponse
             examples:
               formatTypeOfBusiness:
-                description: The format of the supplied type of business is not valid
+                description: The format of the supplied type of business is not valid.
                 value:
                   code: FORMAT_TYPE_OF_BUSINESS
   formatBsasId:
@@ -79,9 +79,20 @@ traits:
             type: types.errorResponse
             examples:
               formatBsasId:
-                description: The format of the supplied BSAS ID is not valid
+                description: The format of the supplied BSAS ID is not valid.
                 value:
                   code: FORMAT_BSAS_ID
+  formatBusinessId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatBusinessId:
+                description: The format of the supplied business ID is invalid.
+                value:
+                  code: FORMAT_BUSINESS_ID
   formatAdjustedStatus:
     responses:
       400:
@@ -90,7 +101,7 @@ traits:
             type: types.errorResponse
             examples:
               formatAdjustedStatus:
-                description: The format of the supplied adjusted status field is not valid
+                description: The format of the supplied adjusted status field is not valid.
                 value:
                   code: FORMAT_ADJUSTED_STATUS
   formatAdjustmentValue:
@@ -101,7 +112,7 @@ traits:
             type: types.errorResponse
             examples:
               formatAdjustmentValue:
-                description: One or more values have been added with the incorrect format
+                description: One or more values have been added with the incorrect format.
                 value:
                   code: FORMAT_ADJUSTMENT_VALUE
   ruleNotSelfEmployment:
@@ -112,7 +123,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleNotSelfEmployment:
-                description: The BSAS ID supplied does not relate to a self-employment business
+                description: The BSAS ID supplied does not relate to a self-employment business.
                 value:
                   code: RULE_NOT_SELF_EMPLOYMENT
   ruleNotUkProperty:
@@ -123,7 +134,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleNotUkProperty:
-                description: The BSAS ID supplied does not relate to a UK property business
+                description: The BSAS ID supplied does not relate to a UK property business.
                 value:
                   code: RULE_NOT_UK_PROPERTY
   ruleSelfEmploymentId:
@@ -134,7 +145,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSelfEmploymentId:
-                description: A self-employment ID can only be supplied for a self-employment business type
+                description: A self-employment ID can only be supplied for a self-employment business type.
                 value:
                   code: RULE_SELF_EMPLOYMENT_ID
   ruleTaxYearNotSupported:
@@ -145,7 +156,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTaxYearNotSupported:
-                description: The specified tax year is not supported - the tax year specified is before the minimum tax year value
+                description: The specified tax year is not supported - the tax year specified is before the minimum tax year value.
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearRangeInvalid:
@@ -156,7 +167,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTaxYearRangeInvalid:
-                description: Tax year range invalid. A tax year range of one year is required
+                description: Tax year range invalid. A tax year range of one year is required.
                 value:
                   code: RULE_TAX_YEAR_RANGE_INVALID
   ruleRangeInvalid:
@@ -167,7 +178,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleRangeInvalid:
-                description:  One or more values have been added that are outside the accepted value range
+                description:  One or more values have been added that are outside the accepted value range.
                 value:
                   code: RULE_RANGE_INVALID
   ruleTypeOfBusinessIncorrect:
@@ -178,7 +189,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTypeOfBusinessIncorrect:
-                description:  The BSAS ID relates to a different type of business
+                description:  The BSAS ID relates to a different type of business.
                 value:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
@@ -189,7 +200,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSummaryStatusInvalid:
-                description: The ‘summaryStatus’ of the summary with this BSAS ID is set to 'invalid'
+                description: The ‘summaryStatus’ of the summary with this BSAS ID is set to 'invalid'.
                 value:
                   code: RULE_SUMMARY_STATUS_INVALID
   ruleSummaryStatusSuperseded:
@@ -200,7 +211,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSummaryStatusSuperseded:
-                description: A newer BSAS exists for this accounting period
+                description: A newer BSAS exists for this accounting period.
                 value:
                   code: RULE_SUMMARY_STATUS_SUPERSEDED
   rulePeriodicDataIncomplete:
@@ -211,7 +222,7 @@ traits:
             type: types.errorResponse
             examples:
               rulePeriodicDataIncomplete:
-                description: One or more Periodic updates are missing for this accounting period
+                description: One or more Periodic updates are missing for this accounting period.
                 value:
                   code: RULE_PERIODIC_DATA_INCOMPLETE
   ruleEndDateBeforeStartDate:
@@ -222,7 +233,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleEndDateBeforeStartDate:
-                description: The accounting period end date value is before the start date
+                description: The accounting period end date value is before the start date.
                 value:
                   code: RULE_END_DATE_BEFORE_START_DATE
   ruleAccountingPeriodNotSupported:
@@ -233,7 +244,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleAccountingPeriodNotSupported:
-                description: The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value
+                description: The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
   ruleAccountingPeriodNotEnded:
@@ -244,7 +255,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleAccountingPeriodNotEnded:
-                description: The accounting period has not ended
+                description: The accounting period has not ended.
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_ENDED
   ruleAlreadyAdjusted:
@@ -255,7 +266,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleAlreadyAdjusted:
-                description: Adjustments previously submitted against the supplied BSAS ID
+                description: Adjustments previously submitted against the supplied BSAS ID.
                 value:
                   code: RULE_BSAS_ALREADY_ADJUSTED
   ruleOverConsolidatedExpensesThreshold:
@@ -266,7 +277,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleOverConsolidatedExpensesThreshold:
-                description: Adjustment to turnover exceeds consolidated expenses threshold
+                description: Adjustment to turnover exceeds consolidated expenses threshold.
                 value:
                   code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
   ruleTradingIncomeAllowanceExceeded:
@@ -277,7 +288,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTradingIncomeAllowanceExceeded:
-                description: Adjustment to expenses where Trading Income Allowance claimed
+                description: Adjustment to expenses where Trading Income Allowance claimed.
                 value:
                   code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
   rulePropertyIncomeAllowanceExceeded:
@@ -288,7 +299,7 @@ traits:
             type: types.errorResponse
             examples:
               rulePropertyIncomeAllowanceExceeded:
-                description: Adjustment to expenses where Property Income Allowance claimed
+                description: Adjustment to expenses where Property Income Allowance claimed.
                 value:
                   code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
   ruleIncorrectPropertyAdjusted:
@@ -299,7 +310,7 @@ traits:
               type: types.errorResponse
               examples:
                 ruleIncorrectPropertyAdjusted:
-                  description: An adjustment made to a BSAS ID that does not match the property type in the request
+                  description: An adjustment made to a BSAS ID that does not match the property type in the request.
                   value:
                     code: RULE_INCORRECT_PROPERTY_ADJUSTED
   ruleNoAccountingPeriod:
@@ -310,7 +321,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleNoAccountingPeriod:
-                description: The supplied accounting period does not exist
+                description: The supplied accounting period does not exist.
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
   ruleNoAdjustmentsMade:
@@ -321,7 +332,7 @@ traits:
               type: types.errorResponse
               examples:
                 ruleNoAdjustmentsMade:
-                  description: An adjusted calculation does not exist
+                  description: An adjusted calculation does not exist.
                   value:
                     code: RULE_NO_ADJUSTMENTS_MADE
   incorrectOrEmptyBodySubmitted:
@@ -332,7 +343,7 @@ traits:
             type: types.errorResponse
             examples:
               incorrectOrEmptyBodySubmitted:
-                description: An empty or non-matching body was submitted
+                description: An empty or non-matching body was submitted.
                 value:
                   code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
   ruleSelfEmploymentAdjusted:
@@ -343,7 +354,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSelfEmploymentAdjusted:
-                description: The BSAS ID used in the adjustment was for a self-employment business type, and an adjustment has been made
+                description: The BSAS ID used in the adjustment was for a self-employment business type, and an adjustment has been made.
                 value:
                   code: RULE_SELF_EMPLOYMENT_ADJUSTED
   ruleBothExpensesSupplied:
@@ -354,7 +365,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleBothExpensesSupplied:
-                description: Consolidated expenses adjusted with other unexpected fields
+                description: Consolidated expenses adjusted with other unexpected fields.
                 value:
                   code: RULE_BOTH_EXPENSES_SUPPLIED
   ruleResultingValueNotPermitted:
@@ -365,7 +376,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleResultingValueNotPermitted:
-                description: One or more adjustments would result in a negative value that is not permitted
+                description: One or more adjustments would result in a negative value that is not permitted.
                 value:
                   code: RULE_RESULTING_VALUE_NOT_PERMITTED
   triggerNotFound:
@@ -376,7 +387,7 @@ traits:
             type: types.errorResponse
             examples:
               notFound:
-                description: The supplied income source could not be found
+                description: The supplied income source could not be found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   bsasNotFound:
@@ -387,7 +398,7 @@ traits:
             type: types.errorResponse
             examples:
               notFound:
-                description: A calculation with this BSAS ID cannot be found
+                description: A calculation with this BSAS ID cannot be found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   notFound:
@@ -398,7 +409,7 @@ traits:
             type: types.errorResponse
             examples:
               notFound:
-                description: Matching resource not found
+                description: Matching resource not found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   clientOrAgentNotAuthorised:
@@ -409,7 +420,18 @@ traits:
             type: types.errorResponse
             examples:
               clientOrAgentNotAuthorised:
-                description: The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf
+                description: The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+                value:
+                  code: CLIENT_OR_AGENT_NOT_AUTHORISED
+  triggerClientOrAgentNotAuthorised:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              clientOrAgentNotAuthorised:
+                description: 'The client or agent is not authorised. This is because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.'
                 value:
                   code: CLIENT_OR_AGENT_NOT_AUTHORISED
 

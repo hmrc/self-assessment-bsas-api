@@ -9,19 +9,19 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates a successful response</p></td>
+            <td><p>Simulates a successful response.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
-            <td><p>The supplied income source could not be found</p></td>
+            <td><p>Simulates a scenario where no data can be found.</p></td>
         </tr>
         <tr>
             <td><p>NO_ACCOUNTING_PERIOD</p></td>
-            <td><p>The supplied accounting period does not exist</p></td>
+            <td><p>Simulates a scenario where the supplied accounting period does not exist.</p></td>
         </tr>
         <tr>
             <td><p>PERIODIC_DATA_INCOMPLETE</p></td>
-            <td><p>One or more periodic updates are missing for this accounting period</p></td>
+            <td><p>Simulates a scenario where one or more periodic updates are missing for this accounting period.</p></td>
         </tr>
     </tbody>
 </table>
