@@ -339,9 +339,9 @@ class DesResponseMappingSupportSpec extends UnitSpec {
   "validateSubmitForeignPropertyBsasSuccessResponse" should {
     def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitForeignPropertyBsasResponse] =
       ResponseWrapper(
-        correlationId = "",
+        correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253",
         responseData = SubmitForeignPropertyBsasResponse(
-          "",
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
           typeOfBusiness
         )
       )
@@ -354,14 +354,14 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, typeOfBusiness) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleSelfEmploymentAdjustedError, None))
+            Left(ErrorWrapper(Some("a1e8057e-fbbc-47a8-a8b4-78d9f015c253"), RuleSelfEmploymentAdjustedError, None))
           }
         }
       }
       "the property type returned was not the property type submitted" in {
         val input = generateResponseWrapper(TypeOfBusiness.`foreign-property`)
         mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, TypeOfBusiness.`foreign-property-fhl-eea`) shouldBe {
-          Left(ErrorWrapper(Some(""), RuleIncorrectPropertyAdjusted, None))
+          Left(ErrorWrapper(Some("a1e8057e-fbbc-47a8-a8b4-78d9f015c253"), RuleIncorrectPropertyAdjusted, None))
         }
       }
     }
