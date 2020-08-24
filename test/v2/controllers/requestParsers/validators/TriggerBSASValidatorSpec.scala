@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.mocks.MockCurrentDateProvider
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.request.triggerBsas.TriggerBsasRawData
 
