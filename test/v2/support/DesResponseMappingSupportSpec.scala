@@ -24,7 +24,7 @@ import v2.controllers.EndpointLogContext
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.response.{ SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments }
+import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
 import v2.models.response.retrieveBsas.AccountingPeriod
 
 class DesResponseMappingSupportSpec extends UnitSpec {
@@ -329,6 +329,50 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(typeOfBusiness)) shouldBe {
+            Right(input)
+          }
+        }
+      }
+    }
+  }
+
+  "validateSubmitForeignPropertyBsasSuccessResponse" should {
+    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitForeignPropertyBsasResponse] =
+      ResponseWrapper(
+        correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253",
+        responseData = SubmitForeignPropertyBsasResponse(
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+          typeOfBusiness
+        )
+      )
+    "return Left" when {
+      List(
+        TypeOfBusiness.`self-employment`,
+        TypeOfBusiness.`uk-property-fhl`,
+        TypeOfBusiness.`uk-property-non-fhl`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, typeOfBusiness) shouldBe {
+            Left(ErrorWrapper(Some("a1e8057e-fbbc-47a8-a8b4-78d9f015c253"), RuleSelfEmploymentAdjustedError, None))
+          }
+        }
+      }
+      "the property type returned was not the property type submitted" in {
+        val input = generateResponseWrapper(TypeOfBusiness.`foreign-property`)
+        mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, TypeOfBusiness.`foreign-property-fhl-eea`) shouldBe {
+          Left(ErrorWrapper(Some("a1e8057e-fbbc-47a8-a8b4-78d9f015c253"), RuleIncorrectPropertyAdjusted, None))
+        }
+      }
+    }
+    "return Right" when {
+      List(
+        TypeOfBusiness.`foreign-property`,
+        TypeOfBusiness.`foreign-property-fhl-eea`
+      ).foreach { typeOfBusiness =>
+        s"provided a model with $typeOfBusiness" in {
+          val input = generateResponseWrapper(typeOfBusiness)
+          mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, typeOfBusiness) shouldBe {
             Right(input)
           }
         }
