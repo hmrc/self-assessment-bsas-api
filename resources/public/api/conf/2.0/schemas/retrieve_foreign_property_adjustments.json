@@ -43,17 +43,17 @@
           "properties": {
             "premisesRunningCosts": {
               "type": "number",
-              "description": "The adjustment made to rent, rates, insurance, ground rents and others. The value must be between 0 and 99999999999.99(excluding 0 or 0.00).",
+              "description": "The adjustment to rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "example": "1000.45"
             },
             "repairsAndMaintenance": {
               "type": "number",
-              "description": "The adjustment made to property repairs and maintenance. The value must be between 0 and 99999999999.99(excluding 0 or 0.00).",
+              "description": "The adjustment to property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "example": "1000.45"
             },
             "financialCosts": {
               "type": "number",
-              "description": "The adjustment made to loan interest and other financial costs. The value must be between 0 and 99999999999.99(excluding 0 or 0.00).",
+              "description": "The adjustment to loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "example": "1000.45"
             },
             "professionalFees": {
@@ -63,7 +63,7 @@
             },
             "travelCosts": {
               "type": "number",
-              "description": "The adjustment made to car, van and travel costs incurred when running a property business.  This value must be between 0 and 99999999999.99(excluding 0 or 0.00).",
+              "description": "The adjustment to car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "example": "1000.45"
             },
             "costOfServices": {
@@ -73,12 +73,12 @@
             },
             "residentialFinancialCost": {
               "type": "number",
-              "description": "The adjustment made to the residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99(excluding 0 or 0.00).",
+              "description": "The adjustment to the residential financial cost that can be deductible from rental income (tax relief). The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "example": "1000.45"
             },
             "other": {
               "type": "number",
-              "description": "The adjustment made to other allowable property expenses. The value must be between 0 and 99999999999.99(excluding 0 or 0.00).",
+              "description": "The adjustment to other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "example": "1000.45"
             },
             "consolidatedExpenses": {
