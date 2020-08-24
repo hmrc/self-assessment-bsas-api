@@ -82,7 +82,7 @@
                       "href": {
                         "description": "The relative URL of the endpoint.",
                         "type": "string",
-                        "example": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+                        "example": "/individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}"
                       },
                       "rel": {
                         "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -130,7 +130,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/AA123456A/trigger"
+            "example": "/individuals/self-assessment/adjustable-summary/{nino}/trigger"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
