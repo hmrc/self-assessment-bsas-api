@@ -91,6 +91,14 @@
       "example": "X9IS98470026982"
     },
 
+    "businessId": {
+      "title": "businessId",
+      "description": "An identifier for the business, unique to the customer.",
+      "type": "string",
+      "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
+      "example": "XAIS12345678910"
+    },
+
     "typeOfBusiness": {
       "title": "typeOfBusiness",
       "description": "The type of business the summary calculation is for.",

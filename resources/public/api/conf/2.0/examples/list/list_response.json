@@ -2,33 +2,33 @@
   "businessSourceSummaries": [
     {
       "typeOfBusiness": "self-employment",
-      "selfEmploymentId": "XAIS12345678910",
+      "businessId": "XAIS12345678910",
       "accountingPeriod": {
         "startDate": "2018-10-11",
         "endDate": "2019-10-10"
       },
       "bsasEntries": [
         {
-          "id": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+          "bsasId": "76350054-0f11-4024-a811-99bcf5ced792",
           "requestedDateTime": "2019-10-14T11:33:27.000Z",
           "summaryStatus": "valid",
           "adjustedSummary": false,
           "links": [
             {
-              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/76350054-0f11-4024-a811-99bcf5ced792",
               "rel": "self",
               "method": "GET"
             }
           ]
         },
         {
-          "id": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+          "bsasId": "ef1a6fd7-3faa-4323-9a9d-fe5cc8ed1c43",
           "requestedDateTime": "2019-10-10T09:01:35.000Z",
           "summaryStatus": "superseded",
           "adjustedSummary": true,
           "links": [
             {
-              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/ef1a6fd7-3faa-4323-9a9d-fe5cc8ed1c43",
               "rel": "self",
               "method": "GET"
             }
@@ -44,26 +44,62 @@
       },
       "bsasEntries": [
         {
-          "id": "39307636-dc2e-99d1-2f76-8f8fb8cdccf6",
+          "bsasId": "56f0a4fe-cfa7-4a21-8aa8-6c8f4642b792",
           "requestedDateTime": "2020-05-14T12:17:15.000Z",
           "summaryStatus": "valid",
           "adjustedSummary": false,
           "links": [
             {
-              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/39307636-dc2e-99d1-2f76-8f8fb8cdccf6",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/56f0a4fe-cfa7-4a21-8aa8-6c8f4642b792",
               "rel": "self",
               "method": "GET"
             }
           ]
         },
         {
-          "id": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+          "bsasId": "7f1fd081-3f59-4fd6-9b1c-c90521e0f7a8",
           "requestedDateTime": "2020-04-10T13:03:17.000Z",
           "summaryStatus": "superseded",
           "adjustedSummary": true,
           "links": [
             {
-              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/7f1fd081-3f59-4fd6-9b1c-c90521e0f7a8",
+              "rel": "self",
+              "method": "GET"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "typeOfBusiness": "foreign-property",
+      "businessId": "XAIS12345678912",
+      "accountingPeriod": {
+        "startDate": "2021-04-06",
+        "endDate": "2022-04-05"
+      },
+      "bsasEntries": [
+        {
+          "bsasId": "16332284-c01b-4046-a055-6c00454467a2",
+          "requestedDateTime": "2022-05-14T12:17:15.000Z",
+          "summaryStatus": "valid",
+          "adjustedSummary": false,
+          "links": [
+            {
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/foreign-property/16332284-c01b-4046-a055-6c00454467a2",
+              "rel": "self",
+              "method": "GET"
+            }
+          ]
+        },
+        {
+          "bsasId": "7ef31d49-ce57-4622-94fc-f4248b72b2cd",
+          "requestedDateTime": "2020-04-10T13:03:17.000Z",
+          "summaryStatus": "superseded",
+          "adjustedSummary": true,
+          "links": [
+            {
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/foreign-property/7ef31d49-ce57-4622-94fc-f4248b72b2cd",
               "rel": "self",
               "method": "GET"
             }

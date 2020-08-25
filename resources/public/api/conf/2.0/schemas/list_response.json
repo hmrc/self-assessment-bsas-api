@@ -18,23 +18,38 @@
         "properties": {
           "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
 
-          "selfEmploymentId": {"$ref": "definitions.json#/definitions/selfEmploymentId"},
+          "businessId": {"$ref": "definitions.json#/definitions/businessId"},
 
-          "accountingPeriod": {"$ref": "definitions.json#/definitions/accountingPeriod"},
+          "accountingPeriod": {
+            "type": "object",
+            "title": "The accounting period",
+            "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned.",
+            "required": [
+              "startDate",
+              "endDate"
+            ],
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "description": "The date the accounting period began.",
+                "example": "2019-04-06"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
+                "example": "2020-04-05"
+              }
+            },
+            "additionalProperties": false
+          },
           "bsasEntries": {
             "title": "BSAS Entries",
             "description": "The array holding Business Source Adjustable Summary (BSAS) entries.",
             "type": "array",
             "items": {
               "type": "object",
-              "required": [
-                "id",
-                "requestedDateTime",
-                "summaryStatus",
-                "adjustedSummary"
-              ],
               "properties": {
-                "id": {
+                "bsasId": {
                   "title": "BSAS ID",
                   "description": "The unique identifier of the summary calculation.",
                   "type": "string",
@@ -67,7 +82,7 @@
                       "href": {
                         "description": "The relative URL of the endpoint.",
                         "type": "string",
-                        "example": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+                        "example": "/individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}"
                       },
                       "rel": {
                         "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -88,13 +103,22 @@
                       "href",
                       "rel",
                       "method"
-                    ]
+                    ],
+                    "additionalProperties": false
                   }
                 }
-              }
+              },
+              "required": [
+                "bsasId",
+                "requestedDateTime",
+                "summaryStatus",
+                "adjustedSummary"
+              ],
+              "additionalProperties": false
             }
           }
-        }
+        },
+        "additionalProperties": false
       }
     },
     "links": {
@@ -106,7 +130,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/AA123456A/trigger"
+            "example": "/individuals/self-assessment/adjustable-summary/{nino}/trigger"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -129,11 +153,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "businessSourceSummaries"
-  ]
+  ],
+  "additionalProperties": false
 }
