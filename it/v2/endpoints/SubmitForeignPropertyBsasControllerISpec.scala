@@ -604,6 +604,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "BVR_FAILURE_C55316", FORBIDDEN, RuleTypeOfBusinessError),
           (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTypeOfBusinessError),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
+          (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
