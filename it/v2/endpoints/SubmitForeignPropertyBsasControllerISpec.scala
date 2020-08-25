@@ -31,7 +31,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     val nino: String = "AA123456A"
     val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val correlationId: String = "X-123"
 
     val desResponse: String => String = (typeOfBusiness: String) =>
       s"""
@@ -325,7 +324,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val responseBody: JsValue = Json.parse(
       s"""
          |{
-         |  "id": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+         |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
          |    {
          |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
@@ -442,7 +441,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |{
            |    "foreignFhlEea": {
            |        "income": {
-           |            "rentIncome": 123.12345
+           |            "rentIncome": 123.12
            |        },
            |        "expenses": {
            |            "consolidatedExpenses": 123.12345
@@ -456,7 +455,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |{
            |    "foreignFhlEea": {
            |        "income": {
-           |            "rentIncome": 100000000000.99
+           |            "rentIncome": 123.12
            |        },
            |        "expenses": {
            |            "consolidatedExpenses": -100000000000.99
@@ -565,8 +564,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue, BAD_REQUEST, FormatAdjustmentValueError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid, BAD_REQUEST, RuleAdjustmentRangeInvalid),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue, BAD_REQUEST, FormatAdjustmentValueError.withFieldName("/foreignFhlEea/expenses/consolidatedExpenses")),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid, BAD_REQUEST, RuleAdjustmentRangeInvalid.withFieldName("/foreignFhlEea/expenses/consolidatedExpenses")),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError)
         )

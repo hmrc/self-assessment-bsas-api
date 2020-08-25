@@ -16,11 +16,14 @@
 
 package v2.models.response
 
+import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
+import v2.models.hateoas.Link
+import v2.models.hateoas.Method.GET
 import v2.models.domain.TypeOfBusiness
 
-class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
+class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig {
 
   val mtdJson = Json.parse(
     """
@@ -53,6 +56,21 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec {
       "return the expected JsValue" in {
         Json.toJson(responseModel) shouldBe mtdJson
       }
+    }
+  }
+
+  "LinksFactory" should {
+    "return the correct links" in {
+      val nino = "mynino"
+      val bsasId = "mybsasid"
+
+      MockedAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes
+      SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory.links(
+        mockAppConfig, SubmitForeignPropertyBsasHateoasData(nino, bsasId)) shouldBe
+        Seq(
+          Link(s"/my/context/$nino/foreign-property/$bsasId/adjust", GET, "self"),
+          Link(s"/my/context/$nino/foreign-property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
+        )
     }
   }
 
