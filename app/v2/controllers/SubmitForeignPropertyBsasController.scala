@@ -17,6 +17,7 @@
 package v2.controllers
 
 import cats.data.EitherT
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
@@ -75,9 +76,16 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
            CustomMtdError(FormatAdjustmentValueError.code) |
            CustomMtdError(RuleAdjustmentRangeInvalid.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           RuleBothExpensesError |
-           RuleSelfEmploymentAdjustedError |
-           RuleIncorrectPropertyAdjusted => BadRequest(Json.toJson(errorWrapper))
+           RuleBothExpensesError => BadRequest(Json.toJson(errorWrapper))
+      case RuleSelfEmploymentAdjustedError |
+           RuleIncorrectPropertyAdjusted |
+           RuleTypeOfBusinessError |
+           RuleSummaryStatusInvalid |
+           RuleSummaryStatusSuperseded |
+           RuleBsasAlreadyAdjusted |
+           RuleResultingValueNotPermitted |
+           RuleOverConsolidatedExpensesThreshold |
+           RulePropertyIncomeAllowanceClaimed => Forbidden(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
     }
