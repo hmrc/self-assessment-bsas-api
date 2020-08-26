@@ -67,4 +67,14 @@ uses:
       /adjust:
         post: !include submit_property_adjustments.raml
         get: !include retrieve_property_adjustments.raml
-
+    /foreign-property/{bsasId}:
+      (annotations.group):
+        name: Foreign property business
+        description: ""
+      uriParameters:
+        bsasId:
+          description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
+          type: string
+          example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
+      /adjust:
+        post: !include submit_foreign_property_accounting_adjustments.raml

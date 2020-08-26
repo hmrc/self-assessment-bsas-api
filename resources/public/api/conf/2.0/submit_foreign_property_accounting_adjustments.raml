@@ -1,0 +1,56 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatBsasId
+  - errors.formatAdjustmentValue
+  - errors.ruleRangeInvalid
+  - errors.incorrectOrEmptyBodySubmitted
+  - errors.ruleBothExpensesSupplied
+  - errors.ruleSelfEmploymentAdjusted
+  - errors.ruleIncorrectPropertyAdjusted
+  - errors.ruleTypeOfBusinessIncorrect
+  - errors.incorrectOrEmptyBodySubmitted
+  - errors.ruleSummaryStatusInvalid
+  - errors.ruleSummaryStatusSuperseded
+  - errors.ruleBsasAlreadyAdjusted
+  - errors.ruleResultingValueNotPermitted
+  - errors.ruleOverConsolidatedExpensesThreshold
+  - errors.rulePropertyIncomeAllowanceClaimed
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+displayName: Submit a Foreign Property Business' Accounting Adjustments [test only]
+description: This endpoint allows the developer to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a Foreign Property Business, and it must not have been adjusted, previously.  Only data for one property business (either foreign-property-fhl-eea or foreign-property) should be included in any submission.
+(annotations.sandboxData): !include scenarios/submit_foreign_property_accounting_adjustments.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+  application/json:
+    type: !include schemas/foreign_property_accounting_adjustments_submit_request.json
+    examples:
+      example-1x:
+        description: foreignProperty consolidated request
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_consolidated_foreignProperty_request.json
+      example-2x:
+        description: foreignProperty unconsolidated request
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_unconsolidated_foreignProperty_request.json
+      example-3x:
+        description: foreignFhlEea consolidated request
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_unconsolidated_foreignFhlEea_request.json
+      example-4x:
+        description: foreignFhlEea consolidated request
+        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_consolidated_foreignFhlEea_request.json
+responses:
+  200:
+    body:
+      application/json:
+        type: !include schemas/foreign_property_accounting_adjustments_submit_response.json
+        examples:
+          example:
+            description: Example Response
+            value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.
