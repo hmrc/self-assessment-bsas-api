@@ -50,19 +50,19 @@
     </tbody>
     <tbody>
         <tr>
-            <td><p>PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
+            <td><p>FOREIGN_PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
             <td><p>Simulates the error response where the cumulative turnover exceeds the threshold for consolidated expenses.</p></td>
         </tr>
     </tbody>
     <tbody>
         <tr>
-            <td><p>PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
+            <td><p>FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
             <td><p>Simulates the error response where property income allowance has been claimed and therefore no further expenses can be claimed.</p></td>
         </tr>
     </tbody>
     <tbody>
         <tr>
-            <td><p>PROPERTY_TYPE_OF_BUSINESS_INCORRECT</p></td>
+            <td><p>FOREIGN_PROPERTY_TYPE_OF_BUSINESS_INCORRECT</p></td>
             <td><p>Simulates the error response where either the fields submitted or the BSAS ID are incorrect for the type of business.</p></td>
         </tr>
     </tbody>
