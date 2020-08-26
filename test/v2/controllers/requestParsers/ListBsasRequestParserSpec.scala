@@ -32,20 +32,24 @@ class ListBsasRequestParserSpec extends UnitSpec{
 
   private val nino = "AA123456B"
   private val taxYear = "2019-20"
-  private val typeOfBusiness = "self-employment"
-  private val typeOfBusinessTwo = "uk-property-non-fhl"
-  private val typeOfBusinessThree = "uk-property-fhl"
+  private val typeOfBusinessSE = "self-employment"
+  private val typeOfBusinessNonFhl = "uk-property-non-fhl"
+  private val typeOfBusinessFhl = "uk-property-fhl"
+  private val typeOfBusinessFhlEea = "foreign-property-fhl-eea"
+  private val typeOfBusinessForeign = "foreign-property"
   private val incomeSourceId ="incomeSourceId"
   private val incomeSourceType ="incomeSourceType"
   private val businessId = "XAIS12345678901"
 
 
-  private val inputWithBusinessIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(businessId))
+  private val inputWithBusinessIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessSE), Some(businessId))
   private val inputWithBusinessId = ListBsasRawData(nino, Some(taxYear), None, Some(businessId))
-  private val inputDataTwo = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), None)
-  private val inputDataThree = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessTwo), None)
-  private val inputDataFour = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessThree), None)
+  private val inputDataTwo = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessSE), None)
+  private val inputDataThree = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessNonFhl), None)
+  private val inputDataFour = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessFhl), None)
   private val inputDataFive = ListBsasRawData(nino, Some(taxYear), None, None)
+  private val inputDataSix = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessFhlEea), None)
+  private val inputDataSeven = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessForeign), None)
 
   class Test(date: LocalDate = LocalDate.of(2019, 6, 18)) extends MockListBsasValidator with MockCurrentDateProvider {
     lazy val parser = new ListBsasRequestParser(mockValidator, mockCurrentDateProvider)
@@ -93,6 +97,24 @@ class ListBsasRequestParserSpec extends UnitSpec{
 
         parser.parseRequest(inputDataFour) shouldBe
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)))
+      }
+
+      "return a valid object with foreign-property-fhl-eea" in new Test {
+
+        MockValidator.validate(inputDataSix).returns(Nil)
+
+        parser.parseRequest(inputDataSix) shouldBe
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear),
+            Some(incomeSourceType), Some(TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue)))
+      }
+
+      "return a valid object with foreign-property" in new Test {
+
+        MockValidator.validate(inputDataSeven).returns(Nil)
+
+        parser.parseRequest(inputDataSeven) shouldBe
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear),
+            Some(incomeSourceType), Some(TypeOfBusiness.`foreign-property`.toIdentifierValue)))
       }
     }
 

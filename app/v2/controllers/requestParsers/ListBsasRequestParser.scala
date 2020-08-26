@@ -40,7 +40,7 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
       case TypeOfBusiness.`uk-property-fhl` => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
       case TypeOfBusiness.`uk-property-non-fhl` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
       case TypeOfBusiness.`foreign-property` => TypeOfBusiness.`foreign-property`.toIdentifierValue
-      case TypeOfBusiness.`foreign-property-fhl-eea` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
+      case TypeOfBusiness.`foreign-property-fhl-eea` => TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue
     }
 
     ListBsasRequest(
