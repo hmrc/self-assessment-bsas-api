@@ -35,7 +35,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
     val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val selfEmploymentId: Option[String] = None
+    val businessId: Option[String] = None
     val correlationId = "X-123"
     val desTaxYear: DesTaxYear = DesTaxYear("2019")
 
@@ -47,7 +47,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
     def request: WSRequest = {
 
-      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "selfEmploymentId" -> selfEmploymentId, "taxYear" -> taxYear)
+      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
         .collect {
           case (k, Some(v)) => (k, v)
         }
@@ -101,14 +101,14 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       def validationErrorTest(requestNino: String, requestTaxYear: String,
-                              requestTypeOfBusiness: Option[String], requestSelfEmploymentID: Option[String],
+                              requestTypeOfBusiness: Option[String], requestBusinessId: Option[String],
                               expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
           override val taxYear: Option[String] = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val selfEmploymentId: Option[String] = requestSelfEmploymentID
+          override val businessId: Option[String] = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -127,7 +127,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2019-20", Some("self-employment"), Some("XAI901"), BAD_REQUEST, SelfEmploymentIdFormatError),
+        ("AA123456A", "2019-20", Some("self-employment"), Some("X0IS00"), BAD_REQUEST, BusinessIdFormatError),
         ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
         ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )

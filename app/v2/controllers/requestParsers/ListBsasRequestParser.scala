@@ -29,13 +29,13 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
 
-    val incomeSourceIdentifier = (data.selfEmploymentId, data.typeOfBusiness) match {
+    val incomeSourceIdentifier = (data.businessId, data.typeOfBusiness) match {
       case (Some(_), _) => Some("incomeSourceId")
       case (None, Some(_)) => Some("incomeSourceType")
       case (None, None) => None
     }
 
-    val identifierValue: Option[String] = if(data.selfEmploymentId.isDefined) data.selfEmploymentId else data.typeOfBusiness.map(TypeOfBusiness.parser).map {
+    val identifierValue: Option[String] = if(data.businessId.isDefined) data.businessId else data.typeOfBusiness.map(TypeOfBusiness.parser).map {
       case TypeOfBusiness.`self-employment` => TypeOfBusiness.`self-employment`.toIdentifierValue
       case TypeOfBusiness.`uk-property-fhl` => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
       case TypeOfBusiness.`uk-property-non-fhl` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue

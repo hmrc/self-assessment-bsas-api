@@ -86,7 +86,7 @@ object RetrieveSelfEmploymentAdjustmentsFixtures {
   val metaDataModel: Metadata =
     Metadata(
       typeOfBusiness = TypeOfBusiness.`self-employment`,
-      selfEmploymentId = Some("000000000000210"),
+      businessId = Some("000000000000210"),
       accountingPeriod = accountPeriodModel,
       taxYear = "2019-20",
       requestedDateTime = "2019-10-14T11:33:27Z",
@@ -100,7 +100,7 @@ object RetrieveSelfEmploymentAdjustmentsFixtures {
       |{
       |   "metadata": {
       |      "typeOfBusiness": "self-employment",
-      |      "selfEmploymentId": "000000000000210",
+      |      "businessId": "000000000000210",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
@@ -320,7 +320,7 @@ object RetrieveSelfEmploymentAdjustmentsFixtures {
        |{
        |   "metadata": {
        |      "typeOfBusiness": "self-employment",
-       |      "selfEmploymentId": "000000000000210",
+       |      "businessId": "000000000000210",
        |      "accountingPeriod": {
        |         "startDate": "2018-10-11",
        |         "endDate": "2019-10-10"
@@ -389,7 +389,7 @@ object RetrieveSelfEmploymentAdjustmentsFixtures {
        |{
        |   "metadata": {
        |      "typeOfBusiness": "self-employment",
-       |      "selfEmploymentId": "000000000000210",
+       |      "businessId": "000000000000210",
        |      "accountingPeriod": {
        |         "startDate": "2018-10-11",
        |         "endDate": "2019-10-10"

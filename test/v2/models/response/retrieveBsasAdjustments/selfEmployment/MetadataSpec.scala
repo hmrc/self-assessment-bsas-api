@@ -43,7 +43,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   val mtdJson: JsValue = Json.parse(
     """{
       | "typeOfBusiness": "self-employment",
-      |   "selfEmploymentId": "000000000000210",
+      |   "businessId": "000000000000210",
       |   "accountingPeriod": {
       |     "startDate": "2018-10-11",
       |     "endDate": "2019-10-10"

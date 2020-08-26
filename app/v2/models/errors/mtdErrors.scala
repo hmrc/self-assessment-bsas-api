@@ -48,16 +48,11 @@ object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", ""
   def withFieldName(fieldName: String): MtdError = this.copy(message = s"The format of the '$fieldName' value is invalid")
 }
 
-object SelfEmploymentIdFormatError extends MtdError("FORMAT_SELF_EMPLOYMENT_ID","The supplied self-employment ID format is invalid")
-
 object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
 
 object BusinessIdFormatError extends  MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
 
-
 // Rule Errors
-object RuleSelfEmploymentIdError
-  extends MtdError("RULE_SELF_EMPLOYMENT_ID","A self-employment ID should be supplied for a self-employment business type")
 
 object RuleEndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")

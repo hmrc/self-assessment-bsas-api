@@ -43,6 +43,7 @@ object ListBsasResponse extends HateoasLinks {
           summary.typeOfBusiness match {
             case TypeOfBusiness.`self-employment` => Seq(getSelfEmploymentBsas(appConfig, data.nino, item.bsasId))
             case TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` => Seq(getUkPropertyBsas(appConfig, data.nino, item.bsasId))
+            case TypeOfBusiness.`foreign-property` | TypeOfBusiness.`foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, data.nino, item.bsasId))
           }
         )
       )

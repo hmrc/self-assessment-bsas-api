@@ -55,7 +55,7 @@ object RetrieveUkPropertyAdjustmentsFixtures {
       |{
       |   "metadata": {
       |      "typeOfBusiness": "self-employment",
-      |      "selfEmploymentId": "000000000000210",
+      |      "businessId": "000000000000210",
       |      "accountingPeriod": {
       |         "StartDate": "2018-10-11",
       |         "EndDate": "2019-10-10"

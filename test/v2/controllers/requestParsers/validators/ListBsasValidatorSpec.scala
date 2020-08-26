@@ -26,13 +26,13 @@ class ListBsasValidatorSpec extends UnitSpec {
   private val nino = "AA123456B"
   private val taxYear = "2019-20"
   private val typeOfBusiness = "uk-property-fhl"
-  private val selfEmploymentId = "XAIS12345678901"
+  private val businessId = "XAIS12345678901"
   private val invalidNino = "not a nino"
   private val invalidTaxYear = "2018-20"
   private val tooEarlyTaxYear = "2018-19"
   private val invalidTypeOfBusiness = "toothpicks-for-hamsters"
-  private val invalidSelfEmploymentId = "Not a SelfEmploymentId"
-  private val rawData: ListBsasRawData = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(selfEmploymentId))
+  private val invalidBusinessId = "Not a businessId"
+  private val rawData: ListBsasRawData = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(businessId))
 
   "running the validator" should {
     "return no errors" when {
@@ -40,8 +40,8 @@ class ListBsasValidatorSpec extends UnitSpec {
         validator.validate(rawData) shouldBe Nil
       }
 
-      "a valid request is supplied without a typeOfBusiness or selfEmploymentId" in {
-        validator.validate(rawData.copy(typeOfBusiness = None, selfEmploymentId = None)) shouldBe Nil
+      "a valid request is supplied without a typeOfBusiness or businessId" in {
+        validator.validate(rawData.copy(typeOfBusiness = None, businessId = None)) shouldBe Nil
       }
     }
 
@@ -58,8 +58,8 @@ class ListBsasValidatorSpec extends UnitSpec {
       "an invalid type of business is provided" in {
         validator.validate(rawData.copy(typeOfBusiness = Some(invalidTypeOfBusiness))) shouldBe List(TypeOfBusinessFormatError)
       }
-      "an invalid self employment id is provided" in {
-        validator.validate(rawData.copy(selfEmploymentId = Some(invalidSelfEmploymentId))) shouldBe List(SelfEmploymentIdFormatError)
+      "an invalid business id is provided" in {
+        validator.validate(rawData.copy(businessId = Some(invalidBusinessId))) shouldBe List(BusinessIdFormatError)
       }
     }
 

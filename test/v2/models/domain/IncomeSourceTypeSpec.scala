@@ -25,7 +25,9 @@ class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {
   testRoundTrip[IncomeSourceType](
     ("01", `01`),
     ("02", `02`),
-    ("04", `04`)
+    ("04", `04`),
+    ("03", `03`),
+    ("15", `15`)
   )
 
   "toIdentifierValue" should {
@@ -33,6 +35,8 @@ class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {
       IncomeSourceType.`01`.toTypeOfBusiness shouldBe TypeOfBusiness.`self-employment`
       IncomeSourceType.`02`.toTypeOfBusiness shouldBe TypeOfBusiness.`uk-property-non-fhl`
       IncomeSourceType.`04`.toTypeOfBusiness shouldBe TypeOfBusiness.`uk-property-fhl`
+      IncomeSourceType.`03`.toTypeOfBusiness shouldBe TypeOfBusiness.`foreign-property-fhl-eea`
+      IncomeSourceType.`15`.toTypeOfBusiness shouldBe TypeOfBusiness.`foreign-property`
     }
   }
 }

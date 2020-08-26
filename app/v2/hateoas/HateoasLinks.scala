@@ -105,6 +105,7 @@ trait HateoasLinks {
   def listBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = listUri(appConfig, nino), method = GET, rel = SELF)
 
+  //L9
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 }

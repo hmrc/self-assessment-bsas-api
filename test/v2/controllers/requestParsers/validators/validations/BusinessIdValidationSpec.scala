@@ -26,7 +26,7 @@ class BusinessIdValidationSpec extends UnitSpec with JsonErrorValidators  {
 
   "validate" should {
     "return no errors" when {
-      "a valid self employment id is provided" in new SetUp("XAIS12345678901") {
+      "a valid business id is provided" in new SetUp("XAIS12345678901") {
 
         BusinessIdValidation.validate(BusinessId).isEmpty shouldBe true
       }
