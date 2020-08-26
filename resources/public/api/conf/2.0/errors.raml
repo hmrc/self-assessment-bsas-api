@@ -137,6 +137,17 @@ traits:
                 description: The BSAS ID supplied does not relate to a UK property business.
                 value:
                   code: RULE_NOT_UK_PROPERTY
+  ruleNotForeignProperty:
+      responses:
+        403:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                ruleNotForeignProperty:
+                  description: The BSAS ID supplied does not relate to a foreign property business.
+                  value:
+                    code: RULE_NOT_FOREIGN_PROPERTY
   ruleSelfEmploymentId:
     responses:
       400:
