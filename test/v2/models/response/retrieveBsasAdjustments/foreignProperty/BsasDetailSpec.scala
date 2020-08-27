@@ -122,13 +122,14 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
           """
             |{
             |  "adjustments": {
-            |     "incomes": {},
+            |     "income": {},
             |     "expenses": {}
             |  }
             |}
             |""".stripMargin)
 
         desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(None, None)
+        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(None, None)
       }
     }
 

@@ -83,7 +83,7 @@ class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
       }
 
       "return the appropriate non fhl model" in {
-        nonFhlDesJson.as[ExpensesBreakdown](ExpensesBreakdown.fhlReads) shouldBe nonFhlExpenseBreakdownModel
+        nonFhlDesJson.as[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads) shouldBe nonFhlExpenseBreakdownModel
       }
     }
 
