@@ -79,6 +79,22 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe summariesJSONWithHateoas(nino)
       }
 
+      "valid request is made with foreign property" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONForeign)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJSONForeignWithHateoas(nino)
+      }
+
       "valid request is made without a tax year" in new Test {
 
         override val taxYear: Option[String] = None
