@@ -148,6 +148,42 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
+  val summaryFromDesJSONForeign: JsValue = Json.parse(
+    """
+      |{
+      | "incomeSourceType": "15",
+      | "accountingStartDate": "2018-10-11",
+      | "accountingEndDate": "2019-10-10",
+      | "ascCalculations": [
+      |     {
+      |       "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+      |       "requestedDateTime": "2019-10-14T11:33:27Z",
+      |       "status": "valid",
+      |       "adjusted": false
+      |     }
+      |   ]
+      | }
+      |""".stripMargin
+  )
+
+  val summaryFromDesJSONFhlEea: JsValue = Json.parse(
+    """
+      |{
+      | "incomeSourceType": "03",
+      | "accountingStartDate": "2018-10-11",
+      | "accountingEndDate": "2019-10-10",
+      | "ascCalculations": [
+      |     {
+      |       "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+      |       "requestedDateTime": "2019-10-14T11:33:27Z",
+      |       "status": "valid",
+      |       "adjusted": false
+      |     }
+      |   ]
+      | }
+      |""".stripMargin
+  )
+
   val summariesJSON: JsValue = Json.parse(
     """
       | {
@@ -261,8 +297,53 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
+  val summariesJSONForeignWithHateoas: String => JsValue = nino => Json.parse(
+    s"""
+       |{
+       |  "businessSourceSummaries": [
+       |    {
+       |      "typeOfBusiness": "foreign-property",
+       |      "accountingPeriod": {
+       |        "startDate": "2018-10-11",
+       |        "endDate": "2019-10-10"
+       |      },
+       |      "bsasEntries": [
+       |        {
+       |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+       |          "requestedDateTime": "2019-10-14T11:33:27Z",
+       |          "summaryStatus": "valid",
+       |          "adjustedSummary": false,
+       |          "links": [
+       |            {
+       |              "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+       |              "method": "GET",
+       |              "rel": "self"
+       |            }
+       |          ]
+       |        }
+       |      ]
+       |    }
+       |  ],
+       |  "links": [
+       |    {
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
+       |      "method": "POST",
+       |      "rel": "trigger-business-source-adjustable-summary"
+       |    },
+       |    {
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
+       |      "method": "GET",
+       |      "rel": "self"
+       |    }
+       |  ]
+       |}
+       |""".stripMargin
+  )
+
   val summariesFromDesJSONSingle = JsArray(Seq(summaryFromDesJSONSE))
   val summariesFromDesJSONMultiple = JsArray(Seq(summaryFromDesJSONSE, summaryFromDesJSONUkFhl, summaryFromDesJSONUkNonFhl))
+  val summariesFromDesJSONForeign = JsArray(Seq(summaryFromDesJSONForeign))
+  val summariesFromDesJSONFhlEea = JsArray(Seq(summaryFromDesJSONFhlEea))
 
   val summaryModel =
     ListBsasResponse(
