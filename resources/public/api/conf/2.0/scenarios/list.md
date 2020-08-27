@@ -32,6 +32,18 @@
             <td><p>Simulates a successful response containing a mixture of uk-property-fhl and uk-property-non-fhl.</p></td>
         </tr>
         <tr>
+            <td><p>FOREIGN_PROPERTY</p></td>
+            <td><p>Simulates a successful response containing a single foreign-property.</p></td>
+        </tr>
+        <tr>
+            <td><p>FOREIGN_PROPERTY_FHL_EEA</p></td>
+            <td><p>Simulates a successful response containing a single foreign-property-fhl-eea.</p></td>
+        </tr>
+        <tr>
+            <td><p>FOREIGN_PROPERTY_MULTIPLE</p></td>
+            <td><p>Simulates a successful response containing a mixture of foreign-property and foreign-property-fhl-eea.</p></td>
+        </tr>
+        <tr>
             <td><p>NOT_FOUND</p></td>
             <td><p>Simulates a scenario where no data can be found.</p></td>
         </tr>
