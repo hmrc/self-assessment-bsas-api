@@ -26,10 +26,10 @@ case class IncomeBreakdown(rentIncome: Option[BigDecimal],
 
 object IncomeBreakdown {
   val fhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "rentReceived").readNullable[BigDecimal] and
-      (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      (JsPath \ "foreignTaxTakenOff").readNullable[BigDecimal]
+    (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None)
     ) (IncomeBreakdown.apply _)
 
   val nonFhlReads: Reads[IncomeBreakdown] = (

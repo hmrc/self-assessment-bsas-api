@@ -27,7 +27,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
     """
       |{
       | "inputs": {
-      |   "incomeSourceType" : "04",
+      |   "incomeSourceType" : "03",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -37,15 +37,9 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |   "requestedDateTime" : "2019-10-14T11:33:27Z",
       |   "status" : "superseded"
       | },
-      | "adjustedSummaryCalculation" : {
-      |
-      | },
       | "adjustments" : {
       |    "income": {
-      |      "rentReceived": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "reversePremiums": 100.49,
-      |      "otherPropertyIncome": 100.49
+      |      "totalRentsReceived": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,
@@ -54,7 +48,6 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |      "professionalFees": 100.49,
       |      "travelCosts": 100.49,
       |      "costOfServices": 100.49,
-      |      "residentialFinancialCost" : 100.49,
       |      "other": 100.49,
       |      "consolidatedExpenses": 100.49
       |    }
@@ -66,7 +59,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
     """
       |{
       | "inputs": {
-      |   "incomeSourceType" : "02",
+      |   "incomeSourceType" : "15",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -83,8 +76,8 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |    "income": {
       |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "reversePremiums": 100.49,
-      |      "otherPropertyIncome": 100.49
+      |      "otherPropertyIncome": 100.49,
+      |      "foreignTaxTakenOff": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,
@@ -101,11 +94,11 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |}
     """.stripMargin)
 
-  val minimalDesJson: JsValue = Json.parse(
+  val fhlMinimalDesJson: JsValue = Json.parse(
     """
       |{
       | "inputs": {
-      |   "incomeSourceType" : "04",
+      |   "incomeSourceType" : "03",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -124,11 +117,34 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |}
     """.stripMargin)
 
-  val fullMtdJson: JsValue = Json.parse(
+  val nonFhlMinimalDesJson: JsValue = Json.parse(
+    """
+      |{
+      | "inputs": {
+      |   "incomeSourceType" : "15",
+      |   "accountingPeriodStartDate" : "2018-10-11",
+      |   "accountingPeriodEndDate" : "2019-10-10"
+      | },
+      | "metadata": {
+      |   "taxYear" : 2020,
+      |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |   "requestedDateTime" : "2019-10-14T11:33:27Z",
+      |   "status" : "superseded"
+      | },
+      |  "adjustedSummaryCalculation" : {
+      |
+      | },
+      | "adjustments" : {
+      |
+      | }
+      |}
+    """.stripMargin)
+
+  val foreignPropertyFullMtdJson: JsValue = Json.parse(
     """
       |{
       | "metadata": {
-      |      "typeOfBusiness": "uk-property-fhl",
+      |      "typeOfBusiness": "foreign-property",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
@@ -143,8 +159,8 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |      "incomes": {
       |         "rentIncome": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,
-      |         "reversePremiums": 100.49,
-      |         "otherPropertyIncome": 100.49
+      |         "otherPropertyIncome": 100.49,
+      |         "foreignTaxTakenOff": 100.49
       |      },
       |      "expenses": {
       |         "premisesRunningCosts": 100.49,
@@ -161,11 +177,63 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |}
     """.stripMargin)
 
-  val minimalMtdJson: JsValue = Json.parse(
+  val foreignPropertyFhlEeaFullMtdJson: JsValue = Json.parse(
     """
       |{
       | "metadata": {
-      |      "typeOfBusiness": "uk-property-fhl",
+      |      "typeOfBusiness": "foreign-property-fhl-eea",
+      |      "accountingPeriod": {
+      |         "startDate": "2018-10-11",
+      |         "endDate": "2019-10-10"
+      |      },
+      |      "taxYear": "2019-20",
+      |      "requestedDateTime": "2019-10-14T11:33:27Z",
+      |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |      "summaryStatus": "superseded",
+      |      "adjustedSummary": true
+      | },
+      | "adjustments": {
+      |      "incomes": {
+      |         "rentIncome": 100.49
+      |      },
+      |      "expenses": {
+      |         "premisesRunningCosts": 100.49,
+      |         "repairsAndMaintenance": 100.49,
+      |         "financialCosts": 100.49,
+      |         "professionalFees": 100.49,
+      |         "travelCosts": 100.49,
+      |         "costOfServices": 100.49,
+      |         "other": 100.49,
+      |         "consolidatedExpenses": 100.49
+      |      }
+      | }
+      |}
+    """.stripMargin)
+
+  val foreignPropertyMinimalMtdJson: JsValue = Json.parse(
+    """
+      |{
+      | "metadata": {
+      |      "typeOfBusiness": "foreign-property",
+      |      "accountingPeriod": {
+      |         "startDate": "2018-10-11",
+      |         "endDate": "2019-10-10"
+      |      },
+      |      "taxYear": "2019-20",
+      |      "requestedDateTime": "2019-10-14T11:33:27Z",
+      |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |      "summaryStatus": "superseded",
+      |      "adjustedSummary": true
+      | },
+      | "adjustments": {}
+      |}
+    """.stripMargin)
+
+  val foreignPropertyFhlEeaMinimalMtdJson: JsValue = Json.parse(
+    """
+      |{
+      | "metadata": {
+      |      "typeOfBusiness": "foreign-property-fhl-eea",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
@@ -182,26 +250,38 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
 
   "RetrieveSelfEmploymentAdjustmentResponse" when {
     "reading from valid JSON" should {
-      "return the appropriate FHL model when the most data has been provided" in {
-        fhlDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe retrieveForeignPropertyAdjustmentResponseModel
-      }
-
       "return the appropriate non-FHL model when the most data has been provided" in {
-        fhlDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe retrieveForeignPropertyAdjustmentResponseModel
+        nonFhlDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel
       }
 
-      "return the appropriate model when the minimal data has been provided" in {
-        minimalDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe minimalRetrieveForeignPropertyAdjustmentResponseModel
+      "return the appropriate FHL model when the most data has been provided" in {
+        fhlDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe foreignPropertyFhlEeaRetrieveForeignPropertyAdjustmentResponseModel
+      }
+
+      "return the appropriate non-FHL model when the minimal data has been provided" in {
+        nonFhlMinimalDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe foreignPropertyMinimalRetrieveForeignPropertyAdjustmentResponseModel
+      }
+
+      "return the appropriate FHL model when the minimal data has been provided" in {
+        fhlMinimalDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe foreignPropertyFhlEeaMinimalRetrieveForeignPropertyAdjustmentResponseModel
       }
     }
 
     "writing to valid json" should {
-      "return valid json with most data provided" in {
-        retrieveForeignPropertyAdjustmentResponseModel.toJson shouldBe fullMtdJson
+      "return valid foreign property json with most data provided" in {
+        foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel.toJson shouldBe foreignPropertyFullMtdJson
       }
 
-      "return valid Json when the minimal data has been provided" in {
-        minimalRetrieveForeignPropertyAdjustmentResponseModel.toJson shouldBe minimalMtdJson
+      "return valid foreign property fhl eea json with most data provided" in {
+        foreignPropertyFhlEeaRetrieveForeignPropertyAdjustmentResponseModel.toJson shouldBe foreignPropertyFhlEeaFullMtdJson
+      }
+
+      "return valid foreign property Json when the minimal data has been provided" in {
+        foreignPropertyMinimalRetrieveForeignPropertyAdjustmentResponseModel.toJson shouldBe foreignPropertyMinimalMtdJson
+      }
+
+      "return valid foreign property fhl eea Json when the minimal data has been provided" in {
+        foreignPropertyFhlEeaMinimalRetrieveForeignPropertyAdjustmentResponseModel.toJson shouldBe foreignPropertyFhlEeaMinimalMtdJson
       }
     }
   }

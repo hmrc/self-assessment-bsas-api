@@ -29,7 +29,7 @@ object BsasDetail {
       case Some(IncomeBreakdown(None, None, None, None)) => None
       case incomeBreakdown => incomeBreakdown
     } and
-      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
+      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
         case expensesBreakdown => expensesBreakdown
       }
@@ -40,7 +40,7 @@ object BsasDetail {
       case Some(IncomeBreakdown(None, None, None, None)) => None
       case incomeBreakdown => incomeBreakdown
     } and
-      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
+      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
         case expensesBreakdown => expensesBreakdown
       }

@@ -22,16 +22,16 @@ import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 
 case class RetrieveForeignPropertyAdjustmentsResponse(metadata: Metadata, adjustments: BsasDetail)
 
-object RetrieveUkPropertyAdjustmentsResponse {
+object RetrieveForeignPropertyAdjustmentsResponse {
 
   implicit val reads: Reads[RetrieveForeignPropertyAdjustmentsResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`uk-property-fhl` => BsasDetail.fhlReads
-        case TypeOfBusiness.`uk-property-non-fhl` => BsasDetail.nonFhlReads
+        case TypeOfBusiness.`foreign-property-fhl-eea` => BsasDetail.fhlReads
+        case TypeOfBusiness.`foreign-property` => BsasDetail.nonFhlReads
         case _ => BsasDetail.fhlReads // Reading as normal property, we are handling the error in the service layer.
       }
-    )(RetrieveUkPropertyAdjustmentsResponse.apply _)
+    )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] = Json.writes[RetrieveForeignPropertyAdjustmentsResponse]
 }
