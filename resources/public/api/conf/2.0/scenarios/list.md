@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td><p>FOREIGN_PROPERTY_MULTIPLE</p></td>
-            <td><p>Simulates a successful response containing multiple foreign-properties.</p></td>
+            <td><p>Simulates a successful response containing a mixture of foreign-property and foreign-property-fhl-eea.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
