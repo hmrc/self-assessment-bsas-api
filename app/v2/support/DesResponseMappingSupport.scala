@@ -80,6 +80,16 @@ trait DesResponseMappingSupport {
       case _ => Right(desResponseWrapper)
     }
 
+  final def validateRetrieveForeignPropertyAdjustmentsSuccessResponse[T](
+                                                                     desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
+        if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotForeignProperty, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
   final def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case RetrieveSelfEmploymentBsasResponse(retrieveBsas.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
