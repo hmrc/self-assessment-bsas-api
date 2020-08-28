@@ -5,7 +5,9 @@
     "metadata"
   ],
   "properties": {
-    "metadata": { "$ref": "metadata_definitions.json#/definitions/propMetadata"},
+    "metadata": {
+      "$ref": "metadata_definitions.json#/definitions/propMetadata"
+    },
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for either a UK property non-Furnished Holiday Let (non-FHL) or for a UK Property Furnished Holiday Let (FHL) business income source.",
@@ -48,7 +50,8 @@
               "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "expensesBreakdown": {
           "type": "object",
@@ -104,9 +107,11 @@
               "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     },
     "links": {
       "type": "array",
@@ -140,8 +145,10 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

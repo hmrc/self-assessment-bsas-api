@@ -1,21 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "required": ["metadata"],
+  "required": [
+    "metadata"
+  ],
   "properties": {
-    "metadata": { "$ref": "metadata_definitions.json#/definitions/seMetadata"},
+    "metadata": {
+      "$ref": "metadata_definitions.json#/definitions/seMetadata"
+    },
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for the self-employment business income source.",
       "properties": {
-        "total": { "$ref": "definitions.json#/definitions/bsasTotal"},
+        "total": {
+          "$ref": "definitions.json#/definitions/bsasTotal"
+        },
         "accountingAdjustments": {
           "type": "number",
           "description": "Adjustment for change of accounting practice. The value must be between -99999999999.99 and 99999999999.99.",
           "example": "1000.45"
         },
-        "profit": { "$ref": "definitions.json#/definitions/bsasProfit"},
-        "loss": { "$ref": "definitions.json#/definitions/bsasLoss"},
+        "profit": {
+          "$ref": "definitions.json#/definitions/bsasProfit"
+        },
+        "loss": {
+          "$ref": "definitions.json#/definitions/bsasLoss"
+        },
         "incomeBreakdown": {
           "type": "object",
           "description": "Total income broken down by type for the accounting period.",
@@ -30,7 +40,8 @@
               "description": "Any other business income not included in the turnover. Income associated with the running of the business. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "expensesBreakdown": {
           "type": "object",
@@ -116,7 +127,8 @@
               "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "additionsBreakdown": {
           "type": "object",
@@ -197,9 +209,11 @@
               "description": "Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     },
     "links": {
       "type": "array",
@@ -233,8 +247,10 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

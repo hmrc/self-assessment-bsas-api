@@ -16,11 +16,15 @@
           "bsasEntries"
         ],
         "properties": {
-          "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
-
-          "selfEmploymentId": {"$ref": "definitions.json#/definitions/selfEmploymentId"},
-
-          "accountingPeriod": {"$ref": "definitions.json#/definitions/accountingPeriod"},
+          "typeOfBusiness": {
+            "$ref": "definitions.json#/definitions/typeOfBusiness"
+          },
+          "selfEmploymentId": {
+            "$ref": "definitions.json#/definitions/selfEmploymentId"
+          },
+          "accountingPeriod": {
+            "$ref": "definitions.json#/definitions/accountingPeriod"
+          },
           "bsasEntries": {
             "title": "BSAS Entries",
             "description": "The array holding Business Source Adjustable Summary (BSAS) entries.",
@@ -50,7 +54,11 @@
                   "title": "Summary Status",
                   "description": "Whether the summary calculation with this ID is current, has been invalidated (by subsequent changes) or has been superseded by a more recent request for a summary calculation.",
                   "type": "string",
-                  "enum": [ "valid", "invalid", "superseded" ]
+                  "enum": [
+                    "valid",
+                    "invalid",
+                    "superseded"
+                  ]
                 },
                 "adjustedSummary": {
                   "title": "Adjusted Summary",
@@ -88,13 +96,16 @@
                       "href",
                       "rel",
                       "method"
-                    ]
+                    ],
+                    "additionalProperties": false
                   }
                 }
-              }
+              },
+              "additionalProperties": false
             }
           }
-        }
+        },
+        "additionalProperties": false
       }
     },
     "links": {
@@ -129,11 +140,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "businessSourceSummaries"
-  ]
+  ],
+  "additionalProperties": false
 }
