@@ -16,6 +16,7 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
+import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
 import utils.DesTaxYear
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}

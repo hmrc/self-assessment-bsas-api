@@ -20,19 +20,19 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 
-case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
+case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
                                           bsas: Option[BsasDetail])
 
-object RetrieveUkPropertyBsasResponse {
+object RetrieveForeignPropertyBsasResponse {
 
-  implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
+  implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
         case TypeOfBusiness.`foreign-property-fhl-eea` => fhlBsasDetailReads
         case TypeOfBusiness.`foreign-property` => nonFhlBsasDetailReads
         case _ => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
       }
-    )(RetrieveUkPropertyBsasResponse.apply _)
+    )(RetrieveForeignPropertyBsasResponse.apply _)
 
   private val fhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
     case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
@@ -44,5 +44,5 @@ object RetrieveUkPropertyBsasResponse {
     case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
   }
 
-  implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]
+  implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
 }

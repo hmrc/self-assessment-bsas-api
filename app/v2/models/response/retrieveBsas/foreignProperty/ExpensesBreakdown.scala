@@ -16,6 +16,7 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
+import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal],
