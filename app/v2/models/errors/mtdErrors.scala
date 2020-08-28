@@ -102,6 +102,8 @@ object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An ad
 
 object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The summary calculation requested is not for a UK property business")
 
+object RuleNotForeignProperty extends MtdError("RULE_NOT_FOREIGN_PROPERTY", "The adjustments requested are not for a foreign property business")
+
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The summary calculation requested is not for a self-employment business")
 
 object RuleIncorrectPropertyAdjusted extends MtdError("RULE_INCORRECT_PROPERTY_ADJUSTED",

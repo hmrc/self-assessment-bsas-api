@@ -23,6 +23,7 @@ import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
@@ -76,6 +77,16 @@ trait DesResponseMappingSupport {
       case RetrieveSelfEmploymentAdjustmentsResponse(retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
           if typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
+  final def validateRetrieveForeignPropertyAdjustmentsSuccessResponse[T](
+                                                                     desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
+        if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotForeignProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
