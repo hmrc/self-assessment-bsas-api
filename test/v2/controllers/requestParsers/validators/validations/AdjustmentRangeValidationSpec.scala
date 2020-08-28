@@ -18,6 +18,7 @@ package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v2.models.errors.RuleAdjustmentRangeInvalid
 import v2.models.utils.JsonErrorValidators
 
 class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -44,7 +45,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
         val result = AdjustmentRangeValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(rangeError(fieldName))
+        result shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(fieldName))))
       }
 
       "a adjustment is above 99999999999.99" in new SetUp(invaldAdjustmentPositive) {
@@ -52,7 +53,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
         val result = AdjustmentRangeValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(rangeError(fieldName))
+        result shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(fieldName))))
       }
     }
   }

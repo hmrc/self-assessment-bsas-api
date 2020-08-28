@@ -108,47 +108,45 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
       }
 
       val inputs: Seq[(String, BigDecimal => SubmitSelfEmploymentBsasRequestBody)] = Seq(
-        ("income.turnover", i => defaultBody(income = Some(seIncome.copy(turnover = Some(i))))),
-        ("income.other", i => defaultBody(income = Some(seIncome.copy(other = Some(i))))),
-        ("expenses.costOfGoodsBought", i => defaultBody(expenses = Some(seExpenses.copy(costOfGoodsBought = Some(i))))),
-        ("expenses.cisPaymentsToSubcontractors", i => defaultBody(expenses = Some(seExpenses.copy(cisPaymentsToSubcontractors = Some(i))))),
-        ("expenses.staffCosts", i => defaultBody(expenses = Some(seExpenses.copy(staffCosts = Some(i))))),
-        ("expenses.travelCosts", i => defaultBody(expenses = Some(seExpenses.copy(travelCosts = Some(i))))),
-        ("expenses.premisesRunningCosts", i => defaultBody(expenses = Some(seExpenses.copy(premisesRunningCosts = Some(i))))),
-        ("expenses.maintenanceCosts", i => defaultBody(expenses = Some(seExpenses.copy(maintenanceCosts = Some(i))))),
-        ("expenses.adminCosts", i => defaultBody(expenses = Some(seExpenses.copy(adminCosts = Some(i))))),
-        ("expenses.advertisingCosts", i => defaultBody(expenses = Some(seExpenses.copy(advertisingCosts = Some(i))))),
-        ("expenses.businessEntertainmentCosts", i => defaultBody(expenses = Some(seExpenses.copy(businessEntertainmentCosts = Some(i))))),
-        ("expenses.interest", i => defaultBody(expenses = Some(seExpenses.copy(interest = Some(i))))),
-        ("expenses.financialCharges", i => defaultBody(expenses = Some(seExpenses.copy(financialCharges = Some(i))))),
-        ("expenses.badDebt", i => defaultBody(expenses = Some(seExpenses.copy(badDebt = Some(i))))),
-        ("expenses.professionalFees", i => defaultBody(expenses = Some(seExpenses.copy(professionalFees = Some(i))))),
-        ("expenses.depreciation", i => defaultBody(expenses = Some(seExpenses.copy(depreciation = Some(i))))),
-        ("expenses.other", i => defaultBody(expenses = Some(seExpenses.copy(other = Some(i))))),
-        ("expenses.consolidatedExpenses", i => defaultBody(expenses = Some(seExpenses.copy(consolidatedExpenses = Some(i))))),
-        ("additions.costOfGoodsBoughtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(costOfGoodsBoughtDisallowable = Some(i))))),
-        ("additions.cisPaymentsToSubcontractorsDisallowable", i => defaultBody(additions =
-          Some(seAdditions.copy(cisPaymentsToSubcontractorsDisallowable = Some(i))))),
-        ("additions.staffCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(staffCostsDisallowable = Some(i))))),
-        ("additions.travelCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(travelCostsDisallowable = Some(i))))),
-        ("additions.premisesRunningCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(premisesRunningCostsDisallowable = Some(i))))),
-        ("additions.maintenanceCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(maintenanceCostsDisallowable = Some(i))))),
-        ("additions.adminCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(adminCostsDisallowable = Some(i))))),
-        ("additions.advertisingCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(advertisingCostsDisallowable = Some(i))))),
-        ("additions.businessEntertainmentCostsDisallowable", i => defaultBody(additions =
-          Some(seAdditions.copy(businessEntertainmentCostsDisallowable = Some(i))))),
-        ("additions.interestDisallowable", i => defaultBody(additions = Some(seAdditions.copy(interestDisallowable = Some(i))))),
-        ("additions.financialChargesDisallowable", i => defaultBody(additions = Some(seAdditions.copy(financialChargesDisallowable = Some(i))))),
-        ("additions.badDebtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(badDebtDisallowable = Some(i))))),
-        ("additions.professionalFeesDisallowable", i => defaultBody(additions = Some(seAdditions.copy(professionalFeesDisallowable = Some(i))))),
-        ("additions.depreciationDisallowable", i => defaultBody(additions = Some(seAdditions.copy(depreciationDisallowable = Some(i))))),
-        ("additions.otherDisallowable", i => defaultBody(additions = Some(seAdditions.copy(otherDisallowable = Some(i)))))
+        ("/income/turnover", i => defaultBody(income = Some(seIncome.copy(turnover = Some(i))))),
+        ("/income/other", i => defaultBody(income = Some(seIncome.copy(other = Some(i))))),
+        ("/expenses/costOfGoodsBought", i => defaultBody(expenses = Some(seExpenses.copy(costOfGoodsBought = Some(i))))),
+        ("/expenses/cisPaymentsToSubcontractors", i => defaultBody(expenses = Some(seExpenses.copy(cisPaymentsToSubcontractors = Some(i))))),
+        ("/expenses/staffCosts", i => defaultBody(expenses = Some(seExpenses.copy(staffCosts = Some(i))))),
+        ("/expenses/travelCosts", i => defaultBody(expenses = Some(seExpenses.copy(travelCosts = Some(i))))),
+        ("/expenses/premisesRunningCosts", i => defaultBody(expenses = Some(seExpenses.copy(premisesRunningCosts = Some(i))))),
+        ("/expenses/maintenanceCosts", i => defaultBody(expenses = Some(seExpenses.copy(maintenanceCosts = Some(i))))),
+        ("/expenses/adminCosts", i => defaultBody(expenses = Some(seExpenses.copy(adminCosts = Some(i))))),
+        ("/expenses/advertisingCosts", i => defaultBody(expenses = Some(seExpenses.copy(advertisingCosts = Some(i))))),
+        ("/expenses/businessEntertainmentCosts", i => defaultBody(expenses = Some(seExpenses.copy(businessEntertainmentCosts = Some(i))))),
+        ("/expenses/interest", i => defaultBody(expenses = Some(seExpenses.copy(interest = Some(i))))),
+        ("/expenses/financialCharges", i => defaultBody(expenses = Some(seExpenses.copy(financialCharges = Some(i))))),
+        ("/expenses/badDebt", i => defaultBody(expenses = Some(seExpenses.copy(badDebt = Some(i))))),
+        ("/expenses/professionalFees", i => defaultBody(expenses = Some(seExpenses.copy(professionalFees = Some(i))))),
+        ("/expenses/depreciation", i => defaultBody(expenses = Some(seExpenses.copy(depreciation = Some(i))))),
+        ("/expenses/other", i => defaultBody(expenses = Some(seExpenses.copy(other = Some(i))))),
+        ("/expenses/consolidatedExpenses", i => defaultBody(expenses = Some(seExpenses.copy(consolidatedExpenses = Some(i))))),
+        ("/additions/costOfGoodsBoughtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(costOfGoodsBoughtDisallowable = Some(i))))),
+        ("/additions/cisPaymentsToSubcontractorsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(cisPaymentsToSubcontractorsDisallowable = Some(i))))),
+        ("/additions/staffCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(staffCostsDisallowable = Some(i))))),
+        ("/additions/travelCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(travelCostsDisallowable = Some(i))))),
+        ("/additions/premisesRunningCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(premisesRunningCostsDisallowable = Some(i))))),
+        ("/additions/maintenanceCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(maintenanceCostsDisallowable = Some(i))))),
+        ("/additions/adminCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(adminCostsDisallowable = Some(i))))),
+        ("/additions/advertisingCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(advertisingCostsDisallowable = Some(i))))),
+        ("/additions/businessEntertainmentCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(businessEntertainmentCostsDisallowable = Some(i))))),
+        ("/additions/interestDisallowable", i => defaultBody(additions = Some(seAdditions.copy(interestDisallowable = Some(i))))),
+        ("/additions/financialChargesDisallowable", i => defaultBody(additions = Some(seAdditions.copy(financialChargesDisallowable = Some(i))))),
+        ("/additions/badDebtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(badDebtDisallowable = Some(i))))),
+        ("/additions/professionalFeesDisallowable", i => defaultBody(additions = Some(seAdditions.copy(professionalFeesDisallowable = Some(i))))),
+        ("/additions/depreciationDisallowable", i => defaultBody(additions = Some(seAdditions.copy(depreciationDisallowable = Some(i))))),
+        ("/additions/otherDisallowable", i => defaultBody(additions = Some(seAdditions.copy(otherDisallowable = Some(i)))))
       )
 
       val testCases: Seq[(String, BigDecimal, String => MtdError)] = Seq(
-        ("out of range", 999999999999.99, s => RuleAdjustmentRangeInvalid.withFieldName(s)),
-        ("with zero value", 0, s => FormatAdjustmentValueError.withFieldName(s)),
-        ("with more than 2dp", 999999999.999, s => FormatAdjustmentValueError.withFieldName(s))
+        ("out of range", 999999999999.99, s => RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(s)))),
+        ("with zero value", 0, s => FormatAdjustmentValueError.copy(paths = Some(Seq(s)))),
+        ("with more than 2dp", 999999999.999, s => FormatAdjustmentValueError.copy(paths = Some(Seq(s))))
       )
 
       testCases.foreach {

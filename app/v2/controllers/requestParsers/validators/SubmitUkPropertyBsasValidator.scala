@@ -90,41 +90,41 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     val withAdjustmentValidations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
       Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
 
-    (model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
+    List(flattenErrors((model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
       case (None, Some(nonFurnishedHolidayLet)) =>
         val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
         val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
         List(
-          doValidationFor("rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
-          doValidationFor("premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant))(withAdjustmentValidations),
-          doValidationFor("reversePremiums", income.flatMap(_.reversePremiums))(withAdjustmentValidations),
-          doValidationFor("otherPropertyIncome", income.flatMap(_.otherPropertyIncome))(withAdjustmentValidations),
-          doValidationFor("premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
-          doValidationFor("repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
-          doValidationFor("financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
-          doValidationFor("professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
-          doValidationFor("travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
-          doValidationFor("costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
-          doValidationFor("residentialFinancialCost", expenses.flatMap(_.residentialFinancialCost))(withAdjustmentValidations),
-          doValidationFor("other", expenses.flatMap(_.other))(withAdjustmentValidations),
-          doValidationFor("consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
+          doValidationFor("/nonFurnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/income/reversePremiums", income.flatMap(_.reversePremiums))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/income/otherPropertyIncome", income.flatMap(_.otherPropertyIncome))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", expenses.flatMap(_.residentialFinancialCost))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/other", expenses.flatMap(_.other))(withAdjustmentValidations),
+          doValidationFor("/nonFurnishedHolidayLet/expenses/consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
         )
       case (Some(furnishedHolidayLet), None) =>
         val income: Option[FHLIncome] = furnishedHolidayLet.income
         val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
         List(
-          doValidationFor("rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
-          doValidationFor("premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
-          doValidationFor("repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
-          doValidationFor("financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
-          doValidationFor("professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
-          doValidationFor("travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
-          doValidationFor("costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
-          doValidationFor("other", expenses.flatMap(_.other))(withAdjustmentValidations),
-          doValidationFor("consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
+          doValidationFor("/furnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/financialCosts", expenses.flatMap(_.financialCosts))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/professionalFees", expenses.flatMap(_.professionalFees))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/travelCosts", expenses.flatMap(_.travelCosts))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/costOfServices", expenses.flatMap(_.costOfServices))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/other", expenses.flatMap(_.other))(withAdjustmentValidations),
+          doValidationFor("/furnishedHolidayLet/expenses/consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))(withAdjustmentValidations)
         )
       case _ => List(List(RuleIncorrectOrEmptyBodyError))
-    }
+    }))
   }
 
   private def otherBodyFieldsValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>

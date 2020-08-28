@@ -17,8 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v2.models.errors.MtdError
+import v2.models.errors.{FormatAdjustmentValueError, MtdError}
 import v2.models.utils.JsonErrorValidators
 
 class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -36,17 +35,14 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
   "validate" should {
     "return no errors" when {
       "the adjustment is a positive number" in new SetUp(validPositiveAdjustment) {
-
         AdjustmentValueValidation.validate(adjustmentValue, fieldName).isEmpty shouldBe true
       }
 
       "the adjustment is a negative number" in new SetUp(validNegativeAdjustment) {
-
         AdjustmentValueValidation.validate(adjustmentValue, fieldName).isEmpty shouldBe true
       }
 
       "the adjustment is a decimal number" in new SetUp(validDecimalAdjustment) {
-
         AdjustmentValueValidation.validate(adjustmentValue, fieldName).isEmpty shouldBe true
       }
     }
@@ -57,7 +53,7 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
         val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(formatError(fieldName))
+        result shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName))))
       }
 
       "the adjustment has a value zero decimal" in new SetUp(invalidDecimalZero) {
@@ -65,14 +61,14 @@ class AdjustmentValueValidationSpec extends UnitSpec with JsonErrorValidators {
         val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(formatError(fieldName))
+        result shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName))))
       }
       "the adjustment has more than 2 decimal places" in new SetUp(invalidDecimalPositions) {
 
         val result: Seq[MtdError] = AdjustmentValueValidation.validate(adjustmentValue, fieldName)
 
         result.length shouldBe 1
-        result shouldBe List(formatError(fieldName))
+        result shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName))))
       }
     }
   }

@@ -44,9 +44,7 @@ object TypeOfBusinessFormatError
 object AdjustedStatusFormatError
   extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
 
-object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "") {
-  def withFieldName(fieldName: String): MtdError = this.copy(message = s"The format of the '$fieldName' value is invalid")
-}
+object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "PLACEHOLDER")
 
 object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
 
@@ -112,9 +110,7 @@ object RuleIncorrectPropertyAdjusted extends MtdError("RULE_INCORRECT_PROPERTY_A
 object RuleErrorPropertyAdjusted extends MtdError("RULE_UK_PROPERTY_ADJUSTED",
   "A UK Property business type was adjusted. Re-trigger an adjustable summary for the affected UK Property business to correct")
 
-object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "") {
-  def withFieldName(fieldName: String): MtdError = this.copy(message = s"Adjustment value for '$fieldName' falls outside the accepted range")
-}
+object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "PLACEHOLDER")
 
 object RuleResultingValueNotPermitted
   extends MtdError("RULE_RESULTING_VALUE_NOT_PERMITTED","The adjustments provided would produce an unacceptable negative monetary value")

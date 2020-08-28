@@ -18,8 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.foreignProperty.SubmitForeignPropertyBsasRequestBodyFixtures.{formatError, rangeError}
-import v2.models.errors.{BsasIdFormatError, NinoFormatError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v2.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, NinoFormatError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
@@ -518,7 +517,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    }
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(formatError("/foreignProperty/income/rentIncome"))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignProperty/income/rentIncome"))))
       }
       "multiple fields have more than 2 decimal points" in {
         val badjson = Json.parse(
@@ -541,8 +540,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          formatError("/foreignFhlEea/income/rentIncome"),
-          formatError("/foreignFhlEea/expenses/premisesRunningCosts"))
+          FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
     }
     "return a RULE_RANGE_INVALID error" when {
@@ -570,7 +568,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    }
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(rangeError("/foreignProperty/income/rentIncome"))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/income/rentIncome"))))
       }
       "a value field is below -99999999999.99" in {
         val badJson = Json.parse(
@@ -596,7 +594,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |    }
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(rangeError("/foreignProperty/income/rentIncome"))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/income/rentIncome"))))
       }
       "multiple fields are above 99999999999.99" in {
         val badjson = Json.parse(
@@ -619,8 +617,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          rangeError("/foreignFhlEea/expenses/premisesRunningCosts"),
-          rangeError("/foreignFhlEea/income/rentIncome"))
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
       "multiple fields are below -99999999999.99" in {
         val badjson = Json.parse(
@@ -643,8 +640,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          rangeError("/foreignFhlEea/expenses/premisesRunningCosts"),
-          rangeError("/foreignFhlEea/income/rentIncome"))
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
     }
     "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {

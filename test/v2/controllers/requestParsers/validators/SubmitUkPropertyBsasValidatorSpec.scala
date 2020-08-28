@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v2.models.errors.{BsasIdFormatError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v2.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
 import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
@@ -62,7 +62,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(formatError("otherPropertyIncome"))
+        result shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/income/otherPropertyIncome"))))
       }
 
       "a single adjustment field is more then 99999999999.99 " in new SetUp {
@@ -72,7 +72,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(rangeError("rentIncome"))
+        result shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/nonFurnishedHolidayLet/income/rentIncome"))))
       }
 
       "the format of the bsasId is invalid" in new SetUp {
@@ -105,9 +105,8 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
             SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
           )
 
-        result.length shouldBe 4
-        result shouldBe List(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
-          rangeError("financialCosts"), rangeError("professionalFees"))
+        result.length shouldBe 1
+        result shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/furnishedHolidayLet/expenses/premisesRunningCosts", "/furnishedHolidayLet/expenses/repairsAndMaintenance", "/furnishedHolidayLet/expenses/financialCosts", "/furnishedHolidayLet/expenses/professionalFees"))))
       }
 
 

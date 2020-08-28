@@ -209,8 +209,8 @@ class SubmitUkPropertyBsasControllerSpec
           BadRequestError,
           Some(
             Seq(
-              FormatAdjustmentValueError.withFieldName("doesntMatter"),
-              RuleAdjustmentRangeInvalid.withFieldName("thePatternMatchIgnoresMe")
+              FormatAdjustmentValueError,
+              RuleAdjustmentRangeInvalid
             )
           )
         )
@@ -226,8 +226,8 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(
-              AuditError(FormatAdjustmentValueError.withFieldName("doesntMatter").code),
-              AuditError(RuleAdjustmentRangeInvalid.withFieldName("thePatternMatchIgnoresMe").code)
+              AuditError(FormatAdjustmentValueError.code),
+              AuditError(RuleAdjustmentRangeInvalid.code)
             )), None)
 
         MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
