@@ -17,9 +17,7 @@
         ],
         "properties": {
           "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
-
           "businessId": {"$ref": "definitions.json#/definitions/businessId"},
-
           "accountingPeriod": {
             "type": "object",
             "title": "The accounting period",

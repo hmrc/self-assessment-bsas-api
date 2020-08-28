@@ -4,13 +4,20 @@
   "description": "Trigger a Business Source Adjustable Summary (BSAS)",
   "type": "object",
   "properties": {
-    "accountingPeriod": {"$ref": "definitions.json#/definitions/accountingPeriod"},
-    "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
-    "selfEmploymentId": {"$ref": "definitions.json#/definitions/selfEmploymentId"}
+    "accountingPeriod": {
+      "$ref": "definitions.json#/definitions/accountingPeriod"
+    },
+    "typeOfBusiness": {
+      "$ref": "definitions.json#/definitions/typeOfBusiness"
+    },
+    "selfEmploymentId": {
+      "$ref": "definitions.json#/definitions/selfEmploymentId"
+    }
   },
   "required": [
     "accountingPeriod",
     "typeOfBusiness"
-  ]
+  ],
+  "additionalProperties": false
 }
 

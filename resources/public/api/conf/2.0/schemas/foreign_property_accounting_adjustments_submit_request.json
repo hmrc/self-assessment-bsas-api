@@ -44,7 +44,8 @@
               "maximum": 99999999999.99,
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "expenses": {
           "type": "object",
@@ -122,9 +123,11 @@
               "maximum": 99999999999.99,
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     },
     "foreignFhlEea": {
       "type": "object",
@@ -142,7 +145,8 @@
               "maximum": 99999999999.99,
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "expenses": {
           "type": "object",
@@ -212,9 +216,12 @@
               "maximum": 99999999999.99,
               "example": "1000.45"
             }
-          }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     }
-  }
+  },
+  "additionalProperties": false
 }

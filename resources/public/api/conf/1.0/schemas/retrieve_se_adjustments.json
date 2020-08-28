@@ -4,10 +4,25 @@
   "description": "This endpoint allows the user to request the adjustments made to a specific Self-Employment Business Source Adjustable Summary by quoting it's identifier.",
   "type": "object",
   "properties": {
-    "metadata": { "$ref": "metadata_definitions.json#/definitions/seMetadata"},
-    "income": { "$ref": "adjustment_definitions.json#/definitions/seIncome"},
-    "expenses": { "$ref": "adjustment_definitions.json#/definitions/seExpenses"},
-    "additions": { "$ref": "adjustment_definitions.json#/definitions/seAdditions"},
+    "metadata": {
+      "$ref": "metadata_definitions.json#/definitions/seMetadata"
+    },
+    "adjustments": {
+      "type": "object",
+      "description": "Object containing the adjustments made.",
+      "properties": {
+        "income": {
+          "$ref": "adjustment_definitions.json#/definitions/seIncome"
+        },
+        "expenses": {
+          "$ref": "adjustment_definitions.json#/definitions/seExpenses"
+        },
+        "additions": {
+          "$ref": "adjustment_definitions.json#/definitions/seAdditions"
+        }
+      },
+      "additionalProperties": false
+    },
     "links": {
       "type": "array",
       "items": {
@@ -23,7 +38,8 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "retrieve-adjustable-summary"
+              "self",
+              "retrieve-adjustable-summary"
             ]
           },
           "method": {
@@ -38,8 +54,14 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "required": [
+    "metadata",
+    "adjustments"
+  ],
+  "additionalProperties": false
 }

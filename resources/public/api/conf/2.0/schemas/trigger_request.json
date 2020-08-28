@@ -26,8 +26,12 @@
       ],
       "additionalProperties": false
     },
-    "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
-    "businessId": {"$ref": "definitions.json#/definitions/businessId"}
+    "typeOfBusiness": {
+      "$ref": "definitions.json#/definitions/typeOfBusiness"
+    },
+    "businessId": {
+      "$ref": "definitions.json#/definitions/businessId"
+    }
   },
   "required": [
     "accountingPeriod",

@@ -10,5 +10,6 @@
     "furnishedHolidayLet": {
       "$ref": "adjustment_definitions.json#/definitions/fhlAdjustments"
     }
-  }
+  },
+  "additionalProperties": false
 }

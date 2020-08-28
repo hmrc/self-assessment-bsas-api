@@ -4,7 +4,9 @@
   "description": "Trigger a Business Source Adjustable Summary (BSAS)",
   "type": "object",
   "properties": {
-    "id": { "$ref": "definitions.json#/definitions/bsasId"},
+    "id": {
+      "$ref": "definitions.json#/definitions/bsasId"
+    },
     "links": {
       "type": "array",
       "items": {

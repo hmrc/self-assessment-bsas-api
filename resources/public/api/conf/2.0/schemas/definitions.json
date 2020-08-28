@@ -34,17 +34,16 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     },
-
     "uid": {
       "description": "A unique identifier",
       "type": "string",
       "pattern": "^[A-Za-z0-9]{15}$",
       "example": "123456879012345"
     },
-
     "bsasId": {
       "title": "id",
       "description": "The unique identifier of the summary calculation.",
@@ -52,7 +51,6 @@
       "pattern": "^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
       "example": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
     },
-
     "accountingPeriod": {
       "type": "object",
       "title": "The accounting period",
@@ -72,17 +70,9 @@
           "description": "The date the accounting period ended.",
           "example": "2020-04-05"
         }
-      }
+      },
+      "additionalProperties": false
     },
-
-    "businessId": {
-      "title": "businessId",
-      "description": "The unique identifier of the income source the claim relates to.",
-      "type": "string",
-      "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
-      "example": "X9IS98470026982"
-    },
-
     "selfEmploymentId": {
       "title": "selfEmploymentId",
       "description": "An identifier for the self-employment business, unique to the customer.",
@@ -90,7 +80,6 @@
       "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
       "example": "X9IS98470026982"
     },
-
     "businessId": {
       "title": "businessId",
       "description": "An identifier for the business, unique to the customer.",
@@ -98,39 +87,43 @@
       "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
       "example": "XAIS12345678910"
     },
-
     "typeOfBusiness": {
       "title": "typeOfBusiness",
       "description": "The type of business the summary calculation is for.",
       "type": "string",
-      "enum": ["self-employment", "uk-property-fhl", "uk-property-non-fhl", "foreign-property-fhl-eea", "foreign-property"]
+      "enum": [
+        "self-employment",
+        "uk-property-fhl",
+        "uk-property-non-fhl",
+        "foreign-property-fhl-eea",
+        "foreign-property"
+      ]
     },
-
     "summaryStatus": {
       "type": "string",
       "description": "The status of the calculated summary.",
-      "enum": ["valid", "invalid", "superseded"]
+      "enum": [
+        "valid",
+        "invalid",
+        "superseded"
+      ]
     },
-
     "adjustedSummary": {
       "type": "boolean",
       "description": "Indicates if summary includes adjusted values.",
       "example": "false"
     },
-
     "taxYear": {
       "type": "string",
       "description": "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid. The minimum tax year is 2019-20.",
       "example": "2019-20"
     },
-
     "requestedDateTime": {
       "type": "string",
       "description": "The original date and time of the summary calculation before any adjustments.",
       "example": "2020-07-11T12:13:48.763Z",
       "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{0,3}|)Z$"
     },
-
     "bsasTotal": {
       "type": "object",
       "description": "Object of total values.",
@@ -155,10 +148,10 @@
           "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99.",
           "example": "1000.45"
         }
-      }
+      },
+      "additionalProperties": false
     },
-
-    "bsasProfit" : {
+    "bsasProfit": {
       "type": "object",
       "description": "An object of profit values.",
       "properties": {
@@ -172,9 +165,9 @@
           "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999.99.",
           "example": "1000.45"
         }
-      }
+      },
+      "additionalProperties": false
     },
-
     "bsasLoss": {
       "type": "object",
       "description": "An object of loss values.",
@@ -189,8 +182,8 @@
           "description": "The adjusted income tax loss. The value must be between 0 and 99999999999.99.",
           "example": "1000.45"
         }
-      }
+      },
+      "additionalProperties": false
     }
-
   }
 }
