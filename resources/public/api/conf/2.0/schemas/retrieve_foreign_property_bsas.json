@@ -99,7 +99,8 @@
               "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999.99.",
               "example": "123.12"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "loss": {
           "type": "object",
