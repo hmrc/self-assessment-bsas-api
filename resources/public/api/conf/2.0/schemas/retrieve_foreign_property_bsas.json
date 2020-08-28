@@ -5,55 +5,6 @@
   "type": "object",
   "properties": {
     "metadata": {"$ref": "metadata_definitions.json#/definitions/foreignPropMetadata"},
-    "typeOfBusiness": {
-      "type": "string",
-      "description": "The type of business the loss applies to.\n\nLimited to the following possible values:\n\nforeign-property-fhl-eea\n\nforeign-property",
-      "enum": [
-        "foreign-property-fhl-eea",
-        "foreign-property"
-      ]
-    },
-    "accountingPeriod": {
-      "type": "object",
-      "description": "Object containing the accounting period start and end dates",
-      "properties": {
-        "startDate": {
-          "type": "string",
-          "description": "The date the accounting period started",
-          "example": "2019-04-06"
-        },
-        "endDate": {
-          "type": "string",
-          "description": "The date the accounting period ended",
-          "example": "2020-04-06"
-        }
-      }
-    },
-    "taxYear": {
-      "type": "string",
-      "description": "The tax year into which this accounting period falls",
-      "example": "2020-21"
-    },
-    "requestedDateTime": {
-      "type": "string",
-      "description": "The date and time the summary calculation was originally requested, prior to any adjustments",
-      "example": "2020-10-14T11:33:27Z"
-    },
-    "bsasId": {
-      "type": "string",
-      "description": "The unique identifier of the summary calculation.\n\nMust conform to the regular expression:\n\n^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-\n\n[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-\n\n[0-9a-f]{12}$",
-      "example": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    },
-    "summaryStatus": {
-      "type": "string",
-      "description": "The status of the this calculated summary, limited to the following possible values:\n\n    valid\n    invalid\n    superseded",
-      "example": "valid"
-    },
-    "adjustedSummary": {
-      "type": "boolean",
-      "description": "Indicates whether or not the summary includes adjusted values.",
-      "example": "true"
-    },
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for either Foreign Property Furnished Holiday Let in the EEA business income source or for any other type Foreign Property.",
@@ -208,8 +159,49 @@
           "additionalProperties": false
         }
       },
+      "required": [
+        "total"
+      ],
       "additionalProperties": false
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c/adjust"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "submit-summary-adjustments"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "POST",
+              "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
     }
   },
+  "required": [
+    "metadata",
+    "bsas"
+  ],
   "additionalProperties": false
 }
