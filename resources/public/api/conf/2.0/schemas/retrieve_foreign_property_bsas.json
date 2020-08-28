@@ -205,5 +205,6 @@
         }
       }
     }
-  }
+  },
+  "additionalProperties": false
 }
