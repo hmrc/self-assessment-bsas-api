@@ -147,7 +147,8 @@
               "description": "Tax withheld (in UK Pounds) on certain payments to UK residents or UK Tax taken off rental Income (applies to non-resident landlords only)\n\nThe value must be greater than 0 and up to 99999999999.99.",
               "example": "123.12"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "expensesBreakdown": {
           "type": "object",
