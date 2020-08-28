@@ -32,6 +32,12 @@ case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaint
     "other" -> other,
     "consolidatedExpenses" -> consolidatedExpenses
   ).collect {case (k, Some(v)) => (k, v) }
+
+  def isEmpty: Boolean =
+    FHLExpenses.unapply(this).forall {
+      case (None, None, None, None, None, None, None, None) => true
+      case _ => false
+    }
 }
 
 object FHLExpenses {

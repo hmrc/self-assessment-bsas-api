@@ -20,13 +20,13 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v2.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
-import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
+import v2.models.errors._
+import v2.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
   val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val nino   = "AA123456A"
 
   class SetUp {
     val validator = new SubmitUkPropertyBsasValidator
@@ -34,22 +34,19 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
   val invalidBody: AnyContentAsJson = AnyContentAsJson(Json.obj("aproperty" -> "25"))
 
-
   "running validation" should {
     "return no errors" when {
       "all the fields are submitted for adjustments non-furnished" in new SetUp {
 
         validator
-          .validate(
-            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields)))
+          .validate(SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields)))
           .isEmpty shouldBe true
       }
 
       "all the fields are submitted for adjustments furnished" in new SetUp {
 
         validator
-          .validate(
-            SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields)))
+          .validate(SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields)))
           .isEmpty shouldBe true
       }
     }
@@ -79,7 +76,9 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result = validator.validate(
           SubmitUkPropertyBsasRawData(
-            nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields)
+            nino,
+            invalidBsasId,
+            submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields)
           )
         )
 
@@ -106,9 +105,14 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
           )
 
         result.length shouldBe 1
-        result shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/furnishedHolidayLet/expenses/premisesRunningCosts", "/furnishedHolidayLet/expenses/repairsAndMaintenance", "/furnishedHolidayLet/expenses/financialCosts", "/furnishedHolidayLet/expenses/professionalFees"))))
+        result shouldBe List(
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(
+            "/furnishedHolidayLet/expenses/premisesRunningCosts",
+            "/furnishedHolidayLet/expenses/repairsAndMaintenance",
+            "/furnishedHolidayLet/expenses/financialCosts",
+            "/furnishedHolidayLet/expenses/professionalFees"
+          ))))
       }
-
 
       "invalid request is submitted" in new SetUp {
 
@@ -131,7 +135,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         result.length shouldBe 1
         result shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
-
 
       "an empty FHL body is submitted" in new SetUp {
 
@@ -171,7 +174,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         result.length shouldBe 1
         result shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
-
 
       "an empty non-FHL body is submitted" in new SetUp {
 
@@ -216,9 +218,17 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
         private val result =
           validator.validate(
-            SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj(
-              "furnishedHolidayLet" -> "",
-              "nonFurnishedHolidayLet" -> ""))
+            SubmitUkPropertyBsasRawData(
+              nino,
+              bsasId,
+              AnyContentAsJson(
+                Json.obj(
+                  "nonFurnishedHolidayLet" ->
+                    Json.obj("income" -> Json.obj("rentIncome" -> 1)),
+                  "furnishedHolidayLet" ->
+                    Json.obj("income" -> Json.obj("rentIncome" -> 1))
+                )
+              )
             )
           )
 

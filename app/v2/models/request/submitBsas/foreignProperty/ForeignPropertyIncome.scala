@@ -16,17 +16,18 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 case class ForeignPropertyIncome(rentIncome: Option[BigDecimal],
                                  premiumsOfLeaseGrant: Option[BigDecimal],
                                  foreignTaxTakenOff: Option[BigDecimal],
                                  otherPropertyIncome: Option[BigDecimal]) {
 
-  def isEmpty: Boolean = rentIncome.isEmpty &&
-    premiumsOfLeaseGrant.isEmpty &&
-    foreignTaxTakenOff.isEmpty &&
-    otherPropertyIncome.isEmpty
+  def isEmpty: Boolean =
+    ForeignPropertyIncome.unapply(this).forall {
+      case (None, None, None, None) => true
+      case _                        => false
+    }
 }
 
 object ForeignPropertyIncome {

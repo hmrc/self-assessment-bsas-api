@@ -16,7 +16,7 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 case class FhlEeaExpenses(premisesRunningCosts: Option[BigDecimal],
                           repairsAndMaintenance: Option[BigDecimal],
@@ -27,26 +27,22 @@ case class FhlEeaExpenses(premisesRunningCosts: Option[BigDecimal],
                           other: Option[BigDecimal],
                           consolidatedExpenses: Option[BigDecimal]) {
 
-  def isEmpty: Boolean = premisesRunningCosts.isEmpty &&
-    repairsAndMaintenance.isEmpty &&
-    financialCosts.isEmpty &&
-    professionalFees.isEmpty &&
-    travelCosts.isEmpty &&
-    costOfServices.isEmpty &&
-    other.isEmpty &&
-    consolidatedExpenses.isEmpty
+  def isEmpty: Boolean =
+    FhlEeaExpenses.unapply(this).forall {
+      case (None, None, None, None, None, None, None, None) => true
+      case _                                                => false
+    }
 
   val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts" -> premisesRunningCosts,
+    "premisesRunningCosts"  -> premisesRunningCosts,
     "repairsAndMaintenance" -> repairsAndMaintenance,
-    "financialCosts" -> financialCosts,
-    "professionalFees" -> professionalFees,
-    "costOfServices" -> costOfServices,
-    "travelCosts" -> travelCosts,
-    "other" -> other,
-    "consolidatedExpenses" -> consolidatedExpenses
-  ).collect {case (k, Some(v)) => (k, v)
-  }
+    "financialCosts"        -> financialCosts,
+    "professionalFees"      -> professionalFees,
+    "costOfServices"        -> costOfServices,
+    "travelCosts"           -> travelCosts,
+    "other"                 -> other,
+    "consolidatedExpenses"  -> consolidatedExpenses
+  ).collect { case (k, Some(v)) => (k, v) }
 }
 
 object FhlEeaExpenses {

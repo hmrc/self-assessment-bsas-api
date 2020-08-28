@@ -21,13 +21,11 @@ import utils.JsonWritesUtil
 
 case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty], foreignFhlEea: Option[FhlEea]) {
 
-  def isEmpty: Boolean = (foreignProperty.isEmpty && foreignFhlEea.isEmpty) ||
-    foreignFhlEea.flatMap(_.income.map(_.isEmpty)).getOrElse(false) ||
-    foreignFhlEea.flatMap(_.expenses.map(_.isEmpty)).getOrElse(false) ||
-    foreignFhlEea.exists(_.isEmpty) ||
-    foreignProperty.flatMap(_.income.map(_.isEmpty)).getOrElse(false) ||
-    foreignProperty.flatMap(_.expenses.map(_.isEmpty)).getOrElse(false) ||
-    foreignProperty.exists(_.isEmpty)
+  private def isEmpty: Boolean = (foreignProperty.isEmpty && foreignFhlEea.isEmpty)
+
+  def isIncorrectOrEmptyBody: Boolean = isEmpty ||
+    (foreignProperty.isDefined && foreignProperty.get.isEmpty) ||
+    (foreignFhlEea.isDefined && foreignFhlEea.get.isEmpty)
 }
 
 

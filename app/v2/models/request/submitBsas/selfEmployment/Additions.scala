@@ -16,7 +16,7 @@
 
 package v2.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 import play.api.libs.functional.syntax._
 
 case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
@@ -33,42 +33,32 @@ case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
                      badDebtDisallowable: Option[BigDecimal],
                      professionalFeesDisallowable: Option[BigDecimal],
                      depreciationDisallowable: Option[BigDecimal],
-                     otherDisallowable: Option[BigDecimal]){
+                     otherDisallowable: Option[BigDecimal]) {
 
-  def isEmpty: Boolean =  costOfGoodsBoughtDisallowable.isEmpty &&
-                          cisPaymentsToSubcontractorsDisallowable.isEmpty &&
-                          staffCostsDisallowable.isEmpty &&
-                          travelCostsDisallowable.isEmpty &&
-                          premisesRunningCostsDisallowable.isEmpty &&
-                          maintenanceCostsDisallowable.isEmpty &&
-                          adminCostsDisallowable.isEmpty &&
-                          advertisingCostsDisallowable.isEmpty &&
-                          businessEntertainmentCostsDisallowable.isEmpty &&
-                          interestDisallowable.isEmpty &&
-                          financialChargesDisallowable.isEmpty &&
-                          badDebtDisallowable.isEmpty &&
-                          professionalFeesDisallowable.isEmpty &&
-                          depreciationDisallowable.isEmpty &&
-                          otherDisallowable.isEmpty
+  def isEmpty: Boolean =
+    Additions.unapply(this).forall {
+      case (None, None, None, None, None, None, None, None, None, None, None, None, None, None, None) => true
+      case _                                                                                          => false
+    }
 }
 
-object Additions{
- implicit val reads: Reads[Additions] = Json.reads[Additions]
- implicit val writes: OWrites[Additions] = (
-   (JsPath \ "costOfGoodsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "paymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "wagesAndStaffCostsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "carVanTravelExpensesDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "premisesRunningCostsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "maintenanceCostsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "adminCostsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "advertisingCostsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "businessEntertainmentCostsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "interestOnBankOtherLoansDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "financeChargesDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "irrecoverableDebtsDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "professionalFeesDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "depreciationDisallowable").writeNullable[BigDecimal] and
-     (JsPath \ "otherExpensesDisallowable").writeNullable[BigDecimal]
-   )(unlift(Additions.unapply))
+object Additions {
+  implicit val reads: Reads[Additions] = Json.reads[Additions]
+  implicit val writes: OWrites[Additions] = (
+    (JsPath \ "costOfGoodsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "paymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "wagesAndStaffCostsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "carVanTravelExpensesDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "premisesRunningCostsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "maintenanceCostsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "adminCostsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "advertisingCostsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "businessEntertainmentCostsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "interestOnBankOtherLoansDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "financeChargesDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "irrecoverableDebtsDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "professionalFeesDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "depreciationDisallowable").writeNullable[BigDecimal] and
+      (JsPath \ "otherExpensesDisallowable").writeNullable[BigDecimal]
+  )(unlift(Additions.unapply))
 }

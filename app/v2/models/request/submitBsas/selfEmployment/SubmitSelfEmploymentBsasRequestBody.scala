@@ -22,9 +22,10 @@ import utils.JsonWritesUtil
 case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses]){
 
   def isEmpty: Boolean = !(income.isDefined || additions.isDefined || expenses.isDefined)
-  def isIncorrectOrEmptyBodyError: Boolean = isEmpty || (income.isDefined && income.get.isEmpty ||
-    additions.isDefined && additions.get.isEmpty ||
-    expenses.isDefined && expenses.get.isEmpty)
+
+  def isIncorrectOrEmptyBodyError: Boolean = isEmpty || (income.isDefined && income.get.isEmpty) ||
+    (additions.isDefined && additions.get.isEmpty) ||
+    (expenses.isDefined && expenses.get.isEmpty)
 }
 
 object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil{
