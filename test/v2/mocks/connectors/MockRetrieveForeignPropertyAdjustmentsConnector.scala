@@ -14,31 +14,28 @@
  * limitations under the License.
  */
 
-package v2.connectors
+package v2.mocks.connectors
 
-import config.AppConfig
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import v2.connectors.{DesOutcome, RetrieveForeignPropertyAdjustmentsConnector}
 import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.connectors.httpparsers.StandardDesHttpParser._
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class RetrieveForeignPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
-                                                            val appConfig: AppConfig) extends BaseDesConnector {
+trait MockRetrieveForeignPropertyAdjustmentsConnector extends MockFactory {
 
-  def retrieveForeignPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveForeignPropertyAdjustmentsResponse]] = {
+  val mockConnector: RetrieveForeignPropertyAdjustmentsConnector = mock[RetrieveForeignPropertyAdjustmentsConnector]
 
-    val nino = request.nino.nino
-    val bsasId = request.bsasId
-
-    get(
-      DesUri[RetrieveForeignPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
-    )
+  object MockRetrieveForeignPropertyAdjustmentsConnector {
+    def retrieveForeignPropertyAdjustments(requestData: RetrieveAdjustmentsRequestData):
+    CallHandler[Future[DesOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
+      (mockConnector
+        .retrieveForeignPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(requestData, *, *)
+    }
   }
 }
+

@@ -26,6 +26,7 @@ import v2.controllers.EndpointLogContext
 import v2.models.errors.{BsasIdFormatError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleNoAdjustmentsMade}
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
+import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 import v2.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
