@@ -33,11 +33,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "id"
-  ]
+  ],
+  "additionalProperties": false
 }

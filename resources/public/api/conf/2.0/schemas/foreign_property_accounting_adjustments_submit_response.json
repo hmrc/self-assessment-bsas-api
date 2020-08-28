@@ -4,7 +4,9 @@
   "description": "This endpoint allows the developer to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a Foreign Property Business, and it must not have been adjusted, previously.  Only data for one property business (either foreign-property-fhl-eea or foreign-property) should be included in any submission.",
   "type": "object",
   "properties": {
-    "id": {"$ref": "definitions.json#/definitions/bsasId"},
+    "id": {
+      "$ref": "definitions.json#/definitions/bsasId"
+    },
     "links": {
       "type": "array",
       "items": {
@@ -20,7 +22,8 @@
             "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "retrieve-adjustable-summary"
+              "self",
+              "retrieve-adjustable-summary"
             ]
           },
           "method": {
@@ -35,11 +38,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "id"
-  ]
+  ],
+  "additionalProperties": false
 }
