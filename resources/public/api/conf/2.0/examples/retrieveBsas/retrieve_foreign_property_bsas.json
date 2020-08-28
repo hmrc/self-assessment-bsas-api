@@ -27,7 +27,7 @@
       "adjustedIncomeTax": 123.12
     },
     "incomeBreakdown": {
-      "totalRentsReceived": 123.12,
+      "rentIncome": 123.12,
       "premiumsOfLeaseGrant": 123.12,
       "otherPropertyIncome": 123.12,
       "foreignTaxTakenOff": 123.12,
