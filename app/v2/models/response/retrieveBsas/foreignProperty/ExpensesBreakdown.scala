@@ -33,7 +33,7 @@ case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal],
 
 object ExpensesBreakdown {
 
-  implicit val reads: Reads[ExpensesBreakdown] = (
+  val nonFhlReads: Reads[ExpensesBreakdown] = (
     (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
       (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and
       (JsPath \ "financialCosts").readNullable[BigDecimal] and
@@ -42,6 +42,19 @@ object ExpensesBreakdown {
       (JsPath \ "costOfServices").readNullable[BigDecimal] and
       (JsPath \ "residentialFinancialCost").readNullable[BigDecimal] and
       (JsPath \ "broughtFwdResidentialFinancialCost").readNullable[BigDecimal] and
+      (JsPath \ "other").readNullable[BigDecimal] and
+      (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
+    )(ExpensesBreakdown.apply _)
+
+  val fhlReads: Reads[ExpensesBreakdown] = (
+    (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
+      (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and
+      (JsPath \ "financialCosts").readNullable[BigDecimal] and
+      (JsPath \ "professionalFees").readNullable[BigDecimal] and
+      (JsPath \ "travelCosts").readNullable[BigDecimal] and
+      (JsPath \ "costOfServices").readNullable[BigDecimal] and
+      Reads.pure(None) and
+      Reads.pure(None) and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
     )(ExpensesBreakdown.apply _)

@@ -24,7 +24,7 @@ import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsa
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 
-  val nonFhlExpenseBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(
+  val nonFhlExpensesModel: ExpensesBreakdown = ExpensesBreakdown(
     Some(100.49),
     Some(100.49),
     Some(100.49),
@@ -37,7 +37,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     None
   )
 
-  val fhlExpenseBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(
+  val fhlExpensesModel: ExpensesBreakdown = ExpensesBreakdown(
     Some(100.49),
     Some(100.49),
     Some(100.49),
@@ -60,14 +60,14 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   val loss: Loss = Loss(Some(100.49), Some(100.49))
 
-  val nonFhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
+  val nonFhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
 
-  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpenseBreakdownModel))
+  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel))
 
   val nonFhlMetaDataModel: Metadata = Metadata(
     TypeOfBusiness.`foreign-property`,
-    AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")),
-    "2019-20",
+    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2021-10-10")),
+    "2021-22",
     "2019-10-14T11:33:27Z",
     "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
     "valid",
@@ -76,8 +76,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   val fhlMetaDataModel: Metadata = Metadata(
     TypeOfBusiness.`foreign-property-fhl-eea`,
-    AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")),
-    "2019-20",
+    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2021-10-10")),
+    "2021-22",
     "2019-10-14T11:33:27Z",
     "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
     "valid",

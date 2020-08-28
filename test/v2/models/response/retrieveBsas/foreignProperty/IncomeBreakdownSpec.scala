@@ -16,7 +16,7 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
-import v2.fixtures.foreignProperty.RetrieveBsasForeignPropertyAdjustmentsFixtures
+import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
@@ -51,7 +51,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
 
   val fhlDesJson = Json.parse(
     """{
-      |  "rentReceived": 100.49
+      |  "rentIncome": 100.49
       |}""".stripMargin
   )
 
