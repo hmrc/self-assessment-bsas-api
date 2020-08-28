@@ -16,12 +16,12 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 import support.UnitSpec
 
 class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
-  val validJson = Json.parse(
+  val foreignPropertyJson: JsValue = Json.parse(
     """
       |{
       |    "foreignProperty": {
@@ -42,7 +42,37 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       |            "other": 123.12,
       |            "consolidatedExpenses": 123.12
       |        }
+      |    }
+      |}
+      |""".stripMargin)
+
+  val foreignPropertyJsonWithType: JsValue = Json.parse(
+    """
+      |{
+      |    "incomeSourceType": "15",
+      |    "income": {
+      |        "rentIncome": 123.12,
+      |        "premiumsOfLeaseGrant": 123.12,
+      |        "foreignTaxTakenOff": 123.12,
+      |        "otherPropertyIncome": 123.12
       |    },
+      |    "expenses": {
+      |        "premisesRunningCosts": 123.12,
+      |        "repairsAndMaintenance": 123.12,
+      |        "financialCosts": 123.12,
+      |        "professionalFees": 123.12,
+      |        "costOfServices": 123.12,
+      |        "travelCosts": 123.12,
+      |        "residentialFinancialCost": 123.12,
+      |        "other": 123.12,
+      |        "consolidatedExpenses": 123.12
+      |    }
+      |}
+      |""".stripMargin)
+
+  val foreignFhlEeaJson: JsValue = Json.parse(
+    """
+      |{
       |    "foreignFhlEea": {
       |        "income": {
       |            "rentIncome": 123.12
@@ -58,13 +88,36 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       |            "consolidatedExpenses": 123.12
       |        }
       |    }
-      |
       |}
-      |""".stripMargin)
+      |""".stripMargin
+  )
 
-  val emptyJson = Json.parse("""{}""")
+  val foreignFhlEeaJsonWithType: JsValue = Json.parse(
+    """
+      |{
+      |    "incomeSourceType": "03",
+      |    "income": {
+      |        "rentIncome": 123.12
+      |    },
+      |    "expenses": {
+      |        "premisesRunningCosts": 123.12,
+      |        "repairsAndMaintenance": 123.12,
+      |        "financialCosts": 123.12,
+      |        "professionalFees": 123.12,
+      |        "costOfServices": 123.12,
+      |        "travelCosts": 123.12,
+      |        "other": 123.12,
+      |        "consolidatedExpenses": 123.12
+      |    }
+      |}
+      |""".stripMargin
+  )
 
-  val validModel = SubmitForeignPropertyBsasRequestBody(
+  val emptyJson: JsValue = Json.parse("""{}""")
+
+  val emptyModel = SubmitForeignPropertyBsasRequestBody(None, None)
+
+  val foreignPropertyModel = SubmitForeignPropertyBsasRequestBody(
     Some(ForeignProperty(
       Some(ForeignPropertyIncome(
         Some(123.12),
@@ -84,6 +137,11 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
         Some(123.12)
       ))
     )),
+    None
+  )
+
+  val foreignFhlEeaModel = SubmitForeignPropertyBsasRequestBody(
+    None,
     Some(FhlEea(
       Some(FhlIncome(
         Some(123.12)
@@ -101,46 +159,32 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
     ))
   )
 
-  val emptyModel = SubmitForeignPropertyBsasRequestBody(None, None)
+  "SubmitForeignPropertyBsasRequestBody" when {
+    "read from valid JSON" should {
+      "return the expected SubmitForeignPropertyBsasRequestBody with a foreignProperty" in {
+        foreignPropertyJson.validate[SubmitForeignPropertyBsasRequestBody] shouldBe JsSuccess(foreignPropertyModel)
+      }
 
-  "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        validModel shouldBe validJson.as[SubmitForeignPropertyBsasRequestBody]
+      "return the expected SubmitForeignPropertyBsasRequestBody with a foreignFhlEea" in {
+        foreignFhlEeaJson.validate[SubmitForeignPropertyBsasRequestBody] shouldBe JsSuccess(foreignFhlEeaModel)
+      }
+
+      "return the expected empty body" in {
+        emptyJson.as[SubmitForeignPropertyBsasRequestBody] shouldBe emptyModel
       }
     }
-  }
-  "reads from an empty JSON" when{
-    "passed an empty JSON" should {
-      "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[SubmitForeignPropertyBsasRequestBody]
+
+    "written to JSON" should {
+      "return the expected SubmitForeignPropertyBsasRequestBody with a foreignProperty" in {
+        Json.toJson(foreignPropertyModel) shouldBe foreignPropertyJsonWithType
       }
-    }
-  }
-  "writes" when {
-    "passed valid model" should {
-      "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validJson
+
+      "return the expected SubmitForeignPropertyBsasRequestBody with a foreignFhlEea" in {
+        Json.toJson(foreignFhlEeaModel) shouldBe foreignFhlEeaJsonWithType
       }
-    }
-  }
-  "write from an empty body" when {
-    "passed an empty model" should {
-      "return an empty JSON" in {
+
+      "return an empty body when written from an empty model" in {
         Json.toJson(emptyModel) shouldBe emptyJson
-      }
-    }
-  }
-
-  "isEmpty" when {
-    "passed a non empty model" should {
-      "return false" in {
-        validModel.isEmpty shouldBe false
-      }
-    }
-    "passed an empty model" should {
-      "return true" in {
-        emptyModel.isEmpty shouldBe true
       }
     }
   }

@@ -16,7 +16,8 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import utils.JsonWritesUtil
 
 case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty], foreignFhlEea: Option[FhlEea]) {
 
@@ -30,6 +31,22 @@ case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignP
 }
 
 
-object SubmitForeignPropertyBsasRequestBody {
-  implicit val format: OFormat[SubmitForeignPropertyBsasRequestBody] = Json.format[SubmitForeignPropertyBsasRequestBody]
+object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
+  implicit val reads: Reads[SubmitForeignPropertyBsasRequestBody] = Json.reads[SubmitForeignPropertyBsasRequestBody]
+  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = new OWrites[SubmitForeignPropertyBsasRequestBody] {
+    override def writes(o: SubmitForeignPropertyBsasRequestBody): JsObject =
+      o.foreignProperty.map (x =>
+        filterNull(Json.obj(
+          "incomeSourceType" -> "15",
+          "income" -> x.income,
+          "expenses" -> x.expenses
+        ))).getOrElse(
+        o.foreignFhlEea.map(x =>
+          filterNull(Json.obj(
+            "incomeSourceType" -> "03",
+            "income" -> x.income,
+            "expenses" -> x.expenses
+          ))).getOrElse(Json.obj())
+      )
+  }
 }
