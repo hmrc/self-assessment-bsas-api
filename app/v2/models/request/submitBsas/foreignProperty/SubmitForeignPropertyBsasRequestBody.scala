@@ -16,7 +16,7 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{JsObject, Json, OFormat, OWrites, Reads}
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
 case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty], foreignFhlEea: Option[FhlEea]) {
