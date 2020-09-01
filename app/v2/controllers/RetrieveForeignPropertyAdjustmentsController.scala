@@ -32,7 +32,7 @@ import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.errors._
 import v2.models.request.RetrieveAdjustmentsRawData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyAdjustmentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -120,7 +120,7 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
 
     val event = AuditEvent(
       auditType = "retrieveBusinessSourceAccountingAdjustments",
-      transactionName = "retrieve-a-self-employment-business-accounting-adjustments",
+      transactionName = "retrieve-a-foreign-property-business-accounting-adjustments",
       detail = details
     )
 

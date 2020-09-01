@@ -64,19 +64,19 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |   "metadata": {
        |      "typeOfBusiness": "foreign-property",
        |      "accountingPeriod": {
-       |         "StartDate": "2020-10-11",
-       |         "EndDate": "2021-10-10"
+       |         "startDate": "2018-10-11",
+       |         "endDate": "2019-10-10"
        |      },
-       |      "taxYear": "2020-21",
-       |      "requestedDateTime": "2020-10-14T11:33:27Z",
-       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
-       |      "summaryStatus": "valid",
-       |      "adjustedSummary": "true"
+       |      "taxYear": "2019-20",
+       |      "requestedDateTime": "2019-10-14T11:33:27Z",
+       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       |      "summaryStatus": "superseded",
+       |      "adjustedSummary": true
        |   },
        |   "adjustments": {
        |      "incomes": {
        |         "rentIncome": 100.49,
-       |         "premiumsOFLeaseGrant": 100.49,
+       |         "premiumsOfLeaseGrant": 100.49,
        |         "otherPropertyIncome": 100.49,
        |         "foreignTaxTakenOff": 100.49
        |      },

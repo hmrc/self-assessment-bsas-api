@@ -20,12 +20,13 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v2.models.errors._
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
-import v1.models.outcomes.ResponseWrapper
+import v2.models.outcomes.ResponseWrapper
 import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
 import v2.mocks.services._
-import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.hateoas.{HateoasWrapper, Link}
 import v2.models.hateoas.Method.GET
 import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
@@ -61,7 +62,7 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
 
   private val nino = "AA123456A"
   private val correlationId = "X-123"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
@@ -111,6 +112,70 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
 
         val auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForForeignPropertyAdjustments(nino, bsasId))))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+      }
+    }
+
+    "return the error as per spec" when {
+      "parser errors occur" must {
+        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
+          s"a ${error.code} error is returned from the parser" in new Test {
+
+            MockRetrieveAdjustmentsRequestParser
+              .parse(requestRawData)
+              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+
+            val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(error)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          }
+        }
+
+        val input = Seq(
+          (NinoFormatError, BAD_REQUEST),
+          (BsasIdFormatError, BAD_REQUEST)
+        )
+
+        input.foreach(args => (errorsFromParserTester _).tupled(args))
+      }
+
+      "service errors occur" must {
+        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+          s"a $mtdError error is returned from the service" in new Test {
+
+            MockRetrieveAdjustmentsRequestParser
+              .parse(requestRawData)
+              .returns(Right(request))
+
+            MockRetrieveForeignPropertyAdjustmentsService
+              .retrieveAdjustments(request)
+              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+
+            val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(mtdError)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          }
+        }
+
+        val input = Seq(
+          (NinoFormatError, BAD_REQUEST),
+          (BsasIdFormatError, BAD_REQUEST),
+          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (RuleNoAdjustmentsMade, FORBIDDEN),
+          (NotFoundError, NOT_FOUND),
+          (RuleNotSelfEmployment, FORBIDDEN)
+        )
+
+        input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }
