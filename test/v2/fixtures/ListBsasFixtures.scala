@@ -152,6 +152,7 @@ object ListBsasFixtures {
     """
       |{
       | "incomeSourceType": "15",
+      | "incomeSourceId": "000000000000210",
       | "accountingStartDate": "2018-10-11",
       | "accountingEndDate": "2019-10-10",
       | "ascCalculations": [
@@ -303,6 +304,7 @@ object ListBsasFixtures {
        |  "businessSourceSummaries": [
        |    {
        |      "typeOfBusiness": "foreign-property",
+       |      "businessId": "000000000000210",
        |      "accountingPeriod": {
        |        "startDate": "2018-10-11",
        |        "endDate": "2019-10-10"
