@@ -62,7 +62,7 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
 
   private val nino = "AA123456A"
   private val correlationId = "X-123"
-  private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+  private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
   private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
@@ -97,20 +97,20 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
 
         MockRetrieveForeignPropertyAdjustmentsService
           .retrieveAdjustments(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel))))
 
         MockHateoasFactory
-          .wrap(foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel, RetrieveForeignPropertyAdjustmentsHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel, Seq(testHateoasLinkRetrieveBsas, testHateoasLinkAdjustSelf))
+          .wrap(validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel, RetrieveForeignPropertyAdjustmentsHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel, Seq(testHateoasLinkRetrieveBsas, testHateoasLinkAdjustSelf))
           )
 
         val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponseForForeignPropertyAdjustments(nino, bsasId))
+        contentAsJson(result) shouldBe Json.parse(hateoasResponseForeignPropertyAdjustments(nino, bsasId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForForeignPropertyAdjustments(nino, bsasId))))
+        val auditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForeignPropertyAdjustments(nino, bsasId))))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }

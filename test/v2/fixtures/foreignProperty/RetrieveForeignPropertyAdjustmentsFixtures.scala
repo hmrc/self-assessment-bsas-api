@@ -33,6 +33,15 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
     "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 
+  val validForeignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`,
+    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2020-01-01")), "2019-20",
+    "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
+
+  val validForeignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`,
+    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2020-01-01")), "2019-20",
+    "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
+
+
   val nonFhlIncomeModel = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
   val fhlIncomeModel = IncomeBreakdown(Some(100.49), None, None, None)
@@ -49,6 +58,9 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
 
   val foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
     RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, nonFhlBsasDetailModel)
+
+  val validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
+    RetrieveForeignPropertyAdjustmentsResponse(validForeignPropertyMetaDataModel, nonFhlBsasDetailModel)
 
   val foreignPropertyFhlEeaRetrieveForeignPropertyAdjustmentResponseModel =
     RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, fhlBsasDetailModel)
@@ -79,6 +91,52 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
        |         "otherPropertyIncome": 100.49
+       |      },
+       |      "expenses": {
+       |         "premisesRunningCosts": 100.49,
+       |         "repairsAndMaintenance": 100.49,
+       |         "financialCosts": 100.49,
+       |         "professionalFees": 100.49,
+       |         "travelCosts": 100.49,
+       |         "costOfServices": 100.49,
+       |         "residentialFinancialCost": 100.49,
+       |         "other": 100.49,
+       |         "consolidatedExpenses": 100.49
+       |      }
+       |   },
+       |	"links": [{
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId?adjustedStatus=true",
+       |		"method": "GET",
+       |		"rel": "retrieve-adjustable-summary"
+       |	}, {
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+       |		"method": "GET",
+       |		"rel": "self"
+       |	}]
+       |}
+       |""".stripMargin
+
+  val hateoasResponseForeignPropertyAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |   "metadata": {
+       |      "typeOfBusiness": "foreign-property",
+       |      "accountingPeriod": {
+       |         "startDate": "2020-10-11",
+       |         "endDate": "2020-01-01"
+       |      },
+       |      "taxYear": "2019-20",
+       |      "requestedDateTime": "2020-10-14T11:33:27Z",
+       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+       |      "summaryStatus": "valid",
+       |      "adjustedSummary": true
+       |   },
+       |   "adjustments": {
+       |      "incomes": {
+       |         "rentIncome": 100.49,
+       |         "premiumsOfLeaseGrant": 100.49,
+       |         "otherPropertyIncome": 100.49,
+       |         "foreignTaxTakenOff": 100.49
        |      },
        |      "expenses": {
        |         "premisesRunningCosts": 100.49,
