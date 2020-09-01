@@ -18,12 +18,13 @@ package v2.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.OK
+import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures.hateoasResponseForForeignPropertyAdjustments
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures.desJson
+import v2.models.errors.{BsasIdFormatError, DownstreamError, MtdError, NinoFormatError, NotFoundError, RuleNoAdjustmentsMade}
 import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
@@ -71,9 +72,72 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
       }
     }
 
-    "return error response with status BAD_REQUEST" when {
+    "return error according to spec" when {
 
-      "valid requesy"
+      def validationErroTest(requestNino: String, requestBsasId: String,
+                             expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"validation fails with ${expectedBody.code} error" in new Test {
+
+          override val nino: String = requestNino
+          override val bsasId: String = requestBsasId
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+          }
+
+          val response: WSResponse = await(request.get)
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
+      }
+
+      val input = Seq(
+        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError)
+      )
+
+      input.foreach(args => (validationErroTest _).tupled(args))
+    }
+
+    "des service error" when {
+
+      def errorBody(code: String): String =
+        s"""{
+           |  "code": "$code",
+           |  "reason": "des message"
+           |}""".stripMargin
+
+      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"des returns an $desCode error and status $desStatus" in new Test {
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
+          }
+
+          val response: WSResponse = await(request.get)
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
+      }
+
+      val input = Seq(
+        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
+        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
+        (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
+        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+      )
+
+      input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
 }
