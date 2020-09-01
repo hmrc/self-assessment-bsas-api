@@ -58,4 +58,49 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
   val foreignPropertyFhlEeaMinimalRetrieveForeignPropertyAdjustmentResponseModel =
     RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, BsasDetail(None, None))
 
+  val hateoasResponseForForeignPropertyAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |   "metadata": {
+       |      "typeOfBusiness": "foreign-property",
+       |      "accountingPeriod": {
+       |         "StartDate": "2020-10-11",
+       |         "EndDate": "2021-10-10"
+       |      },
+       |      "taxYear": "2020-21",
+       |      "requestedDateTime": "2020-10-14T11:33:27Z",
+       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+       |      "summaryStatus": "valid",
+       |      "adjustedSummary": "true"
+       |   },
+       |   "adjustments": {
+       |      "incomes": {
+       |         "rentIncome": 100.49,
+       |         "premiumsOFLeaseGrant": 100.49,
+       |         "otherPropertyIncome": 100.49,
+       |         "foreignTaxTakenOff": 100.49
+       |      },
+       |      "expenses": {
+       |         "premisesRunningCosts": 100.49,
+       |         "repairsAndMaintenance": 100.49,
+       |         "financialCosts": 100.49,
+       |         "professionalFees": 100.49,
+       |         "travelCosts": 100.49,
+       |         "costOfServices": 100.49,
+       |         "residentialFinancialCost": 100.49,
+       |         "other": 100.49,
+       |         "consolidatedExpenses": 100.49
+       |      }
+       |   },
+       |	"links": [{
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId?adjustedStatus=true",
+       |		"method": "GET",
+       |		"rel": "retrieve-adjustable-summary"
+       |	}, {
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+       |		"method": "GET",
+       |		"rel": "self"
+       |	}]
+       |}
+       |""".stripMargin
 }
