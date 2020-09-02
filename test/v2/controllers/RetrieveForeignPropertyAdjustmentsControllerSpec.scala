@@ -40,8 +40,7 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
   with MockMtdIdLookupService
   with MockRetrieveAdjustmentsRequestParser
   with MockRetrieveForeignPropertyAdjustmentsService
-  with MockHateoasFactory
-  with MockAuditService  {
+  with MockHateoasFactory  {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -52,7 +51,6 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
       cc = cc
     )
 
