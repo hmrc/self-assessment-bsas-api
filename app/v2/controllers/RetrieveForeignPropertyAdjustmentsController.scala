@@ -88,7 +88,7 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | BsasIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case RuleNotForeignProperty | RuleNoAdjustmentsMade  => Forbidden(Json.toJson(errorWrapper))
+      case RuleNotForeignProperty | RuleNoAdjustmentsMade | RuleTypeOfBusinessError  => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
