@@ -73,7 +73,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
 
     "return error according to spec" when {
 
-      def validationErroTest(requestNino: String, requestBsasId: String,
+      def validationErrorTest(requestNino: String, requestBsasId: String,
                              expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
@@ -98,7 +98,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError)
       )
 
-      input.foreach(args => (validationErroTest _).tupled(args))
+      input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
     "des service error" when {
@@ -130,7 +130,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "RULE_NOT_FOREIGN_PROPERTY", BAD_REQUEST, RuleNotForeignProperty),
+        (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleNotForeignProperty),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),

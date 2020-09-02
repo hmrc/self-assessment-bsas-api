@@ -73,16 +73,6 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "bsasId" -> bsasId),
-              requestBody = None,
-              `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
-            )
-          )
-
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
@@ -90,16 +80,6 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "bsasId" -> bsasId),
-            requestBody = None,
-            `X-CorrelationId` = correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
 
         result
       }.merge
@@ -114,16 +94,4 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "retrieveBusinessSourceAccountingAdjustments",
-      transactionName = "retrieve-a-foreign-property-business-accounting-adjustments",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 }

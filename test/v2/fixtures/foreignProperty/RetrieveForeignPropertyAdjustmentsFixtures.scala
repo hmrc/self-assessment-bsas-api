@@ -105,7 +105,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      }
        |   },
        |	"links": [{
-       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId?adjustedStatus=true",
        |		"method": "GET",
        |		"rel": "retrieve-adjustable-summary"
        |	}, {
@@ -151,7 +151,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      }
        |   },
        |	"links": [{
-       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
+       |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId?adjustedStatus=true",
        |		"method": "GET",
        |		"rel": "retrieve-adjustable-summary"
        |	}, {
