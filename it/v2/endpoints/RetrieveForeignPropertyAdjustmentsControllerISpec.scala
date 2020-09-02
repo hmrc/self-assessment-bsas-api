@@ -30,7 +30,6 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
 
   private trait Test {
     val nino = "AA123456B"
-    val correlationId = "X-123"
     val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
     val desResponse: String => String = (typeOfBusiness: String) =>

@@ -43,7 +43,6 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
                                                               requestParser: RetrieveAdjustmentsRequestParser,
                                                               service: RetrieveForeignPropertyAdjustmentsService,
                                                               hateoasFactory: HateoasFactory,
-                                                              auditService: AuditService,
                                                               cc: ControllerComponents
                                                             )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
