@@ -22,17 +22,13 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
-import v2.models.errors.ErrorWrapper
 import v2.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v2.hateoas.HateoasFactory
-import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.errors._
+import v2.models.errors.{ErrorWrapper, _}
 import v2.models.request.RetrieveAdjustmentsRawData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyAdjustmentsService}
+import v2.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyAdjustmentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
