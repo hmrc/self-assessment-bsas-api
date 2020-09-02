@@ -16,13 +16,17 @@
 
 package v2.fixtures.foreignProperty
 
+import java.time.LocalDate
+
 import play.api.libs.json.{JsValue, Json}
+import v2.models.domain.TypeOfBusiness
+import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
+import v2.models.response.retrieveBsas.foreignProperty.{BsasDetail, Metadata, ExpensesBreakdown, IncomeBreakdown}
 
 object RetrieveForeignPropertyBsasFixtures {
 
   private val now = "2020-04-06"
   private val aYearFromNow = "2021-04-05"
-
 
   val mtdRetrieveBsasResponseJson: Boolean => JsValue = adjustedSummary =>
     Json.parse(
@@ -88,4 +92,28 @@ object RetrieveForeignPropertyBsasFixtures {
        |     }
        |}""".stripMargin
   )
+
+  val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
+  val profitModel = Profit(Some(100.49),Some(100.49))
+  val lossModel = Loss(Some(100.49),Some(100.49))
+  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
+    Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
+  val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2019-04-06"), LocalDate.parse("2020-04-05"))
+
+  val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`foreign-property`,
+    accountingPeriod = accountingPeriodModel,
+    taxYear = "2019-20",
+    requestedDateTime = "2020-10-14T11:33:27.111Z",
+    bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+    summaryStatus = "valid",
+    adjustedSummary = true
+  )
+
+  val bsasDetailModel = BsasDetail(total = totalBsasModel,
+    profit = Some(profitModel),
+    loss = Some(lossModel),
+    incomeBreakdown = Some(incomeBreakdownModel),
+    expensesBreakdown = Some(expensesBreakdownModel))
+
 }
