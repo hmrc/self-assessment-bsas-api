@@ -18,7 +18,6 @@ package v2.fixtures.ukProperty
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
-import v2.models.errors.MtdError
 import v2.models.request.submitBsas.ukProperty._
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
@@ -315,12 +314,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val validMinimalBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
-
-  def rangeError(fieldName: String): MtdError =
-    MtdError("RULE_RANGE_INVALID", s"Adjustment value for '$fieldName' falls outside the accepted range")
-
-  def formatError(fieldName: String): MtdError =
-    MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the '$fieldName' value is invalid")
 
   def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
                                expenses: Option[JsObject] = None): AnyContentAsJson = {

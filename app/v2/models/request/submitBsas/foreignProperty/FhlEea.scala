@@ -18,11 +18,12 @@ package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{Json, OFormat}
 
-case class FhlEea(income: Option[FhlIncome],
-                  expenses: Option[FhlEeaExpenses]) {
+case class FhlEea(income: Option[FhlIncome], expenses: Option[FhlEeaExpenses]) {
 
-  def isEmpty: Boolean = income.isEmpty &&
-    expenses.isEmpty
+  def isEmpty: Boolean =
+    (income.isEmpty && expenses.isEmpty) ||
+    (income.isDefined && income.get.isEmpty) ||
+    (expenses.isDefined && expenses.get.isEmpty)
 }
 
 object FhlEea {

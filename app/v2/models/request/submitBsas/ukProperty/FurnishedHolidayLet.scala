@@ -19,7 +19,11 @@ package v2.models.request.submitBsas.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
+case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses]) {
+  def isEmpty: Boolean = (income.isEmpty && expenses.isEmpty) ||
+    (income.isDefined && income.get.isEmpty) ||
+    (expenses.isDefined && expenses.get.isEmpty)
+}
 
 object FurnishedHolidayLet {
 

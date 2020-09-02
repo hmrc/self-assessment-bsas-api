@@ -80,10 +80,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(formatError("otherPropertyIncome")))
+          .returns(List(FormatAdjustmentValueError.copy(paths = Some(Seq("otherPropertyIncome")))))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, formatError("otherPropertyIncome"), None))
+        result shouldBe Left(ErrorWrapper(None, FormatAdjustmentValueError.copy(paths = Some(Seq("otherPropertyIncome"))), None))
       }
 
       "a adjustment has a value over the range" in new Test {
@@ -93,10 +93,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(rangeError("rentIncome")))
+          .returns(List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("rentIncome")))))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, rangeError("rentIncome"), None))
+        result shouldBe Left(ErrorWrapper(None, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("rentIncome"))), None))
       }
 
       "the bsas id format is incorrect" in new Test {
@@ -131,13 +131,11 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
-            rangeError("financialCosts"), rangeError("professionalFees")))
+          .returns(List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
 
         private val result = parser.parseRequest(inputData)
         result shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
-            rangeError("financialCosts"), rangeError("professionalFees")))))
+          Left(ErrorWrapper(None, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
       }
     }
   }

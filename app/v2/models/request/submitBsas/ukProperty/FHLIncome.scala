@@ -23,6 +23,8 @@ case class FHLIncome(rentIncome: Option[BigDecimal]) {
   val params: Map[String, BigDecimal] = Map(
     "rentReceived" -> rentIncome
   ).collect {case (k, Some(v)) => (k, v) }
+
+  def isEmpty: Boolean = rentIncome.isEmpty
 }
 
 object FHLIncome {

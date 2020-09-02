@@ -19,28 +19,40 @@ package v2.models.request.submitBsas.ukProperty
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
-case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet],
-                                           furnishedHolidayLet: Option[FurnishedHolidayLet])
+case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet]) {
+  private def isEmpty: Boolean = nonFurnishedHolidayLet.isEmpty && furnishedHolidayLet.isEmpty
 
-object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil{
+  def isIncorrectOrEmptyBody: Boolean =
+    isEmpty ||
+    (nonFurnishedHolidayLet.isDefined && nonFurnishedHolidayLet.get.isEmpty) ||
+    (furnishedHolidayLet.isDefined && furnishedHolidayLet.get.isEmpty)
+}
+
+object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
 
   implicit val reads: Reads[SubmitUKPropertyBsasRequestBody] = Json.reads[SubmitUKPropertyBsasRequestBody]
   implicit val writes: OWrites[SubmitUKPropertyBsasRequestBody] = new OWrites[SubmitUKPropertyBsasRequestBody] {
     override def writes(o: SubmitUKPropertyBsasRequestBody): JsObject =
-      o.nonFurnishedHolidayLet.map { x =>
-        filterNull(Json.obj(
-          "incomeSourceType" -> "02",
-          "income" -> x.income,
-          "expenses"-> x.expenses
-        ))
-      }.getOrElse(
-        o.furnishedHolidayLet.map(x =>
-          filterNull(Json.obj(
-            "incomeSourceType" -> "04",
-            "income" -> x.income,
-            "expenses"-> x.expenses
-          ))).getOrElse(Json.obj())
-      )
+      o.nonFurnishedHolidayLet
+        .map { x =>
+          filterNull(
+            Json.obj(
+              "incomeSourceType" -> "02",
+              "income"           -> x.income,
+              "expenses"         -> x.expenses
+            ))
+        }
+        .getOrElse(
+          o.furnishedHolidayLet
+            .map(
+              x =>
+                filterNull(
+                  Json.obj(
+                    "incomeSourceType" -> "04",
+                    "income"           -> x.income,
+                    "expenses"         -> x.expenses
+                  )))
+            .getOrElse(Json.obj())
+        )
   }
 }
-

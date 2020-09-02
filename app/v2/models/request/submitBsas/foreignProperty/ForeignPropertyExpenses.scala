@@ -16,40 +16,35 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
-                              repairsAndMaintenance: Option[BigDecimal],
-                              financialCosts: Option[BigDecimal],
-                              professionalFees: Option[BigDecimal],
-                              travelCosts: Option[BigDecimal],
-                              costOfServices: Option[BigDecimal],
-                              residentialFinancialCost: Option[BigDecimal],
-                              other: Option[BigDecimal],
-                              consolidatedExpenses: Option[BigDecimal]) {
+                                   repairsAndMaintenance: Option[BigDecimal],
+                                   financialCosts: Option[BigDecimal],
+                                   professionalFees: Option[BigDecimal],
+                                   travelCosts: Option[BigDecimal],
+                                   costOfServices: Option[BigDecimal],
+                                   residentialFinancialCost: Option[BigDecimal],
+                                   other: Option[BigDecimal],
+                                   consolidatedExpenses: Option[BigDecimal]) {
 
-  def isEmpty: Boolean = premisesRunningCosts.isEmpty &&
-    repairsAndMaintenance.isEmpty &&
-    financialCosts.isEmpty &&
-    professionalFees.isEmpty &&
-    travelCosts.isEmpty &&
-    costOfServices.isEmpty &&
-    residentialFinancialCost.isEmpty &&
-    other.isEmpty &&
-    consolidatedExpenses.isEmpty
+  def isEmpty: Boolean =
+    ForeignPropertyExpenses.unapply(this).forall {
+      case (None, None, None, None, None, None, None, None, None) => true
+      case _                                                      => false
+    }
 
   val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts" -> premisesRunningCosts,
-    "repairsAndMaintenance" -> repairsAndMaintenance,
-    "financialCosts" -> financialCosts,
-    "professionalFees" -> professionalFees,
-    "costOfServices" -> costOfServices,
-    "travelCosts" -> travelCosts,
-    "other" -> other,
+    "premisesRunningCosts"     -> premisesRunningCosts,
+    "repairsAndMaintenance"    -> repairsAndMaintenance,
+    "financialCosts"           -> financialCosts,
+    "professionalFees"         -> professionalFees,
+    "costOfServices"           -> costOfServices,
+    "travelCosts"              -> travelCosts,
+    "other"                    -> other,
     "residentialFinancialCost" -> residentialFinancialCost,
-    "consolidatedExpenses" -> consolidatedExpenses
-  ).collect {case (k, Some(v)) => (k, v)
-  }
+    "consolidatedExpenses"     -> consolidatedExpenses
+  ).collect { case (k, Some(v)) => (k, v) }
 }
 
 object ForeignPropertyExpenses {

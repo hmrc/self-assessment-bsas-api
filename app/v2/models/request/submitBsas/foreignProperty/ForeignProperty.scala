@@ -21,7 +21,10 @@ import play.api.libs.json.{Json, OFormat}
 case class ForeignProperty(income: Option[ForeignPropertyIncome],
                            expenses: Option[ForeignPropertyExpenses]) {
 
-  def isEmpty: Boolean = income.isEmpty && expenses.isEmpty
+  def isEmpty: Boolean =
+    (income.isEmpty && expenses.isEmpty) ||
+      (income.isDefined && income.get.isEmpty) ||
+      (expenses.isDefined && expenses.get.isEmpty)
 }
 
 object ForeignProperty {
