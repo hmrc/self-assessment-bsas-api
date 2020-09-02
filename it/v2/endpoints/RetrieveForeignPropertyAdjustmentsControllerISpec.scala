@@ -33,6 +33,52 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
     val correlationId = "X-123"
     val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
+    val desResponse: String => String = (typeOfBusiness: String) =>
+      s"""
+         |{
+         |    "metadata": {
+         |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+         |        "requestedDateTime": "2020-10-14T11:33:27Z",
+         |        "taxableEntityId": "AA1234567A",
+         |        "taxYear": 2020,
+         |        "status": "valid"
+         |    },
+         |    "inputs": {
+         |        "incomeSourceId": "111111111111111",
+         |        "incomeSourceType": "$typeOfBusiness",
+         |        "accountingPeriodStartDate": "2020-10-11",
+         |        "accountingPeriodEndDate": "2020-01-01",
+         |        "source": "MTD-SA",
+         |        "submissionPeriods": [
+         |            {
+         |                "periodId": "0000000000000000",
+         |                "startDate": "2020-01-01",
+         |                "endDate": "2021-10-10",
+         |                "receivedDateTime": "2020-01-01T10:12:10Z"
+         |            }
+         |        ]
+         |    },
+         |    "adjustments": {
+         |        "income": {
+         |            "totalRentsReceived": 100.49,
+         |            "premiumsOfLeaseGrant": 100.49,
+         |            "otherPropertyIncome": 100.49,
+         |            "foreignPropertyTaxTakenOff": 100.49
+         |        },
+         |        "expenses": {
+         |            "consolidatedExpenses": 100.49,
+         |            "repairsAndMaintenance": 100.49,
+         |            "financialCosts": 100.49,
+         |            "professionalFees": 100.49,
+         |            "costOfServices": 100.49,
+         |            "travelCosts": 100.49,
+         |            "other": 100.49,
+         |            "premisesRunningCosts": 100.49
+         |        }
+         |    }
+         |}
+         |""".stripMargin
+
     def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
@@ -72,6 +118,21 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
     }
 
     "return error according to spec" when {
+
+      "request made is for an invalid type of business" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, Json.parse(desResponse("01")))
+        }
+
+        val response: WSResponse = await(request.get())
+        response.status shouldBe FORBIDDEN
+        response.json shouldBe Json.toJson(RuleNotForeignProperty)
+      }
+
 
       def validationErrorTest(requestNino: String, requestBsasId: String,
                              expectedStatus: Int, expectedBody: MtdError): Unit = {
@@ -130,7 +191,6 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleTypeOfBusinessError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
