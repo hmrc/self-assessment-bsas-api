@@ -17,26 +17,27 @@
 package v2.controllers
 
 import cats.data.EitherT
-import javax.inject.Inject
-import play.api.http.MimeTypes
+import cats.implicits._
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
+import v2.controllers.requestParsers.RetrieveForeignPropertyRequestParser
 import v2.hateoas.HateoasFactory
 import v2.models.errors._
-import v2.models.request.RetrieveAdjustmentsRawData
-import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
+import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
+import v2.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class RetrieveForeignPropertyBsasController @Inject()(
                                                        val authService: EnrolmentsAuthService,
                                                        val lookupService: MtdIdLookupService,
-                                                       requestParser: RetrieveForeignPropertyBsasRequestParser,
+                                                       requestParser: RetrieveForeignPropertyRequestParser,
                                                        service: RetrieveForeignPropertyBsasService,
                                                        hateoasFactory: HateoasFactory,
-                                                       auditService: AuditService,
                                                        cc: ControllerComponents
                                                      )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -46,21 +47,21 @@ class RetrieveForeignPropertyBsasController @Inject()(
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveSelfEmploymentAdjustmentsController",
+      controllerName = "RetrieveForeignPropertyBsasController",
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, bsasId: String): Action[AnyContent] =
+  def retrieve(nino: String, bsasId: String, adjustedStatus: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawData = RetrieveAdjustmentsRawData(nino, bsasId)
+      val rawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedStatus)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response <- EitherT(service.retrieveForeignPropertyBsas(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
-              RetrieveSelfEmploymentAdjustmentsHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
+              RetrieveForeignPropertyHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -69,7 +70,6 @@ class RetrieveForeignPropertyBsasController @Inject()(
 
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)

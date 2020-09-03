@@ -112,10 +112,14 @@ trait HateoasLinks {
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
 
-
   def getAdjustedForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
 
+  //L10
+  def adjustForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
+    Link(href = foreignPropertyAdjustmentUri(appConfig, nino, bsasId), method = POST, rel = SUBMIT_ADJUSTMENTS)
+
+  //L11
   def getForeignPropertyBsasAdjustments(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
       href = foreignPropertyAdjustmentUri(appConfig, nino, bsasId),
