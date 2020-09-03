@@ -47,7 +47,7 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveSelfEmploymentAdjustmentsController",
+      controllerName = "RetrieveForeignPropertyAdjustmentsController",
       endpointName = "retrieve"
     )
 
