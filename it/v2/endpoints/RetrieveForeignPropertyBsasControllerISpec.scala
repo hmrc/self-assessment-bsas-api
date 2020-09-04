@@ -54,7 +54,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
 
-  "Calling the retrieve UK Property Bsas endpoint" should {
+  "Calling the retrieve Foreign Property Bsas endpoint" should {
 
     "return a valid response with status OK" when {
 

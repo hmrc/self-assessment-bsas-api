@@ -149,7 +149,8 @@ class RetrieveForeignPropertyBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (RuleNotForeignProperty, FORBIDDEN)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
