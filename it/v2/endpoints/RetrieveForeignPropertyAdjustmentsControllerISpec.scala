@@ -59,7 +59,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
          |    },
          |    "adjustments": {
          |        "income": {
-         |            "totalRentsReceived": 100.49,
+         |            "rentReceived": 100.49,
          |            "premiumsOfLeaseGrant": 100.49,
          |            "otherPropertyIncome": 100.49,
          |            "foreignPropertyTaxTakenOff": 100.49
