@@ -64,7 +64,7 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
   private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
-  val testHateoasLinkRetrieveBsas = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId?adjustedStatus=true",
+  val testHateoasLinkRetrieveBsas = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
     method = GET, rel = "retrieve-adjustable-summary")
 
   val testHateoasLinkAdjustSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",

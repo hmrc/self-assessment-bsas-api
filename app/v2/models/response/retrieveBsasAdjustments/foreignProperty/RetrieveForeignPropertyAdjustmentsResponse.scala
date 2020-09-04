@@ -44,7 +44,7 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
       import data._
 
       Seq(
-        getAdjustedForeignPropertyBsas(appConfig, nino, bsasId),
+        getAdjustedForeignPropertyBsasNoStat(appConfig, nino, bsasId),
         getForeignPropertyBsasAdjustments(appConfig, nino, bsasId)
       )
     }
