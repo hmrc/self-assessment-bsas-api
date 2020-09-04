@@ -160,7 +160,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "netLoss": 100.49,
        |        "adjustedIncomeTaxLoss": 100.49,
        |        "income": {
-       |            "rentIncome": 100.49,
+       |            "totalRentsReceived": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
        |            "otherPropertyIncome": 100.49,
        |            "foreignTaxTakenOff": 100.49,
@@ -189,7 +189,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "netLoss": 100.49,
        |        "adjustedIncomeTaxLoss": 100.49,
        |        "income": {
-       |            "rentIncome": 100.49,
+       |            "totalRentsReceived": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
        |            "otherPropertyIncome": 100.49,
        |            "foreignTaxTakenOff": 100.49,
