@@ -39,7 +39,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       | },
       | "adjustments" : {
       |    "income": {
-      |      "rentReceived": 100.49
+      |      "totalRentsReceived": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,

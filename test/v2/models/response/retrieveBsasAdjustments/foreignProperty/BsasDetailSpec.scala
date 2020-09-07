@@ -27,7 +27,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
     """{
       | "adjustments" : {
       |    "income": {
-      |      "rentReceived": 100.49
+      |      "totalRentsReceived": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,
