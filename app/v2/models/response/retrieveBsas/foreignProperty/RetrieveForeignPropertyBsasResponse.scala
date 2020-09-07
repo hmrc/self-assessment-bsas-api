@@ -16,14 +16,16 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v2.models.hateoas.{HateoasData, Link}
 
-case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
-                                          bsas: Option[BsasDetail])
+case class RetrieveForeignPropertyBsasResponse(metadata: Metadata, bsas: Option[BsasDetail])
 
-object RetrieveForeignPropertyBsasResponse {
+object RetrieveForeignPropertyBsasResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (
     JsPath.read[Metadata] and
@@ -45,4 +47,16 @@ object RetrieveForeignPropertyBsasResponse {
   }
 
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
+
+  implicit object RetrieveForeignPropertyBsasHateoasFactory
+    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
+      Seq(
+        getForeignPropertyBsas(appConfig, data.nino, data.bsasId),
+        adjustForeignPropertyBsas(appConfig, data.nino, data.bsasId)
+      )
+    }
+  }
 }
+
+case class RetrieveForeignPropertyHateoasData(nino: String, bsasId: String) extends HateoasData

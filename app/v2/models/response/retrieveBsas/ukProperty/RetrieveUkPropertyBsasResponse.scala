@@ -26,7 +26,7 @@ import v2.models.hateoas.{HateoasData, Link}
 case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
                                           bsas: Option[BsasDetail])
 
-object RetrieveUkPropertyBsasResponse extends HateoasLinks{
+object RetrieveUkPropertyBsasResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
     JsPath.read[Metadata] and

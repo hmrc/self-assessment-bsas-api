@@ -16,9 +16,13 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v2.hateoas.HateoasFactory
+import v2.models.hateoas.{HateoasWrapper, Link}
+import v2.models.hateoas.Method.{GET, POST}
 import v2.models.utils.JsonErrorValidators
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators{
@@ -144,7 +148,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100.49,
       |    "income": {
-      |      "rentIncome": 100.49,
+      |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "otherPropertyIncome": 100.49,
       |      "foreignTaxTakenOff": 100.49,
@@ -173,7 +177,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100.49,
       |    "income": {
-      |      "rentIncome": 100.49,
+      |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "otherPropertyIncome": 100.49,
       |      "foreignTaxTakenOff": 100.49,
@@ -219,7 +223,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100.49,
       |    "income": {
-      |      "rentIncome": 100.49,
+      |      "rentReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "otherPropertyIncome": 100.49,
       |      "foreignTaxTakenOff": 100.49,
@@ -248,7 +252,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100.49,
       |    "income": {
-      |      "rentIncome": 100.49
+      |      "rentReceived": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -288,7 +292,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100.49,
       |    "income": {
-      |      "rentIncome": 100.49,
+      |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "otherPropertyIncome": 100.49,
       |      "foreignTaxTakenOff": 100.49,
@@ -334,7 +338,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100.49,
       |    "income": {
-      |      "rentIncome": 100.49
+      |      "rentReceived": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -382,4 +386,25 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       }
     }
   }
+
+  "HateoasFactory" should {
+    class Test extends MockAppConfig{
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino = "someNino"
+      val bsasId = "anId"
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+    }
+
+    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
+      hateoasFactory.wrap(retrieveForeignPropertyBsasResponseModel, RetrieveForeignPropertyHateoasData(nino, bsasId)) shouldBe
+        HateoasWrapper(
+          retrieveForeignPropertyBsasResponseModel,
+          Seq(
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", GET, "self"),
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", POST, "submit-summary-adjustments")
+          )
+        )
+    }
+  }
+
 }

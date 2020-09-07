@@ -15,3 +15,5 @@ POST       /:nino/self-employment/:bsasId/adjust           v2.controllers.Submit
 GET        /:nino/self-employment/:bsasId/adjust           v2.controllers.RetrieveSelfEmploymentAdjustmentsController.retrieve(nino:String, bsasId: String)
 
 POST       /:nino/foreign-property/:bsasId/adjust          v2.controllers.SubmitForeignPropertyBsasController.handleRequest(nino: String, bsasId: String)
+
+GET        /:nino/foreign-property/:bsasId                 v2.controllers.RetrieveForeignPropertyBsasController.retrieve(nino: String, bsasId: String, adjustedStatus: Option[String])

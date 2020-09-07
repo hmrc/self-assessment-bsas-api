@@ -103,7 +103,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "adjustedIncomeTaxLoss": 100.49,
       |  "income": {
-      |    "rentIncome": 100.49,
+      |    "totalRentsReceived": 100.49,
       |    "premiumsOfLeaseGrant": 100.49,
       |    "otherPropertyIncome": 100.49,
       |    "foreignTaxTakenOff": 100.49,
@@ -135,7 +135,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "adjustedIncomeTaxLoss": 100.49,
       |  "income": {
-      |    "rentIncome": 100.49
+      |    "rentReceived": 100.49
       |  },
       |  "expenses": {
       |    "premisesRunningCosts": 100.49,
