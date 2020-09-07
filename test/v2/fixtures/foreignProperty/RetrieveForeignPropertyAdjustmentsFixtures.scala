@@ -18,6 +18,7 @@ package v2.fixtures.foreignProperty
 
 import java.time.LocalDate
 
+import play.api.libs.json.Json
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.AccountingPeriod
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveForeignPropertyAdjustmentsResponse}
@@ -64,21 +65,20 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |   "metadata": {
        |      "typeOfBusiness": "foreign-property",
        |      "accountingPeriod": {
-       |         "startDate": "2018-10-11",
-       |         "endDate": "2019-10-10"
+       |         "startDate": "2020-10-11",
+       |         "endDate": "2020-01-01"
        |      },
        |      "taxYear": "2019-20",
-       |      "requestedDateTime": "2019-10-14T11:33:27Z",
-       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-       |      "summaryStatus": "superseded",
+       |      "requestedDateTime": "2020-10-14T11:33:27Z",
+       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+       |      "summaryStatus": "valid",
        |      "adjustedSummary": true
        |   },
        |   "adjustments": {
        |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
-       |         "otherPropertyIncome": 100.49,
-       |         "foreignTaxTakenOff": 100.49
+       |         "otherPropertyIncome": 100.49
        |      },
        |      "expenses": {
        |         "premisesRunningCosts": 100.49,
@@ -103,4 +103,51 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |	}]
        |}
        |""".stripMargin
+
+  val desJson = Json.parse(
+    """
+      |{
+      |    "metadata": {
+      |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+      |        "requestedDateTime": "2020-10-14T11:33:27Z",
+      |        "taxableEntityId": "AA1234567A",
+      |        "taxYear": 2020,
+      |        "status": "valid"
+      |    },
+      |    "inputs": {
+      |        "incomeSourceId": "111111111111111",
+      |        "incomeSourceType": "15",
+      |        "accountingPeriodStartDate": "2020-10-11",
+      |        "accountingPeriodEndDate": "2020-01-01",
+      |        "source": "MTD-SA",
+      |        "submissionPeriods": [
+      |            {
+      |                "periodId": "0000000000000000",
+      |                "startDate": "2020-01-01",
+      |                "endDate": "2021-10-10",
+      |                "receivedDateTime": "2020-01-01T10:12:10Z"
+      |            }
+      |        ]
+      |    },
+      |    "adjustments": {
+      |        "income": {
+      |            "totalRentsReceived": 100.49,
+      |            "premiumsOfLeaseGrant": 100.49,
+      |            "otherPropertyIncome": 100.49,
+      |            "foreignPropertyTaxTakenOff": 100.49
+      |        },
+      |        "expenses": {
+      |            "consolidatedExpenses": 100.49,
+      |            "repairsAndMaintenance": 100.49,
+      |            "financialCosts": 100.49,
+      |            "professionalFees": 100.49,
+      |            "costOfServices": 100.49,
+      |            "residentialFinancialCost":100.49,
+      |            "travelCosts": 100.49,
+      |            "other": 100.49,
+      |            "premisesRunningCosts": 100.49
+      |        }
+      |    }
+      |}
+      |""".stripMargin)
 }

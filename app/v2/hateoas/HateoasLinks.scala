@@ -16,7 +16,6 @@
 
 package v2.hateoas
 
-import akka.http.scaladsl.model.headers.LinkParams.rel
 import config.AppConfig
 import v2.models.hateoas.Link
 import v2.models.hateoas.Method._
@@ -127,8 +126,5 @@ trait HateoasLinks {
       method = GET,
       rel = SELF
     )
-  //L10
-  def submitForeignPropertyBsasAdjustments(appConfig: AppConfig, nino: String, bsasId: String): Link =
-    Link(href = foreignPropertyAdjustmentUri(appConfig, nino, bsasId), method = POST, rel = SUBMIT_ADJUSTMENTS)
 
 }

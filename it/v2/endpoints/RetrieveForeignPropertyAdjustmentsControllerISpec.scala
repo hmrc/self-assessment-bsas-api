@@ -18,13 +18,12 @@ package v2.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
+import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures.hateoasResponseForForeignPropertyAdjustments
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures.desJson
-import v2.models.errors.{BsasIdFormatError, DownstreamError, MtdError, NinoFormatError, NotFoundError, RuleNoAdjustmentsMade}
+import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
+import v2.models.errors._
 import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
@@ -32,7 +31,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
   private trait Test {
     val nino = "AA123456B"
     val correlationId = "X-123"
-    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
     def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
 
@@ -55,7 +54,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
 
     "return a valid response with status OK" when {
 
-      "a valid response is recieved from des" in new Test {
+      "a valid response is received from des" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
