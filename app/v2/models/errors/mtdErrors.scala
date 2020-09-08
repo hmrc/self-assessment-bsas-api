@@ -46,9 +46,9 @@ object AdjustedStatusFormatError
 
 object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "The format of the adjustment value is invalid")
 
-object BsasIdFormatError extends  MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
+object BsasIdFormatError extends MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
 
-object BusinessIdFormatError extends  MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
+object BusinessIdFormatError extends MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
 
 // Rule Errors
 
