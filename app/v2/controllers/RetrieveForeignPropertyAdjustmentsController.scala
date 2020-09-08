@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
 import v2.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v2.hateoas.HateoasFactory
-import v2.models.errors.{ErrorWrapper, _}
+import v2.models.errors._
 import v2.models.request.RetrieveAdjustmentsRawData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
 import v2.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyAdjustmentsService}
