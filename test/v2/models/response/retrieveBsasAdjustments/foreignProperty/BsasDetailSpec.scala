@@ -50,7 +50,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |      "totalRentsReceived": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
       |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49
+      |      "foreignPropertyTaxTakenOff": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,

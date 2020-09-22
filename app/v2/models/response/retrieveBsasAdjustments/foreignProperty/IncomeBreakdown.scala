@@ -36,7 +36,7 @@ object IncomeBreakdown {
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      (JsPath \ "foreignTaxTakenOff").readNullable[BigDecimal]
+      (JsPath \ "foreignPropertyTaxTakenOff").readNullable[BigDecimal]
     ) (IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]

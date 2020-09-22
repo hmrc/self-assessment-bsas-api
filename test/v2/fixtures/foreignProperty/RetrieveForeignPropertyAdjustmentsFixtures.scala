@@ -88,7 +88,9 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |   },
        |   "adjustments": {
        |      "incomes": {
+       |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
+       |         "foreignTaxTakenOff": 100.49,
        |         "otherPropertyIncome": 100.49
        |      },
        |      "expenses": {
@@ -188,7 +190,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |    },
       |    "adjustments": {
       |        "income": {
-      |            "rentReceived": 100.49,
+      |            "totalRentsReceived": 100.49,
       |            "premiumsOfLeaseGrant": 100.49,
       |            "otherPropertyIncome": 100.49,
       |            "foreignPropertyTaxTakenOff": 100.49
