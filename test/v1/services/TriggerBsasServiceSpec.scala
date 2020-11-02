@@ -34,7 +34,7 @@ class TriggerBsasServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val correlationId = "X-123"
+  private implicit val correlationId = "X-123"
 
   val request = TriggerBsasRequest(nino, seBody)
 
@@ -65,7 +65,7 @@ class TriggerBsasServiceSpec extends UnitSpec {
           MockTriggerBsasConnector.triggerBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.triggerBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.triggerBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(

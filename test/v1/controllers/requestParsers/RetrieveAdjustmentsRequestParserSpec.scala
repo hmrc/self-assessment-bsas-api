@@ -31,6 +31,7 @@ class RetrieveAdjustmentsRequestParserSpec extends UnitSpec {
   val nino = "AA123456A"
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("true")
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val inputRawData = RetrieveAdjustmentsRawData(nino, bsasId)
   val outputRequestData = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
@@ -46,13 +47,13 @@ class RetrieveAdjustmentsRequestParserSpec extends UnitSpec {
     "return a single error" when {
       "a single error is thrown in the validation" in new Test {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError))
-        parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(None, NinoFormatError))
+        parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
     }
     "return multiple errors" when {
       "a multiple errors are thrown in the validation" in new Test {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError, BsasIdFormatError))
-        parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
+        parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
       }
     }
   }

@@ -55,14 +55,14 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       "the error code is in the map provided" must {
         "use the mapping and wrap" in {
           mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("ERR1")))) shouldBe
-            ErrorWrapper(Some(correlationId), Error1)
+            ErrorWrapper(correlationId, Error1)
         }
       }
 
       "the error code is not in the map provided" must {
         "default to DownstreamError and wrap" in {
           mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("UNKNOWN")))) shouldBe
-            ErrorWrapper(Some(correlationId), DownstreamError)
+            ErrorWrapper(correlationId, DownstreamError)
         }
       }
     }
@@ -71,21 +71,21 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       "the error codes is in the map provided" must {
         "use the mapping and wrap with main error type of BadRequest" in {
           mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode("ERR1"), DesErrorCode("ERR2"))))) shouldBe
-            ErrorWrapper(Some(correlationId), BadRequestError, Some(Seq(Error1, Error2)))
+            ErrorWrapper(correlationId, BadRequestError, Some(Seq(Error1, Error2)))
         }
       }
 
       "the error code is not in the map provided" must {
         "default main error to DownstreamError ignore other errors" in {
           mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode("ERR1"), DesErrorCode("UNKNOWN"))))) shouldBe
-            ErrorWrapper(Some(correlationId), DownstreamError)
+            ErrorWrapper(correlationId, DownstreamError)
         }
       }
 
       "one of the mapped errors is DownstreamError" must {
         "wrap the errors with main error type of DownstreamError" in {
           mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode("ERR1"), DesErrorCode("DS"))))) shouldBe
-            ErrorWrapper(Some(correlationId), DownstreamError)
+            ErrorWrapper(correlationId, DownstreamError)
         }
       }
     }
@@ -93,14 +93,14 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     "the error code is an OutboundError" must {
       "return the error as is (in an ErrorWrapper)" in {
         mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, OutboundError(ErrorBvrMain))) shouldBe
-          ErrorWrapper(Some(correlationId), ErrorBvrMain)
+          ErrorWrapper(correlationId, ErrorBvrMain)
       }
     }
 
     "the error code is an OutboundError with multiple errors" must {
       "return the error as is (in an ErrorWrapper)" in {
         mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, OutboundError(ErrorBvrMain, Some(Seq(ErrorBvr))))) shouldBe
-          ErrorWrapper(Some(correlationId), ErrorBvrMain, Some(Seq(ErrorBvr)))
+          ErrorWrapper(correlationId, ErrorBvrMain, Some(Seq(ErrorBvr)))
       }
     }
   }
@@ -120,7 +120,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateRetrieveUkPropertyAdjustmentsSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleNotUkProperty, None))
+            Left(ErrorWrapper("", RuleNotUkProperty, None))
           }
         }
       }
@@ -157,7 +157,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleNotSelfEmployment, None))
+            Left(ErrorWrapper("", RuleNotSelfEmployment, None))
           }
         }
       }
@@ -193,7 +193,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateRetrieveSelfEmploymentBsasSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleNotSelfEmployment, None))
+            Left(ErrorWrapper("", RuleNotSelfEmployment, None))
           }
         }
       }
@@ -229,7 +229,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateSubmitSelfEmploymentSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleErrorPropertyAdjusted, None))
+            Left(ErrorWrapper("", RuleErrorPropertyAdjusted, None))
           }
         }
       }
@@ -272,7 +272,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateRetrieveUkPropertyBsasSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleNotUkProperty, None))
+            Left(ErrorWrapper("", RuleNotUkProperty, None))
           }
         }
       }
@@ -310,14 +310,14 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(typeOfBusiness)) shouldBe {
-            Left(ErrorWrapper(Some(""), RuleSelfEmploymentAdjustedError, None))
+            Left(ErrorWrapper("", RuleSelfEmploymentAdjustedError, None))
           }
         }
       }
       "the property type returned was not the property type submitted" in {
         val input = generateResponseWrapper(TypeOfBusiness.`uk-property-fhl`)
         mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(TypeOfBusiness.`uk-property-non-fhl`)) shouldBe {
-          Left(ErrorWrapper(Some(""), RuleIncorrectPropertyAdjusted, None))
+          Left(ErrorWrapper("", RuleIncorrectPropertyAdjusted, None))
         }
       }
     }
@@ -354,14 +354,14 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         s"provided a model with $typeOfBusiness" in {
           val input = generateResponseWrapper(typeOfBusiness)
           mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, typeOfBusiness) shouldBe {
-            Left(ErrorWrapper(Some("a1e8057e-fbbc-47a8-a8b4-78d9f015c253"), RuleSelfEmploymentAdjustedError, None))
+            Left(ErrorWrapper("a1e8057e-fbbc-47a8-a8b4-78d9f015c253", RuleSelfEmploymentAdjustedError, None))
           }
         }
       }
       "the property type returned was not the property type submitted" in {
         val input = generateResponseWrapper(TypeOfBusiness.`foreign-property`)
         mapping.validateSubmitForeignPropertyBsasSuccessResponse(input, TypeOfBusiness.`foreign-property-fhl-eea`) shouldBe {
-          Left(ErrorWrapper(Some("a1e8057e-fbbc-47a8-a8b4-78d9f015c253"), RuleIncorrectPropertyAdjusted, None))
+          Left(ErrorWrapper("a1e8057e-fbbc-47a8-a8b4-78d9f015c253", RuleIncorrectPropertyAdjusted, None))
         }
       }
     }

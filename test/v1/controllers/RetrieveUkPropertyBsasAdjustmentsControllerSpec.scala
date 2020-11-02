@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -41,7 +42,10 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
   with MockRetrieveAdjustmentsRequestParser
   with MockRetrieveUkPropertyBsasAdjustmentsService
   with MockHateoasFactory
-  with MockAuditService  {
+  with MockAuditService
+  with MockIdGenerator {
+
+  private val correlationId = "X-123"
 
   trait Test {
     val hc = HeaderCarrier()
@@ -53,15 +57,17 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+
   }
 
   private val nino = "AA123456A"
-  private val correlationId = "X-123"
   private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
@@ -147,7 +153,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
             MockRetrieveAdjustmentsRequestParser
               .parse(requestRawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
@@ -178,7 +184,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
             MockRetrieveUkPropertyBsasAdjustmentsService
               .retrieveAdjustments(request)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 

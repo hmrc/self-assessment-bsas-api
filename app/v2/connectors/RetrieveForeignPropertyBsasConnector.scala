@@ -32,7 +32,8 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveForeignPropertyBsasResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
     val nino = request.nino.nino
     val bsasId = request.bsasId

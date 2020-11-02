@@ -34,8 +34,8 @@ trait MockRetrieveSelfEmploymentAdjustmentsConnector extends MockFactory {
     CallHandler[Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
 
       (mockConnector
-        .retrieveSelfEmploymentAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .retrieveSelfEmploymentAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

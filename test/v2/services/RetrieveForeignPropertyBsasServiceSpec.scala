@@ -36,7 +36,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends UnitSpec{
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("03")
-  private val correlationId = "X-123"
+  private implicit val correlationId = "X-123"
 
   val request = RetrieveForeignPropertyBsasRequestData(nino, id, adjustedStatus)
 
@@ -68,7 +68,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends UnitSpec{
         MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleNotForeignProperty))
+        await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotForeignProperty))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -77,7 +77,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends UnitSpec{
           MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(

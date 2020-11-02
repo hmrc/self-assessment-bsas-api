@@ -26,6 +26,7 @@ import v2.models.request.submitBsas.foreignProperty._
 class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
   val nino = "AA123456B"
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val requestBodyJson = Json.parse(
     """
@@ -124,7 +125,7 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test {
@@ -132,7 +133,7 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, BsasIdFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
       }
     }
   }

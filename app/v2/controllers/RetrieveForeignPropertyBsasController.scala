@@ -21,7 +21,7 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveForeignPropertyRequestParser
 import v2.hateoas.HateoasFactory
 import v2.models.errors._
@@ -38,7 +38,8 @@ class RetrieveForeignPropertyBsasController @Inject()(
                                                        requestParser: RetrieveForeignPropertyRequestParser,
                                                        service: RetrieveForeignPropertyBsasService,
                                                        hateoasFactory: HateoasFactory,
-                                                       cc: ControllerComponents
+                                                       cc: ControllerComponents,
+                                                       val idGenerator: IdGenerator
                                                      )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
@@ -53,6 +54,11 @@ class RetrieveForeignPropertyBsasController @Inject()(
 
   def retrieve(nino: String, bsasId: String, adjustedStatus: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       val rawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedStatus)
       val result =
@@ -72,8 +78,13 @@ class RetrieveForeignPropertyBsasController @Inject()(
             .withApiHeaders(response.correlationId)
         }
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
+
+        result
       }.merge
     }
 

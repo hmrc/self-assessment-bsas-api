@@ -28,6 +28,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
   val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
   val nino = "AA123456A"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockSubmitUkPropertyBsasValidator {
     lazy val parser = new SubmitUkPropertyBsasDataParser(mockValidator)
@@ -83,7 +84,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
           .returns(List(formatError("otherPropertyIncome")))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, formatError("otherPropertyIncome"), None))
+        result shouldBe Left(ErrorWrapper(correlationId, formatError("otherPropertyIncome"), None))
       }
 
       "a adjustment has a value over the range" in new Test {
@@ -96,7 +97,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
           .returns(List(rangeError("rentIncome")))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, rangeError("rentIncome"), None))
+        result shouldBe Left(ErrorWrapper(correlationId, rangeError("rentIncome"), None))
       }
 
       "the bsas id format is incorrect" in new Test {
@@ -109,7 +110,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
           .returns(List(BsasIdFormatError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, BsasIdFormatError))
+        result shouldBe Left(ErrorWrapper(correlationId, BsasIdFormatError))
       }
 
       "the input contains consolidated expenses along with other expenses" in new Test {
@@ -122,7 +123,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
           .returns(List(RuleBothExpensesError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, RuleBothExpensesError, None))
+        result shouldBe Left(ErrorWrapper(correlationId, RuleBothExpensesError, None))
       }
 
       "the input has multiple invalid feels" in new Test {
@@ -136,7 +137,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         private val result = parser.parseRequest(inputData)
         result shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(rangeError("premisesRunningCosts"), rangeError("repairsAndMaintenance"),
             rangeError("financialCosts"), rangeError("professionalFees")))))
       }
     }

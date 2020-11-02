@@ -36,8 +36,8 @@ trait MockRetrieveForeignPropertyAdjustmentsService extends MockFactory {
 
     def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyAdjustmentsResponse]]]] = {
-      (mockService.retrieveForeignPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+      (mockService.retrieveForeignPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 }

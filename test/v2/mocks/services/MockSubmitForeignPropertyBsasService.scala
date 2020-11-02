@@ -37,8 +37,8 @@ trait MockSubmitForeignPropertyBsasService extends MockFactory {
     def submitForeignPropertyBsas(requestData: SubmitForeignPropertyBsasRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SubmitForeignPropertyBsasResponse]]]] = {
       (mockService
-        .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 }

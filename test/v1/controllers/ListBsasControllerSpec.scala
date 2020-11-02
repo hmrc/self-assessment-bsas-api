@@ -18,7 +18,7 @@ package v1.controllers
 
 import java.time.LocalDate
 
-import mocks.MockAppConfig
+import mocks.{MockAppConfig, MockIdGenerator}
 import v1.fixtures.ListBsasFixtures._
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -51,7 +51,10 @@ class ListBsasControllerSpec
     with MockAppConfig
     with HateoasLinks
     with MockAuditService
-    with MockCurrentDateProvider{
+    with MockCurrentDateProvider
+    with MockIdGenerator {
+
+  private val correlationId = "X-123"
 
   trait Test {
     val hc = HeaderCarrier()
@@ -64,11 +67,13 @@ class ListBsasControllerSpec
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
+      idGenerator = mockIdGenerator,
       currentDateProvider = mockCurrentDateProvider
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
 
     val date: LocalDate = LocalDate.of(2019, 6, 18)
     MockCurrentDateProvider.getCurrentDate().returns(date).anyNumberOfTimes()
@@ -78,7 +83,6 @@ class ListBsasControllerSpec
   private val taxYear = Some("2019-20")
   private val typeOfBusiness = Some("uk-property-fhl")
   private val selfEmploymentId = Some("XAIS12345678901")
-  private val correlationId = "X-123"
 
   val response: ListBsasResponse[BsasEntries] =
     ListBsasResponse(
@@ -240,7 +244,7 @@ class ListBsasControllerSpec
 
             MockListBsasRequestDataParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
 
@@ -277,7 +281,7 @@ class ListBsasControllerSpec
 
             MockListBsasService
               .listBsas(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
 
@@ -402,7 +406,7 @@ class ListBsasControllerSpec
 
         MockListBsasService
           .listBsas(requestData.copy(taxYear = desTaxYear))
-          .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), NinoFormatError))))
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
 
         val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, selfEmploymentId)(fakeGetRequest)
 

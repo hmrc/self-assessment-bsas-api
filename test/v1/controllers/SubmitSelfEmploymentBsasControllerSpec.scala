@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
@@ -42,7 +43,10 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockSubmitSelfEmploymentRequestParser
     with MockSubmitSelfEmploymentBsasService
     with MockHateoasFactory
-    with MockAuditService  {
+    with MockAuditService
+    with MockIdGenerator {
+
+  private val correlationId = "X-123"
 
   trait Test {
     val hc = HeaderCarrier()
@@ -54,17 +58,19 @@ class SubmitSelfEmploymentBsasControllerSpec
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+
   }
 
   import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
   private val nino          = "AA123456A"
-  private val correlationId = "X-123"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -134,7 +140,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
           MockSubmitSelfEmploymentBsasDataParser
             .parse(rawRequest)
-            .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+            .returns(Left(ErrorWrapper(correlationId, error, None)))
 
           val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
 
@@ -162,7 +168,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error = ErrorWrapper(Some(correlationId), BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
@@ -189,7 +195,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       "multiple errors occur for the customised errors" in new Test {
         val error = ErrorWrapper(
-          Some(correlationId),
+          correlationId,
           BadRequestError,
           Some(
             Seq(
@@ -232,7 +238,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
           MockSubmitSelfEmploymentBsasService
             .submitSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
           val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
 

@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package mocks
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.RetrieveUkPropertyRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import utils.IdGenerator
 
-trait MockRetrieveUkPropertyRequestParser extends MockFactory {
+trait MockIdGenerator extends MockFactory {
 
-  val mockRequestParser = mock[RetrieveUkPropertyRequestParser]
+  val mockIdGenerator: IdGenerator = mock[IdGenerator]
 
-  object MockRetrieveUkPropertyRequestParser {
-    def parse(data: RetrieveUkPropertyBsasRawData): CallHandler[Either[ErrorWrapper, RetrieveUkPropertyBsasRequestData]] = {
-      (mockRequestParser.parseRequest(_: RetrieveUkPropertyBsasRawData)(_: String)).expects(data, *)
-    }
+  object MockIdGenerator {
+    def generateCorrelationId: CallHandler[String] = (mockIdGenerator.generateCorrelationId _).expects()
   }
 }

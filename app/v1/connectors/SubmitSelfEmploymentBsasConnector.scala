@@ -32,7 +32,8 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[SubmitSelfEmploymentBsasResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[SubmitSelfEmploymentBsasResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

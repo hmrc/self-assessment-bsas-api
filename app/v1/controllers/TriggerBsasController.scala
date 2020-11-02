@@ -24,7 +24,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.TriggerBsasRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -43,7 +43,8 @@ class TriggerBsasController @Inject()(
                                        triggerBsasService: TriggerBsasService,
                                        hateoasFactory: HateoasFactory,
                                        auditService: AuditService,
-                                       cc: ControllerComponents
+                                       cc: ControllerComponents,
+                                       val idGenerator: IdGenerator
                           )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
@@ -57,6 +58,11 @@ class TriggerBsasController @Inject()(
 
   def triggerBsas(nino: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       val rawData = TriggerBsasRawData(nino, AnyContentAsJson(request.body))
       val result =
@@ -88,8 +94,11 @@ class TriggerBsasController @Inject()(
         }
 
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           GenericAuditDetail(

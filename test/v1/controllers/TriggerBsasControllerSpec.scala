@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import mocks.MockIdGenerator
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -38,12 +39,15 @@ import scala.concurrent.Future
 
 class TriggerBsasControllerSpec
   extends ControllerBaseSpec
-      with MockEnrolmentsAuthService
-      with MockMtdIdLookupService
-      with MockTriggerBsasRequestParser
-      with MockTriggerBsasService
-      with MockHateoasFactory
-      with MockAuditService  {
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockTriggerBsasRequestParser
+    with MockTriggerBsasService
+    with MockHateoasFactory
+    with MockAuditService
+    with MockIdGenerator {
+
+  private val correlationId = "X-123"
 
   trait Test {
     val hc = HeaderCarrier()
@@ -55,15 +59,17 @@ class TriggerBsasControllerSpec
       triggerBsasService = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+
   }
 
   private val nino          = "AA123456A"
-  private val correlationId = "X-123"
 
   private val request = TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody())
   private val requestRawData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
@@ -151,7 +157,7 @@ class TriggerBsasControllerSpec
 
             MockTriggerBsasRequestParser
               .parse(requestRawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBody))
 
@@ -191,7 +197,7 @@ class TriggerBsasControllerSpec
 
             MockTriggerBsasService
               .triggerBsas(request)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBody))
 

@@ -32,7 +32,7 @@ import scala.concurrent.Future
 class RetrieveUkPropertyAdjustmentsServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
-  private val correlationId = "X-123"
+  private implicit val correlationId = "X-123"
 
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val request = RetrieveAdjustmentsRequestData(nino, id)

@@ -31,7 +31,8 @@ class ListBsasConnector @Inject()(val http: HttpClient,
 
   def listBsas(request: ListBsasRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[ListBsasResponse[BsasEntries]]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[ListBsasResponse[BsasEntries]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

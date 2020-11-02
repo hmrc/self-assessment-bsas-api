@@ -18,22 +18,22 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import v1.models.errors.{ FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _ }
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
 import v1.models.request.submitBsas.SubmitUkPropertyBsasRawData
 import v1.models.response.SubmitUkPropertyBsasHateoasData
-import v1.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService }
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -42,7 +42,8 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
                                                service: SubmitUkPropertyBsasService,
                                                hateoasFactory: HateoasFactory,
                                                auditService: AuditService,
-                                               cc: ControllerComponents)(implicit ec: ExecutionContext)
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -55,6 +56,12 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
 
   def submitUkPropertyBsas(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
+
       val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
       val result =
         for {
@@ -88,8 +95,11 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
         }
 
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        val result        = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           GenericAuditDetail(

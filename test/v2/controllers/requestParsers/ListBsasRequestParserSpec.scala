@@ -41,6 +41,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
   private val incomeSourceType ="incomeSourceType"
   private val businessId = "XAIS12345678901"
 
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val inputWithBusinessIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessSE), Some(businessId))
   private val inputWithBusinessId = ListBsasRawData(nino, Some(taxYear), None, Some(businessId))
@@ -138,13 +139,13 @@ class ListBsasRequestParserSpec extends UnitSpec{
       "a single error is found" in new Test {
         MockValidator.validate(inputWithBusinessIdAndTypeOfBusiness).returns(List(NinoFormatError))
 
-        parser.parseRequest(inputWithBusinessIdAndTypeOfBusiness) shouldBe Left(ErrorWrapper(None, NinoFormatError))
+        parser.parseRequest(inputWithBusinessIdAndTypeOfBusiness) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
       "a multiple errors are found" in new Test {
         MockValidator.validate(inputWithBusinessIdAndTypeOfBusiness).returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(inputWithBusinessIdAndTypeOfBusiness) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
+        parser.parseRequest(inputWithBusinessIdAndTypeOfBusiness) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
       }
     }
   }

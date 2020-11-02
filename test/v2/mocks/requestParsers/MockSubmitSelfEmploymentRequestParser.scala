@@ -28,7 +28,7 @@ trait MockSubmitSelfEmploymentRequestParser extends MockFactory {
 
   object MockSubmitSelfEmploymentBsasDataParser {
     def parse(data: SubmitSelfEmploymentBsasRawData): CallHandler[Either[ErrorWrapper, SubmitSelfEmploymentBsasRequestData]] = {
-      (mockRequestParser.parseRequest(_: SubmitSelfEmploymentBsasRawData)).expects(data)
+      (mockRequestParser.parseRequest(_: SubmitSelfEmploymentBsasRawData)(_: String)).expects(data, *)
     }
   }
 

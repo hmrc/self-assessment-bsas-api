@@ -31,7 +31,8 @@ class TriggerBsasConnector @Inject()(val http: HttpClient,
 
   def triggerBsas(request: TriggerBsasRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[TriggerBsasResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[TriggerBsasResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

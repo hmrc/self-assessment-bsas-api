@@ -36,8 +36,8 @@ trait MockTriggerBsasService extends MockFactory {
 
     def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]]] = {
       (mockService
-        .triggerBsas(_: TriggerBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .triggerBsas(_: TriggerBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

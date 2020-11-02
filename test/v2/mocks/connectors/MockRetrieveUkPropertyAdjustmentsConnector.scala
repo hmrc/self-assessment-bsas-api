@@ -33,8 +33,8 @@ trait MockRetrieveUkPropertyAdjustmentsConnector extends MockFactory {
     def retrieveUkPropertyAdjustments(requestData: RetrieveAdjustmentsRequestData):
     CallHandler[Future[DesOutcome[RetrieveUkPropertyAdjustmentsResponse]]] = {
       (mockConnector
-        .retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

@@ -35,7 +35,7 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val correlationId = "X-123"
+  private implicit val correlationId = "X-123"
 
 
   val request = RetrieveAdjustmentsRequestData(nino, id)

@@ -29,7 +29,7 @@ trait MockRetrieveAdjustmentsRequestParser extends MockFactory {
   object MockRetrieveAdjustmentsRequestParser {
 
     def parse(data: RetrieveAdjustmentsRawData): CallHandler[Either[ErrorWrapper, RetrieveAdjustmentsRequestData]] = {
-      (mockRequestParser.parseRequest(_: RetrieveAdjustmentsRawData)).expects(data)
+      (mockRequestParser.parseRequest(_: RetrieveAdjustmentsRawData)(_: String)).expects(data, *)
     }
   }
 }

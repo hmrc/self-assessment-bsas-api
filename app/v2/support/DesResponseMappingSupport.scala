@@ -42,7 +42,7 @@ trait DesResponseMappingSupport {
 
     desResponseWrapper match {
       case ResponseWrapper(correlationId, DesErrors(error :: Nil)) =>
-        ErrorWrapper(Some(correlationId), errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping), None)
+        ErrorWrapper(correlationId, errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping), None)
 
       case ResponseWrapper(correlationId, DesErrors(errorCodes)) =>
         val mtdErrors = errorCodes.map(error => errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping))
@@ -52,13 +52,13 @@ trait DesResponseMappingSupport {
             s"[${logContext.controllerName}] [${logContext.endpointName}] [CorrelationId - $correlationId]" +
               s" - downstream returned ${errorCodes.map(_.code).mkString(",")}. Revert to ISE")
 
-          ErrorWrapper(Some(correlationId), DownstreamError, None)
+          ErrorWrapper(correlationId, DownstreamError, None)
         } else {
-          ErrorWrapper(Some(correlationId), BadRequestError, Some(mtdErrors))
+          ErrorWrapper(correlationId, BadRequestError, Some(mtdErrors))
         }
 
       case ResponseWrapper(correlationId, OutboundError(error, errors)) =>
-        ErrorWrapper(Some(correlationId), error, errors)
+        ErrorWrapper(correlationId, error, errors)
     }
   }
 
@@ -67,7 +67,7 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case RetrieveUkPropertyAdjustmentsResponse(retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
           if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotUkProperty, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -77,7 +77,7 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case RetrieveSelfEmploymentAdjustmentsResponse(retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
           if typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -87,7 +87,7 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
         if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotForeignProperty, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -97,7 +97,7 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case RetrieveForeignPropertyBsasResponse(retrieveBsas.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
         if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotForeignProperty, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -106,7 +106,7 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case RetrieveSelfEmploymentBsasResponse(retrieveBsas.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
           if typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotSelfEmployment, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -114,7 +114,7 @@ trait DesResponseMappingSupport {
   final def validateSubmitSelfEmploymentSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case SubmitSelfEmploymentBsasResponse(_, typeOfBusiness) if typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleErrorPropertyAdjusted, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleErrorPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -123,7 +123,7 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case RetrieveUkPropertyBsasResponse(retrieveBsas.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
           if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleNotUkProperty, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -133,10 +133,10 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case SubmitUkPropertyBsasResponse(_, typeOfBusiness)
           if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleSelfEmploymentAdjustedError, None))
 
       case SubmitUkPropertyBsasResponse(_, typeOfBusiness) if optionalTypeOfBusiness.exists(_ != typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleIncorrectPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
     }
@@ -146,10 +146,10 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case SubmitForeignPropertyBsasResponse(_, typeOfBusiness)
         if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleSelfEmploymentAdjustedError, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleSelfEmploymentAdjustedError, None))
 
       case SubmitForeignPropertyBsasResponse(_, typeOfBusiness) if businessType != typeOfBusiness =>
-        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), RuleIncorrectPropertyAdjusted, None))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleIncorrectPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
     }
