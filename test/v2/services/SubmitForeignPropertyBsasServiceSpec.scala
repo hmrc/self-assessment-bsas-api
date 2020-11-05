@@ -16,7 +16,6 @@
 
 package v2.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
@@ -28,13 +27,11 @@ import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class SubmitForeignPropertyBsasServiceSpec extends UnitSpec {
+class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
   private val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private implicit val correlationId = "X-123"
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(

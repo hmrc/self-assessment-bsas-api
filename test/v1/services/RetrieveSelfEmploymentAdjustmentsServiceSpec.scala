@@ -16,27 +16,23 @@
 
 package v1.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
+import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
 import v1.models.outcomes.ResponseWrapper
-import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.models.request.RetrieveAdjustmentsRequestData
 import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class RetrieveSelfEmploymentAdjustmentsServiceSpec extends UnitSpec {
+class RetrieveSelfEmploymentAdjustmentsServiceSpec extends ServiceSpec {
 
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private implicit val correlationId = "X-123"
-
 
   val request = RetrieveAdjustmentsRequestData(nino, id)
 

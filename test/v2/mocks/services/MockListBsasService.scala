@@ -16,7 +16,7 @@
 
 package v2.mocks.services
 
-import org.scalamock.handlers.CallHandler5
+import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
@@ -34,7 +34,7 @@ trait MockListBsasService extends MockFactory{
 
   object MockListBsasService{
 
-    def listBsas(requestData: ListBsasRequest): CallHandler5[ListBsasRequest, HeaderCarrier, ExecutionContext, EndpointLogContext, String, Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasEntries]]]]] = {
+    def listBsas(requestData: ListBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasEntries]]]]] = {
       (mockService
         .listBsas(_: ListBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)

@@ -107,7 +107,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
             userDetails = request.userDetails,
             params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
             requestBody = None,
-            `X-CorrelationId` = correlationId,
+            `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
             )
           )

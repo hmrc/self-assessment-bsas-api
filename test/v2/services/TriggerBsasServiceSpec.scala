@@ -16,7 +16,6 @@
 
 package v2.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
@@ -27,14 +26,12 @@ import v2.models.outcomes.ResponseWrapper
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class TriggerBsasServiceSpec extends UnitSpec {
+class TriggerBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private implicit val correlationId = "X-123"
 
   val request = TriggerBsasRequest(nino, model)
 

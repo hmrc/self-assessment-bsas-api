@@ -106,7 +106,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             userDetails = request.userDetails,
             params = Map("nino" -> nino, "bsasId" -> bsasId),
             requestBody = Some(request.body),
-            `X-CorrelationId` = correlationId,
+            `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )

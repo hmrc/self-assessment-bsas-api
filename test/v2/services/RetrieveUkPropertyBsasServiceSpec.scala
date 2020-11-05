@@ -16,27 +16,24 @@
 
 package v2.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v2.models.errors._
 import v2.mocks.connectors.MockRetrieveUkPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
+import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class RetrieveUkPropertyBsasServiceSpec extends UnitSpec{
+class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("03")
-  private implicit val correlationId = "X-123"
 
   val request = RetrieveUkPropertyBsasRequestData(nino, id, adjustedStatus)
 

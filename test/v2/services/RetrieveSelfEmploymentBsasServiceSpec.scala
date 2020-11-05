@@ -16,28 +16,25 @@
 
 package v2.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v2.models.errors._
 import v2.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
 import v2.models.domain.TypeOfBusiness
+import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class RetrieveSelfEmploymentBsasServiceSpec extends UnitSpec{
+class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("true")
-  private implicit val correlationId = "X-123"
-  
+
   val request = RetrieveSelfEmploymentBsasRequestData(nino, id, adjustedStatus)
   
   val response = RetrieveSelfEmploymentBsasResponse(metadataModel(true), Some(bsasDetailModel))

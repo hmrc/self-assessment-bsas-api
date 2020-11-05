@@ -102,7 +102,7 @@ class RetrieveUkPropertyBsasAdjustmentsController @Inject()(val authService: Enr
             userDetails = request.userDetails,
             params = Map("nino" -> nino, "bsasId" -> bsasId),
             requestBody = None,
-            `X-CorrelationId` = correlationId,
+            `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
