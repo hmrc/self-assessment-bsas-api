@@ -29,6 +29,6 @@ trait ServiceSpec extends UnitSpec
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
-  private implicit val correlationId = "X-123"
+  implicit val correlationId = "X-123"
 
 }
