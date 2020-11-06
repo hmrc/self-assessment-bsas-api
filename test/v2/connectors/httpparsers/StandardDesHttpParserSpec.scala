@@ -154,7 +154,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
       responseCode =>
         s"receiving a $responseCode response" should {
           "be able to parse a single error" in {
-            val httpResponse = HttpResponse(responseCode, Some(singleErrorJson), Map("CorrelationId" -> Seq(correlationId)))
+            val httpResponse = HttpResponse(responseCode, singleErrorJson, Map("CorrelationId" -> Seq(correlationId)))
 
             httpReads.read(method, url, httpResponse) shouldBe Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("CODE"))))
           }

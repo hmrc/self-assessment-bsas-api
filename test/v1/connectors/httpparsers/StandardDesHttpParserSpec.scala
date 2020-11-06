@@ -90,7 +90,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
 
       "receiving a 204 response" should {
         "return a Right DesResponse with the correct correlationId and no responseData" in {
-          val httpResponse = HttpResponse(NO_CONTENT, responseHeaders = Map("CorrelationId" -> Seq(correlationId)))
+          val httpResponse = HttpResponse(NO_CONTENT, "", Map("CorrelationId" -> Seq(correlationId)))
 
           httpReads.read(method, url, httpResponse) shouldBe Right(ResponseWrapper(correlationId, ()))
         }
@@ -107,7 +107,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
       val httpReads: HttpReads[DesOutcome[Unit]] = implicitly
 
       "use that status code for success" in {
-        val httpResponse = HttpResponse(PARTIAL_CONTENT, responseHeaders = Map("CorrelationId" -> Seq(correlationId)))
+        val httpResponse = HttpResponse(PARTIAL_CONTENT, "", Map("CorrelationId" -> Seq(correlationId)))
 
         httpReads.read(method, url, httpResponse) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
