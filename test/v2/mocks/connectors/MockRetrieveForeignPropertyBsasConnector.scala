@@ -33,8 +33,8 @@ trait MockRetrieveForeignPropertyBsasConnector extends MockFactory {
     def retrieveForeignPropertyBsas(requestData: RetrieveForeignPropertyBsasRequestData):
     CallHandler[Future[DesOutcome[RetrieveForeignPropertyBsasResponse]]] = {
       (mockConnector
-        .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, * )
+        .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

@@ -33,8 +33,8 @@ trait MockSubmitUkPropertyBsasConnector extends MockFactory {
 
     def submitUKPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[DesOutcome[SubmitUkPropertyBsasResponse]]] = {
       (mockConnector
-        .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

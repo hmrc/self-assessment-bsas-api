@@ -30,7 +30,8 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveUkPropertyBsasResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[RetrieveUkPropertyBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 

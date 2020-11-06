@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -41,7 +42,10 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockSubmitForeignPropertyBsasService
     with MockSubmitForeignPropertyBsasRequestParser
     with MockHateoasFactory
-    with MockAuditService {
+    with MockAuditService
+    with MockIdGenerator {
+
+  private val correlationId = "X-123"
 
   trait Test {
     val hc = HeaderCarrier()
@@ -52,16 +56,18 @@ class SubmitForeignPropertyBsasControllerSpec
       parser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+
   }
 
   private val nino = "AA123456A"
   private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val correlationId = "X-123"
 
   private val testHateoasLink = Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
 
@@ -146,7 +152,7 @@ class SubmitForeignPropertyBsasControllerSpec
 
             MockSubmitForeignPropertyBsasRequestParser
               .parseRequest(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
 
@@ -179,7 +185,7 @@ class SubmitForeignPropertyBsasControllerSpec
 
             MockSubmitForeignPropertyBsasService
               .submitForeignPropertyBsas(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
 

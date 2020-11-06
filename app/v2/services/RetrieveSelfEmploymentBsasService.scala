@@ -35,7 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging{
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-                                implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+                                implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+                                correlationId: String):
   Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {

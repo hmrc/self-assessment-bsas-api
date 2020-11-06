@@ -18,22 +18,22 @@ package v2.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v2.hateoas.HateoasFactory
-import v2.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import v2.models.errors.{ FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _ }
+import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v2.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
 import v2.models.response.SubmitSelfEmploymentBsasHateoasData
-import v2.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasService }
+import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasService}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -42,7 +42,8 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
                                                    service: SubmitSelfEmploymentBsasService,
                                                    hateoasFactory: HateoasFactory,
                                                    auditService: AuditService,
-                                                   cc: ControllerComponents)(implicit ec: ExecutionContext)
+                                                   cc: ControllerComponents,
+                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -55,6 +56,12 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
 
   def submitSelfEmploymentBsas(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
+
       val rawData = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
       val result =
         for {
@@ -87,15 +94,18 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
         }
 
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        val result        = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
             params = Map("nino" -> nino, "bsasId" -> bsasId),
             requestBody = Some(request.body),
-            `X-CorrelationId` = correlationId,
+            `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )

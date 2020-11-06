@@ -16,7 +16,6 @@
 
 package v2.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
@@ -29,13 +28,11 @@ import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
-class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
+class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val correlationId = "X-123"
 
   val request = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
 
@@ -65,7 +62,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleSelfEmploymentAdjustedError))
+        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
       }
 
       "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
@@ -73,7 +70,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+        await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
       }
 
       "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
@@ -81,7 +78,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
 
-        await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(Some(correlationId), RuleIncorrectPropertyAdjusted))
+        await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -90,7 +87,7 @@ class SubmitUKPropertyBsasServiceSpec extends UnitSpec {
           MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(

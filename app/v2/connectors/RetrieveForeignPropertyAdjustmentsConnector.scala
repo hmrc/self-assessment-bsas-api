@@ -32,7 +32,8 @@ class RetrieveForeignPropertyAdjustmentsConnector @Inject()(val http: HttpClient
 
   def retrieveForeignPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveForeignPropertyAdjustmentsResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[RetrieveForeignPropertyAdjustmentsResponse]] = {
 
     val nino = request.nino.nino
     val bsasId = request.bsasId

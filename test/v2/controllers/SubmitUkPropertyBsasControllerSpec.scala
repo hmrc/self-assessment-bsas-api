@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import mocks.MockIdGenerator
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -43,7 +44,10 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUkPropertyRequestParser
     with MockSubmitUkPropertyBsasService
     with MockHateoasFactory
-    with MockAuditService  {
+    with MockAuditService
+    with MockIdGenerator {
+
+  private val correlationId = "X-123"
 
   trait Test {
     val hc = HeaderCarrier()
@@ -55,15 +59,17 @@ class SubmitUkPropertyBsasControllerSpec
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+
   }
 
   private val nino          = "AA123456A"
-  private val correlationId = "X-123"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -159,7 +165,7 @@ class SubmitUkPropertyBsasControllerSpec
 
           MockSubmitUkPropertyBsasDataParser
             .parse(fhlRawRequest)
-            .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+            .returns(Left(ErrorWrapper(correlationId, error, None)))
 
           val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
 
@@ -187,7 +193,7 @@ class SubmitUkPropertyBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error = ErrorWrapper(Some(correlationId), BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitUkPropertyBsasDataParser
           .parse(fhlRawRequest)
@@ -205,7 +211,7 @@ class SubmitUkPropertyBsasControllerSpec
 
       "multiple errors occur for the customised errors" in new Test {
         val error = ErrorWrapper(
-          Some(correlationId),
+          correlationId,
           BadRequestError,
           Some(
             Seq(
@@ -244,7 +250,7 @@ class SubmitUkPropertyBsasControllerSpec
 
           MockSubmitUkPropertyBsasService
             .submitPropertyBsas(fhlRequest)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
           val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
 

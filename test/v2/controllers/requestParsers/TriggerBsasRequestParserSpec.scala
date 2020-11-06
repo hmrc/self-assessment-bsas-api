@@ -28,6 +28,7 @@ import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 class TriggerBsasRequestParserSpec extends UnitSpec {
 
   val nino = "AA123456A"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockTriggerBSASValidator {
     lazy val parser = new TriggerBsasRequestParser(mockValidator)
@@ -58,7 +59,7 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
           .returns(List(RuleIncorrectOrEmptyBodyError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, RuleIncorrectOrEmptyBodyError, None))
+        result shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError, None))
       }
 
       "multiple errors are present" in new Test {
@@ -70,7 +71,7 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
           .returns(List(BusinessIdFormatError, RuleEndBeforeStartDateError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(BusinessIdFormatError, RuleEndBeforeStartDateError))))
+        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(BusinessIdFormatError, RuleEndBeforeStartDateError))))
       }
     }
   }

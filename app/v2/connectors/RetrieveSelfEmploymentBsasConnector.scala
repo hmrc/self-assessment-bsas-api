@@ -31,7 +31,8 @@ class RetrieveSelfEmploymentBsasConnector @Inject()
        val appConfig: AppConfig) extends BaseDesConnector {
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)
-                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentBsasResponse]] = {
+                                (implicit hc: HeaderCarrier, ec: ExecutionContext,
+                                 correlationId: String): Future[DesOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 

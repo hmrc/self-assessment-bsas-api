@@ -16,27 +16,24 @@
 
 package v2.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
 import v2.mocks.connectors.MockRetrieveForeignPropertyBsasConnector
+import v2.models.domain.TypeOfBusiness
+import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveForeignPropertyBsasServiceSpec extends UnitSpec{
+class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("03")
-  private val correlationId = "X-123"
 
   val request = RetrieveForeignPropertyBsasRequestData(nino, id, adjustedStatus)
 
@@ -68,7 +65,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends UnitSpec{
         MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), RuleNotForeignProperty))
+        await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotForeignProperty))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -77,7 +74,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends UnitSpec{
           MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(

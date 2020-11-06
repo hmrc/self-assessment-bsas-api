@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{CurrentDateProvider, DateUtils, DesTaxYear, Logging}
+import utils.{CurrentDateProvider, DateUtils, DesTaxYear, IdGenerator, Logging}
 import v1.controllers.requestParsers.ListBsasRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -43,7 +43,8 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    hateoasFactory: HateoasFactory,
                                    auditService: AuditService,
                                    cc: ControllerComponents,
-                                   val currentDateProvider: CurrentDateProvider
+                                   val currentDateProvider: CurrentDateProvider,
+                                   val idGenerator: IdGenerator
                                   )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
@@ -57,6 +58,11 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], selfEmploymentId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       lazy val currentMtdTaxYear = DesTaxYear.fromDes(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()).toString)
 
@@ -90,15 +96,18 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
             .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
             params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
             requestBody = None,
-            `X-CorrelationId` = correlationId,
+            `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
             )
           )

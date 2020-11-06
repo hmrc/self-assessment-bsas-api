@@ -35,7 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkPropertyAdjustmentsConnector) extends DesResponseMappingSupport with Logging {
 
   def retrieveUkPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
-                                        implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+                                        implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+                                        correlationId: String):
   Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]] = {
 
     val result = for {

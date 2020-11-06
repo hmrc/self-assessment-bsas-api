@@ -28,7 +28,7 @@ trait MockRetrieveUkPropertyRequestParser extends MockFactory {
 
   object MockRetrieveUkPropertyRequestParser {
     def parse(data: RetrieveUkPropertyBsasRawData): CallHandler[Either[ErrorWrapper, RetrieveUkPropertyBsasRequestData]] = {
-      (mockRequestParser.parseRequest(_: RetrieveUkPropertyBsasRawData)).expects(data)
+      (mockRequestParser.parseRequest(_: RetrieveUkPropertyBsasRawData)(_: String)).expects(data, *)
     }
   }
 }

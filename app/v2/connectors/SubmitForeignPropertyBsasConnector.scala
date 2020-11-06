@@ -32,7 +32,8 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[SubmitForeignPropertyBsasResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[SubmitForeignPropertyBsasResponse]] = {
 
     put(
       body = request.body,

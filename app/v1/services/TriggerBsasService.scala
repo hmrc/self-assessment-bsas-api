@@ -35,7 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesResponseMappingSupport with Logging{
 
   def triggerBsas(request: TriggerBsasRequest)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+                       (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+                        correlationId: String):
   Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
 
     val result = for {

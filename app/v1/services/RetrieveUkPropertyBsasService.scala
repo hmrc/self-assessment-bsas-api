@@ -35,7 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+    correlationId: String):
   Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
     val result = for {

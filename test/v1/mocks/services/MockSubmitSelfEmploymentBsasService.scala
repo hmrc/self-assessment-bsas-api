@@ -37,8 +37,8 @@ trait MockSubmitSelfEmploymentBsasService extends MockFactory {
     def submitSelfEmploymentBsas(requestData: SubmitSelfEmploymentBsasRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]]] = {
       (mockService
-        .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

@@ -32,7 +32,8 @@ class SubmitUkPropertyBsasConnector @Inject()(
 
   def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
                           implicit hc: HeaderCarrier,
-                          ec: ExecutionContext): Future[DesOutcome[SubmitUkPropertyBsasResponse]] = {
+                          ec: ExecutionContext,
+                          correlationId: String): Future[DesOutcome[SubmitUkPropertyBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 

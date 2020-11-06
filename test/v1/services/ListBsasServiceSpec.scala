@@ -16,28 +16,25 @@
 
 package v1.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.DesTaxYear
 import v1.controllers.EndpointLogContext
+import v1.fixtures.ListBsasFixtures._
 import v1.mocks.connectors.MockListBsasConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.ListBsasRequest
-import v1.fixtures.ListBsasFixtures._
 import v1.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListBsasServiceSpec extends UnitSpec {
+class ListBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
   private val taxYear = DesTaxYear("2019-20")
   private val incomeSourceIdentifier = Some("IncomeSourceType")
   private val identifierValue = Some("01")
-  private val correlationId = "X-123"
 
   val request: ListBsasRequest = ListBsasRequest(nino, taxYear, incomeSourceIdentifier, identifierValue)
   val response: ListBsasResponse[BsasEntries] = summaryModel
@@ -67,7 +64,7 @@ class ListBsasServiceSpec extends UnitSpec {
           MockListBsasConnector.listBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.listBsas(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.listBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(

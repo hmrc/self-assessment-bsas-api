@@ -31,7 +31,8 @@ class RetrieveUkPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
 
   def retrieveUkPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[DesOutcome[RetrieveUkPropertyAdjustmentsResponse]] = {
+                                       ec: ExecutionContext,
+                                       correlationId: String): Future[DesOutcome[RetrieveUkPropertyAdjustmentsResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

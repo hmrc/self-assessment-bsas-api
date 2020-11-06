@@ -28,7 +28,7 @@ trait MockSubmitForeignPropertyBsasRequestParser extends MockFactory {
 
   object MockSubmitForeignPropertyBsasRequestParser {
     def parseRequest(data: SubmitForeignPropertyRawData): CallHandler[Either[ErrorWrapper, SubmitForeignPropertyBsasRequestData]] = {
-      (mockRequestParser.parseRequest(_: SubmitForeignPropertyRawData)).expects(data)
+      (mockRequestParser.parseRequest(_: SubmitForeignPropertyRawData)(_: String)).expects(data, *)
     }
   }
 }

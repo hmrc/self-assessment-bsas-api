@@ -36,7 +36,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+    correlationId: String):
   Future[Either[ErrorWrapper, ResponseWrapper[SubmitForeignPropertyBsasResponse]]] = {
 
     val result = for {

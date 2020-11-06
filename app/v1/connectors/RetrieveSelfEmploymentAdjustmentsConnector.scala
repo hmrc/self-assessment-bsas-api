@@ -32,7 +32,8 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
 
   def retrieveSelfEmploymentAdjustments(request: RetrieveAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
+                                       ec: ExecutionContext,
+                                       correlationId: String): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

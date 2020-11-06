@@ -36,7 +36,8 @@ class RetrieveForeignPropertyAdjustmentsService @Inject()(connector: RetrieveFor
   extends DesResponseMappingSupport with Logging {
 
   def retrieveForeignPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
+    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+    correlationId: String):
   Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyAdjustmentsResponse]]] = {
 
     val result = for {

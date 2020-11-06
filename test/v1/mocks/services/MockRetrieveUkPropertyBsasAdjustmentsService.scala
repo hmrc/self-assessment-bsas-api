@@ -35,8 +35,8 @@ trait MockRetrieveUkPropertyBsasAdjustmentsService extends MockFactory {
 
     def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]]] = {
-      (mockService.retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+      (mockService.retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 }
