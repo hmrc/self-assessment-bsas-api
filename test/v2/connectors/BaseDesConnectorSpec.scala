@@ -19,7 +19,7 @@ package v2.connectors
 import config.AppConfig
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HttpReads
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 

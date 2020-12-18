@@ -19,7 +19,7 @@ package v2.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 

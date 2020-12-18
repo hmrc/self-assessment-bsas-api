@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 
