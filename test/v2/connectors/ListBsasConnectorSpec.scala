@@ -32,8 +32,8 @@ class ListBsasConnectorSpec extends ConnectorSpec {
 
   val queryParams: Map[String, String] = Map(
     "taxYear" -> "2019",
-    "incomeSourceIdentifier" -> "incomeSourceId",
-    "identifierValue" -> "02"
+    "incomeSourceId" -> "incomeSourceId",
+    "incomeSourceType" -> "02"
   )
 
   class Test extends MockHttpClient with MockAppConfig {

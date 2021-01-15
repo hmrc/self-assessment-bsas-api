@@ -40,8 +40,8 @@ class ListBsasConnector @Inject()(val http: HttpClient,
 
     val queryParams = Map(
       "taxYear" -> Some(request.taxYear.toString),
-      "incomeSourceIdentifier" -> request.incomeSourceIdentifier,
-      "identifierValue" -> request.identifierValue
+      "incomeSourceId" -> request.incomeSourceId,
+      "incomeSourceType" -> request.incomeSourceType
     )
 
     def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {

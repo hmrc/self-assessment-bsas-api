@@ -29,13 +29,13 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
 
-    val incomeSourceIdentifier = (data.businessId, data.typeOfBusiness) match {
+    val incomeSourceId = (data.businessId, data.typeOfBusiness) match {
       case (Some(_), _) => Some("incomeSourceId")
       case (None, Some(_)) => Some("incomeSourceType")
       case (None, None) => None
     }
 
-    val identifierValue: Option[String] = if(data.businessId.isDefined) data.businessId else data.typeOfBusiness.map(TypeOfBusiness.parser).map {
+    val incomeSourceType: Option[String] = if(data.businessId.isDefined) data.businessId else data.typeOfBusiness.map(TypeOfBusiness.parser).map {
       case TypeOfBusiness.`self-employment` => TypeOfBusiness.`self-employment`.toIdentifierValue
       case TypeOfBusiness.`uk-property-fhl` => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
       case TypeOfBusiness.`uk-property-non-fhl` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
@@ -46,8 +46,8 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
     ListBsasRequest(
       nino = Nino(data.nino),
       taxYear = data.taxYear.fold(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDesTaxYear),
-      incomeSourceIdentifier = incomeSourceIdentifier,
-      identifierValue = identifierValue
+      incomeSourceId = incomeSourceId,
+      incomeSourceType = incomeSourceType
     )
   }
 }
