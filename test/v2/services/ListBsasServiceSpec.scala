@@ -69,10 +69,10 @@ class ListBsasServiceSpec extends ServiceSpec {
 
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID" , NinoFormatError),
-        ("NOT_FOUND" , NotFoundError),
+        ("NO_DATA_FOUND" , NotFoundError),
         ("INVALID_TAXYEAR" , DownstreamError),
-        ("INVALID_INCOMESOURCE_IDENTIFIER" , DownstreamError),
-        ("INVALID_IDENTIFIER_VALUE" , DownstreamError),
+        ("INVALID_INCOMESOURCEID" , DownstreamError),
+        ("INVALID_INCOMESOURCE_TYPE" , DownstreamError),
         ("SERVER_ERROR" , DownstreamError),
         ("SERVICE_UNAVAILABLE" , DownstreamError)
       )
