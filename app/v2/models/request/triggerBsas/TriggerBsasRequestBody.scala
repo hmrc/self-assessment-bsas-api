@@ -28,11 +28,19 @@ object TriggerBsasRequestBody {
 
   implicit val writes: OWrites[TriggerBsasRequestBody] = (requestBody: TriggerBsasRequestBody) => {
     val typeOfBusiness = TypeOfBusiness.parser(requestBody.typeOfBusiness)
-    Json.obj(
-      "incomeSourceType"          -> typeOfBusiness.toIdentifierValue,
-      "incomeSourceId"            -> requestBody.businessId,
-      "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
-      "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate
-    )
+    if (typeOfBusiness.toIdentifierValue == "04" || typeOfBusiness.toIdentifierValue == "02") {
+      Json.obj(
+        "incomeSourceType" -> typeOfBusiness.toIdentifierValue,
+        "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
+        "accountingPeriodEndDate" -> requestBody.accountingPeriod.endDate
+      )
+    } else {
+      Json.obj(
+        "incomeSourceType" -> typeOfBusiness.toIdentifierValue,
+        "incomeSourceId" -> requestBody.businessId,
+        "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
+        "accountingPeriodEndDate" -> requestBody.accountingPeriod.endDate
+      )
+    }
   }
 }

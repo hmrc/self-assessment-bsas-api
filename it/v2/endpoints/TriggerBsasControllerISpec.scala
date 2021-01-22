@@ -181,13 +181,15 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-          (FORBIDDEN, "ACCOUNTING_PERIOD_NOT_ENDED", FORBIDDEN, RuleAccountingPeriodNotEndedError),
-          (FORBIDDEN, "OBLIGATIONS_NOT_MET", FORBIDDEN, RulePeriodicDataIncompleteError),
-          (FORBIDDEN, "NO_ACCOUNTING_PERIOD", FORBIDDEN, RuleNoAccountingPeriodError),
+          (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ENDED", FORBIDDEN, RuleAccountingPeriodNotEndedError),
+          (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", FORBIDDEN, RulePeriodicDataIncompleteError),
+          (UNPROCESSABLE_ENTITY, "NO_ACCOUNTING_PERIOD", FORBIDDEN, RuleNoAccountingPeriodError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
+          (UNPROCESSABLE_ENTITY, "INCOME_SOURCEID_NOT_PROVIDED", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError)
         )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))

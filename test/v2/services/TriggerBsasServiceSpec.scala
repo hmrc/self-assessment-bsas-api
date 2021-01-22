@@ -74,7 +74,9 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("NOT_FOUND", NotFoundError),
         ("INVALID_PAYLOAD", DownstreamError),
         ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVICE_UNAVAILABLE", DownstreamError),
+        ("INCOME_SOURCEID_NOT_PROVIDED", DownstreamError),
+        ("INVALID_CORRELATIONID", DownstreamError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))
