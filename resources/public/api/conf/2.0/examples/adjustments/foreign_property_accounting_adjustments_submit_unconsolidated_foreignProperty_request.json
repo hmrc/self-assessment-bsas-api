@@ -1,5 +1,7 @@
 {
-  "foreignProperty": {
+  "foreignProperty": [
+    {
+    "countryCode": "FRA",
     "income": {
       "rentIncome": 123.12,
       "premiumsOfLeaseGrant": 123.12,
@@ -17,4 +19,5 @@
       "other": 123.12
     }
   }
+  ]
 }
