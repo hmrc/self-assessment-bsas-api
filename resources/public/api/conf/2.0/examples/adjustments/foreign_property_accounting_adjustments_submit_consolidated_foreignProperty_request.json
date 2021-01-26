@@ -1,16 +1,15 @@
 {
   "foreignProperty": [
-  {
-    "countryCode": "FRA",
-    "income": {
-      "rentIncome": 123.12,
-      "premiumsOfLeaseGrant": 123.12,
-      "foreignTaxTakenOff": 123.12,
-      "otherPropertyIncome": 123.12
-    },
-    "expenses": {
-      "consolidatedExpenses": 123.12
+    {
+      "countryCode": "FRA",
+      "income": {
+        "rentIncome": 123.12,
+        "premiumsOfLeaseGrant": 123.12,
+        "otherPropertyIncome": 123.12
+      },
+      "expenses": {
+        "consolidatedExpenses": 123.12
+      }
     }
-  }
   ]
 }
