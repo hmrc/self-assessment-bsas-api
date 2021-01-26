@@ -3,7 +3,7 @@
     {
       "countryCode": "FRA",
       "income": {
-        "rentIncome": 123.12,
+        "rent": 123.12,
         "premiumsOfLeaseGrant": 123.12,
         "otherPropertyIncome": 123.12
       },
