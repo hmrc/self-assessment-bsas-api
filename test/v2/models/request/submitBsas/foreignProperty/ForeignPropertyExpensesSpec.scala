@@ -24,21 +24,20 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   val validJson = Json.parse(
     """
       |{
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "travelCosts": 123.12,
-      |            "costOfServices": 123.12,
-      |            "residentialFinancialCost": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
+      |  "premisesRunningCosts": 123.12,
+      |  "repairsAndMaintenance": 123.12,
+      |  "financialCosts": 123.12,
+      |  "professionalFees": 123.12,
+      |  "travelCosts": 123.12,
+      |  "costOfServices": 123.12,
+      |  "residentialFinancialCost": 123.12,
+      |  "other": 123.12
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = ForeignPropertyExpenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12))
+  val validModel = ForeignPropertyExpenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),None)
 
   val emptyModel = ForeignPropertyExpenses(None,None,None,None,None,None,None,None,None)
 
@@ -47,14 +46,14 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[ForeignPropertyExpenses]
+        validJson.as[ForeignPropertyExpenses] shouldBe validModel
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[ForeignPropertyExpenses]
+        emptyJson.as[ForeignPropertyExpenses] shouldBe emptyModel
       }
     }
   }

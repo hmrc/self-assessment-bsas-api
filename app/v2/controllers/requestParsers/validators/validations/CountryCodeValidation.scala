@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package v2.models.request.submitBsas.foreignProperty
+package v2.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import com.neovisionaries.i18n.CountryCode
+import v2.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError}
 
-case class FhlIncome(rentIncome: Option[BigDecimal]) {
-
-  def isEmpty: Boolean = rentIncome.isEmpty
-}
-
-object FhlIncome {
-  implicit val reads: Reads[FhlIncome] = Json.reads[FhlIncome]
-  implicit val writes: OWrites[FhlIncome] = new OWrites[FhlIncome] {
-    override def writes(o: FhlIncome): JsObject =
-      if (o.isEmpty) JsObject.empty
-      else Json.obj(
-        "rentAmount" -> o.rentIncome
-      )
+object CountryCodeValidation {
+  def validate(field: String, path: String): List[MtdError] = (CountryCode.getByAlpha3Code(field), field) match {
+    case (_: CountryCode,_) => NoValidationErrors
+    case (_, code) if code.length == 3 => List(RuleCountryCodeError.copy(paths = Some(Seq(path))))
+    case _ => List(CountryCodeFormatError.copy(paths = Some(Seq(path))))
   }
 }

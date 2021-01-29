@@ -248,42 +248,48 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val requestBodyForeignPropertyJson: JsValue = Json.parse(
       """
          |{
-         |    "foreignProperty": {
-         |        "income": {
-         |            "rentIncome": 123.12,
-         |            "premiumsOfLeaseGrant": 123.12,
-         |            "foreignTaxTakenOff": 123.12,
-         |            "otherPropertyIncome": 123.12
-         |        },
-         |        "expenses": {
-         |            "premisesRunningCosts": 123.12,
-         |            "repairsAndMaintenance": 123.12,
-         |            "financialCosts": 123.12,
-         |            "professionalFees": 123.12,
-         |            "travelCosts": 123.12,
-         |            "costOfServices": 123.12,
-         |            "residentialFinancialCost": 123.12,
-         |            "other": 123.12
-         |        }
+         |  "foreignProperty": [
+         |    {
+         |      "countryCode": "FRA",
+         |      "income": {
+         |        "rentIncome": 123.12,
+         |        "premiumsOfLeaseGrant": 123.12,
+         |        "foreignTaxTakenOff": 123.12,
+         |        "otherPropertyIncome": 123.12
+         |      },
+         |      "expenses": {
+         |        "premisesRunningCosts": 123.12,
+         |        "repairsAndMaintenance": 123.12,
+         |        "financialCosts": 123.12,
+         |        "professionalFees": 123.12,
+         |        "travelCosts": 123.12,
+         |        "costOfServices": 123.12,
+         |        "residentialFinancialCost": 123.12,
+         |        "other": 123.12
+         |      }
          |    }
+         |  ]
          |}
          |""".stripMargin)
 
     val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse(
       """
         |{
-        |    "foreignProperty": {
-        |        "income": {
-        |            "rentIncome": 123.12,
-        |            "premiumsOfLeaseGrant": 123.12,
-        |            "foreignTaxTakenOff": 123.12,
-        |            "otherPropertyIncome": 123.12
-        |        },
-        |        "expenses": {
-        |            "residentialFinancialCost": 123.12,
-        |            "consolidatedExpenses": 123.12
-        |        }
+        |  "foreignProperty": [
+        |    {
+        |      "countryCode": "FRA",
+        |      "income": {
+        |        "rentIncome": 123.12,
+        |        "premiumsOfLeaseGrant": 123.12,
+        |        "foreignTaxTakenOff": 123.12,
+        |        "otherPropertyIncome": 123.12
+        |      },
+        |      "expenses": {
+        |        "residentialFinancialCost": 123.12,
+        |        "consolidatedExpenses": 123.12
+        |      }
         |    }
+        |  ]
         |}
         |""".stripMargin)
 
@@ -477,25 +483,84 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       val requestBodyBothExpenses: JsValue = Json.parse(
         s"""
            |{
-           |    "foreignProperty": {
-           |        "income": {
-           |            "rentIncome": 123.12,
-           |            "premiumsOfLeaseGrant": 123.12,
-           |            "foreignTaxTakenOff": 123.12,
-           |            "otherPropertyIncome": 123.12
-           |        },
-           |        "expenses": {
-           |            "premisesRunningCosts": 123.12,
-           |            "repairsAndMaintenance": 123.12,
-           |            "financialCosts": 123.12,
-           |            "professionalFees": 123.12,
-           |            "travelCosts": 123.12,
-           |            "costOfServices": 123.12,
-           |            "residentialFinancialCost": 123.12,
-           |            "other": 123.12,
-           |            "consolidatedExpenses": 123.12
-           |        }
+           |  "foreignProperty": [
+           |    {
+           |      "countryCode": "FRA",
+           |      "income": {
+           |        "rentIncome": 123.12,
+           |        "premiumsOfLeaseGrant": 123.12,
+           |        "foreignTaxTakenOff": 123.12,
+           |        "otherPropertyIncome": 123.12
+           |      },
+           |      "expenses": {
+           |        "premisesRunningCosts": 123.12,
+           |        "repairsAndMaintenance": 123.12,
+           |        "financialCosts": 123.12,
+           |        "professionalFees": 123.12,
+           |        "travelCosts": 123.12,
+           |        "costOfServices": 123.12,
+           |        "residentialFinancialCost": 123.12,
+           |        "other": 123.12,
+           |        "consolidatedExpenses": 123.12
+           |      }
            |    }
+           |  ]
+           |}
+           |""".stripMargin)
+
+      val requestBodyInvalidCountryCode: JsValue = Json.parse(
+        s"""
+           |{
+           |  "foreignProperty": [
+           |    {
+           |      "countryCode": "FRE",
+           |      "income": {
+           |        "rentIncome": 123.12,
+           |        "premiumsOfLeaseGrant": 123.12,
+           |        "foreignTaxTakenOff": 123.12,
+           |        "otherPropertyIncome": 123.12
+           |      },
+           |      "expenses": {
+           |        "premisesRunningCosts": 123.12,
+           |        "repairsAndMaintenance": 123.12,
+           |        "financialCosts": 123.12,
+           |        "professionalFees": 123.12,
+           |        "travelCosts": 123.12,
+           |        "costOfServices": 123.12,
+           |        "residentialFinancialCost": 123.12,
+           |        "other": 123.12,
+           |        "consolidatedExpenses": 123.12
+           |      }
+           |    }
+           |  ]
+           |}
+           |""".stripMargin)
+
+      val requestBodyUnformattedCountryCode: JsValue = Json.parse(
+        s"""
+           |{
+           |  "foreignProperty": [
+           |    {
+           |      "countryCode": "FRANCE",
+           |      "income": {
+           |        "rentIncome": 123.12,
+           |        "premiumsOfLeaseGrant": 123.12,
+           |        "foreignTaxTakenOff": 123.12,
+           |        "otherPropertyIncome": 123.12
+           |      },
+           |      "expenses": {
+           |        "premisesRunningCosts": 123.12,
+           |        "repairsAndMaintenance": 123.12,
+           |        "financialCosts": 123.12,
+           |        "professionalFees": 123.12,
+           |        "travelCosts": 123.12,
+           |        "costOfServices": 123.12,
+           |        "residentialFinancialCost": 123.12,
+           |        "other": 123.12,
+           |        "consolidatedExpenses": 123.12
+           |      }
+           |    }
+           |  ]
            |}
            |""".stripMargin)
 
@@ -564,10 +629,16 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue, BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid, BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue,
+            BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid,
+            BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError)
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
+            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/foreignProperty/0/countryCode")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
+            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/foreignProperty/0/countryCode"))))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -595,7 +666,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD_REMOTE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleTypeOfBusinessError),
+          (BAD_REQUEST, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleTypeOfBusinessError),
           (BAD_REQUEST, "INVALID_MONETARY_FORMAT", INTERNAL_SERVER_ERROR, DownstreamError),
           (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
           (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
@@ -606,7 +677,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
-          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )

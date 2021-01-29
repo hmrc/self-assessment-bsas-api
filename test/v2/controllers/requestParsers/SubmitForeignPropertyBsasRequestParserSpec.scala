@@ -31,38 +31,26 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
   private val requestBodyJson = Json.parse(
     """
       |{
-      |    "foreignProperty": {
-      |        "income": {
-      |            "rentIncome": 123.12,
-      |            "premiumsOfLeaseGrant": 123.12,
-      |            "foreignTaxTakenOff": 123.12,
-      |            "otherPropertyIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "travelCosts": 123.12,
-      |            "costOfServices": 123.12,
-      |            "residentialFinancialCost": 123.12,
-      |            "other": 123.12
-      |        }
-      |    },
-      |    "foreignFhlEea": {
-      |        "income": {
-      |            "rentIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "costOfServices": 123.12,
-      |            "travelCosts": 123.12,
-      |            "other": 123.12
-      |        }
+      |  "foreignProperty": [
+      |    {
+      |      "countryCode": "FRA",
+      |      "income": {
+      |        "rentIncome": 123.12,
+      |        "premiumsOfLeaseGrant": 123.12,
+      |        "otherPropertyIncome": 123.12
+      |      },
+      |      "expenses": {
+      |        "premisesRunningCosts": 123.12,
+      |        "repairsAndMaintenance": 123.12,
+      |        "financialCosts": 123.12,
+      |        "professionalFees": 123.12,
+      |        "travelCosts": 123.12,
+      |        "costOfServices": 123.12,
+      |        "residentialFinancialCost": 123.12,
+      |        "other": 123.12
+      |      }
       |    }
+      |  ]
       |}
       |""".stripMargin
   )
@@ -81,9 +69,9 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
 
         val submitForeignPropertyBsasRequestBody =
           SubmitForeignPropertyBsasRequestBody(
-            Some(ForeignProperty(
+            Some(Seq(ForeignProperty(
+              "FRA",
               Some(ForeignPropertyIncome(
-                Some(123.12),
                 Some(123.12),
                 Some(123.12),
                 Some(123.12)
@@ -98,22 +86,9 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
                 Some(123.12),
                 Some(123.12),
                 None
-              )))),
-            Some(FhlEea(
-              Some(FhlIncome(
-                Some(123.12)
-              )),
-              Some(FhlEeaExpenses(
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                None
-              ))
-            )))
+              ))))),
+            None
+            )
 
         parser.parseRequest(inputData) shouldBe
           Right(SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, submitForeignPropertyBsasRequestBody))

@@ -25,12 +25,12 @@ object BothExpensesValidation {
     expensesAdjustments match {
       case Some(expenses) => (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"),
         expenses.size) match {
-        case (true, true, size) if size == 2 => List()
+        case (true, true, size) if size == 2 => NoValidationErrors
         case (true, true, size) if size > 2 => List(RuleBothExpensesError)
         case (true, _, size) if size > 1 => List(RuleBothExpensesError)
-        case (_, _, _) => List()
+        case (_, _, _) => NoValidationErrors
       }
-      case None => List()
+      case None => NoValidationErrors
     }
   }
 }

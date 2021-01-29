@@ -21,41 +21,49 @@ import support.UnitSpec
 
 class ForeignPropertyIncomeSpec extends UnitSpec {
 
-  val validJson = Json.parse(
+  val validReadJson = Json.parse(
     """
       |{
       |   "rentIncome": 123.12,
       |   "premiumsOfLeaseGrant": 123.12,
-      |   "foreignTaxTakenOff": 123.12,
+      |   "otherPropertyIncome": 123.12
+      |}
+      |""".stripMargin)
+
+  val validWriteJson = Json.parse(
+    """
+      |{
+      |   "rent": 123.12,
+      |   "premiumsOfLeaseGrant": 123.12,
       |   "otherPropertyIncome": 123.12
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = ForeignPropertyIncome(Some(123.12),Some(123.12),Some(123.12),Some(123.12))
+  val validModel = ForeignPropertyIncome(Some(123.12), Some(123.12), Some(123.12))
 
-  val emptyModel = ForeignPropertyIncome(None,None,None,None)
+  val emptyModel = ForeignPropertyIncome(None, None, None)
 
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[ForeignPropertyIncome]
+        validReadJson.as[ForeignPropertyIncome] shouldBe validModel
       }
     }
   }
   "reads from an empty JSON" when{
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[ForeignPropertyIncome]
+        emptyJson.as[ForeignPropertyIncome] shouldBe emptyModel
       }
     }
   }
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validJson
+        Json.toJson(validModel) shouldBe validWriteJson
       }
     }
   }
