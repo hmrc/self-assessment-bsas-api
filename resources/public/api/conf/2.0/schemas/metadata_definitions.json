@@ -115,6 +115,11 @@
             "foreign-property"
           ]
         },
+        "businessId": {
+          "type": "string",
+          "description": "The unique identifier for the business. Must conform to the regular expression\n\n^X[a-zA-Z0-9]{1}IS[0-9]{12}$",
+          "example": "XAIS123456789012"
+        },
         "accountingPeriod": {
           "$ref": "definitions.json#/definitions/accountingPeriod"
         },
