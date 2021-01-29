@@ -125,7 +125,10 @@
             "additionalProperties": false
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "countryCode"
+        ]
       }
     },
     "foreignFhlEea": {
