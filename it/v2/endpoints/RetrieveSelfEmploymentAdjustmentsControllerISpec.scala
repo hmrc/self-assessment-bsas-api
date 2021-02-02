@@ -166,9 +166,10 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
-        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "BAD_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError)
       )
 
       input.foreach(args => (serviceErrorTest _).tupled(args))
