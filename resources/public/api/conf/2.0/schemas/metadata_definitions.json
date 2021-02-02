@@ -53,6 +53,7 @@
       "type": "object",
       "required": [
         "typeOfBusiness",
+        "businessId",
         "accountingPeriod",
         "requestedDateTime",
         "taxYear",
@@ -63,12 +64,15 @@
       "properties": {
         "typeOfBusiness": {
           "title": "typeOfBusiness",
-          "description": "The type of business the summary calculation is for.",
-          "type": "string",
-          "enum": [
+            "description": "The type of business the summary calculation is for.",
+            "type": "string",
+            "enum": [
             "uk-property-fhl",
             "uk-property-non-fhl"
           ]
+        },
+        "businessId": {
+          "$ref": "definitions.json#/definitions/businessId"
         },
         "accountingPeriod": {
           "$ref": "definitions.json#/definitions/accountingPeriod"
