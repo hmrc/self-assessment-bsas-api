@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "metadata": {
-      "$ref": "metadata_definitions.json#/definitions/foreignPropMetadata"
+      "$ref": "metadata_definitions.json#/definitions/foreignPropAdjustmentsMetadata"
     },
     "adjustments": {
       "type": "array",
@@ -96,7 +96,10 @@
             },
             "additionalProperties": false
           }
-        }
+        },
+        "required": [
+          "countryCode"
+        ]
       },
       "additionalProperties": false
     },
