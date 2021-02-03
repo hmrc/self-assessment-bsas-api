@@ -57,13 +57,13 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
     "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"          -> RuleResultingValueNotPermitted,
+    "UNALLOWABLE_VALUE"           -> RuleResultingValueNotPermitted,
     "BVR_FAILURE_C55316"          -> RuleOverConsolidatedExpensesThreshold,
     "BVR_FAILURE_C15320"          -> RuleTradingIncomeAllowanceClaimed,
     "BVR_FAILURE_C55503"          -> RuleNotSelfEmployment,
     "BVR_FAILURE_C55508"          -> RuleNotSelfEmployment,
     "BVR_FAILURE_C55509"          -> RuleNotSelfEmployment,
-    "NOT_FOUND"                   -> NotFoundError,
+    "NO_DATA_FOUND"               -> NotFoundError,
     "SERVER_ERROR"                -> DownstreamError,
     "SERVICE_UNAVAILABLE"         -> DownstreamError
   )

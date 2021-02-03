@@ -44,30 +44,29 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
       desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
       mtdResponseWrapper <-
         EitherT.fromEither[Future](validateSubmitForeignPropertyBsasSuccessResponse(desResponseWrapper, retrieveTypeOfBusiness(request.body)))
-    } yield mtdResponseWrapper
+    } yield desResponseWrapper
 
     result.value
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
-    "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
-    "INVALID_PAYLOAD"             -> DownstreamError,
-    "INVALID_PAYLOAD_REMOTE"      -> DownstreamError,
-    "INVALID_FIELD"               -> RuleTypeOfBusinessError,
-    "INVALID_MONETARY_FORMAT"     -> DownstreamError,
-    "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
-    "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
-    "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"           -> RuleResultingValueNotPermitted,
-    "BVR_FAILURE_C55316"          -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C15320"          -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C55503"          -> RuleOverConsolidatedExpensesThreshold,
-    "BVR_FAILURE_C55508"          -> RulePropertyIncomeAllowanceClaimed,
-    "BVR_FAILURE_C55509"          -> RulePropertyIncomeAllowanceClaimed,
-    "NOT_FOUND"                   -> NotFoundError,
-    "SERVER_ERROR"                -> DownstreamError,
-    "SERVICE_UNAVAILABLE"         -> DownstreamError
+    "INVALID_TAXABLE_ENTITY_ID"      -> NinoFormatError,
+    "INVALID_CALCULATION_ID"         -> BsasIdFormatError,
+    "INVALID_PAYLOAD"                -> DownstreamError,
+    "INCOMESOURCE_TYPE_NOT_MATCHED"  -> RuleTypeOfBusinessError,
+    "ASC_ID_INVALID"                 -> RuleSummaryStatusInvalid,
+    "ASC_ALREADY_SUPERSEDED"         -> RuleSummaryStatusSuperseded,
+    "ASC_ALREADY_ADJUSTED"           -> RuleBsasAlreadyAdjusted,
+    "UNALLOWABLE_VALUE"              -> RuleResultingValueNotPermitted,
+    "BVR_FAILURE_C55316"             -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C15320"             -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C55503"             -> RuleOverConsolidatedExpensesThreshold,
+    "BVR_FAILURE_C55508"             -> RulePropertyIncomeAllowanceClaimed,
+    "BVR_FAILURE_C55509"             -> RulePropertyIncomeAllowanceClaimed,
+    "NO_DATA_FOUND"                  -> NotFoundError,
+    "SERVER_ERROR"                   -> DownstreamError,
+    "SERVICE_UNAVAILABLE"            -> DownstreamError,
+    "INVALID_CORRELATION_ID"         -> DownstreamError
   )
 
   //The validator should make sure that it is always one or the other.

@@ -21,10 +21,17 @@ import support.UnitSpec
 
 class FhlIncomeSpec extends UnitSpec {
 
-  val validJson = Json.parse(
+  val validReadsJson = Json.parse(
     """
       |{
       |   "rentIncome": 123.12
+      |}
+      |""".stripMargin)
+
+  val validWritesJson = Json.parse(
+    """
+      |{
+      |   "rentAmount": 123.12
       |}
       |""".stripMargin)
 
@@ -38,7 +45,7 @@ class FhlIncomeSpec extends UnitSpec {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[FhlIncome]
+        validModel shouldBe validReadsJson.as[FhlIncome]
       }
     }
   }
@@ -52,7 +59,7 @@ class FhlIncomeSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validJson
+        Json.toJson(validModel) shouldBe validWritesJson
       }
     }
   }

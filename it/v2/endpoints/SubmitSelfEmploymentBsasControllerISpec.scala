@@ -150,7 +150,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTradingIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleNotSelfEmployment),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RuleNotSelfEmployment),
-          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_MONETARY_FORMAT", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD_REMOTE", INTERNAL_SERVER_ERROR, DownstreamError),

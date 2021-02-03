@@ -107,7 +107,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
-        ("NOT_FOUND", NotFoundError),
+        ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )

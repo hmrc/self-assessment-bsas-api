@@ -77,7 +77,6 @@ class SubmitForeignPropertyBsasControllerSpec
        |        "income": {
        |            "rentIncome": 123.12,
        |            "premiumsOfLeaseGrant": 123.12,
-       |            "foreignTaxTakenOff": 123.12,
        |            "otherPropertyIncome": 123.12
        |        },
        |        "expenses": {
@@ -97,8 +96,8 @@ class SubmitForeignPropertyBsasControllerSpec
 
   private val foreignProperty: ForeignProperty =
     ForeignProperty(
+      "FRA",
       Some(ForeignPropertyIncome(
-        Some(123.12),
         Some(123.12),
         Some(123.12),
         Some(123.12)
@@ -117,7 +116,7 @@ class SubmitForeignPropertyBsasControllerSpec
     )
 
   val requestBody: SubmitForeignPropertyBsasRequestBody =
-    SubmitForeignPropertyBsasRequestBody(Some(foreignProperty), None)
+    SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
 
   val responseBody = SubmitForeignPropertyBsasResponse("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", TypeOfBusiness.`foreign-property`)
 
