@@ -50,6 +50,7 @@ class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkProper
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_CALCULATION_ID" -> BsasIdFormatError,
     "INVALID_RETURN" -> DownstreamError,
+    "INVALID_CORRELATION_ID" -> DownstreamError,
     "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
     "NO_DATA_FOUND" -> NotFoundError,
     "SERVER_ERROR" -> DownstreamError,
