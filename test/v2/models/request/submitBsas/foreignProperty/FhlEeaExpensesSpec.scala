@@ -24,20 +24,28 @@ class FhlEeaExpensesSpec extends UnitSpec {
   val validJson = Json.parse(
     """
       |{
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "travelCosts": 123.12,
-      |            "costOfServices": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
+      |  "premisesRunningCosts": 123.12,
+      |  "repairsAndMaintenance": 123.12,
+      |  "financialCosts": 123.12,
+      |  "professionalFees": 123.12,
+      |  "travelCosts": 123.12,
+      |  "costOfServices": 123.12,
+      |  "other": 123.12
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = FhlEeaExpenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12))
+  val validModel = FhlEeaExpenses(
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    consolidatedExpenses = None
+  )
 
   val emptyModel = FhlEeaExpenses(None,None,None,None,None,None,None,None)
 

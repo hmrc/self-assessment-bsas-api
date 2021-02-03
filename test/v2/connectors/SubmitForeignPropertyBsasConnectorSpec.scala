@@ -33,9 +33,9 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPropertyBsasRequestBody = {
     SubmitForeignPropertyBsasRequestBody(
-      Some(ForeignProperty(
+      Some(Seq(ForeignProperty(
+        "FRA",
         Some(ForeignPropertyIncome(
-          Some(123.12),
           Some(123.12),
           Some(123.12),
           Some(123.12)
@@ -49,24 +49,10 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
           Some(123.12),
           Some(123.12),
           Some(123.12),
-          Some(123.12)
+          consolidatedExpenses = None
         ))
-      )),
-      Some(FhlEea(
-        Some(FhlIncome(
-          Some(123.12)
-        )),
-        Some(FhlEeaExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12)
-        ))
-      ))
+      ))),
+      foreignFhlEea = None
     )
   }
 

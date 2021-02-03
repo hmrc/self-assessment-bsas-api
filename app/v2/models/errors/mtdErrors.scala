@@ -17,6 +17,7 @@
 package v2.models.errors
 
 import play.api.libs.json.{Json, Writes}
+import v1.models.errors.MtdError
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
 
@@ -50,6 +51,8 @@ object BsasIdFormatError extends MtdError("FORMAT_BSAS_ID", "The format of the B
 
 object BusinessIdFormatError extends MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
 
+object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided Country code is invalid")
+
 // Rule Errors
 
 object RuleEndBeforeStartDateError
@@ -67,6 +70,9 @@ object RuleAccountingPeriodNotSupportedError
 
 object RuleTaxYearNotSupportedError
   extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "Tax year not supported, because it precedes the earliest allowable tax year")
+
+object RuleCountryCodeError
+  extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 

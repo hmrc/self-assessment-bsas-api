@@ -24,70 +24,73 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   val foreignPropertyJson: JsValue = Json.parse(
     """
       |{
-      |    "foreignProperty": {
-      |        "income": {
-      |            "rentIncome": 123.12,
-      |            "premiumsOfLeaseGrant": 123.12,
-      |            "foreignTaxTakenOff": 123.12,
-      |            "otherPropertyIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "travelCosts": 123.12,
-      |            "costOfServices": 123.12,
-      |            "residentialFinancialCost": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
-      |        }
+      |  "foreignProperty": [
+      |    {
+      |      "countryCode": "FRA",
+      |      "income": {
+      |        "rentIncome": 123.12,
+      |        "premiumsOfLeaseGrant": 123.12,
+      |        "otherPropertyIncome": 123.12
+      |      },
+      |      "expenses": {
+      |        "premisesRunningCosts": 123.12,
+      |        "repairsAndMaintenance": 123.12,
+      |        "financialCosts": 123.12,
+      |        "professionalFees": 123.12,
+      |        "travelCosts": 123.12,
+      |        "costOfServices": 123.12,
+      |        "residentialFinancialCost": 123.12,
+      |        "other": 123.12
+      |      }
       |    }
+      |  ]
       |}
       |""".stripMargin)
 
   val foreignPropertyJsonWithType: JsValue = Json.parse(
     """
       |{
-      |    "incomeSourceType": "15",
-      |    "income": {
-      |        "rentIncome": 123.12,
+      |  "incomeSourceType": "15",
+      |  "adjustments": [
+      |    {
+      |      "countryCode": "FRA",
+      |      "income": {
+      |        "rent": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
-      |    },
-      |    "expenses": {
+      |      },
+      |      "expenses": {
       |        "premisesRunningCosts": 123.12,
       |        "repairsAndMaintenance": 123.12,
       |        "financialCosts": 123.12,
       |        "professionalFees": 123.12,
-      |        "costOfServices": 123.12,
       |        "travelCosts": 123.12,
+      |        "costOfServices": 123.12,
       |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12,
-      |        "consolidatedExpenses": 123.12
+      |        "other": 123.12
+      |      }
       |    }
+      |  ]
       |}
       |""".stripMargin)
 
   val foreignFhlEeaJson: JsValue = Json.parse(
     """
       |{
-      |    "foreignFhlEea": {
-      |        "income": {
-      |            "rentIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "costOfServices": 123.12,
-      |            "travelCosts": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
-      |        }
+      |  "foreignFhlEea": {
+      |    "income": {
+      |      "rentIncome": 123.12
+      |    },
+      |    "expenses": {
+      |      "premisesRunningCosts": 123.12,
+      |      "repairsAndMaintenance": 123.12,
+      |      "financialCosts": 123.12,
+      |      "professionalFees": 123.12,
+      |      "costOfServices": 123.12,
+      |      "travelCosts": 123.12,
+      |      "other": 123.12
       |    }
+      |  }
       |}
       |""".stripMargin
   )
@@ -95,20 +98,21 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   val foreignFhlEeaJsonWithType: JsValue = Json.parse(
     """
       |{
-      |    "incomeSourceType": "03",
+      |  "incomeSourceType": "03",
+      |  "adjustments": {
       |    "income": {
-      |        "rentIncome": 123.12
+      |      "rentAmount": 123.12
       |    },
       |    "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "costOfServices": 123.12,
-      |        "travelCosts": 123.12,
-      |        "other": 123.12,
-      |        "consolidatedExpenses": 123.12
+      |      "premisesRunningCosts": 123.12,
+      |      "repairsAndMaintenance": 123.12,
+      |      "financialCosts": 123.12,
+      |      "professionalFees": 123.12,
+      |      "costOfServices": 123.12,
+      |      "travelCosts": 123.12,
+      |      "other": 123.12
       |    }
+      |  }
       |}
       |""".stripMargin
   )
@@ -118,9 +122,9 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   val emptyModel = SubmitForeignPropertyBsasRequestBody(None, None)
 
   val foreignPropertyModel = SubmitForeignPropertyBsasRequestBody(
-    Some(ForeignProperty(
+    Some(Seq(ForeignProperty(
+      "FRA",
       Some(ForeignPropertyIncome(
-        Some(123.12),
         Some(123.12),
         Some(123.12),
         Some(123.12)
@@ -134,9 +138,9 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
         Some(123.12),
         Some(123.12),
         Some(123.12),
-        Some(123.12)
+        consolidatedExpenses = None
       ))
-    )),
+    ))),
     None
   )
 
@@ -154,7 +158,7 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
         Some(123.12),
         Some(123.12),
         Some(123.12),
-        Some(123.12)
+        consolidatedExpenses = None
       ))
     ))
   )
