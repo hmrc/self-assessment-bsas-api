@@ -5,7 +5,7 @@
       "type": "object",
       "required": [
         "typeOfBusiness",
-        "selfEmploymentId",
+        "businessId",
         "accountingPeriod",
         "requestedDateTime",
         "taxYear",
@@ -22,8 +22,8 @@
             "self-employment"
           ]
         },
-        "selfEmploymentId": {
-          "$ref": "definitions.json#/definitions/selfEmploymentId"
+        "businessId": {
+          "$ref": "definitions.json#/definitions/businessId"
         },
         "accountingPeriod": {
           "$ref": "definitions.json#/definitions/accountingPeriod"
