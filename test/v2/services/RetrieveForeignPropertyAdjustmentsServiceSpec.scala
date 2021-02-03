@@ -70,6 +70,7 @@ class RetrieveForeignPropertyAdjustmentsServiceSpec extends ServiceSpec {
       val input = Seq(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+        "INVALID_CORRELATION_ID" -> DownstreamError,
         "INVALID_RETURN" -> DownstreamError,
         "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
         "NOT_FOUND" -> NotFoundError,
