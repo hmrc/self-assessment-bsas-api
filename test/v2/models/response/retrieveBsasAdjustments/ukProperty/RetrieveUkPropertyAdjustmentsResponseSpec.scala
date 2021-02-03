@@ -28,6 +28,7 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       |{
       | "inputs": {
       |   "incomeSourceType" : "04",
+      |   "incomeSourceId":"XAIS00000000210",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -67,6 +68,7 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       |{
       | "inputs": {
       |   "incomeSourceType" : "02",
+      |   "incomeSourceId":"XAIS00000000210",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -106,6 +108,7 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       |{
       | "inputs": {
       |   "incomeSourceType" : "04",
+      |   "incomeSourceId":"XAIS00000000210",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -129,6 +132,7 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       |{
       | "metadata": {
       |      "typeOfBusiness": "uk-property-fhl",
+      |      "businessId": "XAIS00000000210",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
@@ -166,6 +170,7 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       |{
       | "metadata": {
       |      "typeOfBusiness": "uk-property-fhl",
+      |      "businessId": "XAIS00000000210",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"

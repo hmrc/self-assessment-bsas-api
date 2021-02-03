@@ -28,6 +28,7 @@ object RetrieveUkPropertyAdjustmentsFixtures {
   val metaDataModel: Metadata =
     Metadata(
       typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+      Some("XAIS00000000210"),
       accountingPeriod = AccountingPeriod(
         LocalDate.parse("2018-10-11"),
         LocalDate.parse("2019-10-10")
