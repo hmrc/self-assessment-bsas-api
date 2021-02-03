@@ -82,7 +82,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
 
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
-        ("NOT_FOUND", NotFoundError),
+        ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )

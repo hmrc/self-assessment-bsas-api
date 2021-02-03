@@ -80,7 +80,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVALID_RETURN", DownstreamError),
         ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
-        ("NOT_FOUND", NotFoundError),
+        ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )
