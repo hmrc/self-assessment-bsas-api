@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "metadata": {
-      "$ref": "metadata_definitions.json#/definitions/propMetadata"
+      "$ref": "metadata_definitions.json#/definitions/propAdjustmentsMetadata"
     },
     "adjustments": {
       "type": "object",
