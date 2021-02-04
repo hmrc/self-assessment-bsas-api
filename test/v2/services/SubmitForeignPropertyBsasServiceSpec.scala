@@ -35,8 +35,8 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(
-      None,
-      Some(FhlEea(
+      foreignProperty = None,
+      foreignFhlEea = Some(FhlEea(
         Some(FhlIncome(
           Some(123.12)
         )),
@@ -48,16 +48,16 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
           Some(123.12),
           Some(123.12),
           Some(123.12),
-          Some(123.12)
+          consolidatedExpenses = None
         ))
       ))
     )
 
   private val foreignPropertyBody =
     SubmitForeignPropertyBsasRequestBody(
-      Some(ForeignProperty(
+      Some(Seq(ForeignProperty(
+        "FRA",
         Some(ForeignPropertyIncome(
-          Some(123.12),
           Some(123.12),
           Some(123.12),
           Some(123.12)
@@ -71,10 +71,10 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
           Some(123.12),
           Some(123.12),
           Some(123.12),
-          Some(123.12)
+          consolidatedExpenses = None
         ))
-      )),
-      None
+      ))),
+      foreignFhlEea = None
     )
 
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
@@ -154,9 +154,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVALID_PAYLOAD", DownstreamError),
-        ("INVALID_PAYLOAD_REMOTE", DownstreamError),
-        ("INVALID_FIELD", RuleTypeOfBusinessError),
-        ("INVALID_MONETARY_FORMAT", DownstreamError),
+        ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
@@ -166,8 +164,9 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
-        ("NOT_FOUND", NotFoundError),
+        ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
+        ("INVALID_CORRELATION_ID", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )
 

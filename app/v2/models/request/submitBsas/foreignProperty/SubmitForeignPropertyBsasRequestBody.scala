@@ -19,12 +19,19 @@ package v2.models.request.submitBsas.foreignProperty
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
-case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[ForeignProperty], foreignFhlEea: Option[FhlEea]) {
+case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[Seq[ForeignProperty]], foreignFhlEea: Option[FhlEea]) {
 
   private def isEmpty: Boolean = (foreignProperty.isEmpty && foreignFhlEea.isEmpty)
 
+  private def foreignPropertyIsEmpty: Boolean = {
+    val x: List[Boolean] = foreignProperty.get.toList.map {
+      case o => o.isEmpty
+    }
+    if (x.contains(true)) true else false
+  }
+
   def isIncorrectOrEmptyBody: Boolean = isEmpty ||
-    (foreignProperty.isDefined && foreignProperty.get.isEmpty) ||
+    (if (foreignProperty.isDefined) foreignPropertyIsEmpty else false) ||
     (foreignFhlEea.isDefined && foreignFhlEea.get.isEmpty)
 }
 
@@ -34,16 +41,26 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
   implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = new OWrites[SubmitForeignPropertyBsasRequestBody] {
     override def writes(o: SubmitForeignPropertyBsasRequestBody): JsObject =
       o.foreignProperty.map (x =>
-        filterNull(Json.obj(
-          "incomeSourceType" -> "15",
-          "income" -> x.income,
-          "expenses" -> x.expenses
-        ))).getOrElse(
+        filterNull(
+          Json.obj(
+            "incomeSourceType" -> "15",
+            "adjustments" -> x.map (i =>
+              Json.obj(
+                "countryCode" -> i.countryCode,
+                "income" -> i.income,
+                "expenses" -> i.expenses
+              )
+            )
+          )
+        )
+      ).getOrElse(
         o.foreignFhlEea.map(x =>
           filterNull(Json.obj(
             "incomeSourceType" -> "03",
-            "income" -> x.income,
-            "expenses" -> x.expenses
+            "adjustments" -> Json.obj(
+              "income" -> x.income,
+              "expenses" -> x.expenses
+            )
           ))).getOrElse(Json.obj())
       )
   }

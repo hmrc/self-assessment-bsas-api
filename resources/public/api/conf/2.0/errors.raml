@@ -115,6 +115,28 @@ traits:
                 description: One or more values has been added with the incorrect format.
                 value:
                   code: FORMAT_ADJUSTMENT_VALUE
+  formatCountryCode:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatCountryCode:
+                description: The format of the supplied Country code field is not valid.
+                value:
+                  code: FORMAT_COUNTRY_CODE
+  ruleCountryCode:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleCountryCode:
+                description: Not a valid ISO 3166-1 alpha-3 country code.
+                value:
+                  code: RULE_COUNTRY_CODE
   ruleNotSelfEmployment:
     responses:
       403:

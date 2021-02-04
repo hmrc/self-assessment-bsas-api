@@ -91,7 +91,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("BVR_FAILURE_C55503", RuleNotSelfEmployment),
         ("BVR_FAILURE_C55508", RuleNotSelfEmployment),
         ("BVR_FAILURE_C55509", RuleNotSelfEmployment),
-        ("NOT_FOUND", NotFoundError),
+        ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )

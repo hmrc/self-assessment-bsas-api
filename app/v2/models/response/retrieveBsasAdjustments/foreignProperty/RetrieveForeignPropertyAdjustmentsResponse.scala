@@ -23,16 +23,16 @@ import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.hateoas.{HateoasData, Link}
 
-case class RetrieveForeignPropertyAdjustmentsResponse(metadata: Metadata, adjustments: BsasDetail)
+case class RetrieveForeignPropertyAdjustmentsResponse(metadata: Metadata, adjustments: Seq[BsasDetail])
 
 object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveForeignPropertyAdjustmentsResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`foreign-property-fhl-eea` => BsasDetail.fhlReads
-        case TypeOfBusiness.`foreign-property` => BsasDetail.nonFhlReads
-        case _ => BsasDetail.fhlReads // Reading as normal property, we are handling the error in the service layer.
+        case TypeOfBusiness.`foreign-property-fhl-eea` => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.fhlSeqReads)
+        case TypeOfBusiness.`foreign-property` => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.nonFhlSeqReads)
+        case _ => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.fhlSeqReads) // Reading as normal property, we are handling the error in the service layer.
       }
     )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
 

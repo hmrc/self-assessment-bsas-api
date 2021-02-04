@@ -21,22 +21,41 @@ import support.UnitSpec
 
 class FhlEeaSpec extends UnitSpec {
 
-  val validJson = Json.parse(
+  val validReadsJson = Json.parse(
     """
       |{
-      |        "income": {
-      |            "rentIncome": 123.12
-      |        },
-      |        "expenses": {
-      |            "premisesRunningCosts": 123.12,
-      |            "repairsAndMaintenance": 123.12,
-      |            "financialCosts": 123.12,
-      |            "professionalFees": 123.12,
-      |            "costOfServices": 123.12,
-      |            "travelCosts": 123.12,
-      |            "other": 123.12,
-      |            "consolidatedExpenses": 123.12
-      |        }
+      |  "income": {
+      |    "rentIncome": 123.12
+      |  },
+      |  "expenses": {
+      |    "premisesRunningCosts": 123.12,
+      |    "repairsAndMaintenance": 123.12,
+      |    "financialCosts": 123.12,
+      |    "professionalFees": 123.12,
+      |    "costOfServices": 123.12,
+      |    "travelCosts": 123.12,
+      |    "other": 123.12,
+      |    "consolidatedExpenses": 123.12
+      |  }
+      |}
+      |""".stripMargin)
+
+  val validWritesJson = Json.parse(
+    """
+      |{
+      |  "income": {
+      |    "rentAmount": 123.12
+      |  },
+      |  "expenses": {
+      |    "premisesRunningCosts": 123.12,
+      |    "repairsAndMaintenance": 123.12,
+      |    "financialCosts": 123.12,
+      |    "professionalFees": 123.12,
+      |    "costOfServices": 123.12,
+      |    "travelCosts": 123.12,
+      |    "other": 123.12,
+      |    "consolidatedExpenses": 123.12
+      |  }
       |}
       |""".stripMargin)
 
@@ -63,7 +82,7 @@ class FhlEeaSpec extends UnitSpec {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validModel shouldBe validJson.as[FhlEea]
+        validModel shouldBe validReadsJson.as[FhlEea]
       }
     }
   }
@@ -77,7 +96,7 @@ class FhlEeaSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validJson
+        Json.toJson(validModel) shouldBe validWritesJson
       }
     }
   }

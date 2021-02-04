@@ -52,8 +52,9 @@ class RetrieveSelfEmploymentAdjustmentsService @Inject()(connector: RetrieveSelf
     "INVALID_CALCULATION_ID" -> BsasIdFormatError,
     "INVALID_RETURN" -> DownstreamError,
     "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
-    "NOT_FOUND" -> NotFoundError,
+    "NO_DATA_FOUND" -> NotFoundError,
     "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError
+    "SERVICE_UNAVAILABLE" -> DownstreamError,
+    "INVALID_CORRELATION_ID" -> DownstreamError
   )
 }
