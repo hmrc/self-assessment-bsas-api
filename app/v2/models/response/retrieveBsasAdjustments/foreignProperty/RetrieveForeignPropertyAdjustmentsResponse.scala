@@ -30,9 +30,10 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
   implicit val reads: Reads[RetrieveForeignPropertyAdjustmentsResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`foreign-property-fhl-eea` => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.fhlSeqReads)
+        case TypeOfBusiness.`foreign-property-fhl-eea` => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
         case TypeOfBusiness.`foreign-property` => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.nonFhlSeqReads)
-        case _ => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.fhlSeqReads) // Reading as normal property, we are handling the error in the service layer.
+        case _ => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
+        // Reading as normal property, we are handling the error in the service layer.
       }
     )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
 
