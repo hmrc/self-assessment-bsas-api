@@ -27,7 +27,7 @@ object BsasDetail {
   val fhlReads: Reads[BsasDetail] = (
     Reads.pure("FRA") and
       (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
-        case Some(IncomeBreakdown(None, None, None, None)) => None
+        case Some(IncomeBreakdown(None, None, None)) => None
         case incomeBreakdown => incomeBreakdown
       } and
       (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
@@ -41,7 +41,7 @@ object BsasDetail {
   val nonFhlReads: Reads[BsasDetail] = (
     (JsPath   \ "countryCode").read[String] and
       (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
-        case Some(IncomeBreakdown(None, None, None, None)) => None
+        case Some(IncomeBreakdown(None, None, None)) => None
         case incomeBreakdown => incomeBreakdown
       } and
       (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {

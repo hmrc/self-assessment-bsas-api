@@ -27,7 +27,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
 
   val foreignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`,
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
-    "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
+    "2019-10-14T12:00:22Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 
   val foreignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`,
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
@@ -42,15 +42,15 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
     "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
 
 
-  val nonFhlIncomeModel = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val nonFhlIncomeModel = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
 
-  val fhlIncomeModel = IncomeBreakdown(Some(100.49), None, None, None)
+  val fhlIncomeModel = IncomeBreakdown(Some(100.49), None, None)
 
   val nonFhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+    Some(100.49), Some(100.49), Some(100.49), Some(100.49), None)
 
   val fhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), None, Some(100.49), Some(100.49))
+    Some(100.49), Some(100.49), None, Some(100.49), None)
 
   val nonFhlBsasDetailModel = BsasDetail("FRA", Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
 

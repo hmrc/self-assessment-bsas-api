@@ -53,7 +53,6 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |            "rent": 100.49
       |        },
       |        "expenses": {
-      |            "consolidatedExpenses": 100.49,
       |            "repairsAndMaintenance": 100.49,
       |            "financialCosts": 100.49,
       |            "professionalFees": 100.49,
@@ -98,20 +97,19 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |    {
       |      "countryCode": "FRA",
       |      "income":{
-      |        "rent":-99999999999.99,
-      |        "premiumsOfLeaseGrantAmount":-99999999999.99,
-      |        "otherPropertyIncomeAmount":-99999999999.99
+      |        "rent":100.49,
+      |        "premiumsOfLeaseGrant":100.49,
+      |        "otherPropertyIncome":100.49
       |      },
       |      "expenses":{
-      |        "premisesRunningCostsAmount":-99999999999.99,
-      |        "repairsAndMaintenanceAmount":-99999999999.99,
-      |        "financialCostsAmount":-99999999999.99,
-      |        "professionalFeesAmount":-99999999999.99,
-      |        "travelCostsAmount":-99999999999.99,
-      |        "costOfServicesAmount":-99999999999.99,
-      |        "residentialFinancialCostAmount":-99999999999.99,
-      |        "otherAmount":-99999999999.99,
-      |        "consolidatedExpenseAmount":-99999999999.99
+      |        "premisesRunningCosts":100.49,
+      |        "repairsAndMaintenance":100.49,
+      |        "financialCosts":100.49,
+      |        "professionalFees":100.49,
+      |        "travelCosts":100.49,
+      |        "costOfServices":100.49,
+      |        "residentialFinancialCost":100.49,
+      |        "other":100.49
       |      }
       |    }
       |  ]
@@ -153,16 +151,17 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       | "metadata": {
       |   "taxYear" : 2020,
       |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |   "requestedDateTime" : "2019-10-14T11:33:27Z",
+      |   "requestedDateTime" : "2019-10-14T12:00:22Z",
       |   "taxableEntityId": "AA1234567A",
       |   "status" : "superseded"
       | },
       |  "adjustedSummaryCalculation" : {
       |
       | },
-      | "adjustments" : {
-      |
-      | }
+      | "adjustments" : [{
+      |     "countryCode": "FRA"
+      |   }
+      | ]
       |}
     """.stripMargin)
 
