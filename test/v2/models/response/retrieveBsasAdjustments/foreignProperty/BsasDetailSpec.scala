@@ -128,8 +128,8 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
             |}
             |""".stripMargin)
 
-        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(None, None)
-        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(None, None)
+        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail("FRA", None, None)
+        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail("FRA", None, None)
       }
     }
 

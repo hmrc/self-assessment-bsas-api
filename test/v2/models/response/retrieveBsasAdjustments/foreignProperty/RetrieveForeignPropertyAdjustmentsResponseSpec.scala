@@ -48,6 +48,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |        ]
       |    },
       |    "adjustments": {
+      |        "countryCode": "FRA",
       |        "income": {
       |            "rent": 100.49
       |        },
@@ -95,7 +96,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |  },
       |  "adjustments":[
       |    {
-      |      "countryCode":"CYM",
+      |      "countryCode": "FRA",
       |      "income":{
       |        "rent":-99999999999.99,
       |        "premiumsOfLeaseGrantAmount":-99999999999.99,
