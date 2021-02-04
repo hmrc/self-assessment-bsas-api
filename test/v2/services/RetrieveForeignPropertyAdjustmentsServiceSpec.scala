@@ -34,7 +34,7 @@ class RetrieveForeignPropertyAdjustmentsServiceSpec extends ServiceSpec {
 
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val request = RetrieveAdjustmentsRequestData(nino, id)
-  val response = RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, nonFhlBsasDetailModel)
+  val response = RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
 
   trait Test extends MockRetrieveForeignPropertyAdjustmentsConnector {
 

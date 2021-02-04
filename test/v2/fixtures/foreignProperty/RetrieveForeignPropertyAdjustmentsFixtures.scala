@@ -57,19 +57,19 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
   val fhlBsasDetailModel = BsasDetail(Some(fhlIncomeModel), Some(fhlExpenseBreakdownModel))
 
   val foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, nonFhlBsasDetailModel)
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
 
   val validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(validForeignPropertyMetaDataModel, nonFhlBsasDetailModel)
+    RetrieveForeignPropertyAdjustmentsResponse(validForeignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
 
   val foreignPropertyFhlEeaRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, fhlBsasDetailModel)
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(fhlBsasDetailModel))
 
   val foreignPropertyMinimalRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, BsasDetail(None, None))
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(BsasDetail(None, None)))
 
   val foreignPropertyFhlEeaMinimalRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, BsasDetail(None, None))
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(BsasDetail(None, None)))
 
   val hateoasResponseForForeignPropertyAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
@@ -86,7 +86,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      "summaryStatus": "valid",
        |      "adjustedSummary": true
        |   },
-       |   "adjustments": {
+       |   "adjustments": [{
        |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
@@ -104,7 +104,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |         "other": 100.49,
        |         "consolidatedExpenses": 100.49
        |      }
-       |   },
+       |   }],
        |	"links": [{
        |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
        |		"method": "GET",
@@ -132,7 +132,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      "summaryStatus": "valid",
        |      "adjustedSummary": true
        |   },
-       |   "adjustments": {
+       |   "adjustments": [{
        |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
@@ -150,7 +150,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |         "other": 100.49,
        |         "consolidatedExpenses": 100.49
        |      }
-       |   },
+       |   }],
        |	"links": [{
        |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
        |		"method": "GET",
@@ -188,7 +188,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |            }
       |        ]
       |    },
-      |    "adjustments": {
+      |    "adjustments": [{
       |        "income": {
       |            "totalRentsReceived": 100.49,
       |            "premiumsOfLeaseGrant": 100.49,
@@ -206,7 +206,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |            "other": 100.49,
       |            "premisesRunningCosts": 100.49
       |        }
-      |    }
+      |    }]
       |}
       |""".stripMargin)
 }

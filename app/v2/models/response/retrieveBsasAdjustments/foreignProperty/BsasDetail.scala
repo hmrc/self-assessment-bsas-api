@@ -25,26 +25,30 @@ case class BsasDetail(incomes: Option[IncomeBreakdown], expenses: Option[Expense
 object BsasDetail {
 
   val fhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
+    (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
       case Some(IncomeBreakdown(None, None, None, None)) => None
       case incomeBreakdown => incomeBreakdown
     } and
-      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
+      (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
         case expensesBreakdown => expensesBreakdown
       }
     ) (BsasDetail.apply _)
 
+  val fhlSeqReads: Reads[Seq[BsasDetail]] = Reads.seq(fhlReads)
+
   val nonFhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
+    (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
       case Some(IncomeBreakdown(None, None, None, None)) => None
       case incomeBreakdown => incomeBreakdown
     } and
-      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
+      (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
         case expensesBreakdown => expensesBreakdown
       }
     ) (BsasDetail.apply _)
+
+  val nonFhlSeqReads: Reads[Seq[BsasDetail]] = Reads.traversableReads[Seq, BsasDetail](implicitly, nonFhlReads)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }
