@@ -25,19 +25,19 @@ import v2.models.response.retrieveBsasAdjustments.foreignProperty.{BsasDetail, E
 
 object RetrieveForeignPropertyAdjustmentsFixtures {
 
-  val foreignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`,
+  val foreignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
     "2019-10-14T12:00:22Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 
-  val foreignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`,
+  val foreignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
     "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 
-  val validForeignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`,
+  val validForeignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2020-01-01")), "2019-20",
     "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
 
-  val validForeignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`,
+  val validForeignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2020-01-01")), "2019-20",
     "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
 

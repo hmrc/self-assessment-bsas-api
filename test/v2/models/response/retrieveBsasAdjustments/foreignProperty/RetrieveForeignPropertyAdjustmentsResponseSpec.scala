@@ -33,7 +33,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |        "status": "superseded"
       |    },
       |    "inputs": {
-      |        "incomeSourceId": "111111111111111",
+      |        "incomeSourceId": "XAIS123456789012",
       |        "incomeSourceType": "03",
       |        "accountingPeriodStartDate": "2018-10-11",
       |        "accountingPeriodEndDate": "2019-10-10",
@@ -78,7 +78,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |    "status":"superseded"
       |  },
       |  "inputs":{
-      |    "incomeSourceId":"000000000000210",
+      |    "incomeSourceId":"XAIS123456789012",
       |    "incomeSourceType":"15",
       |    "incomeSourceName":"string",
       |    "accountingPeriodStartDate":"2018-10-11",
@@ -120,6 +120,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
     """
       |{
       | "inputs": {
+      |   "incomeSourceId":"XAIS123456789012",
       |   "incomeSourceType" : "03",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
@@ -144,6 +145,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
     """
       |{
       | "inputs": {
+      |   "incomeSourceId":"XAIS123456789012",
       |   "incomeSourceType" : "15",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
@@ -170,25 +172,24 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |{
       |   "metadata": {
       |      "typeOfBusiness": "foreign-property",
-      |      "businessId": "XAIS00000000210",
+      |      "businessId": "XAIS123456789012",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
       |      },
       |      "taxYear": "2019-20",
-      |      "requestedDateTime": "2019-10-14T11:33:27Z",
-      |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+      |      "requestedDateTime": "2019-10-14T12:00:22Z",
+      |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |      "summaryStatus": "superseded",
       |      "adjustedSummary": true
       |   },
       |   "adjustments": [
       |      {
-      |         "countryCode": "CYM",
+      |         "countryCode": "FRA",
       |         "incomes": {
       |            "rentIncome": 100.49,
-      |            "premiumsOFLeaseGrant": 100.49,
-      |            "otherPropertyIncome": 100.49,
-      |            "foreignTaxTakenOff": 100.49
+      |            "premiumsOfLeaseGrant": 100.49,
+      |            "otherPropertyIncome": 100.49
       |         },
       |         "expenses": {
       |            "premisesRunningCosts": 100.49,
@@ -198,8 +199,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |            "travelCosts": 100.49,
       |            "costOfServices": 100.49,
       |            "residentialFinancialCost": 100.49,
-      |            "other": 100.49,
-      |            "consolidatedExpenses": 100.49
+      |            "other": 100.49
       |         }
       |      }]
       |}
@@ -210,7 +210,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |{
       |   "metadata": {
       |      "typeOfBusiness": "foreign-property-fhl-eea",
-      |      "businessId": "XAIS00000000210",
+      |      "businessId": "XAIS123456789012",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
@@ -232,8 +232,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |         "professionalFees": 100.49,
       |         "travelCosts": 100.49,
       |         "costOfServices": 100.49,
-      |         "other": 100.49,
-      |         "consolidatedExpenses": 100.49
+      |         "other": 100.49
       |      }
       |   }
       |}
@@ -244,18 +243,20 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |{
       | "metadata": {
       |      "typeOfBusiness": "foreign-property",
-      |      "businessId": "XAIS00000000210",
+      |      "businessId": "XAIS123456789012",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"
       |      },
       |      "taxYear": "2019-20",
-      |      "requestedDateTime": "2019-10-14T11:33:27Z",
+      |      "requestedDateTime": "2019-10-14T12:00:22Z",
       |      "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |      "summaryStatus": "superseded",
       |      "adjustedSummary": true
       | },
-      | "adjustments": {}
+      | "adjustments": [{
+      |   "countryCode":"FRA"
+      | }]
       |}
     """.stripMargin)
 
@@ -264,7 +265,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |{
       | "metadata": {
       |      "typeOfBusiness": "foreign-property-fhl-eea",
-      |      "businessId": "XAIS00000000210",
+      |      "businessId": "XAIS123456789012",
       |      "accountingPeriod": {
       |         "startDate": "2018-10-11",
       |         "endDate": "2019-10-10"

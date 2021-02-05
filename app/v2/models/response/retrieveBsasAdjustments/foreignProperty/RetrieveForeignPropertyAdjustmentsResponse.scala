@@ -18,8 +18,9 @@ package v2.models.response.retrieveBsasAdjustments.foreignProperty
 
 import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
 import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v2.models.domain.TypeOfBusiness
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.hateoas.{HateoasData, Link}
 
@@ -37,7 +38,37 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
       }
     )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
 
-  implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] = Json.writes[RetrieveForeignPropertyAdjustmentsResponse]
+  implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] = new OWrites[RetrieveForeignPropertyAdjustmentsResponse] {
+    override def writes(o: RetrieveForeignPropertyAdjustmentsResponse): JsObject =
+      o.metadata.typeOfBusiness match {
+        case TypeOfBusiness.`foreign-property`         => {
+          Json.obj(
+            "metadata"    -> o.metadata,
+            "adjustments" -> o.adjustments
+          )
+        }
+        case TypeOfBusiness.`foreign-property-fhl-eea` => {
+          Json.obj(
+            "metadata" -> o.metadata,
+            "adjustments" -> {
+              (o.adjustments.head.incomes.isDefined, o.adjustments.head.expenses.isDefined) match {
+                case (true, true) => Json.obj(
+                  "incomes" -> o.adjustments.head.incomes,
+                  "expenses" -> o.adjustments.head.expenses
+                )
+                case (true, false) => Json.obj(
+                  "incomes" -> o.adjustments.head.incomes
+                )
+                case (false, true) => Json.obj(
+                  "expenses" -> o.adjustments.head.expenses
+                )
+                case (false, false) => Json.obj()
+              }
+            }
+          )
+        }
+      }
+  }
 
   implicit object RetrieveForeignPropertyAdjustmentsHateoasFactory
     extends HateoasLinksFactory[RetrieveForeignPropertyAdjustmentsResponse, RetrieveForeignPropertyAdjustmentsHateoasData] {
