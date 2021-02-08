@@ -19,7 +19,7 @@ package v2.models.response.retrieveBsas.foreignProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class IncomeBreakdown(rentIncome: Option[BigDecimal],
+case class IncomeBreakdown(rent: Option[BigDecimal],
                            premiumsOfLeaseGrant: Option[BigDecimal],
                            otherPropertyIncome: Option[BigDecimal],
                            foreignTaxTakenOff: Option[BigDecimal],
@@ -27,7 +27,7 @@ case class IncomeBreakdown(rentIncome: Option[BigDecimal],
 
 object IncomeBreakdown {
   val nonFhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
+    (JsPath \ "rent").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
       (JsPath \ "foreignTaxTakenOff").readNullable[BigDecimal] and
