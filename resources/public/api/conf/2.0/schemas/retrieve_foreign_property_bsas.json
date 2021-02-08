@@ -145,10 +145,10 @@
               "type": "number",
               "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99.",
               "example": "123.12"
-            },
+            }
+          },
           "additionalProperties": false
-        }
-      },
+        },
         "countryLevelDetail": {
           "type": "array",
           "description": "Object holding foreign property adjustments.",
@@ -263,13 +263,13 @@
                   }
                 }
               }
-            }
-          },
-          "required": [
-            "countryCode",
-            "total"
-          ],
-          "additionalProperties": false
+            },
+            "required": [
+              "countryCode",
+              "total"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [
