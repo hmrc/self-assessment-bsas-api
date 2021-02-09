@@ -18,7 +18,7 @@ package v1.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
+import config.{AppConfig, FeatureSwitch}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveUkPropertyAdjustmentsConnector
@@ -29,10 +29,14 @@ import v1.models.request.RetrieveAdjustmentsRequestData
 import v1.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 import v1.support.DesResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkPropertyAdjustmentsConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkPropertyAdjustmentsConnector, appConfig: AppConfig)
+  extends DesResponseMappingSupport with Logging {
+
+  val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
   def retrieveUkPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
                                         implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
@@ -46,13 +50,24 @@ class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkProper
     result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID" -> BsasIdFormatError,
-    "INVALID_RETURN" -> DownstreamError,
-    "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
-    "NOT_FOUND" -> NotFoundError,
-    "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError
-  )
+  private def mappingDesToMtdError: Map[String, MtdError] = {
+    if(featureSwitch.isJacobsNewThing) {
+      Map(
+        "NOT_FOUND" -> NotFoundError,
+        "SERVER_ERROR" -> DownstreamError,
+        "SERVICE_UNAVAILABLE" -> DownstreamError
+      )
+    } else {
+      // old
+      Map(
+        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+        "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+        "INVALID_RETURN" -> DownstreamError,
+        "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+        "NOT_FOUND" -> NotFoundError,
+        "SERVER_ERROR" -> DownstreamError,
+        "SERVICE_UNAVAILABLE" -> DownstreamError
+      )
+    }
+  }
 }

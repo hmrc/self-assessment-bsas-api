@@ -54,4 +54,11 @@ case class FeatureSwitch(value: Option[Configuration]) {
 
     enabled.getOrElse(false)
   }
+
+  def isJacobsNewThing: Boolean = {
+    value.flatMap {
+      config =>
+        config.getOptional[Boolean](s"is-jacobs-new-thing")
+    }.getOrElse(false)
+  }
 }
