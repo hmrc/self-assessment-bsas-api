@@ -24,7 +24,7 @@ import v2.models.response.retrieveBsasAdjustments.ukProperty._
 
 object RetrieveBsasUKPropertyAdjustmentsFixtures {
 
-  val metaDataModel = Metadata(TypeOfBusiness.`uk-property-fhl`,
+  val metaDataModel = Metadata(TypeOfBusiness.`uk-property-fhl`, Some("XAIS00000000210"),
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
     "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 

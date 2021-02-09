@@ -111,7 +111,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       ResponseWrapper(
         correlationId = "",
         responseData = retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse(
-          retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
+          retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, Some("XAIS00000000210"), AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
           retrieveBsasAdjustments.ukProperty.BsasDetail(None, None)
         )
       )

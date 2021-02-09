@@ -90,7 +90,6 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
   val desJsonWithWrongTypeOfBusiness = Json.parse("""{
       |  "inputs": {
       |    "incomeSourceType" : "01",
-      |    "incomeSourceId": "000000000000210",
       |    "accountingPeriodStartDate" : "2018-10-11",
       |    "accountingPeriodEndDate" : "2019-10-10"
       |  },

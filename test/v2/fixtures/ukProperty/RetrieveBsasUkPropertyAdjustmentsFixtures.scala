@@ -28,6 +28,7 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
   val desJsonNonFhl = Json.parse("""{
       |  "inputs": {
       |    "incomeSourceType" : "02",
+      |    "incomeSourceId": "000000000000210",
       |    "accountingPeriodStartDate" : "2018-10-11",
       |    "accountingPeriodEndDate" : "2019-10-10"
       |  },
@@ -61,6 +62,7 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
   val desJsonFhl = Json.parse("""{
       |  "inputs": {
       |    "incomeSourceType" : "04",
+      |    "incomeSourceId": "000000000000210",
       |    "accountingPeriodStartDate" : "2018-10-11",
       |    "accountingPeriodEndDate" : "2019-10-10"
       |  },
@@ -142,6 +144,7 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
 
   val metaDataModel: Metadata = Metadata(
     TypeOfBusiness.`uk-property-non-fhl`,
+    Some("000000000000210"),
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")),
     "2019-20",
     "2019-10-14T11:33:27Z",
@@ -160,6 +163,7 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
       |{
       |  "metadata": {
       |     "typeOfBusiness": "uk-property-non-fhl",
+      |     "businessId": "000000000000210",
       |     "accountingPeriod": {
       |       "startDate": "2018-10-11",
       |       "endDate": "2019-10-10"
@@ -207,6 +211,7 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
       |{
       |  "metadata": {
       |     "typeOfBusiness": "uk-property-fhl",
+      |     "businessId": "000000000000210",
       |     "accountingPeriod": {
       |       "startDate": "2018-10-11",
       |       "endDate": "2019-10-10"
