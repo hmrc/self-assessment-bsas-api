@@ -16,14 +16,16 @@
 
 package v1.controllers
 
-import mocks.MockIdGenerator
+import com.typesafe.config.ConfigFactory
+import mocks.{MockAppConfig, MockIdGenerator}
+import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitSelfEmploymentBsasService}
+import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
@@ -44,11 +46,13 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockSubmitSelfEmploymentBsasService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig
+    with MockSubmitSelfEmploymentBsasServiceV1R5 {
 
   private val correlationId = "X-123"
 
-  trait Test {
+  class Test(v1r2Config: Boolean = false) {
     val hc = HeaderCarrier()
 
     val controller = new SubmitSelfEmploymentBsasController(
@@ -56,16 +60,20 @@ class SubmitSelfEmploymentBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
       service = mockService,
+      r5Service = mockServiceV1R5,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      appConfig = mockAppConfig
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
+                                                                                         |v1r2.enabled = $v1r2Config
+      """.stripMargin))))
   }
 
   import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
@@ -116,6 +124,32 @@ class SubmitSelfEmploymentBsasControllerSpec
           .returns(Right(request))
 
         MockSubmitSelfEmploymentBsasService
+          .submitSelfEmploymentBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        MockHateoasFactory
+          .wrap(response, SubmitSelfEmploymentBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(response, testHateoasLinks))
+
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(Json.toJson(mtdRequest)))
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+      }
+    }
+
+    "return a v1r5 successful hateoas response with status 200 (OK)" when {
+      "a valid v1r5 request is supplied" in new Test(true) {
+
+        MockSubmitSelfEmploymentBsasDataParser
+          .parse(rawRequest)
+          .returns(Right(request))
+
+        MockSubmitSelfEmploymentBsasServiceV1R5
           .submitSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
