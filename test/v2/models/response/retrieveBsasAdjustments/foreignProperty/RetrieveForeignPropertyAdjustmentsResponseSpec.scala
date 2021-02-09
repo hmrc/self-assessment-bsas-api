@@ -60,7 +60,8 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |            "travelCosts": 100.49,
       |            "residentialFinancialCost": 100.49,
       |            "other": 100.49,
-      |            "premisesRunningCosts": 100.49
+      |            "premisesRunningCosts": 100.49,
+      |            "consolidatedExpenses":100.49
       |        }
       |    }
       |}
@@ -109,7 +110,8 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |        "travelCosts":100.49,
       |        "costOfServices":100.49,
       |        "residentialFinancialCost":100.49,
-      |        "other":100.49
+      |        "other":100.49,
+      |        "consolidatedExpenses":100.49
       |      }
       |    }
       |  ]
@@ -199,7 +201,8 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |            "travelCosts": 100.49,
       |            "costOfServices": 100.49,
       |            "residentialFinancialCost": 100.49,
-      |            "other": 100.49
+      |            "other": 100.49,
+      |            "consolidatedExpenses":100.49
       |         }
       |      }]
       |}
@@ -232,7 +235,8 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |         "professionalFees": 100.49,
       |         "travelCosts": 100.49,
       |         "costOfServices": 100.49,
-      |         "other": 100.49
+      |         "other": 100.49,
+      |         "consolidatedExpenses":100.49
       |      }
       |   }
       |}

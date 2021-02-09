@@ -47,10 +47,10 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
   val fhlIncomeModel = IncomeBreakdown(Some(100.49), None, None)
 
   val nonFhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), Some(100.49), Some(100.49), None)
+    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
   val fhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
-    Some(100.49), Some(100.49), None, Some(100.49), None)
+    Some(100.49), Some(100.49), None, Some(100.49), Some(100.49))
 
   val nonFhlBsasDetailModel = BsasDetail("FRA", Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
 
@@ -76,6 +76,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |{
        |   "metadata": {
        |      "typeOfBusiness": "foreign-property",
+       |      "businessId": "XAIS123456789012",
        |      "accountingPeriod": {
        |         "startDate": "2020-10-11",
        |         "endDate": "2020-01-01"
@@ -87,10 +88,10 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      "adjustedSummary": true
        |   },
        |   "adjustments": [{
-       |      "income": {
+       |      "countryCode": "FRA",
+       |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
-       |         "foreignTaxTakenOff": 100.49,
        |         "otherPropertyIncome": 100.49
        |      },
        |      "expenses": {
@@ -122,6 +123,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |{
        |   "metadata": {
        |      "typeOfBusiness": "foreign-property",
+       |      "businessId": "XAIS123456789012",
        |      "accountingPeriod": {
        |         "startDate": "2020-10-11",
        |         "endDate": "2020-01-01"
@@ -133,11 +135,11 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      "adjustedSummary": true
        |   },
        |   "adjustments": [{
-       |      "income": {
+       |      "countryCode": "FRA",
+       |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
-       |         "otherPropertyIncome": 100.49,
-       |         "foreignTaxTakenOff": 100.49
+       |         "otherPropertyIncome": 100.49
        |      },
        |      "expenses": {
        |         "premisesRunningCosts": 100.49,
@@ -174,7 +176,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |        "status": "valid"
       |    },
       |    "inputs": {
-      |        "incomeSourceId": "111111111111111",
+      |        "incomeSourceId": "XAIS123456789012",
       |        "incomeSourceType": "15",
       |        "accountingPeriodStartDate": "2020-10-11",
       |        "accountingPeriodEndDate": "2020-01-01",
@@ -189,11 +191,11 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |        ]
       |    },
       |    "adjustments": [{
+      |        "countryCode": "FRA",
       |        "income": {
-      |            "totalRentsReceived": 100.49,
+      |            "rent": 100.49,
       |            "premiumsOfLeaseGrant": 100.49,
-      |            "otherPropertyIncome": 100.49,
-      |            "foreignPropertyTaxTakenOff": 100.49
+      |            "otherPropertyIncome": 100.49
       |        },
       |        "expenses": {
       |            "consolidatedExpenses": 100.49,
