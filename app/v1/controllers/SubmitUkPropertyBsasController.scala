@@ -18,6 +18,7 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitch}
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
@@ -38,6 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                val lookupService: MtdIdLookupService,
+                                               val appConfig: AppConfig,
                                                requestParser: SubmitUkPropertyBsasDataParser,
                                                service: SubmitUkPropertyBsasService,
                                                hateoasFactory: HateoasFactory,
@@ -53,7 +55,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       controllerName = "SubmitUkPropertyBsasController",
       endpointName = "submitUkPropertyBsas"
     )
-
+  //noinspection ScalaStyle
   def submitUkPropertyBsas(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
 
@@ -62,11 +64,20 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
+      val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
+
       val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- EitherT(service.submitPropertyBsas(parsedRequest))
+          response <- {
+            if (featureSwitch.isV1R5Enabled) {
+              EitherT(service.submitPropertyBsasV1R5(parsedRequest))
+            }
+            else {
+              EitherT(service.submitPropertyBsas(parsedRequest))
+            }
+          }
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(

@@ -16,7 +16,9 @@
 
 package v1.controllers
 
-import mocks.MockIdGenerator
+import com.typesafe.config.ConfigFactory
+import mocks.{MockAppConfig, MockIdGenerator}
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -40,6 +42,7 @@ class SubmitUkPropertyBsasControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
+    with MockAppConfig
     with MockSubmitUkPropertyRequestParser
     with MockSubmitUkPropertyBsasService
     with MockHateoasFactory
@@ -48,12 +51,13 @@ class SubmitUkPropertyBsasControllerSpec
 
   private val correlationId = "X-123"
 
-  trait Test {
+  class Test(v1r5Config: Boolean = false) {
     val hc = HeaderCarrier()
 
     val controller = new SubmitUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
@@ -65,6 +69,9 @@ class SubmitUkPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
+                                                                                          |v1r5.enabled = $v1r5Config
+      """.stripMargin))))
 
   }
 
@@ -143,6 +150,56 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(nonFhlRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        MockHateoasFactory
+          .wrap(response, SubmitUkPropertyBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(response, testHateoasLinks))
+
+        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validNonFHLInputJson)))
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validNonFHLInputJson))).once
+      }
+    }
+
+    "return a successful hateoas response with status 200 (OK) for v1r5" when {
+      "a valid request is supplied for an FHL property" in new Test(true) {
+
+        MockSubmitUkPropertyBsasDataParser
+          .parse(fhlRawRequest)
+          .returns(Right(fhlRequest))
+
+        MockSubmitUkPropertyBsasService
+          .submitPropertyBsasV1R5(fhlRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        MockHateoasFactory
+          .wrap(response, SubmitUkPropertyBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(response, testHateoasLinks))
+
+        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validfhlInputJson)))
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson) )).once
+      }
+
+      "a valid request is supplied for a non-FHL property" in new Test(true) {
+
+        MockSubmitUkPropertyBsasDataParser
+          .parse(nonFhlRawRequest)
+          .returns(Right(nonFhlRequest))
+
+        MockSubmitUkPropertyBsasService
+          .submitPropertyBsasV1R5(nonFhlRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
@@ -244,6 +301,46 @@ class SubmitUkPropertyBsasControllerSpec
     "return downstream errors as per the spec" when {
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
         s"a ${mtdError.code} error is returned from the service" in new Test {
+
+          MockSubmitUkPropertyBsasDataParser
+            .parse(fhlRawRequest)
+            .returns(Right(fhlRequest))
+
+          MockSubmitUkPropertyBsasService
+            .submitPropertyBsas(fhlRequest)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+          val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+
+          status(result) shouldBe expectedStatus
+          contentAsJson(result) shouldBe Json.toJson(mtdError)
+          header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
+        }
+      }
+
+      val input = Seq(
+        (NinoFormatError, BAD_REQUEST),
+        (BsasIdFormatError, BAD_REQUEST),
+        (NotFoundError, NOT_FOUND),
+        (DownstreamError, INTERNAL_SERVER_ERROR),
+        (RuleTypeOfBusinessError, FORBIDDEN),
+        (RuleSummaryStatusInvalid, FORBIDDEN),
+        (RuleSummaryStatusSuperseded, FORBIDDEN),
+        (RuleBsasAlreadyAdjusted, FORBIDDEN),
+        (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+        (RuleSelfEmploymentAdjustedError, FORBIDDEN),
+        (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
+        (RuleResultingValueNotPermitted, FORBIDDEN)
+      )
+      input.foreach(args => (serviceErrors _).tupled(args))
+    }
+
+    "return downstream errors as per the spec for v1r5" when {
+      def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+        s"a ${mtdError.code} error is returned from the service" in new Test(true) {
 
           MockSubmitUkPropertyBsasDataParser
             .parse(fhlRawRequest)

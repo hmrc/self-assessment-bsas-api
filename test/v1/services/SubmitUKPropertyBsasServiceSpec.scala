@@ -55,6 +55,15 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
       }
     }
 
+    "return a valid response for v1r5" when {
+      "a valid request is supplied" in new Test {
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.submitPropertyBsasV1R5(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+      }
+    }
+
     "return error response" when {
 
       "des return success response with invalid type of business as `self-employment`" in new Test {
@@ -65,6 +74,14 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
       }
 
+      "des return success response with invalid type of business as `self-employment`for v1r5" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
+
+        await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
+      }
+
       "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
 
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
@@ -73,12 +90,28 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
       }
 
+      "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected for v1r5" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
+
+        await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
+      }
+
       "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
 
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
 
         await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
+      }
+
+      "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected for v1r5" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
+
+        await(service.submitPropertyBsasV1R5(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -113,7 +146,38 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
       )
 
       input.foreach(args => (serviceError _).tupled(args))
+
+      def serviceErrorV1R5(desErrorCode: String, error: MtdError): Unit =
+        s"a $desErrorCode error is returned from the service" in new Test {
+
+          MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+
+          await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+        }
+
+      val inputV1R5 = Seq(
+
+        ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
+        ("INVALID_CALCULATION_ID", BsasIdFormatError),
+        ("INVALID_PAYLOAD", DownstreamError),
+        ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
+        ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
+        ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
+        ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
+        ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessError),
+        ("BVR_FAILURE_C55316", RuleTypeOfBusinessError),
+        ("BVR_FAILURE_C15320", RuleTypeOfBusinessError),
+        ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
+        ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
+        ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
+        ("NO_DATA_FOUND", NotFoundError),
+        ("SERVER_ERROR", DownstreamError),
+        ("SERVICE_UNAVAILABLE", DownstreamError)
+      )
+
+      inputV1R5.foreach(args => (serviceErrorV1R5 _).tupled(args))
     }
-    }
+  }
 
 }
