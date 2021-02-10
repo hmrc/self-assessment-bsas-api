@@ -20,12 +20,12 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class Loss(net: Option[BigDecimal],
-                adjustedIncomeTax: Option[BigDecimal])
+                adjustedIncomeTax: Option[BigInt])
 
 object Loss {
   implicit val reads: Reads[Loss] = (
     (JsPath \ "netLoss").readNullable[BigDecimal] and
-      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
+      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigInt]
     )(Loss.apply _)
 
   implicit val writes: OWrites[Loss] = Json.writes[Loss]

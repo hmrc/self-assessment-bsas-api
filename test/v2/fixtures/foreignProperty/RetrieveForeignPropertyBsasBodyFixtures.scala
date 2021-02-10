@@ -56,9 +56,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   val total: TotalBsas = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
-  val profit: Profit = Profit(Some(100.49), Some(100.49))
+  val profit: Profit = Profit(Some(100.49), Some(100))
 
-  val loss: Loss = Loss(Some(100.49), Some(100.49))
+  val loss: Loss = Loss(Some(100.49), Some(100))
 
   val nonFhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
 

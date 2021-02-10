@@ -62,11 +62,11 @@ object RetrieveForeignPropertyBsasFixtures {
        |  },
        |  "profit": {
        |    "net": 100.49,
-       |    "taxable": 100.49
+       |    "taxable": 100
        |  },
        |  "loss": {
        |    "net": 100.49,
-       |    "adjustedIncomeTax": 100.49
+       |    "adjustedIncomeTax": 100
        |  },
        |  "incomeBreakdown": {
        |    "rentIncome": 100.49,
@@ -90,8 +90,8 @@ object RetrieveForeignPropertyBsasFixtures {
   )
 
   val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
-  val profitModel = Profit(Some(100.49),Some(100.49))
-  val lossModel = Loss(Some(100.49),Some(100.49))
+  val profitModel = Profit(Some(100.49),Some(100))
+  val lossModel = Loss(Some(100.49),Some(100))
   val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
   val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
@@ -156,9 +156,9 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "totalRentsReceived": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
@@ -185,9 +185,9 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "totalRentsReceived": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
@@ -232,9 +232,9 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "rentIncome": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
@@ -261,9 +261,9 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "rentIncome": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,

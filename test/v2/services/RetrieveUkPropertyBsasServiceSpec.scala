@@ -82,6 +82,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
 
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
+        ("INVAlID_CORRELATION_ID", DownstreamError),
         ("INVALID_RETURN", DownstreamError),
         ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
         ("NO_DATA_FOUND", NotFoundError),

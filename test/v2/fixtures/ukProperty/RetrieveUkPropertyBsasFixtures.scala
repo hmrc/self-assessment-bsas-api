@@ -26,8 +26,8 @@ import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsa
 object RetrieveUkPropertyBsasFixtures {
 
   val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
-  val profitModel = Profit(Some(100.49),Some(100.49))
-  val lossModel = Loss(Some(100.49),Some(100.49))
+  val profitModel = Profit(Some(100.49),Some(100))
+  val lossModel = Loss(Some(100.49),Some(100))
   val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
   val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
@@ -40,6 +40,7 @@ object RetrieveUkPropertyBsasFixtures {
     expensesBreakdown = Some(expensesBreakdownModel))
 
   val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+    businessId = None,
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
@@ -49,6 +50,7 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val metadataModelWithAdjustableSummary = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+    businessId = None,
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
@@ -82,11 +84,11 @@ object RetrieveUkPropertyBsasFixtures {
       |      },
       |      "profit": {
       |         "net": 100.49,
-      |         "taxable": 100.49
+      |         "taxable": 100
       |      },
       |      "loss": {
       |         "net": 100.49,
-      |         "adjustedIncomeTax": 100.49
+      |         "adjustedIncomeTax": 100
       |      },
       |      "incomeBreakdown": {
       |         "rentIncome": 100.49,
@@ -119,11 +121,11 @@ object RetrieveUkPropertyBsasFixtures {
       |      },
       |      "profit": {
       |         "net": 100.49,
-      |         "taxable": 100.49
+      |         "taxable": 100
       |      },
       |      "loss": {
       |         "net": 100.49,
-      |         "adjustedIncomeTax": 100.49
+      |         "adjustedIncomeTax": 100
       |      },
       |      "incomeBreakdown": {
       |         "rentIncome": 100.49,
@@ -209,8 +211,8 @@ object RetrieveUkPropertyBsasFixtures {
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
       |  "accountingAdjustments": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       | },
       | "adjustedSummaryCalculation": {
       |  "totalIncome": 100.49,
@@ -238,8 +240,8 @@ object RetrieveUkPropertyBsasFixtures {
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
       |  "accountingAdjustments": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       | }
       |}""".stripMargin)
 
@@ -293,8 +295,8 @@ object RetrieveUkPropertyBsasFixtures {
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
       |  "accountingAdjustments": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       | },
       | "adjustments": {
       |  "income": {
@@ -365,8 +367,8 @@ object RetrieveUkPropertyBsasFixtures {
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
       |  "accountingAdjustments": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       | },
       | "adjustedSummaryCalculation": {
       |  "totalIncome": 100.49,
@@ -394,8 +396,8 @@ object RetrieveUkPropertyBsasFixtures {
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
       |  "accountingAdjustments": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       | }
       |}""".stripMargin)
 
@@ -422,11 +424,11 @@ object RetrieveUkPropertyBsasFixtures {
                                                         |      },
                                                         |      "profit": {
                                                         |         "net": 100.49,
-                                                        |         "taxable": 100.49
+                                                        |         "taxable": 100
                                                         |      },
                                                         |      "loss": {
                                                         |         "net": 100.49,
-                                                        |         "adjustedIncomeTax": 100.49
+                                                        |         "adjustedIncomeTax": 100
                                                         |      },
                                                         |      "incomeBreakdown": {
                                                         |         "rentIncome": 100.49,

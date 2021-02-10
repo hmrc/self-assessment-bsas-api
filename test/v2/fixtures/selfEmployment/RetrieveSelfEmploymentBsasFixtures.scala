@@ -169,8 +169,8 @@ object RetrieveSelfEmploymentBsasFixtures {
   val bsasDetailModel: BsasDetail = BsasDetail(
     total = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49)),
     accountingAdjustments = Some(100.49),
-    profit = Some(Profit(Some(100.49), Some(100.49))),
-    loss = Some(Loss(Some(100.49), Some(100.49))),
+    profit = Some(Profit(Some(100.49), Some(100))),
+    loss = Some(Loss(Some(100.49), Some(100))),
     incomeBreakdown = Some(incomeBreakdownModel),
     expensesBreakdown = Some(expensesBreakdownModel),
     additionsBreakdown = Some(additionsBreakdownModel)
@@ -187,11 +187,11 @@ object RetrieveSelfEmploymentBsasFixtures {
        |  "accountingAdjustments": 100.49,
        |  "profit": {
        |    "net": 100.49,
-       |    "taxable": 100.49
+       |    "taxable": 100
        |  },
        |  "loss": {
        |    "net": 100.49,
-       |    "adjustedIncomeTax": 100.49
+       |    "adjustedIncomeTax": 100
        |  },
        |  "incomeBreakdown": $mtdIncomeBreakdownJson,
        |  "expensesBreakdown": $mtdExpensesBreakdownJson,
@@ -207,9 +207,9 @@ object RetrieveSelfEmploymentBsasFixtures {
        |  "totalDeductions": 100.49,
        |  "accountingAdjustments": 100.49,
        |  "netProfit": 100.49,
-       |  "taxableProfit": 100.49,
+       |  "taxableProfit": 100,
        |  "netLoss": 100.49,
-       |  "adjustedIncomeTaxLoss": 100.49,
+       |  "adjustedIncomeTaxLoss": 100,
        |  "income": $desIncomeBreakdownJson,
        |  "expenses": $desExpensesBreakdownJson,
        |  "additions": $desAdditionsBreakdownJson
@@ -325,11 +325,11 @@ object RetrieveSelfEmploymentBsasFixtures {
        |			"accountingAdjustments": 100.49,
        |			"profit": {
        |				"net": 100.49,
-       |				"taxable": 100.49
+       |				"taxable": 100
        |			},
        |			"loss": {
        |				"net": 100.49,
-       |				"adjustedIncomeTax": 100.49
+       |				"adjustedIncomeTax": 100
        |			},
        |			"incomeBreakdown": {
        |				"turnover": 100.49,
@@ -394,11 +394,11 @@ object RetrieveSelfEmploymentBsasFixtures {
        |		"accountingAdjustments": 100.49,
        |		"profit": {
        |			"net": 100.49,
-       |			"taxable": 100.49
+       |			"taxable": 100
        |		},
        |		"loss": {
        |			"net": 100.49,
-       |			"adjustedIncomeTax": 100.49
+       |			"adjustedIncomeTax": 100
        |		},
        |		"incomeBreakdown": {
        |			"turnover": 100.49,
@@ -473,9 +473,9 @@ object RetrieveSelfEmploymentBsasFixtures {
       | 		"totalDeductions": 100.49,
       | 		"accountingAdjustments": 100.49,
       | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100.49,
+      | 		"taxableProfit": 100,
       | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100.49,
+      | 		"adjustedIncomeTaxLoss": 100,
       | 		"income": {
       | 			"turnover": 100.49,
       | 			"other": 100.49
@@ -508,9 +508,9 @@ object RetrieveSelfEmploymentBsasFixtures {
       | 		"totalDeductions": 100.49,
       | 		"accountingAdjustments": 100.49,
       | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100.49,
+      | 		"taxableProfit": 100,
       | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100.49,
+      | 		"adjustedIncomeTaxLoss": 100,
       | 		"income": {
       | 			"turnover": 100.49,
       | 			"other": 100.49
@@ -559,9 +559,9 @@ object RetrieveSelfEmploymentBsasFixtures {
       | 		"totalDeductions": 100.49,
       | 		"accountingAdjustments": 100.49,
       | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100.49,
+      | 		"taxableProfit": 100,
       | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100.49,
+      | 		"adjustedIncomeTaxLoss": 100,
       | 		"income": {
       | 			"turnover": 100.49,
       | 			"other": 100.49
@@ -594,9 +594,9 @@ object RetrieveSelfEmploymentBsasFixtures {
       | 		"totalDeductions": 100.49,
       | 		"accountingAdjustments": 100.49,
       | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100.49,
+      | 		"taxableProfit": 100,
       | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100.49,
+      | 		"adjustedIncomeTaxLoss": 100,
       | 		"income": {
       | 			"turnover": 100.49,
       | 			"other": 100.49
