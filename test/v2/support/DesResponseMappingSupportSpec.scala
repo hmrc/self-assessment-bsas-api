@@ -253,6 +253,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
         responseData = retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse(
           retrieveBsas.ukProperty.Metadata(
             typeOfBusiness,
+            None,
             AccountingPeriod(date, date),
             "",
             "",

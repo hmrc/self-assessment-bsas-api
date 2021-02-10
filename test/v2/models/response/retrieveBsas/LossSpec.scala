@@ -26,13 +26,13 @@ class LossSpec extends UnitSpec with JsonErrorValidators{
   val mtdJson = Json.parse(
     """{
       |  "net": 100.49,
-      |  "adjustedIncomeTax": 100.49
+      |  "adjustedIncomeTax": 100
       |}""".stripMargin)
 
   val desJson = Json.parse(
     """{
       |  "netLoss": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "adjustedIncomeTaxLoss": 100
       |}""".stripMargin)
 
   "reads" should {

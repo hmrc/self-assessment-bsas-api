@@ -49,8 +49,8 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       |}""".stripMargin)
 
   val desFhlJson = Json.parse(
@@ -79,8 +79,8 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "totalAdditions": 100.49,
       |  "totalDeductions": 100.49,
-      |  "taxableProfit": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49
+      |  "taxableProfit": 100,
+      |  "adjustedIncomeTaxLoss": 100
       |}""".stripMargin)
 
   "reads" should {
