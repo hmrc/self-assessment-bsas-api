@@ -74,14 +74,6 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
       }
 
-      "des return success response with invalid type of business as `self-employment`for v1r5" in new Test {
-
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
-
-        await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
-      }
-
       "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
 
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
@@ -90,28 +82,12 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
       }
 
-      "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected for v1r5" in new Test {
-
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
-
-        await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
-      }
-
       "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
 
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
 
         await(service.submitPropertyBsas(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
-      }
-
-      "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected for v1r5" in new Test {
-
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
-
-        await(service.submitPropertyBsasV1R5(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -146,8 +122,35 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
       )
 
       input.foreach(args => (serviceError _).tupled(args))
+    }
 
-      def serviceErrorV1R5(desErrorCode: String, error: MtdError): Unit =
+    "return error response for v1r5" when {
+
+      "des return success response with invalid type of business as `self-employment`" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
+
+        await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
+      }
+
+      "des return success response with invalid type of business as `uk-property-non-fhl` where fhl is expected" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
+
+        await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
+      }
+
+      "des return success response with invalid type of business as `uk-property-fhl` where non-fhl is expected" in new Test {
+
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request.copy(body = nonFHLBody))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
+
+        await(service.submitPropertyBsasV1R5(request.copy(body = nonFHLBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
+      }
+
+      def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
           MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
@@ -156,7 +159,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
           await(service.submitPropertyBsasV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val inputV1R5 = Seq(
+      val input = Seq(
 
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
@@ -176,8 +179,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )
 
-      inputV1R5.foreach(args => (serviceErrorV1R5 _).tupled(args))
+      input.foreach(args => (serviceError _).tupled(args))
     }
   }
-
 }

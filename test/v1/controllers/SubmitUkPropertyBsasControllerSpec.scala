@@ -347,7 +347,7 @@ class SubmitUkPropertyBsasControllerSpec
             .returns(Right(fhlRequest))
 
           MockSubmitUkPropertyBsasService
-            .submitPropertyBsas(fhlRequest)
+            .submitPropertyBsasV1R5(fhlRequest)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
           val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
