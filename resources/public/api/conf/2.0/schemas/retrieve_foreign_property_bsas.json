@@ -11,7 +11,7 @@
       "properties": {
         "total": {
           "type": "object",
-          "description": "Object of total values",
+          "description": "Object of total values.",
           "properties": {
             "income": {
               "type": "number",
@@ -38,7 +38,7 @@
         },
         "profit": {
           "type": "object",
-          "description": "An object of profit values",
+          "description": "An object of profit values.",
           "properties": {
             "net": {
               "type": "number",
@@ -47,8 +47,8 @@
             },
             "taxable": {
               "type": "number",
-              "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999.99.",
-              "example": "123.12"
+              "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999.",
+              "example": "123."
             }
           },
           "additionalProperties": false
@@ -64,8 +64,8 @@
             },
             "adjustedIncomeTax": {
               "type": "number",
-              "description": "The adjusted income tax loss. The value must be between 0 and 99999999999.99.",
-              "example": "123.12"
+              "description": "The adjusted income tax loss. The value must be between 0 and 99999999999.",
+              "example": "123"
             }
           },
           "additionalProperties": false
@@ -88,23 +88,13 @@
               "type": "number",
               "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99.",
               "example": "123.12"
-            },
-            "foreignTaxTakenOff": {
-              "type": "number",
-              "description": "The total amount of foreign tax taken off your income.\n\nThe value must be greater than 0 and up to 99999999999.99.",
-              "example": "123.12"
-            },
-            "specialWithholdingTaxOrUKTaxPaid": {
-              "type": "number",
-              "description": "Tax withheld (in UK Pounds) on certain payments to UK residents or UK Tax taken off rental Income (applies to non-resident landlords only)\n\nThe value must be greater than 0 and up to 99999999999.99.",
-              "example": "123.12"
             }
           },
           "additionalProperties": false
         },
         "expensesBreakdown": {
           "type": "object",
-          "description": "Total expenses broken down by type for the tax year to date",
+          "description": "Total expenses broken down by type for the tax year to date.",
           "properties": {
             "premisesRunningCosts": {
               "type": "number",
@@ -158,6 +148,128 @@
             }
           },
           "additionalProperties": false
+        },
+        "countryLevelDetail": {
+          "type": "array",
+          "description": "Object holding foreign property adjustments.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "countryCode": {
+                "type": "string",
+                "description": "A three-letter code that represents a country name. This must be an ISO 3166-1 Alpha-3 value.",
+                "example": "FRA"
+              },
+              "total": {
+                "type": "object",
+                "description": "Object of total values",
+                "properties": {
+                  "income": {
+                    "type": "number",
+                    "description": "The total income for the income source. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "expenses": {
+                    "type": "number",
+                    "description": "The total expenses for the income source. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "additions": {
+                    "type": "number",
+                    "description": "The total additions to net profit (or deduction to net loss). The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "deductions": {
+                    "type": "number",
+                    "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  }
+                }
+              },
+              "incomeBreakdown": {
+                "type": "object",
+                "description": "Total income broken down by type for the tax year to date.",
+                "properties": {
+                  "rentIncome": {
+                    "type": "number",
+                    "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "premiumsOfLeaseGrant": {
+                    "type": "number",
+                    "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "otherPropertyIncome": {
+                    "type": "number",
+                    "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  }
+                }
+              },
+              "expensesBreakdown": {
+                "type": "object",
+                "description": "Total expenses broken down by type for the tax year to date.",
+                "properties": {
+                  "premisesRunningCosts": {
+                    "type": "number",
+                    "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "repairsAndMaintenance": {
+                    "type": "number",
+                    "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "financialCosts": {
+                    "type": "number",
+                    "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "professionalFees": {
+                    "type": "number",
+                    "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "travelCosts": {
+                    "type": "number",
+                    "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "costOfServices": {
+                    "type": "number",
+                    "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "residentialFinancialCost": {
+                    "type": "number",
+                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "broughtFwdResidentialFinancialCost": {
+                    "type": "number",
+                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "other": {
+                    "type": "number",
+                    "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  },
+                  "consolidatedExpenses": {
+                    "type": "number",
+                    "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99.",
+                    "example": "123.12"
+                  }
+                }
+              }
+            },
+            "required": [
+              "countryCode",
+              "total"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [
@@ -202,8 +314,7 @@
     }
   },
   "required": [
-    "metadata",
-    "bsas"
+    "metadata"
   ],
   "additionalProperties": false
 }

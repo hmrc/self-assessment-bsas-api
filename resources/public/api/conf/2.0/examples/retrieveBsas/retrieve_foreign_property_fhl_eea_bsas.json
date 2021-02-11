@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "typeOfBusiness": "foreign-property",
+    "typeOfBusiness": "foreign-property-fhl-eea",
     "accountingPeriod": {
       "startDate": "2021-04-06",
       "endDate": "2022-04-06"
@@ -27,9 +27,7 @@
       "adjustedIncomeTax": 123
     },
     "incomeBreakdown": {
-      "rentIncome": 123.12,
-      "premiumsOfLeaseGrant": 123.12,
-      "otherPropertyIncome": 123.12
+      "rentIncome": 123.12
     },
     "expensesBreakdown": {
       "premisesRunningCosts": 123.12,
@@ -38,39 +36,8 @@
       "professionalFees": 123.12,
       "travelCosts": 123.12,
       "costOfServices": 123.12,
-      "residentialFinancialCost": 123.12,
-      "broughtFwdResidentialFinancialCost": 123.12,
       "other": 123.12
-    },
-    "countryLevelDetail":[
-      {
-        "countryCode": "CYM",
-        "total": {
-          "income": 123.12,
-          "expenses": 123.12,
-          "additions": 123.12,
-          "deductions": 123.12
-        },
-        "incomeBreakdown": {
-          "rentIncome": 123.12,
-          "premiumsOfLeaseGrant": 123.12,
-          "otherPropertyIncome": 123.12,
-          "foreignTaxTakenOff": 123.12,
-          "specialWithholdingTaxOrUKTaxPaid": 123.12
-        },
-        "expensesBreakdown": {
-          "premisesRunningCosts": 123.12,
-          "repairsAndMaintenance": 123.12,
-          "financialCosts": 123.12,
-          "professionalFees": 123.12,
-          "travelCosts": 123.12,
-          "costOfServices": 123.12,
-          "residentialFinancialCost": 123.12,
-          "broughtFwdResidentialFinancialCost": 123.12,
-          "other": 123.12
-        }
-      }
-    ]
+    }
   },
   "links": [
     {
