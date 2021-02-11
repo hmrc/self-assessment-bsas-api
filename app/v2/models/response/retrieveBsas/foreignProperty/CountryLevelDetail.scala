@@ -18,22 +18,17 @@ package v2.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
-import v2.models.response.retrieveBsas.{Loss, Profit, TotalBsas}
+import v2.models.response.retrieveBsas.TotalBsas
 
-case class CountryLevelDetail(CountryCode: String,
+case class CountryLevelDetail(countryCode: String,
                               total: TotalBsas,
                               incomeBreakdown: Option[IncomeBreakdown],
                               expensesBreakdown: Option[ExpensesBreakdown]
                              )
 
 object CountryLevelDetail {
-   val reads: Reads[CountryLevelDetail] = (
-    JsPath.readNullable[String] and
-    JsPath.read[TotalBsas] and
-      JsPath.readNullable[Profit].map {
-        case Some(Profit(None, None)) => None
-        case profit => profit
-      } and
+   val fhlReads: Reads[CountryLevelDetail] = (
+     (JsPath   \ "countryCode").read[String] and    JsPath.read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None, None, None)) => None
         case income => income
@@ -43,5 +38,16 @@ object CountryLevelDetail {
         case expenses => expenses
       }
   )(CountryLevelDetail.apply _)
+  val nonFhlReads: Reads[CountryLevelDetail] = (
+    (JsPath   \ "countryCode").read[String] and      JsPath.read[TotalBsas] and
+      (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
+        case Some(IncomeBreakdown(None, None, None, None, None)) => None
+        case income => income
+      } and
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
+        case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
+        case expenses => expenses
+      }
+    )(CountryLevelDetail.apply _)
   implicit val writes: Writes[CountryLevelDetail] = Json.writes[CountryLevelDetail]
 }
