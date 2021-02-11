@@ -11,7 +11,7 @@
       "properties": {
         "total": {
           "type": "object",
-          "description": "Object of total values",
+          "description": "Object of total values.",
           "properties": {
             "income": {
               "type": "number",
@@ -38,7 +38,7 @@
         },
         "profit": {
           "type": "object",
-          "description": "An object of profit values",
+          "description": "An object of profit values.",
           "properties": {
             "net": {
               "type": "number",
@@ -64,7 +64,7 @@
             },
             "adjustedIncomeTax": {
               "type": "number",
-              "description": "The adjusted income tax loss. The value must be between 0 and 99999999999",
+              "description": "The adjusted income tax loss. The value must be between 0 and 99999999999.",
               "example": "123"
             }
           },
@@ -94,7 +94,7 @@
         },
         "expensesBreakdown": {
           "type": "object",
-          "description": "Total expenses broken down by type for the tax year to date",
+          "description": "Total expenses broken down by type for the tax year to date.",
           "properties": {
             "premisesRunningCosts": {
               "type": "number",
