@@ -22,11 +22,11 @@
     "accountingAdjustments": -100.49,
     "profit": {
       "net": 100.49,
-      "taxable": 100.49
+      "taxable": 149
     },
     "loss": {
       "net": 100.49,
-      "adjustedIncomeTax": 100.49
+      "adjustedIncomeTax": 149
     },
     "incomeBreakdown": {
       "turnover": 100.49,
