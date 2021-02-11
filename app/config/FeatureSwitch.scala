@@ -55,9 +55,9 @@ case class FeatureSwitch(value: Option[Configuration]) {
     enabled.getOrElse(false)
   }
 
-  def isV1R2Enabled: Boolean = {
+  def isV1R5Enabled: Boolean = {
     value match {
-      case Some(config) => config.getOptional[Boolean]("v1r2.enabled").getOrElse(false)
+      case Some(config) => config.getOptional[Boolean]("v1r5.enabled").getOrElse(false)
       case None => false
     }
   }

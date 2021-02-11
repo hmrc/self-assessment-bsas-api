@@ -47,20 +47,18 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator
-    with MockAppConfig
-    with MockSubmitSelfEmploymentBsasServiceV1R5 {
+    with MockAppConfig {
 
   private val correlationId = "X-123"
 
-  class Test(v1r2Config: Boolean = false) {
-    val hc = HeaderCarrier()
+  class Test(v1r5Config: Boolean = false) {
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new SubmitSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
       service = mockService,
-      r5Service = mockServiceV1R5,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
@@ -72,7 +70,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
     MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
-                                                                                         |v1r2.enabled = $v1r2Config
+                                                                                         |v1r5.enabled = $v1r5Config
       """.stripMargin))))
   }
 
@@ -86,7 +84,7 @@ class SubmitSelfEmploymentBsasControllerSpec
   private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
   private val request = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
 
-  val response = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
+  val response: SubmitSelfEmploymentBsasResponse = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
@@ -149,8 +147,8 @@ class SubmitSelfEmploymentBsasControllerSpec
           .parse(rawRequest)
           .returns(Right(request))
 
-        MockSubmitSelfEmploymentBsasServiceV1R5
-          .submitSelfEmploymentBsas(request)
+        MockSubmitSelfEmploymentBsasService
+          .submitSelfEmploymentBsasV1R5(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
@@ -202,7 +200,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
@@ -228,7 +226,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       }
 
       "multiple errors occur for the customised errors" in new Test {
-        val error = ErrorWrapper(
+        val error: ErrorWrapper = ErrorWrapper(
           correlationId,
           BadRequestError,
           Some(

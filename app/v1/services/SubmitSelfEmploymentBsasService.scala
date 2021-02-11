@@ -47,6 +47,19 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     result.value
   }
 
+  def submitSelfEmploymentBsasV1R5(request: SubmitSelfEmploymentBsasRequestData)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+    correlationId: String):
+  Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]] = {
+
+    val result = for {
+      desResponseWrapper <- EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdErrorV1R5))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateSubmitSelfEmploymentSuccessResponse(desResponseWrapper))
+    } yield mtdResponseWrapper
+
+    result.value
+  }
+
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
     "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
@@ -64,6 +77,25 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     "BVR_FAILURE_C55508"          -> RuleNotSelfEmployment,
     "BVR_FAILURE_C55509"          -> RuleNotSelfEmployment,
     "NOT_FOUND"                   -> NotFoundError,
+    "SERVER_ERROR"                -> DownstreamError,
+    "SERVICE_UNAVAILABLE"         -> DownstreamError
+  )
+
+  private def mappingDesToMtdErrorV1R5: Map[String, MtdError] = Map(
+    "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
+    "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
+    "INVALID_PAYLOAD"             -> DownstreamError,
+    "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
+    "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
+    "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
+    "UNALLOWABLE_VALUE"          -> RuleResultingValueNotPermitted,
+    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleNotSelfEmployment,
+    "BVR_FAILURE_C55316"          -> RuleOverConsolidatedExpensesThreshold,
+    "BVR_FAILURE_C15320"          -> RuleTradingIncomeAllowanceClaimed,
+    "BVR_FAILURE_C55503"          -> RuleNotSelfEmployment,
+    "BVR_FAILURE_C55508"          -> RuleNotSelfEmployment,
+    "BVR_FAILURE_C55509"          -> RuleNotSelfEmployment,
+    "NO_DATA_FOUND"               -> NotFoundError,
     "SERVER_ERROR"                -> DownstreamError,
     "SERVICE_UNAVAILABLE"         -> DownstreamError
   )

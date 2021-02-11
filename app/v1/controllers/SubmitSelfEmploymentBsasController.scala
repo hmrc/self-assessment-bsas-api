@@ -32,7 +32,7 @@ import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
 import v1.models.response.SubmitSelfEmploymentBsasHateoasData
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasService, SubmitSelfEmploymentBsasServiceV1R5}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,7 +42,6 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
                                                    val appConfig: AppConfig,
                                                    requestParser: SubmitSelfEmploymentBsasDataParser,
                                                    service: SubmitSelfEmploymentBsasService,
-                                                   r5Service: SubmitSelfEmploymentBsasServiceV1R5,
                                                    hateoasFactory: HateoasFactory,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
@@ -72,8 +71,8 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- {
-            if (featureSwitch.isV1R2Enabled) {
-              EitherT(r5Service.submitSelfEmploymentBsas(parsedRequest))
+            if (featureSwitch.isV1R5Enabled) {
+              EitherT(service.submitSelfEmploymentBsasV1R5(parsedRequest))
             }
             else
               EitherT(service.submitSelfEmploymentBsas(parsedRequest))
