@@ -314,8 +314,7 @@
     }
   },
   "required": [
-    "metadata",
-    "bsas"
+    "metadata"
   ],
   "additionalProperties": false
 }
