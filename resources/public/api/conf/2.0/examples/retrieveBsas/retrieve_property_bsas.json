@@ -1,6 +1,7 @@
 {
   "metadata": {
     "typeOfBusiness": "uk-property-non-fhl",
+    "businessId": "XAIS123456789012",
     "accountingPeriod": {
       "startDate": "2019-04-06",
       "endDate": "2020-04-05"
@@ -20,11 +21,11 @@
     },
     "profit": {
       "net": 100.49,
-      "taxable": 100.49
+      "taxable": 149
     },
     "loss": {
       "net": 100.49,
-      "adjustedIncomeTax": 100.49
+      "adjustedIncomeTax": 149
     },
     "incomeBreakdown": {
       "rentIncome": 100.49,
