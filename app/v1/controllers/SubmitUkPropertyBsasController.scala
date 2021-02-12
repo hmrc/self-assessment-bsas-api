@@ -55,7 +55,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       controllerName = "SubmitUkPropertyBsasController",
       endpointName = "submitUkPropertyBsas"
     )
-  //noinspection ScalaStyle
+
   def submitUkPropertyBsas(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
 
