@@ -19,13 +19,13 @@ package v2.models.response.retrieveBsasAdjustments.foreignProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BsasDetail(countryCode: String, incomes: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown])
+case class BsasDetail(countryCode: Option[String], incomes: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown])
 
 
 object BsasDetail {
 
   val fhlReads: Reads[BsasDetail] = (
-    Reads.pure("FRA") and
+    (JsPath   \ "countryCode").readNullable[String] and
       (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
         case incomeBreakdown => incomeBreakdown
@@ -39,7 +39,7 @@ object BsasDetail {
   val fhlSeqReads: Reads[Seq[BsasDetail]] = Reads.seq(fhlReads)
 
   val nonFhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "countryCode").read[String] and
+    (JsPath   \ "countryCode").readNullable[String] and
       (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
         case incomeBreakdown => incomeBreakdown

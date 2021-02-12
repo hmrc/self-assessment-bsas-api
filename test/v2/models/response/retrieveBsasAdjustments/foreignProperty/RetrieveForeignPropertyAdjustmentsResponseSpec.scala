@@ -48,7 +48,6 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |        ]
       |    },
       |    "adjustments": {
-      |        "countryCode": "FRA",
       |        "income": {
       |            "rent": 100.49
       |        },
@@ -224,7 +223,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |      "summaryStatus": "superseded",
       |      "adjustedSummary": true
       |   },
-      |   "adjustments": {
+      |   "adjustments": [{
       |      "incomes": {
       |         "rentIncome": 100.49
       |      },
@@ -238,7 +237,7 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |         "other": 100.49,
       |         "consolidatedExpenses":100.49
       |      }
-      |   }
+      |   }]
       |}
     """.stripMargin)
 
@@ -280,11 +279,11 @@ class RetrieveForeignPropertyAdjustmentsResponseSpec extends UnitSpec with JsonE
       |      "summaryStatus": "superseded",
       |      "adjustedSummary": true
       | },
-      | "adjustments": {}
+      | "adjustments": [{}]
       |}
     """.stripMargin)
 
-  "RetrieveSelfEmploymentAdjustmentResponse" when {
+  "RetrieveForeignPropertyAdjustmentResponse" when {
     "reading from valid JSON" should {
       "return the appropriate non-FHL model when the most data has been provided" in {
         nonFhlDesJson.as[RetrieveForeignPropertyAdjustmentsResponse] shouldBe foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel

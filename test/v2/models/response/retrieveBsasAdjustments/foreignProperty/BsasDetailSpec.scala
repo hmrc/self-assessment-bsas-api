@@ -66,7 +66,6 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
   val fhlMtdJson: JsValue = Json.parse(
     """
     {
-      "countryCode": "FRA",
       "incomes": {
         "rentIncome": 100.49
       },
@@ -119,14 +118,13 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
         val desJson = Json.parse(
           """
             |{
-            |     "countryCode": "FRA",
             |     "income": {},
             |     "expenses": {}
             |}
             |""".stripMargin)
 
-        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail("FRA", None, None)
-        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail("FRA", None, None)
+        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(None, None, None)
+        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(None, None, None)
       }
     }
 

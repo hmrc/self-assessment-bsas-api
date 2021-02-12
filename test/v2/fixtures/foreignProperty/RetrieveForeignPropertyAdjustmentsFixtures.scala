@@ -52,9 +52,9 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
   val fhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
     Some(100.49), Some(100.49), None, Some(100.49), Some(100.49))
 
-  val nonFhlBsasDetailModel = BsasDetail("FRA", Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
+  val nonFhlBsasDetailModel = BsasDetail(Some("FRA"), Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
 
-  val fhlBsasDetailModel = BsasDetail("FRA", Some(fhlIncomeModel), Some(fhlExpenseBreakdownModel))
+  val fhlBsasDetailModel = BsasDetail(None, Some(fhlIncomeModel), Some(fhlExpenseBreakdownModel))
 
   val foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
     RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
@@ -66,10 +66,10 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
     RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(fhlBsasDetailModel))
 
   val foreignPropertyMinimalRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(BsasDetail("FRA", None, None)))
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(BsasDetail(Some("FRA"), None, None)))
 
   val foreignPropertyFhlEeaMinimalRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(BsasDetail("FRA", None, None)))
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(BsasDetail(None, None, None)))
 
   val hateoasResponseForForeignPropertyAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""

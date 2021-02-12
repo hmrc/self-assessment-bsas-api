@@ -49,22 +49,8 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
         }
         case TypeOfBusiness.`foreign-property-fhl-eea` => {
           Json.obj(
-            "metadata" -> o.metadata,
-            "adjustments" -> {
-              (o.adjustments.head.incomes.isDefined, o.adjustments.head.expenses.isDefined) match {
-                case (true, true) => Json.obj(
-                  "incomes" -> o.adjustments.head.incomes,
-                  "expenses" -> o.adjustments.head.expenses
-                )
-                case (true, false) => Json.obj(
-                  "incomes" -> o.adjustments.head.incomes
-                )
-                case (false, true) => Json.obj(
-                  "expenses" -> o.adjustments.head.expenses
-                )
-                case (false, false) => Json.obj()
-              }
-            }
+            "metadata"    -> o.metadata,
+            "adjustments" -> o.adjustments
           )
         }
       }
