@@ -47,7 +47,7 @@ object BsasDetail {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
         case expenses => expenses
       } and
-    JsPath.read[CountryLevelDetail](CountryLevelDetail.fhlReads).map
+    JsPath.readNullable[CountryLevelDetail](CountryLevelDetail.fhlReads)
     )(BsasDetail.apply _)
 
   val nonFhlReads: Reads[BsasDetail] = (
@@ -68,7 +68,7 @@ object BsasDetail {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
         case expenses => expenses
       } and
-      JsPath.read[CountryLevelDetail](CountryLevelDetail.nonFhlReads).map
+      JsPath.readNullable[CountryLevelDetail](CountryLevelDetail.nonFhlReads)
     )(BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
