@@ -17,27 +17,16 @@
 package v1.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import support.IntegrationBaseSpec
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.libs.ws.{WSRequest, WSResponse}
+import support.IntegrationBaseSpec
 import v1.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
-
-  override def servicesConfig: Map[String, Any] = Map(
-    "microservice.services.des.host" -> mockHost,
-    "microservice.services.des.port" -> mockPort,
-    "microservice.services.mtd-id-lookup.host" -> mockHost,
-    "microservice.services.mtd-id-lookup.port" -> mockPort,
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort,
-    "feature-switch.v1r5.enabled" -> false
-  )
+class RetrieveSelfEmploymentBsasControllerV1R5ISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -67,7 +56,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the retrieve Self-assessment Bsas endpoint" should {
+  "Calling the retrieve Self-assessment Bsas endpoint for v1r5" should {
 
     "return a valid response with status OK" when {
 
@@ -169,8 +158,9 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
-        (FORBIDDEN, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
-        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+        (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )

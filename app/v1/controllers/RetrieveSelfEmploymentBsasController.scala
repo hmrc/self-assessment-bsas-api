@@ -19,6 +19,7 @@ package v1.controllers
 import javax.inject.{Inject, Singleton}
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitch}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -36,20 +37,19 @@ import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, Ret
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasController @Inject()(
-                                                      val authService: EnrolmentsAuthService,
-                                                      val lookupService: MtdIdLookupService,
-                                                      requestParser: RetrieveSelfEmploymentRequestParser,
-                                                      service: RetrieveSelfEmploymentBsasService,
-                                                      hateoasFactory: HateoasFactory,
-                                                      auditService: AuditService,
-                                                      cc: ControllerComponents,
-                                                      val idGenerator: IdGenerator
+class RetrieveSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
+                                                     val lookupService: MtdIdLookupService,
+                                                     val appConfig: AppConfig,
+                                                     requestParser: RetrieveSelfEmploymentRequestParser,
+                                                     service: RetrieveSelfEmploymentBsasService,
+                                                     hateoasFactory: HateoasFactory,
+                                                     auditService: AuditService,
+                                                     cc: ControllerComponents,
+                                                     val idGenerator: IdGenerator
                                                     )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
     with Logging {
-
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -65,11 +65,20 @@ class RetrieveSelfEmploymentBsasController @Inject()(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
+      val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
+
       val rawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedStatus)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
+          response <- {
+            if (featureSwitch.isV1R5Enabled) {
+              EitherT(service.retrieveSelfEmploymentBsasV1R5(parsedRequest))
+            }
+            else {
+              EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
+            }
+          }
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
               RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
