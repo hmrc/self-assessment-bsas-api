@@ -112,7 +112,7 @@ object RetrieveForeignPropertyBsasFixtures {
     loss = Some(lossModel),
     incomeBreakdown = Some(incomeBreakdownModel),
     expensesBreakdown = Some(expensesBreakdownModel),
-    countryLevelDetail = Some(countryLevelDetail))
+    countryLevelDetail = Some(Seq(countryLevelDetail)))
 
   val retrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
