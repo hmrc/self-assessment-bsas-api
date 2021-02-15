@@ -27,6 +27,7 @@ case class CountryLevelDetail(countryCode: String,
                              )
 
 object CountryLevelDetail {
+
    val fhlReads: Reads[CountryLevelDetail] = (
      (JsPath   \ "countryCode").read[String] and
        JsPath.read[TotalBsas] and
@@ -39,6 +40,9 @@ object CountryLevelDetail {
         case expenses => expenses
       }
   )(CountryLevelDetail.apply _)
+
+  val fhlReadsSeq: Reads[Seq[CountryLevelDetail]] = Reads.traversableReads[Seq, CountryLevelDetail](implicitly, fhlReads)
+
   val nonFhlReads: Reads[CountryLevelDetail] = (
     (JsPath   \ "countryCode").read[String] and
       JsPath.read[TotalBsas] and
@@ -51,5 +55,8 @@ object CountryLevelDetail {
         case expenses => expenses
       }
     )(CountryLevelDetail.apply _)
+
+  val nonFhlReadsSeq: Reads[Seq[CountryLevelDetail]] = Reads.traversableReads[Seq, CountryLevelDetail](implicitly, nonFhlReads)
+
   implicit val writes: Writes[CountryLevelDetail] = Json.writes[CountryLevelDetail]
 }

@@ -19,7 +19,7 @@ package v2.models.response.retrieveBsas.foreignProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class IncomeBreakdown(rent: Option[BigDecimal],
+case class IncomeBreakdown(rentIncome: Option[BigDecimal],
                            premiumsOfLeaseGrant: Option[BigDecimal],
                            otherPropertyIncome: Option[BigDecimal],
                            foreignTaxTakenOff: Option[BigDecimal],
