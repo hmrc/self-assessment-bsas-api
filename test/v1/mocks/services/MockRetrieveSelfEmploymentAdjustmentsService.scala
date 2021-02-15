@@ -39,5 +39,11 @@ trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
       (mockService.retrieveSelfEmploymentsAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
+    def retrieveAdjustmentsV1R5(requestData: RetrieveAdjustmentsRequestData):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
+      (mockService.retrieveSelfEmploymentsAdjustmentsV1R5(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
+    }
   }
 }

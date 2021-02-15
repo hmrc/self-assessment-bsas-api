@@ -27,9 +27,7 @@ import v1.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmp
 
 import scala.concurrent.Future
 
-
 class RetrieveSelfEmploymentAdjustmentsServiceSpec extends ServiceSpec {
-
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
@@ -53,6 +51,17 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends ServiceSpec {
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.retrieveSelfEmploymentsAdjustments(request) ) shouldBe Right(ResponseWrapper(correlationId, response))
+      }
+    }
+  }
+
+  "retrieveSelfEmploymentAdjustmentsV1R5" should {
+    "return a valid response" when {
+      "a valid request is supplied" in new Test {
+        MockRetrieveSelfEmploymentAdjustmentsConnector.retrieveSelfEmploymentAdjustments(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.retrieveSelfEmploymentsAdjustmentsV1R5(request) ) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
   }
