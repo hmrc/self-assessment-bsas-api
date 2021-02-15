@@ -25,18 +25,7 @@ import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
-
-  override def servicesConfig: Map[String, Any] = Map(
-    "microservice.services.des.host" -> mockHost,
-    "microservice.services.des.port" -> mockPort,
-    "microservice.services.mtd-id-lookup.host" -> mockHost,
-    "microservice.services.mtd-id-lookup.port" -> mockPort,
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort,
-    "feature-switch.v1r5.enabled" -> false
-  )
+class SubmitUkPropertyBsasControllerV1R5ISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -69,7 +58,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   val requestBody: JsValue = validfhlInputJson
 
-  "Calling the Submit Adjustments to your UK Property Summary endpoint" should {
+  "Calling the Submit Adjustments to your UK Property Summary endpoint for v1r5" should {
 
     "return a 200 status code" when {
 
@@ -163,18 +152,17 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_PAYLOAD_REMOTE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleTypeOfBusinessError),
-          (BAD_REQUEST, "INVALID_MONETARY_FORMAT", INTERNAL_SERVER_ERROR, DownstreamError),
-          (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
-          (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
-          (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
-          (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
+          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
+          (CONFLICT, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
+          (CONFLICT, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
+          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleTypeOfBusinessError),
+          (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
           (FORBIDDEN, "BVR_FAILURE_C55316", FORBIDDEN, RuleTypeOfBusinessError),
           (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTypeOfBusinessError),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
+          (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
-          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )

@@ -40,6 +40,13 @@ trait MockSubmitUkPropertyBsasService extends MockFactory {
         .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
+    def submitPropertyBsasV1R5(requestData: SubmitUkPropertyBsasRequestData):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SubmitUkPropertyBsasResponse]]]] = {
+      (mockService
+        .submitPropertyBsasV1R5(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
+    }
   }
 
 }
