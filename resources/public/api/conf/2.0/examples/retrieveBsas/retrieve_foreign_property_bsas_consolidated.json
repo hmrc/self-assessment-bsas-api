@@ -32,15 +32,7 @@
       "otherPropertyIncome": 123.12
     },
     "expensesBreakdown": {
-      "premisesRunningCosts": 123.12,
-      "repairsAndMaintenance": 123.12,
-      "financialCosts": 123.12,
-      "professionalFees": 123.12,
-      "travelCosts": 123.12,
-      "costOfServices": 123.12,
-      "residentialFinancialCost": 123.12,
-      "broughtFwdResidentialFinancialCost": 123.12,
-      "other": 123.12
+      "consolidatedExpenses": 123.12
     },
     "countryLevelDetail":[
       {
@@ -59,15 +51,7 @@
           "specialWithholdingTaxOrUKTaxPaid": 123.12
         },
         "expensesBreakdown": {
-          "premisesRunningCosts": 123.12,
-          "repairsAndMaintenance": 123.12,
-          "financialCosts": 123.12,
-          "professionalFees": 123.12,
-          "travelCosts": 123.12,
-          "costOfServices": 123.12,
-          "residentialFinancialCost": 123.12,
-          "broughtFwdResidentialFinancialCost": 123.12,
-          "other": 123.12
+          "consolidatedExpenses": 123.12
         }
       }
     ]
