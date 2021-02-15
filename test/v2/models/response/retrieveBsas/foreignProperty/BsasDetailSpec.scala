@@ -40,7 +40,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |    "adjustedIncomeTax": 100
       |  },
       |  "incomeBreakdown": {
-      |    "rentIncome": 100.49,
+      |    "rent": 100.49,
       |    "premiumsOfLeaseGrant": 100.49,
       |    "otherPropertyIncome": 100.49,
       |    "foreignTaxTakenOff": 100.49,
@@ -56,7 +56,36 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |    "residentialFinancialCost": 100.49,
       |    "broughtFwdResidentialFinancialCost": 100.49,
       |    "other": 100.49
-      |  }
+      |  },
+      |  "countryLevelDetail":[
+      |  {
+      |    "countryCode": "CYM",
+      |    "total": {
+      |      "income": 100.49,
+      |      "expenses": 100.49,
+      |      "additions": 100.49,
+      |      "deductions": 100.49
+      |    },
+      |    "incomeBreakdown": {
+      |      "totalRentsReceived": 100.49,
+      |      "premiumsOfLeaseGrant": 100.49,
+      |      "otherPropertyIncome": 100.49,
+      |      "foreignTaxTakenOff": 100.49,
+      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |    },
+      |    "expensesBreakdown": {
+      |      "premisesRunningCosts": 100.49,
+      |      "repairsAndMaintenance": 100.49,
+      |      "financialCosts": 100.49,
+      |      "professionalFees": 100.49,
+      |      "travelCosts": 100.49,
+      |      "costOfServices": 100.49,
+      |      "residentialFinancialCost": 100.49,
+      |      "broughtFwdResidentialFinancialCost": 100.49,
+      |      "other": 100.49
+      |      }
+      |   }
+      |  ]
       |}""".stripMargin
   )
 
@@ -172,11 +201,11 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       }
 
       "a valid non-fhl json with all fields empty are supplied" in {
-        emptyObjectsDesJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(total, None, None, None, None)
+        emptyObjectsDesJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(total, None, None, None, None, None)
       }
 
       "a valid fhl json with all fields empty are supplied" in {
-        emptyObjectsDesJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(total, None, None, None, None)
+        emptyObjectsDesJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(total, None, None, None, None, None)
       }
 
     }

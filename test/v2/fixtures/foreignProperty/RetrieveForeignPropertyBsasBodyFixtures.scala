@@ -60,9 +60,14 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   val loss: Loss = Loss(Some(100.49), Some(100))
 
-  val nonFhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
+  val nonFhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
 
-  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel))
+  val fhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(fhlIncomeModel), Some(fhlExpensesModel))
+
+  val nonFhlBsasDetailModel: BsasDetail =
+    BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel), Some(nonFhlCountryLevelDetail))
+
+  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel), Some(fhlCountryLevelDetail))
 
   val nonFhlMetaDataModel: Metadata = Metadata(
     TypeOfBusiness.`foreign-property`,
