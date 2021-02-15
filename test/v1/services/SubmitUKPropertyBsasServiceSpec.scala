@@ -34,9 +34,9 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
+  val request: SubmitUkPropertyBsasRequestData = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
 
-  val response = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
+  val response: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
 
   trait Test extends MockSubmitUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -52,15 +52,6 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
-      }
-    }
-
-    "return a valid response for v1r5" when {
-      "a valid request is supplied" in new Test {
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-
-        await(service.submitPropertyBsasV1R5(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
 
@@ -122,6 +113,18 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
       )
 
       input.foreach(args => (serviceError _).tupled(args))
+    }
+  }
+
+  "submitUKPropertyBsasV1R5" should {
+
+    "return a valid response for v1r5" when {
+      "a valid request is supplied" in new Test {
+        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.submitPropertyBsasV1R5(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+      }
     }
 
     "return error response for v1r5" when {
