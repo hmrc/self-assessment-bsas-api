@@ -49,17 +49,31 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
     result.value
   }
 
+  def submitPropertyBsasV1R5(request: SubmitUkPropertyBsasRequestData)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+    correlationId: String):
+  Future[Either[ErrorWrapper, ResponseWrapper[SubmitUkPropertyBsasResponse]]] = {
+
+    val result = for {
+      desResponseWrapper <- EitherT(connector.submitPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdErrorV1R5))
+      mtdResponseWrapper <-
+        EitherT.fromEither[Future](validateSubmitUkPropertyBsasSuccessResponse(desResponseWrapper, Some(retrieveTypeOfBusiness(request.body))))
+    } yield mtdResponseWrapper
+
+    result.value
+  }
+
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
     "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
-    "INVALID_PAYLOAD"     -> DownstreamError,
+    "INVALID_PAYLOAD"             -> DownstreamError,
     "INVALID_PAYLOAD_REMOTE"      -> DownstreamError,
     "INVALID_FIELD"               -> RuleTypeOfBusinessError,
     "INVALID_MONETARY_FORMAT"     -> DownstreamError,
     "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
     "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"          -> RuleResultingValueNotPermitted,
+    "UNALLOWABLE_VALUE"           -> RuleResultingValueNotPermitted,
     "BVR_FAILURE_C55316"          -> RuleTypeOfBusinessError,
     "BVR_FAILURE_C15320"          -> RuleTypeOfBusinessError,
     "BVR_FAILURE_C55503"          -> RuleOverConsolidatedExpensesThreshold,
@@ -68,6 +82,25 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
     "NOT_FOUND"                   -> NotFoundError,
     "SERVER_ERROR"                -> DownstreamError,
     "SERVICE_UNAVAILABLE"         -> DownstreamError
+  )
+
+  private def mappingDesToMtdErrorV1R5: Map[String, MtdError] = Map(
+    "INVALID_TAXABLE_ENTITY_ID"      -> NinoFormatError,
+    "INVALID_CALCULATION_ID"         -> BsasIdFormatError,
+    "INVALID_PAYLOAD"                -> DownstreamError,
+    "ASC_ID_INVALID"                 -> RuleSummaryStatusInvalid,
+    "ASC_ALREADY_SUPERSEDED"         -> RuleSummaryStatusSuperseded,
+    "ASC_ALREADY_ADJUSTED"           -> RuleBsasAlreadyAdjusted,
+    "UNALLOWABLE_VALUE"              -> RuleResultingValueNotPermitted,
+    "INCOMESOURCE_TYPE_NOT_MATCHED"  -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C55316"             -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C15320"             -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C55503"             -> RuleOverConsolidatedExpensesThreshold,
+    "BVR_FAILURE_C55508"             -> RulePropertyIncomeAllowanceClaimed,
+    "BVR_FAILURE_C55509"             -> RulePropertyIncomeAllowanceClaimed,
+    "NO_DATA_FOUND"                  -> NotFoundError,
+    "SERVER_ERROR"                   -> DownstreamError,
+    "SERVICE_UNAVAILABLE"            -> DownstreamError
   )
 
   private def retrieveTypeOfBusiness(body: SubmitUKPropertyBsasRequestBody): TypeOfBusiness = {
