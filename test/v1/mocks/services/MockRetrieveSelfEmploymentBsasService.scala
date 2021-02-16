@@ -36,7 +36,15 @@ trait MockRetrieveSelfEmploymentBsasService extends MockFactory {
 
     def retrieveBsas(requestData: RetrieveSelfEmploymentBsasRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]]] = {
-      (mockService.retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (mockService
+        .retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
+    }
+
+    def retrieveBsasV1R5(requestData: RetrieveSelfEmploymentBsasRequestData):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]]] = {
+      (mockService
+        .retrieveSelfEmploymentBsasV1R5(_: RetrieveSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
   }

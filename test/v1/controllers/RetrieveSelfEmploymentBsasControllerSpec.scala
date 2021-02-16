@@ -16,7 +16,9 @@
 
 package v1.controllers
 
-import mocks.MockIdGenerator
+import com.typesafe.config.ConfigFactory
+import mocks.{MockAppConfig, MockIdGenerator}
+import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -39,6 +41,7 @@ import scala.concurrent.Future
 class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
+  with MockAppConfig
   with MockRetrieveSelfEmploymentRequestParser
   with MockRetrieveSelfEmploymentBsasService
   with MockHateoasFactory
@@ -47,12 +50,13 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
 
   private val correlationId = "X-123"
 
-  trait Test {
+  class Test(v1r5Config: Boolean = false) {
     val hc = HeaderCarrier()
 
     val controller = new RetrieveSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
@@ -64,7 +68,9 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
+                                                                                          |v1r5.enabled = $v1r5Config
+      """.stripMargin))))
   }
 
   private val nino = "AA123456A"
@@ -123,6 +129,33 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
       }
     }
 
+    "return successful hateoas response for self-assessment with status OK for v1r5" when {
+      "a valid request supplied" in new Test(true) {
+
+        MockRetrieveSelfEmploymentRequestParser
+          .parse(requestRawData)
+          .returns(Right(request))
+
+        MockRetrieveSelfEmploymentBsasService
+          .retrieveBsasV1R5(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModelAdjusted))))
+
+        MockHateoasFactory
+          .wrap(retrieveBsasResponseModelAdjusted, RetrieveSelfAssessmentBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper(retrieveBsasResponseModelAdjusted , Seq(testHateoasLinkSelf, testHateoasLinkAdjustSubmit))
+          )
+
+        val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+      }
+    }
+
     "return the error as per spec" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
@@ -162,6 +195,41 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
 
             MockRetrieveSelfEmploymentBsasService
               .retrieveBsas(request)
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(mtdError)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          }
+        }
+
+        val input = Seq(
+          (NinoFormatError, BAD_REQUEST),
+          (BsasIdFormatError, BAD_REQUEST),
+          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (RuleNoAdjustmentsMade, FORBIDDEN),
+          (NotFoundError, NOT_FOUND),
+          (RuleNotSelfEmployment, FORBIDDEN)
+        )
+
+        input.foreach(args => (serviceErrors _).tupled(args))
+      }
+
+      "service errors occur for v1r5" must {
+        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+          s"a $mtdError error is returned from the service" in new Test(true) {
+
+            MockRetrieveSelfEmploymentRequestParser
+              .parse(requestRawData)
+              .returns(Right(request))
+
+            MockRetrieveSelfEmploymentBsasService
+              .retrieveBsasV1R5(request)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
