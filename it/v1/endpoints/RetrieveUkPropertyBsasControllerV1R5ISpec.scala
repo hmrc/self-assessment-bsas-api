@@ -26,18 +26,9 @@ import v1.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
+class RetrieveUkPropertyBsasControllerV1R5ISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] = Map(
-    "microservice.services.des.host" -> mockHost,
-    "microservice.services.des.port" -> mockPort,
-    "microservice.services.mtd-id-lookup.host" -> mockHost,
-    "microservice.services.mtd-id-lookup.port" -> mockPort,
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort,
-    "feature-switch.v1r5.enabled" -> false
-  )
+
 
   private trait Test {
     val nino = "AA123456B"
@@ -67,7 +58,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
 
-  "Calling the retrieve UK Property Bsas endpoint" should {
+  "Calling the retrieve UK Property Bsas endpoint with V1R5 enabled" should {
 
     "return a valid response with status OK" when {
 
@@ -170,10 +161,12 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
-        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError)
       )
+
 
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }

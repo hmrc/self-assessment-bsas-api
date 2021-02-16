@@ -18,6 +18,7 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitch}
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
@@ -40,13 +41,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveUkPropertyBsasController @Inject()(
                                                   val authService: EnrolmentsAuthService,
                                                   val lookupService: MtdIdLookupService,
+                                                  val appConfig: AppConfig,
                                                   requestParser: RetrieveUkPropertyRequestParser,
                                                   service: RetrieveUkPropertyBsasService,
                                                   hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator
-                                              )(implicit ec: ExecutionContext)
+                                                )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -65,11 +67,21 @@ class RetrieveUkPropertyBsasController @Inject()(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
+
+      val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
+
       val rawData = RetrieveUkPropertyBsasRawData(nino, bsasId, adjustedStatus)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.retrieve(parsedRequest))
+          response <- {
+            if (featureSwitch.isV1R5Enabled) {
+              EitherT(service.retrieveV1R5(parsedRequest))
+            }
+            else {
+              EitherT(service.retrieve(parsedRequest))
+            }
+          }
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
               RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
