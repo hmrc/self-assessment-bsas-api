@@ -262,14 +262,14 @@ class SubmitSelfEmploymentBsasControllerSpec
 
     "return downstream errors as per the spec" when {
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-        s"a ${mtdError.code} error is returned from the service" in new Test {
+        s"a ${mtdError.code} error is returned from the service function submitSelfEmploymentBsasV1R5" in new Test(true) {
 
           MockSubmitSelfEmploymentBsasDataParser
             .parse(rawRequest)
             .returns(Right(request))
 
           MockSubmitSelfEmploymentBsasService
-            .submitSelfEmploymentBsas(request)
+            .submitSelfEmploymentBsasV1R5(request)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
           val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))

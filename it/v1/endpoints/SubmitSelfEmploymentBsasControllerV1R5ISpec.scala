@@ -150,6 +150,7 @@ class SubmitSelfEmploymentBsasControllerV1R5ISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "BVR_FAILURE_C55316", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTradingIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleNotSelfEmployment),
+          (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RuleNotSelfEmployment),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RuleNotSelfEmployment),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
