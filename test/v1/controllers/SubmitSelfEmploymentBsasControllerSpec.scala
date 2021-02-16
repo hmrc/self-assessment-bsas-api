@@ -262,6 +262,45 @@ class SubmitSelfEmploymentBsasControllerSpec
 
     "return downstream errors as per the spec" when {
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+        s"a ${mtdError.code} error is returned from the service" in new Test {
+
+          MockSubmitSelfEmploymentBsasDataParser
+            .parse(rawRequest)
+            .returns(Right(request))
+
+          MockSubmitSelfEmploymentBsasService
+            .submitSelfEmploymentBsas(request)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
+
+          status(result) shouldBe expectedStatus
+          contentAsJson(result) shouldBe Json.toJson(mtdError)
+          header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        }
+      }
+
+      val input = Seq(
+        (NinoFormatError, BAD_REQUEST),
+        (BsasIdFormatError, BAD_REQUEST),
+        (NotFoundError, NOT_FOUND),
+        (DownstreamError, INTERNAL_SERVER_ERROR),
+        (RuleSummaryStatusInvalid, FORBIDDEN),
+        (RuleSummaryStatusSuperseded, FORBIDDEN),
+        (RuleBsasAlreadyAdjusted, FORBIDDEN),
+        (RuleResultingValueNotPermitted, FORBIDDEN),
+        (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+        (RuleNotSelfEmployment, FORBIDDEN),
+        (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
+      )
+      input.foreach(args => (serviceErrors _).tupled(args))
+    }
+
+    "return downstream errors as per the v1r5 spec" when {
+      def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
         s"a ${mtdError.code} error is returned from the service function submitSelfEmploymentBsasV1R5" in new Test(true) {
 
           MockSubmitSelfEmploymentBsasDataParser
