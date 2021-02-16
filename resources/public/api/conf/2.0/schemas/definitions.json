@@ -162,7 +162,7 @@
         },
         "taxable": {
           "type": "number",
-          "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999.",
+          "description": "The taxable net profit of the income source. The value must be between 0 and 99999999999. No decimals.",
           "example": "1045"
         }
       },
@@ -179,7 +179,7 @@
         },
         "adjustedIncomeTax": {
           "type": "number",
-          "description": "The adjusted income tax loss. The value must be between 0 and 99999999999.",
+          "description": "The adjusted income tax loss. The value must be between 0 and 99999999999. No decimals.",
           "example": "1045"
         }
       },
