@@ -46,12 +46,35 @@ class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkProper
     result.value
   }
 
+  def retrieveUkPropertyAdjustmentsV1R5(request: RetrieveAdjustmentsRequestData)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
+    correlationId: String):
+  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]] = {
+
+    val result = for {
+      desResponseWrapper <- EitherT(connector.retrieveUkPropertyAdjustments(request)).leftMap(mapDesErrors(mappingDesToMtdErrorV1R5))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveUkPropertyAdjustmentsSuccessResponse(desResponseWrapper))
+    } yield mtdResponseWrapper
+    result.value
+  }
+
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_CALCULATION_ID" -> BsasIdFormatError,
     "INVALID_RETURN" -> DownstreamError,
     "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
     "NOT_FOUND" -> NotFoundError,
+    "SERVER_ERROR" -> DownstreamError,
+    "SERVICE_UNAVAILABLE" -> DownstreamError
+  )
+
+  private def mappingDesToMtdErrorV1R5: Map[String, MtdError] = Map(
+    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+    "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+    "INVALID_RETURN" -> DownstreamError,
+    "INVALID_CORRELATIONID" -> DownstreamError,
+    "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+    "NO_DATA_FOUND" -> NotFoundError,
     "SERVER_ERROR" -> DownstreamError,
     "SERVICE_UNAVAILABLE" -> DownstreamError
   )

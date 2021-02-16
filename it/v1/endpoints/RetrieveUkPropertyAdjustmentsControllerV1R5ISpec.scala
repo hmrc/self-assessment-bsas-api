@@ -26,18 +26,7 @@ import v1.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
-
-  override def servicesConfig: Map[String, Any] = Map(
-    "microservice.services.des.host" -> mockHost,
-    "microservice.services.des.port" -> mockPort,
-    "microservice.services.mtd-id-lookup.host" -> mockHost,
-    "microservice.services.mtd-id-lookup.port" -> mockPort,
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort,
-    "feature-switch.v1r5.enabled" -> false
-  )
+class RetrieveUkPropertyAdjustmentsControllerV1R5ISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -59,7 +48,7 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the retrieve UK Property Adjustments endpoint" should {
+  "Calling the retrieve UK Property Adjustments endpoint for v1r5" should {
 
     val desQueryParams = Map("return" -> "2")
 
@@ -176,8 +165,9 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
-        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )

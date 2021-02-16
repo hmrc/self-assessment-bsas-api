@@ -29,13 +29,22 @@ import v1.services.RetrieveUkPropertyAdjustmentsService
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveUkPropertyBsasAdjustmentsService extends MockFactory {
+
   val mockService: RetrieveUkPropertyAdjustmentsService = mock[RetrieveUkPropertyAdjustmentsService]
 
   object MockRetrieveUkPropertyBsasAdjustmentsService {
 
     def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]]] = {
-      (mockService.retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (mockService
+        .retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
+    }
+
+    def retrieveAdjustmentsV1R5(requestData: RetrieveAdjustmentsRequestData):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]]] = {
+      (mockService
+        .retrieveUkPropertyAdjustmentsV1R5(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
   }

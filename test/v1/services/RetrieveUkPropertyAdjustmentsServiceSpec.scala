@@ -53,4 +53,15 @@ class RetrieveUkPropertyAdjustmentsServiceSpec extends ServiceSpec {
       }
     }
   }
+
+  "retrieveUkPropertyAdjustmentsV1R5" should {
+    "return a valid response" when {
+      "a valid request is supplied" in new Test {
+        MockRetrieveUkPropertyAdjustmentsConnector.retrieveUkPropertyAdjustments(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.retrieveUkPropertyAdjustmentsV1R5(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+      }
+    }
+  }
 }
