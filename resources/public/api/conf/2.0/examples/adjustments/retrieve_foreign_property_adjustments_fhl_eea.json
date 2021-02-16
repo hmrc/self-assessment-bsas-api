@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "typeOfBusiness": "foreign-property",
-    "businessId": "XAIS123456789012",
+    "typeOfBusiness": "foreign-property-fhl-eea",
+    "businessId": "XAIS00000000210",
     "accountingPeriod": {
       "startDate": "2020-10-11",
       "endDate": "2021-10-10"
@@ -14,11 +14,8 @@
   },
   "adjustments": [
     {
-      "countryCode": "CYM",
       "incomes": {
-        "rentIncome": 100.49,
-        "premiumsOfLeaseGrant": 100.49,
-        "otherPropertyIncome": 100.49
+        "rentIncome": 100.49
       },
       "expenses": {
         "premisesRunningCosts": 100.49,
@@ -27,8 +24,8 @@
         "professionalFees": 100.49,
         "travelCosts": 100.49,
         "costOfServices": 100.49,
-        "residentialFinancialCost": 100.49,
-        "other": 100.49
+        "other": 100.49,
+        "consolidatedExpenses": 100.49
       }
     }
   ],
