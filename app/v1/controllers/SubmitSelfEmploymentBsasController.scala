@@ -18,6 +18,7 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitch}
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
@@ -38,6 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
+                                                   val appConfig: AppConfig,
                                                    requestParser: SubmitSelfEmploymentBsasDataParser,
                                                    service: SubmitSelfEmploymentBsasService,
                                                    hateoasFactory: HateoasFactory,
@@ -54,6 +56,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       endpointName = "submitSelfEmploymentBsas"
     )
 
+  //noinspection ScalaStyle
   def submitSelfEmploymentBsas(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
 
@@ -61,12 +64,19 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
+      val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
       val rawData = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- EitherT(service.submitSelfEmploymentBsas(parsedRequest))
+          response      <- {
+            if (featureSwitch.isV1R5Enabled) {
+              EitherT(service.submitSelfEmploymentBsasV1R5(parsedRequest))
+            }
+            else
+              EitherT(service.submitSelfEmploymentBsas(parsedRequest))
+          }
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(
               response.responseData,
@@ -77,7 +87,6 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}"
           )
-
           auditSubmission(
             GenericAuditDetail(
               userDetails = request.userDetails,
