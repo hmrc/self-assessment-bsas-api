@@ -25,26 +25,26 @@ import v2.models.response.retrieveBsasAdjustments.foreignProperty.{BsasDetail, E
 
 object RetrieveForeignPropertyAdjustmentsFixtures {
 
-  val foreignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`,
+  val foreignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`, "XAIS123456789012",
+    AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
+    "2019-10-14T12:00:22Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
+
+  val foreignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
     "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
 
-  val foreignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`,
-    AccountingPeriod(LocalDate.parse("2018-10-11"), LocalDate.parse("2019-10-10")), "2019-20",
-    "2019-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "superseded", adjustedSummary = true)
-
-  val validForeignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`,
+  val validForeignPropertyMetaDataModel = Metadata(TypeOfBusiness.`foreign-property`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2020-01-01")), "2019-20",
     "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
 
-  val validForeignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`,
+  val validForeignPropertyFhlEeaMetaDataModel = Metadata(TypeOfBusiness.`foreign-property-fhl-eea`, "XAIS123456789012",
     AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2020-01-01")), "2019-20",
     "2020-10-14T11:33:27Z", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", "valid", adjustedSummary = true)
 
 
-  val nonFhlIncomeModel = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val nonFhlIncomeModel = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
 
-  val fhlIncomeModel = IncomeBreakdown(Some(100.49), None, None, None)
+  val fhlIncomeModel = IncomeBreakdown(Some(100.49), None, None)
 
   val nonFhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
     Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
@@ -52,30 +52,31 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
   val fhlExpenseBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
     Some(100.49), Some(100.49), None, Some(100.49), Some(100.49))
 
-  val nonFhlBsasDetailModel = BsasDetail(Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
+  val nonFhlBsasDetailModel = BsasDetail(Some("FRA"), Some(nonFhlIncomeModel), Some(nonFhlExpenseBreakdownModel))
 
-  val fhlBsasDetailModel = BsasDetail(Some(fhlIncomeModel), Some(fhlExpenseBreakdownModel))
+  val fhlBsasDetailModel = BsasDetail(None, Some(fhlIncomeModel), Some(fhlExpenseBreakdownModel))
 
   val foreignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, nonFhlBsasDetailModel)
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
 
   val validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(validForeignPropertyMetaDataModel, nonFhlBsasDetailModel)
+    RetrieveForeignPropertyAdjustmentsResponse(validForeignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
 
   val foreignPropertyFhlEeaRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, fhlBsasDetailModel)
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(fhlBsasDetailModel))
 
   val foreignPropertyMinimalRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, BsasDetail(None, None))
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(BsasDetail(Some("FRA"), None, None)))
 
   val foreignPropertyFhlEeaMinimalRetrieveForeignPropertyAdjustmentResponseModel =
-    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, BsasDetail(None, None))
+    RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyFhlEeaMetaDataModel, Seq(BsasDetail(None, None, None)))
 
   val hateoasResponseForForeignPropertyAdjustments: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
        |{
        |   "metadata": {
        |      "typeOfBusiness": "foreign-property",
+       |      "businessId": "XAIS123456789012",
        |      "accountingPeriod": {
        |         "startDate": "2020-10-11",
        |         "endDate": "2020-01-01"
@@ -86,11 +87,11 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      "summaryStatus": "valid",
        |      "adjustedSummary": true
        |   },
-       |   "adjustments": {
+       |   "adjustments": [{
+       |      "countryCode": "FRA",
        |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
-       |         "foreignTaxTakenOff": 100.49,
        |         "otherPropertyIncome": 100.49
        |      },
        |      "expenses": {
@@ -104,7 +105,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |         "other": 100.49,
        |         "consolidatedExpenses": 100.49
        |      }
-       |   },
+       |   }],
        |	"links": [{
        |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
        |		"method": "GET",
@@ -122,6 +123,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |{
        |   "metadata": {
        |      "typeOfBusiness": "foreign-property",
+       |      "businessId": "XAIS123456789012",
        |      "accountingPeriod": {
        |         "startDate": "2020-10-11",
        |         "endDate": "2020-01-01"
@@ -132,12 +134,12 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |      "summaryStatus": "valid",
        |      "adjustedSummary": true
        |   },
-       |   "adjustments": {
+       |   "adjustments": [{
+       |      "countryCode": "FRA",
        |      "incomes": {
        |         "rentIncome": 100.49,
        |         "premiumsOfLeaseGrant": 100.49,
-       |         "otherPropertyIncome": 100.49,
-       |         "foreignTaxTakenOff": 100.49
+       |         "otherPropertyIncome": 100.49
        |      },
        |      "expenses": {
        |         "premisesRunningCosts": 100.49,
@@ -150,7 +152,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
        |         "other": 100.49,
        |         "consolidatedExpenses": 100.49
        |      }
-       |   },
+       |   }],
        |	"links": [{
        |		"href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
        |		"method": "GET",
@@ -174,7 +176,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |        "status": "valid"
       |    },
       |    "inputs": {
-      |        "incomeSourceId": "111111111111111",
+      |        "incomeSourceId": "XAIS123456789012",
       |        "incomeSourceType": "15",
       |        "accountingPeriodStartDate": "2020-10-11",
       |        "accountingPeriodEndDate": "2020-01-01",
@@ -188,12 +190,12 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |            }
       |        ]
       |    },
-      |    "adjustments": {
+      |    "adjustments": [{
+      |        "countryCode": "FRA",
       |        "income": {
-      |            "totalRentsReceived": 100.49,
+      |            "rent": 100.49,
       |            "premiumsOfLeaseGrant": 100.49,
-      |            "otherPropertyIncome": 100.49,
-      |            "foreignPropertyTaxTakenOff": 100.49
+      |            "otherPropertyIncome": 100.49
       |        },
       |        "expenses": {
       |            "consolidatedExpenses": 100.49,
@@ -206,7 +208,7 @@ object RetrieveForeignPropertyAdjustmentsFixtures {
       |            "other": 100.49,
       |            "premisesRunningCosts": 100.49
       |        }
-      |    }
+      |    }]
       |}
       |""".stripMargin)
 }

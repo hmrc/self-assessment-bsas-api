@@ -27,6 +27,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
     """{
       | "inputs": {
       |   "incomeSourceType" : "03",
+      |   "incomeSourceId" : "XAIS123456789012",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
@@ -46,13 +47,14 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
     """{
       | "inputs": {
       |   "incomeSourceType" : "15",
+      |   "incomeSourceId" : "XAIS123456789012",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
       | "metadata": {
       |   "taxYear" : 2020,
       |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |   "requestedDateTime" : "2019-10-14T11:33:27Z",
+      |   "requestedDateTime" : "2019-10-14T12:00:22Z",
       |   "status" : "superseded"
       | },
       | "adjustedSummaryCalculation" : {
@@ -64,6 +66,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   val foreignPropertyFhlEeaMtdJson: JsValue = Json.parse(
     """{
       | "typeOfBusiness": "foreign-property-fhl-eea",
+      | "businessId" : "XAIS123456789012",
       |   "accountingPeriod": {
       |     "startDate": "2018-10-11",
       |     "endDate": "2019-10-10"
@@ -79,12 +82,13 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   val foreignPropertyMtdJson: JsValue = Json.parse(
     """{
       | "typeOfBusiness": "foreign-property",
+      | "businessId" : "XAIS123456789012",
       |   "accountingPeriod": {
       |     "startDate": "2018-10-11",
       |     "endDate": "2019-10-10"
       |   },
       |   "taxYear": "2019-20",
-      |   "requestedDateTime": "2019-10-14T11:33:27Z",
+      |   "requestedDateTime": "2019-10-14T12:00:22Z",
       |   "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |   "summaryStatus": "superseded",
       |   "adjustedSummary": true

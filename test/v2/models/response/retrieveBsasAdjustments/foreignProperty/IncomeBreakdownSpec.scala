@@ -25,14 +25,14 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   val fhlDesJson: JsValue = Json.parse(
     """{
-      |         "rentReceived": 100.49
+      |         "rent": 100.49
       | }
     """.stripMargin
   )
 
   val nonFhlDesJson: JsValue = Json.parse(
     """{
-      |         "totalRentsReceived": 100.49,
+      |         "rent": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,
       |         "otherPropertyIncome": 100.49,
       |         "foreignPropertyTaxTakenOff": 100.49
@@ -51,8 +51,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
     """{
       |         "rentIncome": 100.49,
       |         "premiumsOfLeaseGrant": 100.49,
-      |         "otherPropertyIncome": 100.49,
-      |         "foreignTaxTakenOff": 100.49
+      |         "otherPropertyIncome": 100.49
       | }
     """.stripMargin
   )

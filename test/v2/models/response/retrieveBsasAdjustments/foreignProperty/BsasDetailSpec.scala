@@ -25,9 +25,8 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
   val fhlDesJson: JsValue = Json.parse(
     """{
-      | "adjustments" : {
       |    "income": {
-      |      "rentReceived": 100.49
+      |      "rent": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,
@@ -37,20 +36,18 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |      "travelCosts": 100.49,
       |      "costOfServices": 100.49,
       |      "other": 100.49,
-      |      "consolidatedExpenses": 100.49
+      |      "consolidatedExpenses":100.49
       |   }
-      | }
       |}
     """.stripMargin)
 
   val nonFhlDesJson: JsValue = Json.parse(
     """{
-      | "adjustments" : {
+      |    "countryCode": "FRA",
       |    "income": {
-      |      "totalRentsReceived": 100.49,
+      |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignPropertyTaxTakenOff": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses" : {
       |      "premisesRunningCosts": 100.49,
@@ -61,37 +58,37 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
       |      "costOfServices": 100.49,
       |      "residentialFinancialCost" : 100.49,
       |      "other": 100.49,
-      |      "consolidatedExpenses": 100.49
+      |      "consolidatedExpenses":100.49
       |   }
-      | }
       |}
-    """.stripMargin)
+      |""".stripMargin)
 
   val fhlMtdJson: JsValue = Json.parse(
-    """{
-      | "incomes": {
-      |    "rentIncome": 100.49
-      | },
-      | "expenses": {
-      |    "premisesRunningCosts": 100.49,
-      |    "repairsAndMaintenance": 100.49,
-      |    "financialCosts": 100.49,
-      |    "professionalFees": 100.49,
-      |    "travelCosts": 100.49,
-      |    "costOfServices": 100.49,
-      |    "other": 100.49,
-      |    "consolidatedExpenses":100.49
-      | }
-      |}
+    """
+    {
+      "incomes": {
+        "rentIncome": 100.49
+      },
+      "expenses": {
+        "premisesRunningCosts": 100.49,
+        "repairsAndMaintenance": 100.49,
+        "financialCosts": 100.49,
+        "professionalFees": 100.49,
+        "travelCosts": 100.49,
+        "costOfServices": 100.49,
+        "other": 100.49,
+        "consolidatedExpenses":100.49
+      }
+    }
     """.stripMargin)
 
   val nonFhlMtdJson: JsValue = Json.parse(
     """{
+      | "countryCode": "FRA",
       | "incomes": {
       |    "rentIncome": 100.49,
       |    "premiumsOfLeaseGrant": 100.49,
-      |    "otherPropertyIncome": 100.49,
-      |    "foreignTaxTakenOff": 100.49
+      |    "otherPropertyIncome": 100.49
       | },
       | "expenses": {
       |    "premisesRunningCosts": 100.49,
@@ -121,15 +118,13 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
         val desJson = Json.parse(
           """
             |{
-            |  "adjustments": {
             |     "income": {},
             |     "expenses": {}
-            |  }
             |}
             |""".stripMargin)
 
-        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(None, None)
-        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(None, None)
+        desJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(None, None, None)
+        desJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(None, None, None)
       }
     }
 

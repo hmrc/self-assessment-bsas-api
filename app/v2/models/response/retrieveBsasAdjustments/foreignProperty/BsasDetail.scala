@@ -19,32 +19,38 @@ package v2.models.response.retrieveBsasAdjustments.foreignProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BsasDetail(incomes: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown])
+case class BsasDetail(countryCode: Option[String], incomes: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown])
 
 
 object BsasDetail {
 
   val fhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
-      case Some(IncomeBreakdown(None, None, None, None)) => None
-      case incomeBreakdown => incomeBreakdown
-    } and
-      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
+    (JsPath   \ "countryCode").readNullable[String] and
+      (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
+        case Some(IncomeBreakdown(None, None, None)) => None
+        case incomeBreakdown => incomeBreakdown
+      } and
+      (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
         case expensesBreakdown => expensesBreakdown
       }
     ) (BsasDetail.apply _)
 
+  val fhlSeqReads: Reads[Seq[BsasDetail]] = Reads.seq(fhlReads)
+
   val nonFhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
-      case Some(IncomeBreakdown(None, None, None, None)) => None
-      case incomeBreakdown => incomeBreakdown
-    } and
-      (JsPath  \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
+    (JsPath   \ "countryCode").readNullable[String] and
+      (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
+        case Some(IncomeBreakdown(None, None, None)) => None
+        case incomeBreakdown => incomeBreakdown
+      } and
+      (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
         case expensesBreakdown => expensesBreakdown
       }
     ) (BsasDetail.apply _)
+
+  val nonFhlSeqReads: Reads[Seq[BsasDetail]] = Reads.traversableReads[Seq, BsasDetail](implicitly, nonFhlReads)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }

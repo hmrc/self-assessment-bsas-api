@@ -85,7 +85,7 @@ trait DesResponseMappingSupport {
   final def validateRetrieveForeignPropertyAdjustmentsSuccessResponse[T](
                                                                                desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
+      case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
         if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
 
