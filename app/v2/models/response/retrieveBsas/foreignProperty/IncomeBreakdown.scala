@@ -35,7 +35,7 @@ object IncomeBreakdown {
     ) (IncomeBreakdown.apply _)
 
   val fhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "rentReceived").readNullable[BigDecimal] and
+    (JsPath \ "rent").readNullable[BigDecimal] and
       Reads.pure(None) and
       Reads.pure(None) and
       Reads.pure(None) and

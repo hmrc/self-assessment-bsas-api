@@ -30,7 +30,7 @@ object CountryLevelDetail {
 
    val fhlReads: Reads[CountryLevelDetail] = (
      (JsPath   \ "countryCode").read[String] and
-       JsPath.read[TotalBsas] and
+       (JsPath \ "total").read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None, None, None)) => None
         case income => income
@@ -45,7 +45,7 @@ object CountryLevelDetail {
 
   val nonFhlReads: Reads[CountryLevelDetail] = (
     (JsPath   \ "countryCode").read[String] and
-      JsPath.read[TotalBsas] and
+      (JsPath \ "total").read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None, None, None)) => None
         case income => income
