@@ -59,9 +59,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "incomeBreakdown": {
       |      "rentIncome": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expensesBreakdown": {
       |      "premisesRunningCosts": 100.49,
@@ -85,9 +83,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "incomeBreakdown": {
       |        "rentIncome":100.49,
       |        "premiumsOfLeaseGrant":100.49,
-      |        "otherPropertyIncome":100.49,
-      |        "foreignTaxTakenOff":100.49,
-      |        "specialWithholdingTaxOrUKTaxPaid":100.49
+      |        "otherPropertyIncome":100.49
       |        },
       |      "expensesBreakdown": {
       |        "premisesRunningCosts":100.49,
@@ -200,9 +196,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "income": {
       |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -229,9 +223,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "income": {
       |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -256,9 +248,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "income": {
       |        "rent": 100.49,
       |        "premiumsOfLeaseGrant": 100.49,
-      |        "otherPropertyIncome": 100.49,
-      |        "foreignTaxTakenOff": 100.49,
-      |        "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |        "otherPropertyIncome": 100.49
       |      },
       |      "expenses": {
       |        "premisesRunningCosts": 100.49,
@@ -304,9 +294,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "income": {
       |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -396,9 +384,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "income": {
       |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -423,9 +409,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "income": {
       |        "rent": 100.49,
       |        "premiumsOfLeaseGrant": 100.49,
-      |        "otherPropertyIncome": 100.49,
-      |        "foreignTaxTakenOff": 100.49,
-      |        "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |        "otherPropertyIncome": 100.49
       |      },
       |      "expenses": {
       |        "premisesRunningCosts": 100.49,

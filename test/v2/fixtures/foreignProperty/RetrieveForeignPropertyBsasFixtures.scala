@@ -71,9 +71,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |  "incomeBreakdown": {
        |    "rentIncome": 100.49,
        |    "premiumsOfLeaseGrant": 100.49,
-       |    "otherPropertyIncome": 100.49,
-       |    "foreignTaxTakenOff": 100.49,
-       |    "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |    "otherPropertyIncome": 100.49
        |  },
        |  "expensesBreakdown": {
        |    "premisesRunningCosts": 100.49,
@@ -98,9 +96,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |    "incomeBreakdown": {
        |      "rentIncome": 100.49,
        |      "premiumsOfLeaseGrant": 100.49,
-       |      "otherPropertyIncome": 100.49,
-       |      "foreignTaxTakenOff": 100.49,
-       |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |      "otherPropertyIncome": 100.49
        |    },
        |    "expensesBreakdown": {
        |      "premisesRunningCosts": 100.49,
@@ -121,7 +117,7 @@ object RetrieveForeignPropertyBsasFixtures {
   val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
   val profitModel = Profit(Some(100.49),Some(100))
   val lossModel = Loss(Some(100.49),Some(100))
-  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49))
   val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
   val countryLevelDetail = CountryLevelDetail("FRA", totalBsasModel, Some(incomeBreakdownModel), Some(expensesBreakdownModel))
@@ -193,9 +189,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "income": {
        |            "totalRentsReceived": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -222,9 +216,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "income": {
        |            "rent": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -249,9 +241,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |          "income": {
        |            "rent": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |          },
        |          "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -298,9 +288,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "income": {
        |            "rentIncome": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -327,9 +315,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "income": {
        |            "rentIncome": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -354,9 +340,7 @@ object RetrieveForeignPropertyBsasFixtures {
        |          "income": {
        |            "rent": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |          },
        |          "expenses": {
        |            "premisesRunningCosts": 100.49,

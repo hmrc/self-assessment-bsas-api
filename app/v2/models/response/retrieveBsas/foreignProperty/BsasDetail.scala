@@ -40,7 +40,7 @@ object BsasDetail {
         case loss => loss
       } and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
-        case Some(IncomeBreakdown(None, None, None, None, None)) => None
+        case Some(IncomeBreakdown(None, None, None)) => None
         case income => income
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
@@ -61,7 +61,7 @@ object BsasDetail {
         case loss => loss
       } and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
-        case Some(IncomeBreakdown(None, None, None, None, None)) => None
+        case Some(IncomeBreakdown(None, None, None)) => None
         case income => income
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {

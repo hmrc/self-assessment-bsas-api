@@ -50,9 +50,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     None
   )
 
-  val nonFhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val nonFhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
 
-  val fhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), None, None, None, None)
+  val fhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), None, None)
 
   val total: TotalBsas = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
