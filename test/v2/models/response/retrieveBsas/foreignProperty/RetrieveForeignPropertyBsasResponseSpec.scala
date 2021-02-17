@@ -461,6 +461,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "status": "valid"
       |  },
       |  "adjustableSummaryCalculation": {
+      |    "totalIncome": 0,
       |    "income": {
       |      "rent": 0,
       |      "premiumsOfLeaseGrantAmount": 0,
@@ -570,9 +571,9 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |  "totalDeductions": 100.49,
       |  "accountingAdjustments": 100.49,
       |  "netProfit": 100.49,
-      |  "taxableProfit": 100.49,
+      |  "taxableProfit": 100,
       |  "netLoss": 100.49,
-      |  "adjustedIncomeTaxLoss": 100.49,
+      |  "adjustedIncomeTaxLoss": 100,
       |  "income": {
       |    "rent": 100.49
       |  },
