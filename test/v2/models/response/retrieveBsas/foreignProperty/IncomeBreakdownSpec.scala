@@ -27,9 +27,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
     """{
       |  "rentIncome": 100.49,
       |  "premiumsOfLeaseGrant": 100.49,
-      |  "otherPropertyIncome": 100.49,
-      |  "foreignTaxTakenOff": 100.49,
-      |  "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |  "otherPropertyIncome": 100.49
       |}""".stripMargin
   )
 
@@ -43,9 +41,7 @@ class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
     """{
       |  "rent": 100.49,
       |  "premiumsOfLeaseGrant": 100.49,
-      |  "otherPropertyIncome": 100.49,
-      |  "foreignTaxTakenOff": 100.49,
-      |  "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |  "otherPropertyIncome": 100.49
       |}""".stripMargin
   )
 
