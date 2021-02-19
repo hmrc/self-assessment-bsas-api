@@ -29,7 +29,7 @@ import v1.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
-class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
+class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
@@ -87,6 +87,55 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
         ("NOT_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
+      )
+
+      input.foreach(args => (serviceError _).tupled(args))
+    }
+  }
+
+  "retrieveV1R5" should {
+    "return a valid response" when {
+      "a valid request is supplied" in new Test {
+        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.retrieveV1R5(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+      }
+    }
+
+
+    "return error response" when {
+
+      "des return success response with invalid type of business" in new Test {
+        val response = RetrieveUkPropertyBsasResponse(metadataModel.copy(typeOfBusiness = TypeOfBusiness.`self-employment`),
+          Some(bsasDetailModel))
+        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        await(service.retrieveV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotUkProperty))
+      }
+
+      def serviceError(desErrorCode: String, error: MtdError): Unit =
+        s"a $desErrorCode error is returned from the service" in new Test {
+
+          MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+
+          await(service.retrieveV1R5(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+        }
+
+      val input = Seq(
+
+
+        ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
+        ("INVALID_CALCULATION_ID", BsasIdFormatError),
+        ("INVALID_RETURN", DownstreamError),
+        ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
+        ("NO_DATA_FOUND", NotFoundError),
+        ("SERVER_ERROR", DownstreamError),
+        ("SERVICE_UNAVAILABLE", DownstreamError),
+        ("INVALID_CORRELATIONID", DownstreamError)
+
       )
 
       input.foreach(args => (serviceError _).tupled(args))
