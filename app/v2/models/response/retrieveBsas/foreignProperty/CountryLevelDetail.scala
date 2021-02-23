@@ -17,28 +17,20 @@
 package v2.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v2.models.response.retrieveBsas.{Loss, Profit, TotalBsas}
+import play.api.libs.json.{JsPath, Json, Reads, Writes}
+import v2.models.response.retrieveBsas.TotalBsas
 
-case class BsasDetail(total: TotalBsas,
-                      profit: Option[Profit],
-                      loss: Option[Loss],
-                      incomeBreakdown: Option[IncomeBreakdown],
-                      expensesBreakdown: Option[ExpensesBreakdown],
-                      countryLevelDetail: Option[Seq[CountryLevelDetail]])
+case class CountryLevelDetail(countryCode: String,
+                              total: TotalBsas,
+                              incomeBreakdown: Option[IncomeBreakdown],
+                              expensesBreakdown: Option[ExpensesBreakdown]
+                             )
 
-object BsasDetail {
+object CountryLevelDetail {
 
-  val fhlReads: Reads[BsasDetail] = (
-    JsPath.read[TotalBsas] and
-      JsPath.readNullable[Profit].map {
-        case Some(Profit(None, None)) => None
-        case profit => profit
-      } and
-      JsPath.readNullable[Loss].map {
-        case Some(Loss(None, None)) => None
-        case loss => loss
-      } and
+  val fhlReads: Reads[CountryLevelDetail] = (
+    (JsPath \ "countryCode").read[String] and
+      (JsPath \ "total").read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
         case income => income
@@ -46,20 +38,14 @@ object BsasDetail {
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
         case expenses => expenses
-      } and
-      (JsPath \ "countryLevelDetail").readNullable[Seq[CountryLevelDetail]](CountryLevelDetail.fhlReadsSeq)
-    )(BsasDetail.apply _)
+      }
+    ) (CountryLevelDetail.apply _)
 
-  val nonFhlReads: Reads[BsasDetail] = (
-    JsPath.read[TotalBsas] and
-      JsPath.readNullable[Profit].map {
-        case Some(Profit(None, None)) => None
-        case profit => profit
-      } and
-      JsPath.readNullable[Loss].map {
-        case Some(Loss(None, None)) => None
-        case loss => loss
-      } and
+  val fhlReadsSeq: Reads[Seq[CountryLevelDetail]] = Reads.traversableReads[Seq, CountryLevelDetail](implicitly, fhlReads)
+
+  val nonFhlReads: Reads[CountryLevelDetail] = (
+    (JsPath \ "countryCode").read[String] and
+      (JsPath \ "total").read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
         case income => income
@@ -67,9 +53,10 @@ object BsasDetail {
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
         case expenses => expenses
-      } and
-      (JsPath \ "countryLevelDetail").readNullable[Seq[CountryLevelDetail]](CountryLevelDetail.nonFhlReadsSeq)
-    )(BsasDetail.apply _)
+      }
+    ) (CountryLevelDetail.apply _)
 
-  implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
+  val nonFhlReadsSeq: Reads[Seq[CountryLevelDetail]] = Reads.traversableReads[Seq, CountryLevelDetail](implicitly, nonFhlReads)
+
+  implicit val writes: Writes[CountryLevelDetail] = Json.writes[CountryLevelDetail]
 }

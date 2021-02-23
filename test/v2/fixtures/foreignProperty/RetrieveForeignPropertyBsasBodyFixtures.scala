@@ -50,9 +50,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     None
   )
 
-  val nonFhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val nonFhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
 
-  val fhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), None, None, None, None)
+  val fhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), None, None)
 
   val total: TotalBsas = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
@@ -60,9 +60,14 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   val loss: Loss = Loss(Some(100.49), Some(100))
 
-  val nonFhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
+  val nonFhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
 
-  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel))
+  val fhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(fhlIncomeModel), Some(fhlExpensesModel))
+
+  val nonFhlBsasDetailModel: BsasDetail =
+    BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel), Some(Seq(nonFhlCountryLevelDetail)))
+
+  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel), Some(Seq(fhlCountryLevelDetail)))
 
   val nonFhlMetaDataModel: Metadata = Metadata(
     TypeOfBusiness.`foreign-property`,

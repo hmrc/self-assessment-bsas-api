@@ -59,9 +59,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "incomeBreakdown": {
       |      "rentIncome": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expensesBreakdown": {
       |      "premisesRunningCosts": 100.49,
@@ -73,7 +71,33 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "residentialFinancialCost": 100.49,
       |      "broughtFwdResidentialFinancialCost": 100.49,
       |      "other": 100.49
-      |    }
+      |    },
+      |    "countryLevelDetail": [ {
+      |      "countryCode":"FRA",
+      |      "total": {
+      |        "income":100.49,
+      |        "expenses":100.49,
+      |        "additions":100.49,
+      |        "deductions":100.49
+      |        },
+      |      "incomeBreakdown": {
+      |        "rentIncome":100.49,
+      |        "premiumsOfLeaseGrant":100.49,
+      |        "otherPropertyIncome":100.49
+      |        },
+      |      "expensesBreakdown": {
+      |        "premisesRunningCosts":100.49,
+      |        "repairsAndMaintenance":100.49,
+      |        "financialCosts":100.49,
+      |        "professionalFees":100.49,
+      |        "travelCosts":100.49,
+      |        "costOfServices":100.49,
+      |        "residentialFinancialCost":100.49,
+      |        "broughtFwdResidentialFinancialCost":100.49,
+      |        "other":100.49
+      |        }
+      |      }
+      |    ]
       |  }
       |}""".stripMargin
   )
@@ -118,7 +142,29 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "travelCosts": 100.49,
       |      "costOfServices": 100.49,
       |      "other": 100.49
-      |    }
+      |    },
+      |    "countryLevelDetail": [ {
+      |      "countryCode":"FRA",
+      |      "total": {
+      |        "income":100.49,
+      |        "expenses":100.49,
+      |        "additions":100.49,
+      |        "deductions":100.49
+      |        },
+      |      "incomeBreakdown": {
+      |        "rentIncome":100.49
+      |        },
+      |      "expensesBreakdown": {
+      |        "premisesRunningCosts":100.49,
+      |        "repairsAndMaintenance":100.49,
+      |        "financialCosts":100.49,
+      |        "professionalFees":100.49,
+      |        "travelCosts":100.49,
+      |        "costOfServices":100.49,
+      |        "other":100.49
+      |        }
+      |      }
+      |    ]
       |  }
       |}""".stripMargin
   )
@@ -148,11 +194,9 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100,
       |    "income": {
-      |      "totalRentsReceived": 100.49,
+      |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -177,11 +221,9 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100,
       |    "income": {
-      |      "totalRentsReceived": 100.49,
+      |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -193,8 +235,35 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "residentialFinancialCost": 100.49,
       |      "broughtFwdResidentialFinancialCost": 100.49,
       |      "other": 100.49
+      |    },
+      |    "countryLevelDetail":[
+      |    {
+      |      "countryCode": "FRA",
+      |      "total": {
+      |        "totalIncome": 100.49,
+      |        "totalExpenses": 100.49,
+      |        "totalAdditions": 100.49,
+      |        "totalDeductions": 100.49
+      |      },
+      |      "income": {
+      |        "rent": 100.49,
+      |        "premiumsOfLeaseGrant": 100.49,
+      |        "otherPropertyIncome": 100.49
+      |      },
+      |      "expenses": {
+      |        "premisesRunningCosts": 100.49,
+      |        "repairsAndMaintenance": 100.49,
+      |        "financialCosts": 100.49,
+      |        "professionalFees": 100.49,
+      |        "travelCosts": 100.49,
+      |        "costOfServices": 100.49,
+      |        "residentialFinancialCost": 100.49,
+      |        "broughtFwdResidentialFinancialCost": 100.49,
+      |        "other": 100.49
+      |      }
       |    }
-      |  }
+      |   ]
+      | }
       |}""".stripMargin
   )
 
@@ -223,11 +292,9 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100,
       |    "income": {
-      |      "rentReceived": 100.49,
+      |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -252,7 +319,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100,
       |    "income": {
-      |      "rentReceived": 100.49
+      |      "rent": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -262,8 +329,31 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "travelCosts": 100.49,
       |      "costOfServices": 100.49,
       |      "other": 100.49
+      |    },
+      |    "countryLevelDetail": [
+      |    {
+      |      "countryCode":"FRA",
+      |      "total": {
+      |        "totalIncome": 100.49,
+      |        "totalExpenses": 100.49,
+      |        "totalAdditions": 100.49,
+      |        "totalDeductions": 100.49
+      |      },
+      |      "income": {
+      |        "rent":100.49
+      |      },
+      |      "expenses": {
+      |        "premisesRunningCosts":100.49,
+      |        "repairsAndMaintenance":100.49,
+      |        "financialCosts":100.49,
+      |        "professionalFees":100.49,
+      |        "travelCosts":100.49,
+      |        "costOfServices":100.49,
+      |        "other":100.49
+      |      }
       |    }
-      |  }
+      |  ]
+      | }
       |}""".stripMargin
   )
 
@@ -292,11 +382,9 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "netLoss": 100.49,
       |    "adjustedIncomeTaxLoss": 100,
       |    "income": {
-      |      "totalRentsReceived": 100.49,
+      |      "rent": 100.49,
       |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49,
-      |      "foreignTaxTakenOff": 100.49,
-      |      "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |      "otherPropertyIncome": 100.49
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 100.49,
@@ -308,7 +396,34 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |      "residentialFinancialCost": 100.49,
       |      "broughtFwdResidentialFinancialCost": 100.49,
       |      "other": 100.49
+      |    },
+      |    "countryLevelDetail":[
+      |    {
+      |      "countryCode": "FRA",
+      |      "total": {
+      |        "totalIncome": 100.49,
+      |        "totalExpenses": 100.49,
+      |        "totalAdditions": 100.49,
+      |        "totalDeductions": 100.49
+      |      },
+      |      "income": {
+      |        "rent": 100.49,
+      |        "premiumsOfLeaseGrant": 100.49,
+      |        "otherPropertyIncome": 100.49
+      |      },
+      |      "expenses": {
+      |        "premisesRunningCosts": 100.49,
+      |        "repairsAndMaintenance": 100.49,
+      |        "financialCosts": 100.49,
+      |        "professionalFees": 100.49,
+      |        "travelCosts": 100.49,
+      |        "costOfServices": 100.49,
+      |        "residentialFinancialCost": 100.49,
+      |        "broughtFwdResidentialFinancialCost": 100.49,
+      |        "other": 100.49
+      |      }
       |    }
+      |   ]
       |  }
       |}""".stripMargin
   )
@@ -322,34 +437,189 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |    "accountingPeriodEndDate": "2021-10-10"
       |  },
       |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
       |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |    "requestedDateTime": "2019-10-14T11:33:27Z",
+      |    "adjustedDateTime": "2019-10-14T11:33:27Z",
+      |    "taxableEntityId": "string",
+      |    "taxYear": 2022,
       |    "status": "valid"
       |  },
       |  "adjustableSummaryCalculation": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49,
-      |    "accountingAdjustments": 100.49,
-      |    "netProfit": 100.49,
-      |    "taxableProfit": 100,
-      |    "netLoss": 100.49,
-      |    "adjustedIncomeTaxLoss": 100,
+      |    "totalIncome": 0,
       |    "income": {
-      |      "rentReceived": 100.49
+      |      "rent": 0,
+      |      "premiumsOfLeaseGrantAmount": 0,
+      |      "otherPropertyIncomeAmount": 0
       |    },
+      |    "totalExpenses": 0,
       |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "other": 100.49
+      |      "premisesRunningCostsAmount": 0,
+      |      "repairsAndMaintenanceAmount": 0,
+      |      "financialCostsAmount": 0,
+      |      "professionalFeesAmount": 0,
+      |      "travelCostsAmount": 0,
+      |      "costOfServicesAmount": 0,
+      |      "residentialFinancialCostAmount": 0,
+      |      "broughtFwdResidentialFinancialCostAmount": 0,
+      |      "otherAmount": 0,
+      |      "consolidatedExpenseAmount": 0
+      |    },
+      |    "netProfit": 0,
+      |    "netLoss": 0,
+      |    "totalAdditions": 0,
+      |    "additions": {
+      |      "privateUseAdjustment": 0,
+      |      "balancingCharge": 0
+      |    },
+      |    "totalDeductions": 0,
+      |    "deductions": {
+      |      "annualInvestmentAllowance": 0,
+      |      "costOfReplacingDomesticItems": 0,
+      |      "zeroEmissionsGoodsVehicleAllowance": 0,
+      |      "propertyAllowance": 0,
+      |      "otherCapitalAllowance": 0,
+      |      "structureAndBuildingAllowance": 0,
+      |      "electricChargePointAllowance": 0
+      |    },
+      |    "taxableProfit": 12500,
+      |    "adjustedIncomeTaxLoss": 12500,
+      |    "countryLevelDetail": [
+      |      {
+      |        "countryCode": "CYM",
+      |        "totalIncome": 0,
+      |        "income": {
+      |          "rent": 0,
+      |          "premiumsOfLeaseGrantAmount": 0,
+      |          "otherPropertyIncomeAmount": 0
+      |        },
+      |        "totalExpenses": 0,
+      |        "expenses": {
+      |          "premisesRunningCostsAmount": 0,
+      |          "repairsAndMaintenanceAmount": 0,
+      |          "financialCostsAmount": 0,
+      |          "professionalFeesAmount": 0,
+      |          "travelCostsAmount": 0,
+      |          "costOfServicesAmount": 0,
+      |          "residentialFinancialCostAmount": 0,
+      |          "broughtFwdResidentialFinancialCostAmount": 0,
+      |          "otherAmount": 0,
+      |          "consolidatedExpenseAmount": 0
+      |        },
+      |        "netProfit": 0,
+      |        "netLoss": 0,
+      |        "totalAdditions": 0,
+      |        "additions": {
+      |          "privateUseAdjustment": 0,
+      |          "balancingCharge": 0
+      |        },
+      |        "totalDeductions": 0,
+      |        "deductions": {
+      |          "annualInvestmentAllowance": 0,
+      |          "costOfReplacingDomesticItems": 0,
+      |          "zeroEmissionsGoodsVehicleAllowance": 0,
+      |          "propertyAllowance": 0,
+      |          "otherCapitalAllowance": 0,
+      |          "structureAndBuildingAllowance": 0,
+      |          "electricChargePointAllowance": 0
+      |        },
+      |        "taxableProfit": 0,
+      |        "adjustedIncomeTaxLoss": 0
+      |      }
+      |    ]
+      |  },
+      |  "adjustments": [
+      |    {
+      |      "countryCode": "CYM",
+      |      "income": {
+      |        "rent": -99999999999.99,
+      |        "premiumsOfLeaseGrantAmount": -99999999999.99,
+      |        "otherPropertyIncomeAmount": -99999999999.99
+      |      },
+      |      "expenses": {
+      |        "premisesRunningCostsAmount": -99999999999.99,
+      |        "repairsAndMaintenanceAmount": -99999999999.99,
+      |        "financialCostsAmount": -99999999999.99,
+      |        "professionalFeesAmount": -99999999999.99,
+      |        "travelCostsAmount": -99999999999.99,
+      |        "costOfServicesAmount": -99999999999.99,
+      |        "residentialFinancialCostAmount": -99999999999.99,
+      |        "otherAmount": -99999999999.99,
+      |        "consolidatedExpenseAmount": -99999999999.99
+      |      }
       |    }
-      |  }
+      |  ],
+      |  "adjustedSummaryCalculation": {
+      |  "totalIncome": 100.49,
+      |  "totalExpenses": 100.49,
+      |  "totalAdditions": 100.49,
+      |  "totalDeductions": 100.49,
+      |  "accountingAdjustments": 100.49,
+      |  "netProfit": 100.49,
+      |  "taxableProfit": 100,
+      |  "netLoss": 100.49,
+      |  "adjustedIncomeTaxLoss": 100,
+      |  "income": {
+      |    "rent": 100.49
+      |  },
+      |  "expenses": {
+      |    "premisesRunningCosts": 100.49,
+      |    "repairsAndMaintenance": 100.49,
+      |    "financialCosts": 100.49,
+      |    "professionalFees": 100.49,
+      |    "travelCosts": 100.49,
+      |    "costOfServices": 100.49,
+      |    "other": 100.49
+      |  },
+      |  "total": {
+      |    "income": 100.49,
+      |    "expenses": 100.49,
+      |    "additions": 100.49,
+      |    "deductions": 100.49
+      |  },
+      |  "profit": {
+      |    "net": 100.49,
+      |    "taxable": 100.49
+      |  },
+      |  "loss": {
+      |    "net": 100.49,
+      |    "adjustedIncomeTax": 100.49
+      |  },
+      |  "income": {
+      |    "rent": 100.49
+      |  },
+      |  "expenses": {
+      |    "premisesRunningCosts": 100.49,
+      |    "repairsAndMaintenance": 100.49,
+      |    "financialCosts": 100.49,
+      |    "professionalFees": 100.49,
+      |    "travelCosts": 100.49,
+      |    "costOfServices": 100.49,
+      |    "other": 100.49
+      |  },
+      |  "countryLevelDetail": [
+      |  {
+      |    "countryCode":"FRA",
+      |    "total": {
+      |      "totalIncome": 100.49,
+      |      "totalExpenses": 100.49,
+      |      "totalAdditions": 100.49,
+      |      "totalDeductions": 100.49
+      |    },
+      |    "income": {
+      |      "rent":100.49
+      |      },
+      |    "expenses": {
+      |      "premisesRunningCosts":100.49,
+      |      "repairsAndMaintenance":100.49,
+      |      "financialCosts":100.49,
+      |      "professionalFees":100.49,
+      |      "travelCosts":100.49,
+      |      "costOfServices":100.49,
+      |      "other":100.49
+      |    }
+      |   }
+      | ]
+      |}
       |}""".stripMargin
   )
 
@@ -370,7 +640,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
 
       "a valid fhl json with all fields are supplied and no adjustedSummaryCalculation" in {
         adjustableSummaryCalculationFhlDesJson.as[RetrieveForeignPropertyBsasResponse] shouldBe
-          retrieveForeignPropertyFhlEeaBsasResponseModel.copy(metadata = fhlMetaDataModel.copy(adjustedSummary = false))
+          retrieveForeignPropertyFhlEeaBsasResponseModel.copy(metadata = fhlMetaDataModel.copy(adjustedSummary = true))
       }
     }
   }

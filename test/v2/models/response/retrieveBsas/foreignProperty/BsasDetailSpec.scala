@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
 
-class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
+class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
   val nonFhlMtdJson = Json.parse(
     """{
@@ -42,9 +42,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "incomeBreakdown": {
       |    "rentIncome": 100.49,
       |    "premiumsOfLeaseGrant": 100.49,
-      |    "otherPropertyIncome": 100.49,
-      |    "foreignTaxTakenOff": 100.49,
-      |    "specialWithholdingTaxOrUKTaxPaid": 100.49
+      |    "otherPropertyIncome": 100.49
       |  },
       |  "expensesBreakdown": {
       |    "premisesRunningCosts": 100.49,
@@ -56,7 +54,34 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |    "residentialFinancialCost": 100.49,
       |    "broughtFwdResidentialFinancialCost": 100.49,
       |    "other": 100.49
-      |  }
+      |  },
+      |  "countryLevelDetail":[
+      |  {
+      |    "countryCode": "FRA",
+      |    "total": {
+      |      "income": 100.49,
+      |      "expenses": 100.49,
+      |      "additions": 100.49,
+      |      "deductions": 100.49
+      |    },
+      |    "incomeBreakdown": {
+      |      "rentIncome": 100.49,
+      |      "premiumsOfLeaseGrant": 100.49,
+      |      "otherPropertyIncome": 100.49
+      |    },
+      |    "expensesBreakdown": {
+      |      "premisesRunningCosts": 100.49,
+      |      "repairsAndMaintenance": 100.49,
+      |      "financialCosts": 100.49,
+      |      "professionalFees": 100.49,
+      |      "travelCosts": 100.49,
+      |      "costOfServices": 100.49,
+      |      "residentialFinancialCost": 100.49,
+      |      "broughtFwdResidentialFinancialCost": 100.49,
+      |      "other": 100.49
+      |      }
+      |   }
+      |  ]
       |}""".stripMargin
   )
 
@@ -87,7 +112,30 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |    "travelCosts": 100.49,
       |    "costOfServices": 100.49,
       |    "other": 100.49
-      |  }
+      |  },
+      |  "countryLevelDetail": [
+      |  {
+      |    "countryCode":"FRA",
+      |    "total": {
+      |      "income":100.49,
+      |      "expenses":100.49,
+      |      "additions":100.49,
+      |      "deductions":100.49
+      |      },
+      |    "incomeBreakdown": {
+      |      "rentIncome":100.49
+      |      },
+      |    "expensesBreakdown": {
+      |      "premisesRunningCosts":100.49,
+      |      "repairsAndMaintenance":100.49,
+      |      "financialCosts":100.49,
+      |      "professionalFees":100.49,
+      |      "travelCosts":100.49,
+      |      "costOfServices":100.49,
+      |      "other":100.49
+      |    }
+      |   }
+      | ]
       |}""".stripMargin
   )
 
@@ -103,7 +151,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "adjustedIncomeTaxLoss": 100,
       |  "income": {
-      |    "totalRentsReceived": 100.49,
+      |    "rent": 100.49,
       |    "premiumsOfLeaseGrant": 100.49,
       |    "otherPropertyIncome": 100.49,
       |    "foreignTaxTakenOff": 100.49,
@@ -119,7 +167,34 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |    "residentialFinancialCost": 100.49,
       |    "broughtFwdResidentialFinancialCost": 100.49,
       |    "other": 100.49
+      |  },
+      |  "countryLevelDetail":[
+      |  {
+      |    "countryCode": "FRA",
+      |    "total": {
+      |      "totalIncome": 100.49,
+      |      "totalExpenses": 100.49,
+      |      "totalAdditions": 100.49,
+      |      "totalDeductions": 100.49
+      |    },
+      |    "income": {
+      |      "rent": 100.49,
+      |      "premiumsOfLeaseGrant": 100.49,
+      |      "otherPropertyIncome": 100.49
+      |    },
+      |    "expenses": {
+      |      "premisesRunningCosts": 100.49,
+      |      "repairsAndMaintenance": 100.49,
+      |      "financialCosts": 100.49,
+      |      "professionalFees": 100.49,
+      |      "travelCosts": 100.49,
+      |      "costOfServices": 100.49,
+      |      "residentialFinancialCost": 100.49,
+      |      "broughtFwdResidentialFinancialCost": 100.49,
+      |      "other": 100.49
+      |    }
       |  }
+      | ]
       |}""".stripMargin
   )
 
@@ -135,7 +210,7 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "adjustedIncomeTaxLoss": 100,
       |  "income": {
-      |    "rentReceived": 100.49
+      |    "rent": 100.49
       |  },
       |  "expenses": {
       |    "premisesRunningCosts": 100.49,
@@ -145,7 +220,56 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       |    "travelCosts": 100.49,
       |    "costOfServices": 100.49,
       |    "other": 100.49
-      |  }
+      |  },
+      |  "total": {
+      |    "income": 100.49,
+      |    "expenses": 100.49,
+      |    "additions": 100.49,
+      |    "deductions": 100.49
+      |  },
+      |  "profit": {
+      |    "net": 100.49,
+      |    "taxable": 100.49
+      |  },
+      |  "loss": {
+      |    "net": 100.49,
+      |    "adjustedIncomeTax": 100.49
+      |  },
+      |  "income": {
+      |    "rent": 100.49
+      |  },
+      |  "expenses": {
+      |    "premisesRunningCosts": 100.49,
+      |    "repairsAndMaintenance": 100.49,
+      |    "financialCosts": 100.49,
+      |    "professionalFees": 100.49,
+      |    "travelCosts": 100.49,
+      |    "costOfServices": 100.49,
+      |    "other": 100.49
+      |  },
+      |  "countryLevelDetail": [
+      |  {
+      |    "countryCode":"FRA",
+      |    "total": {
+      |      "totalIncome": 100.49,
+      |      "totalExpenses": 100.49,
+      |      "totalAdditions": 100.49,
+      |      "totalDeductions": 100.49
+      |    },
+      |    "income": {
+      |      "rent":100.49
+      |      },
+      |    "expenses": {
+      |      "premisesRunningCosts":100.49,
+      |      "repairsAndMaintenance":100.49,
+      |      "financialCosts":100.49,
+      |      "professionalFees":100.49,
+      |      "travelCosts":100.49,
+      |      "costOfServices":100.49,
+      |      "other":100.49
+      |    }
+      |   }
+      | ]
       |}""".stripMargin
   )
 
@@ -172,11 +296,11 @@ class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
       }
 
       "a valid non-fhl json with all fields empty are supplied" in {
-        emptyObjectsDesJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(total, None, None, None, None)
+        emptyObjectsDesJson.as[BsasDetail](BsasDetail.nonFhlReads) shouldBe BsasDetail(total, None, None, None, None, None)
       }
 
       "a valid fhl json with all fields empty are supplied" in {
-        emptyObjectsDesJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(total, None, None, None, None)
+        emptyObjectsDesJson.as[BsasDetail](BsasDetail.fhlReads) shouldBe BsasDetail(total, None, None, None, None, None)
       }
 
     }
