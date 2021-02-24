@@ -40,7 +40,7 @@ object RetrieveUkPropertyBsasFixtures {
     expensesBreakdown = Some(expensesBreakdownModel))
 
   val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-    businessId = None,
+    businessId = Some("111111111111111"),
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
@@ -50,7 +50,7 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val metadataModelWithAdjustableSummary = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-    businessId = None,
+    businessId = Some("111111111111111"),
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
     requestedDateTime = "2020-10-14T11:33:27.111Z",
@@ -65,6 +65,7 @@ object RetrieveUkPropertyBsasFixtures {
     """{
       |   "metadata": {
       |      "typeOfBusiness": "uk-property-fhl",
+      |      "businessId": "111111111111111",
       |      "accountingPeriod": {
       |         "startDate": "2019-04-06",
       |         "endDate": "2020-04-05"
@@ -150,7 +151,8 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdMetadataJson = Json.parse(
     """{
       |"typeOfBusiness": "uk-property-fhl",
-      |    "accountingPeriod": {
+      |"businessId": "111111111111111",
+      |"accountingPeriod": {
       |    "startDate": "2019-04-06",
       |    "endDate": "2020-04-05"
       |  },
@@ -405,6 +407,7 @@ object RetrieveUkPropertyBsasFixtures {
                                                         |{
                                                         |   "metadata": {
                                                         |      "typeOfBusiness": "uk-property-fhl",
+                                                        |      "businessId": "111111111111111",
                                                         |      "accountingPeriod": {
                                                         |         "startDate": "2019-04-06",
                                                         |         "endDate": "2020-04-05"
