@@ -21,23 +21,17 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class IncomeBreakdown(rentIncome: Option[BigDecimal],
                            premiumsOfLeaseGrant: Option[BigDecimal],
-                           otherPropertyIncome: Option[BigDecimal],
-                           foreignTaxTakenOff: Option[BigDecimal],
-                           specialWithholdingTaxOrUKTaxPaid: Option[BigDecimal])
+                           otherPropertyIncome: Option[BigDecimal])
 
 object IncomeBreakdown {
   val nonFhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
+    (JsPath \ "rent").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      (JsPath \ "foreignTaxTakenOff").readNullable[BigDecimal] and
-      (JsPath \ "specialWithholdingTaxOrUKTaxPaid").readNullable[BigDecimal]
+      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
     ) (IncomeBreakdown.apply _)
 
   val fhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "rentReceived").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      Reads.pure(None) and
+    (JsPath \ "rent").readNullable[BigDecimal] and
       Reads.pure(None) and
       Reads.pure(None)
     )(IncomeBreakdown.apply _)

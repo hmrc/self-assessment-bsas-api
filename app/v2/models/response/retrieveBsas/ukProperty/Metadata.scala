@@ -23,6 +23,7 @@ import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
+                    businessId: Option[String],
                     accountingPeriod: AccountingPeriod,
                     taxYear: String,
                     requestedDateTime: String,
@@ -34,6 +35,7 @@ object Metadata {
 
   implicit val reads: Reads[Metadata] = (
     (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
+      (JsPath \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriod] and
       (JsPath \ "metadata" \ "taxYear").read[Int].map(DesTaxYear.fromDesIntToString) and
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and

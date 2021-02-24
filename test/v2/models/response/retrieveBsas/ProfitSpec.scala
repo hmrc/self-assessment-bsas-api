@@ -26,13 +26,13 @@ class ProfitSpec extends UnitSpec with JsonErrorValidators{
   val mtdJson = Json.parse(
     """{
       |  "net": 100.49,
-      |  "taxable": 100.49
+      |  "taxable": 100
       |}""".stripMargin)
 
   val desJson = Json.parse(
     """{
       |  "netProfit": 100.49,
-      |  "taxableProfit": 100.49
+      |  "taxableProfit": 100
       |}""".stripMargin)
 
   "reads" should {

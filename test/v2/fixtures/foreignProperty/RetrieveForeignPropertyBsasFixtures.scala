@@ -21,7 +21,7 @@ import java.time.LocalDate
 import play.api.libs.json.{JsValue, Json}
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
-import v2.models.response.retrieveBsas.foreignProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveForeignPropertyBsasResponse}
+import v2.models.response.retrieveBsas.foreignProperty._
 
 object RetrieveForeignPropertyBsasFixtures {
 
@@ -62,18 +62,16 @@ object RetrieveForeignPropertyBsasFixtures {
        |  },
        |  "profit": {
        |    "net": 100.49,
-       |    "taxable": 100.49
+       |    "taxable": 100
        |  },
        |  "loss": {
        |    "net": 100.49,
-       |    "adjustedIncomeTax": 100.49
+       |    "adjustedIncomeTax": 100
        |  },
        |  "incomeBreakdown": {
        |    "rentIncome": 100.49,
        |    "premiumsOfLeaseGrant": 100.49,
-       |    "otherPropertyIncome": 100.49,
-       |    "foreignTaxTakenOff": 100.49,
-       |    "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |    "otherPropertyIncome": 100.49
        |  },
        |  "expensesBreakdown": {
        |    "premisesRunningCosts": 100.49,
@@ -85,16 +83,44 @@ object RetrieveForeignPropertyBsasFixtures {
        |    "residentialFinancialCost": 100.49,
        |    "broughtFwdResidentialFinancialCost": 100.49,
        |    "other": 100.49
-       |  }
+       |  },
+       |  "countryLevelDetail":[
+       |  {
+       |    "countryCode": "FRA",
+       |    "total": {
+       |      "income": 100.49,
+       |      "expenses": 100.49,
+       |      "additions": 100.49,
+       |      "deductions": 100.49
+       |    },
+       |    "incomeBreakdown": {
+       |      "rentIncome": 100.49,
+       |      "premiumsOfLeaseGrant": 100.49,
+       |      "otherPropertyIncome": 100.49
+       |    },
+       |    "expensesBreakdown": {
+       |      "premisesRunningCosts": 100.49,
+       |      "repairsAndMaintenance": 100.49,
+       |      "financialCosts": 100.49,
+       |      "professionalFees": 100.49,
+       |      "travelCosts": 100.49,
+       |      "costOfServices": 100.49,
+       |      "residentialFinancialCost": 100.49,
+       |      "broughtFwdResidentialFinancialCost": 100.49,
+       |      "other": 100.49
+       |      }
+       |   }
+       |  ]
        |}""".stripMargin
   )
 
   val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
-  val profitModel = Profit(Some(100.49),Some(100.49))
-  val lossModel = Loss(Some(100.49),Some(100.49))
-  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val profitModel = Profit(Some(100.49),Some(100))
+  val lossModel = Loss(Some(100.49),Some(100))
+  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49))
   val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
+  val countryLevelDetail = CountryLevelDetail("FRA", totalBsasModel, Some(incomeBreakdownModel), Some(expensesBreakdownModel))
   val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2020-04-06"), LocalDate.parse("2021-04-05"))
 
   val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`foreign-property`,
@@ -110,7 +136,8 @@ object RetrieveForeignPropertyBsasFixtures {
     profit = Some(profitModel),
     loss = Some(lossModel),
     incomeBreakdown = Some(incomeBreakdownModel),
-    expensesBreakdown = Some(expensesBreakdownModel))
+    expensesBreakdown = Some(expensesBreakdownModel),
+    countryLevelDetail = Some(Seq(countryLevelDetail)))
 
   val retrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
@@ -156,15 +183,13 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "totalRentsReceived": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -185,15 +210,13 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
-       |            "totalRentsReceived": 100.49,
+       |            "rent": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -205,8 +228,35 @@ object RetrieveForeignPropertyBsasFixtures {
        |            "residentialFinancialCost": 100.49,
        |            "broughtFwdResidentialFinancialCost": 100.49,
        |            "other": 100.49
+       |        },
+       |        "countryLevelDetail": [
+       |        {
+       |          "countryCode": "FRA",
+       |          "total": {
+       |            "totalIncome": 100.49,
+       |            "totalExpenses": 100.49,
+       |            "totalAdditions": 100.49,
+       |            "totalDeductions": 100.49
+       |          },
+       |          "income": {
+       |            "rent": 100.49,
+       |            "premiumsOfLeaseGrant": 100.49,
+       |            "otherPropertyIncome": 100.49
+       |          },
+       |          "expenses": {
+       |            "premisesRunningCosts": 100.49,
+       |            "repairsAndMaintenance": 100.49,
+       |            "financialCosts": 100.49,
+       |            "professionalFees": 100.49,
+       |            "travelCosts": 100.49,
+       |            "costOfServices": 100.49,
+       |            "residentialFinancialCost": 100.49,
+       |            "broughtFwdResidentialFinancialCost": 100.49,
+       |            "other": 100.49
+       |          }
        |        }
-       |    }
+       |      ]
+       |     }
        |}""".stripMargin
   )
 
@@ -232,15 +282,13 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "rentIncome": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -261,15 +309,13 @@ object RetrieveForeignPropertyBsasFixtures {
        |        "totalDeductions": 100.49,
        |        "accountingAdjustments": 100.49,
        |        "netProfit": 100.49,
-       |        "taxableProfit": 100.49,
+       |        "taxableProfit": 100,
        |        "netLoss": 100.49,
-       |        "adjustedIncomeTaxLoss": 100.49,
+       |        "adjustedIncomeTaxLoss": 100,
        |        "income": {
        |            "rentIncome": 100.49,
        |            "premiumsOfLeaseGrant": 100.49,
-       |            "otherPropertyIncome": 100.49,
-       |            "foreignTaxTakenOff": 100.49,
-       |            "specialWithholdingTaxOrUKTaxPaid": 100.49
+       |            "otherPropertyIncome": 100.49
        |        },
        |        "expenses": {
        |            "premisesRunningCosts": 100.49,
@@ -281,7 +327,34 @@ object RetrieveForeignPropertyBsasFixtures {
        |            "residentialFinancialCost": 100.49,
        |            "broughtFwdResidentialFinancialCost": 100.49,
        |            "other": 100.49
+       |        },
+       |                "countryLevelDetail": [
+       |        {
+       |          "countryCode": "FRA",
+       |          "total": {
+       |            "totalIncome": 100.49,
+       |            "totalExpenses": 100.49,
+       |            "totalAdditions": 100.49,
+       |            "totalDeductions": 100.49
+       |          },
+       |          "income": {
+       |            "rent": 100.49,
+       |            "premiumsOfLeaseGrant": 100.49,
+       |            "otherPropertyIncome": 100.49
+       |          },
+       |          "expenses": {
+       |            "premisesRunningCosts": 100.49,
+       |            "repairsAndMaintenance": 100.49,
+       |            "financialCosts": 100.49,
+       |            "professionalFees": 100.49,
+       |            "travelCosts": 100.49,
+       |            "costOfServices": 100.49,
+       |            "residentialFinancialCost": 100.49,
+       |            "broughtFwdResidentialFinancialCost": 100.49,
+       |            "other": 100.49
+       |          }
        |        }
+       |      ]
        |    }
        |}""".stripMargin
   )
