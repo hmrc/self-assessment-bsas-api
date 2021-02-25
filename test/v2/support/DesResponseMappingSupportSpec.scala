@@ -293,49 +293,6 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     }
   }
 
-  "validateSubmitUkPropertyBsasSuccessResponse" should {
-    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitUkPropertyBsasResponse] =
-      ResponseWrapper(
-        correlationId = "",
-        responseData = SubmitUkPropertyBsasResponse(
-          "",
-          typeOfBusiness
-        )
-      )
-    "return Left" when {
-      List(
-        TypeOfBusiness.`self-employment`,
-        TypeOfBusiness.`foreign-property`,
-        TypeOfBusiness.`foreign-property-fhl-eea`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(typeOfBusiness)) shouldBe {
-            Left(ErrorWrapper("", RuleSelfEmploymentAdjustedError, None))
-          }
-        }
-      }
-      "the property type returned was not the property type submitted" in {
-        val input = generateResponseWrapper(TypeOfBusiness.`uk-property-fhl`)
-        mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(TypeOfBusiness.`uk-property-non-fhl`)) shouldBe {
-          Left(ErrorWrapper("", RuleIncorrectPropertyAdjusted, None))
-        }
-      }
-    }
-    "return Right" when {
-      List(
-        TypeOfBusiness.`uk-property-fhl`,
-        TypeOfBusiness.`uk-property-non-fhl`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateSubmitUkPropertyBsasSuccessResponse(input, Some(typeOfBusiness)) shouldBe {
-            Right(input)
-          }
-        }
-      }
-    }
-  }
 
   "validateSubmitForeignPropertyBsasSuccessResponse" should {
     def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitForeignPropertyBsasResponse] =

@@ -23,10 +23,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.SubmitUkPropertyBsasConnector
 import v2.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
+import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 import v2.support.DesResponseMappingSupport
 
@@ -42,38 +41,28 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
 
     val result = for {
       desResponseWrapper <- EitherT(connector.submitPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <-
-        EitherT.fromEither[Future](validateSubmitUkPropertyBsasSuccessResponse(desResponseWrapper, Some(retrieveTypeOfBusiness(request.body))))
-    } yield mtdResponseWrapper
+    } yield desResponseWrapper
 
     result.value
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
-    "INVALID_CALCULATION_ID"      -> BsasIdFormatError,
-    "INVALID_PAYLOAD"             -> DownstreamError,
-    "INVALID_PAYLOAD_REMOTE"      -> DownstreamError,
-    "INVALID_FIELD"               -> RuleTypeOfBusinessError,
-    "INVALID_MONETARY_FORMAT"     -> DownstreamError,
-    "ASC_ID_INVALID"              -> RuleSummaryStatusInvalid,
-    "ASC_ALREADY_SUPERSEDED"      -> RuleSummaryStatusSuperseded,
-    "ASC_ALREADY_ADJUSTED"        -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"           -> RuleResultingValueNotPermitted,
-    "BVR_FAILURE_C55316"          -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C15320"          -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C55503"          -> RuleOverConsolidatedExpensesThreshold,
-    "BVR_FAILURE_C55508"          -> RulePropertyIncomeAllowanceClaimed,
-    "BVR_FAILURE_C55509"          -> RulePropertyIncomeAllowanceClaimed,
-    "NO_DATA_FOUND"               -> NotFoundError,
-    "SERVER_ERROR"                -> DownstreamError,
-    "SERVICE_UNAVAILABLE"         -> DownstreamError
+    "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+    "INVALID_CALCULATION_ID"        -> BsasIdFormatError,
+    "INVALID_PAYLOAD"               -> DownstreamError,
+    "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
+    "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
+    "ASC_ALREADY_ADJUSTED"          -> RuleBsasAlreadyAdjusted,
+    "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
+    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C55316"            -> DownstreamError,
+    "BVR_FAILURE_C15320"            -> DownstreamError,
+    "BVR_FAILURE_C55503"            -> RuleOverConsolidatedExpensesThreshold,
+    "BVR_FAILURE_C55508"            -> RulePropertyIncomeAllowanceClaimed,
+    "BVR_FAILURE_C55509"            -> RulePropertyIncomeAllowanceClaimed,
+    "NO_DATA_FOUND"                 -> NotFoundError,
+    "SERVER_ERROR"                  -> DownstreamError,
+    "SERVICE_UNAVAILABLE"           -> DownstreamError
   )
 
-  private def retrieveTypeOfBusiness(body: SubmitUKPropertyBsasRequestBody): TypeOfBusiness = {
-    (body: @unchecked) match {
-      case SubmitUKPropertyBsasRequestBody(Some(_), None) => TypeOfBusiness.`uk-property-non-fhl`
-      case SubmitUKPropertyBsasRequestBody(None, Some(_)) => TypeOfBusiness.`uk-property-fhl`
-    }
-  }
 }

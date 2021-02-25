@@ -81,34 +81,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      "request made is for the invalid type of business `SELF-EMPLOYMENT`" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "01")))
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleSelfEmploymentAdjustedError)
-      }
-
-      "request made is for the invalid type of business `uk-property-non-fhl` where fhl is expected" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "02")))
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleIncorrectPropertyAdjusted)
-      }
-
       "validation error" when {
         def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
@@ -153,15 +125,13 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_PAYLOAD_REMOTE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleTypeOfBusinessError),
-          (BAD_REQUEST, "INVALID_MONETARY_FORMAT", INTERNAL_SERVER_ERROR, DownstreamError),
-          (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
-          (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
-          (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
-          (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
-          (FORBIDDEN, "BVR_FAILURE_C55316", FORBIDDEN, RuleTypeOfBusinessError),
-          (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTypeOfBusinessError),
+          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
+          (CONFLICT, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
+          (CONFLICT, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
+          (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
+          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleTypeOfBusinessError),
+          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, DownstreamError),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
