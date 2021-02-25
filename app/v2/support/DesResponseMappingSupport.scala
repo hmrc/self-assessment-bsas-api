@@ -27,7 +27,7 @@ import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
-import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
+import v2.models.response.{retrieveBsas, retrieveBsasAdjustments}
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -117,19 +117,6 @@ trait DesResponseMappingSupport {
       case RetrieveUkPropertyBsasResponse(retrieveBsas.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
           if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
-
-      case _ => Right(desResponseWrapper)
-    }
-
-  final def validateSubmitForeignPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T],
-                                                           businessType: TypeOfBusiness): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case SubmitForeignPropertyBsasResponse(_, typeOfBusiness)
-        if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleSelfEmploymentAdjustedError, None))
-
-      case SubmitForeignPropertyBsasResponse(_, typeOfBusiness) if businessType != typeOfBusiness =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleIncorrectPropertyAdjusted, None))
 
       case _ => Right(desResponseWrapper)
     }

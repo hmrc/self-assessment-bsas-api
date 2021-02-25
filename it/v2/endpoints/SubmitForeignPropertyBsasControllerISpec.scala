@@ -564,48 +564,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      "request made is for the invalid type of business `SELF-EMPLOYMENT`" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("01")))
-        }
-
-        val result: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleSelfEmploymentAdjustedError)
-      }
-
-      "request made is for the invalid type of business `foreign-property` where fhl-eea is expected" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
-        }
-
-        val result: WSResponse = await(request().post(requestBodyForeignPropertyJson))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleIncorrectPropertyAdjusted)
-      }
-
-      "request made is for the invalid type of business `foreign-proprty-fhl-eea` where foreign-property is expected" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
-        }
-
-        val result: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleIncorrectPropertyAdjusted)
-      }
-
       "validation error" when {
         def validationErrorTest(requestNino: String, requestBsasId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
@@ -672,8 +630,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
           (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
           (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
-          (FORBIDDEN, "BVR_FAILURE_C55316", FORBIDDEN, RuleTypeOfBusinessError),
-          (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTypeOfBusinessError),
+          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, DownstreamError),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
