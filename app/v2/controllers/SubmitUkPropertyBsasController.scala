@@ -124,7 +124,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
            RuleBsasAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
            RulePropertyIncomeAllowanceClaimed | RuleResultingValueNotPermitted |
-           RuleSelfEmploymentAdjustedError | RuleIncorrectPropertyAdjusted |
+           RuleSelfEmploymentAdjustedError |
            RuleTypeOfBusinessError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

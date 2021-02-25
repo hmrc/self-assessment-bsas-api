@@ -81,34 +81,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      "request made is for the invalid type of business `SELF-EMPLOYMENT`" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "01")))
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleSelfEmploymentAdjustedError)
-      }
-
-      "request made is for the invalid type of business `uk-property-non-fhl` where fhl is expected" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "02")))
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe FORBIDDEN
-        result.json shouldBe Json.toJson(RuleIncorrectPropertyAdjusted)
-      }
-
       "validation error" when {
         def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {

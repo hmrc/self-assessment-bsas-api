@@ -23,10 +23,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.SubmitUkPropertyBsasConnector
 import v2.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
+import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 import v2.support.DesResponseMappingSupport
 
@@ -42,9 +41,7 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
 
     val result = for {
       desResponseWrapper <- EitherT(connector.submitPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <-
-        EitherT.fromEither[Future](validateSubmitUkPropertyBsasSuccessResponse(desResponseWrapper, Some(retrieveTypeOfBusiness(request.body))))
-    } yield mtdResponseWrapper
+    } yield desResponseWrapper
 
     result.value
   }
@@ -68,10 +65,4 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
     "SERVICE_UNAVAILABLE"           -> DownstreamError
   )
 
-  private def retrieveTypeOfBusiness(body: SubmitUKPropertyBsasRequestBody): TypeOfBusiness = {
-    (body: @unchecked) match {
-      case SubmitUKPropertyBsasRequestBody(Some(_), None) => TypeOfBusiness.`uk-property-non-fhl`
-      case SubmitUKPropertyBsasRequestBody(None, Some(_)) => TypeOfBusiness.`uk-property-fhl`
-    }
-  }
 }
