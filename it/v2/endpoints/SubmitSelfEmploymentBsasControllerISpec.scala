@@ -141,19 +141,18 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
-          (BAD_REQUEST, "INVALID_FIELD", FORBIDDEN, RuleNotSelfEmployment),
           (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
           (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
           (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
           (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
           (FORBIDDEN, "BVR_FAILURE_C55316", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C15320", FORBIDDEN, RuleTradingIncomeAllowanceClaimed),
-          (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleNotSelfEmployment),
-          (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RuleNotSelfEmployment),
+          (INTERNAL_SERVER_ERROR, "BVR_FAILURE_C55503", INTERNAL_SERVER_ERROR, DownstreamError),
+          (INTERNAL_SERVER_ERROR, "BVR_FAILURE_C55508", INTERNAL_SERVER_ERROR, DownstreamError),
+          (INTERNAL_SERVER_ERROR, "BVR_FAILURE_C55509", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleNotSelfEmployment),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "INVALID_MONETARY_FORMAT", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_PAYLOAD_REMOTE", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
