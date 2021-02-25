@@ -123,7 +123,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
            RuleBsasAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
            RuleTradingIncomeAllowanceClaimed | RuleNotSelfEmployment |
-           RuleErrorPropertyAdjusted | RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
+           RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

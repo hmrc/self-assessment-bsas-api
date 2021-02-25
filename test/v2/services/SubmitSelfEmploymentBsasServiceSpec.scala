@@ -57,14 +57,6 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      "des return success response with invalid type of business as `uk-property-non-fhl`" in new Test {
-
-        MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
-
-        await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleErrorPropertyAdjusted))
-      }
-
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
