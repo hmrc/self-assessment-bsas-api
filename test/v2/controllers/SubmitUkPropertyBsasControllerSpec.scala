@@ -273,7 +273,6 @@ class SubmitUkPropertyBsasControllerSpec
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleBsasAlreadyAdjusted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RuleSelfEmploymentAdjustedError, FORBIDDEN),
         (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
         (RuleResultingValueNotPermitted, FORBIDDEN)
       )
