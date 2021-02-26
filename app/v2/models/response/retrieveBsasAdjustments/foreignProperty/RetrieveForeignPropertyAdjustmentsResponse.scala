@@ -20,7 +20,6 @@ import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
 import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v2.models.domain.TypeOfBusiness
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.hateoas.{HateoasData, Link}
 

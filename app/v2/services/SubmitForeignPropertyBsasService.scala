@@ -23,10 +23,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.SubmitForeignPropertyBsasConnector
 import v2.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
+import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v2.models.response.SubmitForeignPropertyBsasResponse
 import v2.support.DesResponseMappingSupport
 
