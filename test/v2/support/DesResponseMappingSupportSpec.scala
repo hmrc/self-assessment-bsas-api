@@ -24,8 +24,8 @@ import v2.controllers.EndpointLogContext
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
 import v2.models.response.retrieveBsas.AccountingPeriod
+import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
@@ -210,41 +210,6 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     }
   }
 
-  "validateSubmitSelfEmploymentSuccessResponse" should {
-    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[SubmitSelfEmploymentBsasResponse] =
-      ResponseWrapper(
-        correlationId = "",
-        responseData = SubmitSelfEmploymentBsasResponse(
-          "",
-          typeOfBusiness
-        )
-      )
-    "return Left" when {
-      List(
-        TypeOfBusiness.`uk-property-fhl`,
-        TypeOfBusiness.`uk-property-non-fhl`,
-        TypeOfBusiness.`foreign-property`,
-        TypeOfBusiness.`foreign-property-fhl-eea`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateSubmitSelfEmploymentSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper("", RuleErrorPropertyAdjusted, None))
-          }
-        }
-      }
-    }
-    "return Right" when {
-      List(TypeOfBusiness.`self-employment`).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateSubmitSelfEmploymentSuccessResponse(input) shouldBe {
-            Right(input)
-          }
-        }
-      }
-    }
-  }
 
   "validateRetrieveUkPropertyBsasSuccessResponse" should {
     def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse] =

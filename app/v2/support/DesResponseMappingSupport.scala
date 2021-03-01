@@ -27,7 +27,7 @@ import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
-import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitSelfEmploymentBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
+import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -111,13 +111,6 @@ trait DesResponseMappingSupport {
       case _ => Right(desResponseWrapper)
     }
 
-  final def validateSubmitSelfEmploymentSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case SubmitSelfEmploymentBsasResponse(_, typeOfBusiness) if typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleErrorPropertyAdjusted, None))
-
-      case _ => Right(desResponseWrapper)
-    }
 
   final def validateRetrieveUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {

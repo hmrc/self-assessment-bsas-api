@@ -57,14 +57,6 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      "des return success response with invalid type of business as `uk-property-non-fhl`" in new Test {
-
-        MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
-
-        await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleErrorPropertyAdjusted))
-      }
-
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
@@ -79,18 +71,16 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVALID_PAYLOAD", DownstreamError),
-        ("INVALID_PAYLOAD_REMOTE", DownstreamError),
-        ("INVALID_FIELD", RuleNotSelfEmployment),
-        ("INVALID_MONETARY_FORMAT", DownstreamError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
         ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
+        ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleNotSelfEmployment),
         ("BVR_FAILURE_C55316", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C15320", RuleTradingIncomeAllowanceClaimed),
-        ("BVR_FAILURE_C55503", RuleNotSelfEmployment),
-        ("BVR_FAILURE_C55508", RuleNotSelfEmployment),
-        ("BVR_FAILURE_C55509", RuleNotSelfEmployment),
+        ("BVR_FAILURE_C55503", DownstreamError),
+        ("BVR_FAILURE_C55508", DownstreamError),
+        ("BVR_FAILURE_C55509", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
