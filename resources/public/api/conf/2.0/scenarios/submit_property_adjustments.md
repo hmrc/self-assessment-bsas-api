@@ -12,16 +12,8 @@
             <td><p>Simulates the scenario where no data could be found</p></td>
         </tr>
         <tr>
-            <td><p>UK_PROPERTY_FHL</p></td>
-            <td><p>Simulates a successful response for a FHL UK Property</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL</p></td>
-            <td><p>Simulates a successful response for a Non-FHL UK Property</p></td>
-        </tr>
-        <tr>
-            <td><p>NOT_UK_PROPERTY</p></td>
-            <td><p>Simulates the error response that may occur if a self-employment BSAS ID is used</p></td>
+            <td><p>UK_PROPERTY</p></td>
+            <td><p>Simulates a successful response for a UK Property</p></td>
         </tr>
         <tr>
             <td><p>SUMMARY_STATUS_INVALID</p></td>
