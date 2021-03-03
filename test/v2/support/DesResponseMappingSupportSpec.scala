@@ -25,7 +25,7 @@ import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.response.retrieveBsas.AccountingPeriod
-import v2.models.response.{SubmitForeignPropertyBsasResponse, SubmitUkPropertyBsasResponse, retrieveBsas, retrieveBsasAdjustments}
+import v2.models.response.{retrieveBsas, retrieveBsasAdjustments}
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
