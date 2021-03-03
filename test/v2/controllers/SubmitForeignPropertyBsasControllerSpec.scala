@@ -199,8 +199,6 @@ class SubmitForeignPropertyBsasControllerSpec
             (BsasIdFormatError, BAD_REQUEST),
             (NotFoundError, NOT_FOUND),
             (DownstreamError, INTERNAL_SERVER_ERROR),
-            (RuleSelfEmploymentAdjustedError, FORBIDDEN),
-            (RuleIncorrectPropertyAdjusted, FORBIDDEN),
             (RuleTypeOfBusinessError, FORBIDDEN),
             (RuleSummaryStatusInvalid, FORBIDDEN),
             (RuleSummaryStatusSuperseded, FORBIDDEN),

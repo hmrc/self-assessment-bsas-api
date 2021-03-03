@@ -23,10 +23,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.SubmitForeignPropertyBsasConnector
 import v2.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
+import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v2.models.response.SubmitForeignPropertyBsasResponse
 import v2.support.DesResponseMappingSupport
 
@@ -42,8 +41,6 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
 
     val result = for {
       desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <-
-        EitherT.fromEither[Future](validateSubmitForeignPropertyBsasSuccessResponse(desResponseWrapper, retrieveTypeOfBusiness(request.body)))
     } yield desResponseWrapper
 
     result.value
@@ -58,8 +55,8 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
     "ASC_ALREADY_SUPERSEDED"         -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"           -> RuleBsasAlreadyAdjusted,
     "UNALLOWABLE_VALUE"              -> RuleResultingValueNotPermitted,
-    "BVR_FAILURE_C55316"             -> RuleTypeOfBusinessError,
-    "BVR_FAILURE_C15320"             -> RuleTypeOfBusinessError,
+    "BVR_FAILURE_C55316"             -> DownstreamError,
+    "BVR_FAILURE_C15320"             -> DownstreamError,
     "BVR_FAILURE_C55503"             -> RuleOverConsolidatedExpensesThreshold,
     "BVR_FAILURE_C55508"             -> RulePropertyIncomeAllowanceClaimed,
     "BVR_FAILURE_C55509"             -> RulePropertyIncomeAllowanceClaimed,
@@ -69,12 +66,5 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
     "INVALID_CORRELATION_ID"         -> DownstreamError
   )
 
-  //The validator should make sure that it is always one or the other.
-  private def retrieveTypeOfBusiness(body: SubmitForeignPropertyBsasRequestBody): TypeOfBusiness = {
-    body match {
-      case SubmitForeignPropertyBsasRequestBody(Some(_), None) => TypeOfBusiness.`foreign-property`
-      case _ => TypeOfBusiness.`foreign-property-fhl-eea`
-    }
-  }
 }
 

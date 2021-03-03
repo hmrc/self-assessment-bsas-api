@@ -100,46 +100,6 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      "des return success response with invalid type of business as `self-employment`" in new Test {
-
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`self-employment`)))))
-
-        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
-      }
-
-      "des return success response with invalid type of business as `uk-property-fhl`" in new Test {
-
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)))))
-
-        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
-      }
-
-      "des return success response with invalid type of business as `uk-property-non-fhl`" in new Test {
-
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`)))))
-
-        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleSelfEmploymentAdjustedError))
-      }
-
-      "des return success response with invalid type of business as `foreign-property` where foreign-property-fhl-eea is expected" in new Test {
-
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`foreign-property`)))))
-
-        await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
-      }
-
-      "des return success response with invalid type of business as `foreign-property-fhl-eea` where foreign-property is expected" in new Test {
-
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request.copy(body = foreignPropertyBody))
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response.copy(typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`)))))
-
-        await(service.submitForeignPropertyBsas(request.copy(body = foreignPropertyBody))) shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectPropertyAdjusted))
-      }
-
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
@@ -159,8 +119,8 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
         ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
-        ("BVR_FAILURE_C55316", RuleTypeOfBusinessError),
-        ("BVR_FAILURE_C15320", RuleTypeOfBusinessError),
+        ("BVR_FAILURE_C55316", DownstreamError),
+        ("BVR_FAILURE_C15320", DownstreamError),
         ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
