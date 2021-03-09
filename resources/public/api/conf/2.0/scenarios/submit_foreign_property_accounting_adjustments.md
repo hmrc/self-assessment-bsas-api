@@ -20,18 +20,6 @@
     </tbody>
     <tbody>
         <tr>
-            <td><p>FOREIGN_PROPERTY_FHL_EEA</p></td>
-            <td><p>Simulates a successful response for an FHL EEA Foreign Property.</p></td>
-        </tr>
-    </tbody>
-    <tbody>
-        <tr>
-            <td><p>NOT_FOREIGN_PROPERTY</p></td>
-            <td><p>Simulates the error response that may occur if a non foreign property BSAS ID is used.</p></td>
-        </tr>
-    </tbody>
-    <tbody>
-        <tr>
             <td><p>SUMMARY_STATUS_INVALID</p></td>
             <td><p>Simulates the error response where the summary is invalid and cannot be adjusted.</p></td>
         </tr>
@@ -50,13 +38,13 @@
     </tbody>
     <tbody>
         <tr>
-            <td><p>FOREIGN_PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
+            <td><p>PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
             <td><p>Simulates the error response where the cumulative turnover exceeds the threshold for consolidated expenses.</p></td>
         </tr>
     </tbody>
     <tbody>
         <tr>
-            <td><p>FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
+            <td><p>PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
             <td><p>Simulates the error response where property income allowance has been claimed and therefore no further expenses can be claimed.</p></td>
         </tr>
     </tbody>
