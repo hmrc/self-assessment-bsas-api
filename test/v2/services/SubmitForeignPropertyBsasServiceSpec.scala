@@ -53,30 +53,6 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
       ))
     )
 
-  private val foreignPropertyBody =
-    SubmitForeignPropertyBsasRequestBody(
-      Some(Seq(ForeignProperty(
-        "FRA",
-        Some(ForeignPropertyIncome(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12)
-        )),
-        Some(ForeignPropertyExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          consolidatedExpenses = None
-        ))
-      ))),
-      foreignFhlEea = None
-    )
-
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
 
   private val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property-fhl-eea`)
