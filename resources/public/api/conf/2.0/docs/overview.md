@@ -4,5 +4,6 @@ The Self Assessment BSAS (Business Source Adjustable Summary) API allows a devel
 * generate an end of accounting period BSAS
 * request a specific BSAS
 * request the adjustments made to a specific self-employment BSAS
-* provide accounting adjustments against a specified BSAS
 * request the adjustments made to a specific UK property BSAS
+* request the adjustments made to a specific foreign property BSAS
+* provide accounting adjustments against a specified BSAS
