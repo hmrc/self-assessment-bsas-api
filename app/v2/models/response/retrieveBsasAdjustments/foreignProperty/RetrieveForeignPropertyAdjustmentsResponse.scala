@@ -18,7 +18,7 @@ package v2.models.response.retrieveBsasAdjustments.foreignProperty
 
 import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.hateoas.{HateoasData, Link}
@@ -31,32 +31,29 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
         case TypeOfBusiness.`foreign-property-fhl-eea` => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
-        case TypeOfBusiness.`foreign-property` => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.nonFhlSeqReads)
-        case _ => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
+        case TypeOfBusiness.`foreign-property`         => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.nonFhlSeqReads)
+        case _                                         => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
         // Reading as normal property, we are handling the error in the service layer.
       }
-    )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
+  )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
 
-  implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] = new OWrites[RetrieveForeignPropertyAdjustmentsResponse] {
-    override def writes(o: RetrieveForeignPropertyAdjustmentsResponse): JsObject =
+  implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] =
+    (o: RetrieveForeignPropertyAdjustmentsResponse) =>
       o.metadata.typeOfBusiness match {
-        case TypeOfBusiness.`foreign-property`         => {
+        case TypeOfBusiness.`foreign-property` =>
           Json.obj(
             "metadata"    -> o.metadata,
             "adjustments" -> o.adjustments
           )
-        }
-        case TypeOfBusiness.`foreign-property-fhl-eea` => {
+        case TypeOfBusiness.`foreign-property-fhl-eea` =>
           Json.obj(
             "metadata"    -> o.metadata,
             "adjustments" -> o.adjustments
           )
-        }
       }
-  }
 
   implicit object RetrieveForeignPropertyAdjustmentsHateoasFactory
-    extends HateoasLinksFactory[RetrieveForeignPropertyAdjustmentsResponse, RetrieveForeignPropertyAdjustmentsHateoasData] {
+      extends HateoasLinksFactory[RetrieveForeignPropertyAdjustmentsResponse, RetrieveForeignPropertyAdjustmentsHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveForeignPropertyAdjustmentsHateoasData): Seq[Link] = {
       import data._
 

@@ -22,22 +22,20 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"   %% "bootstrap-backend-play-26" % "3.2.0",
-    "uk.gov.hmrc"   %% "domain"            % "5.10.0-play-26",
-    "org.typelevel" %% "cats-core"         % "2.3.0",
-    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.6.0" cross CrossVersion.full),
-    "com.github.ghik" % "silencer-lib" % "1.6.0" % Provided cross CrossVersion.full,
-    "com.chuusai"   %% "shapeless"         % "2.4.0-M1",
-    "com.neovisionaries" % "nv-i18n" % "1.27"
+    "uk.gov.hmrc"        %% "bootstrap-backend-play-27" % "4.1.0",
+    "uk.gov.hmrc"        %% "domain"                    % "5.10.0-play-27",
+    "org.typelevel"      %% "cats-core"                 % "2.4.2",
+    "com.chuusai"        %% "shapeless"                 % "2.4.0-M1",
+    "com.neovisionaries" % "nv-i18n"                    % "1.27"
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(
     "org.scalatest"          %% "scalatest"          % "3.2.3"             % scope,
-    "com.vladsch.flexmark"   % "flexmark-all"        % "0.36.8"           % scope,
-    "org.scalacheck"         %% "scalacheck"         % "1.15.1"            % scope,
+    "com.vladsch.flexmark"   % "flexmark-all"        % "0.36.8"            % scope,
+    "org.scalacheck"         %% "scalacheck"         % "1.15.3"            % scope,
     "org.scalamock"          %% "scalamock"          % "5.1.0"             % scope,
     "com.typesafe.play"      %% "play-test"          % PlayVersion.current % scope,
-    "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3"             % scope,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3"             % scope,
     "com.github.tomakehurst" % "wiremock-jre8"       % "2.27.2"            % scope
   )
 }

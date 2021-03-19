@@ -39,4 +39,3 @@ object CodeCoverageSettings {
     ScoverageKeys.coverageHighlighting := true
   )
 }
-
