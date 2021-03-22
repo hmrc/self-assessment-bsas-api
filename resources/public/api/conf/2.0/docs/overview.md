@@ -1,5 +1,5 @@
-This API allows a developer to retrieve an adjustable summary calculation for a specified self-employment or UK property business, for a given accounting period. Here a developer can:
-
+This API allows a developer to retrieve a Self Assessment Business Source Adjustable Summary (BSAS) calculation for a specified self-employment, foreign or UK property business, for a given accounting period. 
+Here a developer can:
 * generate a list of BSAS
 * generate an end of accounting period BSAS
 * request a specific BSAS
