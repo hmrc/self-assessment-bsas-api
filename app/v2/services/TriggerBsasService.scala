@@ -51,7 +51,7 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesR
     "ACCOUNTING_PERIOD_NOT_ENDED"   -> RuleAccountingPeriodNotEndedError,
     "OBLIGATIONS_NOT_MET"           -> RulePeriodicDataIncompleteError,
     "NO_ACCOUNTING_PERIOD"          -> RuleNoAccountingPeriodError,
-    "NOT_FOUND"                     -> NotFoundError,
+    "NO_DATA_FOUND"                 -> NotFoundError,
     "INVALID_PAYLOAD"               -> DownstreamError,
     "SERVER_ERROR"                  -> DownstreamError,
     "SERVICE_UNAVAILABLE"           -> DownstreamError,
