@@ -35,8 +35,10 @@ object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil{
     if(o.isEmpty) JsObject.empty
     else filterNull(Json.obj(
     "incomeSourceType" -> "01",
-    "income" -> o.income,
-    "expenses" -> o.expenses,
-    "additions" -> o.additions
+      "adjustments" -> Json.obj(
+        "income" -> o.income,
+        "expenses" -> o.expenses,
+        "additions" -> o.additions
+      )
   ))
 }
