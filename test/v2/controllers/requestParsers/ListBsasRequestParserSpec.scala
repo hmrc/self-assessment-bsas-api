@@ -37,7 +37,6 @@ class ListBsasRequestParserSpec extends UnitSpec{
   private val typeOfBusinessFhl = "uk-property-fhl"
   private val typeOfBusinessFhlEea = "foreign-property-fhl-eea"
   private val typeOfBusinessForeign = "foreign-property"
-  private val incomeSourceId ="incomeSourceId"
   private val incomeSourceType ="incomeSourceType"
   private val businessId = "XAIS12345678901"
 
@@ -61,17 +60,17 @@ class ListBsasRequestParserSpec extends UnitSpec{
 
   "parse" when {
     "a valid businessId is provided" should {
-      "return a valid object if no typeOfBusiness is provided" in new Test {
+      "return a valid object if a typeOfBusiness is provided" in new Test {
         MockValidator.validate(inputWithBusinessIdAndTypeOfBusiness).returns(Nil)
 
         parser.parseRequest(inputWithBusinessIdAndTypeOfBusiness) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(businessId)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(businessId), Some("01")))
       }
-      "return a valid object if a typeOfBusiness is provided" in new Test {
+      "return a valid object if no typeOfBusiness is provided" in new Test {
         MockValidator.validate(inputWithBusinessId).returns(Nil)
 
         parser.parseRequest(inputWithBusinessId) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceId), Some(businessId)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(businessId), None))
       }
     }
 
@@ -81,7 +80,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataTwo).returns(Nil)
 
         parser.parseRequest(inputDataTwo) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`self-employment`.toIdentifierValue)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`self-employment`.toIdentifierValue)))
       }
 
       "return a valid object with uk-property-non-fhl" in new Test {
@@ -89,7 +88,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataThree).returns(Nil)
 
         parser.parseRequest(inputDataThree) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)))
       }
 
       "return a valid object with uk-property-fhl" in new Test {
@@ -97,7 +96,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataFour).returns(Nil)
 
         parser.parseRequest(inputDataFour) shouldBe
-          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), Some(incomeSourceType), Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)))
+          Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)))
       }
 
       "return a valid object with foreign-property-fhl-eea" in new Test {
@@ -106,7 +105,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
 
         parser.parseRequest(inputDataSix) shouldBe
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear),
-            Some(incomeSourceType), Some(TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue)))
+            None, Some(TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue)))
       }
 
       "return a valid object with foreign-property" in new Test {
@@ -115,7 +114,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
 
         parser.parseRequest(inputDataSeven) shouldBe
           Right(ListBsasRequest(Nino(nino), DesTaxYear.fromMtd(taxYear),
-            Some(incomeSourceType), Some(TypeOfBusiness.`foreign-property`.toIdentifierValue)))
+            None, Some(TypeOfBusiness.`foreign-property`.toIdentifierValue)))
       }
     }
 
