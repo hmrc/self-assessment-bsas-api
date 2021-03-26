@@ -18,7 +18,6 @@ package v2.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody.filterNull
 
 case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet]) {
   private def isEmpty: Boolean = nonFurnishedHolidayLet.isEmpty && furnishedHolidayLet.isEmpty
