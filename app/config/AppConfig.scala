@@ -40,6 +40,8 @@ trait AppConfig {
   def endpointsEnabled(version: String): Boolean
 
   def confidenceLevelConfig: ConfidenceLevelConfig
+
+  def mtdNrsProxyBaseUrl: String
 }
 
 @Singleton
@@ -50,6 +52,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
   val apiGatewayContext: String = config.getString("api.gateway.context")
+  val mtdNrsProxyBaseUrl: String = config.baseUrl("mtd-api-nrs-proxy")
 
   def apiStatus(version: String): String = config.getString(s"api.$version.status")
 
