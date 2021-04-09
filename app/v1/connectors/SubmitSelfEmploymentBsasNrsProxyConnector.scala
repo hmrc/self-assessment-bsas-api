@@ -30,6 +30,6 @@ class SubmitSelfEmploymentBsasNrsProxyConnector @Inject()(http: HttpClient,
   def submit[T](nino: String, taxYear:String, requestBody: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()
 
-    http.POST[SubmitSelfEmploymentBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/self-assessment-bsas-api", requestBody)
+    http.POST[SubmitSelfEmploymentBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", requestBody)
   }
 }

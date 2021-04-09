@@ -65,7 +65,7 @@ class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnectorSpec exte
 
         MockedHttpClient
           .post(
-            url = s"$baseUrl/mtd-api-nrs-proxy/$nino/self-assessment-bsas-api",
+            url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
             body = request
           ).returns(Future.successful((): Unit))
 
