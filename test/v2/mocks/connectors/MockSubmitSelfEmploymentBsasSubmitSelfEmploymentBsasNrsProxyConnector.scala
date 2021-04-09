@@ -19,14 +19,14 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.NrsProxyConnector
+import v2.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockNrsProxyConnector extends MockFactory {
+trait MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector extends MockFactory {
 
-  val mockNrsProxyConnector: NrsProxyConnector = mock[NrsProxyConnector]
+  val mockNrsProxyConnector: SubmitSelfEmploymentBsasNrsProxyConnector = mock[SubmitSelfEmploymentBsasNrsProxyConnector]
 
   object MockNrsProxyConnector{
     def submit(nino: String, taxYear: String, body: SubmitSelfEmploymentBsasRequestBody): CallHandler[Future[Unit]] = {

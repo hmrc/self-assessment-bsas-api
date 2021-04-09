@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package v2.services
+package v1.services
 
 import uk.gov.hmrc.domain.Nino
-import v2.mocks.connectors.MockNrsProxyConnector
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v1.mocks.connectors.MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector
+import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.Future
 
-class NrsProxyServiceSpec extends ServiceSpec {
+class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
 
-  trait Test extends MockNrsProxyConnector {
-    lazy val service = new NrsProxyService(mockNrsProxyConnector)
+  trait Test extends MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector {
+    lazy val service = new SubmitSelfEmploymentBsasNrsProxyService(mockNrsProxyConnector)
   }
 
   private val nino = Nino("AA123456A")

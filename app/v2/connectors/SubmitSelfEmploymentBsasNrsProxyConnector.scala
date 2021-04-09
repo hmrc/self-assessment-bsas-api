@@ -25,8 +25,8 @@ import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasReque
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NrsProxyConnector @Inject()(http: HttpClient,
-                                  appConfig: AppConfig) {
+class SubmitSelfEmploymentBsasNrsProxyConnector @Inject()(http: HttpClient,
+                                                          appConfig: AppConfig) {
 
   def submit[T](nino: String, taxYear:String, requestBody: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()

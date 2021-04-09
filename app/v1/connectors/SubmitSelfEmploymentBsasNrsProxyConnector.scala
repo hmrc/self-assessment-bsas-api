@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package v1.services
+package v1.connectors
 
+import config.AppConfig
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.NrsProxyConnector
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NrsProxyService @Inject()(val connector: NrsProxyConnector) {
+class SubmitSelfEmploymentBsasNrsProxyConnector @Inject()(http: HttpClient,
+                                                          appConfig: AppConfig) {
 
-  def submit(nino: String, taxYear: String, body: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
+  def submit[T](nino: String, taxYear:String, requestBody: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()
 
-    connector.submit(nino, taxYear, body)
+    http.POST[SubmitSelfEmploymentBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/self-assessment-bsas-api", requestBody)
   }
-
 }
