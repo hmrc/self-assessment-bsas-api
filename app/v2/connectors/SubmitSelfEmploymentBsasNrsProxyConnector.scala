@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubmitSelfEmploymentBsasNrsProxyConnector @Inject()(http: HttpClient,
                                                           appConfig: AppConfig) {
 
-  def submit[T](nino: String, taxYear:String, requestBody: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+  def submit[T](nino: String, requestBody: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()
 
     http.POST[SubmitSelfEmploymentBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", requestBody)

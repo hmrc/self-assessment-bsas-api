@@ -69,7 +69,7 @@ class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnectorSpec exte
             body = request
           ).returns(Future.successful((): Unit))
 
-        await(connector.submit(nino, "2021-22", request)) shouldBe ((): Unit)
+        await(connector.submit(nino, request)) shouldBe ((): Unit)
       }
     }
   }

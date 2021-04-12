@@ -29,9 +29,9 @@ trait MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector exte
   val mockNrsProxyConnector: SubmitSelfEmploymentBsasNrsProxyConnector = mock[SubmitSelfEmploymentBsasNrsProxyConnector]
 
   object MockNrsProxyConnector{
-    def submit(nino: String, taxYear: String, body: SubmitSelfEmploymentBsasRequestBody): CallHandler[Future[Unit]] = {
-      (mockNrsProxyConnector.submit(_: String, _: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
-       .expects(nino, *, *, *, *)
+    def submit(nino: String): CallHandler[Future[Unit]] = {
+      (mockNrsProxyConnector.submit(_: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
+       .expects(nino, *, *, *)
     }
 }
 }

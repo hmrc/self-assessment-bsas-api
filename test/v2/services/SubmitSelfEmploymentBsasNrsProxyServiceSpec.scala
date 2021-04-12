@@ -35,10 +35,10 @@ class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
     "call the Nrs Proxy connector" when {
       "the connector is valid" in new Test {
 
-        MockNrsProxyConnector.submit(nino.toString(), "2021-22", SubmitSelfEmploymentBsasRequestBody(None, None, None))
+        MockNrsProxyConnector.submit(nino.toString())
           .returns(Future.successful((): Unit))
 
-        service.submit(nino.toString(), "2021-22", SubmitSelfEmploymentBsasRequestBody(None, None, None))
+        service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None))
       }
     }
   }
