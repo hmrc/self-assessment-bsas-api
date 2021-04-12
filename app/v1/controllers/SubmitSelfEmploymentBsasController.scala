@@ -25,7 +25,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.{CurrentDateTime, IdGenerator, Logging}
 import v1.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -40,11 +40,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
                                                    val appConfig: AppConfig,
+                                                   nrsService: SubmitSelfEmploymentBsasNrsProxyService,
                                                    requestParser: SubmitSelfEmploymentBsasDataParser,
                                                    service: SubmitSelfEmploymentBsasService,
                                                    hateoasFactory: HateoasFactory,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
+                                                   dateTime: CurrentDateTime,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
@@ -67,10 +69,17 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
       val rawData = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+
+      val nrsId = idGenerator.getUid
+      val submissionTimestamp = dateTime.getDateTime
+
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- {
+            //Submit asynchronously to NRS
+            nrsService.submit(parsedRequest, nrsId, submissionTimestamp)
+            //Submit Return to ETMP
             if (featureSwitch.isV1R5Enabled) {
               EitherT(service.submitSelfEmploymentBsasV1R5(parsedRequest))
             }

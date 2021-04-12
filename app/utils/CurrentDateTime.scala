@@ -16,14 +16,11 @@
 
 package utils
 
-import java.util.UUID
-
 import javax.inject.{Inject, Singleton}
+import org.joda.time.{DateTime, DateTimeZone}
 
 @Singleton
-class IdGenerator @Inject()() {
+class CurrentDateTime @Inject()() {
 
-  def getUid: String = UUID.randomUUID().toString
-
-  def generateCorrelationId: String = UUID.randomUUID().toString
+  def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
 }
