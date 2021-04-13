@@ -64,6 +64,7 @@ class RetrieveForeignPropertyAdjustmentsController @Inject()(
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          _ <- EitherT(nrsService.submit)
           response <- EitherT(service.retrieveForeignPropertyAdjustments(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(response.responseData,
