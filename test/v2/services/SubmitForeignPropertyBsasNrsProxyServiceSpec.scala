@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package v1.services
+package v2.services
 
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
-import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v2.mocks.connectors.MockSubmitForeignPropertyBsasNrsProxyConnector
+import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
 import scala.concurrent.Future
 
-class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
+class SubmitForeignPropertyBsasNrsProxyServiceSpec extends ServiceSpec {
 
-  trait Test extends MockSubmitSelfEmploymentBsasNrsProxyConnector {
-    lazy val service = new SubmitSelfEmploymentBsasNrsProxyService(mockNrsProxyConnector)
+  trait Test extends MockSubmitForeignPropertyBsasNrsProxyConnector {
+    lazy val service = new SubmitForeignPropertyBsasNrsProxyService(mockNrsProxyConnector)
   }
 
   private val nino = Nino("AA123456A")
@@ -38,7 +38,7 @@ class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
         MockNrsProxyConnector.submit(nino.toString())
           .returns(Future.successful((): Unit))
 
-        service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None))
+        service.submit(nino.toString(), SubmitForeignPropertyBsasRequestBody(None, None))
       }
     }
   }
