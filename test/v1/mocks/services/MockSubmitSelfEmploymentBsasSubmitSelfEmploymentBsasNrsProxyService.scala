@@ -19,19 +19,17 @@ package v1.mocks.services
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.UserRequest
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
-import v1.models.response.NrsResponse
 import v1.services.SubmitSelfEmploymentBsasNrsProxyService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitSelfEmploymentBsasNrsProxyService extends MockFactory {
+trait MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyService extends MockFactory {
 
   val mockSubmitSelfEmploymentBsasNrsProxyService: SubmitSelfEmploymentBsasNrsProxyService = mock[SubmitSelfEmploymentBsasNrsProxyService]
 
   object MockSubmitSelfEmploymentBsasNrsProxyService {
-    def submit(nino: String, body: SubmitSelfEmploymentBsasRequestBody): CallHandler[Future[Option[NrsResponse]]] = {
+    def submit(nino: String): CallHandler[Future[Unit]] = {
       (mockSubmitSelfEmploymentBsasNrsProxyService
         .submit(_: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
         .expects(nino, *, *, *)

@@ -25,7 +25,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{CurrentDateTime, IdGenerator, Logging}
+import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -46,7 +46,6 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
                                                    hateoasFactory: HateoasFactory,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
-                                                   dateTime: CurrentDateTime,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController

@@ -23,7 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitSelfEmploymentBsasService}
+import v2.mocks.services._
 import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
@@ -42,6 +42,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentRequestParser
     with MockSubmitSelfEmploymentBsasService
+    with MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator {
@@ -56,6 +57,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
       service = mockService,
+      nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
@@ -70,7 +72,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
-  private val nino          = "AA123456A"
+  private val nino = "AA123456A"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -114,6 +116,10 @@ class SubmitSelfEmploymentBsasControllerSpec
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
           .returns(Right(request))
+
+        MockSubmitSelfEmploymentBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(request)
@@ -235,6 +241,10 @@ class SubmitSelfEmploymentBsasControllerSpec
           MockSubmitSelfEmploymentBsasDataParser
             .parse(rawRequest)
             .returns(Right(request))
+
+          MockSubmitSelfEmploymentBsasNrsProxyService
+            .submit(nino)
+            .returns(Future.successful(Unit))
 
           MockSubmitSelfEmploymentBsasService
             .submitSelfEmploymentBsas(request)
