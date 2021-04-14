@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package v1.services
+package v2.mocks.connectors
 
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.SubmitUKPropertyBsasNrsproxyConnector
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
+import v2.connectors.SubmitUKPropertyBsasNrsproxyConnector
+import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
+trait MockSubmitUKPropertyBsasNrsproxyConnector extends MockFactory {
 
-@Singleton
-class SubmitUKPropertyBsasNrsProxyService @Inject()(val connector: SubmitUKPropertyBsasNrsproxyConnector) {
+  val mockNrsProxyConnector: SubmitUKPropertyBsasNrsproxyConnector = mock[SubmitUKPropertyBsasNrsproxyConnector]
 
-  def submit(nino: String, body: SubmitUKPropertyBsasRequestBody)(implicit hc:HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-
-    connector.submit(nino, body)
+  object MockNrsProxyConnector {
+    def submit(nino: String): CallHandler[Future[Unit]] = {
+      (mockNrsProxyConnector.submit(_: String, _: SubmitUKPropertyBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(nino, *, *, *)
+    }
   }
 }

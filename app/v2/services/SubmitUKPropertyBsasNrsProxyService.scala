@@ -16,7 +16,7 @@
 
 package v2.services
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.SubmitUKPropertyBsasNrsproxyConnector
 import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody

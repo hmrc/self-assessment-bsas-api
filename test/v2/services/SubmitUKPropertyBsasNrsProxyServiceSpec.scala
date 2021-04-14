@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.services
+package v2.services
 
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
+import v2.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
+import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.Future
 

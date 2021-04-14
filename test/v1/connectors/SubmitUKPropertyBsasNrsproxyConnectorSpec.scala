@@ -16,12 +16,13 @@
 
 package v1.connectors
 
-import java.util.concurrent.Future
 
 import mocks.MockAppConfig
 import utils.DesTaxYear
 import v1.mocks.MockHttpClient
 import v1.models.request.submitBsas._
+
+import scala.concurrent.Future
 
 class SubmitUKPropertyBsasNrsproxyConnectorSpec extends ConnectorSpec {
 
