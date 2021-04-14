@@ -36,7 +36,7 @@ class SubmitUKPropertyBsasNrsProxyServiceSpec extends ServiceSpec {
         MockNrsProxyConnector.submit(nino.toString())
         .returns(Future.successful((): Unit))
 
-        await(service.submit(nino.toString(), SubmitUKPropertyBsasRequestBody(None, None))) shouldBe ()
+        await(service.submit(nino.toString(), SubmitUKPropertyBsasRequestBody(None, None))) shouldBe (())
       }
       "the connector fails" in new Test {
         MockNrsProxyConnector.submit(nino.toString())
