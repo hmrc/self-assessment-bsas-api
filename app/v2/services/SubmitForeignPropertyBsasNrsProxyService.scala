@@ -21,11 +21,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.SubmitForeignPropertyBsasNrsProxyConnector
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class SubmitForeignPropertyBsasNrsProxyService @Inject()(val connector: SubmitForeignPropertyBsasNrsProxyConnector) {
 
-  def submit(nino: String, body: SubmitForeignPropertyBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
+  def submit(nino: String, body: SubmitForeignPropertyBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
 
     connector.submit(nino, body)
   }
