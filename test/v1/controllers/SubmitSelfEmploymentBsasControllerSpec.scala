@@ -44,6 +44,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentRequestParser
     with MockSubmitSelfEmploymentBsasService
+    with MockSubmitSelfEmploymentBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator
@@ -59,6 +60,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
       service = mockService,
+      nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
@@ -69,14 +71,15 @@ class SubmitSelfEmploymentBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
-                                                                                         |v1r5.enabled = $v1r5Config
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
+      s"""
+         |v1r5.enabled = $v1r5Config
       """.stripMargin))))
   }
 
   import v1.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
-  private val nino          = "AA123456A"
+  private val nino = "AA123456A"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -121,6 +124,10 @@ class SubmitSelfEmploymentBsasControllerSpec
           .parse(rawRequest)
           .returns(Right(request))
 
+        MockSubmitSelfEmploymentBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
+
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
@@ -146,6 +153,10 @@ class SubmitSelfEmploymentBsasControllerSpec
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
           .returns(Right(request))
+
+        MockSubmitSelfEmploymentBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsasV1R5(request)
@@ -268,6 +279,10 @@ class SubmitSelfEmploymentBsasControllerSpec
             .parse(rawRequest)
             .returns(Right(request))
 
+          MockSubmitSelfEmploymentBsasNrsProxyService
+            .submit(nino)
+            .returns(Future.successful(Unit))
+
           MockSubmitSelfEmploymentBsasService
             .submitSelfEmploymentBsas(request)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
@@ -306,6 +321,10 @@ class SubmitSelfEmploymentBsasControllerSpec
           MockSubmitSelfEmploymentBsasDataParser
             .parse(rawRequest)
             .returns(Right(request))
+
+          MockSubmitSelfEmploymentBsasNrsProxyService
+            .submit(nino)
+            .returns(Future.successful(Unit))
 
           MockSubmitSelfEmploymentBsasService
             .submitSelfEmploymentBsasV1R5(request)

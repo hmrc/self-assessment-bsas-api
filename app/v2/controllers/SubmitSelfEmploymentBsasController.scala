@@ -29,9 +29,9 @@ import v2.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v2.hateoas.HateoasFactory
 import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
+import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
 import v2.models.response.SubmitSelfEmploymentBsasHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasService}
+import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasNrsProxyService, SubmitSelfEmploymentBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +40,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
                                                    val lookupService: MtdIdLookupService,
                                                    requestParser: SubmitSelfEmploymentBsasDataParser,
                                                    service: SubmitSelfEmploymentBsasService,
+                                                   nrsService: SubmitSelfEmploymentBsasNrsProxyService,
                                                    hateoasFactory: HateoasFactory,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
@@ -66,7 +67,12 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- EitherT(service.submitSelfEmploymentBsas(parsedRequest))
+          response      <- {
+            //Submit asynchronously to NRS
+            nrsService.submit(nino, request.body.as[SubmitSelfEmploymentBsasRequestBody])
+            //Submit Return to ETMP
+            EitherT(service.submitSelfEmploymentBsas(parsedRequest))
+          }
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(
               response.responseData,

@@ -30,9 +30,9 @@ import v1.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
+import v1.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
 import v1.models.response.SubmitSelfEmploymentBsasHateoasData
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasNrsProxyService, SubmitSelfEmploymentBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
                                                    val appConfig: AppConfig,
+                                                   nrsService: SubmitSelfEmploymentBsasNrsProxyService,
                                                    requestParser: SubmitSelfEmploymentBsasDataParser,
                                                    service: SubmitSelfEmploymentBsasService,
                                                    hateoasFactory: HateoasFactory,
@@ -67,10 +68,14 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
       val rawData = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- {
+            //Submit asynchronously to NRS
+            nrsService.submit(nino, request.body.as[SubmitSelfEmploymentBsasRequestBody])
+            //Submit Return to ETMP
             if (featureSwitch.isV1R5Enabled) {
               EitherT(service.submitSelfEmploymentBsasV1R5(parsedRequest))
             }

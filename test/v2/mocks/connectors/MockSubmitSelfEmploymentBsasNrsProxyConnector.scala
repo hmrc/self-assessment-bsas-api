@@ -24,7 +24,7 @@ import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasReque
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector extends MockFactory {
+trait MockSubmitSelfEmploymentBsasNrsProxyConnector extends MockFactory {
 
   val mockNrsProxyConnector: SubmitSelfEmploymentBsasNrsProxyConnector = mock[SubmitSelfEmploymentBsasNrsProxyConnector]
 

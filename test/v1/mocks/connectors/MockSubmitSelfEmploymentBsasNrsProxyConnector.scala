@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package v1.services
+package v1.mocks.connectors
 
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class SubmitSelfEmploymentBsasNrsProxyService @Inject()(val connector: SubmitSelfEmploymentBsasNrsProxyConnector) {
+trait MockSubmitSelfEmploymentBsasNrsProxyConnector extends MockFactory {
 
-  def submit(nino: String, body: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+  val mockNrsProxyConnector: SubmitSelfEmploymentBsasNrsProxyConnector = mock[SubmitSelfEmploymentBsasNrsProxyConnector]
 
-    connector.submit(nino, body)
+  object MockNrsProxyConnector{
+    def submit(nino: String): CallHandler[Future[Unit]] = {
+      (mockNrsProxyConnector.submit(_: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(nino, *, *, *)
+    }
   }
-
 }

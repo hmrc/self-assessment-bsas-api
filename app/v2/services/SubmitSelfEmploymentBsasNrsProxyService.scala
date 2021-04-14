@@ -21,12 +21,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 import v2.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NrsProxyService @Inject()(val connector: SubmitSelfEmploymentBsasNrsProxyConnector) {
+class SubmitSelfEmploymentBsasNrsProxyService @Inject()(val connector: SubmitSelfEmploymentBsasNrsProxyConnector) {
 
-  def submit(nino: String, body: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Unit = {
+  def submit(nino: String, body: SubmitSelfEmploymentBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
 
     connector.submit(nino, body)
   }
