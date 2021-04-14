@@ -16,13 +16,14 @@
 
 package v2.services
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.SubmitForeignPropertyBsasNrsProxyConnector
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class SubmitForeignPropertyBsasNrsProxyService @Inject()(val connector: SubmitForeignPropertyBsasNrsProxyConnector) {
 
   def submit(nino: String, body: SubmitForeignPropertyBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {

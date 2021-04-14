@@ -17,12 +17,13 @@
 package v2.connectors
 
 import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class SubmitForeignPropertyBsasNrsProxyConnector @Inject()(http: HttpClient,
                                                           appConfig: AppConfig) {
 
