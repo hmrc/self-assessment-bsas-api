@@ -17,14 +17,14 @@
 package v1.services
 
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.connectors.MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector
+import v1.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
 import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.Future
 
-class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
+class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
 
-  trait Test extends MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnector {
+  trait Test extends MockSubmitSelfEmploymentBsasNrsProxyConnector {
     lazy val service = new SubmitSelfEmploymentBsasNrsProxyService(mockNrsProxyConnector)
   }
 

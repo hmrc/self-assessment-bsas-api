@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package v1.mocks.services
+package v2.mocks.connectors
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
-import v1.services.SubmitSelfEmploymentBsasNrsProxyService
+import v2.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
+import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyService extends MockFactory {
+trait MockSubmitSelfEmploymentBsasNrsProxyConnector extends MockFactory {
 
-  val mockSubmitSelfEmploymentBsasNrsProxyService: SubmitSelfEmploymentBsasNrsProxyService = mock[SubmitSelfEmploymentBsasNrsProxyService]
+  val mockNrsProxyConnector: SubmitSelfEmploymentBsasNrsProxyConnector = mock[SubmitSelfEmploymentBsasNrsProxyConnector]
 
-  object MockSubmitSelfEmploymentBsasNrsProxyService {
+  object MockNrsProxyConnector{
     def submit(nino: String): CallHandler[Future[Unit]] = {
-      (mockSubmitSelfEmploymentBsasNrsProxyService
-        .submit(_: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(nino, *, *, *)
+      (mockNrsProxyConnector.submit(_: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
+       .expects(nino, *, *, *)
     }
-  }
-
+}
 }

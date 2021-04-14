@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package v2.connectors
+package v1.connectors
 
 import mocks.MockAppConfig
 import utils.DesTaxYear
-import v2.mocks.MockHttpClient
-import v2.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
+import v1.mocks.MockHttpClient
+import v1.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
 
 import scala.concurrent.Future
 
-class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
+class SubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 

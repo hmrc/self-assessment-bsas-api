@@ -42,7 +42,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentRequestParser
     with MockSubmitSelfEmploymentBsasService
-    with MockSubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyService
+    with MockSubmitSelfEmploymentBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator {
