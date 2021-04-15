@@ -29,7 +29,7 @@ import v2.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v2.hateoas.HateoasFactory
 import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
+import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v2.models.response.SubmitUkPropertyBsasHateoasData
 import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService, SubmitUKPropertyBsasNrsProxyService}
 
