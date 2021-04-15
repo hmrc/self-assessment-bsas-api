@@ -74,7 +74,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response <- {
             //Submit asynchronously to NRS
-            nrsService.submit(nino, request.body.as[SubmitUKPropertyBsasRequestBody])
+            nrsService.submit(nino, parsedRequest.body)
             //Submit Return to ETMP
             if (featureSwitch.isV1R5Enabled) {
               EitherT(service.submitPropertyBsasV1R5(parsedRequest))
