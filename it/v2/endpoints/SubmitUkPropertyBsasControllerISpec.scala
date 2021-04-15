@@ -23,7 +23,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
 
 class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -32,7 +32,16 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     val nino             = "AA123456A"
     val bsasId           = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
-    val correlationId    = "X-123"
+
+    val nrsSuccess: JsValue = Json.parse(
+      s"""
+         |{
+         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
+         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
+         |  "timestamp":""
+         |}
+         """.stripMargin
+    )
 
     def setupStubs(): StubMapping
 
@@ -69,6 +78,23 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
+          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "04")))
+        }
+
+        val result: WSResponse = await(request().post(requestBody))
+        result.status shouldBe OK
+        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        result.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "a valid request is made with a failed nrs call" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "04")))
         }
 

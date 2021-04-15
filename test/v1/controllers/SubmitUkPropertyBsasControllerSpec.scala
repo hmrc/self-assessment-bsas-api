@@ -25,7 +25,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockSubmitUkPropertyRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitUkPropertyBsasService}
+import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.TypeOfBusiness
 import v1.models.errors._
@@ -45,6 +45,7 @@ class SubmitUkPropertyBsasControllerSpec
     with MockAppConfig
     with MockSubmitUkPropertyRequestParser
     with MockSubmitUkPropertyBsasService
+    with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator {
@@ -60,6 +61,7 @@ class SubmitUkPropertyBsasControllerSpec
       appConfig = mockAppConfig,
       requestParser = mockRequestParser,
       service = mockService,
+      nrsService = mockSubmitUKPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
@@ -69,15 +71,16 @@ class SubmitUkPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
-                                                                                          |v1r5.enabled = $v1r5Config
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
+      s"""
+         |v1r5.enabled = $v1r5Config
       """.stripMargin))))
 
   }
 
   import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
-  private val nino          = "AA123456A"
+  private val nino   = "AA123456A"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -124,6 +127,10 @@ class SubmitUkPropertyBsasControllerSpec
           .parse(fhlRawRequest)
           .returns(Right(fhlRequest))
 
+        MockSubmitUKPropertyBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
+
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(fhlRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
@@ -147,6 +154,10 @@ class SubmitUkPropertyBsasControllerSpec
         MockSubmitUkPropertyBsasDataParser
           .parse(nonFhlRawRequest)
           .returns(Right(nonFhlRequest))
+
+        MockSubmitUKPropertyBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(nonFhlRequest)
@@ -174,6 +185,10 @@ class SubmitUkPropertyBsasControllerSpec
           .parse(fhlRawRequest)
           .returns(Right(fhlRequest))
 
+        MockSubmitUKPropertyBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
+
         MockSubmitUkPropertyBsasService
           .submitPropertyBsasV1R5(fhlRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
@@ -197,6 +212,10 @@ class SubmitUkPropertyBsasControllerSpec
         MockSubmitUkPropertyBsasDataParser
           .parse(nonFhlRawRequest)
           .returns(Right(nonFhlRequest))
+
+        MockSubmitUKPropertyBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsasV1R5(nonFhlRequest)
@@ -306,6 +325,10 @@ class SubmitUkPropertyBsasControllerSpec
             .parse(fhlRawRequest)
             .returns(Right(fhlRequest))
 
+          MockSubmitUKPropertyBsasNrsProxyService
+            .submit(nino)
+            .returns(Future.successful(Unit))
+
           MockSubmitUkPropertyBsasService
             .submitPropertyBsas(fhlRequest)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
@@ -345,6 +368,10 @@ class SubmitUkPropertyBsasControllerSpec
           MockSubmitUkPropertyBsasDataParser
             .parse(fhlRawRequest)
             .returns(Right(fhlRequest))
+
+          MockSubmitUKPropertyBsasNrsProxyService
+            .submit(nino)
+            .returns(Future.successful(Unit))
 
           MockSubmitUkPropertyBsasService
             .submitPropertyBsasV1R5(fhlRequest)
