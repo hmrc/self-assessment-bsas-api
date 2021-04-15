@@ -30,9 +30,9 @@ import v1.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v1.models.request.submitBsas.SubmitUkPropertyBsasRawData
+import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
 import v1.models.response.SubmitUkPropertyBsasHateoasData
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService,  SubmitUKPropertyBsasNrsProxyService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                val lookupService: MtdIdLookupService,
                                                val appConfig: AppConfig,
+                                               nrsService: SubmitUKPropertyBsasNrsProxyService,
                                                requestParser: SubmitUkPropertyBsasDataParser,
                                                service: SubmitUkPropertyBsasService,
                                                hateoasFactory: HateoasFactory,
@@ -67,10 +68,14 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
       val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response <- {
+            //Submit asynchronously to NRS
+            nrsService.submit(nino, request.body.as[SubmitUKPropertyBsasRequestBody])
+            //Submit Return to ETMP
             if (featureSwitch.isV1R5Enabled) {
               EitherT(service.submitPropertyBsasV1R5(parsedRequest))
             }

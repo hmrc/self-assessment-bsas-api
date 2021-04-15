@@ -29,15 +29,16 @@ import v2.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v2.hateoas.HateoasFactory
 import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
+import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUKPropertyBsasRequestBody}
 import v2.models.response.SubmitUkPropertyBsasHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService}
+import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService, SubmitUKPropertyBsasNrsProxyService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                val lookupService: MtdIdLookupService,
+                                               nrsService: SubmitUKPropertyBsasNrsProxyService,
                                                requestParser: SubmitUkPropertyBsasDataParser,
                                                service: SubmitUkPropertyBsasService,
                                                hateoasFactory: HateoasFactory,
@@ -63,10 +64,16 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
           s"with CorrelationId: $correlationId")
 
       val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- EitherT(service.submitPropertyBsas(parsedRequest))
+          response      <- {
+            //Submit asynchronously to NRS
+            nrsService.submit(nino, request.body.as[SubmitUKPropertyBsasRequestBody])
+            //Submit Return to ETMP
+            EitherT(service.submitPropertyBsas(parsedRequest))
+          }
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(
