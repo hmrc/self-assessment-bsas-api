@@ -258,6 +258,10 @@ class SubmitUkPropertyBsasControllerSpec
             .parse(fhlRawRequest)
             .returns(Right(fhlRequest))
 
+          MockSubmitUKPropertyBsasNrsProxyService
+            .submit(nino)
+            .returns(Future.successful(Unit))
+
           MockSubmitUkPropertyBsasService
             .submitPropertyBsas(fhlRequest)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
