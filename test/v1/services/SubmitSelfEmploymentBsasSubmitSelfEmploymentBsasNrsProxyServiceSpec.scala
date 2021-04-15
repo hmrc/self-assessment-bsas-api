@@ -22,7 +22,7 @@ import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasReque
 
 import scala.concurrent.Future
 
-class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
+class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
 
   trait Test extends MockSubmitSelfEmploymentBsasNrsProxyConnector {
     lazy val service = new SubmitSelfEmploymentBsasNrsProxyService(mockNrsProxyConnector)

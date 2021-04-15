@@ -17,15 +17,15 @@
 package v2.services
 
 import uk.gov.hmrc.domain.Nino
-import v2.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v2.mocks.connectors.MockSubmitForeignPropertyBsasNrsProxyConnector
+import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
 import scala.concurrent.Future
 
-class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
+class SubmitForeignPropertyBsasNrsProxyServiceSpec extends ServiceSpec {
 
-  trait Test extends MockSubmitSelfEmploymentBsasNrsProxyConnector {
-    lazy val service = new SubmitSelfEmploymentBsasNrsProxyService(mockNrsProxyConnector)
+  trait Test extends MockSubmitForeignPropertyBsasNrsProxyConnector {
+    lazy val service = new SubmitForeignPropertyBsasNrsProxyService(mockNrsProxyConnector)
   }
 
   private val nino = Nino("AA123456A")
@@ -36,13 +36,13 @@ class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
       "the connector is valid" in new Test {      MockNrsProxyConnector.submit(nino.toString())
         .returns(Future.successful((): Unit))
 
-        await(service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None))) shouldBe (())
+        await(service.submit(nino.toString(), SubmitForeignPropertyBsasRequestBody(None, None))) shouldBe (())
       }
       "the connector fails" in new Test {      MockNrsProxyConnector.submit(nino.toString())
         .returns(Future.failed(new Exception()))
 
         assertThrows[Exception](
-        await(service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None)))
+          await(service.submit(nino.toString(), SubmitForeignPropertyBsasRequestBody(None, None)))
         )
       }
     }

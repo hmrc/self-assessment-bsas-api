@@ -37,7 +37,6 @@ class ListBsasRequestParserSpec extends UnitSpec{
   private val typeOfBusinessFhl = "uk-property-fhl"
   private val typeOfBusinessFhlEea = "foreign-property-fhl-eea"
   private val typeOfBusinessForeign = "foreign-property"
-  private val incomeSourceType ="incomeSourceType"
   private val businessId = "XAIS12345678901"
 
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
