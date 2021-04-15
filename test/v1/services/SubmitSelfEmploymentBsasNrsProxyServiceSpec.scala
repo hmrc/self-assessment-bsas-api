@@ -22,7 +22,7 @@ import v1.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasReque
 
 import scala.concurrent.Future
 
-class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
+class SubmitSelfEmploymentBsasNrsProxyServiceSpec extends ServiceSpec {
 
   trait Test extends MockSubmitSelfEmploymentBsasNrsProxyConnector {
     lazy val service = new SubmitSelfEmploymentBsasNrsProxyService(mockNrsProxyConnector)
@@ -34,11 +34,18 @@ class SubmitSelfEmploymentBsasSubmitSelfEmploymentBsasNrsProxyServiceSpec extend
   "NrsProxyService" should {
     "call the Nrs Proxy connector" when {
       "the connector is valid" in new Test {
-
         MockNrsProxyConnector.submit(nino.toString())
-          .returns(Future.successful((): Unit))
+        .returns(Future.successful((): Unit))
 
-        service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None))
+        await(service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None))) shouldBe (())
+      }
+      "the connector fails" in new Test {
+        MockNrsProxyConnector.submit(nino.toString())
+        .returns(Future.failed(new Exception()))
+
+        assertThrows[Exception](
+          await(service.submit(nino.toString(), SubmitSelfEmploymentBsasRequestBody(None, None, None)))
+        )
       }
     }
   }
