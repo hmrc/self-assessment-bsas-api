@@ -396,12 +396,13 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
-      "any valid foreignProperty request is made witha failed nrs call" in new Test {
+      "any valid foreignProperty request is made with a failed nrs call" in new Test {
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
