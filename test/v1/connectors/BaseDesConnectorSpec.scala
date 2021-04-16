@@ -47,7 +47,7 @@ class BaseDesConnectorSpec extends ConnectorSpec {
     }
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnv returns "des-environment"
   }
 
   "post" must {

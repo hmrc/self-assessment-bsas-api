@@ -19,7 +19,7 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DesOutcome, TriggerBsasConnector}
+import v2.connectors.{DownstreamOutcome, TriggerBsasConnector}
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
@@ -31,7 +31,7 @@ trait MockTriggerBsasConnector extends MockFactory {
 
   object MockTriggerBsasConnector {
 
-    def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[DesOutcome[TriggerBsasResponse]]] = {
+    def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[DownstreamOutcome[TriggerBsasResponse]]] = {
       (mockConnector
         .triggerBsas(_: TriggerBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

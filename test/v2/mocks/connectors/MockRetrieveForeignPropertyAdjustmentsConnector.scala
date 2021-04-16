@@ -19,7 +19,7 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DesOutcome, RetrieveForeignPropertyAdjustmentsConnector}
+import v2.connectors.{DownstreamOutcome, RetrieveForeignPropertyAdjustmentsConnector}
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 
@@ -31,7 +31,7 @@ trait MockRetrieveForeignPropertyAdjustmentsConnector extends MockFactory {
 
   object MockRetrieveForeignPropertyAdjustmentsConnector {
     def retrieveForeignPropertyAdjustments(requestData: RetrieveAdjustmentsRequestData):
-    CallHandler[Future[DesOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
+    CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
       (mockConnector
         .retrieveForeignPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

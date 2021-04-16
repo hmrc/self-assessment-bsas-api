@@ -27,12 +27,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class TriggerBsasConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDesConnector {
+                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def triggerBsas(request: TriggerBsasRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[TriggerBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 
@@ -40,7 +40,7 @@ class TriggerBsasConnector @Inject()(val http: HttpClient,
 
     post(
       body = request.body,
-      DesUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+      DownstreamUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
     )
   }
 }

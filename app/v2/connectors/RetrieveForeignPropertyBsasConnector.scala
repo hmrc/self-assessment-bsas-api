@@ -28,12 +28,12 @@ import v2.connectors.httpparsers.StandardDesHttpParser._
 
 @Singleton
 class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                     val appConfig: AppConfig) extends BaseDesConnector {
+                                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[RetrieveForeignPropertyBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
     val nino = request.nino.nino
     val bsasId = request.bsasId
@@ -50,7 +50,7 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
 
 
     get(
-      DesUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
+      DownstreamUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
     )
   }
 }

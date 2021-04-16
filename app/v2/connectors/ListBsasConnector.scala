@@ -27,12 +27,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListBsasConnector @Inject()(val http: HttpClient,
-                                  val appConfig: AppConfig) extends BaseDesConnector {
+                                  val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def listBsas(request: ListBsasRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[ListBsasResponse[BsasEntries]]] = {
+    correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 
@@ -51,7 +51,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DesUri[ListBsasResponse[BsasEntries]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
+      DownstreamUri[ListBsasResponse[BsasEntries]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
     )
   }
 }

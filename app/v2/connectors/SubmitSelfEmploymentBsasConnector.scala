@@ -28,18 +28,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
-                                                  val appConfig: AppConfig) extends BaseDesConnector {
+                                                  val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[SubmitSelfEmploymentBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 
     put(
       body = request.body,
-      DesUri[SubmitSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[SubmitSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
     )
   }
 }
