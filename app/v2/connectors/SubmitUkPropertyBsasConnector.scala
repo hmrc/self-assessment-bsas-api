@@ -28,18 +28,18 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SubmitUkPropertyBsasConnector @Inject()(
                                     val http: HttpClient,
-                                    val appConfig: AppConfig) extends BaseDesConnector {
+                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
                           implicit hc: HeaderCarrier,
                           ec: ExecutionContext,
-                          correlationId: String): Future[DesOutcome[SubmitUkPropertyBsasResponse]] = {
+                          correlationId: String): Future[DownstreamOutcome[SubmitUkPropertyBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 
     put(
       body = request.body,
-      DesUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
     )
   }
 }

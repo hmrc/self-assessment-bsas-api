@@ -19,7 +19,7 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DesOutcome, SubmitUkPropertyBsasConnector}
+import v2.connectors.{DownstreamOutcome, SubmitUkPropertyBsasConnector}
 import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
@@ -31,7 +31,7 @@ trait MockSubmitUkPropertyBsasConnector extends MockFactory {
 
   object MockSubmitUKPropertyBsasConnector {
 
-    def submitUKPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[DesOutcome[SubmitUkPropertyBsasResponse]]] = {
+    def submitUKPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[SubmitUkPropertyBsasResponse]]] = {
       (mockConnector
         .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

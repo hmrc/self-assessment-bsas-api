@@ -28,18 +28,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveForeignPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
-                                                            val appConfig: AppConfig) extends BaseDesConnector {
+                                                            val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveForeignPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[RetrieveForeignPropertyAdjustmentsResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyAdjustmentsResponse]] = {
 
     val nino = request.nino.nino
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveForeignPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
+      DownstreamUri[RetrieveForeignPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
     )
   }
 }

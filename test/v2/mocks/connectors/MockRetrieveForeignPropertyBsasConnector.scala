@@ -19,7 +19,7 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DesOutcome, RetrieveForeignPropertyBsasConnector}
+import v2.connectors.{DownstreamOutcome, RetrieveForeignPropertyBsasConnector}
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
@@ -31,7 +31,7 @@ trait MockRetrieveForeignPropertyBsasConnector extends MockFactory {
 
   object MockRetrieveForeignPropertyBsasConnector {
     def retrieveForeignPropertyBsas(requestData: RetrieveForeignPropertyBsasRequestData):
-    CallHandler[Future[DesOutcome[RetrieveForeignPropertyBsasResponse]]] = {
+    CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]]] = {
       (mockConnector
         .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

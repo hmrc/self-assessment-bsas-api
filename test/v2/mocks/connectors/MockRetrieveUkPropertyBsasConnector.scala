@@ -19,7 +19,7 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DesOutcome, RetrieveUkPropertyBsasConnector}
+import v2.connectors.{DownstreamOutcome, RetrieveUkPropertyBsasConnector}
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
@@ -30,7 +30,7 @@ trait MockRetrieveUkPropertyBsasConnector extends MockFactory{
   val mockConnector: RetrieveUkPropertyBsasConnector = mock[RetrieveUkPropertyBsasConnector]
 
   object MockRetrievePropertyBsasConnector{
-    def retrievePropertyBsas(requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DesOutcome[RetrieveUkPropertyBsasResponse]]] = {
+    def retrievePropertyBsas(requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
       (mockConnector
         .retrieve(_: RetrieveUkPropertyBsasRequestData) (_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, * , *, *)

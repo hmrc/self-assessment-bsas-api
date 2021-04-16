@@ -28,12 +28,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
-                                                          val appConfig: AppConfig) extends BaseDesConnector {
+                                                          val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveSelfEmploymentAdjustments(request: RetrieveAdjustmentsRequestData)(
                                        implicit hc: HeaderCarrier,
                                        ec: ExecutionContext,
-                                       correlationId: String): Future[DesOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
+                                       correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentAdjustmentsResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 
@@ -41,7 +41,7 @@ class RetrieveSelfEmploymentAdjustmentsConnector @Inject()(val http: HttpClient,
     val bsasId = request.bsasId
 
     get(
-      DesUri[RetrieveSelfEmploymentAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
+      DownstreamUri[RetrieveSelfEmploymentAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
     )
   }
 }

@@ -19,7 +19,7 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DesOutcome, ListBsasConnector}
+import v2.connectors.{DownstreamOutcome, ListBsasConnector}
 import v2.models.request.ListBsasRequest
 import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
@@ -31,7 +31,7 @@ trait MockListBsasConnector extends MockFactory {
 
   object MockListBsasConnector {
 
-    def listBsas(requestData: ListBsasRequest): CallHandler[Future[DesOutcome[ListBsasResponse[BsasEntries]]]] = {
+    def listBsas(requestData: ListBsasRequest): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]]] = {
       (mockConnector
         .listBsas(_: ListBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

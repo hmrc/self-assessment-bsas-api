@@ -16,4 +16,4 @@
 
 package v2.connectors
 
-case class DesUri[Resp](value: String)
+case class DownstreamService(baseUrl: String, environment: String, token: String)

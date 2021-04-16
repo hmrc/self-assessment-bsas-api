@@ -26,12 +26,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                val appConfig: AppConfig) extends BaseDesConnector {
+                                                val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[RetrieveUkPropertyBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
 
     import v2.connectors.httpparsers.StandardDesHttpParser._
 
@@ -49,7 +49,7 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DesUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
+      DownstreamUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
     )
   }
 }
