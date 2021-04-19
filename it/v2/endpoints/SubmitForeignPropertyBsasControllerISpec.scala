@@ -23,7 +23,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -31,6 +31,16 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     val nino: String = "AA123456A"
     val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+    val nrsSuccess: JsValue = Json.parse(
+      s"""
+         |{
+         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
+         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
+         |  "timestamp":""
+         |}
+         """.stripMargin
+    )
 
     val desResponse: String => String = (typeOfBusiness: String) =>
       s"""
@@ -376,6 +386,22 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
+          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+        }
+
+        val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
+        response.status shouldBe OK
+        response.json shouldBe responseBody
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+      }
+
+      "any valid foreignProperty request is made with a failed nrs call" in new Test {
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
         }
 
@@ -392,6 +418,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.ninoFound(nino)
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
         }
+
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
         response.status shouldBe OK

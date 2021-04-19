@@ -23,7 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitForeignPropertyBsasService}
+import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitForeignPropertyBsasNrsProxyService, MockSubmitForeignPropertyBsasService}
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.hateoas.{HateoasWrapper, Link}
@@ -41,9 +41,11 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitForeignPropertyBsasService
     with MockSubmitForeignPropertyBsasRequestParser
+    with MockSubmitForeignPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+{
 
   private val correlationId = "X-123"
 
@@ -55,6 +57,7 @@ class SubmitForeignPropertyBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       parser = mockRequestParser,
       service = mockService,
+      nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -131,6 +134,10 @@ class SubmitForeignPropertyBsasControllerSpec
           .parseRequest(rawData)
           .returns(Right(requestData))
 
+        MockSubmitForeignPropertyBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
+
         MockSubmitForeignPropertyBsasService
           .submitForeignPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseBody))))
@@ -181,6 +188,10 @@ class SubmitForeignPropertyBsasControllerSpec
             MockSubmitForeignPropertyBsasRequestParser
               .parseRequest(rawData)
               .returns(Right(requestData))
+
+            MockSubmitForeignPropertyBsasNrsProxyService
+              .submit(nino)
+              .returns(Future.successful(Unit))
 
             MockSubmitForeignPropertyBsasService
               .submitForeignPropertyBsas(requestData)

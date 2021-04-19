@@ -27,13 +27,14 @@ import v2.hateoas.HateoasFactory
 import v2.models.errors._
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v2.models.response.SubmitForeignPropertyBsasHateoasData
-import v2.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasService}
+import v2.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
+                                                     nrsService: SubmitForeignPropertyBsasNrsProxyService,
                                                      parser: SubmitForeignPropertyBsasRequestParser,
                                                      service: SubmitForeignPropertyBsasService,
                                                      hateoasFactory: HateoasFactory,
@@ -56,16 +57,21 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.submitForeignPropertyBsas(parsedRequest))
+          response      <- {
+            //Submit asynchronously to NRS
+            nrsService.submit(nino, parsedRequest.body)
+            //Submit Return to ETMP
+            EitherT(service.submitForeignPropertyBsas(parsedRequest))
+          }
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, SubmitForeignPropertyBsasHateoasData(nino, bsasId)).asRight[ErrorWrapper])
+            hateoasFactory.wrap(response.responseData, SubmitForeignPropertyBsasHateoasData(nino, bsasId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+              s"Success response received with CorrelationId: ${response.correlationId}")
 
           Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
+            .withApiHeaders(response.correlationId)
         }
 
       result.leftMap { errorWrapper =>
