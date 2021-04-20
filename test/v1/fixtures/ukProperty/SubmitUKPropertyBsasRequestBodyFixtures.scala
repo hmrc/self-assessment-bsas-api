@@ -19,7 +19,7 @@ package v1.fixtures.ukProperty
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v1.models.errors.MtdError
-import v1.models.request.submitBsas._
+import v1.models.request.submitBsas.ukProperty._
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
 

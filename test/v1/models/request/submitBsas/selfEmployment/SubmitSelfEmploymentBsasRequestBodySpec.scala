@@ -44,7 +44,7 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToDes
+        Json.toJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome) shouldBe requestToDesWithoutIncome
       }
     }
 

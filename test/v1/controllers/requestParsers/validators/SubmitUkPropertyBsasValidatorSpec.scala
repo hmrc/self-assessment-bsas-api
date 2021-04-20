@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v1.models.errors.{BsasIdFormatError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.submitBsas._
+import v1.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 

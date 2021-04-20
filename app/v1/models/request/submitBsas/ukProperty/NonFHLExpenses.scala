@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-package v1.models.request.submitBsas
+package v1.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
-case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal],
-                       financialCosts: Option[BigDecimal], professionalFees: Option[BigDecimal], costOfServices: Option[BigDecimal],
-                       travelCosts: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]){
+case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal], financialCosts: Option[BigDecimal],
+                          professionalFees: Option[BigDecimal], travelCosts: Option[BigDecimal], costOfServices: Option[BigDecimal],
+                          residentialFinancialCost: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]) {
 
   val params: Map[String, BigDecimal] = Map(
     "premisesRunningCosts" -> premisesRunningCosts,
     "repairsAndMaintenance" -> repairsAndMaintenance,
     "financialCosts" -> financialCosts,
     "professionalFees" -> professionalFees,
-    "costOfServices" -> costOfServices,
     "travelCosts" -> travelCosts,
+    "costOfServices" -> costOfServices,
+    "residentialFinancialCost" -> residentialFinancialCost,
     "other" -> other,
     "consolidatedExpenses" -> consolidatedExpenses
   ).collect {case (k, Some(v)) => (k, v) }
 }
 
-object FHLExpenses {
-  implicit val reads: Reads[FHLExpenses] = Json.reads[FHLExpenses]
-  implicit val writes: OWrites[FHLExpenses] = (o: FHLExpenses) => Json.toJsObject(o.params)
+object NonFHLExpenses {
+  implicit val reads: Reads[NonFHLExpenses] = Json.reads[NonFHLExpenses]
+  implicit val writes: OWrites[NonFHLExpenses] = (o: NonFHLExpenses) => Json.toJsObject(o.params)
 }
+

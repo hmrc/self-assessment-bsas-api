@@ -17,9 +17,10 @@
 package v1.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
+import v1.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 

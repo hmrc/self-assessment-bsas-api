@@ -32,7 +32,7 @@ import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v1.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 import v1.models.response.{SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global

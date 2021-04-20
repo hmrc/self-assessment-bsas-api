@@ -22,7 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.TypeOfBusiness
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.submitBsas.SubmitUkPropertyBsasRequestData
+import v1.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v1.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
