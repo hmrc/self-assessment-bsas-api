@@ -38,8 +38,8 @@ object TriggerBsasRequestBodyFixtures {
 
   val seRequestBodyDes: JsValue = Json.parse("""
       |{
-      |   "incomeSourceIdentifier" : "incomeSourceId",
-      |   "identifierValue" : "anId",
+      |   "incomeSourceType" : "01",
+      |   "incomeSourceId" : "anId",
       |   "accountingPeriodStartDate" : "2018-11-25",
       |   "accountingPeriodEndDate" : "2018-11-26"
       |}
@@ -47,8 +47,7 @@ object TriggerBsasRequestBodyFixtures {
 
   val fhlRequestBodyDes: JsValue = Json.parse("""
       |{
-      |   "incomeSourceIdentifier" : "incomeSourceType",
-      |   "identifierValue" : "04",
+      |   "incomeSourceType" : "04",
       |   "accountingPeriodStartDate" : "2018-11-25",
       |   "accountingPeriodEndDate" : "2018-11-26"
       |}
@@ -56,8 +55,7 @@ object TriggerBsasRequestBodyFixtures {
 
   val nonFhlRequestBodyDes: JsValue = Json.parse("""
       |{
-      |   "incomeSourceIdentifier" : "incomeSourceType",
-      |   "identifierValue" : "02",
+      |   "incomeSourceType" : "02",
       |   "accountingPeriodStartDate" : "2018-11-25",
       |   "accountingPeriodEndDate" : "2018-11-26"
       |}
