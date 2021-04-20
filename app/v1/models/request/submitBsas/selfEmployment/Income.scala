@@ -16,13 +16,13 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{ Json, OWrites, Reads }
 
-case class Income(turnover: Option[BigDecimal], other: Option[BigDecimal]){
+case class Income(turnover: Option[BigDecimal], other: Option[BigDecimal]) {
   def isEmpty: Boolean = turnover.isEmpty && other.isEmpty
 }
 
 object Income {
   implicit val writes: OWrites[Income] = Json.writes[Income]
-  implicit val reads: Reads[Income] = Json.reads[Income]
+  implicit val reads: Reads[Income]    = Json.reads[Income]
 }
