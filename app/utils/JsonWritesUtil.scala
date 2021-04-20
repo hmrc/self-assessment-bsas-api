@@ -16,15 +16,15 @@
 
 package utils
 
-import play.api.libs.json.{JsNull, JsObject, JsValue}
+import play.api.libs.json._
 
 trait JsonWritesUtil {
 
   def filterNull(json: JsValue): JsObject = json match {
     case JsObject(fields) =>
       JsObject(fields.flatMap {
-        case (_, JsNull)          => None
-        case other @ (name,value) => Some(other)
+        case (_, JsNull) => None
+        case other       => Some(other)
       })
     case other => other.as[JsObject]
   }

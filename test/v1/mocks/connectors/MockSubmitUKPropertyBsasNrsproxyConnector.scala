@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.SubmitUKPropertyBsasNrsproxyConnector
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
+import v1.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 

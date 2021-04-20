@@ -16,7 +16,7 @@
 
 package v1.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
+import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
 case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],

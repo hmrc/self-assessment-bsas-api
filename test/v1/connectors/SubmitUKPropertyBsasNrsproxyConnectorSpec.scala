@@ -20,7 +20,7 @@ package v1.connectors
 import mocks.MockAppConfig
 import utils.DesTaxYear
 import v1.mocks.MockHttpClient
-import v1.models.request.submitBsas._
+import v1.models.request.submitBsas.ukProperty._
 
 import scala.concurrent.Future
 

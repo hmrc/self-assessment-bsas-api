@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.request.submitBsas
+package v1.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import support.UnitSpec
+import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
 
@@ -26,43 +26,47 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
     """
       |{
       |  "incomeSourceType":"02",
-      |  "income": {
-      |       "totalRentsReceived": 1000.45,
-      |       "premiumsOfLeaseGrant": 1000.45,
-      |       "reversePremiums": 1000.45,
-      |       "otherPropertyIncome": 1000.45
-      |     },
-      |     "expenses": {
-      |       "premisesRunningCosts": 1000.45,
-      |       "repairsAndMaintenance": 1000.45,
-      |       "financialCosts": 1000.45,
-      |       "professionalFees": 1000.45,
-      |       "travelCosts": 1000.45,
-      |       "costOfServices": 1000.45,
-      |       "residentialFinancialCost": 1000.45,
-      |       "other": 1000.45,
-      |       "consolidatedExpenses": 1000.45
-      |     }
-      |   }
+      |  "adjustments": {
+      |    "income": {
+      |      "totalRentsReceived": 1000.45,
+      |      "premiumsOfLeaseGrant": 1000.45,
+      |      "reversePremiums": 1000.45,
+      |      "otherPropertyIncome": 1000.45
+      |    },
+      |    "expenses": {
+      |      "premisesRunningCosts": 1000.45,
+      |      "repairsAndMaintenance": 1000.45,
+      |      "financialCosts": 1000.45,
+      |      "professionalFees": 1000.45,
+      |      "travelCosts": 1000.45,
+      |      "costOfServices": 1000.45,
+      |      "residentialFinancialCost": 1000.45,
+      |      "other": 1000.45,
+      |      "consolidatedExpenses": 1000.45
+      |    }
+      |  }
+      |}
       |""".stripMargin)
 
   val fhlDesJson: JsValue = Json.parse(
     """
       |{
-      | "incomeSourceType":"04",
-      | "income": {
-      |     "rentReceived": 1000.45
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
-      |     "repairsAndMaintenance": 1000.45,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
-      |     "costOfServices": 1000.45,
-      |     "travelCosts": 1000.45,
-      |     "other": 1000.45,
-      |     "consolidatedExpenses": 1000.45
-      |   }
+      |  "incomeSourceType":"04",
+      |  "adjustments": {
+      |    "income": {
+      |      "rentReceived": 1000.45
+      |    },
+      |    "expenses": {
+      |      "premisesRunningCosts": 1000.45,
+      |      "repairsAndMaintenance": 1000.45,
+      |      "financialCosts": 1000.45,
+      |      "professionalFees": 1000.45,
+      |      "costOfServices": 1000.45,
+      |      "travelCosts": 1000.45,
+      |      "other": 1000.45,
+      |      "consolidatedExpenses": 1000.45
+      |    }
+      |  }
       |}
       |""".stripMargin)
 

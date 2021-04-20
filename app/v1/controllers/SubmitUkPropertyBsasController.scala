@@ -19,6 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import cats.implicits._
 import config.{AppConfig, FeatureSwitch}
+
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
@@ -30,9 +31,9 @@ import v1.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v1.models.request.submitBsas.SubmitUkPropertyBsasRawData
+import v1.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v1.models.response.SubmitUkPropertyBsasHateoasData
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService,  SubmitUKPropertyBsasNrsProxyService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUKPropertyBsasNrsProxyService, SubmitUkPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

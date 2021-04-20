@@ -14,31 +14,35 @@
  * limitations under the License.
  */
 
-package v1.models.request.submitBsas
+package v1.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import support.UnitSpec
 
-class FurnishedHolidayLetSpec extends UnitSpec{
+class NonFurnishedHolidayLetSpec extends UnitSpec {
 
   val inputJson: JsValue = Json.parse(
     """
       |{
       |      "income": {
-      |         "rentIncome": 1000.49
+      |         "rentIncome": 1000.49,
+      |         "premiumsOfLeaseGrant": 1000.49,
+      |         "reversePremiums": 1000.49,
+      |         "otherPropertyIncome": 1000.49
       |      },
       |      "expenses": {
       |         "premisesRunningCosts": -1000.49,
       |         "repairsAndMaintenance": 1000.49,
       |         "financialCosts": 1000.49,
       |         "professionalFees": 1000.49,
-      |         "costOfServices": -1000.49,
       |         "travelCosts": 1000.49,
-      |         "other": 1000.49
+      |         "costOfServices": -1000.49,
+      |         "residentialFinancialCost": 1000.49,
+      |         "other": 1000.49,
+      |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
-
 
   val inputWithExpensesOnlyJson: JsValue = Json.parse(
     """
@@ -48,28 +52,34 @@ class FurnishedHolidayLetSpec extends UnitSpec{
       |         "repairsAndMaintenance": 1000.49,
       |         "financialCosts": 1000.49,
       |         "professionalFees": 1000.49,
-      |         "costOfServices": -1000.49,
       |         "travelCosts": 1000.49,
+      |         "costOfServices": -1000.49,
+      |         "residentialFinancialCost": 1000.49,
       |         "other": 1000.49,
       |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
 
-  val desJson: JsValue = Json.parse(
+  val requestJson: JsValue = Json.parse(
     """
       |{
       |      "income": {
-      |         "rentReceived": 1000.49
+      |         "totalRentsReceived": 1000.49,
+      |         "premiumsOfLeaseGrant": 1000.49,
+      |         "reversePremiums": 1000.49,
+      |         "otherPropertyIncome": 1000.49
       |      },
       |      "expenses": {
       |         "premisesRunningCosts": -1000.49,
       |         "repairsAndMaintenance": 1000.49,
       |         "financialCosts": 1000.49,
       |         "professionalFees": 1000.49,
-      |         "costOfServices": -1000.49,
       |         "travelCosts": 1000.49,
-      |         "other": 1000.49
+      |         "costOfServices": -1000.49,
+      |         "residentialFinancialCost": 1000.49,
+      |         "other": 1000.49,
+      |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
@@ -78,41 +88,50 @@ class FurnishedHolidayLetSpec extends UnitSpec{
     """
       |{
       |      "income": {
-      |         "rentIncome": "1000.49"
+      |         "rentIncome": 1000.45,
+      |         "premiumsOfLeaseGrant": 1000.45,
+      |         "reversePremiums": 1000.49,
+      |         "otherPropertyIncome": 1000.45
       |      },
       |      "expenses": {
       |         "premisesRunningCosts": true,
-      |         "repairsAndMaintenance": "1000.49",
-      |         "financialCosts": "1000.49",
-      |         "professionalFees": "1000.49",
+      |         "repairsAndMaintenance": 1000.45,
+      |         "financialCosts": 1000.45,
+      |         "professionalFees": 1000.45,
+      |         "travelCosts": 1000.45,
       |         "costOfServices": -1000.49,
-      |         "travelCosts": "1000.49",
-      |         "other": "1000.49",
+      |         "residentialFinancialCost": 1000.45,
+      |         "other": 1000.45,
       |         "consolidatedExpenses": 1000.49
       |      }
       |}
       |""".stripMargin)
 
-  val model: FurnishedHolidayLet = FurnishedHolidayLet(
-    Some(FHLIncome(
+  val model: NonFurnishedHolidayLet = NonFurnishedHolidayLet(
+    Some(NonFHLIncome(
+      Some(1000.49),
+      Some(1000.49),
+      Some(1000.49),
       Some(1000.49)
     )),
-    Some(FHLExpenses(
+    Some(NonFHLExpenses(
       Some(-1000.49),
       Some(1000.49),
       Some(1000.49),
       Some(1000.49),
+      Some(1000.49),
       Some(-1000.49),
       Some(1000.49),
       Some(1000.49),
-      None
+      Some(1000.49)
     ))
   )
 
-  val modelWithExpensesOnly: FurnishedHolidayLet = FurnishedHolidayLet(
+  val modelWithExpensesOnly: NonFurnishedHolidayLet = NonFurnishedHolidayLet(
     None,
-    Some(FHLExpenses(
+    Some(NonFHLExpenses(
       Some(-1000.49),
+      Some(1000.49),
       Some(1000.49),
       Some(1000.49),
       Some(1000.49),
@@ -123,27 +142,26 @@ class FurnishedHolidayLetSpec extends UnitSpec{
     ))
   )
 
-
-  "FurnishedHolidayLet" when {
+  "NonFurnishedHolidayLet" when {
     "read from valid Json" should {
-      "return the expected FurnishedHolidayLet object" in {
-        inputJson.as[FurnishedHolidayLet] shouldBe model
+      "return the expected NonFurnishedHolidayLet object" in {
+        inputJson.validate[NonFurnishedHolidayLet] shouldBe JsSuccess(model)
       }
 
-      "return the expected FurnishedHolidayLet object without income" in {
-        inputWithExpensesOnlyJson.as[FurnishedHolidayLet] shouldBe modelWithExpensesOnly
+      "return the expected NonFurnishedHolidayLet object without income" in {
+        inputWithExpensesOnlyJson.validate[NonFurnishedHolidayLet] shouldBe JsSuccess(modelWithExpensesOnly)
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidJson.validate[FurnishedHolidayLet] shouldBe a[JsError]
+        invalidJson.validate[NonFurnishedHolidayLet] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(model) shouldBe desJson
+        Json.toJson(model) shouldBe requestJson
       }
     }
   }

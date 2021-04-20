@@ -19,7 +19,7 @@ package v1.services
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.SubmitUKPropertyBsasNrsproxyConnector
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
+import v1.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 

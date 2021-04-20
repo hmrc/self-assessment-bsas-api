@@ -18,7 +18,7 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
-import v1.models.request.submitBsas.SubmitUKPropertyBsasRequestBody
+import v1.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.Future
 

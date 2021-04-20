@@ -17,7 +17,7 @@
 package v1.models.request.submitBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
+import play.api.libs.json._
 
 case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     cisPaymentsToSubcontractors: Option[BigDecimal],
