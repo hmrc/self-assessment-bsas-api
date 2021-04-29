@@ -73,8 +73,8 @@
         "accountingPeriod": {
           "$ref": "definitions.json#/definitions/accountingPeriod"
         },
-        "selfEmploymentId": {
-          "$ref": "definitions.json#/definitions/selfEmploymentId"
+        "businessId": {
+          "$ref": "definitions.json#/definitions/businessId"
         },
         "taxYear": {
           "type": "string",
@@ -169,8 +169,9 @@
           ]
         },
         "businessId": {
-          "description": "The unique identifier for the business. Must conform to the regular expression ^X[a-zA-Z0-9]{1}IS[0-9]{12}$",
           "type": "string",
+          "description": "The unique identifier for the business.",
+          "pattern": "^X[a-zA-Z0-9]{1}IS[0-9]{12}$",
           "example": "XAIS123456789012"
         },
         "accountingPeriod": {
