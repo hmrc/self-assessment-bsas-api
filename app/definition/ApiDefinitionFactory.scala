@@ -16,7 +16,7 @@
 
 package definition
 
-import config.{AppConfig, FeatureSwitch}
+import config.AppConfig
 import definition.Versions._
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
@@ -50,13 +50,11 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         versions = Seq(
           APIVersion(
             version = VERSION_1,
-            access = buildWhiteListingAccess(),
             status = buildAPIStatus(VERSION_1),
             endpointsEnabled = appConfig.endpointsEnabled(VERSION_1)
           ),
           APIVersion(
             version = VERSION_2,
-            access = buildWhiteListingAccess(),
             status = buildAPIStatus(VERSION_2),
             endpointsEnabled = appConfig.endpointsEnabled(VERSION_2)
           )
@@ -71,10 +69,5 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
         APIStatus.ALPHA
       }
-  }
-
-  private[definition] def buildWhiteListingAccess(): Option[Access] = {
-    val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
-    if (featureSwitch.isWhiteListingEnabled) Some(Access("PRIVATE", featureSwitch.whiteListedApplicationIds)) else None
   }
 }
