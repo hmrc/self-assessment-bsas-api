@@ -220,8 +220,9 @@
         },
         "businessId": {
           "type": "string",
-          "description": "The unique identifier for the business. Must conform to the regular expression\n\n`^X[A-Z0-9]{1}IS[0-9]{11}$`",
-          "example": "XAIS123456789012"
+          "description": "The unique identifier for the business.",
+          "example": "XAIS123456789012",
+          "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$"
         },
         "accountingPeriod": {
           "$ref": "definitions.json#/definitions/accountingPeriod"
@@ -271,8 +272,9 @@
         },
         "businessId": {
           "type": "string",
-          "description": "The unique identifier for the business. Must conform to the regular expression\n\n`^X[A-Z0-9]{1}IS[0-9]{11}$`",
-          "example": "XAIS123456789012"
+          "description": "The unique identifier for the business.",
+          "example": "XAIS123456789012",
+          "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$"
         },
         "accountingPeriod": {
           "$ref": "definitions.json#/definitions/accountingPeriod"
