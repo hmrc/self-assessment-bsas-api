@@ -1,3 +1,5 @@
+From 30 November 2021 v1.0 will no longer be available.
+
 This API allows a developer to retrieve a Business Source Adjustable Summary (BSAS) calculation for a specified self-employment or property business, for a given accounting period. Here a developer can:
 
 * generate a list of BSAS
