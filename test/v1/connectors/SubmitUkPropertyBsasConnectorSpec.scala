@@ -18,7 +18,7 @@ package v1.connectors
 
 import v1.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.TypeOfBusiness
 import v1.models.outcomes.ResponseWrapper

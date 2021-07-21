@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers
 
 import javax.inject.Inject
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
 import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 

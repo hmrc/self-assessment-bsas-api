@@ -18,7 +18,7 @@ package v2.controllers.requestParsers
 
 import javax.inject.Inject
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.controllers.requestParsers.validators.TriggerBSASValidator
 import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
 

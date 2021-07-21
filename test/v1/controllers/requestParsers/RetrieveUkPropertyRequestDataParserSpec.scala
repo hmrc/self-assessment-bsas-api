@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v1.mocks.validators.MockRetrieveUkPropertyValidator
 import v1.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v1.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}

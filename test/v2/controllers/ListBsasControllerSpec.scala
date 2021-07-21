@@ -21,7 +21,7 @@ import java.time.LocalDate
 import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{DateUtils, DesTaxYear}
 import v2.fixtures.ListBsasFixtures._

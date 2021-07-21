@@ -17,7 +17,7 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper

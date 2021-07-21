@@ -18,7 +18,7 @@ package v2.controllers.requestParsers
 
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.mocks.validators.MockSubmitSelfEmploymentBsasValidator
 import v2.models.errors._
 import v2.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}

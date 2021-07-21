@@ -27,8 +27,6 @@ object Versions {
 
   private val versionRegex = """application/vnd.hmrc.(\d.\d)\+json""".r
 
-  def getFromRequest(implicit hc: HeaderCarrier): Option[String] = getFrom(hc.headers)
-
   def getFromRequest(request: RequestHeader): Option[String] = getFrom(request.headers.headers)
 
   private def getFrom(headers: Seq[(String, String)]): Option[String] =

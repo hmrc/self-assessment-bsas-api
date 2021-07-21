@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import utils.DesTaxYear
 import v1.fixtures.ListBsasFixtures._
 import v1.mocks.MockHttpClient

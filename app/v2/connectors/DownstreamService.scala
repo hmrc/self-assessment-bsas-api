@@ -16,4 +16,4 @@
 
 package v2.connectors
 
-case class DownstreamService(baseUrl: String, environment: String, token: String)
+case class DownstreamService(baseUrl: String, environment: String, token: String, environmentHeaders: Option[Seq[String]])

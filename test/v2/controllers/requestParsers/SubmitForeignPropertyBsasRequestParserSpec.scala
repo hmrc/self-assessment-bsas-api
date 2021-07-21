@@ -18,7 +18,7 @@ package v2.controllers.requestParsers
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.mocks.validators.MockSubmitForeignPropertyBsasValidator
 import v2.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v2.models.request.submitBsas.foreignProperty._

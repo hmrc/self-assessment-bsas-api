@@ -16,7 +16,7 @@
 
 package v1.models.request
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 
 case class RetrieveUkPropertyBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
 

@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v1.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v1.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v1.fixtures.selfEmployment.IncomeFixture.incomeModel
