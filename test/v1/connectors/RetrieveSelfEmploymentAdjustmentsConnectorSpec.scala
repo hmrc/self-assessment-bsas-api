@@ -36,10 +36,11 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
     val connector: RetrieveSelfEmploymentAdjustmentsConnector =
       new RetrieveSelfEmploymentAdjustmentsConnector( http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer-des-token")
+    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "retrieveSelfEmploymentAdjustments" should {
@@ -51,8 +52,10 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
+          config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveSelfEmploymentAdjustments(request)) shouldBe outcome

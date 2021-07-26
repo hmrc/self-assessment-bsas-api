@@ -83,19 +83,29 @@ object TriggerBsasRequestBodyFixtures {
       |}
     """.stripMargin
 
-  val requestBody =
-    Json.obj(
-      "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
-      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`,
-      "businessId"       -> "XAIS12345678901"
-    )
+  val requestBody = Json.parse(
+   """
+      |{
+      |  "accountingPeriod": {
+      |    "startDate": "2019-05-05",
+      |    "endDate": "2020-05-06"
+      |  },
+      |  "typeOfBusiness": "self-employment",
+      |  "businessId": "XAIS12345678901"
+      |}
+      |""".stripMargin)
 
-  val requestBodyForProperty =
-    Json.obj(
-      "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
-      "typeOfBusiness"   -> TypeOfBusiness.`uk-property-fhl`,
-      "businessId"       -> "XAIS12345678901"
-    )
+  val requestBodyForProperty = Json.parse(
+    """
+      |{
+      |  "accountingPeriod": {
+      |    "startDate": "2019-05-05",
+      |    "endDate": "2020-05-06"
+      |  },
+      |  "typeOfBusiness": "uk-property-fhl",
+      |  "businessId": "XAIS12345678901"
+      |}
+      |""".stripMargin)
 
   val desResponse =
     """

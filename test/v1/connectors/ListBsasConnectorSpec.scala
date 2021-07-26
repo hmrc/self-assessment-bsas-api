@@ -43,6 +43,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "listBsas" when {
@@ -54,8 +55,10 @@ class ListBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
+          config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = requiredDesHeaders,
+          excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
         ).returns(Future.successful(outcome))
 
         await(connector.listBsas(request)) shouldBe outcome

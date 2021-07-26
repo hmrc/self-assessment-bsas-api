@@ -18,6 +18,7 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v2.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v2.fixtures.selfEmployment.IncomeFixture.incomeModel
@@ -49,6 +50,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     MockedAppConfig.ifsEnabled returns false
   }
 
@@ -58,10 +60,15 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)))
 
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
+
       MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+        config = dummyDesHeaderCarrierConfig,
         body = submitSelfEmploymentBsasRequestBodyModel,
-        requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+        requiredHeaders = requiredHeadersPut,
+        excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
       ).returns(Future.successful(outcome))
 
       await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome

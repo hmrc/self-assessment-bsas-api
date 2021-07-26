@@ -19,6 +19,7 @@ package v2.connectors
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import mocks.MockAppConfig
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
 import v2.models.outcomes.ResponseWrapper
@@ -39,6 +40,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     MockedAppConfig.ifsEnabled returns false
   }
 
@@ -48,10 +50,15 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)))
 
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
+
       MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+        config = dummyDesHeaderCarrierConfig,
         body = nonFHLBody,
-        requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+        requiredHeaders = requiredHeadersPut,
+        excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
       ).returns(Future.successful(outcome))
 
       await(connector.submitPropertyBsas(request)) shouldBe outcome

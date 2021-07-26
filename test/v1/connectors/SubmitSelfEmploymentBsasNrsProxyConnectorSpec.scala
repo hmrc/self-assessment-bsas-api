@@ -66,7 +66,8 @@ class SubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .post(
             url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
-            body = request
+            body = request,
+            config = dummyDesHeaderCarrierConfig
           ).returns(Future.successful((): Unit))
 
         await(connector.submit(nino, request)) shouldBe ((): Unit)

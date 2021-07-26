@@ -44,12 +44,20 @@ trait MockHttpClient extends MockFactory {
         }})
     }
 
-    def parameterGet[T](url: String, parameters: Seq[(String, String)], requiredHeaders: (String, String)*): CallHandler[Future[T]] = {
+    def parameterGet[T](url: String,
+                        config: HeaderCarrier.Config,
+                        parameters: Seq[(String, String)],
+                        requiredHeaders: Seq[(String, String)] = Seq.empty,
+                        excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
-        .GET(_: String, _: Seq[(String, String)])(_: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(where { (actualUrl, params,  _, hc, _) =>
-          url == actualUrl && requiredHeaders.forall(hc.headers.contains) && params == parameters
-        })
+        .GET(_: String, _: Seq[(String, String)], _: Seq[(String, String)])(_: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
+        .expects(where { (actualUrl: String, params: Seq[(String, String)], _: Seq[(String, String)], _ : HttpReads[T], hc: HeaderCarrier, _: ExecutionContext) => {
+          val headersForUrl = hc.headersForUrl(config)(actualUrl)
+          url == actualUrl &&
+            requiredHeaders.forall(h => headersForUrl.contains(h)) &&
+            excludedHeaders.forall(h => !headersForUrl.contains(h)) &&
+            params == parameters
+        }})
     }
 
     def post[I, T](url: String,
