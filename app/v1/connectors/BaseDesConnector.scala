@@ -52,7 +52,7 @@ trait BaseDesConnector {
       http.POST(s"${appConfig.desBaseUrl}/${uri.value}", body)
     }
 
-    doPost(desHeaderCarrier())
+    doPost(desHeaderCarrier(Seq("Content-Type")))
   }
 
   def put[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
@@ -64,7 +64,7 @@ trait BaseDesConnector {
       http.PUT(s"${appConfig.desBaseUrl}/${uri.value}", body)
     }
 
-    doPut(desHeaderCarrier())
+    doPut(desHeaderCarrier(Seq("Content-Type")))
   }
 
   def get[Resp](uri: DesUri[Resp])(implicit ec: ExecutionContext,

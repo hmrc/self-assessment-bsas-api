@@ -53,7 +53,7 @@ class RetrieveUkPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)
 
         MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
           config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
           requiredHeaders = desRequestHeaders,
