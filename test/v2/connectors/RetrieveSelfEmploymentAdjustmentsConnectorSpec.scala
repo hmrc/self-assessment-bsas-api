@@ -18,7 +18,7 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
