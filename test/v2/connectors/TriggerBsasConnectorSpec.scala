@@ -18,6 +18,7 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
@@ -47,7 +48,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
     "post a TriggerBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPost: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient.post(
@@ -55,7 +56,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
         config = dummyDesHeaderCarrierConfig,
         body = model,
         requiredHeaders = requiredHeadersPost,
-        excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
       ).returns(Future.successful(outcome))
 
       await(connector.triggerBsas(request)) shouldBe outcome

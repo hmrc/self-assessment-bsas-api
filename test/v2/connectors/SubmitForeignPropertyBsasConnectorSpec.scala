@@ -18,6 +18,7 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
 import v2.models.outcomes.ResponseWrapper
@@ -73,7 +74,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitForeignPropertyBsasResponse(bsasId, TypeOfBusiness.`foreign-property`)))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient.put(
@@ -81,7 +82,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         config = dummyDesHeaderCarrierConfig,
         body = submitForeignPropertyBsasRequestBodyModel,
         requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
       ).returns(Future.successful(outcome))
 
       await(connector.submitForeignPropertyBsas(request)) shouldBe outcome

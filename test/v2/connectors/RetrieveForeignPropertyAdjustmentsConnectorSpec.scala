@@ -19,6 +19,7 @@ package v2.connectors
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
@@ -85,7 +86,7 @@ class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
   "RetrieveForeignPropertyAdjustments" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, responseBody))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)
 
@@ -94,7 +95,7 @@ class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
           config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
           requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveForeignPropertyAdjustments(request)) shouldBe outcome

@@ -58,14 +58,14 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-      val requiredHeadersPut: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
+      val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
         config = dummyDesHeaderCarrierConfig,
         body = submitSelfEmploymentBsasRequestBodyModel,
         requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
       ).returns(Future.successful(outcome))
 
       await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome

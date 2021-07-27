@@ -58,7 +58,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
         config = dummyDesHeaderCarrierConfig,
         body = nonFHLBody,
         requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
       ).returns(Future.successful(outcome))
 
       await(connector.submitPropertyBsas(request)) shouldBe outcome

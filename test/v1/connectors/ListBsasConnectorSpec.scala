@@ -18,6 +18,7 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.DesTaxYear
 import v1.fixtures.ListBsasFixtures._
 import v1.mocks.MockHttpClient
@@ -52,13 +53,13 @@ class ListBsasConnectorSpec extends ConnectorSpec {
 
       "return a ListBsasResponse" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, summaryModel))
-
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
           config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
-          requiredHeaders = requiredDesHeaders,
-          excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.listBsas(request)) shouldBe outcome

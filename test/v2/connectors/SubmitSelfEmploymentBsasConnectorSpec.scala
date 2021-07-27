@@ -68,7 +68,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         config = dummyDesHeaderCarrierConfig,
         body = submitSelfEmploymentBsasRequestBodyModel,
         requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
       ).returns(Future.successful(outcome))
 
       await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome

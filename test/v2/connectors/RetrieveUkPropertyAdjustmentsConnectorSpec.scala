@@ -18,6 +18,7 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
@@ -47,7 +48,7 @@ class RetrieveUkPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
   "RetrieveUkPropertyAdjustments" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdJson))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)
 
@@ -56,7 +57,7 @@ class RetrieveUkPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
           config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
           requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveUkPropertyAdjustments(request)) shouldBe outcome

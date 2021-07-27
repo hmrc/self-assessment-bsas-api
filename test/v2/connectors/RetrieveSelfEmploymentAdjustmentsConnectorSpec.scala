@@ -18,7 +18,7 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.HttpReads
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
@@ -48,7 +48,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
   "retrieveSelfEmploymentAdjustments" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdJson))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)
 
