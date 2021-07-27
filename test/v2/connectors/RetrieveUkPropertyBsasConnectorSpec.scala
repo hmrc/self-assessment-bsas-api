@@ -69,7 +69,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
           config = dummyDesHeaderCarrierConfig,
           Seq.empty,
           requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("Authorization" -> s"Bearer des-token")
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieve(request)) shouldBe outcome
