@@ -61,7 +61,7 @@ trait BaseDesConnector {
                                                              correlationId: String): Future[DesOutcome[Resp]] = {
 
     def doPut(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] = {
-      http.POST(s"${appConfig.desBaseUrl}/${uri.value}", body)
+      http.PUT(s"${appConfig.desBaseUrl}/${uri.value}", body)
     }
 
     doPut(desHeaderCarrier())
