@@ -17,7 +17,6 @@
 package routing
 
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
 import com.typesafe.config.ConfigFactory
 import mocks.MockAppConfig
 import org.scalatest.Inside
@@ -37,7 +36,6 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   test =>
 
   implicit private val actorSystem: ActorSystem = ActorSystem("test")
-  implicit private val mat: Materializer        = ActorMaterializer()
   val action: DefaultActionBuilder = app.injector.instanceOf[DefaultActionBuilder]
 
   import play.api.mvc.Handler

@@ -21,7 +21,7 @@ import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v1.mocks.hateoas.MockHateoasFactory

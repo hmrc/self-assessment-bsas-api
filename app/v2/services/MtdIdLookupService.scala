@@ -17,7 +17,7 @@
 package v2.services
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.{MtdIdLookupConnector, MtdIdLookupOutcome}
 import v2.models.errors.NinoFormatError

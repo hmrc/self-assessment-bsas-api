@@ -22,7 +22,7 @@ import mocks.{MockAppConfig, MockIdGenerator}
 import v1.fixtures.ListBsasFixtures._
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{DateUtils, DesTaxYear}
 import v1.hateoas.HateoasLinks

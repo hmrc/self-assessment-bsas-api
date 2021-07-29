@@ -17,7 +17,8 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
@@ -39,20 +40,23 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     MockedAppConfig.ifsEnabled returns false
   }
 
   "retrievePropertyBsas" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, Some("01"))
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveSelfEmploymentBsas(request)) shouldBe outcome
@@ -63,8 +67,10 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          config = dummyDesHeaderCarrierConfig,
           Seq.empty,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveSelfEmploymentBsas(request)) shouldBe outcome

@@ -16,7 +16,7 @@
 
 package v2.models.request
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import utils.DesTaxYear
 
 

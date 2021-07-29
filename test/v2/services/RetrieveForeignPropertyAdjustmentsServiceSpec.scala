@@ -16,7 +16,7 @@
 
 package v2.services
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures.{foreignPropertyMetaDataModel, nonFhlBsasDetailModel}

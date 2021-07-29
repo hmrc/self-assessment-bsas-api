@@ -19,7 +19,7 @@ package v1.controllers
 import mocks.MockIdGenerator
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.TriggerBsasRequestBodyFixtures._
 import v1.mocks.hateoas.MockHateoasFactory

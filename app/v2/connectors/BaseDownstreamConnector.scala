@@ -19,7 +19,6 @@ package v2.connectors
 import config.AppConfig
 import play.api.Logger
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpReads, HttpClient }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -28,17 +27,27 @@ trait BaseDownstreamConnector {
   val http: HttpClient
   val appConfig: AppConfig
 
-  val logger = Logger(this.getClass)
+  val logger: Logger = Logger(this.getClass)
 
   lazy val downstreamService: DownstreamService = if (appConfig.ifsEnabled) {
-    DownstreamService(appConfig.ifsBaseUrl, appConfig.ifsEnv, appConfig.ifsToken)
+    DownstreamService(appConfig.ifsBaseUrl, appConfig.ifsEnv, appConfig.ifsToken, appConfig.ifsEnvironmentHeaders)
   } else {
-    DownstreamService(appConfig.desBaseUrl, appConfig.desEnv, appConfig.desToken)
+    DownstreamService(appConfig.desBaseUrl, appConfig.desEnv, appConfig.desToken, appConfig.desEnvironmentHeaders)
   }
 
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${downstreamService.token}")))
-      .withExtraHeaders("Environment" -> downstreamService.environment, "CorrelationId" -> correlationId)
+  private[connectors] def downstreamHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)
+                                                 (implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${downstreamService.token}",
+          "Environment" -> downstreamService.environment,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ downstreamService.environmentHeaders.getOrElse(Seq.empty))
+    )
 
   def put[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
                                                                     hc: HeaderCarrier,
@@ -48,7 +57,7 @@ trait BaseDownstreamConnector {
       http.PUT(s"${downstreamService.baseUrl}/${uri.value}", body)
     }
 
-    doPut(desHeaderCarrier)
+    doPut(downstreamHeaderCarrier(Seq("Content-Type")))
   }
 
   def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
@@ -60,7 +69,7 @@ trait BaseDownstreamConnector {
       http.POST(s"${downstreamService.baseUrl}/${uri.value}", body)
     }
 
-    doPost(desHeaderCarrier)
+    doPost(downstreamHeaderCarrier(Seq("Content-Type")))
   }
 
   def get[Resp](uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
@@ -71,7 +80,7 @@ trait BaseDownstreamConnector {
     def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] =
       http.GET(s"${downstreamService.baseUrl}/${uri.value}")
 
-    doGet(desHeaderCarrier)
+    doGet(downstreamHeaderCarrier())
   }
 
   def get[Resp](uri: DownstreamUri[Resp], queryParams: Seq[(String, String)])(implicit ec: ExecutionContext,
@@ -83,6 +92,6 @@ trait BaseDownstreamConnector {
       http.GET(s"${downstreamService.baseUrl}/${uri.value}", queryParams)
     }
 
-    doGet(desHeaderCarrier)
+    doGet(downstreamHeaderCarrier())
   }
 }

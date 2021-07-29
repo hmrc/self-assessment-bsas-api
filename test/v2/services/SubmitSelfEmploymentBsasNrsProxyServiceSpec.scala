@@ -16,7 +16,7 @@
 
 package v2.services
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 

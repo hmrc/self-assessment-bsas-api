@@ -17,7 +17,7 @@
 package v1.models.request.submitBsas.ukProperty
 
 import play.api.mvc.AnyContentAsJson
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v1.models.request.RawData
 
 case class SubmitUkPropertyBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData

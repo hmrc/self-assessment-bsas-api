@@ -27,34 +27,29 @@ trait MockAppConfig extends MockFactory {
 
   object MockedAppConfig {
 
+    // Downstream Config
     def desBaseUrl: CallHandler[String] = (mockAppConfig.desBaseUrl _: () => String).expects()
-
     def desToken: CallHandler[String] = (mockAppConfig.desToken _).expects()
-
     def desEnv: CallHandler[String] = (mockAppConfig.desEnv _).expects()
+    def desEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.desEnvironmentHeaders _).expects()
 
     def ifsBaseUrl: CallHandler[String] = (mockAppConfig.ifsBaseUrl _: () => String).expects()
-
     def ifsToken: CallHandler[String] = (mockAppConfig.ifsToken _).expects()
-
     def ifsEnv: CallHandler[String] = (mockAppConfig.ifsEnv _).expects()
-
     def ifsEnabled: CallHandler[Boolean] = (mockAppConfig.ifsEnabled _).expects()
+    def ifsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.ifsEnvironmentHeaders _).expects()
 
+    // MTD ID Loopup Config
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 
-    def featureSwitch: CallHandler[Option[Configuration]] = (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
-
+    // API Config
     def apiGatewayContext: CallHandler[String] = (mockAppConfig.apiGatewayContext _: () => String).expects()
-
     def apiStatus1: CallHandler[String] = (mockAppConfig.apiStatus: String => String).expects("1.0")
-
     def apiStatus2: CallHandler[String] = (mockAppConfig.apiStatus: String => String).expects("2.0")
 
+    def featureSwitch: CallHandler[Option[Configuration]] = (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
     def endpointsEnabled: CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: String => Boolean).expects(*)
-
     def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] = (mockAppConfig.confidenceLevelConfig _: () => ConfidenceLevelConfig).expects()
-
     def mtdNrsProxyBaseUrl: CallHandler[String] = (mockAppConfig.mtdNrsProxyBaseUrl _).expects()
   }
 }

@@ -18,7 +18,7 @@ package v2.controllers.requestParsers
 
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v2.models.errors._

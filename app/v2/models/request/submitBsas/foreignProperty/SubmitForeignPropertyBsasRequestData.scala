@@ -16,6 +16,6 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 
 case class SubmitForeignPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitForeignPropertyBsasRequestBody)

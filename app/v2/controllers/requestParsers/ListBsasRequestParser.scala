@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers
 
 import javax.inject.Inject
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import utils.{CurrentDateProvider, DateUtils}
 import v2.controllers.requestParsers.validators.ListBsasValidator
 import v2.models.domain.TypeOfBusiness

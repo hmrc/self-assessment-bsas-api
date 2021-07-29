@@ -17,7 +17,8 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
@@ -39,6 +40,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     MockedAppConfig.ifsEnabled returns false
   }
 
@@ -48,11 +50,13 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveForeignPropertyBsasRequestData(nino, bsasId, Some("01"))
-
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
@@ -63,8 +67,10 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          dummyDesHeaderCarrierConfig,
           Seq.empty,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome

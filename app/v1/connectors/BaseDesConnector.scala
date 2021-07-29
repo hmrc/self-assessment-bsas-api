@@ -19,8 +19,7 @@ package v1.connectors
 import config.AppConfig
 import play.api.Logger
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.logging.Authorization
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,21 +27,20 @@ trait BaseDesConnector {
   val http: HttpClient
   val appConfig: AppConfig
 
-  val logger = Logger(this.getClass)
+  val logger: Logger = Logger(this.getClass)
 
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnv, "CorrelationId" -> correlationId)
-
-  def put[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
-                                                             hc: HeaderCarrier,
-                                                             httpReads: HttpReads[DesOutcome[Resp]],
-                                                             correlationId: String): Future[DesOutcome[Resp]] = {
-    def doPut(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] = {
-      http.PUT(s"${appConfig.desBaseUrl}/${uri.value}", body)
-    }
-
-    doPut(desHeaderCarrier)
+  private def desHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier = {
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.desToken}",
+          "Environment" -> appConfig.desEnv,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
+    )
   }
 
   def post[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
@@ -54,7 +52,19 @@ trait BaseDesConnector {
       http.POST(s"${appConfig.desBaseUrl}/${uri.value}", body)
     }
 
-    doPost(desHeaderCarrier)
+    doPost(desHeaderCarrier(Seq("Content-Type")))
+  }
+
+  def put[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
+                                                             hc: HeaderCarrier,
+                                                             httpReads: HttpReads[DesOutcome[Resp]],
+                                                             correlationId: String): Future[DesOutcome[Resp]] = {
+
+    def doPut(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] = {
+      http.PUT(s"${appConfig.desBaseUrl}/${uri.value}", body)
+    }
+
+    doPut(desHeaderCarrier(Seq("Content-Type")))
   }
 
   def get[Resp](uri: DesUri[Resp])(implicit ec: ExecutionContext,
@@ -65,18 +75,18 @@ trait BaseDesConnector {
     def doGet(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] =
       http.GET(s"${appConfig.desBaseUrl}/${uri.value}")
 
-    doGet(desHeaderCarrier)
+    doGet(desHeaderCarrier())
   }
 
   def get[Resp](uri: DesUri[Resp], queryParams: Seq[(String, String)])(implicit ec: ExecutionContext,
-                                                                       hc: HeaderCarrier,
-                                                                       httpReads: HttpReads[DesOutcome[Resp]],
-                                                                       correlationId: String): Future[DesOutcome[Resp]] = {
+                                                                              hc: HeaderCarrier,
+                                                                              httpReads: HttpReads[DesOutcome[Resp]],
+                                                                              correlationId: String): Future[DesOutcome[Resp]] = {
 
     def doGet(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] = {
       http.GET(s"${appConfig.desBaseUrl}/${uri.value}", queryParams)
     }
 
-    doGet(desHeaderCarrier)
+    doGet(desHeaderCarrier())
   }
 }

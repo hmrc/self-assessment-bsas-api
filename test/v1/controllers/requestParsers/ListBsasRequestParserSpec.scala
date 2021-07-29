@@ -19,7 +19,7 @@ package v1.controllers.requestParsers
 import java.time.LocalDate
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import utils.DesTaxYear
 import v1.mocks.MockCurrentDateProvider
 import v1.mocks.validators.MockListBsasValidator

@@ -16,7 +16,7 @@
 
 package v2.services
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 import v2.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
 import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 

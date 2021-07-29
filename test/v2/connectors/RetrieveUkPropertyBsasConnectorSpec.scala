@@ -17,11 +17,13 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveUkPropertyBsasRequestData
+
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -37,20 +39,23 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     MockedAppConfig.ifsEnabled returns false
   }
 
   "retrieve" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
-
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
+          config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieve(request)) shouldBe outcome
@@ -61,8 +66,10 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
+          config = dummyDesHeaderCarrierConfig,
           Seq.empty,
-          requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+          requiredHeaders = desRequestHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
         await(connector.retrieve(request)) shouldBe outcome

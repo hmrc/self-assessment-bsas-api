@@ -18,8 +18,7 @@ package v1.connectors
 
 import config.AppConfig
 import mocks.MockAppConfig
-import uk.gov.hmrc.http.HttpReads
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HttpClient, HttpReads}
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 
@@ -45,15 +44,19 @@ class BaseDesConnectorSpec extends ConnectorSpec {
       val http: HttpClient = mockHttpClient
       val appConfig: AppConfig = mockAppConfig
     }
+
+    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "post" must {
     "posts with the required des headers and returns the result" in new Test {
       MockedHttpClient
-        .post(absoluteUrl, body, "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+        .post(absoluteUrl, dummyDesHeaderCarrierConfig, body, desRequestHeaders)
         .returns(Future.successful(outcome))
 
       await(connector.post(body, DesUri[Result](url))) shouldBe outcome
@@ -61,24 +64,22 @@ class BaseDesConnectorSpec extends ConnectorSpec {
   }
 
   "get" must {
-    "get with the requred des headers and return the result" in new Test {
+    "get with the required des headers and return the result" in new Test {
       MockedHttpClient
-        .get(absoluteUrl, "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+        .get(absoluteUrl,  dummyDesHeaderCarrierConfig, desRequestHeaders)
         .returns(Future.successful(outcome))
 
       await(connector.get(DesUri[Result](url))) shouldBe outcome
     }
   }
 
-  "get (with query parameters)" must {
-    "get with the requred des headers and return the result" in new Test {
-
-      val queryParams: Map[String, String] = Map("aParam" -> "aValue")
+  "parameterGet" must {
+    "get with the required des headers and return the result" in new Test {
       MockedHttpClient
-        .parameterGet(absoluteUrl, queryParams.toSeq, "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+        .parameterGet(absoluteUrl, dummyDesHeaderCarrierConfig, Seq("param" -> "value"), desRequestHeaders)
         .returns(Future.successful(outcome))
 
-      await(connector.get(DesUri[Result](url), queryParams.toSeq)) shouldBe outcome
+      await(connector.get(DesUri[Result](url), Seq("param" -> "value"))) shouldBe outcome
     }
   }
 }

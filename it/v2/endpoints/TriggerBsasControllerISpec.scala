@@ -124,7 +124,11 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", requestBody, BAD_REQUEST, NinoFormatError),
+          ("AA1123A",  Json.obj(
+            "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+            "typeOfBusiness" -> "self-employment",
+            "businessId" -> "XAIS12345678901"
+          ), BAD_REQUEST, NinoFormatError),
           ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02")),
             BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/endDate", "/typeOfBusiness", "/businessId")))),
           ("AA123456A", Json.obj(

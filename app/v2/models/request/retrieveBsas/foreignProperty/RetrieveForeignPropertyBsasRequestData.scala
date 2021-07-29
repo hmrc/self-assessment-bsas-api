@@ -16,6 +16,6 @@
 
 package v2.models.request.retrieveBsas.foreignProperty
 
-import uk.gov.hmrc.domain.Nino
+import domain.Nino
 
 case class RetrieveForeignPropertyBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])
