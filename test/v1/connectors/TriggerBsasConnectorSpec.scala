@@ -48,13 +48,13 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-      val requiredHeadersPut: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
+      val requiredHeadersPost: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient.post(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
         config = dummyDesHeaderCarrierConfig,
         body = seBody,
-        requiredHeaders = requiredHeadersPut,
+        requiredHeaders = requiredHeadersPost,
         excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
       ).returns(Future.successful(outcome))
 
