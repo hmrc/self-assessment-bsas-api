@@ -32,14 +32,14 @@ import scala.concurrent.Future
 class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
+  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
 
-  val response = SubmitSelfEmploymentBsasResponse(id, TypeOfBusiness.`self-employment`)
+  val response: SubmitSelfEmploymentBsasResponse = SubmitSelfEmploymentBsasResponse(id, TypeOfBusiness.`self-employment`)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitSelfEmploymentBsas")
 
     val service = new SubmitSelfEmploymentBsasService(mockConnector)
@@ -48,7 +48,8 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   "submitSelfEmploymentBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
+        MockSubmitSelfEmploymentBsasConnector
+          .submitSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.submitSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -60,14 +61,14 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockSubmitSelfEmploymentBsasConnector.submitSelfEmploymentBsas(request)
+          MockSubmitSelfEmploymentBsasConnector
+            .submitSelfEmploymentBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVALID_PAYLOAD", DownstreamError),
@@ -82,12 +83,13 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("BVR_FAILURE_C55508", DownstreamError),
         ("BVR_FAILURE_C55509", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
+        ("INVALID_CORRELATIONID", DownstreamError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))
     }
-    }
+  }
 
 }

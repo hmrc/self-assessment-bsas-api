@@ -18,7 +18,7 @@ package v2.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.SubmitSelfEmploymentBsasConnector
@@ -29,15 +29,16 @@ import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasReque
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 import v2.support.DesResponseMappingSupport
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
-                implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-                correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
@@ -61,6 +62,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     "BVR_FAILURE_C55508"            -> DownstreamError,
     "BVR_FAILURE_C55509"            -> DownstreamError,
     "NO_DATA_FOUND"                 -> NotFoundError,
+    "INVALID_CORRELATIONID"         -> DownstreamError,
     "SERVER_ERROR"                  -> DownstreamError,
     "SERVICE_UNAVAILABLE"           -> DownstreamError
   )

@@ -19,19 +19,18 @@ package v2.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.IntegrationBaseSpec
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
+import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub }
 
 class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
-
   private trait Test {
 
-    val nino             = "AA123456A"
-    val bsasId           = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val nino   = "AA123456A"
+    val bsasId = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -88,7 +87,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.header("Content-Type") shouldBe Some("application/json")
       }
 
-
       "a valid request is made with a failed nrs call" in new Test {
 
         override def setupStubs(): StubMapping = {
@@ -107,7 +105,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-
 
       "validation error" when {
         def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError, requestBodyJson: JsValue): Unit = {
@@ -167,6 +164,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleNotSelfEmployment),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
