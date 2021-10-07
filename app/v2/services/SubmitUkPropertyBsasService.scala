@@ -61,6 +61,7 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
     "BVR_FAILURE_C55508"            -> RulePropertyIncomeAllowanceClaimed,
     "BVR_FAILURE_C55509"            -> RulePropertyIncomeAllowanceClaimed,
     "NO_DATA_FOUND"                 -> NotFoundError,
+    "INVALID_CORRELATIONID"         -> DownstreamError,
     "SERVER_ERROR"                  -> DownstreamError,
     "SERVICE_UNAVAILABLE"           -> DownstreamError
   )
