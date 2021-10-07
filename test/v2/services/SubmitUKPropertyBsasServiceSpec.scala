@@ -34,9 +34,9 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
+  val request: SubmitUkPropertyBsasRequestData = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
 
-  val response = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
+  val response: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
 
   trait Test extends MockSubmitUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -83,6 +83,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
         ("NO_DATA_FOUND", NotFoundError),
+        ("INVALID_CORRELATIONID", DownstreamError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )
