@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class ForeignPropertyExpensesSpec extends UnitSpec {
 
-  val validJson = Json.parse(
+  val mtdJson = Json.parse(
     """
       |{
       |  "premisesRunningCosts": 123.12,
@@ -31,13 +31,38 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
       |  "travelCosts": 123.12,
       |  "costOfServices": 123.12,
       |  "residentialFinancialCost": 123.12,
-      |  "other": 123.12
+      |  "other": 123.12,
+      |  "consolidatedExpenses": 123.12
+      |}
+      |""".stripMargin)
+
+  val desJson = Json.parse(
+    """
+      |{
+      |  "premisesRunningCosts": 123.12,
+      |  "repairsAndMaintenance": 123.12,
+      |  "financialCosts": 123.12,
+      |  "professionalFees": 123.12,
+      |  "travelCosts": 123.12,
+      |  "costOfServices": 123.12,
+      |  "residentialFinancialCost": 123.12,
+      |  "other": 123.12,
+      |  "consolidatedExpense": 123.12
       |}
       |""".stripMargin)
 
   val emptyJson = Json.parse("""{}""")
 
-  val validModel = ForeignPropertyExpenses(Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),Some(123.12),None)
+  val validModel = ForeignPropertyExpenses(
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12),
+    Some(123.12))
 
   val emptyModel = ForeignPropertyExpenses(None,None,None,None,None,None,None,None,None)
 
@@ -46,7 +71,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        validJson.as[ForeignPropertyExpenses] shouldBe validModel
+        mtdJson.as[ForeignPropertyExpenses] shouldBe validModel
       }
     }
   }
@@ -60,7 +85,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validJson
+        Json.toJson(validModel) shouldBe desJson
       }
     }
   }

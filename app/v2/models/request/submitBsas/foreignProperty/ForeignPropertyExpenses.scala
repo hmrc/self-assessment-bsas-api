@@ -16,7 +16,7 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{Json, Reads, Writes}
 
 case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
                                    repairsAndMaintenance: Option[BigDecimal],
@@ -43,10 +43,11 @@ case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
     "travelCosts"              -> travelCosts,
     "other"                    -> other,
     "residentialFinancialCost" -> residentialFinancialCost,
-    "consolidatedExpenses"     -> consolidatedExpenses
+    "consolidatedExpense"     -> consolidatedExpenses
   ).collect { case (k, Some(v)) => (k, v) }
 }
 
 object ForeignPropertyExpenses {
-  implicit val format: OFormat[ForeignPropertyExpenses] = Json.format[ForeignPropertyExpenses]
+  implicit val reads: Reads[ForeignPropertyExpenses]   = Json.reads[ForeignPropertyExpenses]
+  implicit val writes: Writes[ForeignPropertyExpenses] = (o: ForeignPropertyExpenses) => Json.toJsObject(o.params)
 }
