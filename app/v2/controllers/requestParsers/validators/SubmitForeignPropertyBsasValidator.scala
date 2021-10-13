@@ -110,7 +110,7 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
       List(
         if (model.foreignProperty.isEmpty) NoValidationErrors
         else model.foreignProperty.get.toList.flatMap {
-          case entity =>BothExpensesValidation.validateExpense(entity.expenses.map(_.params))
+          case entity =>BothExpensesValidation.validate(entity.expenses.map(_.params))
         },
         BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
       )

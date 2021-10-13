@@ -16,7 +16,8 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{Json, Reads, Writes}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads, Writes}
 
 case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
                                    repairsAndMaintenance: Option[BigDecimal],
@@ -43,11 +44,22 @@ case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
     "travelCosts"              -> travelCosts,
     "other"                    -> other,
     "residentialFinancialCost" -> residentialFinancialCost,
-    "consolidatedExpense"     -> consolidatedExpenses
+    "consolidatedExpenses"     -> consolidatedExpenses
   ).collect { case (k, Some(v)) => (k, v) }
 }
 
 object ForeignPropertyExpenses {
   implicit val reads: Reads[ForeignPropertyExpenses]   = Json.reads[ForeignPropertyExpenses]
-  implicit val writes: Writes[ForeignPropertyExpenses] = (o: ForeignPropertyExpenses) => Json.toJsObject(o.params)
+
+  implicit val writes: OWrites[ForeignPropertyExpenses] = (
+    (JsPath \ "premisesRunningCosts").writeNullable[BigDecimal] and
+      (JsPath \ "repairsAndMaintenance").writeNullable[BigDecimal] and
+      (JsPath \ "financialCosts").writeNullable[BigDecimal] and
+      (JsPath \ "professionalFees").writeNullable[BigDecimal] and
+      (JsPath \ "travelCosts").writeNullable[BigDecimal] and
+      (JsPath \ "costOfServices").writeNullable[BigDecimal] and
+      (JsPath \ "residentialFinancialCost").writeNullable[BigDecimal] and
+      (JsPath \ "other").writeNullable[BigDecimal] and
+      (JsPath \ "consolidatedExpense").writeNullable[BigDecimal]
+    )(unlift(ForeignPropertyExpenses.unapply))
 }
