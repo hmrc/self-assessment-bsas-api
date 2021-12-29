@@ -17,7 +17,7 @@
 package definition
 
 import definition.APIStatus.{ALPHA, BETA}
-import definition.Versions.{VERSION_1, VERSION_2}
+import definition.Versions.VERSION_2
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.mocks.MockHttpClient
@@ -56,8 +56,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
             context = "api.gateway.context",
             categories = Seq("INCOME_TAX_MTD"),
             versions = Seq(
-              APIVersion(
-                version = VERSION_1, access = None, status = APIStatus.ALPHA, endpointsEnabled = true),
               APIVersion(
                 version = VERSION_2, access = None, status = APIStatus.ALPHA, endpointsEnabled = true)
             ),
