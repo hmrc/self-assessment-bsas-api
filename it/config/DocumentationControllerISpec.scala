@@ -42,11 +42,6 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |    "categories": ["INCOME_TAX_MTD"],
       |    "versions":[
       |      {
-      |        "version":"1.0",
-      |        "status":"RETIRED",
-      |        "endpointsEnabled":false
-      |      },
-      |      {
       |        "version":"2.0",
       |        "status":"ALPHA",
       |        "endpointsEnabled":true
