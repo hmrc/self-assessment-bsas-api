@@ -44,7 +44,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |      {
       |        "version":"1.0",
       |        "status":"RETIRED",
-      |        "endpointsEnabled":true
+      |        "endpointsEnabled":false
       |      },
       |      {
       |        "version":"2.0",
@@ -67,8 +67,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   "a documentation request" must {
     "return the documentation for v1" in {
       val response: WSResponse = await(buildRequest("/api/conf/1.0/application.raml").get())
-      response.status shouldBe Status.OK
-      response.body[String] should startWith("#%RAML 1.0")
+      response.status shouldBe Status.NOT_FOUND
     }
 
     "return the documentation for v2" in {

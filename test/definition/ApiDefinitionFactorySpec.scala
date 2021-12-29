@@ -20,7 +20,7 @@ import definition.APIStatus.{ALPHA, BETA}
 import definition.Versions.{VERSION_1, VERSION_2}
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.mocks.MockHttpClient
+import v2.mocks.MockHttpClient
 
 class ApiDefinitionFactorySpec extends UnitSpec {
 
