@@ -73,6 +73,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString("""
                                                                                          |version-1.enabled = true
                                                                                          |version-2.enabled = true
+                                                                                         |version-3.enabled = true
                                                                          """.stripMargin))))
 
     val requestHandler: VersionRoutingRequestHandler =
@@ -106,6 +107,11 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   "Routing requests with v2" should {
     implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.2.0+json")
     handleWithVersionRoutes("/v2", V2Handler)
+  }
+
+  "Routing requests with v3" should {
+    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
+    handleWithVersionRoutes("/v3", V2Handler)
   }
 
   private def handleWithDefaultRoutes()(implicit acceptHeader: Option[String]): Unit = {

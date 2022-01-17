@@ -52,7 +52,12 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
             version = VERSION_2,
             status = buildAPIStatus(VERSION_2),
             endpointsEnabled = appConfig.endpointsEnabled(VERSION_2)
-          )
+          ),
+//          TODO uncomment when we have some v3 raml
+//          APIVersion(
+//            version = VERSION_3,
+//            status = buildAPIStatus(VERSION_3),
+//            endpointsEnabled = appConfig.endpointsEnabled(VERSION_3))
         ),
         requiresTrust = None
       )
