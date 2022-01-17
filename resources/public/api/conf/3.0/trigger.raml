@@ -1,0 +1,54 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatStartDate
+  - errors.formatEndDate
+  - errors.formatTypeOfBusiness
+  - errors.formatBusinessId
+  - errors.incorrectOrEmptyBodySubmitted
+  - errors.ruleEndDateBeforeStartDate
+  - errors.ruleAccountingPeriodNotSupported
+  - errors.ruleAccountingPeriodNotEnded
+  - errors.rulePeriodicDataIncomplete
+  - errors.ruleNoAccountingPeriod
+  - errors.triggerClientOrAgentNotAuthorised
+  - errors.triggerAndListNotFound
+displayName: Trigger a Business Source Adjustable Summary (BSAS)
+description: This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary (BSAS) of the income and expenditure for a specified business for a given accounting period. A BSAS must be generated before accounting adjustments are to be entered. A National Insurance number is required.
+(annotations.sandboxData): !include scenarios/trigger.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+  application/json:
+    type: !include schemas/trigger_request.json
+    examples:
+     example-1:
+      description: Self-employment Trigger
+      value: !include examples/trigger/trigger_se_request.json
+     example-2:
+      description: UK Property Non-FHL Trigger
+      value: !include examples/trigger/trigger_non_fhl_request.json
+     example-3:
+      description: Foreign Property Trigger
+      value: !include examples/trigger/trigger_foreign_property_request.json
+responses:
+  201:
+    body:
+      application/json:
+        type: !include schemas/trigger_response.json
+        examples:
+          example-1:
+            description: Self-employment example response
+            value: !include examples/trigger/trigger_se_response.json
+          example-2:
+            description: UK Property example response
+            value: !include examples/trigger/trigger_non_fhl_response.json
+          example-3:
+            description: Foreign Property example response
+            value: !include examples/trigger/trigger_foreign_property_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.
