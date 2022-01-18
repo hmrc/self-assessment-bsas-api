@@ -19,9 +19,9 @@ package v3.models.response.retrieveBsasAdjustments.foreignProperty
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v2.models.hateoas.{HateoasData, Link}
+import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v3.models.hateoas.{HateoasData, Link}
 
 case class RetrieveForeignPropertyAdjustmentsResponse(metadata: Metadata, adjustments: Seq[BsasDetail])
 

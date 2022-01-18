@@ -20,8 +20,8 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v3.models.request.ListBsasRequest
+import v3.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +34,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
 

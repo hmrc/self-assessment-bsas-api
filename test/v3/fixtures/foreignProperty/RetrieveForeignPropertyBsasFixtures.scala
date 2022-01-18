@@ -19,9 +19,9 @@ package v3.fixtures.foreignProperty
 import java.time.LocalDate
 
 import play.api.libs.json.{JsValue, Json}
-import v2.models.domain.TypeOfBusiness
-import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
-import v2.models.response.retrieveBsas.foreignProperty._
+import v3.models.domain.TypeOfBusiness
+import v3.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
+import v3.models.response.retrieveBsas.foreignProperty._
 
 object RetrieveForeignPropertyBsasFixtures {
 

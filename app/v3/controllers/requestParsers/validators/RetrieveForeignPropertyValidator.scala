@@ -16,9 +16,9 @@
 
 package v3.controllers.requestParsers.validators
 
-import v2.controllers.requestParsers.validators.validations.{AdjustedStatusValidation, BsasIdValidation, NinoValidation}
-import v2.models.errors.MtdError
-import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
+import v3.controllers.requestParsers.validators.validations.{AdjustedStatusValidation, BsasIdValidation, NinoValidation}
+import v3.models.errors.MtdError
+import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
 
 class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignPropertyRawData] {
 

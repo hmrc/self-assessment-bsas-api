@@ -18,9 +18,9 @@ package v3.fixtures
 
 import java.time.LocalDate
 
-import v2.models.domain.TypeOfBusiness
-import v2.models.response.retrieveBsas.AccountingPeriod
-import v2.models.response.retrieveBsasAdjustments.ukProperty._
+import v3.models.domain.TypeOfBusiness
+import v3.models.response.retrieveBsas.AccountingPeriod
+import v3.models.response.retrieveBsasAdjustments.ukProperty._
 
 object RetrieveBsasUKPropertyAdjustmentsFixtures {
 

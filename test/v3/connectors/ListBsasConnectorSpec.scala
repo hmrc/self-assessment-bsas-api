@@ -20,10 +20,10 @@ import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.DesTaxYear
-import v2.fixtures.ListBsasFixtures._
-import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.ListBsasRequest
+import v3.fixtures.ListBsasFixtures._
+import v3.mocks.MockHttpClient
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.ListBsasRequest
 
 import scala.concurrent.Future
 

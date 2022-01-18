@@ -18,9 +18,9 @@ package v3.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v2.models.errors.MtdError
-import v2.models.request.RetrieveUkPropertyBsasRawData
+import v3.controllers.requestParsers.validators.RetrieveUkPropertyValidator
+import v3.models.errors.MtdError
+import v3.models.request.RetrieveUkPropertyBsasRawData
 
 class MockRetrieveUkPropertyValidator extends MockFactory {
   val mockValidator: RetrieveUkPropertyValidator = mock[RetrieveUkPropertyValidator]

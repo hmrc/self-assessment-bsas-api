@@ -18,8 +18,8 @@ package v3.controllers.requestParsers.validators
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, NinoFormatError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
+import v3.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, NinoFormatError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
 

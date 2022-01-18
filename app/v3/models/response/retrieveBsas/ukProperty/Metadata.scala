@@ -19,8 +19,8 @@ package v3.models.response.retrieveBsas.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.DesTaxYear
-import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v2.models.response.retrieveBsas.AccountingPeriod
+import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v3.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
                     businessId: Option[String],

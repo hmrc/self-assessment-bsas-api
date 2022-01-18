@@ -17,6 +17,6 @@
 package v3.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.JsValue
-import v2.models.request.RawData
+import v3.models.request.RawData
 
 case class SubmitForeignPropertyRawData(nino: String, bsasId: String, body: JsValue) extends RawData

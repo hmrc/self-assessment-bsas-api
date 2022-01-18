@@ -18,8 +18,8 @@ package v3.services
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
-import v2.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v3.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -21,8 +21,8 @@ import javax.inject.{Inject, Singleton}
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v2.models.response.SubmitSelfEmploymentBsasResponse
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
+import v3.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +35,7 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDesHttpParser._
 
     put(
       body = request.body,

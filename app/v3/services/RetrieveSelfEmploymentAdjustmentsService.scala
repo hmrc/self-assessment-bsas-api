@@ -22,13 +22,13 @@ import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v2.connectors.RetrieveSelfEmploymentAdjustmentsConnector
-import v2.controllers.EndpointLogContext
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
-import v2.support.DesResponseMappingSupport
+import v3.connectors.RetrieveSelfEmploymentAdjustmentsConnector
+import v3.controllers.EndpointLogContext
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
+import v3.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 

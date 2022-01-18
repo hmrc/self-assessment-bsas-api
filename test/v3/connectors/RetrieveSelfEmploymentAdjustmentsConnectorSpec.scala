@@ -19,10 +19,10 @@ package v3.connectors
 import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v3.mocks.MockHttpClient
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 
 import scala.concurrent.Future
 

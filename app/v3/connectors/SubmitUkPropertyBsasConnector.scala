@@ -20,8 +20,8 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v2.models.response.SubmitUkPropertyBsasResponse
+import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
+import v3.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +35,7 @@ class SubmitUkPropertyBsasConnector @Inject()(
                           ec: ExecutionContext,
                           correlationId: String): Future[DownstreamOutcome[SubmitUkPropertyBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDesHttpParser._
 
     put(
       body = request.body,

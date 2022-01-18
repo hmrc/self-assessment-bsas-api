@@ -21,9 +21,9 @@ import java.time.LocalDate
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v2.mocks.MockCurrentDateProvider
-import v2.models.errors._
-import v2.models.request.triggerBsas.TriggerBsasRawData
+import v3.mocks.MockCurrentDateProvider
+import v3.models.errors._
+import v3.models.request.triggerBsas.TriggerBsasRawData
 
 
 class TriggerBSASValidatorSpec extends UnitSpec {

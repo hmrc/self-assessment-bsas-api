@@ -20,11 +20,11 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
-import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
+import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
-import v2.connectors.httpparsers.StandardDesHttpParser._
+import v3.connectors.httpparsers.StandardDesHttpParser._
 
 @Singleton
 class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,

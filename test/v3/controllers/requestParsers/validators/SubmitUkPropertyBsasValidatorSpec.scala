@@ -19,9 +19,9 @@ package v3.controllers.requestParsers.validators
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v2.models.errors._
-import v2.models.request.submitBsas.ukProperty._
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v3.models.errors._
+import v3.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 

@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{MtdError, TypeOfBusinessFormatError}
+import v3.models.errors.{MtdError, TypeOfBusinessFormatError}
 
 object ListBSASTypeOfBusinessValidation {
 

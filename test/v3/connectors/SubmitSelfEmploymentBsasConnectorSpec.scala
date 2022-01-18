@@ -19,14 +19,14 @@ package v3.connectors
 import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.selfEmployment.AdditionsFixture.additionsModel
-import v2.fixtures.selfEmployment.ExpensesFixture.expensesModel
-import v2.fixtures.selfEmployment.IncomeFixture.incomeModel
-import v2.mocks.MockHttpClient
-import v2.models.domain.TypeOfBusiness
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
-import v2.models.response.SubmitSelfEmploymentBsasResponse
+import v3.fixtures.selfEmployment.AdditionsFixture.additionsModel
+import v3.fixtures.selfEmployment.ExpensesFixture.expensesModel
+import v3.fixtures.selfEmployment.IncomeFixture.incomeModel
+import v3.mocks.MockHttpClient
+import v3.models.domain.TypeOfBusiness
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
+import v3.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 

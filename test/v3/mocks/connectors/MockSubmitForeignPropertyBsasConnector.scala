@@ -19,9 +19,9 @@ package v3.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, SubmitForeignPropertyBsasConnector}
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
-import v2.models.response.SubmitForeignPropertyBsasResponse
+import v3.connectors.{DownstreamOutcome, SubmitForeignPropertyBsasConnector}
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
+import v3.models.response.SubmitForeignPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

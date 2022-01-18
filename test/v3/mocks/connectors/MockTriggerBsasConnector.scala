@@ -19,9 +19,9 @@ package v3.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, TriggerBsasConnector}
-import v2.models.request.triggerBsas.TriggerBsasRequest
-import v2.models.response.TriggerBsasResponse
+import v3.connectors.{DownstreamOutcome, TriggerBsasConnector}
+import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.response.TriggerBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

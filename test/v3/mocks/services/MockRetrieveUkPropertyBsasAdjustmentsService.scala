@@ -19,12 +19,12 @@ package v3.mocks.services
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
-import v2.models.errors.ErrorWrapper
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
-import v2.services.RetrieveUkPropertyAdjustmentsService
+import v3.controllers.EndpointLogContext
+import v3.models.errors.ErrorWrapper
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
+import v3.services.RetrieveUkPropertyAdjustmentsService
 
 import scala.concurrent.{ExecutionContext, Future}
 

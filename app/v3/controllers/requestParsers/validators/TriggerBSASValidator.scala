@@ -19,10 +19,10 @@ package v3.controllers.requestParsers.validators
 import config.FixedConfig
 import javax.inject.Inject
 import utils.CurrentDateProvider
-import v2.controllers.requestParsers.validators.validations._
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
-import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
+import v3.controllers.requestParsers.validators.validations._
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
 class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 

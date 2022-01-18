@@ -16,8 +16,8 @@
 
 package v3
 
-import v2.models.errors.{DesError, MtdError}
-import v2.models.outcomes.ResponseWrapper
+import v3.models.errors.{DesError, MtdError}
+import v3.models.outcomes.ResponseWrapper
 
 package object connectors {
 

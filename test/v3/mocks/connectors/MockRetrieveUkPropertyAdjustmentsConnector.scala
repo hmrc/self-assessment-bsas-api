@@ -19,7 +19,7 @@ package v3.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, RetrieveUkPropertyAdjustmentsConnector}
+import v3.connectors.{DownstreamOutcome, RetrieveUkPropertyAdjustmentsConnector}
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 

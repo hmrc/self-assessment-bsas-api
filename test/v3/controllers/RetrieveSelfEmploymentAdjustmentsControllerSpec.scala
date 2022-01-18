@@ -21,17 +21,17 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
-import v2.mocks.hateoas.MockHateoasFactory
-import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
-import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.errors._
-import v2.models.hateoas.Method.GET
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
-import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v3.mocks.hateoas.MockHateoasFactory
+import v3.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
+import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentAdjustmentsService}
+import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.errors._
+import v3.models.hateoas.Method.GET
+import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
+import v3.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

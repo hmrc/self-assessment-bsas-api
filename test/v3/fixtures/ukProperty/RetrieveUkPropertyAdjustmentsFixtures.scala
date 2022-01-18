@@ -19,9 +19,9 @@ package v3.fixtures.ukProperty
 import java.time.LocalDate
 
 import play.api.libs.json.{JsValue, Json}
-import v2.models.domain.TypeOfBusiness
-import v2.models.response.retrieveBsas.AccountingPeriod
-import v2.models.response.retrieveBsasAdjustments.ukProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveUkPropertyAdjustmentsResponse}
+import v3.models.domain.TypeOfBusiness
+import v3.models.response.retrieveBsas.AccountingPeriod
+import v3.models.response.retrieveBsasAdjustments.ukProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveUkPropertyAdjustmentsResponse}
 
 object RetrieveUkPropertyAdjustmentsFixtures {
 

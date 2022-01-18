@@ -19,9 +19,9 @@ package v3.models.response.listBsas
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
-import v2.hateoas.{HateoasLinks, HateoasListLinksFactory}
-import v2.models.domain.TypeOfBusiness
-import v2.models.hateoas.{HateoasData, Link}
+import v3.hateoas.{HateoasLinks, HateoasListLinksFactory}
+import v3.models.domain.TypeOfBusiness
+import v3.models.hateoas.{HateoasData, Link}
 
 case class ListBsasResponse[I](businessSourceSummaries: Seq[BusinessSourceSummary[I]])
 

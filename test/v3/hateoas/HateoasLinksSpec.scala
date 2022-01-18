@@ -18,9 +18,9 @@ package v3.hateoas
 
 import mocks.MockAppConfig
 import support.UnitSpec
-import v2.models.hateoas.Link
-import v2.models.hateoas.Method.{GET, POST}
-import v2.models.hateoas.RelType._
+import v3.models.hateoas.Link
+import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 

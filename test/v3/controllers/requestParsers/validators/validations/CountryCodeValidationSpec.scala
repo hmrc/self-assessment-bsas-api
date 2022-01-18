@@ -17,7 +17,7 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.{CountryCodeFormatError, RuleCountryCodeError}
+import v3.models.errors.{CountryCodeFormatError, RuleCountryCodeError}
 
 class CountryCodeValidationSpec extends UnitSpec {
   "CountryCodeValidation" when {

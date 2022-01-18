@@ -17,17 +17,17 @@
 package v3.support
 
 import utils.Logging
-import v2.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
-import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
-import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
-import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
-import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
-import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
-import v2.models.response.{retrieveBsas, retrieveBsasAdjustments}
+import v3.controllers.EndpointLogContext
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
+import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v3.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
+import v3.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
+import v3.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
+import v3.models.response.{retrieveBsas, retrieveBsasAdjustments}
 
 trait DesResponseMappingSupport {
   self: Logging =>

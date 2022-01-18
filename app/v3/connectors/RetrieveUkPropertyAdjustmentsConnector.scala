@@ -20,8 +20,8 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +34,7 @@ class RetrieveUkPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
                                        ec: ExecutionContext,
                                        correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyAdjustmentsResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
     val bsasId = request.bsasId

@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 

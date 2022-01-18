@@ -17,8 +17,8 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.NinoFormatError
-import v2.models.utils.JsonErrorValidators
+import v3.models.errors.NinoFormatError
+import v3.models.utils.JsonErrorValidators
 
 class NinoValidationSpec extends UnitSpec with JsonErrorValidators {
 

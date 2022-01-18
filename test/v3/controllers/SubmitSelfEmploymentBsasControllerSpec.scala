@@ -21,17 +21,17 @@ import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsJson, Result}
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.hateoas.MockHateoasFactory
-import v2.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
-import v2.mocks.services._
-import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
-import v2.models.hateoas.Method.GET
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
-import v2.models.response.{SubmitSelfEmploymentBsasHateoasData, SubmitSelfEmploymentBsasResponse}
+import v3.mocks.hateoas.MockHateoasFactory
+import v3.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
+import v3.mocks.services._
+import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.hateoas.Method.GET
+import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
+import v3.models.response.{SubmitSelfEmploymentBsasHateoasData, SubmitSelfEmploymentBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -70,7 +70,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   }
 
-  import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
+  import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
   private val nino = "AA123456A"
 

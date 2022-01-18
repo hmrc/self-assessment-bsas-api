@@ -17,9 +17,9 @@
 package v3.controllers.requestParsers.validators
 
 import config.FixedConfig
-import v2.controllers.requestParsers.validators.validations._
-import v2.models.errors.{MtdError, RuleTaxYearNotSupportedError}
-import v2.models.request.ListBsasRawData
+import v3.controllers.requestParsers.validators.validations._
+import v3.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import v3.models.request.ListBsasRawData
 
 
 class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {

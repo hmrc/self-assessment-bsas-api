@@ -18,7 +18,7 @@ package v3.controllers.requestParsers.validators.validations
 
 import config.FixedConfig
 import utils.DesTaxYear
-import v2.models.errors.MtdError
+import v3.models.errors.MtdError
 
 object MtdTaxYearValidation extends FixedConfig {
 

@@ -20,7 +20,7 @@ import cats.Functor
 import cats.implicits._
 import config.AppConfig
 import javax.inject.Inject
-import v2.models.hateoas._
+import v3.models.hateoas._
 
 import scala.language.higherKinds
 

@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
-import v2.models.response.retrieveBsas.TotalBsas
+import v3.models.response.retrieveBsas.TotalBsas
 
 case class CountryLevelDetail(countryCode: String,
                               total: TotalBsas,

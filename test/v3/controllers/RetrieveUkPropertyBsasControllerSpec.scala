@@ -21,17 +21,17 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v2.mocks.hateoas.MockHateoasFactory
-import v2.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
-import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, RuleNoAdjustmentsMade, RuleNotUkProperty, _}
-import v2.models.hateoas.Method.{GET, POST}
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
-import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v3.mocks.hateoas.MockHateoasFactory
+import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
+import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
+import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, RuleNoAdjustmentsMade, RuleNotUkProperty, _}
+import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

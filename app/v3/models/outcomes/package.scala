@@ -16,8 +16,8 @@
 
 package v3.models
 
-import v2.models.auth.UserDetails
-import v2.models.errors.MtdError
+import v3.models.auth.UserDetails
+import v3.models.errors.MtdError
 
 package object outcomes {
 

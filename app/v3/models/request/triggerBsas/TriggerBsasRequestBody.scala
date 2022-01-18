@@ -17,8 +17,8 @@
 package v3.models.request.triggerBsas
 
 import play.api.libs.json.{Json, OWrites, Reads}
-import v2.models.domain.TypeOfBusiness
-import v2.models.request.AccountingPeriod
+import v3.models.domain.TypeOfBusiness
+import v3.models.request.AccountingPeriod
 
 case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod, typeOfBusiness: String, businessId: String)
 

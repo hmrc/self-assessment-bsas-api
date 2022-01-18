@@ -16,15 +16,15 @@
 
 package v3.connectors
 
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.MockHttpClient
-import v2.models.domain.TypeOfBusiness
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v2.models.response.SubmitUkPropertyBsasResponse
+import v3.mocks.MockHttpClient
+import v3.models.domain.TypeOfBusiness
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
+import v3.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
 

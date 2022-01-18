@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.audit.AuditExtensions
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import uk.gov.hmrc.play.bootstrap.config.AppName
-import v2.models.audit.AuditEvent
+import v3.models.audit.AuditEvent
 
 import scala.concurrent.{ExecutionContext, Future}
 

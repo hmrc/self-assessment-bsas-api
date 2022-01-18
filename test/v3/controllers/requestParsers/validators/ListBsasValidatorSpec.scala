@@ -17,8 +17,8 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v2.models.errors._
-import v2.models.request.ListBsasRawData
+import v3.models.errors._
+import v3.models.request.ListBsasRawData
 
 class ListBsasValidatorSpec extends UnitSpec {
 

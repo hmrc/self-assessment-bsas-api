@@ -18,8 +18,8 @@ package v3.controllers.requestParsers
 
 import javax.inject.Inject
 import domain.Nino
-import v2.controllers.requestParsers.validators.RetrieveAdjustmentsValidator
-import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
+import v3.controllers.requestParsers.validators.RetrieveAdjustmentsValidator
+import v3.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
 class RetrieveAdjustmentsRequestParser @Inject()(val validator: RetrieveAdjustmentsValidator)
   extends RequestParser[RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData] {

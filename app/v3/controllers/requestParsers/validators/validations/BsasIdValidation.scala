@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{BsasIdFormatError, MtdError}
+import v3.models.errors.{BsasIdFormatError, MtdError}
 
 object BsasIdValidation {
 

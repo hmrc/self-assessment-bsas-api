@@ -18,7 +18,7 @@ package v3.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.RetrieveUkPropertyRequestParser
+import v3.controllers.requestParsers.RetrieveUkPropertyRequestParser
 import v2.models.errors.ErrorWrapper
 import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 

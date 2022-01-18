@@ -17,8 +17,8 @@
 package v3.connectors
 
 import mocks.MockAppConfig
-import v2.mocks.MockHttpClient
-import v2.models.errors.DownstreamError
+import v3.mocks.MockHttpClient
+import v3.models.errors.DownstreamError
 
 import scala.concurrent.Future
 

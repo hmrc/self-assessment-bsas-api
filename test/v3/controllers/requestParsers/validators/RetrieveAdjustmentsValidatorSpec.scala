@@ -17,8 +17,8 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v2.models.errors.{BsasIdFormatError, NinoFormatError}
-import v2.models.request.RetrieveAdjustmentsRawData
+import v3.models.errors.{BsasIdFormatError, NinoFormatError}
+import v3.models.request.RetrieveAdjustmentsRawData
 
 class RetrieveAdjustmentsValidatorSpec extends UnitSpec {
 

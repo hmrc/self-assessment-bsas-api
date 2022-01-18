@@ -18,8 +18,8 @@ package v3.controllers.requestParsers
 
 import javax.inject.Inject
 import domain.Nino
-import v2.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.controllers.requestParsers.validators.RetrieveUkPropertyValidator
+import v3.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
   extends RequestParser[RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData] {

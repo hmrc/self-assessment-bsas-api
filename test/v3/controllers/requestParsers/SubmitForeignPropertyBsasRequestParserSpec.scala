@@ -19,9 +19,9 @@ package v3.controllers.requestParsers
 import play.api.libs.json.Json
 import support.UnitSpec
 import domain.Nino
-import v2.mocks.validators.MockSubmitForeignPropertyBsasValidator
-import v2.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
-import v2.models.request.submitBsas.foreignProperty._
+import v3.mocks.validators.MockSubmitForeignPropertyBsasValidator
+import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
+import v3.models.request.submitBsas.foreignProperty._
 
 class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
   val nino = "AA123456B"

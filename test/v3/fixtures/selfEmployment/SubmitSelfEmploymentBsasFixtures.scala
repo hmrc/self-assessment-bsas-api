@@ -17,10 +17,10 @@
 package v3.fixtures.selfEmployment
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v2.fixtures.selfEmployment.AdditionsFixture.{additionsFromVendorJson, additionsModel, additionsToDesJson}
-import v2.fixtures.selfEmployment.ExpensesFixture.{expensesFromMtdJson, expensesModel, expensesToDesJson}
-import v2.fixtures.selfEmployment.IncomeFixture.{incomeJson, incomeModel}
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v3.fixtures.selfEmployment.AdditionsFixture.{additionsFromVendorJson, additionsModel, additionsToDesJson}
+import v3.fixtures.selfEmployment.ExpensesFixture.{expensesFromMtdJson, expensesModel, expensesToDesJson}
+import v3.fixtures.selfEmployment.IncomeFixture.{incomeJson, incomeModel}
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.collection.mutable.ListBuffer
 

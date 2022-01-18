@@ -19,8 +19,8 @@ package v3.models.response.retrieveBsas.selfEmployment
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v2.models.hateoas.{HateoasData, Link}
+import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v3.models.hateoas.{HateoasData, Link}
 
 case class RetrieveSelfEmploymentBsasResponse (metadata: Metadata,
                                                bsas: Option[BsasDetail])

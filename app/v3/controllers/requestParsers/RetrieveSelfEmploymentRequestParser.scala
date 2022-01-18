@@ -18,8 +18,8 @@ package v3.controllers.requestParsers
 
 import javax.inject.Inject
 import domain.Nino
-import v2.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
-import v2.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v3.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
+import v3.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 class RetrieveSelfEmploymentRequestParser @Inject()(val validator: RetrieveSelfEmploymentValidator)
   extends RequestParser[RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData] {

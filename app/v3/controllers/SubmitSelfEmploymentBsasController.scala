@@ -25,13 +25,13 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
-import v2.hateoas.HateoasFactory
-import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
-import v2.models.response.SubmitSelfEmploymentBsasHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasNrsProxyService, SubmitSelfEmploymentBsasService}
+import v3.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
+import v3.hateoas.HateoasFactory
+import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
+import v3.models.response.SubmitSelfEmploymentBsasHateoasData
+import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasNrsProxyService, SubmitSelfEmploymentBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

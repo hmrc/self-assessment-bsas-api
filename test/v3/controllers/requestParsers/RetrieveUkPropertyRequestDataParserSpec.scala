@@ -18,9 +18,9 @@ package v3.controllers.requestParsers
 
 import support.UnitSpec
 import domain.Nino
-import v2.mocks.validators.MockRetrieveUkPropertyValidator
-import v2.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
-import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.mocks.validators.MockRetrieveUkPropertyValidator
+import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
+import v3.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 
 class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
 

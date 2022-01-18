@@ -18,14 +18,14 @@ package v3.services
 
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
-import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-import v2.mocks.connectors.MockSubmitSelfEmploymentBsasConnector
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v2.models.response.SubmitSelfEmploymentBsasResponse
+import v3.controllers.EndpointLogContext
+import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
+import v3.mocks.connectors.MockSubmitSelfEmploymentBsasConnector
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
+import v3.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 

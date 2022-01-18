@@ -16,9 +16,9 @@
 
 package v3.controllers.requestParsers.validators
 
-import v2.controllers.requestParsers.validators.validations.{CountryCodeValidation, NoValidationErrors, _}
-import v2.models.errors._
-import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
+import v3.controllers.requestParsers.validators.validations.{CountryCodeValidation, NoValidationErrors, _}
+import v3.models.errors._
+import v3.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet = List(

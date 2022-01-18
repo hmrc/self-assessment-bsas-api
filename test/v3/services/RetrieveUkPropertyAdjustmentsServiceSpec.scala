@@ -18,7 +18,7 @@ package v3.services
 
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import v3.controllers.EndpointLogContext
 import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v2.mocks.connectors.MockRetrieveUkPropertyAdjustmentsConnector
 import v2.models.outcomes.ResponseWrapper

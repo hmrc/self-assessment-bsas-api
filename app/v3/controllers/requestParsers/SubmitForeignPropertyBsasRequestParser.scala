@@ -18,8 +18,8 @@ package v3.controllers.requestParsers
 
 import javax.inject.Inject
 import domain.Nino
-import v2.controllers.requestParsers.validators.SubmitForeignPropertyBsasValidator
-import v2.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData, SubmitForeignPropertyRawData}
+import v3.controllers.requestParsers.validators.SubmitForeignPropertyBsasValidator
+import v3.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasRequestParser @Inject()(val validator: SubmitForeignPropertyBsasValidator)
   extends RequestParser[SubmitForeignPropertyRawData, SubmitForeignPropertyBsasRequestData] {

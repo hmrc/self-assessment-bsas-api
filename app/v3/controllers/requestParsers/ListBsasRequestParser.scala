@@ -19,9 +19,9 @@ package v3.controllers.requestParsers
 import javax.inject.Inject
 import domain.Nino
 import utils.{CurrentDateProvider, DateUtils}
-import v2.controllers.requestParsers.validators.ListBsasValidator
-import v2.models.domain.TypeOfBusiness
-import v2.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.controllers.requestParsers.validators.ListBsasValidator
+import v3.models.domain.TypeOfBusiness
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
 
 class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
                                       val currentDateProvider: CurrentDateProvider)

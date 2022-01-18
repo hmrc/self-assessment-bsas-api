@@ -25,14 +25,14 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.RetrieveUkPropertyRequestParser
-import v2.hateoas.HateoasFactory
-import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.errors._
-import v2.models.request.RetrieveUkPropertyBsasRawData
-import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse.RetrieveUkPropertyBsasHateoasFactory
-import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveUkPropertyBsasService}
+import v3.controllers.requestParsers.RetrieveUkPropertyRequestParser
+import v3.hateoas.HateoasFactory
+import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.errors._
+import v3.models.request.RetrieveUkPropertyBsasRawData
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse.RetrieveUkPropertyBsasHateoasFactory
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
+import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveUkPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

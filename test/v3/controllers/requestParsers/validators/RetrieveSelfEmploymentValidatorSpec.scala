@@ -17,8 +17,8 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v2.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, NinoFormatError}
-import v2.models.request.RetrieveSelfEmploymentBsasRawData
+import v3.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, NinoFormatError}
+import v3.models.request.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidatorSpec extends UnitSpec {
 

@@ -17,7 +17,7 @@
 package v3.fixtures.selfEmployment
 
 import play.api.libs.json.{JsValue, Json}
-import v2.models.request.submitBsas.selfEmployment.{Income, queryMap}
+import v3.models.request.submitBsas.selfEmployment.{Income, queryMap}
 
 object IncomeFixture {
 

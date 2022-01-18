@@ -19,10 +19,10 @@ package v3.controllers.requestParsers
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import domain.Nino
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v2.mocks.validators.MockSubmitUkPropertyBsasValidator
-import v2.models.errors._
-import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v3.mocks.validators.MockSubmitUkPropertyBsasValidator
+import v3.models.errors._
+import v3.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 

@@ -23,12 +23,12 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.RetrieveAdjustmentsRequestParser
-import v2.hateoas.HateoasFactory
-import v2.models.errors._
-import v2.models.request.RetrieveAdjustmentsRawData
-import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
-import v2.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyAdjustmentsService}
+import v3.controllers.requestParsers.RetrieveAdjustmentsRequestParser
+import v3.hateoas.HateoasFactory
+import v3.models.errors._
+import v3.models.request.RetrieveAdjustmentsRawData
+import v3.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
+import v3.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyAdjustmentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

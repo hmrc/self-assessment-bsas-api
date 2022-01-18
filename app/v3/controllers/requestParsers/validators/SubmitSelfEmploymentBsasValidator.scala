@@ -17,9 +17,9 @@
 package v3.controllers.requestParsers.validators
 
 import config.FixedConfig
-import v2.controllers.requestParsers.validators.validations._
-import v2.models.errors.{MtdError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
-import v2.models.request.submitBsas.selfEmployment._
+import v3.controllers.requestParsers.validators.validations._
+import v3.models.errors.{MtdError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v3.models.request.submitBsas.selfEmployment._
 
 class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] with FixedConfig {
 

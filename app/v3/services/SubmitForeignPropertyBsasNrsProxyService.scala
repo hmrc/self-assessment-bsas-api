@@ -18,8 +18,8 @@ package v3.services
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.SubmitForeignPropertyBsasNrsProxyConnector
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
+import v3.connectors.SubmitForeignPropertyBsasNrsProxyConnector
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 

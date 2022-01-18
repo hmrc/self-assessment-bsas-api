@@ -17,7 +17,7 @@
 package v3.controllers.requestParsers.validators.validations
 
 import com.neovisionaries.i18n.CountryCode
-import v2.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError}
+import v3.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError}
 
 object CountryCodeValidation {
   def validate(field: String, path: String): List[MtdError] = (CountryCode.getByAlpha3Code(field), field) match {

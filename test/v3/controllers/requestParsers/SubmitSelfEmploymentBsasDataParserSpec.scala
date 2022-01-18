@@ -19,10 +19,10 @@ package v3.controllers.requestParsers
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import domain.Nino
-import v2.mocks.validators.MockSubmitSelfEmploymentBsasValidator
-import v2.models.errors._
-import v2.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
-import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
+import v3.mocks.validators.MockSubmitSelfEmploymentBsasValidator
+import v3.models.errors._
+import v3.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
+import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 

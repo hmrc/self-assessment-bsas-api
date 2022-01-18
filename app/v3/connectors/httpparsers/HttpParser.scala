@@ -19,7 +19,7 @@ package v3.connectors.httpparsers
 import play.api.Logger
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpResponse
-import v2.models.errors._
+import v3.models.errors._
 
 import scala.util.{ Success, Try }
 

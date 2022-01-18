@@ -18,9 +18,9 @@ package v3.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.validators.RetrieveAdjustmentsValidator
-import v2.models.errors.MtdError
-import v2.models.request.RetrieveAdjustmentsRawData
+import v3.controllers.requestParsers.validators.RetrieveAdjustmentsValidator
+import v3.models.errors.MtdError
+import v3.models.request.RetrieveAdjustmentsRawData
 
 class MockRetrieveAdjustmentsValidator extends MockFactory {
   val mockValidator: RetrieveAdjustmentsValidator = mock[RetrieveAdjustmentsValidator]

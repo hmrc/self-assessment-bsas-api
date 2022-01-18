@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{RuleBothExpensesError, MtdError}
+import v3.models.errors.{RuleBothExpensesError, MtdError}
 
 object BothExpensesValidation {
 

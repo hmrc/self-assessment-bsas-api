@@ -20,9 +20,9 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.RetrieveAdjustmentsRequestData
+import v3.mocks.MockHttpClient
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.RetrieveAdjustmentsRequestData
 
 import scala.concurrent.Future
 

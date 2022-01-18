@@ -19,7 +19,7 @@ package v3.controllers.requestParsers.validators.validations
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import v2.models.errors.{RuleEndBeforeStartDateError, MtdError}
+import v3.models.errors.{RuleEndBeforeStartDateError, MtdError}
 
 object EndBeforeStartDateValidation {
 

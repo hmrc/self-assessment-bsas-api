@@ -19,9 +19,9 @@ package v3.controllers.requestParsers.validators
 import play.api.libs.json.{Json, OWrites}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v2.models.errors._
-import v2.models.request.submitBsas.selfEmployment._
-import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
+import v3.models.errors._
+import v3.models.request.submitBsas.selfEmployment._
+import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
   val validator = new SubmitSelfEmploymentBsasValidator()

@@ -17,8 +17,8 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.RuleEndBeforeStartDateError
-import v2.models.utils.JsonErrorValidators
+import v3.models.errors.RuleEndBeforeStartDateError
+import v3.models.utils.JsonErrorValidators
 
 class EndBeforeDateValidationSpec extends UnitSpec with JsonErrorValidators {
 

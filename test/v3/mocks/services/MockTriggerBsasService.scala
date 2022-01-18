@@ -20,11 +20,11 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.controllers.EndpointLogContext
-import v2.models.errors.ErrorWrapper
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.triggerBsas.TriggerBsasRequest
-import v2.models.response.TriggerBsasResponse
-import v2.services.TriggerBsasService
+import v3.models.errors.ErrorWrapper
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.response.TriggerBsasResponse
+import v3.services.TriggerBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
 

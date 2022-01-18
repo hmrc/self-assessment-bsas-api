@@ -17,8 +17,8 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.RuleBothExpensesError
-import v2.models.utils.JsonErrorValidators
+import v3.models.errors.RuleBothExpensesError
+import v3.models.utils.JsonErrorValidators
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 

@@ -19,7 +19,7 @@ package v3.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 

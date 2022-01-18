@@ -20,8 +20,8 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v2.models.request.RetrieveSelfEmploymentBsasRequestData
-import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v3.models.request.RetrieveSelfEmploymentBsasRequestData
+import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +34,7 @@ class RetrieveSelfEmploymentBsasConnector @Inject()
                                 (implicit hc: HeaderCarrier, ec: ExecutionContext,
                                  correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
     val bsasId = request.bsasId

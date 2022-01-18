@@ -19,12 +19,12 @@ package v3.mocks.services
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
-import v2.models.errors.ErrorWrapper
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
-import v2.models.response.SubmitForeignPropertyBsasResponse
-import v2.services.SubmitForeignPropertyBsasService
+import v3.controllers.EndpointLogContext
+import v3.models.errors.ErrorWrapper
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
+import v3.models.response.SubmitForeignPropertyBsasResponse
+import v3.services.SubmitForeignPropertyBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
 

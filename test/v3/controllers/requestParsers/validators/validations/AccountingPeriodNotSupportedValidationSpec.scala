@@ -17,10 +17,10 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.mocks.MockCurrentDateProvider
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors.RuleAccountingPeriodNotSupportedError
-import v2.models.utils.JsonErrorValidators
+import v3.mocks.MockCurrentDateProvider
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors.RuleAccountingPeriodNotSupportedError
+import v3.models.utils.JsonErrorValidators
 
 class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider {
 

@@ -19,8 +19,8 @@ package v3.controllers.requestParsers
 import javax.inject.Inject
 
 import domain.Nino
-import v2.controllers.requestParsers.validators.TriggerBSASValidator
-import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
+import v3.controllers.requestParsers.validators.TriggerBSASValidator
+import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
 
 class TriggerBsasRequestParser @Inject()(val validator: TriggerBSASValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
 

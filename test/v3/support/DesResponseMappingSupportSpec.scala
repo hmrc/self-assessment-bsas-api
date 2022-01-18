@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import support.UnitSpec
 import utils.Logging
-import v2.controllers.EndpointLogContext
+import v3.controllers.EndpointLogContext
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper

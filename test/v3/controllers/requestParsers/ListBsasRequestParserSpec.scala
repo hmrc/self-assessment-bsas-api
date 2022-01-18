@@ -21,11 +21,11 @@ import java.time.LocalDate
 import support.UnitSpec
 import domain.Nino
 import utils.DesTaxYear
-import v2.mocks.MockCurrentDateProvider
-import v2.mocks.validators.MockListBsasValidator
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import v2.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.mocks.MockCurrentDateProvider
+import v3.mocks.validators.MockListBsasValidator
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
 
 class ListBsasRequestParserSpec extends UnitSpec{
 

@@ -19,8 +19,8 @@ package v3.mocks.services
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
-import v2.services.SubmitForeignPropertyBsasNrsProxyService
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
+import v3.services.SubmitForeignPropertyBsasNrsProxyService
 
 import scala.concurrent.{ExecutionContext, Future}
 

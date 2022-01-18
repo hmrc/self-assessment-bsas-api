@@ -19,11 +19,11 @@ package v3.connectors
 import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.TriggerBsasRequestBodyFixtures._
-import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.triggerBsas.TriggerBsasRequest
-import v2.models.response.TriggerBsasResponse
+import v3.fixtures.TriggerBsasRequestBodyFixtures._
+import v3.mocks.MockHttpClient
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.response.TriggerBsasResponse
 
 import scala.concurrent.Future
 

@@ -20,10 +20,10 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import domain.Nino
-import v2.fixtures.TriggerBsasRequestBodyFixtures._
-import v2.mocks.validators.MockTriggerBSASValidator
-import v2.models.errors._
-import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
+import v3.fixtures.TriggerBsasRequestBodyFixtures._
+import v3.mocks.validators.MockTriggerBSASValidator
+import v3.models.errors._
+import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
 class TriggerBsasRequestParserSpec extends UnitSpec {
 

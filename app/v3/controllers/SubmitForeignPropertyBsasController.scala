@@ -22,12 +22,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.SubmitForeignPropertyBsasRequestParser
-import v2.hateoas.HateoasFactory
-import v2.models.errors._
-import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
-import v2.models.response.SubmitForeignPropertyBsasHateoasData
-import v2.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
+import v3.controllers.requestParsers.SubmitForeignPropertyBsasRequestParser
+import v3.hateoas.HateoasFactory
+import v3.models.errors._
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
+import v3.models.response.SubmitForeignPropertyBsasHateoasData
+import v3.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

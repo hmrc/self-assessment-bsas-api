@@ -19,8 +19,8 @@ package v3.controllers.requestParsers.validators.validations
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors.{MtdError, RuleAccountingPeriodNotSupportedError}
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors.{MtdError, RuleAccountingPeriodNotSupportedError}
 
 object AccountingPeriodNotSupportedValidation {
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
