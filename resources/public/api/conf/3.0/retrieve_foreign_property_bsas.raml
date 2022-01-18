@@ -1,0 +1,35 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatBsasId
+  - errors.formatAdjustedStatus
+  - errors.ruleNotForeignProperty
+  - errors.ruleNoAdjustmentsMade
+  - errors.clientOrAgentNotAuthorised
+  - errors.bsasNotFound
+  - queryParameters.adjustedStatusOptional
+displayName: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
+description: This endpoint allows the developer to  request a specific Business Source Adjustable Summary using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted is to be returned. A National Insurance number and BSAS ID are required. The BSAS ID quoted must be for a Foreign Property Business.
+(annotations.sandboxData): !include scenarios/retrieve_foreign_property_bsas.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+responses:
+  200:
+    body:
+      application/json:
+        type: !include schemas/retrieve_foreign_property_bsas.json
+        examples:
+          foreign_property:
+            description: Foreign Property
+            value: !include examples/retrieveBsas/retrieve_foreign_property_bsas.json
+          foreign_property_fhl_eea:
+            description: Foreign Property FHL EEA
+            value: !include examples/retrieveBsas/retrieve_foreign_property_fhl_eea_bsas.json
+          consolidated_expenses:
+            description: Foreign Property with consolidated expenses
+            value: !include examples/retrieveBsas/retrieve_foreign_property_bsas_consolidated.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.
