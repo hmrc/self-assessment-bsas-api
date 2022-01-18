@@ -20,7 +20,7 @@ import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
-import v3.models.outcomes.ResponseWrapper
+import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
 
