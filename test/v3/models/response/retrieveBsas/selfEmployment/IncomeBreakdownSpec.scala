@@ -17,8 +17,8 @@
 package v3.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desIncomeBreakdownJson, incomeBreakdownModel, mtdIncomeBreakdownJson}
-import v2.models.utils.JsonErrorValidators
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desIncomeBreakdownJson, incomeBreakdownModel, mtdIncomeBreakdownJson}
+import v3.models.utils.JsonErrorValidators
 
 class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 

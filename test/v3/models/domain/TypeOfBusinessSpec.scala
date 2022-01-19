@@ -18,7 +18,7 @@ package v3.models.domain
 
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
-import v2.models.domain.TypeOfBusiness._
+import v3.models.domain.TypeOfBusiness._
 
 class TypeOfBusinessSpec extends UnitSpec with EnumJsonSpecSupport {
 

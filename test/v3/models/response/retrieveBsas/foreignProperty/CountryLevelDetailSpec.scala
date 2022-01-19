@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class CountryLevelDetailSpec extends UnitSpec {
 

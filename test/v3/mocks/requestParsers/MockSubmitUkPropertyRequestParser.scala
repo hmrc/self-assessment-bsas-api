@@ -19,8 +19,8 @@ package v3.mocks.requestParsers
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.controllers.requestParsers.SubmitUkPropertyBsasDataParser
-import v2.models.errors.ErrorWrapper
-import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v3.models.errors.ErrorWrapper
+import v3.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 trait MockSubmitUkPropertyRequestParser extends MockFactory {
 

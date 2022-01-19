@@ -17,8 +17,8 @@
 package v3.services
 
 import domain.Nino
-import v2.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
-import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
+import v3.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
+import v3.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
 import scala.concurrent.Future
 

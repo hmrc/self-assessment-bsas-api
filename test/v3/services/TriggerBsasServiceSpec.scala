@@ -19,12 +19,12 @@ package v3.services
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
-import v2.fixtures.TriggerBsasRequestBodyFixtures._
-import v2.mocks.connectors.MockTriggerBsasConnector
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.triggerBsas.TriggerBsasRequest
-import v2.models.response.TriggerBsasResponse
+import v3.fixtures.TriggerBsasRequestBodyFixtures._
+import v3.mocks.connectors.MockTriggerBsasConnector
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.response.TriggerBsasResponse
 
 import scala.concurrent.Future
 

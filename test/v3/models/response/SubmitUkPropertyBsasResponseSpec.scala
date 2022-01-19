@@ -19,10 +19,10 @@ package v3.models.response
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v2.hateoas.HateoasFactory
-import v2.models.domain.TypeOfBusiness
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.hateoas.Method.GET
+import v3.hateoas.HateoasFactory
+import v3.models.domain.TypeOfBusiness
+import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.Method.GET
 
 class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
 

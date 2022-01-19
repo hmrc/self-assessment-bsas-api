@@ -20,8 +20,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.{DownstreamOutcome, RetrieveSelfEmploymentBsasConnector}
-import v2.models.request.RetrieveSelfEmploymentBsasRequestData
-import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v3.models.request.RetrieveSelfEmploymentBsasRequestData
+import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

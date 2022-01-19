@@ -19,11 +19,11 @@ package v3.models.response.listBsas
 import mocks.MockAppConfig
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
-import v2.fixtures.ListBsasFixtures._
-import v2.models.domain.{Status, TypeOfBusiness}
-import v2.models.hateoas.Method.{GET, POST}
-import v2.models.hateoas.Link
-import v2.models.request.AccountingPeriod
+import v3.fixtures.ListBsasFixtures._
+import v3.models.domain.{Status, TypeOfBusiness}
+import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.Link
+import v3.models.request.AccountingPeriod
 
 class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
 

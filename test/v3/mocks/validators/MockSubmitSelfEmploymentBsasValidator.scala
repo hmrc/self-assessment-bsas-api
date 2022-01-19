@@ -18,9 +18,9 @@ package v3.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
-import v2.models.errors.MtdError
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
+import v3.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
+import v3.models.errors.MtdError
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
 
 class MockSubmitSelfEmploymentBsasValidator extends MockFactory {
   val mockValidator: SubmitSelfEmploymentBsasValidator = mock[SubmitSelfEmploymentBsasValidator]

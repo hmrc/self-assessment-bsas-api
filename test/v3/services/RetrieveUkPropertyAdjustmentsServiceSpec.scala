@@ -19,11 +19,11 @@ package v3.services
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
-import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
-import v2.mocks.connectors.MockRetrieveUkPropertyAdjustmentsConnector
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
+import v3.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
+import v3.mocks.connectors.MockRetrieveUkPropertyAdjustmentsConnector
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
 import scala.concurrent.Future
 

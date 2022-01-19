@@ -18,9 +18,9 @@ package v3.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
-import v2.models.errors.ErrorWrapper
-import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
+import v3.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
+import v3.models.errors.ErrorWrapper
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
 
 trait MockSubmitSelfEmploymentRequestParser extends MockFactory {
 

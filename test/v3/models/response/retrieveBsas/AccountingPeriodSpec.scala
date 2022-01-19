@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class AccountingPeriodSpec extends UnitSpec {
 

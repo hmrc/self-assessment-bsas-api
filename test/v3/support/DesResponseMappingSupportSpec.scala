@@ -21,11 +21,11 @@ import java.time.LocalDate
 import support.UnitSpec
 import utils.Logging
 import v3.controllers.EndpointLogContext
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.response.retrieveBsas.AccountingPeriod
-import v2.models.response.{retrieveBsas, retrieveBsasAdjustments}
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.response.retrieveBsas.AccountingPeriod
+import v3.models.response.{retrieveBsas, retrieveBsasAdjustments}
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 

@@ -17,12 +17,12 @@
 package v3.models.response.retrieveBsas.selfEmployment
 
 import mocks.MockAppConfig
-import v2.models.hateoas.Method._
+import v3.models.hateoas.Method._
 import support.UnitSpec
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, mtdRetrieveBsasResponseJson, retrieveBsasResponseModelAdjustable, retrieveBsasResponseModelAdjusted}
-import v2.hateoas.HateoasFactory
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.utils.JsonErrorValidators
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, mtdRetrieveBsasResponseJson, retrieveBsasResponseModelAdjustable, retrieveBsasResponseModelAdjusted}
+import v3.hateoas.HateoasFactory
+import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.utils.JsonErrorValidators
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 

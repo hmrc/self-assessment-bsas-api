@@ -17,8 +17,8 @@
 package v3.services
 
 import domain.Nino
-import v2.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
+import v3.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
 import scala.concurrent.Future
 

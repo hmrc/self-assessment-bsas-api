@@ -18,8 +18,8 @@ package v3.models.response.listBsas
 
 import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
-import v2.fixtures.ListBsasFixtures._
-import v2.models.domain.Status
+import v3.fixtures.ListBsasFixtures._
+import v3.models.domain.Status
 
 class BsasEntriesSpec extends UnitSpec{
 

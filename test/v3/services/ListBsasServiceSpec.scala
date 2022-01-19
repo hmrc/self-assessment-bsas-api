@@ -20,12 +20,12 @@ import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.DesTaxYear
 import v3.controllers.EndpointLogContext
-import v2.fixtures.ListBsasFixtures._
-import v2.mocks.connectors.MockListBsasConnector
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v3.fixtures.ListBsasFixtures._
+import v3.mocks.connectors.MockListBsasConnector
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.ListBsasRequest
+import v3.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 import scala.concurrent.Future
 

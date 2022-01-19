@@ -18,8 +18,8 @@ package v3.models.response.retrieveBsasAdjustments.ukProperty
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.models.utils.JsonErrorValidators
-import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
+import v3.models.utils.JsonErrorValidators
+import v3.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 
 class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 

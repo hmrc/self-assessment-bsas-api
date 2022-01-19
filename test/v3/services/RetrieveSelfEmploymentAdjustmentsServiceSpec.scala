@@ -19,11 +19,11 @@ package v3.services
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
-import v2.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v3.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 
 import scala.concurrent.Future
 

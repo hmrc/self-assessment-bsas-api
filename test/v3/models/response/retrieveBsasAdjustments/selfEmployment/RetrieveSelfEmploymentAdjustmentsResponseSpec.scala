@@ -17,8 +17,8 @@
 package v3.models.response.retrieveBsasAdjustments.selfEmployment
 
 import support.UnitSpec
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
-import v2.models.utils.JsonErrorValidators
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v3.models.utils.JsonErrorValidators
 
 class RetrieveSelfEmploymentAdjustmentsResponseSpec extends UnitSpec with JsonErrorValidators {
 

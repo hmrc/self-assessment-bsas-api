@@ -19,11 +19,11 @@ package v3.models.response.retrieveBsas.foreignProperty
 import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v2.hateoas.HateoasFactory
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.hateoas.Method.{GET, POST}
-import v2.models.utils.JsonErrorValidators
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v3.hateoas.HateoasFactory
+import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.Method.{GET, POST}
+import v3.models.utils.JsonErrorValidators
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators{
 

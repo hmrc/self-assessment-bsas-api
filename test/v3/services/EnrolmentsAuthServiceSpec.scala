@@ -24,8 +24,8 @@ import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, 
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.models.auth.UserDetails
-import v2.models.errors.{DownstreamError, UnauthorisedError}
+import v3.models.auth.UserDetails
+import v3.models.errors.{DownstreamError, UnauthorisedError}
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -17,13 +17,13 @@
 package v3.models.response.retrieveBsas.selfEmployment
 
 import support.UnitSpec
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
   desRetrieveBsasResponseJsonAdjustable,
   desRetrieveBsasResponseJsonAdjusted,
   metadataModel,
   mtdMetadataJson
 }
-import v2.models.utils.JsonErrorValidators
+import v3.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 

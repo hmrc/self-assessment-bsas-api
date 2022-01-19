@@ -19,13 +19,13 @@ package v3.services
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
-import v2.mocks.connectors.MockRetrieveForeignPropertyBsasConnector
-import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
-import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
-import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
+import v3.mocks.connectors.MockRetrieveForeignPropertyBsasConnector
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.outcomes.ResponseWrapper
+import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 

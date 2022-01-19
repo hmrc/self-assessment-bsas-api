@@ -111,7 +111,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
   "Routing requests with v3" should {
     implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
-    handleWithVersionRoutes("/v3", V2Handler)
+    handleWithVersionRoutes("/v3", V3Handler)
   }
 
   private def handleWithDefaultRoutes()(implicit acceptHeader: Option[String]): Unit = {

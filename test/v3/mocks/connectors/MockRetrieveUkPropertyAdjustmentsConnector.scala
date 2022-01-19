@@ -20,8 +20,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.{DownstreamOutcome, RetrieveUkPropertyAdjustmentsConnector}
-import v2.models.request.RetrieveAdjustmentsRequestData
-import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
+import v3.models.request.RetrieveAdjustmentsRequestData
+import v3.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

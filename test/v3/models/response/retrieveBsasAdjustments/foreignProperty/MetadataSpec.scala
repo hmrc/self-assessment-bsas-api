@@ -18,8 +18,8 @@ package v3.models.response.retrieveBsasAdjustments.foreignProperty
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
-import v2.models.utils.JsonErrorValidators
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
+import v3.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
