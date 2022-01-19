@@ -160,16 +160,16 @@ traits:
                 value:
                   code: RULE_NOT_UK_PROPERTY
   ruleNotForeignProperty:
-      responses:
-        403:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                ruleNotForeignProperty:
-                  description: The BSAS ID supplied does not relate to a foreign property business.
-                  value:
-                    code: RULE_NOT_FOREIGN_PROPERTY
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleNotForeignProperty:
+                description: The BSAS ID supplied does not relate to a foreign property business.
+                value:
+                  code: RULE_NOT_FOREIGN_PROPERTY
   ruleSelfEmploymentId:
     responses:
       400:
@@ -214,6 +214,17 @@ traits:
                 description:  One or more values has been added that is outside the accepted value range.
                 value:
                   code: RULE_RANGE_INVALID
+  formatCalculationId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatCalculationId:
+                description: The format of the supplied calculation ID is invalid.
+                value:
+                  code: FORMAT_CALCULATION_ID
   ruleTypeOfBusinessIncorrect:
     responses:
       403:
@@ -358,16 +369,16 @@ traits:
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
   ruleNoAdjustmentsMade:
-      responses:
-        403:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                ruleNoAdjustmentsMade:
-                  description: An adjusted calculation does not exist.
-                  value:
-                    code: RULE_NO_ADJUSTMENTS_MADE
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleNoAdjustmentsMade:
+                description: An adjusted calculation does not exist.
+                value:
+                  code: RULE_NO_ADJUSTMENTS_MADE
   incorrectOrEmptyBodySubmitted:
     responses:
       400:
@@ -467,6 +478,17 @@ traits:
                 description: Matching resource not found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
+  summaryNotFound:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              summaryNotFound:
+                description: The supplied income source could not be found.
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
   clientOrAgentNotAuthorised:
     responses:
       403:
@@ -489,4 +511,3 @@ traits:
                 description: 'The client or agent is not authorised. This is because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.'
                 value:
                   code: CLIENT_OR_AGENT_NOT_AUTHORISED
-

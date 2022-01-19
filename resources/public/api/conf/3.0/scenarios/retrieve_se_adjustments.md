@@ -9,23 +9,35 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates the scenario where no data was found.</p></td>
+            <td><p>Simulates success response with all fields and netProfit.</p></td>
         </tr>
         <tr>
-            <td><p>SELF_EMPLOYMENT_ADJUSTED</p></td>
-            <td><p>Simulates a successful response where adjustments are present for a self-employment.</p></td>
+            <td><p>LOSS</p></td>
+            <td><p>Simulates success response with all fields and netLoss.</p></td>
         </tr>        
         <tr>
-            <td><p>SELF_EMPLOYMENT_CONSOLIDATED</p></td>
-            <td><p>Simulates a successful response where adjustments are present for a consolidated self-employment.</p></td>
+            <td><p>CONSOLIDATED_EXPENSES</p></td>
+            <td><p>Simulates success response with adjusted summary and consolidated expenses.</p></td>
         </tr>
         <tr>
-            <td><p>SELF_EMPLOYMENT_UNADJUSTED</p></td>
-            <td><p>Simulates an unsuccessful response where adjustments are not present for a self-employment.</p></td>
+            <td><p>UNADJUSTED</p></td>
+            <td><p>Simulates success response with unadjusted summary.</p></td>
+        </tr>        
+        <tr>
+            <td><p>INVALID</p></td>
+            <td><p>Simulates success response with summary status invalid.</p></td>
         </tr>
         <tr>
-            <td><p>NOT_SELF_EMPLOYMENT</p></td>
-            <td><p>Simulates an unsuccessful response where returned adjustments do not belong to a self-employment.</p></td>
+            <td><p>SUPERSEDED</p></td>
+            <td><p>Simulates success response with summary status superseded.</p></td>
+        </tr>
+        <tr>
+            <td><p>INCORRECT_BUSINESS_TYPE</p></td>
+            <td><p>Simulates the scenario where the businessId is not a self-employment.</p></td>
+        </tr>
+        <tr>
+            <td><p>NOT_FOUND</p></td>
+            <td><p>Simulates the scenario where no data is found.</p></td>
         </tr>
     </tbody>
 </table>
