@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
 
 import scala.concurrent.Future
 

@@ -22,9 +22,9 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v2.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
-import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
+import v3.models.errors._
+import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 

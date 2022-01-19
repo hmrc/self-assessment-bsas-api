@@ -22,8 +22,8 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
+import v3.models.errors._
+import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
 
 class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -64,7 +64,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
   }
 
-  import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+  import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
   val requestBody: JsValue = validfhlInputJson
 

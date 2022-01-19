@@ -16,7 +16,7 @@
 
 package v3.endpoints
 
-import v2.fixtures.ListBsasFixtures._
+import v3.fixtures.ListBsasFixtures._
 import play.api.http.HeaderNames.ACCEPT
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
@@ -24,8 +24,8 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import utils.DesTaxYear
-import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.models.errors._
+import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class ListBsasControllerISpec extends IntegrationBaseSpec {
 

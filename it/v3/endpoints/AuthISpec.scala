@@ -23,9 +23,9 @@ import play.api.http.Status.OK
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v2.fixtures.TriggerBsasRequestBodyFixtures.desResponse
-import v2.models.domain.TypeOfBusiness
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.fixtures.TriggerBsasRequestBodyFixtures.desResponse
+import v3.models.domain.TypeOfBusiness
+import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class AuthISpec extends IntegrationBaseSpec {
 
