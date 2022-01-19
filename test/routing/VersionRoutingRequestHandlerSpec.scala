@@ -30,7 +30,7 @@ import play.api.routing.Router
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import support.UnitSpec
-import v2.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
+import v3.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 
 class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockAppConfig with GuiceOneAppPerSuite {
   test =>
@@ -44,7 +44,6 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   object DefaultHandler extends Handler
   object V1Handler extends Handler
   object V2Handler extends Handler
-  object V3Handler extends Handler
 
   private val defaultRouter = Router.from {
     case GET(p"") => DefaultHandler
@@ -55,13 +54,10 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   private val v2Router      = Router.from {
     case GET(p"/v2") => V2Handler
   }
-  private val v3Router = Router.from {
-    case GET(p"/v3") => V3Handler
-  }
 
   private val routingMap = new VersionRoutingMap {
     override val defaultRouter: Router = test.defaultRouter
-    override val map: Map[String, Router] = Map("1.0" -> v1Router, "2.0" -> v2Router, "3.0" -> v3Router)
+    override val map: Map[String, Router] = Map("1.0" -> v1Router, "2.0" -> v2Router)
   }
 
   class Test(implicit acceptHeader: Option[String]) {
