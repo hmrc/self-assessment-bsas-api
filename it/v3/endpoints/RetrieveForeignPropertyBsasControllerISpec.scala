@@ -49,7 +49,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
+        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
   }
 

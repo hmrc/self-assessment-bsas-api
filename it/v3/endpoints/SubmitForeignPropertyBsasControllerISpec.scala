@@ -365,7 +365,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
+        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
 
     def errorBody(code: String): String =
