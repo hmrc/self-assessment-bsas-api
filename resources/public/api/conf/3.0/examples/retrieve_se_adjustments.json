@@ -4,20 +4,19 @@
     "requestedDateTime":"2021-01-01T10:10:10Z",
     "adjustedDateTime":"2021-01-02T10:10:10Z",
     "nino":"TC663795B",
-    "taxYear":2020,
+    "taxYear":"2020",
     "summaryStatus":"valid"
   },
   "inputs":{
     "businessId":"XAIS12345678910",
     "typeOfBusiness":"self-employment",
-    "incomeSourceName":"My self-employment",
+    "businessName":"My self-employment",
     "accountingPeriodStartDate":"2020-04-06",
     "accountingPeriodEndDate":"2021-04-05",
     "source":"MTD-SA",
     "submissionPeriods":[
       {
         "periodId":"2021-04-06_2021-07-05",
-        "submissionId":"4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
         "startDate":"2021-04-06",
         "endDate":"2021-07-05",
         "receivedDateTime":"2021-07-07T10:12:10Z"
@@ -32,7 +31,6 @@
     },
     "totalExpenses":-0.02,
     "expenses":{
-      "consolidatedExpenses":0.12,
       "costOfGoodsAllowable":0.12,
       "paymentsToSubcontractorsAllowable":0.12,
       "wagesAndStaffCostsAllowable":0.12,
@@ -96,7 +94,7 @@
       "accountingAdjustment":0.12,
       "averagingAdjustment":0.12
     },
-    "taxableProfit":0.12,
+    "taxableProfit":0.12
   },
   "adjustments":{
     "income":{
@@ -104,7 +102,6 @@
       "other":100.02
     },
     "expenses":{
-      "consolidatedExpenses":100.03,
       "costOfGoodsAllowable":100.04,
       "paymentsToSubcontractorsAllowable":100.05,
       "wagesAndStaffCostsAllowable":100.06,
@@ -147,7 +144,6 @@
     },
     "totalExpenses":0.12,
     "expenses":{
-      "consolidatedExpenses":0.12,
       "costOfGoodsAllowable":0.12,
       "paymentsToSubcontractorsAllowable":0.12,
       "wagesAndStaffCostsAllowable":0.12,
@@ -205,12 +201,12 @@
       "zeroEmissionsCarAllowance":0.12
     },
     "totalAccountingAdjustments":0.12,
-    "selfEmploymentAccountingAdjustments":{
+    "accountingAdjustments":{
       "basisAdjustment":0.12,
       "overlapReliefUsed":0.12,
       "accountingAdjustment":0.12,
       "averagingAdjustment":0.12
     },
-    "taxableProfit":0
+    "taxableProfit":0.12
   }
 }
