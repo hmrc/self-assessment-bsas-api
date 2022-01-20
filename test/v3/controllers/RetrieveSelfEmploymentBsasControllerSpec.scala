@@ -66,7 +66,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
   }
 
   private val nino          = "AA123456A"
-  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
   private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
   private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
