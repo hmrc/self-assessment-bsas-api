@@ -24,16 +24,16 @@
             <td><p>Simulates success response with unadjusted summary.</p></td>
         </tr>        
         <tr>
-            <td><p>INVALID</p></td>
+            <td><p>STATUS_INVALID</p></td>
             <td><p>Simulates success response with summary status invalid.</p></td>
         </tr>
         <tr>
-            <td><p>SUPERSEDED</p></td>
+            <td><p>STATUS_SUPERSEDED</p></td>
             <td><p>Simulates success response with summary status superseded.</p></td>
         </tr>
         <tr>
             <td><p>INCORRECT_BUSINESS_TYPE</p></td>
-            <td><p>Simulates the scenario where the businessId is not a self-employment.</p></td>
+            <td><p>Simulates the scenario where the calculationId is not a self-employment.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>

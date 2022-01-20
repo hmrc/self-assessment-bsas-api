@@ -1027,12 +1027,12 @@
         },
         "taxableProfit": {
           "description": "Amount of taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
-          "type": "number",
+          "type": "integer",
           "example": "1000"
         },
         "adjustedIncomeTaxLoss": {
           "description": "Amount of taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
-          "type": "number",
+          "type": "integer",
           "example": "1000"
         }
       }

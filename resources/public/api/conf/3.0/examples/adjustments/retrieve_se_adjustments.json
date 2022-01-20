@@ -207,6 +207,6 @@
       "accountingAdjustment":0.12,
       "averagingAdjustment":0.12
     },
-    "taxableProfit":0.12
+    "taxableProfit":100
   }
 }
