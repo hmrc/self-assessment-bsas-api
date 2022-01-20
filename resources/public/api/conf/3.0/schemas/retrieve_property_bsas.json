@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "metadata"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "metadata_definitions.json#/definitions/propMetadata"
+    },
+    "bsas": {
+      "type": "object",
+      "description": "Object holding the BSAS for either a UK property non-Furnished Holiday Let (non-FHL) or for a UK Property Furnished Holiday Let (FHL) business income source.",
+      "properties": {
+        "total": {
+          "$ref": "definitions.json#/definitions/bsasTotal"
+        },
+        "profit": {
+          "$ref": "definitions.json#/definitions/bsasProfit"
+        },
+        "loss": {
+          "$ref": "definitions.json#/definitions/bsasLoss"
+        },
+        "incomeBreakdown": {
+          "type": "object",
+          "description": "Total income broken down by type for the accounting period.",
+          "properties": {
+            "rentIncome": {
+              "type": "number",
+              "description": "The total amount of property rental income. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "premiumsOfLeaseGrant": {
+              "type": "number",
+              "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "reversePremiums": {
+              "type": "number",
+              "description": "Reverse premiums and inducements. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "otherPropertyIncome": {
+              "type": "number",
+              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "rarRentReceived": {
+              "type": "number",
+              "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "expensesBreakdown": {
+          "type": "object",
+          "description": "Total expenses broken down by type for the accounting period.",
+          "properties": {
+            "premisesRunningCosts": {
+              "type": "number",
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "repairsAndMaintenance": {
+              "type": "number",
+              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "financialCosts": {
+              "type": "number",
+              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "professionalFees": {
+              "type": "number",
+              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "travelCosts": {
+              "type": "number",
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "costOfServices": {
+              "type": "number",
+              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "residentialFinancialCost": {
+              "type": "number",
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "broughtFwdResidentialFinancialCost": {
+              "type": "number",
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "other": {
+              "type": "number",
+              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            },
+            "consolidatedExpenses": {
+              "type": "number",
+              "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99.",
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/sample-context/AA123456A"
+          },
+          "rel": {
+            "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "submit-accounting-adjustments"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

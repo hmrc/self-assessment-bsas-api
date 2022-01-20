@@ -1,0 +1,304 @@
+{
+  "definitions": {
+    "seAdjustmentsMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "businessId",
+        "accountingPeriod",
+        "requestedDateTime",
+        "taxYear",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "self-employment"
+          ]
+        },
+        "businessId": {
+          "$ref": "definitions.json#/definitions/businessId"
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "seMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "businessId",
+        "accountingPeriod",
+        "requestedDateTime",
+        "taxYear",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "self-employment"
+          ]
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "businessId": {
+          "$ref": "definitions.json#/definitions/businessId"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "propAdjustmentsMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "businessId",
+        "accountingPeriod",
+        "requestedDateTime",
+        "taxYear",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "uk-property-fhl",
+            "uk-property-non-fhl"
+          ]
+        },
+        "businessId": {
+          "$ref": "definitions.json#/definitions/businessId"
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "propMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "businessId",
+        "accountingPeriod",
+        "requestedDateTime",
+        "taxYear",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "uk-property-fhl",
+            "uk-property-non-fhl"
+          ]
+        },
+        "businessId": {
+          "type": "string",
+          "description": "The unique identifier for the business.",
+          "pattern": "^X[a-zA-Z0-9]{1}IS[0-9]{12}$",
+          "example": "XAIS123456789012"
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "foreignPropMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "accountingPeriod",
+        "taxYear",
+        "requestedDateTime",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "foreign-property-fhl-eea",
+            "foreign-property"
+          ]
+        },
+        "businessId": {
+          "type": "string",
+          "description": "The unique identifier for the business.",
+          "example": "XAIS123456789012",
+          "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$"
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      },
+      "additionalProperties": false
+    },
+    "foreignPropAdjustmentsMetadata": {
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "type": "object",
+      "required": [
+        "typeOfBusiness",
+        "businessId",
+        "accountingPeriod",
+        "taxYear",
+        "requestedDateTime",
+        "bsasId",
+        "summaryStatus",
+        "adjustedSummary"
+      ],
+      "properties": {
+        "typeOfBusiness": {
+          "title": "typeOfBusiness",
+          "description": "The type of business the summary calculation is for.",
+          "type": "string",
+          "enum": [
+            "foreign-property-fhl-eea",
+            "foreign-property"
+          ]
+        },
+        "businessId": {
+          "type": "string",
+          "description": "The unique identifier for the business.",
+          "example": "XAIS123456789012",
+          "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$"
+        },
+        "accountingPeriod": {
+          "$ref": "definitions.json#/definitions/accountingPeriod"
+        },
+        "taxYear": {
+          "type": "string",
+          "description": "The tax year into which this accounting period falls.",
+          "example": "2019-20"
+        },
+        "requestedDateTime": {
+          "$ref": "definitions.json#/definitions/requestedDateTime"
+        },
+        "bsasId": {
+          "$ref": "definitions.json#/definitions/bsasId"
+        },
+        "summaryStatus": {
+          "$ref": "definitions.json#/definitions/summaryStatus"
+        },
+        "adjustedSummary": {
+          "$ref": "definitions.json#/definitions/adjustedSummary"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

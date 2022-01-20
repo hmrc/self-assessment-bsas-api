@@ -1,0 +1,16 @@
+{
+  "foreignFhlEea": {
+    "income": {
+      "rentIncome": 123.12
+    },
+    "expenses": {
+      "premisesRunningCosts": 123.12,
+      "repairsAndMaintenance": 123.12,
+      "financialCosts": 123.12,
+      "professionalFees": 123.12,
+      "costOfServices": 123.12,
+      "travelCosts": 123.12,
+      "other": 123.12
+    }
+  }
+}
