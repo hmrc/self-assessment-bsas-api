@@ -17,39 +17,39 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v3.models.errors.{BsasIdFormatError, NinoFormatError}
+import v3.models.errors.{CalculationIdFormatError, NinoFormatError}
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidatorSpec extends UnitSpec {
 
   val validNino = "AA123456A"
-  val validBsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val invalidNino = "BEANS"
-  val invalidBsasId = "f2fb30e5-4ab6-4a29-b3c1-beans"
+  val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-beans"
 
   val validator = new RetrieveSelfEmploymentValidator()
 
   "validator" should {
     "return no errors" when {
       "passed valid raw data" in {
-        val input = RetrieveSelfEmploymentBsasRawData(validNino, validBsasId)
+        val input = RetrieveSelfEmploymentBsasRawData(validNino, validCalculationId)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, validBsasId)
+        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, validCalculationId)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
-      "passed raw data with an invalid bsas id" in {
-        val input = RetrieveSelfEmploymentBsasRawData(validNino, invalidBsasId)
-        validator.validate(input) shouldBe List(BsasIdFormatError)
+      "passed raw data with an invalid calculation id" in {
+        val input = RetrieveSelfEmploymentBsasRawData(validNino, invalidCalculationId)
+        validator.validate(input) shouldBe List(CalculationIdFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, invalidBsasId)
-        validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError)
+        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, invalidCalculationId)
+        validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError)
       }
     }
   }

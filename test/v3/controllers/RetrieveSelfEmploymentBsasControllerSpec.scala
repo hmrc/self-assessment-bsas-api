@@ -120,9 +120,8 @@ class RetrieveSelfEmploymentBsasControllerSpec
         }
 
         val input = Seq(
-          (AdjustedStatusFormatError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (BsasIdFormatError, BAD_REQUEST)
+          (CalculationIdFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -150,7 +149,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (BsasIdFormatError, BAD_REQUEST),
+          (CalculationIdFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),

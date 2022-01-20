@@ -65,7 +65,9 @@ class RetrieveSelfEmploymentBsasController @Inject()(
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData, RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.calculationId)).asRight[ErrorWrapper])
+            hateoasFactory
+              .wrap(response.responseData, RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.calculationId))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -89,10 +91,10 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | AdjustedStatusFormatError | BsasIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case RuleNotSelfEmployment | RuleNoAdjustmentsMade                                     => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError                                                                     => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                                                   => InternalServerError(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | BsasIdFormatError | CalculationIdFormatError => BadRequest(Json.toJson(errorWrapper))
+      case RuleNotSelfEmployment | RuleNoAdjustmentsMade                => Forbidden(Json.toJson(errorWrapper))
+      case NotFoundError                                                => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                                              => InternalServerError(Json.toJson(errorWrapper))
     }
   }
 }
