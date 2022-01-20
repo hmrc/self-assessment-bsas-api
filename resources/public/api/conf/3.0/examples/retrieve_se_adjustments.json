@@ -8,8 +8,8 @@
     "summaryStatus":"valid"
   },
   "inputs":{
-    "businessId":"XAIS12345678910",
     "typeOfBusiness":"self-employment",
+    "businessId":"XAIS12345678910",
     "businessName":"My self-employment",
     "accountingPeriodStartDate":"2020-04-06",
     "accountingPeriodEndDate":"2021-04-05",
