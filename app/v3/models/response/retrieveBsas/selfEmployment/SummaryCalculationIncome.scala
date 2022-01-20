@@ -16,27 +16,19 @@
 
 package v3.models.response.retrieveBsas.selfEmployment
 
-import play.api.libs.json.Json
-import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{metadataModel, downstreamMetadataJson, mtdMetadataJson}
-import v3.models.utils.JsonErrorValidators
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+case class SummaryCalculationIncome(
+    turnover: Option[BigDecimal],
+    other: Option[BigDecimal]
+)
 
-  "reads" should {
-    "return a valid model" when {
-      "passed valid JSON" in {
-        downstreamMetadataJson.as[Metadata] shouldBe metadataModel
-      }
-    }
-  }
+object SummaryCalculationIncome {
+  implicit val reads: Reads[SummaryCalculationIncome] = (
+    (JsPath \ "turnover").readNullable[BigDecimal] and
+    (JsPath \ "other").readNullable[BigDecimal]
+  )(SummaryCalculationIncome.apply _)
 
-  "writes" should {
-    "return valid JSON" when {
-      "passed a valid model" in {
-        Json.toJson(metadataModel) shouldBe mtdMetadataJson
-      }
-    }
-  }
-
+  implicit val writes: OWrites[SummaryCalculationIncome] = Json.writes[SummaryCalculationIncome]
 }

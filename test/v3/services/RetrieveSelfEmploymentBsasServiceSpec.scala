@@ -21,11 +21,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.RetrieveSelfEmploymentBsasRequestData
-import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.retrieveBsasResponseModel
+import v3.models.domain.TypeOfBusiness
 
 import scala.concurrent.Future
 
@@ -33,11 +33,8 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus = Some("true")
 
-  val request = RetrieveSelfEmploymentBsasRequestData(nino, id, adjustedStatus)
-  
-  val response = RetrieveSelfEmploymentBsasResponse(metadataModel(true), Some(bsasDetailModel))
+  val request = RetrieveSelfEmploymentBsasRequestData(nino, id)
 
   trait Test extends MockRetrieveSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -50,18 +47,16 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
     "return a valid response" when {
       "a valid request is supplied" in new Test{
         MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
-        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))
       }
     }
 
     "return an error response" when {
       "des return success response with invalid type of business" in new Test {
-        val response = RetrieveSelfEmploymentBsasResponse(metadataModel(true).copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`),
-          Some(bsasDetailModel))
         MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseInvalidTypeOfBusinessModel(TypeOfBusiness.`uk-property-fhl`)))))
 
         await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotSelfEmployment))
       }

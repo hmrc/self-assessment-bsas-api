@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v3.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
 import v3.models.errors.MtdError
-import v3.models.request.RetrieveSelfEmploymentBsasRawData
+import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 
 class MockRetrieveSelfEmploymentValidator extends MockFactory {
   val mockValidator: RetrieveSelfEmploymentValidator = mock[RetrieveSelfEmploymentValidator]

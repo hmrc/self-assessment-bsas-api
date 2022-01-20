@@ -17,49 +17,39 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v3.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, NinoFormatError}
-import v3.models.request.RetrieveSelfEmploymentBsasRawData
+import v3.models.errors.{BsasIdFormatError, NinoFormatError}
+import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidatorSpec extends UnitSpec {
 
   val validNino = "AA123456A"
   val validBsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val validAdjustedStatus = Some("true")
   val invalidNino = "BEANS"
   val invalidBsasId = "f2fb30e5-4ab6-4a29-b3c1-beans"
-  val invalidAdjustedStatus = Some("beans")
 
   val validator = new RetrieveSelfEmploymentValidator()
 
   "validator" should {
     "return no errors" when {
-      "passed valid raw data with all fields" in {
-        val input = RetrieveSelfEmploymentBsasRawData(validNino, validBsasId, validAdjustedStatus)
-        validator.validate(input) shouldBe List()
-      }
-      "passed valid raw data with only mandatory fields" in {
-        val input = RetrieveSelfEmploymentBsasRawData(validNino, validBsasId, None)
+      "passed valid raw data" in {
+        val input = RetrieveSelfEmploymentBsasRawData(validNino, validBsasId)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, validBsasId, validAdjustedStatus)
+        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, validBsasId)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed raw data with an invalid bsas id" in {
-        val input = RetrieveSelfEmploymentBsasRawData(validNino, invalidBsasId, validAdjustedStatus)
+        val input = RetrieveSelfEmploymentBsasRawData(validNino, invalidBsasId)
         validator.validate(input) shouldBe List(BsasIdFormatError)
-      }
-      "passed raw data with an invalid adjusted status" in {
-        val input = RetrieveSelfEmploymentBsasRawData(validNino, validBsasId, invalidAdjustedStatus)
-        validator.validate(input) shouldBe List(AdjustedStatusFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, invalidBsasId, invalidAdjustedStatus)
-        validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError, AdjustedStatusFormatError)
+        val input = RetrieveSelfEmploymentBsasRawData(invalidNino, invalidBsasId)
+        validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError)
       }
     }
   }

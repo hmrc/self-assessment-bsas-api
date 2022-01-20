@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.models.errors.ErrorWrapper
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.controllers.EndpointLogContext
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v3.services.RetrieveSelfEmploymentBsasService

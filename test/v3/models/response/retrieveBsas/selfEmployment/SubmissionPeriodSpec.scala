@@ -18,23 +18,29 @@ package v3.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{metadataModel, downstreamMetadataJson, mtdMetadataJson}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid model" when {
-      "passed valid JSON" in {
-        downstreamMetadataJson.as[Metadata] shouldBe metadataModel
+      "passed valid JSON with periodId regex" in {
+        downstreamSubmissionPeriodWithPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithPeriodIdModel
+      }
+      "passed valid JSON with invalid periodId regex" in {
+        downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithSubmissionIdModel
       }
     }
   }
 
   "writes" should {
     "return valid JSON" when {
-      "passed a valid model" in {
-        Json.toJson(metadataModel) shouldBe mtdMetadataJson
+      "passed a valid model with periodId" in {
+        Json.toJson(submissionPeriodWithPeriodIdModel) shouldBe mtdSubmissionPeriodWithPeriodIdJson
+      }
+      "passed a valid model with submissionId" in {
+        Json.toJson(submissionPeriodWithSubmissionIdModel) shouldBe mtdSubmissionPeriodWithSubmissionIdJson
       }
     }
   }

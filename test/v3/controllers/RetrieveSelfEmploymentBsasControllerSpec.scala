@@ -16,34 +16,33 @@
 
 package v3.controllers
 
+import domain.Nino
 import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
 import v3.models.errors._
-import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockRetrieveSelfEmploymentRequestParser
-  with MockRetrieveSelfEmploymentBsasService
-  with MockHateoasFactory
-  with MockAuditService
-  with MockIdGenerator {
+class RetrieveSelfEmploymentBsasControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockRetrieveSelfEmploymentRequestParser
+    with MockRetrieveSelfEmploymentBsasService
+    with MockHateoasFactory
+    with MockIdGenerator {
 
   private val correlationId = "X-123"
 
@@ -56,7 +55,6 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -67,33 +65,18 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
 
   }
 
-  private val nino = "AA123456A"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val adjustedMtdStatus = Some("true")
-  private val adjustedDesStatus = Some("03")
+  private val nino          = "AA123456A"
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request = RetrieveSelfEmploymentBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
-  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedMtdStatus)
+  private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
+  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
 
-  val testHateoasLinkSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId",
-    method = GET, rel = "self")
+  val testHateoasLinkSelf =
+    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId", method = GET, rel = "self")
 
-  val testHateoasLinkAdjustSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
-    method = POST, rel = "submit-summary-adjustments")
-
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "retrieveABusinessSourceAdjustableSummary",
-      transactionName = "retrieve-a-self-employment-bsas",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "bsasId" -> bsasId),
-        requestBody = None,
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
+  val testHateoasLinkAdjustSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust",
+                                         method = POST,
+                                         rel = "submit-summary-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for self-assessment with status OK" when {
@@ -105,21 +88,17 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
 
         MockRetrieveSelfEmploymentBsasService
           .retrieveBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModelAdjusted))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseModelAdjusted, RetrieveSelfAssessmentBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(retrieveBsasResponseModelAdjusted , Seq(testHateoasLinkSelf, testHateoasLinkAdjustSubmit))
-        )
+          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId))
+          .returns(HateoasWrapper(retrieveBsasResponseModel, Seq(testHateoasLinkSelf, testHateoasLinkAdjustSubmit)))
 
-        val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))
+        contentAsJson(result) shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForAdjustedSelfAssessment(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -132,14 +111,11 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
               .parse(requestRawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -164,14 +140,11 @@ class RetrieveSelfEmploymentBsasControllerSpec extends ControllerBaseSpec
               .retrieveBsas(request)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

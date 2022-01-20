@@ -16,17 +16,31 @@
 
 package v3.models.response.retrieveBsas.selfEmployment
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsResultException, Json}
 import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{metadataModel, downstreamMetadataJson, mtdMetadataJson}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class InputsSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid model" when {
       "passed valid JSON" in {
-        downstreamMetadataJson.as[Metadata] shouldBe metadataModel
+        downstreamInputsJson.as[Inputs] shouldBe inputsModel
+      }
+    }
+    "return an error" when {
+      "passed JSON with an invalid source" in {
+        a[JsResultException] should be thrownBy downstreamInputsInvalidSourceJson.as[Inputs]
+
+        val thrown: JsResultException = the[JsResultException] thrownBy downstreamInputsInvalidSourceJson.as[Inputs]
+        thrown.errors.map {
+          case (path, errors) => (path, errors.map(_.messages))
+        }.map {
+          case (path, errors) =>
+            path.toString() shouldBe "/source"
+            errors.flatten.contains("error.expected.Source") shouldBe true
+        }
       }
     }
   }
@@ -34,7 +48,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model" in {
-        Json.toJson(metadataModel) shouldBe mtdMetadataJson
+        Json.toJson(inputsModel) shouldBe mtdInputsJson
       }
     }
   }
