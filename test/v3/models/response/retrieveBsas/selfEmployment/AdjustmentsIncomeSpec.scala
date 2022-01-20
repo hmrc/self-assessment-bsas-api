@@ -18,15 +18,15 @@ package v3.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{metadataModel, downstreamMetadataJson, mtdMetadataJson}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{adjustmentsIncomeModel, downstreamAdjustmentsIncomeJson, mtdAdjustmentsIncomeJson}
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class AdjustmentsIncomeSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid model" when {
       "passed valid JSON" in {
-        downstreamMetadataJson.as[Metadata] shouldBe metadataModel
+        downstreamAdjustmentsIncomeJson.as[AdjustmentsIncome] shouldBe adjustmentsIncomeModel
       }
     }
   }
@@ -34,7 +34,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model" in {
-        Json.toJson(metadataModel) shouldBe mtdMetadataJson
+        Json.toJson(adjustmentsIncomeModel) shouldBe mtdAdjustmentsIncomeJson
       }
     }
   }

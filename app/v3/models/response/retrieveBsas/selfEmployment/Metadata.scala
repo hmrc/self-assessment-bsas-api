@@ -19,32 +19,25 @@ package v3.models.response.retrieveBsas.selfEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.DesTaxYear
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v3.models.response.retrieveBsas.AccountingPeriod
+import v3.models.domain.Status
 
-case class Metadata(typeOfBusiness: TypeOfBusiness,
-                    businessId: Option[String], // Optional so we can error if not present with BVR 4
-                    accountingPeriod: AccountingPeriod,
-                    taxYear: String,
-                    bsasId: String,
-                    requestedDateTime: String,
-                    summaryStatus: String,
-                    adjustedSummary: Boolean)
+case class Metadata(
+    calculationId: String,
+    requestedDateTime: String,
+    adjustedDateTime: Option[String],
+    nino: String,
+    taxYear: String,
+    summaryStatus: Status
+)
 
 object Metadata {
-
   implicit val reads: Reads[Metadata] = (
-    (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
-      (JsPath \ "inputs" \ "incomeSourceId").readNullable[String] and
-      JsPath.read[AccountingPeriod] and
-      (JsPath \ "metadata" \ "taxYear").read[Int].map(DesTaxYear.fromDesIntToString) and
-      (JsPath \ "metadata" \ "calculationId").read[String] and
-      (JsPath \ "metadata" \ "requestedDateTime").read[String] and
-      (JsPath \ "metadata" \ "status").read[String] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
-        case Some(_) => true
-        case _       => false
-      }
+    (JsPath \ "calculationId").read[String] and
+      (JsPath \ "requestedDateTime").read[String] and
+      (JsPath \ "adjustedDateTime").readNullable[String] and
+      (JsPath \ "taxableEntityId").read[String] and
+      (JsPath \ "taxYear").read[BigInt].map(taxYear => DesTaxYear.fromDes(taxYear.toString())) and
+      (JsPath \ "status").read[Status]
   )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]

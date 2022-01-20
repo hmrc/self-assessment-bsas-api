@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package v3.models.request
+package v3.models.request.retrieveBsas.selfEmployment
 
 import domain.Nino
 
-case class RetrieveSelfEmploymentBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
-case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])
+case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, calculationId: String)

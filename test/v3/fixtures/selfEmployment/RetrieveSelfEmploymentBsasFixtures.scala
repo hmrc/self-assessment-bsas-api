@@ -16,611 +16,742 @@
 
 package v3.fixtures.selfEmployment
 
-import java.time.LocalDate
-
-import play.api.libs.json.{JsValue, Json}
-import v3.models.domain.TypeOfBusiness
+import play.api.libs.json.{JsObject, JsValue, Json}
+import v3.models.domain.{IncomeSourceType, Source, Status, TypeOfBusiness}
 import v3.models.response.retrieveBsas.selfEmployment._
-import v3.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
 object RetrieveSelfEmploymentBsasFixtures {
 
   private val now = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
-  val additionsBreakdownModel: AdditionsBreakdown = AdditionsBreakdown(
-    costOfGoodsBoughtDisallowable = Some(100.49),
-    cisPaymentsToSubcontractorsDisallowable = Some(100.49),
-    staffCostsDisallowable = Some(100.49),
-    travelCostsDisallowable = Some(100.49),
-    premisesRunningCostsDisallowable = Some(100.49),
-    maintenanceCostsDisallowable = Some(100.49),
-    adminCostsDisallowable = Some(100.49),
-    advertisingCostsDisallowable = Some(100.49),
-    businessEntertainmentCostsDisallowable = Some(100.49),
-    interestDisallowable = Some(100.49),
-    financialChargesDisallowable = Some(100.49),
-    badDebtDisallowable = Some(100.49),
-    professionalFeesDisallowable = Some(100.49),
-    depreciationDisallowable = Some(100.49),
-    otherDisallowable = Some(100.49)
+  val downstreamMetadataJson: JsValue = Json.parse(
+    """
+      |{
+      |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
+      |  "requestedDateTime": "2000-01-01T10:12:10Z",
+      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2021,
+      |  "status": "valid"
+      |}
+      |""".stripMargin
   )
 
-  val mtdAdditionsBreakdownJson: JsValue = Json.parse(
-    """{
-      |  "costOfGoodsBoughtDisallowable": 100.49,
-      |  "cisPaymentsToSubcontractorsDisallowable": 100.49,
-      |  "staffCostsDisallowable": 100.49,
-      |  "travelCostsDisallowable": 100.49,
-      |  "premisesRunningCostsDisallowable": 100.49,
-      |  "maintenanceCostsDisallowable": 100.49,
-      |  "adminCostsDisallowable": 100.49,
-      |  "advertisingCostsDisallowable": 100.49,
-      |  "businessEntertainmentCostsDisallowable": 100.49,
-      |  "interestDisallowable": 100.49,
-      |  "financialChargesDisallowable": 100.49,
-      |  "badDebtDisallowable": 100.49,
-      |  "professionalFeesDisallowable": 100.49,
-      |  "depreciationDisallowable": 100.49,
-      |  "otherDisallowable": 100.49
-      |}""".stripMargin
-  )
-
-  val desAdditionsBreakdownJson: JsValue = Json.parse(
-    """{
-      |  "costOfGoodsDisallowable": 100.49,
-      |  "paymentsToSubcontractorsDisallowable": 100.49,
-      |  "wagesAndStaffCostsDisallowable": 100.49,
-      |  "carVanTravelExpensesDisallowable": 100.49,
-      |  "premisesRunningCostsDisallowable": 100.49,
-      |  "maintenanceCostsDisallowable": 100.49,
-      |  "adminCostsDisallowable": 100.49,
-      |  "advertisingCostsDisallowable": 100.49,
-      |  "businessEntertainmentCostsDisallowable": 100.49,
-      |  "interestOnBankOtherLoansDisallowable": 100.49,
-      |  "financeChargesDisallowable": 100.49,
-      |  "irrecoverableDebtsDisallowable": 100.49,
-      |  "professionalFeesDisallowable": 100.49,
-      |  "depreciationDisallowable": 100.49,
-      |  "otherExpensesDisallowable": 100.49
-      |}""".stripMargin
-  )
-
-  val incomeBreakdownModel: IncomeBreakdown = IncomeBreakdown(
-    turnover = Some(100.49),
-    other = Some(100.49)
-  )
-
-  val mtdIncomeBreakdownJson: JsValue = Json.parse(
-    """{
-      |  "turnover": 100.49,
-      |  "other": 100.49
-      |}""".stripMargin
-  )
-
-  val desIncomeBreakdownJson: JsValue = Json.parse(
-    """{
-      |  "turnover": 100.49,
-      |  "other": 100.49
-      |}""".stripMargin
-  )
-
-  val expensesBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(
-    costOfGoodsBought = Some(100.49),
-    cisPaymentsToSubcontractors = Some(100.49),
-    staffCosts = Some(100.49),
-    travelCosts = Some(100.49),
-    premisesRunningCosts = Some(100.49),
-    maintenanceCosts = Some(100.49),
-    adminCosts = Some(100.49),
-    advertisingCosts = Some(100.49),
-    businessEntertainmentCosts = Some(100.49),
-    interest = Some(100.49),
-    financialCharges = Some(100.49),
-    badDebt = Some(100.49),
-    professionalFees = Some(100.49),
-    depreciation = Some(100.49),
-    other = Some(100.49),
-    consolidatedExpenses = Some(100.49)
-  )
-
-  val mtdExpensesBreakdownJson: JsValue = Json.parse(
-    """{
-      |  "costOfGoodsBought": 100.49,
-      |  "cisPaymentsToSubcontractors": 100.49,
-      |  "staffCosts": 100.49,
-      |  "travelCosts": 100.49,
-      |  "premisesRunningCosts": 100.49,
-      |  "maintenanceCosts": 100.49,
-      |  "adminCosts": 100.49,
-      |  "advertisingCosts": 100.49,
-      |  "businessEntertainmentCosts": 100.49,
-      |  "interest": 100.49,
-      |  "financialCharges": 100.49,
-      |  "badDebt": 100.49,
-      |  "professionalFees": 100.49,
-      |  "depreciation": 100.49,
-      |  "other": 100.49,
-      |  "consolidatedExpenses": 100.49
-      |}""".stripMargin
-  )
-
-  val desExpensesBreakdownJson: JsValue = Json.parse(
-    """{
-      |  "costOfGoodsAllowable": 100.49,
-      |  "paymentsToSubcontractorsAllowable": 100.49,
-      |  "wagesAndStaffCostsAllowable": 100.49,
-      |  "carVanTravelExpensesAllowable": 100.49,
-      |  "premisesRunningCostsAllowable": 100.49,
-      |  "maintenanceCostsAllowable": 100.49,
-      |  "adminCostsAllowable": 100.49,
-      |  "advertisingCostsAllowable": 100.49,
-      |  "businessEntertainmentCostsAllowable": 100.49,
-      |  "interestOnBankOtherLoansAllowable": 100.49,
-      |  "financeChargesAllowable": 100.49,
-      |  "irrecoverableDebtsAllowable": 100.49,
-      |  "professionalFeesAllowable": 100.49,
-      |  "depreciationAllowable": 100.49,
-      |  "otherExpensesAllowable": 100.49,
-      |  "consolidatedExpenses": 100.49
-      |}""".stripMargin
-  )
-
-  val bsasDetailModel: BsasDetail = BsasDetail(
-    total = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49)),
-    accountingAdjustments = Some(100.49),
-    profit = Some(Profit(Some(100.49), Some(100))),
-    loss = Some(Loss(Some(100.49), Some(100))),
-    incomeBreakdown = Some(incomeBreakdownModel),
-    expensesBreakdown = Some(expensesBreakdownModel),
-    additionsBreakdown = Some(additionsBreakdownModel)
-  )
-
-  val mtdBsasDetailJson: JsValue = Json.parse(
-    s"""{
-       |  "total": {
-       |    "income": 100.49,
-       |    "expenses": 100.49,
-       |    "additions": 100.49,
-       |    "deductions": 100.49
-       |  },
-       |  "accountingAdjustments": 100.49,
-       |  "profit": {
-       |    "net": 100.49,
-       |    "taxable": 100
-       |  },
-       |  "loss": {
-       |    "net": 100.49,
-       |    "adjustedIncomeTax": 100
-       |  },
-       |  "incomeBreakdown": $mtdIncomeBreakdownJson,
-       |  "expensesBreakdown": $mtdExpensesBreakdownJson,
-       |  "additionsBreakdown": $mtdAdditionsBreakdownJson
-       |}""".stripMargin
-  )
-
-  val desBsasDetailJson: JsValue = Json.parse(
-    s"""{
-       |  "totalIncome": 100.49,
-       |  "totalExpenses": 100.49,
-       |  "totalAdditions": 100.49,
-       |  "totalDeductions": 100.49,
-       |  "accountingAdjustments": 100.49,
-       |  "netProfit": 100.49,
-       |  "taxableProfit": 100,
-       |  "netLoss": 100.49,
-       |  "adjustedIncomeTaxLoss": 100,
-       |  "income": $desIncomeBreakdownJson,
-       |  "expenses": $desExpensesBreakdownJson,
-       |  "additions": $desAdditionsBreakdownJson
-       |}""".stripMargin
-  )
-
-  val metadataModel: Boolean => Metadata = adjustedSummary =>
-    Metadata(
-      typeOfBusiness = TypeOfBusiness.`self-employment`,
-      businessId = Some("X0IS12345678901"),
-      accountingPeriod = AccountingPeriod(LocalDate.parse(now), LocalDate.parse(aYearFromNow)),
-      taxYear = "2019-20",
-      bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-      requestedDateTime = "2020-04-07T23:59:59.000Z",
-      summaryStatus = "valid",
-      adjustedSummary = adjustedSummary
-    )
-
-  val mtdMetadataJson: Boolean => JsValue = adjustedSummary =>
-    Json.parse(
-      s"""{
-         |  "typeOfBusiness": "self-employment",
-         |  "businessId": "X0IS12345678901",
-         |  "accountingPeriod": {
-         |    "startDate": "$now",
-         |    "endDate": "$aYearFromNow"
-         |  },
-         |  "taxYear": "2019-20",
-         |  "bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-         |  "requestedDateTime": "2020-04-07T23:59:59.000Z",
-         |  "summaryStatus": "valid",
-         |  "adjustedSummary": $adjustedSummary
-         |}""".stripMargin
-    )
-
-  val retrieveBsasResponseModelAdjusted: RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataModel(true),
-    bsas = Some(bsasDetailModel)
-  )
-
-  val retrieveBsasResponseModelAdjustable: RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataModel(false),
-    bsas = Some(bsasDetailModel)
-  )
-
-  val mtdRetrieveBsasResponseJson: Boolean => JsValue = adjustedSummary =>
-    Json.parse(
-      s"""{
-         |  "metadata": ${mtdMetadataJson(adjustedSummary)},
-         |  "bsas": $mtdBsasDetailJson
-         |}""".stripMargin
-    )
-
-  val desRetrieveBsasResponseJsonAdjusted: JsValue = Json.parse(
-    s"""{
-       |  "inputs": {
-       |    "incomeSourceType": "01",
-       |    "incomeSourceId": "X0IS12345678901",
-       |    "accountingPeriodStartDate": "$now",
-       |    "accountingPeriodEndDate": "$aYearFromNow"
-       |  },
-       |  "metadata": {
-       |    "taxYear": 2020,
-       |    "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-       |    "requestedDateTime": "2020-04-07T23:59:59.000Z",
-       |    "status": "valid"
-       |  },
-       |  "adjustedSummaryCalculation": $desBsasDetailJson
-       |}""".stripMargin
-  )
-
-  val desRetrieveBsasResponseJsonAdjustable: JsValue = Json.parse(
-    s"""{
-       |  "inputs": {
-       |    "incomeSourceType": "01",
-       |    "incomeSourceId": "X0IS12345678901",
-       |    "accountingPeriodStartDate": "$now",
-       |    "accountingPeriodEndDate": "$aYearFromNow"
-       |  },
-       |  "metadata": {
-       |    "taxYear": 2020,
-       |    "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-       |    "requestedDateTime": "2020-04-07T23:59:59.000Z",
-       |    "status": "valid"
-       |  },
-       |  "adjustableSummaryCalculation": $desBsasDetailJson
-       |}""".stripMargin
-  )
-
-  val hateoasResponseForSelfAssessment = (nino: String, bsasId: String) =>
+  val downstreamSubmissionPeriodWithPeriodIdRegexJson: JsValue = Json.parse(
     s"""
-       |	{
-       |		"metadata": {
-       |			"typeOfBusiness": "self-employment",
-       |			"businessId": "X0IS12345678901",
-       |			"accountingPeriod": {
-       |				"startDate": "2019-04-06",
-       |				"endDate": "2020-04-05"
-       |			},
-       |			"taxYear": "2019-20",
-       |			"bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-       |			"requestedDateTime": "2020-04-07T23:59:59.000Z",
-       |			"summaryStatus": "valid",
-       |			"adjustedSummary": true
-       |		},
-       |		"bsas": {
-       |			"total": {
-       |				"income": 100.49,
-       |				"expenses": 100.49,
-       |				"additions": 100.49,
-       |				"deductions": 100.49
-       |			},
-       |			"accountingAdjustments": 100.49,
-       |			"profit": {
-       |				"net": 100.49,
-       |				"taxable": 100
-       |			},
-       |			"loss": {
-       |				"net": 100.49,
-       |				"adjustedIncomeTax": 100
-       |			},
-       |			"incomeBreakdown": {
-       |				"turnover": 100.49,
-       |				"other": 100.49
-       |			},
-       |			"expensesBreakdown": {
-       |				"consolidatedExpenses": 100.49
-       |			},
-       |			"additionsBreakdown": {
-       |				"costOfGoodsBoughtDisallowable": 100.49,
-       |				"cisPaymentsToSubcontractorsDisallowable": 100.49,
-       |				"staffCostsDisallowable": 100.49,
-       |				"travelCostsDisallowable": 100.49,
-       |				"premisesRunningCostsDisallowable": 100.49,
-       |				"maintenanceCostsDisallowable": 100.49,
-       |				"adminCostsDisallowable": 100.49,
-       |				"advertisingCostsDisallowable": 100.49,
-       |				"businessEntertainmentCostsDisallowable": 100.49,
-       |				"interestDisallowable": 100.49,
-       |				"financialChargesDisallowable": 100.49,
-       |				"badDebtDisallowable": 100.49,
-       |				"professionalFeesDisallowable": 100.49,
-       |				"depreciationDisallowable": 100.49,
-       |				"otherDisallowable": 100.49
-       |			}
-       |		},
-       |		"links": [{
-       |			"href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-       |			"method": "GET",
-       |			"rel": "self"
-       |		}, {
-       |			"href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c/adjust",
-       |			"method": "POST",
-       |			"rel": "submit-summary-adjustments"
-       |		}]
-       |	}
-    """.stripMargin
+      |{
+      |  "periodId": "1234567890123456",
+      |  "startDate": "$now",
+      |  "endDate": "$aYearFromNow",
+      |  "receivedDateTime": "2000-01-01T10:12:10Z"
+      |}
+      |""".stripMargin
+  )
 
-  val hateoasResponseForAdjustedSelfAssessment = (nino: String, bsasId: String) =>
+  val downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson: JsValue = Json.parse(
     s"""
-       {
-       |	"metadata": {
-       |		"typeOfBusiness": "self-employment",
-       |		"businessId": "X0IS12345678901",
-       |		"accountingPeriod": {
-       |			"startDate": "2019-04-06",
-       |			"endDate": "2020-04-05"
-       |		},
-       |		"taxYear": "2019-20",
-       |		"bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-       |		"requestedDateTime": "2020-04-07T23:59:59.000Z",
-       |		"summaryStatus": "valid",
-       |		"adjustedSummary": true
-       |	},
-       |	"bsas": {
-       |		"total": {
-       |			"income": 100.49,
-       |			"expenses": 100.49,
-       |			"additions": 100.49,
-       |			"deductions": 100.49
-       |		},
-       |		"accountingAdjustments": 100.49,
-       |		"profit": {
-       |			"net": 100.49,
-       |			"taxable": 100
-       |		},
-       |		"loss": {
-       |			"net": 100.49,
-       |			"adjustedIncomeTax": 100
-       |		},
-       |		"incomeBreakdown": {
-       |			"turnover": 100.49,
-       |			"other": 100.49
-       |		},
-       |		"expensesBreakdown": {
-       |			"costOfGoodsBought": 100.49,
-       |			"cisPaymentsToSubcontractors": 100.49,
-       |			"staffCosts": 100.49,
-       |			"travelCosts": 100.49,
-       |			"premisesRunningCosts": 100.49,
-       |			"maintenanceCosts": 100.49,
-       |			"adminCosts": 100.49,
-       |			"advertisingCosts": 100.49,
-       |			"businessEntertainmentCosts": 100.49,
-       |			"interest": 100.49,
-       |			"financialCharges": 100.49,
-       |			"badDebt": 100.49,
-       |			"professionalFees": 100.49,
-       |			"depreciation": 100.49,
-       |			"other": 100.49,
-       |			"consolidatedExpenses": 100.49
-       |		},
-       |		"additionsBreakdown": {
-       |			"costOfGoodsBoughtDisallowable": 100.49,
-       |			"cisPaymentsToSubcontractorsDisallowable": 100.49,
-       |			"staffCostsDisallowable": 100.49,
-       |			"travelCostsDisallowable": 100.49,
-       |			"premisesRunningCostsDisallowable": 100.49,
-       |			"maintenanceCostsDisallowable": 100.49,
-       |			"adminCostsDisallowable": 100.49,
-       |			"advertisingCostsDisallowable": 100.49,
-       |			"businessEntertainmentCostsDisallowable": 100.49,
-       |			"interestDisallowable": 100.49,
-       |			"financialChargesDisallowable": 100.49,
-       |			"badDebtDisallowable": 100.49,
-       |			"professionalFeesDisallowable": 100.49,
-       |			"depreciationDisallowable": 100.49,
-       |			"otherDisallowable": 100.49
-       |		}
-       |	},
-       |	"links": [{
-       |		"href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-       |		"method": "GET",
-       |		"rel": "self"
-       |	}, {
-       |		"href": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c/adjust",
-       |		"method": "POST",
-       |		"rel": "submit-summary-adjustments"
-       |	}]
+       |{
+       |  "periodId": "7038926d-d7a1-4399-8641-f278b438259c",
+       |  "startDate": "$now",
+       |  "endDate": "$aYearFromNow",
+       |  "receivedDateTime": "2000-01-01T10:12:10Z"
        |}
-    """.stripMargin
+       |""".stripMargin
+  )
 
-  val desRetrieveBsasResponse = Json.parse(
-    """ {
-      | 	"inputs": {
-      | 		"incomeSourceType": "01",
-      | 		"incomeSourceId": "X0IS12345678901",
-      | 		"accountingPeriodStartDate": "2019-04-06",
-      | 		"accountingPeriodEndDate": "2020-04-05"
-      | 	},
-      | 	"metadata": {
-      | 		"taxYear": 2020,
-      | 		"calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-      | 		"requestedDateTime": "2020-04-07T23:59:59.000Z",
-      | 		"status": "valid"
-      | 	},
-      | 	"adjustableSummaryCalculation": {
-      | 		"totalIncome": 100.49,
-      | 		"totalExpenses": 100.49,
-      | 		"totalAdditions": 100.49,
-      | 		"totalDeductions": 100.49,
-      | 		"accountingAdjustments": 100.49,
-      | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100,
-      | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100,
-      | 		"income": {
-      | 			"turnover": 100.49,
-      | 			"other": 100.49
-      | 		},
-      | 		"expenses": {
-      | 			"consolidatedExpenses": 100.49
-      | 		},
-      | 		"additions": {
-      | 			"costOfGoodsDisallowable": 100.49,
-      | 			"paymentsToSubcontractorsDisallowable": 100.49,
-      | 			"wagesAndStaffCostsDisallowable": 100.49,
-      | 			"carVanTravelExpensesDisallowable": 100.49,
-      | 			"premisesRunningCostsDisallowable": 100.49,
-      | 			"maintenanceCostsDisallowable": 100.49,
-      | 			"adminCostsDisallowable": 100.49,
-      | 			"advertisingCostsDisallowable": 100.49,
-      | 			"businessEntertainmentCostsDisallowable": 100.49,
-      | 			"interestOnBankOtherLoansDisallowable": 100.49,
-      | 			"financeChargesDisallowable": 100.49,
-      | 			"irrecoverableDebtsDisallowable": 100.49,
-      | 			"professionalFeesDisallowable": 100.49,
-      | 			"depreciationDisallowable": 100.49,
-      | 			"otherExpensesDisallowable": 100.49
-      | 		}
-      | 	},
-      | 	"adjustedSummaryCalculation": {
-      | 		"totalIncome": 100.49,
-      | 		"totalExpenses": 100.49,
-      | 		"totalAdditions": 100.49,
-      | 		"totalDeductions": 100.49,
-      | 		"accountingAdjustments": 100.49,
-      | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100,
-      | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100,
-      | 		"income": {
-      | 			"turnover": 100.49,
-      | 			"other": 100.49
-      | 		},
-      | 		"expenses": {
-      | 			"consolidatedExpenses": 100.49
-      | 		},
-      | 		"additions": {
-      | 			"costOfGoodsDisallowable": 100.49,
-      | 			"paymentsToSubcontractorsDisallowable": 100.49,
-      | 			"wagesAndStaffCostsDisallowable": 100.49,
-      | 			"carVanTravelExpensesDisallowable": 100.49,
-      | 			"premisesRunningCostsDisallowable": 100.49,
-      | 			"maintenanceCostsDisallowable": 100.49,
-      | 			"adminCostsDisallowable": 100.49,
-      | 			"advertisingCostsDisallowable": 100.49,
-      | 			"businessEntertainmentCostsDisallowable": 100.49,
-      | 			"interestOnBankOtherLoansDisallowable": 100.49,
-      | 			"financeChargesDisallowable": 100.49,
-      | 			"irrecoverableDebtsDisallowable": 100.49,
-      | 			"professionalFeesDisallowable": 100.49,
-      | 			"depreciationDisallowable": 100.49,
-      | 			"otherExpensesDisallowable": 100.49
-      | 		}
-      | 	}
-      | }""".stripMargin)
+  val downstreamInputsJson: JsValue = Json.parse(
+    s"""
+      |{
+      |  "incomeSourceType": "01",
+      |  "incomeSourceId": "XAIS12345678910",
+      |  "incomeSourceName": "Business Name",
+      |  "accountingPeriodStartDate": "$now",
+      |  "accountingPeriodEndDate": "$aYearFromNow",
+      |  "source": "MTD-SA",
+      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson, $downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson]
+      |}
+      |""".stripMargin
+  )
 
-  val desRetrieveBsasResponseWithInvalidTypeOfBusiness = Json.parse(
-    """ {
-      | 	"inputs": {
-      | 		"incomeSourceType": "04",
-      | 		"incomeSourceId": "X0IS12345678901",
-      | 		"accountingPeriodStartDate": "2019-04-06",
-      | 		"accountingPeriodEndDate": "2020-04-05"
-      | 	},
-      | 	"metadata": {
-      | 		"taxYear": 2020,
-      | 		"calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-      | 		"requestedDateTime": "2020-04-07T23:59:59.000Z",
-      | 		"status": "valid"
-      | 	},
-      | 	"adjustableSummaryCalculation": {
-      | 		"totalIncome": 100.49,
-      | 		"totalExpenses": 100.49,
-      | 		"totalAdditions": 100.49,
-      | 		"totalDeductions": 100.49,
-      | 		"accountingAdjustments": 100.49,
-      | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100,
-      | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100,
-      | 		"income": {
-      | 			"turnover": 100.49,
-      | 			"other": 100.49
-      | 		},
-      | 		"expenses": {
-      | 			"consolidatedExpenses": 100.49
-      | 		},
-      | 		"additions": {
-      | 			"costOfGoodsDisallowable": 100.49,
-      | 			"paymentsToSubcontractorsDisallowable": 100.49,
-      | 			"wagesAndStaffCostsDisallowable": 100.49,
-      | 			"carVanTravelExpensesDisallowable": 100.49,
-      | 			"premisesRunningCostsDisallowable": 100.49,
-      | 			"maintenanceCostsDisallowable": 100.49,
-      | 			"adminCostsDisallowable": 100.49,
-      | 			"advertisingCostsDisallowable": 100.49,
-      | 			"businessEntertainmentCostsDisallowable": 100.49,
-      | 			"interestOnBankOtherLoansDisallowable": 100.49,
-      | 			"financeChargesDisallowable": 100.49,
-      | 			"irrecoverableDebtsDisallowable": 100.49,
-      | 			"professionalFeesDisallowable": 100.49,
-      | 			"depreciationDisallowable": 100.49,
-      | 			"otherExpensesDisallowable": 100.49
-      | 		}
-      | 	},
-      | 	"adjustedSummaryCalculation": {
-      | 		"totalIncome": 100.49,
-      | 		"totalExpenses": 100.49,
-      | 		"totalAdditions": 100.49,
-      | 		"totalDeductions": 100.49,
-      | 		"accountingAdjustments": 100.49,
-      | 		"netProfit": 100.49,
-      | 		"taxableProfit": 100,
-      | 		"netLoss": 100.49,
-      | 		"adjustedIncomeTaxLoss": 100,
-      | 		"income": {
-      | 			"turnover": 100.49,
-      | 			"other": 100.49
-      | 		},
-      | 		"expenses": {
-      | 			"consolidatedExpenses": 100.49
-      | 		},
-      | 		"additions": {
-      | 			"costOfGoodsDisallowable": 100.49,
-      | 			"paymentsToSubcontractorsDisallowable": 100.49,
-      | 			"wagesAndStaffCostsDisallowable": 100.49,
-      | 			"carVanTravelExpensesDisallowable": 100.49,
-      | 			"premisesRunningCostsDisallowable": 100.49,
-      | 			"maintenanceCostsDisallowable": 100.49,
-      | 			"adminCostsDisallowable": 100.49,
-      | 			"advertisingCostsDisallowable": 100.49,
-      | 			"businessEntertainmentCostsDisallowable": 100.49,
-      | 			"interestOnBankOtherLoansDisallowable": 100.49,
-      | 			"financeChargesDisallowable": 100.49,
-      | 			"irrecoverableDebtsDisallowable": 100.49,
-      | 			"professionalFeesDisallowable": 100.49,
-      | 			"depreciationDisallowable": 100.49,
-      | 			"otherExpensesDisallowable": 100.49
-      | 		}
-      | 	}
-      | }""".stripMargin)
+  val downstreamInputsInvalidSourceJson: JsValue = Json.parse(
+    s"""
+      |{
+      |  "incomeSourceType": "01",
+      |  "incomeSourceId": "XAIS12345678910",
+      |  "incomeSourceName": "Business Name",
+      |  "accountingPeriodStartDate": "$now",
+      |  "accountingPeriodEndDate": "$aYearFromNow",
+      |  "source": "MTD-VAT",
+      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+      |}
+      |""".stripMargin
+  )
+
+  def downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType: IncomeSourceType): JsValue = Json.parse(
+    s"""
+      |{
+      |  "incomeSourceType": "$incomeSourceType",
+      |  "incomeSourceId": "XAIS12345678910",
+      |  "incomeSourceName": "Business Name",
+      |  "accountingPeriodStartDate": "$now",
+      |  "accountingPeriodEndDate": "$aYearFromNow",
+      |  "source": "MTD-SA",
+      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamSummaryCalculationIncomeJson: JsValue = Json.parse(
+    """
+      |{
+      |  "turnover": 1.01,
+      |  "other": 1.02
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamSummaryCalculationExpensesJson: JsValue = Json.parse(
+    """
+       |{
+       |  "consolidatedExpenses": 2.01,
+       |  "costOfGoodsAllowable": 2.02,
+       |  "paymentsToSubcontractorsAllowable": 2.03,
+       |  "wagesAndStaffCostsAllowable": 2.04,
+       |  "carVanTravelExpensesAllowable": 2.05,
+       |  "premisesRunningCostsAllowable": 2.06,
+       |  "maintenanceCostsAllowable": 2.07,
+       |  "adminCostsAllowable": 2.08,
+       |  "interestOnBankOtherLoansAllowable": 2.09,
+       |  "financeChargesAllowable": 2.10,
+       |  "irrecoverableDebtsAllowable": 2.11,
+       |  "professionalFeesAllowable": 2.12,
+       |  "depreciationAllowable": 2.13,
+       |  "otherExpensesAllowable": 2.14,
+       |  "advertisingCostsAllowable": 2.15,
+       |  "businessEntertainmentCostsAllowable": 2.16
+       |}
+       |""".stripMargin
+  )
+
+  val downstreamSummaryCalculationAdditionsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "costOfGoodsDisallowable": 5.01,
+      |  "paymentsToSubcontractorsDisallowable": 5.02,
+      |  "wagesAndStaffCostsDisallowable": 5.03,
+      |  "carVanTravelExpensesDisallowable": 5.04,
+      |  "premisesRunningCostsDisallowable": 5.05,
+      |  "maintenanceCostsDisallowable": 5.06,
+      |  "adminCostsDisallowable": 5.07,
+      |  "interestOnBankOtherLoansDisallowable": 5.08,
+      |  "financeChargesDisallowable": 5.09,
+      |  "irrecoverableDebtsDisallowable": 5.10,
+      |  "professionalFeesDisallowable": 5.11,
+      |  "depreciationDisallowable": 5.12,
+      |  "otherExpensesDisallowable": 5.13,
+      |  "advertisingCostsDisallowable": 5.14,
+      |  "businessEntertainmentCostsDisallowable": 5.15,
+      |  "outstandingBusinessIncome": 5.16,
+      |  "balancingChargeOther": 5.17,
+      |  "balancingChargeBpra": 5.18,
+      |  "goodAndServicesOwnUse": 5.19
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamSummaryCalculationDeductionsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "tradingAllowance": 6.01,
+      |  "annualInvestmentAllowance": 6.02,
+      |  "capitalAllowanceMainPool": 6.03,
+      |  "capitalAllowanceSpecialRatePool": 6.04,
+      |  "zeroEmissionGoods": 6.05,
+      |  "businessPremisesRenovationAllowance": 6.06,
+      |  "enhancedCapitalAllowance": 6.07,
+      |  "allowanceOnSales": 6.08,
+      |  "capitalAllowanceSingleAssetPool": 6.09,
+      |  "includedNonTaxableProfits": 6.10,
+      |  "electricChargePointAllowance": 6.11,
+      |  "structuredBuildingAllowance": 6.12,
+      |  "enhancedStructuredBuildingAllowance": 6.13,
+      |  "zeroEmissionsCarAllowance": 6.14
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamSummaryCalculationAccountingAdjustmentsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "basisAdjustment": 7.01,
+      |  "overlapReliefUsed": 7.02,
+      |  "accountingAdjustment": 7.03,
+      |  "averagingAdjustment": 7.04
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamSummaryCalculationJson: JsValue = Json.parse(
+    s"""
+      |{
+      |  "totalIncome": 1.00,
+      |  "income": $downstreamSummaryCalculationIncomeJson,
+      |  "totalExpenses": 2.00,
+      |  "expenses": $downstreamSummaryCalculationExpensesJson,
+      |  "netProfit": 3.00,
+      |  "netLoss": 4.00,
+      |  "totalAdditions": 5.00,
+      |  "additions": $downstreamSummaryCalculationAdditionsJson,
+      |  "totalDeductions": 6.00,
+      |  "deductions": $downstreamSummaryCalculationDeductionsJson,
+      |  "accountingAdjustments": 7.00,
+      |  "selfEmploymentAccountingAdjustments": $downstreamSummaryCalculationAccountingAdjustmentsJson,
+      |  "taxableProfit": 8.00,
+      |  "adjustedIncomeTaxLoss": 9.00
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamAdjustmentsIncomeJson: JsValue = Json.parse(
+    """
+      |{
+      |  "turnover": 1.01,
+      |  "other": 1.02
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamAdjustmentsExpensesJson: JsValue = Json.parse(
+    """
+      |{
+      |    "consolidatedExpenses": 2.01,
+      |    "costOfGoodsAllowable": 2.02,
+      |    "paymentsToSubcontractorsAllowable": 2.03,
+      |    "wagesAndStaffCostsAllowable": 2.04,
+      |    "carVanTravelExpensesAllowable": 2.05,
+      |    "premisesRunningCostsAllowable": 2.06,
+      |    "maintenanceCostsAllowable": 2.07,
+      |    "adminCostsAllowable": 2.08,
+      |    "interestOnBankOtherLoansAllowable": 2.09,
+      |    "financeChargesAllowable": 2.10,
+      |    "irrecoverableDebtsAllowable": 2.11,
+      |    "professionalFeesAllowable": 2.12,
+      |    "depreciationAllowable": 2.13,
+      |    "otherExpensesAllowable": 2.14,
+      |    "advertisingCostsAllowable": 2.15,
+      |    "businessEntertainmentCostsAllowable": 2.16
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamAdjustmentsAdditionsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "costOfGoodsBoughtDisallowable": 3.01,
+      |  "paymentsToSubcontractorsDisallowable": 3.02,
+      |  "wagesAndStaffCostsDisallowable": 3.03,
+      |  "carVanTravelExpensesDisallowable": 3.04,
+      |  "premisesRunningCostsDisallowable": 3.05,
+      |  "maintenanceCostsDisallowable": 3.06,
+      |  "adminCostsDisallowable": 3.07,
+      |  "interestOnBankOtherLoansDisallowable": 3.08,
+      |  "financeChargesDisallowable": 3.09,
+      |  "irrecoverableDebtsDisallowable": 3.10,
+      |  "professionalFeesDisallowable": 3.11,
+      |  "depreciationDisallowable": 3.12,
+      |  "otherExpensesDisallowable": 3.13,
+      |  "advertisingCostsDisallowable": 3.14,
+      |  "businessEntertainmentCostsDisallowable": 3.15
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamAdjustmentsJson: JsValue = Json.parse(
+    s"""
+      |{
+      |  "income": $downstreamAdjustmentsIncomeJson,
+      |  "expenses": $downstreamAdjustmentsExpensesJson,
+      |  "additions": $downstreamAdjustmentsAdditionsJson
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamRetrieveBsasResponseJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "metadata": $downstreamMetadataJson,
+       |  "inputs": $downstreamInputsJson,
+       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+       |  "adjustments": $downstreamAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+       |}
+       |""".stripMargin)
+
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(
+    s"""
+       |{
+       |  "metadata": $downstreamMetadataJson,
+       |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
+       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+       |  "adjustments": $downstreamAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+       |}
+       |""".stripMargin)
+
+  val mtdMetadataJson: JsValue = Json.parse(
+    """
+      |{
+      |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
+      |  "requestedDateTime": "2000-01-01T10:12:10Z",
+      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
+      |  "nino": "AA999999A",
+      |  "taxYear": "2020-21",
+      |  "summaryStatus": "valid"
+      |}
+      |""".stripMargin
+  )
+
+  val mtdSubmissionPeriodWithPeriodIdJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "periodId": "1234567890123456",
+       |  "startDate": "$now",
+       |  "endDate": "$aYearFromNow",
+       |  "receivedDateTime": "2000-01-01T10:12:10Z"
+       |}
+       |""".stripMargin
+  )
+
+  val mtdSubmissionPeriodWithSubmissionIdJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "submissionId": "${now}_$aYearFromNow",
+       |  "startDate": "$now",
+       |  "endDate": "$aYearFromNow",
+       |  "receivedDateTime": "2000-01-01T10:12:10Z"
+       |}
+       |""".stripMargin
+  )
+
+  val mtdInputsJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "typeOfBusiness": "self-employment",
+       |  "businessId": "XAIS12345678910",
+       |  "businessName": "Business Name",
+       |  "accountingPeriodStartDate": "$now",
+       |  "accountingPeriodEndDate": "$aYearFromNow",
+       |  "source": "MTD-SA",
+       |  "submissionPeriods": [$mtdSubmissionPeriodWithPeriodIdJson, $mtdSubmissionPeriodWithSubmissionIdJson]
+       |}
+       |""".stripMargin
+  )
+
+  val mtdSummaryCalculationIncomeJson: JsValue = Json.parse(
+    """
+      |{
+      |  "turnover": 1.01,
+      |  "other": 1.02
+      |}
+      |""".stripMargin
+  )
+
+  val mtdSummaryCalculationExpensesJson: JsValue = Json.parse(
+    """
+       |{
+       |  "consolidatedExpenses": 2.01,
+       |  "costOfGoodsAllowable": 2.02,
+       |  "paymentsToSubcontractorsAllowable": 2.03,
+       |  "wagesAndStaffCostsAllowable": 2.04,
+       |  "carVanTravelExpensesAllowable": 2.05,
+       |  "premisesRunningCostsAllowable": 2.06,
+       |  "maintenanceCostsAllowable": 2.07,
+       |  "adminCostsAllowable": 2.08,
+       |  "interestOnBankOtherLoansAllowable": 2.09,
+       |  "financeChargesAllowable": 2.10,
+       |  "irrecoverableDebtsAllowable": 2.11,
+       |  "professionalFeesAllowable": 2.12,
+       |  "depreciationAllowable": 2.13,
+       |  "otherExpensesAllowable": 2.14,
+       |  "advertisingCostsAllowable": 2.15,
+       |  "businessEntertainmentCostsAllowable": 2.16
+       |}
+       |""".stripMargin
+  )
+
+  val mtdSummaryCalculationAdditionsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "costOfGoodsDisallowable": 5.01,
+      |  "paymentsToSubcontractorsDisallowable": 5.02,
+      |  "wagesAndStaffCostsDisallowable": 5.03,
+      |  "carVanTravelExpensesDisallowable": 5.04,
+      |  "premisesRunningCostsDisallowable": 5.05,
+      |  "maintenanceCostsDisallowable": 5.06,
+      |  "adminCostsDisallowable": 5.07,
+      |  "interestOnBankOtherLoansDisallowable": 5.08,
+      |  "financeChargesDisallowable": 5.09,
+      |  "irrecoverableDebtsDisallowable": 5.10,
+      |  "professionalFeesDisallowable": 5.11,
+      |  "depreciationDisallowable": 5.12,
+      |  "otherExpensesDisallowable": 5.13,
+      |  "advertisingCostsDisallowable": 5.14,
+      |  "businessEntertainmentCostsDisallowable": 5.15,
+      |  "outstandingBusinessIncome": 5.16,
+      |  "balancingChargeOther": 5.17,
+      |  "balancingChargeBpra": 5.18,
+      |  "goodAndServicesOwnUse": 5.19
+      |}
+      |""".stripMargin
+  )
+
+  val mtdSummaryCalculationDeductionsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "tradingAllowance": 6.01,
+      |  "annualInvestmentAllowance": 6.02,
+      |  "capitalAllowanceMainPool": 6.03,
+      |  "capitalAllowanceSpecialRatePool": 6.04,
+      |  "zeroEmissionGoods": 6.05,
+      |  "businessPremisesRenovationAllowance": 6.06,
+      |  "enhancedCapitalAllowance": 6.07,
+      |  "allowanceOnSales": 6.08,
+      |  "capitalAllowanceSingleAssetPool": 6.09,
+      |  "includedNonTaxableProfits": 6.10,
+      |  "electricChargePointAllowance": 6.11,
+      |  "structuredBuildingAllowance": 6.12,
+      |  "enhancedStructuredBuildingAllowance": 6.13,
+      |  "zeroEmissionsCarAllowance": 6.14
+      |}
+      |""".stripMargin
+  )
+
+  val mtdSummaryCalculationAccountingAdjustmentsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "basisAdjustment": 7.01,
+      |  "overlapReliefUsed": 7.02,
+      |  "accountingAdjustment": 7.03,
+      |  "averagingAdjustment": 7.04
+      |}
+      |""".stripMargin
+  )
+
+  val mtdSummaryCalculationJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "totalIncome": 1,
+       |  "income": $mtdSummaryCalculationIncomeJson,
+       |  "totalExpenses": 2,
+       |  "expenses": $mtdSummaryCalculationExpensesJson,
+       |  "netProfit": 3,
+       |  "netLoss": 4,
+       |  "totalAdditions": 5,
+       |  "additions": $mtdSummaryCalculationAdditionsJson,
+       |  "totalDeductions": 6,
+       |  "deductions": $mtdSummaryCalculationDeductionsJson,
+       |  "totalAccountingAdjustments": 7,
+       |  "accountingAdjustments": $mtdSummaryCalculationAccountingAdjustmentsJson,
+       |  "taxableProfit": 8,
+       |  "adjustedIncomeTaxLoss": 9
+       |}
+       |""".stripMargin
+  )
+
+  val mtdAdjustmentsIncomeJson: JsValue = Json.parse(
+    """
+      |{
+      |  "turnover": 1.01,
+      |  "other": 1.02
+      |}
+      |""".stripMargin
+  )
+
+  val mtdAdjustmentsExpensesJson: JsValue = Json.parse(
+    """
+      |{
+      |    "consolidatedExpenses": 2.01,
+      |    "costOfGoodsAllowable": 2.02,
+      |    "paymentsToSubcontractorsAllowable": 2.03,
+      |    "wagesAndStaffCostsAllowable": 2.04,
+      |    "carVanTravelExpensesAllowable": 2.05,
+      |    "premisesRunningCostsAllowable": 2.06,
+      |    "maintenanceCostsAllowable": 2.07,
+      |    "adminCostsAllowable": 2.08,
+      |    "interestOnBankOtherLoansAllowable": 2.09,
+      |    "financeChargesAllowable": 2.10,
+      |    "irrecoverableDebtsAllowable": 2.11,
+      |    "professionalFeesAllowable": 2.12,
+      |    "depreciationAllowable": 2.13,
+      |    "otherExpensesAllowable": 2.14,
+      |    "advertisingCostsAllowable": 2.15,
+      |    "businessEntertainmentCostsAllowable": 2.16
+      |}
+      |""".stripMargin
+  )
+
+  val mtdAdjustmentsAdditionsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "costOfGoodsBoughtDisallowable": 3.01,
+      |  "paymentsToSubcontractorsDisallowable": 3.02,
+      |  "wagesAndStaffCostsDisallowable": 3.03,
+      |  "carVanTravelExpensesDisallowable": 3.04,
+      |  "premisesRunningCostsDisallowable": 3.05,
+      |  "maintenanceCostsDisallowable": 3.06,
+      |  "adminCostsDisallowable": 3.07,
+      |  "interestOnBankOtherLoansDisallowable": 3.08,
+      |  "financeChargesDisallowable": 3.09,
+      |  "irrecoverableDebtsDisallowable": 3.10,
+      |  "professionalFeesDisallowable": 3.11,
+      |  "depreciationDisallowable": 3.12,
+      |  "otherExpensesDisallowable": 3.13,
+      |  "advertisingCostsDisallowable": 3.14,
+      |  "businessEntertainmentCostsDisallowable": 3.15
+      |}
+      |""".stripMargin
+  )
+
+  val mtdAdjustmentsJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "income": $mtdAdjustmentsIncomeJson,
+       |  "expenses": $mtdAdjustmentsExpensesJson,
+       |  "additions": $mtdAdjustmentsAdditionsJson
+       |}
+       |""".stripMargin
+  )
+
+  val mtdRetrieveBsasResponseJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "metadata": $mtdMetadataJson,
+       |  "inputs": $mtdInputsJson,
+       |  "adjustableSummaryCalculation": $mtdSummaryCalculationJson,
+       |  "adjustments": $mtdAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $mtdSummaryCalculationJson
+       |}
+       |""".stripMargin
+  )
+
+  def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String): JsValue = mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(
+    s"""
+      |{
+      |  "links": [
+      |    {
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId",
+      |      "method": "GET",
+      |      "rel": "self"
+      |    }, {
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust",
+      |      "method": "POST",
+      |      "rel": "submit-summary-adjustments"
+      |    }
+      |  ]
+      |}
+      |""".stripMargin).as[JsObject]
+
+  val metadataModel: Metadata = Metadata(
+    calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
+    requestedDateTime = "2000-01-01T10:12:10Z",
+    adjustedDateTime = Some("2000-01-01T10:12:10Z"),
+    nino = "AA999999A",
+    taxYear = "2020-21",
+    summaryStatus = Status.`valid`
+  )
+  
+  val submissionPeriodWithPeriodIdModel: SubmissionPeriod = SubmissionPeriod(
+    periodId = Some("1234567890123456"),
+    submissionId = None,
+    startDate = now,
+    endDate = aYearFromNow,
+    receivedDateTime = "2000-01-01T10:12:10Z"
+  )
+
+  val submissionPeriodWithSubmissionIdModel: SubmissionPeriod = SubmissionPeriod(
+    periodId = None,
+    submissionId = Some(s"${now}_$aYearFromNow"),
+    startDate = now,
+    endDate = aYearFromNow,
+    receivedDateTime = "2000-01-01T10:12:10Z"
+  )
+
+  val inputsModel: Inputs = Inputs(
+    typeOfBusiness = TypeOfBusiness.`self-employment`,
+    businessId = "XAIS12345678910",
+    businessName = Some("Business Name"),
+    accountingPeriodStartDate = now,
+    accountingPeriodEndDate = aYearFromNow,
+    source = Source.`MTD-SA`,
+    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
+  )
+
+  val summaryCalculationIncomeModel: SummaryCalculationIncome = SummaryCalculationIncome(
+    turnover = Some(1.01),
+    other = Some(1.02)
+  )
+
+  val summaryCalculationExpensesModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
+      consolidatedExpenses = Some(2.01),
+      costOfGoodsAllowable = Some(2.02),
+      paymentsToSubcontractorsAllowable = Some(2.03),
+      wagesAndStaffCostsAllowable = Some(2.04),
+      carVanTravelExpensesAllowable = Some(2.05),
+      premisesRunningCostsAllowable = Some(2.06),
+      maintenanceCostsAllowable = Some(2.07),
+      adminCostsAllowable = Some(2.08),
+      interestOnBankOtherLoansAllowable = Some(2.09),
+      financeChargesAllowable = Some(2.10),
+      irrecoverableDebtsAllowable = Some(2.11),
+      professionalFeesAllowable = Some(2.12),
+      depreciationAllowable = Some(2.13),
+      otherExpensesAllowable = Some(2.14),
+      advertisingCostsAllowable = Some(2.15),
+      businessEntertainmentCostsAllowable = Some(2.16)
+  )
+
+  val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
+    costOfGoodsDisallowable = Some(5.01),
+    paymentsToSubcontractorsDisallowable = Some(5.02),
+    wagesAndStaffCostsDisallowable = Some(5.03),
+    carVanTravelExpensesDisallowable = Some(5.04),
+    premisesRunningCostsDisallowable = Some(5.05),
+    maintenanceCostsDisallowable = Some(5.06),
+    adminCostsDisallowable = Some(5.07),
+    interestOnBankOtherLoansDisallowable = Some(5.08),
+    financeChargesDisallowable = Some(5.09),
+    irrecoverableDebtsDisallowable = Some(5.10),
+    professionalFeesDisallowable = Some(5.11),
+    depreciationDisallowable = Some(5.12),
+    otherExpensesDisallowable = Some(5.13),
+    advertisingCostsDisallowable = Some(5.14),
+    businessEntertainmentCostsDisallowable = Some(5.15),
+    outstandingBusinessIncome = Some(5.16),
+    balancingChargeOther = Some(5.17),
+    balancingChargeBpra = Some(5.18),
+    goodAndServicesOwnUse = Some(5.19)
+  )
+
+  val summaryCalculationDeductionsModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
+    tradingAllowance = Some(6.01),
+    annualInvestmentAllowance = Some(6.02),
+    capitalAllowanceMainPool = Some(6.03),
+    capitalAllowanceSpecialRatePool = Some(6.04),
+    zeroEmissionGoods = Some(6.05),
+    businessPremisesRenovationAllowance = Some(6.06),
+    enhancedCapitalAllowance = Some(6.07),
+    allowanceOnSales = Some(6.08),
+    capitalAllowanceSingleAssetPool = Some(6.09),
+    includedNonTaxableProfits = Some(6.10),
+    electricChargePointAllowance = Some(6.11),
+    structuredBuildingAllowance = Some(6.12),
+    enhancedStructuredBuildingAllowance = Some(6.13),
+    zeroEmissionsCarAllowance = Some(6.14)
+  )
+
+  val summaryCalculationAccountingAdjustmentsModel: SummaryCalculationAccountingAdjustments = SummaryCalculationAccountingAdjustments(
+      basisAdjustment = Some(7.01),
+      overlapReliefUsed = Some(7.02),
+      accountingAdjustment = Some(7.03),
+      averagingAdjustment = Some(7.04)
+  )
+
+  val adjustableSummaryCalculationModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
+    totalIncome = Some(1),
+    income = Some(summaryCalculationIncomeModel),
+    totalExpenses = Some(2),
+    expenses = Some(summaryCalculationExpensesModel),
+    netProfit = Some(3),
+    netLoss = Some(4),
+    totalAdditions = Some(5),
+    additions = Some(summaryCalculationAdditionsModel),
+    totalDeductions = Some(6),
+    deductions = Some(summaryCalculationDeductionsModel),
+    totalAccountingAdjustments = Some(7),
+    accountingAdjustments = Some(summaryCalculationAccountingAdjustmentsModel),
+    taxableProfit = Some(8),
+    adjustedIncomeTaxLoss = Some(9)
+  )
+
+  val adjustmentsIncomeModel: AdjustmentsIncome = AdjustmentsIncome(
+    turnover = Some(1.01),
+    other = Some(1.02)
+  )
+
+  val adjustmentsExpensesModel: AdjustmentsExpenses = AdjustmentsExpenses(
+      consolidatedExpenses = Some(2.01),
+      costOfGoodsAllowable = Some(2.02),
+      paymentsToSubcontractorsAllowable = Some(2.03),
+      wagesAndStaffCostsAllowable = Some(2.04),
+      carVanTravelExpensesAllowable = Some(2.05),
+      premisesRunningCostsAllowable = Some(2.06),
+      maintenanceCostsAllowable = Some(2.07),
+      adminCostsAllowable = Some(2.08),
+      interestOnBankOtherLoansAllowable = Some(2.09),
+      financeChargesAllowable = Some(2.10),
+      irrecoverableDebtsAllowable = Some(2.11),
+      professionalFeesAllowable = Some(2.12),
+      depreciationAllowable = Some(2.13),
+      otherExpensesAllowable = Some(2.14),
+      advertisingCostsAllowable = Some(2.15),
+      businessEntertainmentCostsAllowable = Some(2.16)
+  )
+
+  val adjustmentsAdditionsModel: AdjustmentsAdditions = AdjustmentsAdditions(
+      costOfGoodsBoughtDisallowable = Some(3.01),
+      paymentsToSubcontractorsDisallowable = Some(3.02),
+      wagesAndStaffCostsDisallowable = Some(3.03),
+      carVanTravelExpensesDisallowable = Some(3.04),
+      premisesRunningCostsDisallowable = Some(3.05),
+      maintenanceCostsDisallowable = Some(3.06),
+      adminCostsDisallowable = Some(3.07),
+      interestOnBankOtherLoansDisallowable = Some(3.08),
+      financeChargesDisallowable = Some(3.09),
+      irrecoverableDebtsDisallowable = Some(3.10),
+      professionalFeesDisallowable = Some(3.11),
+      depreciationDisallowable = Some(3.12),
+      otherExpensesDisallowable = Some(3.13),
+      advertisingCostsDisallowable = Some(3.14),
+      businessEntertainmentCostsDisallowable = Some(3.15)
+  )
+
+  val adjustmentsModel: Adjustments = Adjustments(
+    income = Some(adjustmentsIncomeModel),
+    expenses = Some(adjustmentsExpensesModel),
+    additions = Some(adjustmentsAdditionsModel)
+  )
+
+  val adjustedSummaryCalculationModel: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
+    totalIncome = Some(1),
+    income = Some(summaryCalculationIncomeModel),
+    totalExpenses = Some(2),
+    expenses = Some(summaryCalculationExpensesModel),
+    netProfit = Some(3),
+    netLoss = Some(4),
+    totalAdditions = Some(5),
+    additions = Some(summaryCalculationAdditionsModel),
+    totalDeductions = Some(6),
+    deductions = Some(summaryCalculationDeductionsModel),
+    totalAccountingAdjustments = Some(7),
+    accountingAdjustments = Some(summaryCalculationAccountingAdjustmentsModel),
+    taxableProfit = Some(8),
+    adjustedIncomeTaxLoss = Some(9)
+  )
+
+  val retrieveBsasResponseModel: RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
+    metadata = metadataModel,
+    inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsModel),
+    adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
+  )
+
+  def retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness: TypeOfBusiness): RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
+    metadata = metadataModel,
+    inputs = inputsModel.copy(typeOfBusiness = typeOfBusiness),
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsModel),
+    adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
+  )
 }

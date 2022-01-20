@@ -26,6 +26,7 @@ import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.response.retrieveBsas.AccountingPeriod
 import v3.models.response.{retrieveBsas, retrieveBsasAdjustments}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.retrieveBsasResponseInvalidTypeOfBusinessModel
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
@@ -178,10 +179,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse] =
       ResponseWrapper(
         correlationId = "",
-        responseData = retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse(
-          retrieveBsas.selfEmployment.Metadata(typeOfBusiness, None, AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
-          None
-        )
+        responseData = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
       )
     "return Left" when {
       List(

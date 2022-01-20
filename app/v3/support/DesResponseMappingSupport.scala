@@ -104,7 +104,7 @@ trait DesResponseMappingSupport {
 
   final def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
-      case RetrieveSelfEmploymentBsasResponse(retrieveBsas.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
+      case RetrieveSelfEmploymentBsasResponse(_, retrieveBsas.selfEmployment.Inputs(typeOfBusiness, _, _, _, _, _, _), _, _, _)
           if typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
 

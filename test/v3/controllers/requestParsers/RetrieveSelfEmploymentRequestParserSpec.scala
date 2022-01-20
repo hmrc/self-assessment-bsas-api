@@ -20,7 +20,7 @@ import support.UnitSpec
 import domain.Nino
 import v3.mocks.validators.MockRetrieveSelfEmploymentValidator
 import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
-import v3.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
 
@@ -29,28 +29,17 @@ class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
   }
 
   val nino = "AA123456A"
-  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus = Some("true")
+  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputRawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedStatus)
-  val outputRequestData = RetrieveSelfEmploymentBsasRequestData(Nino(nino), bsasId, Some("3"))
+  val inputRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
+  val outputRequestData = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
 
   "parser" should {
     "return a valid request object" when {
-      "passed a valid raw data object with an adjusted summary of 'true'" in new Test {
+      "passed a valid raw data object" in new Test {
         MockValidator.validate(inputRawData).returns(List())
         parser.parseRequest(inputRawData) shouldBe Right(outputRequestData)
-      }
-      "passed a valid raw data object with an adjusted summary of 'false'" in new Test {
-        val input: RetrieveSelfEmploymentBsasRawData = inputRawData.copy(adjustedStatus = Some("false"))
-        MockValidator.validate(input).returns(List())
-        parser.parseRequest(input) shouldBe Right(outputRequestData.copy(adjustedStatus = Some("1")))
-      }
-      "passed a valid raw data object without an adjusted summary" in new Test {
-        val input: RetrieveSelfEmploymentBsasRawData = inputRawData.copy(adjustedStatus = None)
-        MockValidator.validate(input).returns(List())
-        parser.parseRequest(input) shouldBe Right(outputRequestData.copy(adjustedStatus = None))
       }
     }
     "return a single error" when {
