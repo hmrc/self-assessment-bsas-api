@@ -32,51 +32,20 @@ uses:
   queryParameters: queryParameters.raml
 
 '/individuals/self-assessment/adjustable-summary':
-  uriParameters:
-    nino:
-      description: National Insurance number in the format AA999999A.
-      type: string
-      example: TC663795B
-  /{nino}:
-    get: !include list.raml
-    /trigger:
-      post: !include trigger.raml
-    /self-employment/{bsasId}:
-      (annotations.group):
-          name: Self-employment business
+    uriParameters:
+      nino:
+        description: National Insurance number in the format AA999999A.
+        type: string
+        example: TC663795B
+    /{nino}:
+      /self-employment/{calculationId}:
+        (annotations.group):
+          name: Self Employment Business Source Adjustable Summary
           description: ""
-      uriParameters:
-        bsasId:
-          description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
-          type: string
-          example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
-      get: !include retrieve_se_bsas.raml
-      /adjust:
-        post: !include submit_se_adjustments.raml
+        uriParameters:
+          calculationId:
+            description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
+            type: string
+            example: 717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4
         get: !include retrieve_se_adjustments.raml
-    /property/{bsasId}:
-      (annotations.group):
-          name: UK property business
-          description: ""
-      uriParameters:
-        bsasId:
-          description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
-          type: string
-          example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
-      get: !include retrieve_property_bsas.raml
-      /adjust:
-        post: !include submit_property_adjustments.raml
         get: !include retrieve_property_adjustments.raml
-    /foreign-property/{bsasId}:
-      (annotations.group):
-        name: Foreign property business
-        description: ""
-      uriParameters:
-        bsasId:
-          description: 'The unique identifier of the summary calculation.<br><br>Must conform to the regular expression: `^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`'
-          type: string
-          example: f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c
-      get: !include retrieve_foreign_property_bsas.raml
-      /adjust:
-        post: !include submit_foreign_property_accounting_adjustments.raml
-        get: !include retrieve_foreign_property_adjustments.raml
