@@ -50,10 +50,10 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+    "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
     "INVALID_CORRELATION_ID" -> DownstreamError,
     "INVALID_RETURN" -> DownstreamError,
-    "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+    "UNPROCESSABLE_ENTITY" -> DownstreamError,
     "NO_DATA_FOUND" -> NotFoundError,
     "SERVER_ERROR" -> DownstreamError,
     "SERVICE_UNAVAILABLE" -> DownstreamError

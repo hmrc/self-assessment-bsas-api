@@ -88,11 +88,11 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, requestCalcId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String          = requestNino
-          override val calculationId: String = requestBsasId
+          override val calculationId: String = requestCalcId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -142,10 +142,10 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
+        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
-        (FORBIDDEN, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
+        (FORBIDDEN, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)

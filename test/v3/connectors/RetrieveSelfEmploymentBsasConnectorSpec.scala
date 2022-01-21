@@ -34,15 +34,15 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
     val connector: RetrieveSelfEmploymentBsasConnector = new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnv returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns false
+    val ifsRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnv returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.ifsEnabled returns true
   }
 
-  "retrievePropertyBsas" should {
+  "retrieveSEBsas" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
@@ -52,7 +52,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId",
           config = dummyDesHeaderCarrierConfig,
-          requiredHeaders = desRequestHeaders,
+          requiredHeaders = ifsRequestHeaders,
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 
