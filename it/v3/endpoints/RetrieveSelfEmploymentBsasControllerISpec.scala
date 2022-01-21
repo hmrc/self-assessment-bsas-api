@@ -109,7 +109,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, CalculationIdFormatError),
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
