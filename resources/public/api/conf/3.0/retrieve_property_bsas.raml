@@ -2,15 +2,12 @@ is:
   - headers.acceptJson
   - headers.testScenarioHeader
   - errors.formatNino
-  - errors.formatBsasId
-  - errors.formatAdjustedStatus
+  - errors.formatCalculationId
   - errors.ruleNotUkProperty
-  - errors.ruleNoAdjustmentsMade
   - errors.clientOrAgentNotAuthorised
-  - errors.bsasNotFound
-  - queryParameters.adjustedStatusOptional
-displayName: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
-description: This endpoint allows a developer to request a specific Business Source Adjustable Summary (BSAS) using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted summary is returned.
+  - errors.summaryNotFound
+displayName: Retrieve a UK Property Business Source Adjustable Summary (BSAS) [test only]
+description: This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business Furnished Holiday Letting (FHL) or a Non FHL UK property. A National Insurance number and Calculation id must be provided.
 (annotations.sandboxData): !include scenarios/retrieve_property.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
@@ -19,7 +16,13 @@ responses:
     body:
       application/json:
         type: !include schemas/retrieve_property_bsas.json
-        example: !include examples/retrieveBsas/retrieve_property_bsas.json
+        examples:
+          example-1:
+            description: UK FHL Response
+            value: !include examples/retrieveBsas/retrieve_uk_fhl_property.json
+          example-2:
+            description: UK Non-FHL Response
+            value: !include examples/retrieveBsas/retrieve_uk_non_fhl_property.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
