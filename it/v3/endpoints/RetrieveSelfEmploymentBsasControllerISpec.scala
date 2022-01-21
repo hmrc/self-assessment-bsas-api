@@ -80,7 +80,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get)
 
-        response.status shouldBe FORBIDDEN
+        response.status shouldBe BAD_REQUEST
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe Json.toJson(RuleNotSelfEmployment)
       }
@@ -88,11 +88,11 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestCalcId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String          = requestNino
-          override val calculationId: String = requestCalcId
+          override val calculationId: String = requestBsasId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -108,8 +108,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, CalculationIdFormatError),
+        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
@@ -145,7 +144,6 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
-        (FORBIDDEN, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
