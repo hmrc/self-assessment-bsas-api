@@ -55,8 +55,6 @@ object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The p
 
 object BusinessIdFormatError extends MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
 
-object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid")
-
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided Country code is invalid")
 
 // Rule Errors
