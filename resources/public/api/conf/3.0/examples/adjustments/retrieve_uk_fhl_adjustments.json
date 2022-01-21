@@ -5,17 +5,18 @@
     "adjustedDateTime": "2020-12-05T16:19:44Z",
     "nino": "TC663795B",
     "taxYear": "2019-20",
-    "status": "valid"
+    "summaryStatus": "valid"
   },
   "inputs": {
     "businessId": "000000000000210",
     "typeOfBusiness": "uk-property-fhl",
     "businessName": "My UK Property",
-    "accountingPeriodStartDate": "2019-04-06",
-    "accountingPeriodEndDate": "2020-04-05",
+    "accountingPeriodStartDate": "2020-04-06",
+    "accountingPeriodEndDate": "2021-04-05",
     "source": "MTD-SA",
     "submissionPeriods": [
       {
+        "periodId": "2019-04-06_2019-07-05",
         "submissionId": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
         "startDate": "2019-04-06",
         "endDate": "2020-04-05",
@@ -31,13 +32,14 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
+      "consolidatedExpenses": 0.12,
+      "premisesRunningCosts": 0.12,
       "repairsAndMaintenance": 0.12,
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
-      "travelCosts": 0.12,
       "other": 0.12,
-      "premisesRunningCosts": 0.12
+      "travelCosts": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
@@ -48,10 +50,11 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "rarReliefClaimed": 0.12,
       "annualInvestmentAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
       "businessPremisesRenovationAllowance": 0.12,
+      "propertyAllowance": 0.12,
+      "otherCapitalAllowance": 0.12,
+      "rarReliefClaimed": 0.12,
       "electricChargePointAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
@@ -59,16 +62,17 @@
   },
   "adjustments": {
     "income": {
-      "rentReceived": -99999999999.99
+      "rentReceived": 0.12
     },
     "expenses": {
-      "repairsAndMaintenance": -99999999999.99,
-      "financialCosts": -99999999999.99,
-      "professionalFees": -99999999999.99,
-      "costOfServices": -99999999999.99,
-      "travelCosts": -99999999999.99,
-      "other": -99999999999.99,
-      "premisesRunningCosts": -99999999999.99
+      "consolidatedExpenses": 0.12,
+      "premisesRunningCosts": 0.12,
+      "repairsAndMaintenance": 0.12,
+      "financialCosts": 0.12,
+      "professionalFees": 0.12,
+      "costOfServices": 0.12,
+      "other": 0.12,
+      "travelCosts": 0.12
     }
   },
   "adjustedSummaryCalculation": {
@@ -79,13 +83,14 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
+      "consolidatedExpenses": 0.12,
+      "premisesRunningCosts": 0.12,
       "repairsAndMaintenance": 0.12,
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
-      "travelCosts": 0.12,
       "other": 0.12,
-      "premisesRunningCosts": 0.12
+      "travelCosts": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
@@ -96,10 +101,11 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "rarReliefClaimed": 0.12,
       "annualInvestmentAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
       "businessPremisesRenovationAllowance": 0.12,
+      "propertyAllowance": 0.12,
+      "otherCapitalAllowance": 0.12,
+      "rarReliefClaimed": 0.12,
       "electricChargePointAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },

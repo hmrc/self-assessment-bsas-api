@@ -9,6 +9,10 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
+            <td><p>Simulates the scenario where no data is found.</p></td>
+        </tr>
+        <tr>
+            <td><p>UK_PROPERTY_FHL_PROFIT</p></td>
             <td><p>Simulates success response with uk property FHL and netProfit.</p></td>
         </tr>
         <tr>
@@ -16,7 +20,7 @@
             <td><p>Simulates success response with uk property FHL and netLoss.</p></td>
         </tr>
         <tr>
-            <td><p>UK_PROPERTY_NON_FHL</p></td>
+            <td><p>UK_PROPERTY_NON_FHL_PROFIT</p></td>
             <td><p>Simulates success response with uk property Non FHL and netProfit.</p></td>
         </tr>
         <tr>
@@ -48,12 +52,8 @@
             <td><p>Simulates success response with summary status superseded.</p></td>
         </tr>
         <tr>
-            <td><p>INCORRECT_BUSINESS_TYPE</p></td>
+            <td><p>NOT_UK_PROPERTY</p></td>
             <td><p>Simulates the scenario where the calculationId is not a UK property.</p></td>
-        </tr>
-        <tr>
-            <td><p>NOT_FOUND</p></td>
-            <td><p>Simulates the scenario where no data is found.</p></td>
         </tr>
     </tbody>
 </table>
