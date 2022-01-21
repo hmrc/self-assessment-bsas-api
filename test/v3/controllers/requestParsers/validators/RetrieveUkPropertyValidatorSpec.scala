@@ -17,49 +17,39 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v3.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, NinoFormatError}
-import v3.models.request.RetrieveUkPropertyBsasRawData
+import v3.models.errors.{BsasIdFormatError, NinoFormatError}
+import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 
 class RetrieveUkPropertyValidatorSpec extends UnitSpec {
 
   val validNino = "AA123456A"
-  val validBsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val validAdjustedStatus = Some("true")
+  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val invalidNino = "BEANS"
-  val invalidBsasId = "f2fb30e5-4ab6-4a29-b3c1-beans"
-  val invalidAdjustedStatus = Some("beans")
+  val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-beans"
 
   val validator = new RetrieveUkPropertyValidator()
 
   "validator" should {
     "return no errors" when {
-      "passed valid raw data with all fields" in {
-        val input = RetrieveUkPropertyBsasRawData(validNino, validBsasId, validAdjustedStatus)
-        validator.validate(input) shouldBe List()
-      }
-      "passed valid raw data with only mandatory fields" in {
-        val input = RetrieveUkPropertyBsasRawData(validNino, validBsasId, None)
+      "passed valid raw data" in {
+        val input = RetrieveUkPropertyBsasRawData(validNino, validCalculationId)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveUkPropertyBsasRawData(invalidNino, validBsasId, validAdjustedStatus)
+        val input = RetrieveUkPropertyBsasRawData(invalidNino, validCalculationId)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed raw data with an invalid bsas id" in {
-        val input = RetrieveUkPropertyBsasRawData(validNino, invalidBsasId, validAdjustedStatus)
+        val input = RetrieveUkPropertyBsasRawData(validNino, invalidCalculationId)
         validator.validate(input) shouldBe List(BsasIdFormatError)
-      }
-      "passed raw data with an invalid adjusted status" in {
-        val input = RetrieveUkPropertyBsasRawData(validNino, validBsasId, invalidAdjustedStatus)
-        validator.validate(input) shouldBe List(AdjustedStatusFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveUkPropertyBsasRawData(invalidNino, invalidBsasId, invalidAdjustedStatus)
-        validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError, AdjustedStatusFormatError)
+        val input = RetrieveUkPropertyBsasRawData(invalidNino, invalidCalculationId)
+        validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError)
       }
     }
   }

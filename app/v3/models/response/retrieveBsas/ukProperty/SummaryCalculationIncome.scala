@@ -19,28 +19,33 @@ package v3.models.response.retrieveBsas.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class IncomeBreakdown(rentIncome: Option[BigDecimal],
-                           premiumsOfLeaseGrant: Option[BigDecimal],
-                           reversePremiums: Option[BigDecimal],
-                           otherPropertyIncome: Option[BigDecimal],
-                           rarRentReceived: Option[BigDecimal])
+case class SummaryCalculationIncome(
+    totalRentsReceived: Option[BigDecimal],
+    premiumsOfLeaseGrant: Option[BigDecimal],
+    reversePremiums: Option[BigDecimal],
+    otherPropertyIncome: Option[BigDecimal],
+    rentReceived: Option[BigDecimal],
+    rarRentReceived: Option[BigDecimal],
+)
 
-object IncomeBreakdown {
-  val nonFhlReads: Reads[IncomeBreakdown] = (
+object SummaryCalculationIncome {
+  val readsFhl: Reads[SummaryCalculationIncome] = (
+    Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      (JsPath \ "rentReceived").readNullable[BigDecimal] and
+      (JsPath \ "rarRentReceived").readNullable[BigDecimal]
+  )(SummaryCalculationIncome.apply _)
+
+  val readsNonFhl: Reads[SummaryCalculationIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
+      Reads.pure(None) and
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
-    ) (IncomeBreakdown.apply _)
+  )(SummaryCalculationIncome.apply _)
 
-   val fhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "rentReceived").readNullable[BigDecimal] and
-      (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-      (JsPath \ "reversePremiums").readNullable[BigDecimal] and
-      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      (JsPath \ "rarRentReceived").readNullable[BigDecimal]
-    )(IncomeBreakdown.apply _)
-
-  implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
+  implicit val writes: OWrites[SummaryCalculationIncome] = Json.writes[SummaryCalculationIncome]
 }

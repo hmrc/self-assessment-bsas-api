@@ -17,45 +17,54 @@
 package v3.models.response.retrieveBsas.ukProperty
 
 import config.AppConfig
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v3.models.domain.TypeOfBusiness
 import v3.models.hateoas.{HateoasData, Link}
 
-case class RetrieveUkPropertyBsasResponse(metadata: Metadata,
-                                          bsas: Option[BsasDetail])
+case class RetrieveUkPropertyBsasResponse(
+    metadata: Metadata,
+    inputs: Inputs,
+    adjustableSummaryCalculation: AdjustableSummaryCalculation,
+    adjustments: Option[Adjustments],
+    adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
+)
 
 object RetrieveUkPropertyBsasResponse extends HateoasLinks {
 
-  implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
-    JsPath.read[Metadata] and
-      (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`uk-property-fhl` => fhlBsasDetailReads
-        case TypeOfBusiness.`uk-property-non-fhl` => nonFhlBsasDetailReads
-        case _ => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
-      }
-    )(RetrieveUkPropertyBsasResponse.apply _)
-
-  private val fhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-    case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
-    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
-  }
-
-  private val nonFhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-    case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
-    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
+  implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (json: JsValue) =>
+    for {
+      metadata <- (json \ "metadata").validate[Metadata]
+      inputs   <- (json \ "inputs").validate[Inputs]
+      isFhl = inputs.typeOfBusiness == TypeOfBusiness.`uk-property-fhl`
+      adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation")
+        .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsNonFhl)
+      adjustments <- (json \ "adjustments").validateOpt[Adjustments](if (isFhl) Adjustments.readsFhl else Adjustments.readsNonFhl)
+      adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation")
+        .validateOpt[AdjustedSummaryCalculation](if (isFhl) AdjustedSummaryCalculation.readsFhl else AdjustedSummaryCalculation.readsNonFhl)
+    } yield {
+      RetrieveUkPropertyBsasResponse(
+        metadata = metadata,
+        inputs = inputs,
+        adjustableSummaryCalculation = adjustableSummaryCalculation,
+        adjustments = adjustments,
+        adjustedSummaryCalculation = adjustedSummaryCalculation
+      )
   }
 
   implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]
 
-  implicit object RetrieveUkPropertyBsasHateoasFactory extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
+  implicit object RetrieveSelfAssessmentBsasHateoasFactory
+      extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveUkPropertyHateoasData): Seq[Link] = {
+      import data._
+
       Seq(
-        getUkPropertyBsas(appConfig, data.nino, data.bsasId), adjustPropertyBsas(appConfig, data.nino, data.bsasId)
+        getUkPropertyBsas(appConfig, nino, calculationId),
+        adjustPropertyBsas(appConfig, nino, calculationId)
       )
     }
   }
 }
 
-case class RetrieveUkPropertyHateoasData(nino: String, bsasId: String) extends HateoasData
+case class RetrieveUkPropertyHateoasData(nino: String, calculationId: String) extends HateoasData

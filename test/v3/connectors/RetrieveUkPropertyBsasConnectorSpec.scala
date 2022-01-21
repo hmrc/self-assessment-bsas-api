@@ -22,15 +22,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.RetrieveUkPropertyBsasRequestData
+import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-
-  val queryParams: Map[String, String] = Map("return" -> "03")
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
@@ -45,29 +43,14 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "retrieve" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
+      val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
-      "a valid request with queryParams is supplied" in new Test {
-        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", Some("03"))
+      "a valid request is supplied" in new Test {
+        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId")
 
-        MockedHttpClient.parameterGet(
+        MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
           config = dummyDesHeaderCarrierConfig,
-          queryParams.toSeq,
-          requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
-
-        await(connector.retrieve(request)) shouldBe outcome
-      }
-
-      "a valid request without queryParams is supplied" in new Test {
-        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", None)
-
-        MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
-          config = dummyDesHeaderCarrierConfig,
-          Seq.empty,
           requiredHeaders = desRequestHeaders,
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))

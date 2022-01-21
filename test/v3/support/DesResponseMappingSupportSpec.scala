@@ -16,17 +16,18 @@
 
 package v3.support
 
-import java.time.LocalDate
-
 import support.UnitSpec
 import utils.Logging
 import v3.controllers.EndpointLogContext
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{retrieveBsasResponseInvalidTypeOfBusinessModel => retrieveSEBsasResponseInvalidTypeOfBusinessModel}
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{retrieveBsasResponseInvalidTypeOfBusinessModel => retrieveUKPropertyBsasResponseInvalidTypeOfBusinessModel}
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.response.retrieveBsas.AccountingPeriod
 import v3.models.response.{retrieveBsas, retrieveBsasAdjustments}
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.retrieveBsasResponseInvalidTypeOfBusinessModel
+
+import java.time.LocalDate
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
@@ -112,7 +113,14 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       ResponseWrapper(
         correlationId = "",
         responseData = retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse(
-          retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, Some("XAIS00000000210"), AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
+          retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness,
+                                                      Some("XAIS00000000210"),
+                                                      AccountingPeriod(date, date),
+                                                      "",
+                                                      "",
+                                                      "",
+                                                      "",
+                                                      adjustedSummary = true),
           retrieveBsasAdjustments.ukProperty.BsasDetail(None, None)
         )
       )
@@ -179,7 +187,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse] =
       ResponseWrapper(
         correlationId = "",
-        responseData = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
+        responseData = retrieveSEBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
       )
     "return Left" when {
       List(
@@ -208,24 +216,11 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     }
   }
 
-
   "validateRetrieveUkPropertyBsasSuccessResponse" should {
     def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse] =
       ResponseWrapper(
         correlationId = "",
-        responseData = retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse(
-          retrieveBsas.ukProperty.Metadata(
-            typeOfBusiness,
-            None,
-            AccountingPeriod(date, date),
-            "",
-            "",
-            "",
-            "",
-            adjustedSummary = true
-          ),
-          None
-        )
+        responseData = retrieveUKPropertyBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
       )
     "return Left" when {
       List(
@@ -255,6 +250,5 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       }
     }
   }
-
 
 }

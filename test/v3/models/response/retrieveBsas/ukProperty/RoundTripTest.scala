@@ -16,27 +16,28 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json, Reads, Writes}
 import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+trait RoundTripTest extends UnitSpec with JsonErrorValidators {
+  def testRoundTrip[A](testName: String, downstreamJson: JsValue, model: A, mtdJson: JsValue)(reads: Reads[A])(implicit writes: Writes[A]): Unit = {
+    s"$testName model tests" when {
+      "reads" should {
+        "return a valid model" when {
+          "passed valid JSON" in {
+            downstreamJson.as[A](reads) shouldBe model
+          }
+        }
+      }
 
-  "reads" should {
-    "return a valid model" when {
-      "passed valid JSON" in {
-        downstreamMetadataJson.as[Metadata] shouldBe metadataModel
+      "writes" should {
+        "return valid JSON" when {
+          "passed a valid model" in {
+            Json.toJson(model) shouldBe mtdJson
+          }
+        }
       }
     }
   }
-
-  "writes" should {
-    "return valid JSON" when {
-      "passed a valid model" in {
-        Json.toJson(metadataModel) shouldBe mtdMetadataJson
-      }
-    }
-  }
-
 }

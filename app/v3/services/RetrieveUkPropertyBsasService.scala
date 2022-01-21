@@ -25,7 +25,7 @@ import v3.connectors.RetrieveUkPropertyBsasConnector
 import v3.controllers.EndpointLogContext
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.RetrieveUkPropertyBsasRequestData
+import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v3.support.DesResponseMappingSupport
 

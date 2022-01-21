@@ -24,23 +24,19 @@ import v3.mocks.connectors.MockRetrieveUkPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.RetrieveUkPropertyBsasRequestData
-import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 
 import scala.concurrent.Future
 
-class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
+class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus = Some("03")
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = RetrieveUkPropertyBsasRequestData(nino, id, adjustedStatus)
-
-  val response = RetrieveUkPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
+  val request = RetrieveUkPropertyBsasRequestData(nino, id)
 
   trait Test extends MockRetrieveUkPropertyBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveUkPropertyBsasConnector", "retrieve")
 
     val service = new RetrieveUkPropertyBsasService(mockConnector)
@@ -49,37 +45,39 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
   "retrieve" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+        MockRetrievePropertyBsasConnector
+          .retrievePropertyBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
 
-        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
       }
     }
 
-
     "return error response" when {
 
-      "des return success response with invalid type of business" in new Test {
-        val response = RetrieveUkPropertyBsasResponse(metadataModel.copy(typeOfBusiness = TypeOfBusiness.`self-employment`),
-          Some(bsasDetailModel))
-        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+      "des return success response with invalid type of business" should {
+        Seq(TypeOfBusiness.`self-employment`, TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).foreach(typeOfBusiness =>
+          s"return an error for $typeOfBusiness" in new Test {
+            val response = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
+            MockRetrievePropertyBsasConnector
+              .retrievePropertyBsas(request)
+              .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotUkProperty))
+            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotUkProperty))
+        })
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+          MockRetrievePropertyBsasConnector
+            .retrievePropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
-
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
         ("INVAlID_CORRELATION_ID", DownstreamError),

@@ -20,26 +20,17 @@ import support.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators{
+class SummaryCalculationIncomeSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  "reads" should {
-    "return a valid model" when {
-      "a valid json is supplied" in {
-        desRetrieveBsasResponse.as[RetrieveUkPropertyBsasResponse] shouldBe retrieveUkPropertyBsasResponseModel
-      }
+  import SummaryCalculationIncome._
 
-      "a valid json with out adjusted summary is supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[RetrieveUkPropertyBsasResponse] shouldBe
-          retrieveUkPropertyBsasResponseModel.copy(metadata = metadataModelWithAdjustableSummary)
-      }
-    }
-  }
+  testRoundTrip("Summary Calculation Income FHL",
+                downstreamSummaryCalculationIncomeJson,
+                summaryCalculationIncomeFhlModel,
+                mtdSummaryCalculationIncomeFhlJson)(readsFhl)
+  testRoundTrip("Summary Calculation Income Non-FHL",
+                downstreamSummaryCalculationIncomeJson,
+                summaryCalculationIncomeNonFhlModel,
+                mtdSummaryCalculationIncomeNonFhlJson)(readsNonFhl)
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        retrieveUkPropertyBsasResponseModel.toJson shouldBe mtdResponse
-      }
-    }
-  }
 }
