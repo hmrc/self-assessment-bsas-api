@@ -139,7 +139,7 @@
     },
     "adjustableSummaryCalculation": {
       "type": "object",
-      "description": "Object containing the details about UK property summary calculation",
+      "description": "Object containing the details about UK property summary calculation.",
       "properties": {
         "totalIncome": {
           "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -185,11 +185,11 @@
         "totalExpenses": {
           "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": " 2000.50"
+          "example": "2000.50"
         },
         "expenses": {
           "type": "object",
-          "description": "Object containing the expenses for UK property income sources",
+          "description": "Object containing the expenses for UK property income sources.",
           "properties": {
             "consolidatedExpenses": {
               "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -246,17 +246,17 @@
         "netProfit": {
           "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": " 1000.45"
+          "example": "1000.45"
         },
         "netLoss": {
           "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": " 1000.45"
+          "example": "1000.45"
         },
         "totalAdditions": {
           "description": "The total additions to net profit (or deduction to net loss). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": " 1000.45"
+          "example": "1000.45"
         },
         "additions": {
           "type": "object",
