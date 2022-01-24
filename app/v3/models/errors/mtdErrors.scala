@@ -54,7 +54,6 @@ object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "T
 
 object BsasIdFormatError extends MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
 
-object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid")
 
 object BusinessIdFormatError extends MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
 
