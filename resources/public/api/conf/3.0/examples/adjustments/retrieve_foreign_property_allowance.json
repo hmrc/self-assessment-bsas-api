@@ -49,10 +49,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "annualInvestmentAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "propertyAllowance": 0.12
     },
     "taxableProfit": 12500,
     "adjustedIncomeTaxLoss": 12500
@@ -97,10 +94,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "annualInvestmentAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "propertyAllowance": 0.12
     },
     "taxableProfit": 2500,
     "adjustedIncomeTaxLoss": 12500
