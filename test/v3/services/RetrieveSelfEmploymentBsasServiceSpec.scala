@@ -72,10 +72,10 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
 
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("INVALID_CALCULATION_ID", BsasIdFormatError),
-        ("INVAlID_CORRELATION_ID", DownstreamError),
+        ("INVALID_CALCULATION_ID", CalculationIdFormatError),
+        ("INVALID_CORRELATIONID", DownstreamError),
         ("INVALID_RETURN", DownstreamError),
-        ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
+        ("UNPROCESSABLE_ENTITY", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
