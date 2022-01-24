@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package v3.models.request
+package v3.models.request.retrieveBsas.ukProperty
 
-import domain.Nino
+import v3.models.request.RawData
 
-case class RetrieveUkPropertyBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
-
-case class RetrieveUkPropertyBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])
-
+case class RetrieveUkPropertyBsasRawData(nino: String, calculationId: String) extends RawData

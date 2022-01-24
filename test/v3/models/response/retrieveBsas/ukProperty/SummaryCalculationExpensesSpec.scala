@@ -17,13 +17,24 @@
 package v3.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import Metadata._
+  import SummaryCalculationExpenses._
 
-  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
+  testRoundTrip(
+    "Summary Calculation Expenses FHL",
+    downstreamSummaryCalculationExpensesJson,
+    summaryCalculationExpensesFhlModel,
+    mtdSummaryCalculationExpensesFhlJson
+  )(readsFhl)
+  testRoundTrip(
+    "Summary Calculation Expenses Non-FHL",
+    downstreamSummaryCalculationExpensesJson,
+    summaryCalculationExpensesNonFhlModel,
+    mtdSummaryCalculationExpensesNonFhlJson
+  )(readsNonFhl)
 
 }

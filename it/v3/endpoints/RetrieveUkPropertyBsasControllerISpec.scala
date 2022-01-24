@@ -23,6 +23,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v3.models.domain.IncomeSourceType
 import v3.models.errors._
 import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
@@ -30,11 +31,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino = "AA123456B"
-    val taxYear: Option[String] = Some("2019-20")
-    val adjustedStatus: Option[String] = Some("true")
-    val correlationId = "X-123"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "3")
 
     def uri: String = s"/$nino/property/$bsasId"
 
@@ -43,14 +40,8 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
-
-      val queryParams = Seq("adjustedStatus" -> adjustedStatus)
-        .collect {
-          case (k, Some(v)) => (k, v)
-        }
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
   }
@@ -60,20 +51,36 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return a valid response with status OK" when {
 
-      "valid request is made" in new Test {
+      "valid request is made and FHL is returned" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponse)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasFhlResponseJson)
         }
 
         val response: WSResponse = await(request.get)
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.parse(hateoasResponseForProperty(nino, bsasId))
+        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, bsasId)
+      }
+
+      "valid request is made and Non-FHL is returned" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasNonFhlResponseJson)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, bsasId)
       }
     }
 
@@ -85,7 +92,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponseWithInvalidTypeOfBusiness)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
         }
 
         val response: WSResponse = await(request.get)
@@ -99,13 +106,11 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       def validationErrorTest(requestNino: String, requestBsasId: String,
-                              requestAdjustedStatus: Option[String],
                               expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
           override val bsasId: String = requestBsasId
-          override val adjustedStatus: Option[String] = requestAdjustedStatus
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -121,9 +126,8 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("true"), BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("true"), BAD_REQUEST, BsasIdFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("test"), BAD_REQUEST, AdjustedStatusFormatError)
+        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))

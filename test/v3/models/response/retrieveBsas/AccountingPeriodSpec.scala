@@ -18,7 +18,8 @@ package v3.models.response.retrieveBsas
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+
+import java.time.LocalDate
 
 class AccountingPeriodSpec extends UnitSpec {
 
@@ -54,6 +55,8 @@ class AccountingPeriodSpec extends UnitSpec {
       |    "startDate": "2019-04-06",
       |    "endDate": "2020-04-05"
       |}""".stripMargin)
+
+  val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2019-04-06"), LocalDate.parse("2020-04-05"))
 
   "AccountingPeriod" when {
     "read from valid JSON" should {

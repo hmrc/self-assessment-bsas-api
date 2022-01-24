@@ -16,21 +16,20 @@
 
 package v3.controllers
 
+import domain.Nino
 import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v3.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, RuleNoAdjustmentsMade, RuleNotUkProperty, _}
+import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
+import v3.models.errors._
 import v3.models.hateoas.Method.{GET, POST}
 import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,7 +42,6 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockRetrieveUkPropertyRequestParser
     with MockRetrieveUkPropertyBsasService
     with MockHateoasFactory
-    with MockAuditService
     with MockIdGenerator {
 
   private val correlationId = "X-123"
@@ -57,7 +55,6 @@ class RetrieveUkPropertyBsasControllerSpec
       requestParser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -69,35 +66,19 @@ class RetrieveUkPropertyBsasControllerSpec
   }
 
   private val nino          = "AA123456A"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val adjustedMtdStatus = Some("true")
-  private val adjustedDesStatus = Some("03")
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request = RetrieveUkPropertyBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
-  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, bsasId, adjustedMtdStatus)
+  private val request = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
+  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
 
-  val testHateoasLinkPropertySelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId",
+  val testHateoasLinkPropertySelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId",
     method = GET, rel = "self")
 
-  val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+  val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
     method = POST, rel = "submit-summary-adjustments")
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "retrieveABusinessSourceAdjustableSummary",
-      transactionName = "retrieve-a-uk-property-bsas",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "bsasId" -> bsasId),
-        requestBody = None,
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
-
   "retrieve" should {
-    "return successful hateoas response for property with status OK" when {
+    "return successful hateoas response for fhl with status OK" when {
       "a valid request supplied" in new Test {
 
         MockRetrieveUkPropertyRequestParser
@@ -106,20 +87,39 @@ class RetrieveUkPropertyBsasControllerSpec
 
         MockRetrieveUkPropertyBsasService
           .retrieveBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkPropertyBsasResponseModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveUkPropertyBsasResponseModel, RetrieveUkPropertyHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(retrieveUkPropertyBsasResponseModel, Seq(testHateoasLinkPropertySelf, testHateoasLinkPropertyAdjust)))
+          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId))
+          .returns(HateoasWrapper(retrieveBsasResponseFhlModel, Seq(testHateoasLinkPropertySelf, testHateoasLinkPropertyAdjust)))
 
-        val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponseForProperty(nino, bsasId))
+        contentAsJson(result) shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+      }
+    }
+    "return successful hateoas response for non-fhl with status OK" when {
+      "a valid request supplied" in new Test {
 
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponseForProperty(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockRetrieveUkPropertyRequestParser
+          .parse(requestRawData)
+          .returns(Right(request))
+
+        MockRetrieveUkPropertyBsasService
+          .retrieveBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))))
+
+        MockHateoasFactory
+          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId))
+          .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, Seq(testHateoasLinkPropertySelf, testHateoasLinkPropertyAdjust)))
+
+        val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
 
@@ -132,14 +132,11 @@ class RetrieveUkPropertyBsasControllerSpec
               .parse(requestRawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -166,14 +163,11 @@ class RetrieveUkPropertyBsasControllerSpec
               .retrieveBsas(request)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.retrieve(nino, bsasId, adjustedMtdStatus)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

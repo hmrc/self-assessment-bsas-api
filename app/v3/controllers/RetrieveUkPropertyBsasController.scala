@@ -18,36 +18,31 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v3.controllers.requestParsers.RetrieveUkPropertyRequestParser
 import v3.hateoas.HateoasFactory
-import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors._
-import v3.models.request.RetrieveUkPropertyBsasRawData
-import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse.RetrieveUkPropertyBsasHateoasFactory
+import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
-import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveUkPropertyBsasService}
+import v3.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveUkPropertyBsasService}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkPropertyBsasController @Inject()(
-                                                  val authService: EnrolmentsAuthService,
-                                                  val lookupService: MtdIdLookupService,
-                                                  requestParser: RetrieveUkPropertyRequestParser,
-                                                  service: RetrieveUkPropertyBsasService,
-                                                  hateoasFactory: HateoasFactory,
-                                                  auditService: AuditService,
-                                                  cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator
-                                              )(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    requestParser: RetrieveUkPropertyRequestParser,
+    service: RetrieveUkPropertyBsasService,
+    hateoasFactory: HateoasFactory,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator
+)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -57,36 +52,26 @@ class RetrieveUkPropertyBsasController @Inject()(
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, bsasId: String, adjustedStatus: Option[String]): Action[AnyContent] =
+  def retrieve(nino: String, calculationId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = RetrieveUkPropertyBsasRawData(nino, bsasId, adjustedStatus)
+      val rawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.retrieve(parsedRequest))
+          response      <- EitherT(service.retrieve(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData,
-              RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
+            hateoasFactory
+              .wrap(response.responseData, RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.calculationId))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
-          )
-
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "bsasId" -> bsasId),
-              requestBody = None,
-              `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
-            )
           )
 
           Ok(Json.toJson(hateoasResponse))
@@ -95,45 +80,20 @@ class RetrieveUkPropertyBsasController @Inject()(
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "bsasId" -> bsasId),
-            requestBody = None,
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
         result
       }.merge
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError
-           | BsasIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
-      case RuleNotUkProperty | RuleNoAdjustmentsMade => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | BsasIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
+      case RuleNotUkProperty | RuleNoAdjustmentsMade                                         => Forbidden(Json.toJson(errorWrapper))
+      case NotFoundError                                                                     => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                                                                   => InternalServerError(Json.toJson(errorWrapper))
     }
-  }
-
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "retrieveABusinessSourceAdjustableSummary",
-      transactionName = "retrieve-a-uk-property-bsas",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
   }
 }

@@ -17,13 +17,14 @@
 package v3.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class AdjustmentsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import Metadata._
+  import Adjustments._
 
-  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
+  testRoundTrip("Adjustments FHL", downstreamAdjustmentsJson, adjustmentsFhlModel, mtdAdjustmentsFhlJson)(readsFhl)
+  testRoundTrip("Adjustments Non-FHL", downstreamAdjustmentsJson, adjustmentsNonFhlModel, mtdAdjustmentsNonFhlJson)(readsNonFhl)
 
 }

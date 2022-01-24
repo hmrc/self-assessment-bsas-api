@@ -17,13 +17,24 @@
 package v3.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import Metadata._
+  import SubmissionPeriod._
 
-  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
+  testRoundTrip(
+    "Submission Period with valid periodId",
+    downstreamSubmissionPeriodWithPeriodIdRegexJson,
+    submissionPeriodWithPeriodIdModel,
+    mtdSubmissionPeriodWithPeriodIdJson
+  )(reads)
+  testRoundTrip(
+    "Submission Period with submissionId",
+    downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson,
+    submissionPeriodWithSubmissionIdModel,
+    mtdSubmissionPeriodWithSubmissionIdJson
+  )(reads)
 
 }

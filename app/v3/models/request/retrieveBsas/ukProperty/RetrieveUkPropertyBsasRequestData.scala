@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package v3.models.response.retrieveBsas.ukProperty
+package v3.models.request.retrieveBsas.ukProperty
 
-import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
-import v3.models.utils.JsonErrorValidators
+import domain.Nino
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
-
-  import Metadata._
-
-  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
-
-}
+case class RetrieveUkPropertyBsasRequestData(nino: Nino, calculationId: String)

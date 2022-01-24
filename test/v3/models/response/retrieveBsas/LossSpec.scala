@@ -19,7 +19,6 @@ package v3.models.response.retrieveBsas
 import play.api.libs.json.Json
 import support.UnitSpec
 import v3.models.utils.JsonErrorValidators
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class LossSpec extends UnitSpec with JsonErrorValidators{
 
@@ -34,6 +33,8 @@ class LossSpec extends UnitSpec with JsonErrorValidators{
       |  "netLoss": 100.49,
       |  "adjustedIncomeTaxLoss": 100
       |}""".stripMargin)
+
+  val lossModel = Loss(Some(100.49), Some(100))
 
   "reads" should {
     "return a valid model" when {
