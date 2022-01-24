@@ -173,7 +173,7 @@
             "rentReceived": {
               "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99.",
               "type": "number",
-              "example": "1000.45",
+              "example": "1000.45"
             },
             "rarRentReceived": {
               "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
