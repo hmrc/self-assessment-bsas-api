@@ -9,7 +9,7 @@ is:
   - errors.bsasNotFound
 displayName: Retrieve a Foreign property Business Source Adjustable Summary (BSAS) [test only]
 description: This endpoint allows the user to request a specific Business Source Adjustable Summary for a Foreign property business EEA Furnished Holiday Letting (FHL) or a Non FHL Foreign property business. A National Insurance number and Calculation id must be provided.
-(annotations.sandboxData): !include scenarios/retrieve_foreign_property_adjustments.md
+(annotations.sandboxData): !include scenarios/retrieve_foreign_property.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:
@@ -18,12 +18,12 @@ responses:
       application/json:
         type: !include schemas/retrieve_foreign_property_adjustments.json
         examples:
-          adjustments_full:
-            description: Retrieve Foreign Property Business' Summary Adjustments example
-            value: !include examples/adjustments/retrieve_foreign_property_adjustments.json
-          adjustments_fhleea:
-            description: Retrieve Foreign Property FhlEea Business' Summary Adjustments example
-            value: !include examples/adjustments/retrieve_foreign_property_adjustments_fhl_eea.json
+          example-1:
+            description: Foreign EEA FHL Response
+            value: !include examples/adjustments/retrieve_foreign_eehFhl_property.json
+          example-2:
+            description: Foreign Non-FHL Response
+            value: !include examples/adjustments/retrieve_foreign_nonFhl_property.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
