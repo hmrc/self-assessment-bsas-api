@@ -166,17 +166,17 @@
               "example": "1000.45"
             },
             "otherPropertyIncome": {
-              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99.",
+              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "rentReceived": {
-              "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99.",
+              "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "rarRentReceived": {
-              "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
+              "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             }
@@ -197,47 +197,47 @@
               "example": "1000.45"
             },
             "premisesRunningCosts": {
-              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99.",
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "repairsAndMaintenance": {
-              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99.",
+              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "financialCosts": {
-              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99.",
+              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "professionalFees": {
-              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99.",
+              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "costOfServices": {
-              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99.",
+              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99.",
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "broughtFwdResidentialFinancialCost": {
-              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99.",
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "other": {
-              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99.",
+              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "travelCosts": {
-              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99.",
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             }
@@ -309,17 +309,17 @@
               "example": "1000.45"
             },
             "propertyAllowance": {
-              "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99.",
+              "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "otherCapitalAllowance": {
-              "description": "Other capital allowances. The value must be between 0 and 99999999999.99.",
+              "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "rarReliefClaimed": {
-              "description": "The amount of rental income claimed under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
+              "description": "The amount of rental income claimed under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -474,17 +474,17 @@
               "example": "1000.45"
             },
             "otherPropertyIncome": {
-              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99.",
+              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "rentReceived": {
-              "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99.",
+              "description": "The total amount of property rental Income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "rarRentReceived": {
-              "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
+              "description": "Rental income received under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             }
@@ -505,47 +505,47 @@
               "example": "1000.45"
             },
             "premisesRunningCosts": {
-              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99.",
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "repairsAndMaintenance": {
-              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99.",
+              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "financialCosts": {
-              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99.",
+              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "professionalFees": {
-              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99.",
+              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "costOfServices": {
-              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99.",
+              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "residentialFinancialCost": {
-              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99.",
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "broughtFwdResidentialFinancialCost": {
-              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99.",
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "other": {
-              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99.",
+              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "travelCosts": {
-              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99.",
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             }
@@ -617,17 +617,17 @@
               "example": "1000.45"
             },
             "propertyAllowance": {
-              "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99.",
+              "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "otherCapitalAllowance": {
-              "description": "Other capital allowances. The value must be between 0 and 99999999999.99.",
+              "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "rarReliefClaimed": {
-              "description": "The amount of rental income claimed under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99.",
+              "description": "The amount of rental income claimed under the Rent a Room scheme for the period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
