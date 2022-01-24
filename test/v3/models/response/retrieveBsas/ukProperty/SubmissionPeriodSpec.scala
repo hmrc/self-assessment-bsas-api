@@ -16,33 +16,25 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
+class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  "reads" should {
-    "return a valid model" when {
-      "passed valid JSON with periodId regex" in {
-        downstreamSubmissionPeriodWithPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithPeriodIdModel
-      }
-      "passed valid JSON with invalid periodId regex" in {
-        downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithSubmissionIdModel
-      }
-    }
-  }
+  import SubmissionPeriod._
 
-  "writes" should {
-    "return valid JSON" when {
-      "passed a valid model with periodId" in {
-        Json.toJson(submissionPeriodWithPeriodIdModel) shouldBe mtdSubmissionPeriodWithPeriodIdJson
-      }
-      "passed a valid model with submissionId" in {
-        Json.toJson(submissionPeriodWithSubmissionIdModel) shouldBe mtdSubmissionPeriodWithSubmissionIdJson
-      }
-    }
-  }
+  testRoundTrip(
+    "Submission Period with valid periodId",
+    downstreamSubmissionPeriodWithPeriodIdRegexJson,
+    submissionPeriodWithPeriodIdModel,
+    mtdSubmissionPeriodWithPeriodIdJson
+  )(reads)
+  testRoundTrip(
+    "Submission Period with submissionId",
+    downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson,
+    submissionPeriodWithSubmissionIdModel,
+    mtdSubmissionPeriodWithSubmissionIdJson
+  )(reads)
 
 }

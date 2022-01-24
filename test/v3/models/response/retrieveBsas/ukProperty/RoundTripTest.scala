@@ -21,7 +21,12 @@ import support.UnitSpec
 import v3.models.utils.JsonErrorValidators
 
 trait RoundTripTest extends UnitSpec with JsonErrorValidators {
-  def testRoundTrip[A](testName: String, downstreamJson: JsValue, model: A, mtdJson: JsValue)(reads: Reads[A])(implicit writes: Writes[A]): Unit = {
+  private[ukProperty] def testRoundTrip[A](
+      testName: String,
+      downstreamJson: JsValue,
+      model: A,
+      mtdJson: JsValue
+  )(reads: Reads[A])(implicit writes: Writes[A]): Unit = {
     s"$testName model tests" when {
       "reads" should {
         "return a valid model" when {

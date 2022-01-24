@@ -16,27 +16,17 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class SummaryCalculationAdditionsSpec extends UnitSpec with JsonErrorValidators {
+class SummaryCalculationAdditionsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  "reads" should {
-    "return a valid model" when {
-      "passed valid JSON with periodId regex" in {
-        downstreamSummaryCalculationAdditionsJson.as[SummaryCalculationAdditions] shouldBe summaryCalculationAdditionsModel
-      }
-    }
-  }
+  import SummaryCalculationAdditions._
 
-  "writes" should {
-    "return valid JSON" when {
-      "passed a valid model with periodId" in {
-        Json.toJson(summaryCalculationAdditionsModel) shouldBe mtdSummaryCalculationAdditionsJson
-      }
-    }
-  }
+  testRoundTrip("Summary Calculation Additions",
+                downstreamSummaryCalculationAdditionsJson,
+                summaryCalculationAdditionsModel,
+                mtdSummaryCalculationAdditionsJson)(reads)
 
 }

@@ -28,7 +28,7 @@ case class Inputs(
     accountingPeriodStartDate: String,
     accountingPeriodEndDate: String,
     source: Source,
-    submissionPeriods: Seq[SubmissionPeriod]
+    submissionPeriods: Option[Seq[SubmissionPeriod]]
 )
 
 object Inputs {
@@ -40,7 +40,7 @@ object Inputs {
       (JsPath \ "accountingPeriodStartDate").read[String] and
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[Source] and
-      (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
+      (JsPath \ "submissionPeriods").readNullable[Seq[SubmissionPeriod]]
   )(Inputs.apply _)
 
   implicit val writes: OWrites[Inputs] = Json.writes[Inputs]

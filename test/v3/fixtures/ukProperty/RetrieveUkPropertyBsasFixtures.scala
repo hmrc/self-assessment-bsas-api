@@ -617,7 +617,7 @@ object RetrieveUkPropertyBsasFixtures {
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
+    submissionPeriods = Some(Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel))
   )
 
   val inputsNonFhlModel: Inputs = Inputs(
@@ -627,7 +627,7 @@ object RetrieveUkPropertyBsasFixtures {
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
+    submissionPeriods = Some(Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel))
   )
 
   val summaryCalculationIncomeFhlModel: SummaryCalculationIncome = SummaryCalculationIncome(
