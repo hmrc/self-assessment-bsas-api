@@ -2,13 +2,12 @@ is:
   - headers.acceptJson
   - headers.testScenarioHeader
   - errors.formatNino
-  - errors.formatBsasId
+  - errors.formatCalculationId
   - errors.ruleNotSelfEmployment
-  - errors.ruleNoAdjustmentsMade
   - errors.clientOrAgentNotAuthorised
-  - errors.bsasNotFound
-displayName: Retrieve a Self-Employment Business' Summary Adjustments
-description: This endpoint allows a developer to request the adjustments made to a specific self-employment Business Source Adjustable Summary (BSAS) by using its identifier. The BSAS ID quoted must be for a self-employment business that has been previously adjusted.
+  - errors.summaryNotFound
+displayName: Retrieve a Self Employment Business Source Adjustable Summary (BSAS) [test only]
+description: This endpoint allows the user to request a specific Business Source Adjustable Summary. A National Insurance number and Calculation id must be provided.
 (annotations.sandboxData): !include scenarios/retrieve_se_adjustments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
@@ -17,13 +16,7 @@ responses:
     body:
       application/json:
         type: !include schemas/retrieve_se_adjustments.json
-        examples:
-          adjustments_full:
-            description: Full Expenses
-            value: !include examples/adjustments/retrieve_se_adjustments.json
-          adjustments_consolidated:
-            description: Consolidated Expenses
-            value: !include examples/adjustments/retrieve_se_adjustments_consolidated.json
+        example: !include examples/adjustments/retrieve_se_adjustments.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
