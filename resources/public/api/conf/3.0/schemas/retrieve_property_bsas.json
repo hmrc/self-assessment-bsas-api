@@ -71,7 +71,7 @@
         "businessName": {
           "description": "The name of the business.",
           "type": "string",
-          "example": "My self-employment"
+          "example": "My uk property business"
         },
         "accountingPeriodStartDate": {
           "description": "The date the accounting period started.",

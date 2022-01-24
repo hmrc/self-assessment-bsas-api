@@ -10,7 +10,7 @@
   "inputs": {
     "businessId": "000000000000210",
     "typeOfBusiness": "uk-property-non-fhl",
-    "businessName": "My UK Property",
+    "businessName": "My uk property business",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
