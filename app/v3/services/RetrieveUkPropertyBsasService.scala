@@ -51,12 +51,12 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-    "INVALID_CORRELATION_ID"    -> DownstreamError,
-    "INVALID_RETURN"            -> DownstreamError,
-    "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
-    "NO_DATA_FOUND"             -> NotFoundError,
-    "SERVER_ERROR"              -> DownstreamError,
-    "SERVICE_UNAVAILABLE"       -> DownstreamError
+    "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
+    "INVALID_CORRELATIONID" -> DownstreamError,
+    "INVALID_RETURN" -> DownstreamError,
+    "UNPROCESSABLE_ENTITY" -> DownstreamError,
+    "NO_DATA_FOUND" -> NotFoundError,
+    "SERVER_ERROR" -> DownstreamError,
+    "SERVICE_UNAVAILABLE" -> DownstreamError
   )
 }

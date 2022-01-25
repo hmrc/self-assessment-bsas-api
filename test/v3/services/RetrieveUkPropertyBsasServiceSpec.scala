@@ -82,7 +82,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVAlID_CORRELATION_ID", DownstreamError),
         ("INVALID_RETURN", DownstreamError),
-        ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
+        ("UNPROCESSABLE_ENTITY", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
