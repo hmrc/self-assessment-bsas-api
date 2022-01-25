@@ -4,13 +4,13 @@
     "requestedDateTime": "2020-12-05T16:19:44Z",
     "adjustedDateTime": "2020-12-05T16:19:44Z",
     "nino": "AA999999A",
-    "taxYear": 2020,
+    "taxYear": "2019-20",
     "summaryStatus": "valid"
   },
   "inputs": {
     "businessId": "000000000000210",
     "typeOfBusiness": "foreign-property-fhl-eea",
-    "businessName": "Business Name",
+    "businessName": "My foreign business name",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
@@ -33,7 +33,6 @@
       "consolidatedExpenses": 0.12
     },
     "netProfit": 0.12,
-    "netLoss": 0.12,
     "totalAdditions": 0.12,
     "additions": {
       "privateUseAdjustment": 0.12,
@@ -46,12 +45,11 @@
       "electricChargePointAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
-    "taxableProfit": 12500,
-    "adjustedIncomeTaxLoss": 12500
+    "taxableProfit": 12500
   },
   "adjustments": {
     "income": {
-      "rentAmount": -99999999999.99
+      "rentAmount": 0.12
     },
     "expenses": {
       "consolidatedExpenses": 0.12
@@ -67,7 +65,6 @@
       "consolidatedExpenses": 0.12
     },
     "netProfit": 0.12,
-    "netLoss": 0.12,
     "totalAdditions": 0.12,
     "additions": {
       "privateUseAdjustment": 0.12,
@@ -80,7 +77,6 @@
       "electricChargePointAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
-    "taxableProfit": 2500,
-    "adjustedIncomeTaxLoss": 12500
+    "taxableProfit": 2500
   }
 }

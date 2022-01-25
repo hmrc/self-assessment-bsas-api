@@ -4,13 +4,13 @@
     "requestedDateTime": "2020-12-05T16:19:44Z",
     "adjustedDateTime": "2020-12-05T16:19:44Z",
     "nino": "AA999999A",
-    "taxYear": 2020,
+    "taxYear": "2019-20",
     "summaryStatus": "valid"
   },
   "inputs": {
     "businessId": "000000000000210",
     "typeOfBusiness": "foreign-property",
-    "businessName": "Business Name",
+    "businessName": "My foreign business name",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
@@ -43,7 +43,6 @@
       "other": 0.12
     },
     "netProfit": 0.12,
-    "netLoss": 0.12,
     "totalAdditions": 0.12,
     "additions": {
       "privateUseAdjustment": 0.12,
@@ -60,7 +59,6 @@
       "zeroEmissionsCarAllowance": 0.12
     },
     "taxableProfit": 2500,
-    "adjustedIncomeTaxLoss": 12500,
     "countryLevelDetail": [
       {
         "countryCode": "CYM",
@@ -83,7 +81,6 @@
           "other": 0.12
         },
         "netProfit": 0.12,
-        "netLoss": 0.12,
         "totalAdditions": 0.12,
         "additions": {
           "privateUseAdjustment": 0.12,
@@ -99,8 +96,7 @@
           "structuredBuildingAllowance": 0.12,
           "zeroEmissionsCarAllowance": 0.12
         },
-        "taxableProfit": 0,
-        "adjustedIncomeTaxLoss": 0
+        "taxableProfit": 0
       }
     ]
   },
@@ -108,19 +104,19 @@
     {
       "countryCode": "CYM",
       "income": {
-        "rentAmount": 99999999999.99,
-        "premiumsOfLeaseGrant": 99999999999.99,
-        "otherPropertyIncome": 99999999999.99
+        "rentAmount": 0.12,
+        "premiumsOfLeaseGrant": 0.12,
+        "otherPropertyIncome": 0.12
       },
       "expenses": {
-        "premisesRunningCosts": 99999999999.99,
-        "repairsAndMaintenance": 99999999999.99,
-        "financialCosts": 99999999999.99,
-        "professionalFees": 99999999999.99,
-        "travelCosts": 99999999999.99,
-        "costOfServices": 99999999999.99,
-        "residentialFinancialCost": 99999999999.99,
-        "other": 99999999999.99
+        "premisesRunningCosts": 0.12,
+        "repairsAndMaintenance": 0.12,
+        "financialCosts": 0.12,
+        "professionalFees": 0.12,
+        "travelCosts": 0.12,
+        "costOfServices": 0.12,
+        "residentialFinancialCost": 0.12,
+        "other": 0.12
       }
     }
   ],
@@ -144,7 +140,6 @@
       "other": 0.12
     },
     "netProfit": 0.12,
-    "netLoss": 0.12,
     "totalAdditions": 0.12,
     "additions": {
       "privateUseAdjustment": 0.12,
@@ -159,7 +154,6 @@
       "electricChargePointAllowance": 0.12
     },
     "taxableProfit": 2500,
-    "adjustedIncomeTaxLoss": 12500,
     "countryLevelDetail": [
       {
         "countryCode": "CYM",
@@ -182,7 +176,6 @@
           "other": 0.12
         },
         "netProfit": 0.12,
-        "netLoss": 0.12,
         "totalAdditions": 0.12,
         "additions": {
           "privateUseAdjustment": 0.12,
@@ -196,8 +189,7 @@
           "otherCapitalAllowance": 0.12,
           "electricChargePointAllowance": 0.12
         },
-        "taxableProfit": 0,
-        "adjustedIncomeTaxLoss": 0
+        "taxableProfit": 0
       }
     ]
   }

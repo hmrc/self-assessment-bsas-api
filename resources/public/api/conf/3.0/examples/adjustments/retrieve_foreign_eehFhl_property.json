@@ -10,7 +10,7 @@
   "inputs": {
     "businessId": "000000000000210",
     "typeOfBusiness": "foreign-property-fhl-eea",
-    "businessName": "Business Name",
+    "businessName": "My foreign business name",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
@@ -41,7 +41,6 @@
       "other": 0.12
     },
     "netProfit": 0.12,
-    "netLoss": 0.12,
     "totalAdditions": 0.12,
     "additions": {
       "privateUseAdjustment": 0.12,
@@ -54,21 +53,20 @@
       "electricChargePointAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
-    "taxableProfit": 12500,
-    "adjustedIncomeTaxLoss": 12500
+    "taxableProfit": 12500
   },
   "adjustments": {
     "income": {
-      "rentAmount": -99999999999.99
+      "rentAmount": -0.12
     },
     "expenses": {
-      "premisesRunningCosts": -99999999999.99,
-      "repairsAndMaintenance": -99999999999.99,
-      "financialCosts": -99999999999.99,
-      "professionalFees": -99999999999.99,
-      "costOfServices": -99999999999.99,
-      "travelCosts": -99999999999.99,
-      "other": -99999999999.99
+      "premisesRunningCosts": -0.12,
+      "repairsAndMaintenance": -0.12,
+      "financialCosts": -0.12,
+      "professionalFees": -0.12,
+      "costOfServices": -0.12,
+      "travelCosts": -0.12,
+      "other": -0.12
     }
   },
   "adjustedSummaryCalculation": {
@@ -89,7 +87,6 @@
       "other": 0.12
     },
     "netProfit": 0.12,
-    "netLoss": 0.12,
     "totalAdditions": 0.12,
     "additions": {
       "privateUseAdjustment": 0.12,
@@ -102,7 +99,6 @@
       "electricChargePointAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
-    "taxableProfit": 2500,
-    "adjustedIncomeTaxLoss": 12500
+    "taxableProfit": 2500
   }
 }
