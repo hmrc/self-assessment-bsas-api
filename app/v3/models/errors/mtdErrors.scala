@@ -114,7 +114,7 @@ object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The summary c
 
 object RuleNotForeignProperty extends MtdError("RULE_NOT_FOREIGN_PROPERTY", "The summary calculation requested is not for a foreign property business")
 
-object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The summary calculation requested is not for a self-employment business")
+object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business")
 
 object RuleIncorrectPropertyAdjusted extends MtdError("RULE_INCORRECT_PROPERTY_ADJUSTED",
   "An adjustment has been made to an incorrect property type. Re-trigger an adjustable summary for this BSAS ID to correct")
