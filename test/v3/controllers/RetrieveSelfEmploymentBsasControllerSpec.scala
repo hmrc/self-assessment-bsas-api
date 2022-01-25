@@ -151,9 +151,8 @@ class RetrieveSelfEmploymentBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR),
-          (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (RuleNotSelfEmployment, FORBIDDEN)
+          (RuleNotSelfEmployment, BAD_REQUEST)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
