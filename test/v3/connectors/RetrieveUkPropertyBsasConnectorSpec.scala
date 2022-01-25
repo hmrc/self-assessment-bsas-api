@@ -29,10 +29,6 @@ import scala.concurrent.Future
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-<<<<<<< HEAD
-=======
-  val calculationId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
->>>>>>> 220b5eb (MTDSA-10866 UK Property BSAS V3 Connector and Service)
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
@@ -50,21 +46,12 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request is supplied" in new Test {
-<<<<<<< HEAD
         val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId")
 
         MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
           config = dummyDesHeaderCarrierConfig,
-          requiredHeaders = desRequestHeaders,
-=======
-        val request: RetrieveUkPropertyBsasRequestData = RetrieveUkPropertyBsasRequestData(nino, calculationId, Some("03"))
-
-        MockedHttpClient.get(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId",
-          config = dummyDesHeaderCarrierConfig,
           requiredHeaders = ifsRequestHeaders,
->>>>>>> 220b5eb (MTDSA-10866 UK Property BSAS V3 Connector and Service)
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 

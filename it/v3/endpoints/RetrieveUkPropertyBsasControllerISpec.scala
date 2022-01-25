@@ -103,11 +103,11 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-
-      def validationErrorTest(requestNino: String, requestCalculationId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, requestCalculationId: String,
+                              expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String          = requestNino
+          override val nino: String = requestNino
           override val calculationId: String = requestCalculationId
 
           override def setupStubs(): StubMapping = {
