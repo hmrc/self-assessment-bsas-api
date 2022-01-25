@@ -20,17 +20,17 @@ import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import utils.{ IdGenerator, Logging }
 import v3.controllers.requestParsers.RetrieveUkPropertyRequestParser
 import v3.hateoas.HateoasFactory
 import v3.models.errors._
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
-import v3.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveUkPropertyBsasService}
+import v3.services.{ EnrolmentsAuthService, MtdIdLookupService, RetrieveUkPropertyBsasService }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveUkPropertyBsasController @Inject()(
@@ -90,10 +90,10 @@ class RetrieveUkPropertyBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | BsasIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
-      case RuleNotUkProperty | RuleNoAdjustmentsMade                                         => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError                                                                     => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                                                   => InternalServerError(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | CalculationIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
+      case RuleNotUkProperty | RuleNoAdjustmentsMade                                                => Forbidden(Json.toJson(errorWrapper))
+      case NotFoundError                                                                            => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                                                                          => InternalServerError(Json.toJson(errorWrapper))
     }
   }
 }

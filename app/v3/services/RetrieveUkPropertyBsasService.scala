@@ -18,7 +18,6 @@ package v3.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v3.connectors.RetrieveUkPropertyBsasConnector
@@ -29,15 +28,17 @@ import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestDa
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v3.support.DesResponseMappingSupport
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-    correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(mappingDesToMtdError))
@@ -50,12 +51,12 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID" -> BsasIdFormatError,
-    "INVALID_CORRELATION_ID" -> DownstreamError,
-    "INVALID_RETURN" -> DownstreamError,
-    "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
-    "NO_DATA_FOUND" -> NotFoundError,
-    "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError
+    "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
+    "INVALID_CORRELATION_ID"    -> DownstreamError,
+    "INVALID_RETURN"            -> DownstreamError,
+    "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
+    "NO_DATA_FOUND"             -> NotFoundError,
+    "SERVER_ERROR"              -> DownstreamError,
+    "SERVICE_UNAVAILABLE"       -> DownstreamError
   )
 }

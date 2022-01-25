@@ -17,14 +17,14 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v3.models.errors.{BsasIdFormatError, NinoFormatError}
+import v3.models.errors.{ CalculationIdFormatError, NinoFormatError }
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 
 class RetrieveUkPropertyValidatorSpec extends UnitSpec {
 
-  val validNino = "AA123456A"
-  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val invalidNino = "BEANS"
+  val validNino            = "AA123456A"
+  val validCalculationId   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val invalidNino          = "BEANS"
   val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-beans"
 
   val validator = new RetrieveUkPropertyValidator()
@@ -43,13 +43,13 @@ class RetrieveUkPropertyValidatorSpec extends UnitSpec {
       }
       "passed raw data with an invalid bsas id" in {
         val input = RetrieveUkPropertyBsasRawData(validNino, invalidCalculationId)
-        validator.validate(input) shouldBe List(BsasIdFormatError)
+        validator.validate(input) shouldBe List(CalculationIdFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
         val input = RetrieveUkPropertyBsasRawData(invalidNino, invalidCalculationId)
-        validator.validate(input) shouldBe List(NinoFormatError, BsasIdFormatError)
+        validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError)
       }
     }
   }

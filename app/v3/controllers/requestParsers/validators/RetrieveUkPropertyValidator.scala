@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators
 
-import v3.controllers.requestParsers.validators.validations.{BsasIdValidation, NinoValidation}
+import v3.controllers.requestParsers.validators.validations.{ CalculationIdValidation, NinoValidation }
 import v3.models.errors.MtdError
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 
@@ -27,7 +27,7 @@ class RetrieveUkPropertyValidator extends Validator[RetrieveUkPropertyBsasRawDat
   private def parameterFormatValidation: RetrieveUkPropertyBsasRawData => List[List[MtdError]] = (data: RetrieveUkPropertyBsasRawData) => {
     List(
       NinoValidation.validate(data.nino),
-      BsasIdValidation.validate(data.calculationId),
+      CalculationIdValidation.validate(data.calculationId),
     )
   }
 

@@ -79,7 +79,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("INVALID_CALCULATION_ID", BsasIdFormatError),
+        ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVAlID_CORRELATION_ID", DownstreamError),
         ("INVALID_RETURN", DownstreamError),
         ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
