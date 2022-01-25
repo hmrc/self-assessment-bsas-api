@@ -18,7 +18,6 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
@@ -74,7 +73,6 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId

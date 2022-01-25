@@ -584,7 +584,7 @@ object RetrieveSelfEmploymentBsasFixtures {
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = Some(Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel))
+    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
   )
 
   val summaryCalculationIncomeModel: SummaryCalculationIncome = SummaryCalculationIncome(
