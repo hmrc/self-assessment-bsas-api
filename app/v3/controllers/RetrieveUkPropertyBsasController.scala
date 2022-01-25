@@ -76,7 +76,6 @@ class RetrieveUkPropertyBsasController @Inject()(
 
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
@@ -90,10 +89,10 @@ class RetrieveUkPropertyBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | BsasIdFormatError | CalculationIdFormatError | AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
-      case RuleNotUkProperty | RuleNoAdjustmentsMade                                         => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError                                                                     => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                                                   => InternalServerError(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | CalculationIdFormatError => BadRequest(Json.toJson(errorWrapper))
+      case RuleNotUkProperty                                            => Forbidden(Json.toJson(errorWrapper))
+      case NotFoundError                                                => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                                              => InternalServerError(Json.toJson(errorWrapper))
     }
   }
 }
