@@ -17,7 +17,7 @@
 package definition
 
 import definition.APIStatus.{ALPHA, BETA}
-import definition.Versions.VERSION_2
+import definition.Versions.{VERSION_2, VERSION_3}
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.mocks.MockHttpClient
@@ -35,6 +35,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.featureSwitch returns None anyNumberOfTimes()
         MockedAppConfig.apiStatus1 returns "1.0"
         MockedAppConfig.apiStatus2 returns "2.0"
+        MockedAppConfig.apiStatus3 returns "3.0"
         MockedAppConfig.endpointsEnabled returns true anyNumberOfTimes()
 
         apiDefinitionFactory.definition shouldBe Definition(
@@ -57,7 +58,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
             categories = Seq("INCOME_TAX_MTD"),
             versions = Seq(
               APIVersion(
-                version = VERSION_2, access = None, status = APIStatus.ALPHA, endpointsEnabled = true)
+                version = VERSION_2, access = None, status = APIStatus.ALPHA, endpointsEnabled = true),
+              APIVersion(
+                version = VERSION_3, access = None, status = APIStatus.ALPHA, endpointsEnabled = true)
             ),
             requiresTrust = None
           )
