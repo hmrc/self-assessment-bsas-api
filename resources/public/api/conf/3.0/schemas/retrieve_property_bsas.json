@@ -300,7 +300,7 @@
               "example": "1000.45"
             },
             "costOfReplacingDomesticItems": {
-              "description": "The amount for replacing domestic items such as: Moveable furniture, Furnishings such as carpets, Curtains and linen, Household appliances such as fridges and freezers, Kitchenware such as crockery and cutlery and Televisions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Cost of Replacing Domestic Items - formerly Wear and Tear allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -608,7 +608,7 @@
               "example": "1000.45"
             },
             "costOfReplacingDomesticItems": {
-              "description": "The amount for replacing domestic items such as: Moveable furniture, Furnishings such as carpets, Curtains and linen, Household appliances such as fridges and freezers, Kitchenware such as crockery and cutlery and Televisions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Cost of Replacing Domestic Items - formerly Wear and Tear allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
