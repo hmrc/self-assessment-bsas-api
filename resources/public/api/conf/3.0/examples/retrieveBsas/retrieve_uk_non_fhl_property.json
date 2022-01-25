@@ -8,7 +8,7 @@
     "summaryStatus": "valid"
   },
   "inputs": {
-    "businessId": " XAIS12345678910",
+    "businessId": "XAIS12345678910",
     "typeOfBusiness": "uk-property-non-fhl",
     "businessName": "My uk property business",
     "accountingPeriodStartDate": "2019-04-06",

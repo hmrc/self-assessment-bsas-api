@@ -97,9 +97,10 @@
             "type": "object",
             "properties": {
               "periodId": {
-                "description": "A reference to the unique identifier of the period.",
+                "description": "A reference to the unique identifier of the period. Must conform to: \nYYYY-MM-DD_YYYY-MM-DD",
                 "type": "string",
-                "pattern": "YYYY-MM-DD_YYYY-MM-DD"
+                "example": "2019-04-06_2019-07-05",
+                "format": "YYYY-MM-DD_YYYY-MM-DD"
               },
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",
@@ -299,7 +300,7 @@
               "example": "1000.45"
             },
             "costOfReplacingDomesticItems": {
-              "description": "The amount for replacing domestic items such as: \n\n Moveable furniture \n\n Furnishings such as carpets, curtains and linen \n\n Household appliances such as fridges and freezers \n\n Kitchenware such as crockery and cutlery \n\n Televisions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "The amount for replacing domestic items such as: Moveable furniture, Furnishings such as carpets, Curtains and linen, Household appliances such as fridges and freezers, Kitchenware such as crockery and cutlery and Televisions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -607,7 +608,7 @@
               "example": "1000.45"
             },
             "costOfReplacingDomesticItems": {
-              "description": "The amount for replacing domestic items such as: \n\n Moveable furniture \n\n Furnishings such as carpets, curtains and linen \n\n Household appliances such as fridges and freezers \n\n Kitchenware such as crockery and cutlery \n\n Televisions. The value must be between 0 and 99999999999.99 up to 2 decimal places. ",
+              "description": "The amount for replacing domestic items such as: Moveable furniture, Furnishings such as carpets, Curtains and linen, Household appliances such as fridges and freezers, Kitchenware such as crockery and cutlery and Televisions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
