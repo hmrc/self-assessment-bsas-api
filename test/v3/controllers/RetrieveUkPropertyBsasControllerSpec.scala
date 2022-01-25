@@ -24,19 +24,19 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
-import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
+import v3.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService }
 import v3.models.errors._
-import v3.models.hateoas.Method.{GET, POST}
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.Method.{ GET, POST }
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveUkPropertyRequestParser
@@ -68,14 +68,15 @@ class RetrieveUkPropertyBsasControllerSpec
   private val nino          = "AA123456A"
   private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
+  private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
   private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
 
-  val testHateoasLinkPropertySelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId",
-    method = GET, rel = "self")
+  val testHateoasLinkPropertySelf =
+    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId", method = GET, rel = "self")
 
   val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
-    method = POST, rel = "submit-summary-adjustments")
+                                           method = POST,
+                                           rel = "submit-summary-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for fhl with status OK" when {
@@ -143,7 +144,7 @@ class RetrieveUkPropertyBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (BsasIdFormatError, BAD_REQUEST),
+          (CalculationIdFormatError, BAD_REQUEST),
           (AdjustedStatusFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
@@ -173,7 +174,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (BsasIdFormatError, BAD_REQUEST),
+          (CalculationIdFormatError, BAD_REQUEST),
           (RuleNotUkProperty, FORBIDDEN),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),

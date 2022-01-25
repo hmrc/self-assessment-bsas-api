@@ -20,22 +20,22 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.domain.IncomeSourceType
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
-    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val nino          = "AA123456B"
+    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-    def uri: String = s"/$nino/property/$bsasId"
+    def uri: String = s"/$nino/property/$calculationId"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
+    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
     def setupStubs(): StubMapping
 
@@ -45,7 +45,6 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
   }
-
 
   "Calling the retrieve UK Property Bsas endpoint" should {
 
@@ -64,7 +63,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, bsasId)
+        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
       }
 
       "valid request is made and Non-FHL is returned" in new Test {
@@ -80,7 +79,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, bsasId)
+        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
       }
     }
 
@@ -105,12 +104,11 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestBsasId: String,
-                              expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, requestCalculationId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
-          override val bsasId: String = requestBsasId
+          override val nino: String          = requestNino
+          override val calculationId: String = requestCalculationId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -127,7 +125,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError)
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, CalculationIdFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
@@ -161,7 +159,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
+        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
