@@ -96,7 +96,7 @@
             "type": "object",
             "properties": {
               "periodId": {
-                "description": "A reference to the unique identifier of the period. Must conform to: \\nYYYY-MM-DD_YYYY-MM-DD\"",
+                "description": "A reference to the unique identifier of the period. Must conform to: \n YYYY-MM-DD_YYYY-MM-DD",
                 "type": "string",
                 "example": "2019-04-06_2019-07-05",
                 "format": "YYYY-MM-DD_YYYY-MM-DD"
