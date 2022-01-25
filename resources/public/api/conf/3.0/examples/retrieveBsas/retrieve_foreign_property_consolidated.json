@@ -8,7 +8,7 @@
     "summaryStatus": "valid"
   },
   "inputs": {
-    "businessId": "000000000000210",
+    "businessId": "XAIS12345678910",
     "typeOfBusiness": "foreign-property-fhl-eea",
     "businessName": "My foreign business name",
     "accountingPeriodStartDate": "2019-04-06",
@@ -30,39 +30,29 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "premisesRunningCosts": 0.12,
-      "repairsAndMaintenance": 0.12,
-      "financialCosts": 0.12,
-      "professionalFees": 0.12,
-      "costOfServices": 0.12,
-      "travelCosts": 0.12,
-      "residentialFinancialCost": 0.12,
-      "broughtFwdResidentialFinancialCost": 0.12,
-      "other": 0.12
+      "consolidatedExpenses": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
+      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12
+      "annualInvestmentAllowance": 0.12,
+      "otherCapitalAllowance": 0.12,
+      "electricChargePointAllowance": 0.12,
+      "zeroEmissionsCarAllowance": 0.12
     },
     "taxableProfit": 12500
   },
   "adjustments": {
     "income": {
-      "rentAmount": -0.12
+      "rentAmount": 0.12
     },
     "expenses": {
-      "premisesRunningCosts": -0.12,
-      "repairsAndMaintenance": -0.12,
-      "financialCosts": -0.12,
-      "professionalFees": -0.12,
-      "costOfServices": -0.12,
-      "travelCosts": -0.12,
-      "other": -0.12
+      "consolidatedExpenses": 0.12
     }
   },
   "adjustedSummaryCalculation": {
@@ -72,24 +62,20 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "premisesRunningCosts": 0.12,
-      "repairsAndMaintenance": 0.12,
-      "financialCosts": 0.12,
-      "professionalFees": 0.12,
-      "costOfServices": 0.12,
-      "travelCosts": 0.12,
-      "residentialFinancialCost": 0.12,
-      "broughtFwdResidentialFinancialCost": 0.12,
-      "other": 0.12
+      "consolidatedExpenses": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
+      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12
+      "annualInvestmentAllowance": 0.12,
+      "otherCapitalAllowance": 0.12,
+      "electricChargePointAllowance": 0.12,
+      "zeroEmissionsCarAllowance": 0.12
     },
     "taxableProfit": 2500
   }

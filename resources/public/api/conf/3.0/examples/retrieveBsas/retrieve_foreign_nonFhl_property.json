@@ -8,7 +8,7 @@
     "summaryStatus": "valid"
   },
   "inputs": {
-    "businessId": "000000000000210",
+    "businessId": "XAIS12345678910",
     "typeOfBusiness": "foreign-property",
     "businessName": "My foreign business name",
     "accountingPeriodStartDate": "2019-04-06",
