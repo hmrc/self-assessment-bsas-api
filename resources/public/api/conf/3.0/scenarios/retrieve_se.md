@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <td><p>NOT_SELF_EMPLOYMENT</p></td>
-            <td><p>Simulates an unsuccessful response where a property BSAS ID was requested.</p></td>
+            <td><p>Simulates the scenario where the calculationId is not a self-employment.</p></td>
         </tr>
     </tbody>
 </table>
