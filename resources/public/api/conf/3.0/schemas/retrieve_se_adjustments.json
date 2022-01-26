@@ -56,9 +56,9 @@
       "description": "Object containing the inputs that were used in this calculation.",
       "properties": {
         "businessId": {
-          "description": "An identifier for the business, unique to the customer. Must conform to the regular expression: \n\n ^X[A-Z0-9]{1}IS[0-9]{11}$",
+          "description": "An identifier for the business, unique to the customer.",
           "type": "string",
-          "example": "XAIS12345678910"
+          "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$"
         },
         "typeOfBusiness": {
           "type": "string",
@@ -87,7 +87,7 @@
           "enum": [
             "MTD-SA"
           ],
-          "description": "Specifies the source of the income data used in this calculation. Limited to the following possible values: \n\n MTD-SA"
+          "description": "Specifies the source of the income data used in this calculation."
         },
         "submissionPeriods": {
           "type": "array",
@@ -96,14 +96,15 @@
             "type": "object",
             "properties": {
               "periodId": {
-                "description": "A reference to the unique identifier of the period. Must conform to the regular expression: \n\n YYYY-MM-DD_YYYY-MM-DD",
+                "description": "A reference to the unique identifier of the period. Must conform to: \n YYYY-MM-DD_YYYY-MM-DD",
                 "type": "string",
-                "example": "2019-04-06_2019-07-05"
+                "example": "2019-04-06_2019-07-05",
+                "format": "YYYY-MM-DD_YYYY-MM-DD"
               },
               "submissionId": {
-                "description": "A reference to the unique identifier of the period. Must conform to the regular expression: \n\n ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "description": "A reference to the unique identifier of the period.",
                 "type": "string",
-                "example": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
               },
               "startDate": {
                 "description": "The date the accounting period started.",
