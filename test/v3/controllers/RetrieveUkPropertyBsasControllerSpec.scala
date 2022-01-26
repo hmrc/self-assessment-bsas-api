@@ -145,7 +145,6 @@ class RetrieveUkPropertyBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
-          (AdjustedStatusFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
@@ -176,7 +175,6 @@ class RetrieveUkPropertyBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
           (RuleNotUkProperty, FORBIDDEN),
-          (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
