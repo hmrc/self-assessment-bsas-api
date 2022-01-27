@@ -145,7 +145,6 @@ class RetrieveUkPropertyBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
-          (AdjustedStatusFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
@@ -175,8 +174,7 @@ class RetrieveUkPropertyBsasControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
-          (RuleNotUkProperty, FORBIDDEN),
-          (RuleNoAdjustmentsMade, FORBIDDEN),
+          (RuleNotUkProperty, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

@@ -96,7 +96,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get)
 
-        response.status shouldBe FORBIDDEN
+        response.status shouldBe BAD_REQUEST
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe Json.toJson(RuleNotUkProperty)
       }
