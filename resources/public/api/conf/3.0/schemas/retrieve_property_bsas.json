@@ -120,7 +120,7 @@
               "receivedDateTime": {
                 "description": "The date and time data received.",
                 "type": "string",
-                "example": "2019-04-04T01:01:01Z"
+                "example": "2019-04-04T01:01:01.123Z"
               }
             },
             "required": [
