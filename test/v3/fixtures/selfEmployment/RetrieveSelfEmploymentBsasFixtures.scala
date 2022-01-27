@@ -248,7 +248,7 @@ object RetrieveSelfEmploymentBsasFixtures {
   val downstreamAdjustmentsAdditionsJson: JsValue = Json.parse(
     """
       |{
-      |  "costOfGoodsBoughtDisallowable": 3.01,
+      |  "costOfGoodsDisallowable": 3.01,
       |  "paymentsToSubcontractorsDisallowable": 3.02,
       |  "wagesAndStaffCostsDisallowable": 3.03,
       |  "carVanTravelExpensesDisallowable": 3.04,
@@ -494,7 +494,7 @@ object RetrieveSelfEmploymentBsasFixtures {
   val mtdAdjustmentsAdditionsJson: JsValue = Json.parse(
     """
       |{
-      |  "costOfGoodsBoughtDisallowable": 3.01,
+      |  "costOfGoodsDisallowable": 3.01,
       |  "paymentsToSubcontractorsDisallowable": 3.02,
       |  "wagesAndStaffCostsDisallowable": 3.03,
       |  "carVanTravelExpensesDisallowable": 3.04,
@@ -699,7 +699,7 @@ object RetrieveSelfEmploymentBsasFixtures {
   )
 
   val adjustmentsAdditionsModel: AdjustmentsAdditions = AdjustmentsAdditions(
-      costOfGoodsBoughtDisallowable = Some(3.01),
+      costOfGoodsDisallowable = Some(3.01),
       paymentsToSubcontractorsDisallowable = Some(3.02),
       wagesAndStaffCostsDisallowable = Some(3.03),
       carVanTravelExpensesDisallowable = Some(3.04),

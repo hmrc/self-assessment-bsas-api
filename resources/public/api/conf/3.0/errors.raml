@@ -478,6 +478,17 @@ traits:
                 description: A calculation with this BSAS ID cannot be found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
+  incomeSourceNotFound:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              notFound:
+                description: The supplied income source could not be found.
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
   notFound:
     responses:
       404:
