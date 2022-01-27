@@ -40,7 +40,7 @@
             "invalid",
             "superseded"
           ],
-          "description": "The status of the this calculated summary, limited to the following possible values: \n\n valid \n\n invalid \n\n superseded"
+          "description": "The status of the this calculated summary."
         }
       },
       "required": [
