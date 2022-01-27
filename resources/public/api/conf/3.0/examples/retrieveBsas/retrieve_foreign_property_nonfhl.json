@@ -9,7 +9,7 @@
   },
   "inputs": {
     "businessId": "XAIS12345678910",
-    "typeOfBusiness": "foreign-property",
+    "typeOfBusiness": "foreign-property-fhl-eea",
     "businessName": "My foreign property business ",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
@@ -100,26 +100,28 @@
       }
     ]
   },
-  "adjustments": [
-    {
-      "countryCode": "CYM",
-      "income": {
-        "rentAmount": 99999999999.99,
-        "premiumsOfLeaseGrant": 99999999999.99,
-        "otherPropertyIncome": 99999999999.99
-      },
-      "expenses": {
-        "premisesRunningCosts": 99999999999.99,
-        "repairsAndMaintenance": 99999999999.99,
-        "financialCosts": 99999999999.99,
-        "professionalFees": 99999999999.99,
-        "travelCosts": 99999999999.99,
-        "costOfServices": 99999999999.99,
-        "residentialFinancialCost": 99999999999.99,
-        "other": 99999999999.99
+  "adjustments": {
+    "countryLevelDetail": [
+      {
+        "countryCode": "CYM",
+        "income": {
+          "rentAmount": 99999999999.99,
+          "premiumsOfLeaseGrant": 99999999999.99,
+          "otherPropertyIncome": 99999999999.99
+        },
+        "expenses":{
+          "premisesRunningCosts": 99999999999.99,
+          "repairsAndMaintenance": 99999999999.99,
+          "financialCosts": 99999999999.99,
+          "professionalFees": 99999999999.99,
+          "travelCosts": 99999999999.99,
+          "costOfServices": 99999999999.99,
+          "residentialFinancialCost": 99999999999.99,
+          "other": 99999999999.99
+        }
       }
-    }
-  ],
+    ]
+  },
   "adjustedSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
