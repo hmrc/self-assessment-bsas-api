@@ -52,7 +52,7 @@
             <td><p>Simulates success response with summary status superseded.</p></td>
         </tr>
         <tr>
-            <td><p>INCORRECT_BUSINESS_TYPE</p></td>
+            <td><p>NOT_FOREIGN_PROPERTY</p></td>
             <td><p>Simulates the scenario where the calculationId is not a foreign property.</p></td>
         </tr>
     </tbody>

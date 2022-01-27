@@ -10,7 +10,7 @@
   "inputs": {
     "businessId": "XAIS12345678910",
     "typeOfBusiness": "foreign-property-fhl-eea",
-    "businessName": "My foreign business name",
+    "businessName": "Business Name",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
@@ -53,16 +53,16 @@
   },
   "adjustments": {
     "income": {
-      "rentAmount": -0.12
+      "rentAmount": -99999999999.99
     },
     "expenses": {
-      "premisesRunningCosts": -0.12,
-      "repairsAndMaintenance": -0.12,
-      "financialCosts": -0.12,
-      "professionalFees": -0.12,
-      "costOfServices": -0.12,
-      "travelCosts": -0.12,
-      "other": -0.12
+      "premisesRunningCosts": -99999999999.99,
+      "repairsAndMaintenance": -99999999999.99,
+      "financialCosts": -99999999999.99,
+      "professionalFees": -99999999999.99,
+      "costOfServices": -99999999999.99,
+      "travelCosts": -99999999999.99,
+      "other": -99999999999.99
     }
   },
   "adjustedSummaryCalculation": {
