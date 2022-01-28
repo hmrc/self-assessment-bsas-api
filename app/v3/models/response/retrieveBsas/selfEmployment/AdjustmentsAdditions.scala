@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class AdjustmentsAdditions(
-    costOfGoodsBoughtDisallowable: Option[BigDecimal],
+    costOfGoodsDisallowable: Option[BigDecimal],
     paymentsToSubcontractorsDisallowable: Option[BigDecimal],
     wagesAndStaffCostsDisallowable: Option[BigDecimal],
     carVanTravelExpensesDisallowable: Option[BigDecimal],
@@ -39,7 +39,7 @@ case class AdjustmentsAdditions(
 
 object AdjustmentsAdditions {
   implicit val reads: Reads[AdjustmentsAdditions] = (
-    (JsPath \ "costOfGoodsBoughtDisallowable").readNullable[BigDecimal] and
+    (JsPath \ "costOfGoodsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "paymentsToSubcontractorsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "carVanTravelExpensesDisallowable").readNullable[BigDecimal] and

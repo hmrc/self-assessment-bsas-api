@@ -50,7 +50,7 @@
       "other": 100.49
     },
     "additionsBreakdown": {
-      "costOfGoodsBoughtDisallowable": 100.49,
+      "costOfGoodsDisallowable": 100.49,
       "cisPaymentsToSubcontractorsDisallowable": 100.49,
       "staffCostsDisallowable": 100.49,
       "travelCostsDisallowable": 100.49,
