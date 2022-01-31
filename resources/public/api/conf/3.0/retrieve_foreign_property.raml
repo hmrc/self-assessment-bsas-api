@@ -15,7 +15,7 @@ responses:
   200:
     body:
       application/json:
-        type: !include schemas/retrieve_foreign_property_bsas.json
+        type: !include schemas/retrieve_foreign_property.json
         examples:
           example-1:
             description: Foreign Property EEA FHL
@@ -25,10 +25,10 @@ responses:
             value: !include examples/retrieveBsas/retrieve_foreign_property_nonfhl.json
           example-3:
             description: Foreign Property with Consolidated Expenses
-            value: !include examples/retrieveBsas/retrieve_foreign_property_bsas_consolidated.json
+            value: !include examples/retrieveBsas/retrieve_foreign_property_consolidated.json
           example-4:
             description: Foreign Property with Property Allowance
-            value: !include examples/retrieveBsas/retrieve_foreign_property_bsas_consolidated.json
+            value: !include examples/retrieveBsas/retrieve_foreign_property_allowance.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
