@@ -9,10 +9,10 @@
   },
   "inputs": {
     "businessId": "XAIS12345678910",
-    "typeOfBusiness": "uk-property-fhl",
+    "typeOfBusiness": "uk-property-non-fhl",
     "businessName": "My uk property business",
-    "accountingPeriodStartDate": "2020-04-06",
-    "accountingPeriodEndDate": "2021-04-05",
+    "accountingPeriodStartDate": "2019-04-06",
+    "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
     "submissionPeriods": [
       {
@@ -27,7 +27,10 @@
   "adjustableSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "rentReceived": 0.12,
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12,
       "rarRentReceived": 0.12
     },
     "totalExpenses": 0.12,
@@ -37,30 +40,29 @@
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "broughtFwdResidentialFinancialCost": 0.12,
       "other": 0.12,
       "travelCosts": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
-      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12,
       "bpraBalancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "annualInvestmentAllowance": 0.12,
-      "businessPremisesRenovationAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
-      "rarReliefClaimed": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "propertyAllowance": 0.12
     },
-    "taxableProfit": 1344
+    "taxableProfit": 12500
   },
   "adjustments": {
     "income": {
-      "rentReceived": 0.12
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12
     },
     "expenses": {
       "premisesRunningCosts": 0.12,
@@ -68,6 +70,7 @@
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
       "other": 0.12,
       "travelCosts": 0.12
     }
@@ -75,7 +78,10 @@
   "adjustedSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "rentReceived": 0.12,
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12,
       "rarRentReceived": 0.12
     },
     "totalExpenses": 0.12,
@@ -85,25 +91,21 @@
       "financialCosts": 0.12,
       "professionalFees": 0.12,
       "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "broughtFwdResidentialFinancialCost": 0.12,
       "other": 0.12,
       "travelCosts": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
-      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12,
       "bpraBalancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "annualInvestmentAllowance": 0.12,
-      "businessPremisesRenovationAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
-      "rarReliefClaimed": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "propertyAllowance": 0.12
     },
-    "taxableProfit": 1344
+    "taxableProfit": 22500
   }
 }

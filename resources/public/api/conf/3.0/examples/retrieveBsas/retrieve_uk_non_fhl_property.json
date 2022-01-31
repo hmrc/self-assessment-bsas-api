@@ -35,7 +35,6 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "consolidatedExpenses": 0.12,
       "premisesRunningCosts": 0.12,
       "repairsAndMaintenance": 0.12,
       "financialCosts": 0.12,
@@ -59,7 +58,6 @@
       "annualInvestmentAllowance": 0.12,
       "costOfReplacingDomesticItems": 0.12,
       "businessPremisesRenovationAllowance": 0.12,
-      "propertyAllowance": 0.12,
       "otherCapitalAllowance": 0.12,
       "rarReliefClaimed": 0.12,
       "electricChargePointAllowance": 0.12,
@@ -77,7 +75,6 @@
       "otherPropertyIncome": 0.12
     },
     "expenses": {
-      "consolidatedExpenses": 0.12,
       "premisesRunningCosts": 0.12,
       "repairsAndMaintenance": 0.12,
       "financialCosts": 0.12,
@@ -99,7 +96,6 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "consolidatedExpenses": 0.12,
       "premisesRunningCosts": 0.12,
       "repairsAndMaintenance": 0.12,
       "financialCosts": 0.12,
@@ -123,7 +119,6 @@
       "annualInvestmentAllowance": 0.12,
       "costOfReplacingDomesticItems": 0.12,
       "businessPremisesRenovationAllowance": 0.12,
-      "propertyAllowance": 0.12,
       "otherCapitalAllowance": 0.12,
       "rarReliefClaimed": 0.12,
       "electricChargePointAllowance": 0.12,
