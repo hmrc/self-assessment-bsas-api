@@ -78,5 +78,12 @@
       "zeroEmissionsCarAllowance": 0.12
     },
     "taxableProfit": 2500
-  }
+  },
+  "links": [
+    {
+      "href":"/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      "rel":"self",
+      "method":"GET"
+    }
+  ]
 }
