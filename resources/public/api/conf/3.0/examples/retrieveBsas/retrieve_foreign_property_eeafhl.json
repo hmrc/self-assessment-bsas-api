@@ -109,7 +109,7 @@
     },
     {
       "href":"/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4/adjust",
-      "rel":"submit-summary-adjustments",
+      "rel":"submit-foreign-property-accounting-adjustments",
       "method":"POST"
     }
   ]
