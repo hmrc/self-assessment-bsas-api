@@ -77,8 +77,8 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
         Target.adjustSelfEmploymentBsas(mockAppConfig, nino, bsasId) shouldBe link
       }
 
-      "return the Submit Property BSAS Adjustments link" in new Test {
-        val link = Link(href = s"/context/$nino/property/$bsasId/adjust", method = POST, rel = SUBMIT_ADJUSTMENTS)
+      "return the Submit UK Property BSAS Adjustments link" in new Test {
+        val link = Link(href = s"/context/$nino/property/$bsasId/adjust", method = POST, rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS)
         Target.adjustPropertyBsas(mockAppConfig, nino, bsasId) shouldBe link
       }
 

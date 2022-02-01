@@ -76,7 +76,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
   val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
                                            method = POST,
-                                           rel = "submit-summary-adjustments")
+                                           rel = "submit-uk-property-accounting-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for fhl with status OK" when {

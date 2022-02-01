@@ -24,7 +24,7 @@ import v3.models.hateoas.Method._
 import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.utils.JsonErrorValidators
 
-class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
   import RetrieveUkPropertyBsasResponse._
 
@@ -45,7 +45,7 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
           retrieveBsasResponseFhlModel,
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust", POST, "submit-summary-adjustments")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust", POST, "submit-uk-property-accounting-adjustments")
           )
         )
     }

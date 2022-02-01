@@ -85,7 +85,7 @@ trait HateoasLinks {
     Link(
       href = propertyAdjustmentUri(appConfig, nino, bsasId),
       method = POST,
-      rel = SUBMIT_ADJUSTMENTS
+      rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS
     )
 
   //L6

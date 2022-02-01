@@ -562,7 +562,7 @@ object RetrieveUkPropertyBsasFixtures {
       |    }, {
       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
       |      "method": "POST",
-      |      "rel": "submit-summary-adjustments"
+      |      "rel": "submit-uk-property-accounting-adjustments"
       |    }
       |  ]
       |}
@@ -579,7 +579,7 @@ object RetrieveUkPropertyBsasFixtures {
       |    }, {
       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
       |      "method": "POST",
-      |      "rel": "submit-summary-adjustments"
+      |      "rel": "submit-uk-property-accounting-adjustments"
       |    }
       |  ]
       |}
