@@ -185,7 +185,7 @@ class RetrieveUkPropertyAdjustmentsResponseSpec extends UnitSpec with JsonErrorV
       |}
     """.stripMargin)
 
-  "RetrieveSelfEmploymentAdjustmentResponse" when {
+  "RetrieveUkPropertyAdjustmentResponse" when {
     "reading from valid JSON" should {
       "return the appropriate FHL model when the most data has been provided" in {
         fhlDesJson.as[RetrieveUkPropertyAdjustmentsResponse] shouldBe retrieveUKPropertyAdjustmentResponseModel
