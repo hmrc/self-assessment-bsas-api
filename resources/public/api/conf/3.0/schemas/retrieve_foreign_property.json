@@ -1062,7 +1062,8 @@
             "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
-              "GET"
+              "GET",
+              "POST"
             ]
           }
         },
