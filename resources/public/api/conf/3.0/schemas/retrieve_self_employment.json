@@ -1037,6 +1037,36 @@
           "example": "1000"
         }
       }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/self-assessment/adjustable-summary/AA123456A"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The 'rel' will be 'self' where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "submit-self-employment-accounting-adjustments"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          }
+        }
+      }
     }
   },
   "required": [
@@ -1044,17 +1074,5 @@
     "inputs",
     "adjustableSummaryCalculation",
     "adjustedSummaryCalculation"
-  ],
-  "links": [
-    {
-      "href":"/individuals/self-assessment/adjustable-summary/AA999999A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      "rel":"self",
-      "method":"GET"
-    },
-    {
-      "href":"/individuals/self-assessment/adjustable-summary/AA999999A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4/adjust",
-      "rel":"submit-self-employment-accounting-adjustments",
-      "method":"POST"
-    }
   ]
 }

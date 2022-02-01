@@ -27,7 +27,8 @@
   "adjustableSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "totalRentsReceived": 0.12
+      "rentReceived": 0.12,
+      "rarRentReceived": 0.12
     },
     "totalExpenses": 0.12,
     "expenses": {
@@ -61,7 +62,7 @@
   },
   "adjustments": {
     "income": {
-      "totalRentsReceived": 0.12
+      "rentReceived": 0.12
     },
     "expenses": {
       "consolidatedExpenses": 0.12,
@@ -77,7 +78,7 @@
   "adjustedSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "totalRentsReceived": 0.12,
+      "rentReceived": 0.12,
       "rarRentReceived": 0.12
     },
     "totalExpenses": 0.12,

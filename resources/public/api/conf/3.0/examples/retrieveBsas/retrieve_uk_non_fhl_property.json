@@ -30,7 +30,8 @@
       "totalRentsReceived": 0.12,
       "premiumsOfLeaseGrant": 0.12,
       "reversePremiums": 0.12,
-      "otherPropertyIncome": 0.12
+      "otherPropertyIncome": 0.12,
+      "rarRentReceived": 0.12
     },
     "totalExpenses": 0.12,
     "expenses": {
