@@ -101,7 +101,7 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       |  "incomeSourceType": "03",
       |  "adjustments": {
       |    "income": {
-      |      "totalRentsReceived": 123.12
+      |      "rentAmount": 123.12
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 123.12,
