@@ -49,8 +49,28 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   private val correlationId = "X-123"
 
+  import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
+
+  private val nino = "AA123456A"
+
+  private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
+
+
+  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
+  private val request = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
+
+  val response: SubmitSelfEmploymentBsasResponse = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
+
+  val testHateoasLinks: Seq[Link] = Seq(
+    Link(
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId",
+      method = GET,
+      rel = "self"
+    )
+  )
+
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new SubmitSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
@@ -69,31 +89,6 @@ class SubmitSelfEmploymentBsasControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
   }
-
-  import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-
-  private val nino = "AA123456A"
-
-  private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
-
-
-  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
-  private val request = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
-
-  val response = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
-
-  val testHateoasLinks: Seq[Link] = Seq(
-    Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
-      method = GET,
-      rel = "self"
-    ),
-    Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
-      method = GET,
-      rel = "retrieve-adjustable-summary"
-    )
-  )
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -174,7 +169,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
@@ -200,7 +195,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       }
 
       "multiple errors occur for the customised errors" in new Test {
-        val error = ErrorWrapper(
+        val error: ErrorWrapper = ErrorWrapper(
           correlationId,
           BadRequestError,
           Some(

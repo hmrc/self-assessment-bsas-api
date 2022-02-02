@@ -57,7 +57,7 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
           retrieveBsasResponseModel,
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust", POST, "submit-summary-adjustments")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust", POST, "submit-self-employment-accounting-adjustments")
           )
         )
     }

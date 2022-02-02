@@ -546,7 +546,7 @@ object RetrieveSelfEmploymentBsasFixtures {
       |    }, {
       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust",
       |      "method": "POST",
-      |      "rel": "submit-summary-adjustments"
+      |      "rel": "submit-self-employment-accounting-adjustments"
       |    }
       |  ]
       |}

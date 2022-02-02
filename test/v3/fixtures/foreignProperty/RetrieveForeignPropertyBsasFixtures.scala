@@ -155,7 +155,7 @@ object RetrieveForeignPropertyBsasFixtures {
       |    {
       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
       |      "method":"POST",
-      |      "rel":"submit-summary-adjustments"
+      |      "rel":"submit-foreign-property-accounting-adjustments"
       |    }
       |  ]
       |}

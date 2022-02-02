@@ -46,8 +46,7 @@ object SubmitUkPropertyBsasResponse extends HateoasLinks {
       import data._
 
       Seq(
-        getPropertyBsasAdjustments(appConfig, nino, bsasId),
-        getAdjustedPropertyBsas(appConfig, nino, bsasId)
+        getUkPropertyBsas(appConfig, nino, bsasId)
       )
     }
   }

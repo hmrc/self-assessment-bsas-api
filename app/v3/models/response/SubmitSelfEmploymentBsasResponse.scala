@@ -45,8 +45,7 @@ object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
       import data._
 
       Seq(
-        getSelfEmploymentBsasAdjustments(appConfig, nino, bsasId),
-        getAdjustedSelfEmploymentBsas(appConfig, nino, bsasId)
+        getSelfEmploymentBsas(appConfig, nino, bsasId)
       )
     }
   }

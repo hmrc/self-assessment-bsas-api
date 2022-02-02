@@ -343,13 +343,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
          |    {
-         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
          |      "rel":"self",
-         |      "method":"GET"
-         |    },
-         |    {
-         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId?adjustedStatus=true",
-         |      "rel":"retrieve-adjustable-summary",
          |      "method":"GET"
          |    }
          |  ]

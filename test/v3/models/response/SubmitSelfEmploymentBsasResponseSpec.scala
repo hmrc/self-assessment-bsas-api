@@ -91,8 +91,7 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           submitSelfEmploymentBsasResponseModel,
           Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId", GET, "self")
           )
         )
     }
