@@ -26,7 +26,7 @@
   "adjustableSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "rentAmount": 0.12
+      "totalRentsReceived": 0.12
     },
     "totalExpenses": 0.12,
     "expenses": {
@@ -53,7 +53,7 @@
   },
   "adjustments": {
     "income": {
-      "rentAmount": -99999999999.99
+      "totalRentsReceived": -99999999999.99
     },
     "expenses": {
       "premisesRunningCosts": -99999999999.99,
@@ -68,7 +68,7 @@
   "adjustedSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "rentAmount": 0.12
+      "totalRentsReceived": 0.12
     },
     "totalExpenses": 0.12,
     "expenses": {
