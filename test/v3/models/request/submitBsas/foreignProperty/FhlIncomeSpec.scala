@@ -31,7 +31,7 @@ class FhlIncomeSpec extends UnitSpec {
   val validWritesJson = Json.parse(
     """
       |{
-      |   "rentAmount": 123.12
+      |   "totalRentsReceived": 123.12
       |}
       |""".stripMargin)
 

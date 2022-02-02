@@ -29,7 +29,7 @@ object FhlIncome {
     override def writes(o: FhlIncome): JsObject =
       if (o.isEmpty) JsObject.empty
       else Json.obj(
-        "rentAmount" -> o.rentIncome
+        "totalRentsReceived" -> o.rentIncome
       )
   }
 }

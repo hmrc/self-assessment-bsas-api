@@ -44,7 +44,7 @@ class FhlEeaSpec extends UnitSpec {
     """
       |{
       |  "income": {
-      |    "rentAmount": 123.12
+      |    "totalRentsReceived": 123.12
       |  },
       |  "expenses": {
       |    "premisesRunningCosts": 123.12,
