@@ -24,8 +24,7 @@ import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{retrieveBsasRespon
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-import v3.models.response.retrieveBsas.AccountingPeriod
-import v3.models.response.{retrieveBsas, retrieveBsasAdjustments}
+import v3.models.response.retrieveBsas
 
 import java.time.LocalDate
 
@@ -103,82 +102,6 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       "return the error as is (in an ErrorWrapper)" in {
         mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, OutboundError(ErrorBvrMain, Some(Seq(ErrorBvr))))) shouldBe
           ErrorWrapper(correlationId, ErrorBvrMain, Some(Seq(ErrorBvr)))
-      }
-    }
-  }
-
-  "validateRetrieveUkPropertyAdjustmentsSuccessResponse" should {
-    def generateResponseWrapper(
-        typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse] =
-      ResponseWrapper(
-        correlationId = "",
-        responseData = retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse(
-          retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness,
-                                                      Some("XAIS00000000210"),
-                                                      AccountingPeriod(date, date),
-                                                      "",
-                                                      "",
-                                                      "",
-                                                      "",
-                                                      adjustedSummary = true),
-          retrieveBsasAdjustments.ukProperty.BsasDetail(None, None)
-        )
-      )
-    "return Left" when {
-      List(TypeOfBusiness.`self-employment`, TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveUkPropertyAdjustmentsSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper("", RuleNotUkProperty, None))
-          }
-        }
-      }
-    }
-    "return Right" when {
-      List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveUkPropertyAdjustmentsSuccessResponse(input) shouldBe {
-            Right(input)
-          }
-        }
-      }
-    }
-  }
-
-  "validateRetrieveSelfEmploymentAdjustmentsSuccessResponse" should {
-    def generateResponseWrapper(
-        typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse] =
-      ResponseWrapper(
-        correlationId = "",
-        responseData = retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse(
-          retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, None, AccountingPeriod(date, date), "", "", "", "", adjustedSummary = true),
-          retrieveBsasAdjustments.selfEmployment.BsasDetail(None, None, None)
-        )
-      )
-    "return Left" when {
-      List(
-        TypeOfBusiness.`uk-property-fhl`,
-        TypeOfBusiness.`uk-property-non-fhl`,
-        TypeOfBusiness.`foreign-property`,
-        TypeOfBusiness.`foreign-property-fhl-eea`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper("", RuleNotSelfEmployment, None))
-          }
-        }
-      }
-    }
-    "return Right" when {
-      List(TypeOfBusiness.`self-employment`).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(input) shouldBe {
-            Right(input)
-          }
-        }
       }
     }
   }
