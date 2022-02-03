@@ -20,6 +20,6 @@ import play.api.mvc.AnyContentAsJson
 import domain.Nino
 import v3.models.request.RawData
 
-case class SubmitSelfEmploymentBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
+case class SubmitSelfEmploymentBsasRawData(nino: String, calculationId: String, body: AnyContentAsJson) extends RawData
 
-case class SubmitSelfEmploymentBsasRequestData(nino: Nino, bsasId: String, body: SubmitSelfEmploymentBsasRequestBody)
+case class SubmitSelfEmploymentBsasRequestData(nino: Nino, calculationId: String, body: SubmitSelfEmploymentBsasRequestBody)

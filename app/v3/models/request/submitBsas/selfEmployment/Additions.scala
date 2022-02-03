@@ -19,21 +19,21 @@ package v3.models.request.submitBsas.selfEmployment
 import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 import play.api.libs.functional.syntax._
 
-case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
-                     cisPaymentsToSubcontractorsDisallowable: Option[BigDecimal],
-                     staffCostsDisallowable: Option[BigDecimal],
-                     travelCostsDisallowable: Option[BigDecimal],
+case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
+                     paymentsToSubcontractorsDisallowable: Option[BigDecimal],
+                     wagesAndStaffCostsDisallowable: Option[BigDecimal],
+                     carVanTravelExpensesDisallowable: Option[BigDecimal],
                      premisesRunningCostsDisallowable: Option[BigDecimal],
                      maintenanceCostsDisallowable: Option[BigDecimal],
                      adminCostsDisallowable: Option[BigDecimal],
-                     advertisingCostsDisallowable: Option[BigDecimal],
-                     businessEntertainmentCostsDisallowable: Option[BigDecimal],
-                     interestDisallowable: Option[BigDecimal],
-                     financialChargesDisallowable: Option[BigDecimal],
-                     badDebtDisallowable: Option[BigDecimal],
+                     interestOnBankOtherLoansDisallowable: Option[BigDecimal],
+                     financeChargesDisallowable: Option[BigDecimal],
+                     irrecoverableDebtsDisallowable: Option[BigDecimal],
                      professionalFeesDisallowable: Option[BigDecimal],
                      depreciationDisallowable: Option[BigDecimal],
-                     otherDisallowable: Option[BigDecimal]) {
+                     otherExpensesDisallowable: Option[BigDecimal],
+                     advertisingCostsDisallowable: Option[BigDecimal],
+                     businessEntertainmentCostsDisallowable: Option[BigDecimal]) {
 
   def isEmpty: Boolean =
     Additions.unapply(this).forall {
@@ -44,21 +44,5 @@ case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
 
 object Additions {
   implicit val reads: Reads[Additions] = Json.reads[Additions]
-  implicit val writes: OWrites[Additions] = (
-    (JsPath \ "costOfGoodsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "paymentsToSubcontractorsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "wagesAndStaffCostsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "carVanTravelExpensesDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "premisesRunningCostsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "maintenanceCostsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "adminCostsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "advertisingCostsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "businessEntertainmentCostsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "interestOnBankOtherLoansDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "financeChargesDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "irrecoverableDebtsDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "professionalFeesDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "depreciationDisallowable").writeNullable[BigDecimal] and
-      (JsPath \ "otherExpensesDisallowable").writeNullable[BigDecimal]
-  )(unlift(Additions.unapply))
+  implicit val writes: OWrites[Additions] = Json.writes[Additions]
 }

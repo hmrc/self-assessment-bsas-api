@@ -19,39 +19,39 @@ package v3.models.request.submitBsas.selfEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 
-case class Expenses(costOfGoodsBought: Option[BigDecimal],
-                    cisPaymentsToSubcontractors: Option[BigDecimal],
-                    staffCosts: Option[BigDecimal],
-                    travelCosts: Option[BigDecimal],
-                    premisesRunningCosts: Option[BigDecimal],
-                    maintenanceCosts: Option[BigDecimal],
-                    adminCosts: Option[BigDecimal],
-                    advertisingCosts: Option[BigDecimal],
-                    businessEntertainmentCosts: Option[BigDecimal],
-                    interest: Option[BigDecimal],
-                    financialCharges: Option[BigDecimal],
-                    badDebt: Option[BigDecimal],
-                    professionalFees: Option[BigDecimal],
-                    depreciation: Option[BigDecimal],
-                    other: Option[BigDecimal],
+case class Expenses(costOfGoodsAllowable: Option[BigDecimal],
+                    paymentsToSubcontractorsAllowable: Option[BigDecimal],
+                    wagesAndStaffCostsAllowable: Option[BigDecimal],
+                    carVanTravelExpensesAllowable: Option[BigDecimal],
+                    premisesRunningCostsAllowable: Option[BigDecimal],
+                    maintenanceCostsAllowable: Option[BigDecimal],
+                    adminCostsAllowable: Option[BigDecimal],
+                    interestOnBankOtherLoansAllowable: Option[BigDecimal],
+                    financeChargesAllowable: Option[BigDecimal],
+                    irrecoverableDebtsAllowable: Option[BigDecimal],
+                    professionalFeesAllowable: Option[BigDecimal],
+                    depreciationAllowable: Option[BigDecimal],
+                    otherExpensesAllowable: Option[BigDecimal],
+                    advertisingCostsAllowable: Option[BigDecimal],
+                    businessEntertainmentCostsAllowable: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]) {
 
   //noinspection ScalaStyle
-  def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsBought.isEmpty &&
-                        cisPaymentsToSubcontractors.isEmpty &&
-                        staffCosts.isEmpty &&
-                        travelCosts.isEmpty &&
-                        premisesRunningCosts.isEmpty &&
-                        maintenanceCosts.isEmpty &&
-                        adminCosts.isEmpty &&
-                        advertisingCosts.isEmpty &&
-                        businessEntertainmentCosts.isEmpty &&
-                        interest.isEmpty &&
-                        financialCharges.isEmpty &&
-                        badDebt.isEmpty &&
-                        professionalFees.isEmpty &&
-                        depreciation.isEmpty &&
-                        other.isEmpty
+  def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsAllowable.isEmpty &&
+                        paymentsToSubcontractorsAllowable.isEmpty &&
+                        wagesAndStaffCostsAllowable.isEmpty &&
+                        carVanTravelExpensesAllowable.isEmpty &&
+                        premisesRunningCostsAllowable.isEmpty &&
+                        maintenanceCostsAllowable.isEmpty &&
+                        adminCostsAllowable.isEmpty &&
+                        interestOnBankOtherLoansAllowable.isEmpty &&
+                        financeChargesAllowable.isEmpty &&
+                        irrecoverableDebtsAllowable.isEmpty &&
+                        professionalFeesAllowable.isEmpty &&
+                        depreciationAllowable.isEmpty &&
+                        otherExpensesAllowable.isEmpty &&
+                        advertisingCostsAllowable.isEmpty &&
+                        businessEntertainmentCostsAllowable.isEmpty
 
   def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
 
@@ -62,22 +62,5 @@ case class Expenses(costOfGoodsBought: Option[BigDecimal],
 
 object Expenses {
   implicit val reads: Reads[Expenses] = Json.reads[Expenses]
-  implicit val writes: OWrites[Expenses] = (
-    (JsPath \ "costOfGoodsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "paymentsToSubcontractorsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "wagesAndStaffCostsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "carVanTravelExpensesAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "premisesRunningCostsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "maintenanceCostsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "adminCostsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "advertisingCostsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "businessEntertainmentCostsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "interestOnBankOtherLoansAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "financeChargesAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "irrecoverableDebtsAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "professionalFeesAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "depreciationAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "otherExpensesAllowable").writeNullable[BigDecimal] and
-      (JsPath \ "consolidatedExpenses").writeNullable[BigDecimal]
-  )(unlift(Expenses.unapply))
+  implicit val writes: OWrites[Expenses] = Json.writes[Expenses]
 }
