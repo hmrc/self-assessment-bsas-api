@@ -258,6 +258,17 @@ traits:
                 description:  The calculation ID supplied does not relate to a self-employment business.
                 value:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
+  ruleTypeOfBusinessIncorrectSE:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTypeOfBusinessIncorrect:
+                description:  The calculation ID supplied does not relate to a self-employment business.
+                value:
+                  code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
     responses:
       403:
@@ -266,7 +277,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSummaryStatusInvalid:
-                description: The status of the summary with this Calculation ID is invalid.
+                description: The status of the summary with this calculation ID is invalid.
                 value:
                   code: RULE_SUMMARY_STATUS_INVALID
   ruleSummaryStatusSuperseded:
@@ -332,7 +343,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleAlreadyAdjusted:
-                description: Adjustments previously submitted against the supplied Calculation ID.
+                description: Adjustments previously submitted against the supplied calculation ID.
                 value:
                   code: RULE_ALREADY_ADJUSTED
   ruleOverConsolidatedExpensesThreshold:
@@ -343,7 +354,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleOverConsolidatedExpensesThreshold:
-                description: Adjustment to turnover exceeds Consolidated Expenses threshold.
+                description: Adjustment to turnover exceeds consolidated expenses threshold.
                 value:
                   code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
   ruleTradingIncomeAllowanceExceeded:
@@ -354,7 +365,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTradingIncomeAllowanceExceeded:
-                description: Adjustment to expenses where Trading Income Allowance claimed.
+                description: Adjustment to expenses where trading income allowance claimed.
                 value:
                   code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
   rulePropertyIncomeAllowanceExceeded:
@@ -530,7 +541,7 @@ traits:
             type: types.errorResponse
             examples:
               adjustmentNotFound:
-                description: No adjustable summary calculation found for this Calculation ID.
+                description: No adjustable summary calculation found for this calculation ID.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   clientOrAgentNotAuthorised:
