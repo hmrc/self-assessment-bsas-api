@@ -87,8 +87,7 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
         HateoasWrapper(
           submitBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }

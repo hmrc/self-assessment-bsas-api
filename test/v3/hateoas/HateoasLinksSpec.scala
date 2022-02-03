@@ -25,7 +25,7 @@ import v3.models.hateoas.RelType._
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
   private val nino   = "AA111111A"
-  private val bsasId = "1234567890"
+  private val calcId = "1234567890"
 
   object Target extends HateoasLinks
 
@@ -38,58 +38,48 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "supplied config and valid nino" should {
       "return the Trigger BSAS link" in new Test {
-        val link = Link(href = s"/context/$nino/trigger", method = POST, rel = TRIGGER)
+        val link: Link = Link(href = s"/context/$nino/trigger", method = POST, rel = TRIGGER)
 
         Target.triggerBsas(mockAppConfig, nino) shouldBe link
       }
 
       "return the List BSAS link" in new Test {
-        val link = Link(href = s"/context/$nino", method = GET, rel = SELF)
+        val link: Link = Link(href = s"/context/$nino", method = GET, rel = SELF)
 
         Target.listBsas(mockAppConfig, nino) shouldBe link
       }
     }
 
-    "supplied config, a nino, and a bsas ID" should {
+    "supplied config, a nino, and a calculation ID" should {
 
       "return the Retrieve SE BSAS link" in new Test {
-        val link = Link(href = s"/context/$nino/self-employment/$bsasId", method = GET, rel = SELF)
-        Target.getSelfEmploymentBsas(mockAppConfig, nino, bsasId) shouldBe link
+        val link: Link = Link(href = s"/context/$nino/self-employment/$calcId", method = GET, rel = SELF)
+        Target.getSelfEmploymentBsas(mockAppConfig, nino, calcId) shouldBe link
       }
 
-      "return the Retrieve Property BSAS link" in new Test {
-        val link = Link(href = s"/context/$nino/property/$bsasId", method = GET, rel = SELF)
-        Target.getUkPropertyBsas(mockAppConfig, nino, bsasId) shouldBe link
+      "return the UK Retrieve Property BSAS link" in new Test {
+        val link: Link = Link(href = s"/context/$nino/property/$calcId", method = GET, rel = SELF)
+        Target.getUkPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
       }
 
-      "return the Retrieve Property BSAS link with adjustedStatus parameter set" in new Test {
-        val link = Link(href = s"/context/$nino/property/$bsasId?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
-        Target.getAdjustedPropertyBsas(mockAppConfig, nino, bsasId) shouldBe link
-      }
-
-      "return the Retrieve SE BSAS link with adjustedStatus parameter set" in new Test {
-        val link = Link(href = s"/context/$nino/self-employment/$bsasId?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
-        Target.getAdjustedSelfEmploymentBsas(mockAppConfig, nino, bsasId) shouldBe link
+      "return the Retrieve Foreign Property BSAS link" in new Test {
+        val link: Link = Link(href = s"/context/$nino/foreign-property/$calcId", method = GET, rel = SELF)
+        Target.getForeignPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
       }
 
       "return the Submit SE BSAS Adjustments link" in new Test {
-        val link = Link(href = s"/context/$nino/self-employment/$bsasId/adjust", method = POST, rel = SUBMIT_ADJUSTMENTS)
-        Target.adjustSelfEmploymentBsas(mockAppConfig, nino, bsasId) shouldBe link
+        val link: Link = Link(href = s"/context/$nino/self-employment/$calcId/adjust", method = POST, rel = SUBMIT_SE_ADJUSTMENTS)
+        Target.adjustSelfEmploymentBsas(mockAppConfig, nino, calcId) shouldBe link
       }
 
       "return the Submit UK Property BSAS Adjustments link" in new Test {
-        val link = Link(href = s"/context/$nino/property/$bsasId/adjust", method = POST, rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS)
-        Target.adjustPropertyBsas(mockAppConfig, nino, bsasId) shouldBe link
+        val link: Link = Link(href = s"/context/$nino/property/$calcId/adjust", method = POST, rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS)
+        Target.adjustPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
       }
 
-      "return the Retrieve SE BSAS Adjustments link" in new Test {
-        val link = Link(href = s"/context/$nino/self-employment/$bsasId/adjust", method = GET, rel = SELF)
-        Target.getSelfEmploymentBsasAdjustments(mockAppConfig, nino, bsasId) shouldBe link
-      }
-
-      "return the Retrieve Property BSAS Adjustments link" in new Test {
-        val link = Link(href = s"/context/$nino/property/$bsasId/adjust", method = GET, rel = SELF)
-        Target.getPropertyBsasAdjustments(mockAppConfig, nino, bsasId) shouldBe link
+      "return the Submit Foreign Property BSAS Adjustments link" in new Test {
+        val link: Link = Link(href = s"/context/$nino/foreign-property/$calcId/adjust", method = POST, rel = SUBMIT_FOREIGN_PROPERTY_ADJUSTMENTS)
+        Target.adjustForeignPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
       }
     }
   }

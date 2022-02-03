@@ -89,7 +89,7 @@ object SubmitSelfEmploymentBsasFixtures {
     json
   }
 
-  val mtdRequest = Json.parse("""{
+  val mtdRequest: JsValue = Json.parse("""{
                       |	"income": {
                       |		"turnover": 1000.25,
                       |		"other": 1000.5
@@ -130,7 +130,7 @@ object SubmitSelfEmploymentBsasFixtures {
                       |	}
                       |}""".stripMargin)
 
-  val mtdRequestWithOnlyConsolidatedExpenses = Json.parse("""{
+  val mtdRequestWithOnlyConsolidatedExpenses: JsValue = Json.parse("""{
                                 |	"income": {
                                 |		"turnover": 1000.25,
                                 |		"other": 1000.5
@@ -140,7 +140,7 @@ object SubmitSelfEmploymentBsasFixtures {
                                 |	}
                                 |}""".stripMargin)
 
-  val mtdRequestWithOnlyAdditionsExpenses = Json.parse("""{
+  val mtdRequestWithOnlyAdditionsExpenses: JsValue = Json.parse("""{
                                                 |	"income": {
                                                 |		"turnover": 1000.25,
                                                 |		"other": 1000.5
@@ -164,7 +164,7 @@ object SubmitSelfEmploymentBsasFixtures {
                                                 |	}
                                                 |}""".stripMargin)
 
-  val mtdRequestWithAdditionsAndExpenses = Json.parse("""{
+  val mtdRequestWithAdditionsAndExpenses: JsValue = Json.parse("""{
                                                          |	"income": {
                                                          |		"turnover": 1000.25,
                                                          |		"other": 1000.5
@@ -191,7 +191,7 @@ object SubmitSelfEmploymentBsasFixtures {
                                                          |	}
                                                          |}""".stripMargin)
 
-  val mtdRequestWithBothExpenses = Json.parse("""{
+  val mtdRequestWithBothExpenses: JsValue = Json.parse("""{
                                 |	"income": {
                                 |		"turnover": 1000.25,
                                 |		"other": 1000.5
@@ -233,26 +233,21 @@ object SubmitSelfEmploymentBsasFixtures {
                                 |	}
                                 |}""".stripMargin)
 
-  val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
+  val hateoasResponse: (String, String) => String = (nino: String, calcId: String) =>
     s"""
        |{
-       |  "id": "$bsasId",
+       |  "id": "$calcId",
        |  "links":[
        |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calcId",
        |      "rel":"self",
-       |      "method":"GET"
-       |    },
-       |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
-       |      "rel":"retrieve-adjustable-summary",
        |      "method":"GET"
        |    }
        |  ]
        |}
     """.stripMargin
 
-  val requestToDes = Json.parse(
+  val requestToDes: JsValue = Json.parse(
     """
       |{
       |	"incomeSourceType": "01",
@@ -298,11 +293,11 @@ object SubmitSelfEmploymentBsasFixtures {
       |  }
       |}""".stripMargin)
 
-  val desResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
+  val desResponse: (String, String) => String = (calcId: String, typeOfBusiness: String) =>
     s"""
        |{
        |      "metadata":{
-       |        "calculationId":"$bsasId",
+       |        "calculationId":"$calcId",
        |        "requestedDateTime":"2019-12-01T12:00:00.000Z",
        |        "taxableEntityId":"AB123456C",
        |        "taxYear":2020,

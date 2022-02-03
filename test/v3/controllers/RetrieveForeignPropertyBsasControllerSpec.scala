@@ -47,8 +47,22 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   private val correlationId = "X-123"
 
+  private val nino          = "AA123456A"
+  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val adjustedMtdStatus = Some("true")
+  private val adjustedDesStatus = Some("03")
+
+  private val request = RetrieveForeignPropertyBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
+  private val requestRawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedMtdStatus)
+
+  private val testHateoasLinkPropertySelf: Link = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
+    method = GET, rel = "self")
+
+  private val testHateoasLinkPropertyAdjust: Link = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+    method = POST, rel = "submit-foreign-property-accounting-adjustments")
+
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
@@ -65,20 +79,6 @@ class RetrieveForeignPropertyBsasControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
   }
-
-  private val nino          = "AA123456A"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val adjustedMtdStatus = Some("true")
-  private val adjustedDesStatus = Some("03")
-
-  private val request = RetrieveForeignPropertyBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
-  private val requestRawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedMtdStatus)
-
-  val testHateoasLinkPropertySelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
-    method = GET, rel = "self")
-
-  val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
-    method = POST, rel = "submit-summary-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for property with status OK" when {

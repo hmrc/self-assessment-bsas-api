@@ -18,18 +18,18 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
-import v3.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService }
+import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasService}
 import v3.models.errors._
-import v3.models.hateoas.Method.{ GET, POST }
-import v3.models.hateoas.{ HateoasWrapper, Link }
+import v3.models.hateoas.Method.GET
+import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,8 +46,29 @@ class RetrieveUkPropertyBsasControllerSpec
 
   private val correlationId = "X-123"
 
+  private val nino          = "AA123456A"
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+  private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
+  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
+
+  private val testHateoasLinks =
+    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
+
+  private val hateoasFhlResponse = mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json.parse(
+    """{
+      |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
+      |}
+      |""".stripMargin).as[JsObject]
+
+  private val hateoasNonFhlResponse = mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json.parse(
+    """{
+      |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
+      |}
+      |""".stripMargin).as[JsObject]
+
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
@@ -62,21 +83,7 @@ class RetrieveUkPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-
   }
-
-  private val nino          = "AA123456A"
-  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
-  private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
-  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
-
-  val testHateoasLinkPropertySelf =
-    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId", method = GET, rel = "self")
-
-  val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
-                                           method = POST,
-                                           rel = "submit-uk-property-accounting-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for fhl with status OK" when {
@@ -92,12 +99,12 @@ class RetrieveUkPropertyBsasControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId))
-          .returns(HateoasWrapper(retrieveBsasResponseFhlModel, Seq(testHateoasLinkPropertySelf, testHateoasLinkPropertyAdjust)))
+          .returns(HateoasWrapper(retrieveBsasResponseFhlModel, testHateoasLinks))
 
         val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
+        contentAsJson(result) shouldBe hateoasFhlResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -114,12 +121,12 @@ class RetrieveUkPropertyBsasControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId))
-          .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, Seq(testHateoasLinkPropertySelf, testHateoasLinkPropertyAdjust)))
+          .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks))
 
         val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
+        contentAsJson(result) shouldBe hateoasNonFhlResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }

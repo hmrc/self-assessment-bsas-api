@@ -335,30 +335,25 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     )
   }
 
-  val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
+  val hateoasResponse: (String, String) => String = (nino: String, calcId: String) =>
     s"""
        |{
-       |  "id": "$bsasId",
+       |  "id": "$calcId",
        |  "links":[
        |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$calcId",
        |      "rel":"self",
-       |      "method":"GET"
-       |    },
-       |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-       |      "rel":"retrieve-adjustable-summary",
        |      "method":"GET"
        |    }
        |  ]
        |}
     """.stripMargin
 
-  val fhlDesResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
+  val fhlDesResponse: (String, String) => String = (calcId: String, typeOfBusiness: String) =>
     s"""
        |{
        |      "metadata":{
-       |        "calculationId":"$bsasId",
+       |        "calculationId":"$calcId",
        |        "requestedDateTime":"2019-12-01T12:00:00.000Z",
        |        "taxableEntityId":"AB123456C",
        |        "taxYear":2020,

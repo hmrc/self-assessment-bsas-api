@@ -25,7 +25,7 @@ import v3.models.domain.TypeOfBusiness
 
 class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig {
 
-  val mtdJson = Json.parse(
+  private val mtdJson = Json.parse(
     """
       |{
       | "id": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
@@ -44,7 +44,7 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig 
       |}
   """.stripMargin)
 
-  val responseModel = SubmitForeignPropertyBsasResponse("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", TypeOfBusiness.`foreign-property-fhl-eea`)
+  private val responseModel = SubmitForeignPropertyBsasResponse("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", TypeOfBusiness.`foreign-property-fhl-eea`)
 
   "SubmitForeignPropertyBsasResponseSpec" when {
     "read from valid JSON" should {
@@ -68,8 +68,7 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig 
       SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory.links(
         mockAppConfig, SubmitForeignPropertyBsasHateoasData(nino, bsasId)) shouldBe
         Seq(
-          Link(s"/my/context/$nino/foreign-property/$bsasId/adjust", GET, "self"),
-          Link(s"/my/context/$nino/foreign-property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
+          Link(s"/my/context/$nino/foreign-property/$bsasId", GET, "self")
         )
     }
   }

@@ -21,13 +21,10 @@ import v3.controllers.EndpointLogContext
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
+import v3.models.response.retrieveBsas
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
-import v3.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
-import v3.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
-import v3.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
-import v3.models.response.{retrieveBsas, retrieveBsasAdjustments}
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -61,36 +58,6 @@ trait DesResponseMappingSupport {
         ErrorWrapper(correlationId, error, errors)
     }
   }
-
-  final def validateRetrieveUkPropertyAdjustmentsSuccessResponse[T](
-      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case RetrieveUkPropertyAdjustmentsResponse(retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
-
-      case _ => Right(desResponseWrapper)
-    }
-
-  final def validateRetrieveSelfEmploymentAdjustmentsSuccessResponse[T](
-      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case RetrieveSelfEmploymentAdjustmentsResponse(retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
-
-      case _ => Right(desResponseWrapper)
-    }
-
-  final def validateRetrieveForeignPropertyAdjustmentsSuccessResponse[T](
-      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
-
-      case _ => Right(desResponseWrapper)
-    }
 
   final def validateRetrieveForeignPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {

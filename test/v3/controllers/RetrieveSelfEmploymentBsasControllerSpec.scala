@@ -18,7 +18,7 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
@@ -26,7 +26,7 @@ import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSelfEmploymentBsasService}
 import v3.models.errors._
-import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
@@ -46,8 +46,23 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
   private val correlationId = "X-123"
 
+  private val nino          = "AA123456A"
+  private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
+
+  private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
+  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
+
+  private val testHateoasLinks =
+    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
+
+  private val hateoasResponse = mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(
+    """{
+      |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
+      |}
+      |""".stripMargin).as[JsObject]
+
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
@@ -62,21 +77,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-
   }
-
-  private val nino          = "AA123456A"
-  private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
-
-  private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
-  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
-
-  val testHateoasLinkSelf =
-    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId", method = GET, rel = "self")
-
-  val testHateoasLinkAdjustSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust",
-                                         method = POST,
-                                         rel = "submit-summary-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for self-assessment with status OK" when {
@@ -92,12 +93,12 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId))
-          .returns(HateoasWrapper(retrieveBsasResponseModel, Seq(testHateoasLinkSelf, testHateoasLinkAdjustSubmit)))
+          .returns(HateoasWrapper(retrieveBsasResponseModel, testHateoasLinks))
 
         val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
+        contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }

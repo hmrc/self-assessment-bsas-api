@@ -671,7 +671,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
           retrieveForeignPropertyBsasResponseModel,
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", POST, "submit-summary-adjustments")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", POST, "submit-foreign-property-accounting-adjustments")
           )
         )
     }

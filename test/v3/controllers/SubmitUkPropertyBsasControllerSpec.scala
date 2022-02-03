@@ -50,8 +50,28 @@ class SubmitUkPropertyBsasControllerSpec
 
   private val correlationId = "X-123"
 
+  private val nino   = "AA123456A"
+
+  private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
+
+  private val fhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields))
+  private val fhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, fhlBody)
+
+  private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
+  private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
+
+  val response: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
+
+  val testHateoasLinks: Seq[Link] = Seq(
+    Link(
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId",
+      method = GET,
+      rel = "self"
+    )
+  )
+
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new SubmitUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
@@ -70,31 +90,6 @@ class SubmitUkPropertyBsasControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
   }
-
-  private val nino   = "AA123456A"
-
-  private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
-
-  private val fhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields))
-  private val fhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, fhlBody)
-
-  private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
-  private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
-
-  val response = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
-
-  val testHateoasLinks: Seq[Link] = Seq(
-    Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-      method = GET,
-      rel = "self"
-    ),
-    Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-      method = GET,
-      rel = "retrieve-adjustable-summary"
-    )
-  )
 
   def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -203,7 +198,7 @@ class SubmitUkPropertyBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitUkPropertyBsasDataParser
           .parse(fhlRawRequest)
@@ -220,7 +215,7 @@ class SubmitUkPropertyBsasControllerSpec
       }
 
       "multiple errors occur for the customised errors" in new Test {
-        val error = ErrorWrapper(
+        val error: ErrorWrapper = ErrorWrapper(
           correlationId,
           BadRequestError,
           Some(
