@@ -324,6 +324,28 @@ traits:
                 description: The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
+  ruleDuplicateCountryCode:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleDuplicateCountryCode:
+                description: The same countryCode cannot be supplied multiple times.
+                value:
+                  code: RULE_DUPLICATE_COUNTRY_CODE
+  ruleBothPropertiesSupplied:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleBothPropertiesSupplied:
+                description: Both FHL and Non-FHL properties cannot be present at the same time.
+                value:
+                  code: RULE_BOTH_PROPERTIES_SUPPLIED
   ruleAccountingPeriodNotEnded:
     responses:
       403:

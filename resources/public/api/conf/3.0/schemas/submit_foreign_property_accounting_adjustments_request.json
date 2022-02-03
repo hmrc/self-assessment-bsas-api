@@ -96,11 +96,11 @@
             },
             "additionalProperties": false
           }
-        },
-        "required": [
-          "foreignPropertyDetails"
-        ]
-      }
+        }
+      },
+      "required": [
+        "foreignPropertyDetails"
+      ]
     },
     "foreignFhlEea": {
       "type": "object",
