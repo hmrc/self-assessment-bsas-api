@@ -48,6 +48,8 @@ uses:
             type: string
             example: 717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4
         get: !include retrieve_self_employment.raml
+        /adjust:
+          post: !include submit_se_adjustments.raml
       /property/{calculationId}:
         (annotations.group):
           name: UK Property Business
