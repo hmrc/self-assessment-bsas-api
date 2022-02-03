@@ -16,123 +16,58 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class ForeignPropertySpec extends UnitSpec {
 
-  val validReadJson = Json.parse(
-    """
+  // Use simple case as formats for contents of income/expenses are tested elsewhere...
+  val json: JsValue = Json.parse("""
       |{
       |  "countryCode": "FRA",
       |  "income": {
-      |    "rentIncome": 123.12,
-      |    "premiumsOfLeaseGrant": 123.12,
-      |    "otherPropertyIncome": 123.12
       |  },
       |  "expenses": {
-      |    "premisesRunningCosts": 123.12,
-      |    "repairsAndMaintenance": 123.12,
-      |    "financialCosts": 123.12,
-      |    "professionalFees": 123.12,
-      |    "travelCosts": 123.12,
-      |    "costOfServices": 123.12,
-      |    "residentialFinancialCost": 123.12,
-      |    "other": 123.12
       |  }
       |}
       |""".stripMargin)
 
-  val validWriteJson = Json.parse(
-    """
-      |{
-      |  "countryCode": "FRA",
-      |  "income": {
-      |    "rent": 123.12,
-      |    "premiumsOfLeaseGrant": 123.12,
-      |    "otherPropertyIncome": 123.12
-      |  },
-      |  "expenses": {
-      |    "premisesRunningCosts": 123.12,
-      |    "repairsAndMaintenance": 123.12,
-      |    "financialCosts": 123.12,
-      |    "professionalFees": 123.12,
-      |    "travelCosts": 123.12,
-      |    "costOfServices": 123.12,
-      |    "residentialFinancialCost": 123.12,
-      |    "other": 123.12
-      |  }
-      |}
-      |""".stripMargin)
-
-  val noIncomeOrOutcomeJson = Json.parse(
-    """{
+  val minimalJson: JsValue = Json.parse("""{
       |  "countryCode": "FRA"
       |}""".stripMargin)
 
-  val emptyJson = Json.parse("""{}""")
-
-  val validModel = ForeignProperty(
+  val model: ForeignProperty = ForeignProperty(
     "FRA",
-    Some(ForeignPropertyIncome(
-      Some(123.12),
-      Some(123.12),
-      Some(123.12)
-    )),
-    Some(ForeignPropertyExpenses(
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      Some(123.12),
-      consolidatedExpenses = None
-    ))
+    Some(ForeignPropertyIncome(None, None, None)),
+    Some(ForeignPropertyExpenses(None, None, None, None, None, None, None, None, None))
   )
 
-  val emptyModel = ForeignProperty("FRA", None, None)
-
+  val minimalModel: ForeignProperty = ForeignProperty("FRA", None, None)
 
   "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        validReadJson.as[ForeignProperty] shouldBe validModel
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json.as[ForeignProperty] shouldBe model
       }
     }
-  }
-  "reads from an empty JSON" when{
+
     "passed an empty JSON" should {
       "return an empty model" in {
-        noIncomeOrOutcomeJson.as[ForeignProperty] shouldBe emptyModel
-      }
-    }
-  }
-  "writes" when {
-    "passed valid model" should {
-      "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validWriteJson
-      }
-    }
-  }
-  "write from an empty body" when {
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe emptyJson
+        minimalJson.as[ForeignProperty] shouldBe minimalModel
       }
     }
   }
 
-  "isEmpty" when {
-    "passed a non empty model" should {
-      "return false" in {
-        validModel.isEmpty shouldBe false
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
       }
     }
+
     "passed an empty model" should {
-      "return true" in {
-        emptyModel.isEmpty shouldBe true
+      "return an empty JSON" in {
+        Json.toJson(minimalModel) shouldBe minimalJson
       }
     }
   }

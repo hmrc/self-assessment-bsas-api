@@ -16,77 +16,61 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{ JsObject, JsValue, Json }
 import support.UnitSpec
 
 class FhlEeaExpensesSpec extends UnitSpec {
 
-  val validJson = Json.parse(
-    """
+  val json: JsValue = Json.parse("""
       |{
-      |  "premisesRunningCosts": 123.12,
-      |  "repairsAndMaintenance": 123.12,
-      |  "financialCosts": 123.12,
-      |  "professionalFees": 123.12,
-      |  "travelCosts": 123.12,
-      |  "costOfServices": 123.12,
-      |  "other": 123.12
+      |  "premisesRunningCosts": 1.12,
+      |  "repairsAndMaintenance": 2.12,
+      |  "financialCosts": 3.12,
+      |  "professionalFees": 4.12,
+      |  "travelCosts": 5.12,
+      |  "costOfServices": 6.12,
+      |  "other": 7.12,
+      |  "consolidatedExpenses": 8.12
       |}
       |""".stripMargin)
 
-  val emptyJson = Json.parse("""{}""")
-
-  val validModel = FhlEeaExpenses(
-    Some(123.12),
-    Some(123.12),
-    Some(123.12),
-    Some(123.12),
-    Some(123.12),
-    Some(123.12),
-    Some(123.12),
-    consolidatedExpenses = None
+  val model: FhlEeaExpenses = FhlEeaExpenses(
+    premisesRunningCosts = Some(1.12),
+    repairsAndMaintenance = Some(2.12),
+    financialCosts = Some(3.12),
+    professionalFees = Some(4.12),
+    travelCosts = Some(5.12),
+    costOfServices = Some(6.12),
+    other = Some(7.12),
+    consolidatedExpenses = Some(8.12)
   )
 
-  val emptyModel = FhlEeaExpenses(None,None,None,None,None,None,None,None)
+  val emptyModel: FhlEeaExpenses = FhlEeaExpenses(None, None, None, None, None, None, None, None)
 
   "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        validModel shouldBe validJson.as[FhlEeaExpenses]
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json.as[FhlEeaExpenses] shouldBe model
       }
     }
-  }
-  "reads from an empty JSON" when{
+
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[FhlEeaExpenses]
-      }
-    }
-  }
-  "writes" when {
-    "passed valid model" should {
-      "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validJson
-      }
-    }
-  }
-  "write from an empty body" when {
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe emptyJson
+        JsObject.empty.as[FhlEeaExpenses] shouldBe emptyModel
       }
     }
   }
 
-  "isEmpty" when {
-    "passed a non empty model" should {
-      "return false" in {
-        validModel.isEmpty shouldBe false
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
       }
     }
+
     "passed an empty model" should {
-      "return true" in {
-        emptyModel.isEmpty shouldBe true
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

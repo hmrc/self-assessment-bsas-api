@@ -22,28 +22,10 @@ case class FhlEeaExpenses(premisesRunningCosts: Option[BigDecimal],
                           repairsAndMaintenance: Option[BigDecimal],
                           financialCosts: Option[BigDecimal],
                           professionalFees: Option[BigDecimal],
-                          travelCosts: Option[BigDecimal],
                           costOfServices: Option[BigDecimal],
                           other: Option[BigDecimal],
-                          consolidatedExpenses: Option[BigDecimal]) {
-
-  def isEmpty: Boolean =
-    FhlEeaExpenses.unapply(this).forall {
-      case (None, None, None, None, None, None, None, None) => true
-      case _                                                => false
-    }
-
-  val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts"  -> premisesRunningCosts,
-    "repairsAndMaintenance" -> repairsAndMaintenance,
-    "financialCosts"        -> financialCosts,
-    "professionalFees"      -> professionalFees,
-    "costOfServices"        -> costOfServices,
-    "travelCosts"           -> travelCosts,
-    "other"                 -> other,
-    "consolidatedExpenses"  -> consolidatedExpenses
-  ).collect { case (k, Some(v)) => (k, v) }
-}
+                          travelCosts: Option[BigDecimal],
+                          consolidatedExpenses: Option[BigDecimal])
 
 object FhlEeaExpenses {
   implicit val format: OFormat[FhlEeaExpenses] = Json.format[FhlEeaExpenses]

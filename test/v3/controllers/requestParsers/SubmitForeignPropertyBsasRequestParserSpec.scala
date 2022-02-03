@@ -31,11 +31,11 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
   private val requestBodyJson = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "otherPropertyIncome": 123.12
       |      },

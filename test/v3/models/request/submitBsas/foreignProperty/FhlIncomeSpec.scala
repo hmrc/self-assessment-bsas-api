@@ -16,70 +16,50 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import support.UnitSpec
 
 class FhlIncomeSpec extends UnitSpec {
 
-  val validReadsJson = Json.parse(
-    """
-      |{
-      |   "rentIncome": 123.12
-      |}
-      |""".stripMargin)
+  val model: FhlIncome = FhlIncome(Some(123.12))
 
-  val validWritesJson = Json.parse(
-    """
-      |{
-      |   "rentAmount": 123.12
-      |}
-      |""".stripMargin)
-
-  val emptyJson = Json.parse("""{}""")
-
-  val validModel = FhlIncome(Some(123.12))
-
-  val emptyModel = FhlIncome(None)
-
+  val emptyModel: FhlIncome = FhlIncome(None)
 
   "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        validModel shouldBe validReadsJson.as[FhlIncome]
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        Json
+          .parse("""
+            |{
+            |   "totalRentsReceived": 123.12
+            |}
+            |""".stripMargin)
+          .as[FhlIncome] shouldBe model
       }
     }
-  }
-  "reads from an empty JSON" when{
+
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyModel shouldBe emptyJson.as[FhlIncome]
-      }
-    }
-  }
-  "writes" when {
-    "passed valid model" should {
-      "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validWritesJson
-      }
-    }
-  }
-  "write from an empty body" when {
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe emptyJson
+        JsObject.empty.as[FhlIncome] shouldBe emptyModel
       }
     }
   }
 
-  "isEmpty" when {
-    "passed a non empty model" should {
-      "return false" in {
-        validModel.isEmpty shouldBe false
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe
+          Json.parse("""
+            |{
+            |   "rentAmount": 123.12
+            |}
+            |""".stripMargin)
       }
     }
+
     "passed an empty model" should {
-      "return true" in {
-        emptyModel.isEmpty shouldBe true
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

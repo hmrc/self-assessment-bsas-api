@@ -16,20 +16,13 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 
-case class FhlIncome(rentIncome: Option[BigDecimal]) {
-
-  def isEmpty: Boolean = rentIncome.isEmpty
-}
+case class FhlIncome(totalRentsReceived: Option[BigDecimal])
 
 object FhlIncome {
   implicit val reads: Reads[FhlIncome] = Json.reads[FhlIncome]
-  implicit val writes: OWrites[FhlIncome] = new OWrites[FhlIncome] {
-    override def writes(o: FhlIncome): JsObject =
-      if (o.isEmpty) JsObject.empty
-      else Json.obj(
-        "rentAmount" -> o.rentIncome
-      )
-  }
+
+  implicit val writes: OWrites[FhlIncome] =
+    (JsPath \ "rentAmount").writeNullable[BigDecimal].contramap((o: FhlIncome) => o.totalRentsReceived)
 }

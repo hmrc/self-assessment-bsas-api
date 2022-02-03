@@ -16,96 +16,73 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{ JsObject, Json }
 import support.UnitSpec
 
 class ForeignPropertyExpensesSpec extends UnitSpec {
 
-  val mtdJson = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": 123.12,
-      |  "repairsAndMaintenance": 123.13,
-      |  "financialCosts": 123.14,
-      |  "professionalFees": 123.15,
-      |  "travelCosts": 123.16,
-      |  "costOfServices": 123.17,
-      |  "residentialFinancialCost": 123.18,
-      |  "other": 123.19,
-      |  "consolidatedExpenses": 123.20
-      |}
-      |""".stripMargin)
+  val model: ForeignPropertyExpenses = ForeignPropertyExpenses(
+    premisesRunningCosts = Some(1.12),
+    repairsAndMaintenance = Some(2.12),
+    financialCosts = Some(3.12),
+    professionalFees = Some(4.12),
+    travelCosts = Some(5.12),
+    costOfServices = Some(6.12),
+    residentialFinancialCost = Some(7.12),
+    other = Some(8.12),
+    consolidatedExpenses = Some(9.12)
+  )
 
-  val desJson = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": 123.12,
-      |  "repairsAndMaintenance": 123.13,
-      |  "financialCosts": 123.14,
-      |  "professionalFees": 123.15,
-      |  "travelCosts": 123.16,
-      |  "costOfServices": 123.17,
-      |  "residentialFinancialCost": 123.18,
-      |  "other": 123.19,
-      |  "consolidatedExpense": 123.20
-      |}
-      |""".stripMargin)
-
-  val emptyJson = Json.parse("""{}""")
-
-  val validModel = ForeignPropertyExpenses(
-    Some(123.12),
-    Some(123.13),
-    Some(123.14),
-    Some(123.15),
-    Some(123.16),
-    Some(123.17),
-    Some(123.18),
-    Some(123.19),
-    Some(123.20))
-
-  val emptyModel = ForeignPropertyExpenses(None,None,None,None,None,None,None,None,None)
-
-
+  val emptyModel: ForeignPropertyExpenses = ForeignPropertyExpenses(None, None, None, None, None, None, None, None, None)
 
   "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        mtdJson.as[ForeignPropertyExpenses] shouldBe validModel
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        Json.parse("""
+            |{
+            |  "premisesRunningCosts": 1.12,
+            |  "repairsAndMaintenance": 2.12,
+            |  "financialCosts": 3.12,
+            |  "professionalFees": 4.12,
+            |  "travelCosts": 5.12,
+            |  "costOfServices": 6.12,
+            |  "residentialFinancialCost": 7.12,
+            |  "other": 8.12,
+            |  "consolidatedExpenses": 9.12
+            |}
+            |""".stripMargin).as[ForeignPropertyExpenses] shouldBe model
       }
     }
-  }
-  "reads from an empty JSON" when{
+
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyJson.as[ForeignPropertyExpenses] shouldBe emptyModel
-      }
-    }
-  }
-  "writes" when {
-    "passed valid model" should {
-      "return valid JSON" in {
-        Json.toJson(validModel) shouldBe desJson
-      }
-    }
-  }
-  "write from an empty body" when {
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe emptyJson
+        JsObject.empty.as[ForeignPropertyExpenses] shouldBe emptyModel
       }
     }
   }
 
-  "isEmpty" when {
-    "passed a non empty model" should {
-      "return false" in {
-        validModel.isEmpty shouldBe false
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe Json.parse("""
+            |{
+            |  "premisesRunningCosts": 1.12,
+            |  "repairsAndMaintenance": 2.12,
+            |  "financialCosts": 3.12,
+            |  "professionalFees": 4.12,
+            |  "travelCosts": 5.12,
+            |  "costOfServices": 6.12,
+            |  "residentialFinancialCost": 7.12,
+            |  "other": 8.12,
+            |  "consolidatedExpense": 9.12
+            |}
+            |""".stripMargin)
       }
     }
+
     "passed an empty model" should {
-      "return true" in {
-        emptyModel.isEmpty shouldBe true
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

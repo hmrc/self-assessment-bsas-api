@@ -16,74 +16,55 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{ JsObject, Json }
 import support.UnitSpec
 
 class ForeignPropertyIncomeSpec extends UnitSpec {
 
-  val validReadJson = Json.parse(
-    """
-      |{
-      |   "rentIncome": 123.12,
-      |   "premiumsOfLeaseGrant": 123.12,
-      |   "otherPropertyIncome": 123.12
-      |}
-      |""".stripMargin)
+  val model: ForeignPropertyIncome =
+    ForeignPropertyIncome(totalRentsReceived = Some(1.12), premiumsOfLeaseGrant = Some(2.12), otherPropertyIncome = Some(3.12))
 
-  val validWriteJson = Json.parse(
-    """
-      |{
-      |   "rent": 123.12,
-      |   "premiumsOfLeaseGrant": 123.12,
-      |   "otherPropertyIncome": 123.12
-      |}
-      |""".stripMargin)
-
-  val emptyJson = Json.parse("""{}""")
-
-  val validModel = ForeignPropertyIncome(Some(123.12), Some(123.12), Some(123.12))
-
-  val emptyModel = ForeignPropertyIncome(None, None, None)
-
+  val emptyModel: ForeignPropertyIncome = ForeignPropertyIncome(None, None, None)
 
   "reads" when {
-    "passed valid JSON" should {
-      "return a valid model" in {
-        validReadJson.as[ForeignPropertyIncome] shouldBe validModel
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        Json
+          .parse("""
+            |{
+            |   "totalRentsReceived": 1.12,
+            |   "premiumsOfLeaseGrant": 2.12,
+            |   "otherPropertyIncome": 3.12
+            |}
+            |""".stripMargin)
+          .as[ForeignPropertyIncome] shouldBe model
       }
     }
-  }
-  "reads from an empty JSON" when{
+
     "passed an empty JSON" should {
       "return an empty model" in {
-        emptyJson.as[ForeignPropertyIncome] shouldBe emptyModel
-      }
-    }
-  }
-  "writes" when {
-    "passed valid model" should {
-      "return valid JSON" in {
-        Json.toJson(validModel) shouldBe validWriteJson
-      }
-    }
-  }
-  "write from an empty body" when {
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe emptyJson
+        JsObject.empty.as[ForeignPropertyIncome] shouldBe emptyModel
       }
     }
   }
 
-  "isEmpty" when {
-    "passed a non empty model" should {
-      "return false" in {
-        validModel.isEmpty shouldBe false
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe
+          Json.parse("""
+                       |{
+                       |   "rent": 1.12,
+                       |   "premiumsOfLeaseGrant": 2.12,
+                       |   "otherPropertyIncome": 3.12
+                       |}
+                       |""".stripMargin)
       }
     }
+
     "passed an empty model" should {
-      "return true" in {
-        emptyModel.isEmpty shouldBe true
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }
