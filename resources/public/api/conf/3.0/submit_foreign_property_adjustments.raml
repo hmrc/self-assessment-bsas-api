@@ -20,27 +20,27 @@ is:
   - errors.rulePropertyIncomeAllowanceClaimed
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Submit a Foreign Property Business' Accounting Adjustments
-description: This endpoint allows the developer to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a Foreign Property Business, and it must not have been adjusted, previously.  Only data for one property business (either foreign-property-fhl-eea or foreign-property) should be included in any submission.
-(annotations.sandboxData): !include scenarios/submit_foreign_property_accounting_adjustments.md
+displayName: Submit Foreign Property Accounting Adjustments [test only]
+description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The calculation ID quoted must be for a Foreign Property Business, and it must not have been adjusted previously.  Only data for one property business either foreign property (FHL EEA) or foreign property (Non FHL) should be included in any submission. A National Insurance number and calculation ID must be provided.
+(annotations.sandboxData): !include scenarios/submit_foreign_property_adjustments.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
   application/json:
     type: !include schemas/foreign_property_accounting_adjustments_submit_request.json
     examples:
-      example-1x:
-        description: foreignProperty consolidated request
-        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_consolidated_foreignProperty_request.json
-      example-2x:
-        description: foreignProperty unconsolidated request
-        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_unconsolidated_foreignProperty_request.json
-      example-3x:
-        description: foreignFhlEea consolidated request
-        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_consolidated_foreignFhlEea_request.json
-      example-4x:
-        description: foreignFhlEea unconsolidated request
-        value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_unconsolidated_foreignFhlEea_request.json
+      example-1:
+        description: Foreign Property EEA FHL
+        value: !include examples/adjustments/submit_foreign_property_eeh_fhl.json
+      example-2:
+        description: Foreign Property EEA FHL with Consolidated
+        value: !include examples/adjustments/submit_foreign_property_eeh_fhl_consolidatd.json
+      example-3:
+        description: Foreign Property (Non-FHL)
+        value: !include examples/adjustments/submit_foreign_property_non_fhl.json
+      example-4:
+        description: Foreign Property (Non-FHL) with Consolidated
+        value: !include examples/adjustments/submit_foreign_property_non_fhl_consolidated.json
 responses:
   200:
     body:
