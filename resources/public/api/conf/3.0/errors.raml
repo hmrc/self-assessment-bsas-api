@@ -258,6 +258,17 @@ traits:
                 description:  The calculation ID supplied does not relate to a self-employment business.
                 value:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
+  ruleTypeOfBusinessIncorrectSE:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTypeOfBusinessIncorrect:
+                description:  The calculation ID supplied does not relate to a self-employment business.
+                value:
+                  code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
     responses:
       403:
