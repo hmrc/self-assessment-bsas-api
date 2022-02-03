@@ -16,13 +16,13 @@
 
 package v3.fixtures.ukProperty
 
-import play.api.libs.json.{JsObject, JsValue, Json}
-import v3.models.domain.{IncomeSourceType, Source, Status, TypeOfBusiness}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import v3.models.domain.{ IncomeSourceType, Source, Status, TypeOfBusiness }
 import v3.models.response.retrieveBsas.ukProperty._
 
 object RetrieveUkPropertyBsasFixtures {
 
-  private val now = "2019-04-06"
+  private val now          = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
   val downstreamMetadataJson: JsValue = Json.parse(
@@ -230,8 +230,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamRetrieveBsasFhlResponseJson: JsValue = Json.parse(
-    s"""
+  val downstreamRetrieveBsasFhlResponseJson: JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
        |  "inputs": $downstreamInputsFhlJson,
@@ -241,8 +240,7 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  val downstreamRetrieveBsasNonFhlResponseJson: JsValue = Json.parse(
-    s"""
+  val downstreamRetrieveBsasNonFhlResponseJson: JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
        |  "inputs": $downstreamInputsNonFhlJson,
@@ -252,8 +250,7 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(
-    s"""
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
        |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
@@ -329,7 +326,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdSummaryCalculationIncomeFhlJson: JsValue = Json.parse(
     """
       |{
-      |  "rentReceived": 1.05,
+      |  "totalRentsReceived": 1.05,
       |  "rarRentReceived": 1.06
       |}
       |""".stripMargin
@@ -551,8 +548,8 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasReponseFhlJsonWithHateoas(nino: String, calculationId: String): JsValue = mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdRetrieveBsasReponseFhlJsonWithHateoas(nino: String, calculationId: String): JsValue =
+    mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json.parse(s"""
       |{
       |  "links": [
       |    {
@@ -568,8 +565,8 @@ object RetrieveUkPropertyBsasFixtures {
       |}
       |""".stripMargin).as[JsObject]
 
-  def mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino: String, calculationId: String): JsValue = mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino: String, calculationId: String): JsValue =
+    mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json.parse(s"""
       |{
       |  "links": [
       |    {
@@ -593,7 +590,7 @@ object RetrieveUkPropertyBsasFixtures {
     taxYear = "2020-21",
     summaryStatus = Status.`valid`
   )
-  
+
   val submissionPeriodWithPeriodIdModel: SubmissionPeriod = SubmissionPeriod(
     periodId = Some("1234567890123456"),
     submissionId = None,
@@ -631,11 +628,11 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val summaryCalculationIncomeFhlModel: SummaryCalculationIncome = SummaryCalculationIncome(
-    totalRentsReceived = None,
+    totalRentsReceived = Some(1.05),
     premiumsOfLeaseGrant = None,
     reversePremiums = None,
     otherPropertyIncome = None,
-    rentReceived = Some(1.05),
+    //rentReceived = Some(1.05),
     rarRentReceived = Some(1.06)
   )
 
@@ -644,34 +641,34 @@ object RetrieveUkPropertyBsasFixtures {
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
     otherPropertyIncome = Some(1.04),
-    rentReceived = None,
+    //rentReceived = None,
     rarRentReceived = Some(1.06)
   )
 
   val summaryCalculationExpensesFhlModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
-      consolidatedExpenses = Some(2.01),
-      premisesRunningCosts = Some(2.02),
-      repairsAndMaintenance = Some(2.03),
-      financialCosts = Some(2.04),
-      professionalFees = Some(2.05),
-      costOfServices = Some(2.06),
-      residentialFinancialCost = None,
-      broughtFwdResidentialFinancialCost = None,
-      other = Some(2.09),
-      travelCosts = Some(2.10),
+    consolidatedExpenses = Some(2.01),
+    premisesRunningCosts = Some(2.02),
+    repairsAndMaintenance = Some(2.03),
+    financialCosts = Some(2.04),
+    professionalFees = Some(2.05),
+    costOfServices = Some(2.06),
+    residentialFinancialCost = None,
+    broughtFwdResidentialFinancialCost = None,
+    other = Some(2.09),
+    travelCosts = Some(2.10),
   )
 
   val summaryCalculationExpensesNonFhlModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
-      consolidatedExpenses = Some(2.01),
-      premisesRunningCosts = Some(2.02),
-      repairsAndMaintenance = Some(2.03),
-      financialCosts = Some(2.04),
-      professionalFees = Some(2.05),
-      costOfServices = Some(2.06),
-      residentialFinancialCost = Some(2.07),
-      broughtFwdResidentialFinancialCost = Some(2.08),
-      other = Some(2.09),
-      travelCosts = Some(2.10),
+    consolidatedExpenses = Some(2.01),
+    premisesRunningCosts = Some(2.02),
+    repairsAndMaintenance = Some(2.03),
+    financialCosts = Some(2.04),
+    professionalFees = Some(2.05),
+    costOfServices = Some(2.06),
+    residentialFinancialCost = Some(2.07),
+    broughtFwdResidentialFinancialCost = Some(2.08),
+    other = Some(2.09),
+    travelCosts = Some(2.10),
   )
 
   val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
@@ -755,27 +752,27 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val adjustmentsExpensesFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
-      consolidatedExpenses = Some(2.01),
-      premisesRunningCosts = Some(2.02),
-      repairsAndMaintenance = Some(2.03),
-      financialCosts = Some(2.04),
-      professionalFees = Some(2.05),
-      costOfServices = Some(2.06),
-      residentialFinancialCost = None,
-      other = Some(2.08),
-      travelCosts = Some(2.09)
+    consolidatedExpenses = Some(2.01),
+    premisesRunningCosts = Some(2.02),
+    repairsAndMaintenance = Some(2.03),
+    financialCosts = Some(2.04),
+    professionalFees = Some(2.05),
+    costOfServices = Some(2.06),
+    residentialFinancialCost = None,
+    other = Some(2.08),
+    travelCosts = Some(2.09)
   )
 
   val adjustmentsExpensesNonFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
-      consolidatedExpenses = Some(2.01),
-      premisesRunningCosts = Some(2.02),
-      repairsAndMaintenance = Some(2.03),
-      financialCosts = Some(2.04),
-      professionalFees = Some(2.05),
-      costOfServices = Some(2.06),
-      residentialFinancialCost = Some(2.07),
-      other = Some(2.08),
-      travelCosts = Some(2.09)
+    consolidatedExpenses = Some(2.01),
+    premisesRunningCosts = Some(2.02),
+    repairsAndMaintenance = Some(2.03),
+    financialCosts = Some(2.04),
+    professionalFees = Some(2.05),
+    costOfServices = Some(2.06),
+    residentialFinancialCost = Some(2.07),
+    other = Some(2.08),
+    travelCosts = Some(2.09)
   )
 
   val adjustmentsFhlModel: Adjustments = Adjustments(
