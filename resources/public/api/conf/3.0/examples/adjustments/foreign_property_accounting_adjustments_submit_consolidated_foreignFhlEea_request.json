@@ -1,0 +1,10 @@
+{
+  "foreignFhlEea": {
+    "income": {
+      "rentIncome": 123.12
+    },
+    "expenses": {
+      "consolidatedExpenses": 123.12
+    }
+  }
+}
