@@ -33,13 +33,13 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import v3.connectors.httpparsers.StandardDesHttpParser._
 
     put(
       body = request.body,
-      DownstreamUri[SubmitSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

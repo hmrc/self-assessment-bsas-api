@@ -17,39 +17,22 @@
 package v3.models.response
 
 import config.AppConfig
-import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
 import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v3.models.hateoas.{HateoasData, Link}
-import play.api.libs.functional.syntax._
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
-
-case class SubmitSelfEmploymentBsasResponse(id: String, typeOfBusiness: TypeOfBusiness)
 
 object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
 
-  implicit val reads: Reads[SubmitSelfEmploymentBsasResponse] = (
-    (JsPath \ "metadata" \ "calculationId").read[String] and
-      (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
-    )(SubmitSelfEmploymentBsasResponse.apply _)
-
-  implicit val writes: OWrites[SubmitSelfEmploymentBsasResponse] = new OWrites[SubmitSelfEmploymentBsasResponse] {
-    def writes(response: SubmitSelfEmploymentBsasResponse): JsObject =
-      Json.obj(
-        "id" -> response.id
-      )
-  }
-
   implicit object SubmitSelfEmploymentAdjustmentHateoasFactory
-    extends HateoasLinksFactory[SubmitSelfEmploymentBsasResponse, SubmitSelfEmploymentBsasHateoasData] {
+    extends HateoasLinksFactory[Unit, SubmitSelfEmploymentBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitSelfEmploymentBsasHateoasData): Seq[Link] = {
       import data._
 
       Seq(
-        getSelfEmploymentBsas(appConfig, nino, bsasId)
+        getSelfEmploymentBsasAdjustments(appConfig, nino, calculationId)
       )
     }
   }
 
 }
 
-case class SubmitSelfEmploymentBsasHateoasData(nino: String, bsasId: String) extends HateoasData
+case class SubmitSelfEmploymentBsasHateoasData(nino: String, calculationId: String) extends HateoasData

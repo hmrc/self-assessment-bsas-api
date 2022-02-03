@@ -27,6 +27,6 @@ class SubmitSelfEmploymentBsasDataParser @Inject()(val validator: SubmitSelfEmpl
   override protected def requestFor(data: SubmitSelfEmploymentBsasRawData): SubmitSelfEmploymentBsasRequestData = {
     val requestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
 
-    SubmitSelfEmploymentBsasRequestData(Nino(data.nino), data.bsasId, requestBody)
+    SubmitSelfEmploymentBsasRequestData(Nino(data.nino), data.calculationId, requestBody)
   }
 }

@@ -76,7 +76,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(
               response.responseData,
-              SubmitSelfEmploymentBsasHateoasData(nino, response.responseData.id)
+              SubmitSelfEmploymentBsasHateoasData(nino, bsasId)
             ).asRight[ErrorWrapper])
         } yield {
           logger.info(
