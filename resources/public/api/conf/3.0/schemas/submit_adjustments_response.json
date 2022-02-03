@@ -2,7 +2,6 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "id": { "$ref": "definitions.json#/definitions/bsasId"},
     "links": {
       "type": "array",
       "items": {
@@ -12,13 +11,13 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/AA123456A"
+            "example": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
           },
           "rel": {
             "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "retrieve-adjustable-summary"
+              "self"
             ]
           },
           "method": {
@@ -38,8 +37,5 @@
       }
     }
   },
-  "required": [
-    "id"
-  ],
   "additionalProperties": false
 }
