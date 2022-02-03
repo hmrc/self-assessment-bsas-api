@@ -27,7 +27,7 @@ description: This endpoint allows the user to provide accounting adjustments aga
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
   application/json:
-    type: !include schemas/foreign_property_accounting_adjustments_submit_request.json
+    type: !include schemas/submit_foreign_property_request.json
     examples:
       example-1:
         description: Foreign Property EEA FHL
@@ -45,11 +45,11 @@ responses:
   200:
     body:
       application/json:
-        type: !include schemas/foreign_property_accounting_adjustments_submit_response.json
+        type: !include schemas/submit_foreign_property_response.json
         examples:
           example:
-            description: Example Response
-            value: !include examples/adjustments/foreign_property_accounting_adjustments_submit_response.json
+            description: Foreign Property Response
+            value: !include examples/adjustments/submit_foreign_property_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
