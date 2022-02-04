@@ -632,7 +632,6 @@ object RetrieveUkPropertyBsasFixtures {
     premiumsOfLeaseGrant = None,
     reversePremiums = None,
     otherPropertyIncome = None,
-    //rentReceived = Some(1.05),
     rarRentReceived = Some(1.06)
   )
 
@@ -641,7 +640,6 @@ object RetrieveUkPropertyBsasFixtures {
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
     otherPropertyIncome = Some(1.04),
-    //rentReceived = None,
     rarRentReceived = Some(1.06)
   )
 
