@@ -478,6 +478,17 @@ traits:
                 description: Consolidated expenses adjusted with other unexpected fields.
                 value:
                   code: RULE_BOTH_EXPENSES_SUPPLIED
+  ruleBothPropertiesSupplied:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleBothPropertiesSupplied:
+                description: Both FHL and Non-FHL properties cannot be present at the same time.
+                value:
+                  code: RULE_BOTH_PROPERTIES_SUPPLIED
   ruleResultingValueNotPermitted:
     responses:
       403:
