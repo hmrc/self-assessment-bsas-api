@@ -16,16 +16,16 @@
 
 package v3.controllers.requestParsers
 
+import domain.Nino
 import play.api.libs.json.Json
 import support.UnitSpec
-import domain.Nino
 import v3.mocks.validators.MockSubmitForeignPropertyBsasValidator
-import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
+import v3.models.errors.{ BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError }
 import v3.models.request.submitBsas.foreignProperty._
 
 class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
-  val nino = "AA123456B"
-  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val nino                           = "AA123456B"
+  val calculationId                  = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val requestBodyJson = Json.parse(
@@ -35,19 +35,7 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
+      |        "totalRentsReceived": 123.12
       |      }
       |    }
       |  ]
@@ -55,8 +43,8 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  val inputData =
-    SubmitForeignPropertyRawData(nino, bsasId, requestBodyJson)
+  val inputData: SubmitForeignPropertyRawData =
+    SubmitForeignPropertyRawData(nino, calculationId, requestBodyJson)
 
   trait Test extends MockSubmitForeignPropertyBsasValidator {
     lazy val parser = new SubmitForeignPropertyBsasRequestParser(mockValidator)
@@ -67,36 +55,21 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       "valid request data is supplied" in new Test {
         MockValidator.validate(inputData).returns(Nil)
 
-        val submitForeignPropertyBsasRequestBody =
+        val body: SubmitForeignPropertyBsasRequestBody =
           SubmitForeignPropertyBsasRequestBody(
-            Some(Seq(ForeignProperty(
-              "FRA",
-              Some(ForeignPropertyIncome(
-                Some(123.12),
-                Some(123.12),
-                Some(123.12)
-              )),
-              Some(ForeignPropertyExpenses(
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                Some(123.12),
-                None
-              ))))),
-            None
-            )
+            nonFurnishedHolidayLet = Some(Seq(ForeignProperty("FRA", Some(ForeignPropertyIncome(Some(123.12), None, None)), None))),
+            foreignFhlEea = None
+          )
 
         parser.parseRequest(inputData) shouldBe
-          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, submitForeignPropertyBsasRequestBody))
+          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, body))
       }
     }
-    "return an ErrroWrapper" when {
+
+    "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockValidator.validate(inputData)
+        MockValidator
+          .validate(inputData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(inputData) shouldBe
@@ -104,7 +77,8 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur" in new Test {
-        MockValidator.validate(inputData)
+        MockValidator
+          .validate(inputData)
           .returns(List(NinoFormatError, BsasIdFormatError))
 
         parser.parseRequest(inputData) shouldBe

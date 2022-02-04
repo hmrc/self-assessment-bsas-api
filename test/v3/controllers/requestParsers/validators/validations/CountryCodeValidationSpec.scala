@@ -37,7 +37,8 @@ class CountryCodeValidationSpec extends UnitSpec {
         "SPM", "VCT", "WSM", "SMR", "STP", "SAU", "SEN", "SRB", "SYC", "SLE", "SGP", "SXM", "SVK", "SVN",
         "SLB", "SOM", "ZAF", "KOR", "SSD", "ESP", "LKA", "SDN", "SUR", "SJM", "SWZ", "SWE", "CHE", "SYR", "TWN",
         "TJK", "TZA", "THA", "TLS", "TGO", "TKL", "TON", "TTO", "TUN", "TUR", "TKM", "TCA", "TUV", "UGA", "UKR",
-        "ARE", "USA", "VIR", "URY", "UZB", "VUT", "VAT", "VEN", "VNM", "WLF", "YEM", "ZMB", "ZWE").foreach {
+        "ARE", "USA", "VIR", "URY", "UZB", "VUT", "VAT", "VEN", "VNM", "WLF", "YEM", "ZMB", "ZWE", "ZZZ")
+        .foreach {
         code =>
           s"return an empty list for valid country code $code" in {
             CountryCodeValidation.validate(code, "path") shouldBe NoValidationErrors
