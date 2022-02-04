@@ -22,8 +22,7 @@ import v3.models.hateoas.{HateoasData, Link}
 
 object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
 
-  implicit object SubmitSelfEmploymentAdjustmentHateoasFactory
-    extends HateoasLinksFactory[Unit, SubmitSelfEmploymentBsasHateoasData] {
+  implicit object SubmitSelfEmploymentAdjustmentHateoasFactory extends HateoasLinksFactory[Unit, SubmitSelfEmploymentBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitSelfEmploymentBsasHateoasData): Seq[Link] = {
       import data._
 

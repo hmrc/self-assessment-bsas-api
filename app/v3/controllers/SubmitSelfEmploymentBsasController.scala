@@ -31,6 +31,7 @@ import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
 import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
+import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
 import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasNrsProxyService, SubmitSelfEmploymentBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}

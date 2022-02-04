@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{Json, OWrites, Reads }
+import play.api.libs.json.{Json, OFormat}
 
 case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
                      paymentsToSubcontractorsDisallowable: Option[BigDecimal],
@@ -42,6 +42,5 @@ case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
 }
 
 object Additions {
-  implicit val reads: Reads[Additions] = Json.reads[Additions]
-  implicit val writes: OWrites[Additions] = Json.writes[Additions]
+  implicit val format: OFormat[Additions] = Json.format[Additions]
 }
