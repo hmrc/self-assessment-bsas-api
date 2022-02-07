@@ -39,7 +39,7 @@ class SubmitUkPropertyBsasConnector @Inject()(
 
     put(
       body = request.body,
-      DownstreamUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

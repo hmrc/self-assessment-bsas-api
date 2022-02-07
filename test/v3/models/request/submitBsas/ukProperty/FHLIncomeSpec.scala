@@ -16,53 +16,52 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class FHLIncomeSpec extends UnitSpec {
 
+  val model: FHLIncome = FHLIncome(Some(123.12))
 
-  val inputJson: JsValue = Json.parse(
-    """
-      |{
-      | "rentIncome": 1000.45
-      |}
-      |""".stripMargin)
+  val emptyModel: FHLIncome = FHLIncome(None)
 
-  val requestJson: JsValue = Json.parse(
-    """
-      |{
-      | "rentReceived": 1000.45
-      |}
-      |""".stripMargin)
-
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |"rentIncome": true
-      |}
-      |""".stripMargin
-  )
-
-  val modelWithNoneValues: FHLIncome = FHLIncome(None)
-  val model: FHLIncome = FHLIncome(Some(1000.45))
-
-  "NonFHLIncome" when {
-    "read from valid JSON" should {
-      "return the expected NonFHLIncome object" in {
-        inputJson.as[FHLIncome] shouldBe model
+  "reads" when {
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        Json
+          .parse(
+            """
+              |{
+              |   "totalRentsReceived": 123.12
+              |}
+              |""".stripMargin)
+          .as[FHLIncome] shouldBe model
       }
     }
 
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[FHLIncome] shouldBe a[JsError]
+    "passed an empty JSON" should {
+      "return an empty model" in {
+        JsObject.empty.as[FHLIncome] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe
+          Json.parse(
+            """
+              |{
+              |   "rentReceived": 123.12
+              |}
+              |""".stripMargin)
       }
     }
 
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

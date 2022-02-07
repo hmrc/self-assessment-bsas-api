@@ -16,47 +16,24 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import play.api.libs.json.{ JsObject, Json, OWrites, Reads, Writes }
 import utils.JsonWritesUtil
 
-case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet]) {
-  private def isEmpty: Boolean = nonFurnishedHolidayLet.isEmpty && furnishedHolidayLet.isEmpty
-
-  def isIncorrectOrEmptyBody: Boolean =
-    isEmpty ||
-    (nonFurnishedHolidayLet.isDefined && nonFurnishedHolidayLet.get.isEmpty) ||
-    (furnishedHolidayLet.isDefined && furnishedHolidayLet.get.isEmpty)
-}
+case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet])
 
 object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
-
   implicit val reads: Reads[SubmitUKPropertyBsasRequestBody] = Json.reads[SubmitUKPropertyBsasRequestBody]
+
   implicit val writes: OWrites[SubmitUKPropertyBsasRequestBody] = new OWrites[SubmitUKPropertyBsasRequestBody] {
-    override def writes(o: SubmitUKPropertyBsasRequestBody): JsObject =
-      o.nonFurnishedHolidayLet
-        .map { x =>
-          filterNull(
-            Json.obj(
-              "incomeSourceType" -> "02",
-              "adjustments" -> filterNull(Json.obj(
-                "income" -> x.income,
-                "expenses" -> x.expenses
-              ))
-            ))
-        }
-        .getOrElse(
-          o.furnishedHolidayLet
-            .map(
-              x =>
-                filterNull(
-                  Json.obj(
-                    "incomeSourceType" -> "04",
-                    "adjustments" -> filterNull(Json.obj(
-                      "income" -> x.income,
-                      "expenses" -> x.expenses
-                    ))
-                  )))
-            .getOrElse(Json.obj())
-        )
+    override def writes(o: SubmitUKPropertyBsasRequestBody): JsObject = {
+      writeIfPresent(o.nonFurnishedHolidayLet, incomeSourceType = "02")
+        .orElse(writeIfPresent(o.furnishedHolidayLet, incomeSourceType = "04"))
+        .getOrElse(JsObject.empty)
+    }
+
+    private def writeIfPresent[A: Writes](oa: Option[A], incomeSourceType: String): Option[JsObject] =
+      oa.map { a =>
+        Json.obj("incomeSourceType" -> incomeSourceType, "adjustments" -> a)
+      }
   }
 }

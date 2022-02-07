@@ -16,21 +16,10 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
-case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses]) {
-  def isEmpty: Boolean = (income.isEmpty && expenses.isEmpty) ||
-    (income.isDefined && income.get.isEmpty) ||
-    (expenses.isDefined && expenses.get.isEmpty)
-}
+case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
 
 object FurnishedHolidayLet {
-
-  implicit val reads: Reads[FurnishedHolidayLet] = (
-    (JsPath \ "income").readNullable[FHLIncome] and
-      (JsPath \ "expenses").readNullable[FHLExpenses]
-    )(FurnishedHolidayLet.apply _)
-
-  implicit  val writes: OWrites[FurnishedHolidayLet] = Json.writes[FurnishedHolidayLet]
+  implicit val format: OFormat[FurnishedHolidayLet] = Json.format[FurnishedHolidayLet]
 }

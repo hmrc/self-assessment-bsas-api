@@ -26,15 +26,13 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   private val validationSet = List(
     parameterFormatValidator,
     bodyFormatValidator,
-    incorrectOrEmptyBodyValidator,
-    adjustmentFieldValidator,
-    otherBodyFieldsValidator)
+    adjustmentFieldValidator)
 
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
 
     List(
       NinoValidation.validate(data.nino),
-      BsasIdValidation.validate(data.bsasId)
+      BsasIdValidation.validate(data.calculationId)
     )
   }
 
@@ -44,6 +42,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     )))
   }
 
+  /*
   private def incorrectOrEmptyBodyValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
     List(
@@ -54,6 +53,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
       }
     )
   }
+   */
 
   private def adjustmentFieldValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
@@ -67,7 +67,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
       val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
       val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
       List(
-        doValidationFor("/nonFurnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome)),
+        doValidationFor("/nonFurnishedHolidayLet/income/rentIncome", income.flatMap(_.totalRentsReceived)),
         doValidationFor("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant)),
         doValidationFor("/nonFurnishedHolidayLet/income/reversePremiums", income.flatMap(_.reversePremiums)),
         doValidationFor("/nonFurnishedHolidayLet/income/otherPropertyIncome", income.flatMap(_.otherPropertyIncome)),
@@ -87,7 +87,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
       val income: Option[FHLIncome] = furnishedHolidayLet.income
       val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
       List(
-        doValidationFor("/furnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome)),
+        doValidationFor("/furnishedHolidayLet/income/rentIncome", income.flatMap(_.totalRentsReceived)),
         doValidationFor("/furnishedHolidayLet/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts)),
         doValidationFor("/furnishedHolidayLet/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance)),
         doValidationFor("/furnishedHolidayLet/expenses/financialCosts", expenses.flatMap(_.financialCosts)),
@@ -106,6 +106,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     }))
   }
 
+/*
   private def otherBodyFieldsValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
 
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
@@ -115,6 +116,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
       BothExpensesValidation.validate(model.nonFurnishedHolidayLet.flatMap(_.expenses.map(_.params)))
     )
   }
+*/
 
   override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
 }

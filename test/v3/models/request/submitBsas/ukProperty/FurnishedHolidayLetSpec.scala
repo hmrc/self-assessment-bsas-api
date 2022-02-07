@@ -16,134 +16,52 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
-class FurnishedHolidayLetSpec extends UnitSpec{
+class FurnishedHolidayLetSpec extends UnitSpec {
 
-  val inputJson: JsValue = Json.parse(
-    """
-      |{
-      |      "income": {
-      |         "rentIncome": 1000.49
-      |      },
-      |      "expenses": {
-      |         "premisesRunningCosts": -1000.49,
-      |         "repairsAndMaintenance": 1000.49,
-      |         "financialCosts": 1000.49,
-      |         "professionalFees": 1000.49,
-      |         "costOfServices": -1000.49,
-      |         "travelCosts": 1000.49,
-      |         "other": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
-
-
-  val inputWithExpensesOnlyJson: JsValue = Json.parse(
-    """
-      |{
-      |      "expenses": {
-      |         "premisesRunningCosts": -1000.49,
-      |         "repairsAndMaintenance": 1000.49,
-      |         "financialCosts": 1000.49,
-      |         "professionalFees": 1000.49,
-      |         "costOfServices": -1000.49,
-      |         "travelCosts": 1000.49,
-      |         "other": 1000.49,
-      |         "consolidatedExpenses": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
-
-  val desJson: JsValue = Json.parse(
-    """
-      |{
-      |      "income": {
-      |         "rentReceived": 1000.49
-      |      },
-      |      "expenses": {
-      |         "premisesRunningCosts": -1000.49,
-      |         "repairsAndMaintenance": 1000.49,
-      |         "financialCosts": 1000.49,
-      |         "professionalFees": 1000.49,
-      |         "costOfServices": -1000.49,
-      |         "travelCosts": 1000.49,
-      |         "other": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
-
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |      "income": {
-      |         "rentIncome": "1000.49"
-      |      },
-      |      "expenses": {
-      |         "premisesRunningCosts": true,
-      |         "repairsAndMaintenance": "1000.49",
-      |         "financialCosts": "1000.49",
-      |         "professionalFees": "1000.49",
-      |         "costOfServices": -1000.49,
-      |         "travelCosts": "1000.49",
-      |         "other": "1000.49",
-      |         "consolidatedExpenses": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
+  // Use simple case as formats for contents of income/expenses are tested elsewhere...
+  val json: JsValue = Json.parse("""
+                                   |{
+                                   |  "income": {
+                                   |  },
+                                   |  "expenses": {
+                                   |  }
+                                   |}
+                                   |""".stripMargin)
 
   val model: FurnishedHolidayLet = FurnishedHolidayLet(
-    Some(FHLIncome(
-      Some(1000.49)
-    )),
-    Some(FHLExpenses(
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      None
-    ))
+    Some(FHLIncome(None)),
+    Some(FHLExpenses(None, None, None, None, None, None, None, None))
   )
 
-  val modelWithExpensesOnly: FurnishedHolidayLet = FurnishedHolidayLet(
-    None,
-    Some(FHLExpenses(
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49)
-    ))
-  )
+  val emptyModel: FurnishedHolidayLet = FurnishedHolidayLet(None, None)
 
-
-  "FurnishedHolidayLet" when {
-    "read from valid Json" should {
-      "return the expected FurnishedHolidayLet object" in {
-        inputJson.as[FurnishedHolidayLet] shouldBe model
-      }
-
-      "return the expected FurnishedHolidayLet object without income" in {
-        inputWithExpensesOnlyJson.as[FurnishedHolidayLet] shouldBe modelWithExpensesOnly
+  "reads" when {
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json.as[FurnishedHolidayLet] shouldBe model
       }
     }
 
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[FurnishedHolidayLet] shouldBe a[JsError]
+    "passed an empty JSON" should {
+      "return an empty model" in {
+        JsObject.empty.as[FurnishedHolidayLet] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
       }
     }
 
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(model) shouldBe desJson
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

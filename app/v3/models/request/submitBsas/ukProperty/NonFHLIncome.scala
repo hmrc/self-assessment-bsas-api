@@ -18,26 +18,11 @@ package v3.models.request.submitBsas.ukProperty
 
 import play.api.libs.json._
 
-case class NonFHLIncome(rentIncome: Option[BigDecimal] = None,
-                        premiumsOfLeaseGrant: Option[BigDecimal] = None,
-                        reversePremiums: Option[BigDecimal] = None,
-                        otherPropertyIncome: Option[BigDecimal] = None) {
-
-  val params: Map[String, BigDecimal] = Map(
-    "totalRentsReceived"   -> rentIncome,
-    "premiumsOfLeaseGrant" -> premiumsOfLeaseGrant,
-    "reversePremiums"      -> reversePremiums,
-    "otherPropertyIncome"  -> otherPropertyIncome
-  ).collect { case (k, Some(v)) => (k, v) }
-
-  def isEmpty: Boolean =
-    NonFHLIncome.unapply(this).forall {
-      case (None, None, None, None) => true
-      case _                        => false
-    }
-}
+case class NonFHLIncome(totalRentsReceived: Option[BigDecimal],
+                        premiumsOfLeaseGrant: Option[BigDecimal],
+                        reversePremiums: Option[BigDecimal],
+                        otherPropertyIncome: Option[BigDecimal])
 
 object NonFHLIncome {
-  implicit val reads: Reads[NonFHLIncome]   = Json.reads[NonFHLIncome]
-  implicit val writes: Writes[NonFHLIncome] = (o: NonFHLIncome) => Json.toJsObject(o.params)
+  implicit val format: OFormat[NonFHLIncome] = Json.format[NonFHLIncome]
 }
