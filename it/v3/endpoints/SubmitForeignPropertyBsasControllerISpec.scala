@@ -492,44 +492,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyIncorrectBody: JsValue = Json.parse(
-        s"""
-           |{
-           |    "foreignFhlEea": {
-           |        "income": {},
-           |        "expenses": {}
-           |    }
-           |}
-           |""".stripMargin)
-
-      val requestBodyBothExpenses: JsValue = Json.parse(
-        s"""
-           |{
-           |  "nonFurnishedHolidayLet": [
-           |    {
-           |      "countryCode": "FRA",
-           |      "income": {
-           |        "totalRentsReceived": 123.12,
-           |        "premiumsOfLeaseGrant": 123.12,
-           |        "foreignTaxTakenOff": 123.12,
-           |        "otherPropertyIncome": 123.12
-           |      },
-           |      "expenses": {
-           |        "premisesRunningCosts": 123.12,
-           |        "repairsAndMaintenance": 123.12,
-           |        "financialCosts": 123.12,
-           |        "professionalFees": 123.12,
-           |        "travelCosts": 123.12,
-           |        "costOfServices": 123.12,
-           |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12,
-           |        "consolidatedExpenses": 123.12
-           |      }
-           |    }
-           |  ]
-           |}
-           |""".stripMargin)
-
       val requestBodyInvalidCountryCode: JsValue = Json.parse(
         s"""
            |{
@@ -643,21 +605,25 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-          (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
+          (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleTypeOfBusinessError),
-          (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
-          (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
-          (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
-          (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
-          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
           (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, DownstreamError),
-          (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
-          (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
-          (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C55508", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C55509", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C559107", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C559103", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C559099", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
+          (FORBIDDEN, "BVR_FAILURE_C55503", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (CONFLICT, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
+          (CONFLICT, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleAlreadyAdjusted),
+          (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
+          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
+          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
         )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))

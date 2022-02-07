@@ -207,13 +207,13 @@ class SubmitForeignPropertyBsasControllerSpec
 
         val input = Seq(
             (NinoFormatError, BAD_REQUEST),
-            (BsasIdFormatError, BAD_REQUEST),
+            (CalculationIdFormatError, BAD_REQUEST),
             (NotFoundError, NOT_FOUND),
             (DownstreamError, INTERNAL_SERVER_ERROR),
-            (RuleTypeOfBusinessError, FORBIDDEN),
+            (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
             (RuleSummaryStatusInvalid, FORBIDDEN),
             (RuleSummaryStatusSuperseded, FORBIDDEN),
-            (RuleBsasAlreadyAdjusted, FORBIDDEN),
+            (RuleAlreadyAdjusted, FORBIDDEN),
             (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
             (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
             (RuleResultingValueNotPermitted, FORBIDDEN)

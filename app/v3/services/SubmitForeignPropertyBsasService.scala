@@ -18,7 +18,7 @@ package v3.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v3.connectors.SubmitForeignPropertyBsasConnector
@@ -29,15 +29,16 @@ import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasReq
 import v3.models.response.SubmitForeignPropertyBsasResponse
 import v3.support.DesResponseMappingSupport
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-    correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[SubmitForeignPropertyBsasResponse]]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[SubmitForeignPropertyBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
@@ -47,24 +48,26 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"      -> NinoFormatError,
-    "INVALID_CALCULATION_ID"         -> BsasIdFormatError,
-    "INVALID_PAYLOAD"                -> DownstreamError,
-    "INCOMESOURCE_TYPE_NOT_MATCHED"  -> RuleTypeOfBusinessError,
-    "ASC_ID_INVALID"                 -> RuleSummaryStatusInvalid,
-    "ASC_ALREADY_SUPERSEDED"         -> RuleSummaryStatusSuperseded,
-    "ASC_ALREADY_ADJUSTED"           -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"              -> RuleResultingValueNotPermitted,
-    "BVR_FAILURE_C55316"             -> DownstreamError,
-    "BVR_FAILURE_C15320"             -> DownstreamError,
-    "BVR_FAILURE_C55503"             -> RuleOverConsolidatedExpensesThreshold,
-    "BVR_FAILURE_C55508"             -> RulePropertyIncomeAllowanceClaimed,
-    "BVR_FAILURE_C55509"             -> RulePropertyIncomeAllowanceClaimed,
-    "NO_DATA_FOUND"                  -> NotFoundError,
-    "SERVER_ERROR"                   -> DownstreamError,
-    "SERVICE_UNAVAILABLE"            -> DownstreamError,
-    "INVALID_CORRELATION_ID"         -> DownstreamError
+    "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+    "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
+    "INVALID_CORRELATIONID"         -> DownstreamError,
+    "INVALID_PAYLOAD"               -> DownstreamError,
+    "BVR_FAILURE_C15320"            -> DownstreamError,
+    "BVR_FAILURE_C55508"            -> DownstreamError,
+    "BVR_FAILURE_C55509"            -> DownstreamError,
+    "BVR_FAILURE_C559107"           -> RulePropertyIncomeAllowanceClaimed,
+    "BVR_FAILURE_C559103"           -> RulePropertyIncomeAllowanceClaimed,
+    "BVR_FAILURE_C559099"           -> RuleOverConsolidatedExpensesThreshold,
+    "BVR_FAILURE_C55503"            -> DownstreamError,
+    "BVR_FAILURE_C55316"            -> DownstreamError,
+    "NO_DATA_FOUND"                 -> NotFoundError,
+    "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
+    "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
+    "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
+    "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
+    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
+    "SERVER_ERROR"                  -> DownstreamError,
+    "SERVICE_UNAVAILABLE"           -> DownstreamError,
   )
 
 }
-

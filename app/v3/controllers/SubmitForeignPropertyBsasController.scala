@@ -90,16 +90,17 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
       case BadRequestError |
            NinoFormatError |
            BsasIdFormatError |
+           CalculationIdFormatError |
+           RuleTypeOfBusinessIncorrectError |
            CustomMtdError(FormatAdjustmentValueError.code) |
            CustomMtdError(RuleAdjustmentRangeInvalid.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
            CustomMtdError(RuleCountryCodeError.code) |
            CustomMtdError(CountryCodeFormatError.code) |
            RuleBothExpensesError => BadRequest(Json.toJson(errorWrapper))
-      case RuleTypeOfBusinessError |
-           RuleSummaryStatusInvalid |
+      case RuleSummaryStatusInvalid |
            RuleSummaryStatusSuperseded |
-           RuleBsasAlreadyAdjusted |
+           RuleAlreadyAdjusted |
            RuleResultingValueNotPermitted |
            RuleOverConsolidatedExpensesThreshold |
            RulePropertyIncomeAllowanceClaimed => Forbidden(Json.toJson(errorWrapper))

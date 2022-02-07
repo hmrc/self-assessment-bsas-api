@@ -70,11 +70,11 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("INVALID_CALCULATION_ID", BsasIdFormatError),
+        ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_PAYLOAD", DownstreamError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
-        ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
+        ("ASC_ALREADY_ADJUSTED", RuleAlreadyAdjusted),
         ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
         ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleNotSelfEmployment),
         ("BVR_FAILURE_C55316", RuleOverConsolidatedExpensesThreshold),
