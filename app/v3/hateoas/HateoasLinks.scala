@@ -26,8 +26,6 @@ trait HateoasLinks {
   private def bsasBasUri(appConfig: AppConfig, nino: String) =
     s"/${appConfig.apiGatewayContext}/$nino"
 
-<<<<<<< HEAD
-=======
   private def listUri(appConfig: AppConfig, nino: String): String = bsasBasUri(appConfig, nino)
 
   private def triggerUri(appConfig: AppConfig, nino: String): String =
@@ -52,8 +50,6 @@ trait HateoasLinks {
     bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId/adjust"
 
   //API resource links
-
->>>>>>> c738ca6 (Further additions to correct the model errors)
   //L1
   def triggerBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = bsasBasUri(appConfig, nino) + "/trigger", method = POST, rel = TRIGGER)
