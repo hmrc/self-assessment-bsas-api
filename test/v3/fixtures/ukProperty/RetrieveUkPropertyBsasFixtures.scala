@@ -459,7 +459,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdAdjustmentsIncomeFhlJson: JsValue = Json.parse(
     """
       |{
-      |  "rentReceived": 1.05
+      |  "totalRentsReceived": 1.05
       |}
       |""".stripMargin
   )
@@ -734,19 +734,17 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val adjustmentsIncomeFhlModel: AdjustmentsIncome = AdjustmentsIncome(
-    totalRentsReceived = None,
+    totalRentsReceived = Some(1.05),
     premiumsOfLeaseGrant = None,
     reversePremiums = None,
-    otherPropertyIncome = None,
-    rentReceived = Some(1.05)
+    otherPropertyIncome = None
   )
 
   val adjustmentsIncomeNonFhlModel: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
-    otherPropertyIncome = Some(1.04),
-    rentReceived = None
+    otherPropertyIncome = Some(1.04)
   )
 
   val adjustmentsExpensesFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
