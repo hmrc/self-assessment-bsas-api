@@ -18,4 +18,4 @@ package v3.models.request.submitBsas.foreignProperty
 
 import domain.Nino
 
-case class SubmitForeignPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitForeignPropertyBsasRequestBody)
+case class SubmitForeignPropertyBsasRequestData(nino: Nino, calculationId: String, body: SubmitForeignPropertyBsasRequestBody)

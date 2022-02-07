@@ -18,7 +18,7 @@ package v3.controllers.requestParsers.validators
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, NinoFormatError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
@@ -28,11 +28,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonForeignPropertyNoDecimals = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123,
+      |        "totalRentsReceived": 123,
       |        "premiumsOfLeaseGrant": 123,
       |        "foreignTaxTakenOff": 123,
       |        "otherPropertyIncome": 123
@@ -55,11 +55,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonForeignProperty = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -82,11 +82,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonForeignPropertyConsolidatedExpenses = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -105,7 +105,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |{
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 123.12,
@@ -125,7 +125,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |{
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {
       |      "consolidatedExpenses": 123.12
@@ -137,7 +137,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonNoForeignPropertyIncome = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "expenses": {
@@ -158,11 +158,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonNoForeignPropertyExpenses = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -194,7 +194,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |{
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    }
       |  }
       |}
@@ -203,11 +203,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonFPAndFHLEEA = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -226,7 +226,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ],
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 123.12,
@@ -245,10 +245,10 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyForeignProperty = Json.parse(
     """
       |{
-      |  "foreignProperty": [],
+      |  "nonFurnishedHolidayLet": [],
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 123.12,
@@ -267,11 +267,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyFhlEea = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -296,7 +296,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyForeignPropertyAndFhlEea = Json.parse(
     """
       |{
-      |  "foreignProperty": [],
+      |  "nonFurnishedHolidayLet": [],
       |  "foreignFhlEea": {}
       |}
       |""".stripMargin
@@ -305,7 +305,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyForeignPropertyIncome = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {},
@@ -323,7 +323,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ],
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 123.12,
@@ -341,11 +341,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyForeignPropertyExpenses = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -355,7 +355,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ],
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {
       |      "premisesRunningCosts": 123.12,
@@ -374,11 +374,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyFhlEeaIncome = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -414,11 +414,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val requestBodyJsonEmptyFhlEeaExpenses = Json.parse(
     """
       |{
-      |  "foreignProperty": [
+      |  "nonFurnishedHolidayLet": [
       |    {
       |      "countryCode": "FRA",
       |      "income": {
-      |        "rentIncome": 123.12,
+      |        "totalRentsReceived": 123.12,
       |        "premiumsOfLeaseGrant": 123.12,
       |        "foreignTaxTakenOff": 123.12,
       |        "otherPropertyIncome": 123.12
@@ -437,7 +437,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ],
       |  "foreignFhlEea": {
       |    "income": {
-      |      "rentIncome": 123.12
+      |      "totalRentsReceived": 123.12
       |    },
       |    "expenses": {}
       |  }
@@ -530,11 +530,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         val badJson = Json.parse(
           """
             |{
-            |  "foreignProperty": [
+            |  "nonFurnishedHolidayLet": [
             |    {
             |      "countryCode": "FRA",
             |      "income": {
-            |        "rentIncome": 123.456,
+            |        "totalRentsReceived": 123.456,
             |        "premiumsOfLeaseGrant": 123.12,
             |        "foreignTaxTakenOff": 123.12,
             |        "otherPropertyIncome": 123.12
@@ -553,7 +553,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/income/totalRentsReceived"))))
       }
       "multiple fields have more than 2 decimal points" in {
         val badjson = Json.parse(
@@ -561,7 +561,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |{
             |  "foreignFhlEea": {
             |    "income": {
-            |      "rentIncome": 123.456
+            |      "totalRentsReceived": 123.456
             |    },
             |    "expenses": {
             |      "premisesRunningCosts": 123.456,
@@ -576,7 +576,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
+          FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/income/totalRentsReceived", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
     }
     "return a RULE_RANGE_INVALID error" when {
@@ -584,11 +584,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         val badJson = Json.parse(
           """
             |{
-            |  "foreignProperty": [
+            |  "nonFurnishedHolidayLet": [
             |    {
             |      "countryCode": "FRA",
             |      "income": {
-            |        "rentIncome": 100000000000.99,
+            |        "totalRentsReceived": 100000000000.99,
             |        "premiumsOfLeaseGrant": 123.12,
             |        "foreignTaxTakenOff": 123.12,
             |        "otherPropertyIncome": 123.12
@@ -607,17 +607,17 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/income/totalRentsReceived"))))
       }
       "a value field is below -99999999999.99" in {
         val badJson = Json.parse(
           """
             |{
-            |  "foreignProperty": [
+            |  "nonFurnishedHolidayLet": [
             |    {
             |      "countryCode": "FRA",
             |      "income": {
-            |        "rentIncome": -100000000000.00,
+            |        "totalRentsReceived": -100000000000.00,
             |        "premiumsOfLeaseGrant": 123.12,
             |        "foreignTaxTakenOff": 123.12,
             |        "otherPropertyIncome": 123.12
@@ -636,7 +636,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/income/totalRentsReceived"))))
       }
       "multiple fields are above 99999999999.99" in {
         val badjson = Json.parse(
@@ -644,7 +644,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |{
             |  "foreignFhlEea": {
             |    "income": {
-            |      "rentIncome": 100000000000.99
+            |      "totalRentsReceived": 100000000000.99
             |    },
             |    "expenses": {
             |      "premisesRunningCosts": 100000000000.99,
@@ -659,7 +659,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/totalRentsReceived", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
       "multiple fields are below -99999999999.99" in {
         val badjson = Json.parse(
@@ -667,7 +667,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |{
             |  "foreignFhlEea": {
             |    "income": {
-            |      "rentIncome": -100000000000.00
+            |      "totalRentsReceived": -100000000000.00
             |    },
             |    "expenses": {
             |      "premisesRunningCosts": -100000000000.00,
@@ -682,19 +682,19 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |}
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/totalRentsReceived", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
     }
-    "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {
+/*    "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {
       "both expenses and consolidated expenses are supplied" in {
         val badJson = Json.parse(
           """
             |{
-            |  "foreignProperty": [
+            |  "nonFurnishedHolidayLet": [
             |    {
             |      "countryCode": "FRA",
             |      "income": {
-            |        "rentIncome": 123.12,
+            |        "totalRentsReceived": 123.12,
             |        "premiumsOfLeaseGrant": 123.12,
             |        "foreignTaxTakenOff": 123.12,
             |        "otherPropertyIncome": 123.12
@@ -722,7 +722,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         val badJson = Json.parse(
           """
             |{
-            |  "foreignProperty": [
+            |  "nonFurnishedHolidayLet": [
             |    {
             |      "countryCode": "FRA"
             |    }
@@ -735,11 +735,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         val badJson = Json.parse(
           """
             |{
-            |  "foreignProperty": [
+            |  "nonFurnishedHolidayLet": [
             |    {
             |      "countryCode": "FRA",
             |      "income": {
-            |        "rentIncome": 123,
+            |        "totalRentsReceived": 123,
             |        "premiumsOfLeaseGrant": 123,
             |        "foreignTaxTakenOff": 123,
             |        "otherPropertyIncome": 123
@@ -763,7 +763,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |""".stripMargin)
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
-    }
+    }*/
   }
 }
 

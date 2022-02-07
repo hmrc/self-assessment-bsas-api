@@ -37,7 +37,7 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
 
     put(
       body = request.body,
-      DownstreamUri[SubmitForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[SubmitForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

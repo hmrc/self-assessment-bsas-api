@@ -35,7 +35,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(
-      foreignProperty = None,
+      nonFurnishedHolidayLet = None,
       foreignFhlEea = Some(FhlEea(
         Some(FhlIncome(
           Some(123.12)

@@ -16,52 +16,24 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import play.api.libs.json._
 import utils.JsonWritesUtil
 
-case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[Seq[ForeignProperty]], foreignFhlEea: Option[FhlEea]) {
-
-  private def isEmpty: Boolean = (foreignProperty.isEmpty && foreignFhlEea.isEmpty)
-
-  private def foreignPropertyIsEmpty: Boolean = {
-    val x: List[Boolean] = foreignProperty.get.toList.map {
-      case o => o.isEmpty
-    }
-    if (x.contains(true)) true else false
-  }
-
-  def isIncorrectOrEmptyBody: Boolean = isEmpty ||
-    (if (foreignProperty.isDefined) foreignPropertyIsEmpty else false) ||
-    (foreignFhlEea.isDefined && foreignFhlEea.get.isEmpty)
-}
-
+case class SubmitForeignPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[Seq[ForeignProperty]], foreignFhlEea: Option[FhlEea])
 
 object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
   implicit val reads: Reads[SubmitForeignPropertyBsasRequestBody] = Json.reads[SubmitForeignPropertyBsasRequestBody]
+
   implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = new OWrites[SubmitForeignPropertyBsasRequestBody] {
-    override def writes(o: SubmitForeignPropertyBsasRequestBody): JsObject =
-      o.foreignProperty.map (x =>
-        filterNull(
-          Json.obj(
-            "incomeSourceType" -> "15",
-            "adjustments" -> x.map (i =>
-              Json.obj(
-                "countryCode" -> i.countryCode,
-                "income" -> i.income,
-                "expenses" -> i.expenses
-              )
-            )
-          )
-        )
-      ).getOrElse(
-        o.foreignFhlEea.map(x =>
-          filterNull(Json.obj(
-            "incomeSourceType" -> "03",
-            "adjustments" -> Json.obj(
-              "income" -> x.income,
-              "expenses" -> x.expenses
-            )
-          ))).getOrElse(Json.obj())
-      )
+    override def writes(o: SubmitForeignPropertyBsasRequestBody): JsObject = {
+      writeIfPresent(o.nonFurnishedHolidayLet, incomeSourceType = "15")
+        .orElse(writeIfPresent(o.foreignFhlEea, incomeSourceType = "03"))
+        .getOrElse(JsObject.empty)
+    }
+
+    private def writeIfPresent[A: Writes](oa: Option[A], incomeSourceType: String): Option[JsObject] =
+      oa.map { a =>
+        Json.obj("incomeSourceType" -> incomeSourceType, "adjustments" -> a)
+      }
   }
 }

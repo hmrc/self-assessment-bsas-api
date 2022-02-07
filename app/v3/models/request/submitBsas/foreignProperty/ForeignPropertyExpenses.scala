@@ -17,7 +17,7 @@
 package v3.models.request.submitBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 
 case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
                                    repairsAndMaintenance: Option[BigDecimal],
@@ -27,29 +27,10 @@ case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
                                    costOfServices: Option[BigDecimal],
                                    residentialFinancialCost: Option[BigDecimal],
                                    other: Option[BigDecimal],
-                                   consolidatedExpenses: Option[BigDecimal]) {
-
-  def isEmpty: Boolean =
-    ForeignPropertyExpenses.unapply(this).forall {
-      case (None, None, None, None, None, None, None, None, None) => true
-      case _                                                      => false
-    }
-
-  val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts"     -> premisesRunningCosts,
-    "repairsAndMaintenance"    -> repairsAndMaintenance,
-    "financialCosts"           -> financialCosts,
-    "professionalFees"         -> professionalFees,
-    "costOfServices"           -> costOfServices,
-    "travelCosts"              -> travelCosts,
-    "other"                    -> other,
-    "residentialFinancialCost" -> residentialFinancialCost,
-    "consolidatedExpenses"     -> consolidatedExpenses
-  ).collect { case (k, Some(v)) => (k, v) }
-}
+                                   consolidatedExpenses: Option[BigDecimal])
 
 object ForeignPropertyExpenses {
-  implicit val reads: Reads[ForeignPropertyExpenses]   = Json.reads[ForeignPropertyExpenses]
+  implicit val reads: Reads[ForeignPropertyExpenses] = Json.reads[ForeignPropertyExpenses]
 
   implicit val writes: OWrites[ForeignPropertyExpenses] = (
     (JsPath \ "premisesRunningCosts").writeNullable[BigDecimal] and
@@ -61,5 +42,5 @@ object ForeignPropertyExpenses {
       (JsPath \ "residentialFinancialCost").writeNullable[BigDecimal] and
       (JsPath \ "other").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpense").writeNullable[BigDecimal]
-    )(unlift(ForeignPropertyExpenses.unapply))
+  )(unlift(ForeignPropertyExpenses.unapply))
 }
