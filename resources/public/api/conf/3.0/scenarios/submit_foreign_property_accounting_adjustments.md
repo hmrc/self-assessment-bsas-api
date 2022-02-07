@@ -9,35 +9,35 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates a successful response for submitting a Foreign Property.</p></td>
+            <td><p>Simulates success response.</p></td>
+        </tr>
+        <tr>
+            <td><p>TYPE_OF_BUSINESS_INCORRECT</p></td>
+            <td><p>Simulates the scenario where the calculation ID supplied does not relate to a foreign property business.</p></td>
         </tr>
         <tr>
             <td><p>SUMMARY_STATUS_INVALID</p></td>
-            <td><p>Simulates the error response where the summary is invalid and cannot be adjusted.</p></td>
+            <td><p>Simulates the scenario where the summary is invalid and cannot be adjusted.</p></td>
         </tr>
         <tr>
             <td><p>SUMMARY_STATUS_SUPERSEDED</p></td>
-            <td><p>Simulates the error response where the summary is superseded and cannot be adjusted.</p></td>
+            <td><p>Simulates the scenario where the summary is superseded and cannot be adjusted.</p></td>
         </tr>
         <tr>
-            <td><p>BSAS_ALREADY_ADJUSTED</p></td>
-            <td><p>Simulates the error response where the summary has already been adjusted.</p></td>
-        </tr>
-        <tr>
-            <td><p>PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
-            <td><p>Simulates the error response where the cumulative turnover exceeds the threshold for consolidated expenses.</p></td>
-        </tr>
-        <tr>
-            <td><p>PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
-            <td><p>Simulates the error response where property income allowance has been claimed and therefore no further expenses can be claimed.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_TYPE_OF_BUSINESS_INCORRECT</p></td>
-            <td><p>Simulates the error response where either the fields submitted or the BSAS ID are incorrect for the type of business.</p></td>
+            <td><p>ALREADY_ADJUSTED</p></td>
+            <td><p>Simulates the scenario where the summary has already been adjusted.</p></td>
         </tr>
         <tr>
             <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
-            <td><p>Simulates the error response that may occur if one of more adjustments submitted would result in a negative value.</p></td>
+            <td><p>Simulates the scenario where one or more adjustments would result in a negative value that is not permitted.</p></td>
+        </tr>
+        <tr>
+            <td><p>FOREIGN_PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
+            <td><p>Simulates the scenario where the cumulative turnover amount exceeds the consolidated expenses threshold.</p></td>
+        </tr>
+        <tr>
+            <td><p>FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
+            <td><p>Simulates the scenario where property income allowance was claimed but the adjustment was made to expenses.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>

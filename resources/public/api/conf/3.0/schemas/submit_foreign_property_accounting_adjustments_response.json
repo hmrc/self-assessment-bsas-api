@@ -1,12 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Submit a Foreign Property Business' Accounting Adjustments",
-  "description": "This endpoint allows the developer to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a Foreign Property Business, and it must not have been adjusted, previously.  Only data for one property business (either foreign-property-fhl-eea or foreign-property) should be included in any submission.",
-  "type": "object",
   "properties": {
-    "id": {
-      "$ref": "definitions.json#/definitions/bsasId"
-    },
     "links": {
       "type": "array",
       "items": {
@@ -16,14 +10,13 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}"
+            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
           },
           "rel": {
             "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self",
-              "retrieve-adjustable-summary"
+              "self"
             ]
           },
           "method": {
@@ -43,8 +36,5 @@
       }
     }
   },
-  "required": [
-    "id"
-  ],
   "additionalProperties": false
 }

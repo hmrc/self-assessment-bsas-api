@@ -269,6 +269,17 @@ traits:
                 description:  The calculation ID supplied does not relate to a self-employment business.
                 value:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
+  ruleTypeOfBusinessIncorrectForeign:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTypeOfBusinessIncorrectForeign:
+                description:  The calculation ID supplied does not relate to a foreign property business.
+                value:
+                  code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
     responses:
       403:
@@ -324,6 +335,28 @@ traits:
                 description: The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
+  ruleDuplicateCountryCode:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleDuplicateCountryCode:
+                description: The same countryCode cannot be supplied multiple times.
+                value:
+                  code: RULE_DUPLICATE_COUNTRY_CODE
+  ruleBothPropertiesSupplied:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleBothPropertiesSupplied:
+                description: Both FHL and Non-FHL properties cannot be present at the same time.
+                value:
+                  code: RULE_BOTH_PROPERTIES_SUPPLIED
   ruleAccountingPeriodNotEnded:
     responses:
       403:

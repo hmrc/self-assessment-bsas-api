@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve a Foreign property Business Source Adjustable Summary  Response",
-  "description": "RRetrieve a Foreign property Business Source Adjustable Summary  Response.",
+  "title": "Retrieve a Foreign property Business Source Adjustable Summary Response",
+  "description": "Retrieve a Foreign property Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
     "metadata": {
