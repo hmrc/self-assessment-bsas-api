@@ -9,7 +9,7 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates a successful response for submitting a Foreign Property.</p></td>
+            <td><p>Simulates success response.</p></td>
         </tr>
         <tr>
             <td><p>TYPE_OF_BUSINESS_INCORRECT</p></td>
@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
-            <td><p>Simulates the scenario where no data was found.</p></td>
+            <td><p>Simulates the scenario where no data is found.</p></td>
         </tr>
     </tbody>
 </table>

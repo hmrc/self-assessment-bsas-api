@@ -282,13 +282,13 @@ traits:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleTypeOfBusinessIncorrectUk:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
             examples:
               ruleTypeOfBusinessIncorrectUK:
-                description:  The calculation ID supplied does not relate to a foreign property business.
+                description:  The calculation ID supplied does not relate to a UK property business.
                 value:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
@@ -420,7 +420,7 @@ traits:
             type: types.errorResponse
             examples:
               rulePropertyIncomeAllowanceExceeded:
-                description: Adjustment to expenses where Property Income Allowance claimed.
+                description: Adjustment to expenses where property income allowance claimed.
                 value:
                   code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
   ruleIncorrectPropertyAdjusted:
@@ -519,7 +519,7 @@ traits:
             type: types.errorResponse
             examples:
               rulePropertyIncomeAllowanceClaimed:
-                description: Adjustment to expenses where Property Income Allowance claimed.
+                description: Adjustment to expenses where property income allowance claimed.
                 value:
                   code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
   triggerAndListNotFound:
