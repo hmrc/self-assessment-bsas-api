@@ -32,7 +32,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
     List(
       NinoValidation.validate(data.nino),
-      BsasIdValidation.validate(data.calculationId)
+      CalculationIdValidation.validate(data.calculationId)
     )
   }
 

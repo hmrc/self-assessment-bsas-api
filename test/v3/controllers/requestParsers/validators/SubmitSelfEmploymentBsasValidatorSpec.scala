@@ -92,7 +92,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
         validator.validate(SubmitSelfEmploymentBsasRawData("beans", bsasId, AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(NinoFormatError)
       }
       "passed an invalid bsasId" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, "beans", AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(BsasIdFormatError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, "beans", AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(CalculationIdFormatError)
       }
       "passed an empty body" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)

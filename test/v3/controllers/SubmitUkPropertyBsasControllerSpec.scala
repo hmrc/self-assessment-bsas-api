@@ -183,7 +183,7 @@ class SubmitUkPropertyBsasControllerSpec
       val input = Seq(
         (BadRequestError, BAD_REQUEST),
         (NinoFormatError, BAD_REQUEST),
-        (BsasIdFormatError, BAD_REQUEST),
+        (CalculationIdFormatError, BAD_REQUEST),
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleBothExpensesError, BAD_REQUEST),
@@ -195,7 +195,7 @@ class SubmitUkPropertyBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError)))
 
         MockSubmitUkPropertyBsasDataParser
           .parse(fhlRawRequest)
@@ -207,7 +207,7 @@ class SubmitUkPropertyBsasControllerSpec
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
+        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(CalculationIdFormatError.code))), None)
         MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
 
@@ -271,13 +271,13 @@ class SubmitUkPropertyBsasControllerSpec
 
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
-        (BsasIdFormatError, BAD_REQUEST),
+        (CalculationIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
-        (RuleTypeOfBusinessError, FORBIDDEN),
+        (RuleTypeOfBusinessIncorrectError, FORBIDDEN),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
-        (RuleBsasAlreadyAdjusted, FORBIDDEN),
+        (RuleAlreadyAdjusted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
         (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
         (RuleResultingValueNotPermitted, FORBIDDEN)

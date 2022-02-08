@@ -29,7 +29,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
-      BsasIdValidation.validate(data.bsasId)
+      CalculationIdValidation.validate(data.bsasId)
     )
   }
 

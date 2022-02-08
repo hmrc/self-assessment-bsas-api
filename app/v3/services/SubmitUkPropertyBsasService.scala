@@ -47,13 +47,13 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-    "INVALID_CALCULATION_ID"        -> BsasIdFormatError,
+    "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
     "INVALID_PAYLOAD"               -> DownstreamError,
     "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
     "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
-    "ASC_ALREADY_ADJUSTED"          -> RuleBsasAlreadyAdjusted,
+    "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
     "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
-    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessError,
+    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
     "BVR_FAILURE_C55316"            -> DownstreamError,
     "BVR_FAILURE_C15320"            -> DownstreamError,
     "BVR_FAILURE_C55503"            -> RuleOverConsolidatedExpensesThreshold,

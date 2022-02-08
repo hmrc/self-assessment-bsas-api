@@ -124,14 +124,14 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | BsasIdFormatError |
+      case BadRequestError | NinoFormatError | CalculationIdFormatError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | RuleBothExpensesError |
            CustomMtdError(FormatAdjustmentValueError.code) |
            CustomMtdError(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
-           RuleBsasAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
+           RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
            RulePropertyIncomeAllowanceClaimed | RuleResultingValueNotPermitted |
-           RuleTypeOfBusinessError => Forbidden(Json.toJson(errorWrapper))
+           RuleTypeOfBusinessIncorrectError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

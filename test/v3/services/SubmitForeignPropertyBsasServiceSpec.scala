@@ -31,26 +31,29 @@ import scala.concurrent.Future
 class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  private val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val id   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(
       nonFurnishedHolidayLet = None,
-      foreignFhlEea = Some(FhlEea(
-        Some(FhlIncome(
-          Some(123.12)
-        )),
-        Some(FhlEeaExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          consolidatedExpenses = None
+      foreignFhlEea = Some(
+        FhlEea(
+          Some(
+            FhlIncome(
+              Some(123.12)
+            )),
+          Some(
+            FhlEeaExpenses(
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              consolidatedExpenses = None
+            ))
         ))
-      ))
     )
 
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
@@ -58,7 +61,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property-fhl-eea`)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitForeignPropertyBsas")
 
     val service = new SubmitForeignPropertyBsasService(mockConnector)
@@ -67,7 +70,8 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   "submitForeignPropertyBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
+        MockSubmitForeignPropertyBsasConnector
+          .submitForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.submitForeignPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -79,31 +83,34 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
+          MockSubmitForeignPropertyBsasConnector
+            .submitForeignPropertyBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("INVALID_CALCULATION_ID", BsasIdFormatError),
+        ("INVALID_CALCULATION_ID", CalculationIdFormatError),
+        ("INVALID_CORRELATIONID", DownstreamError),
         ("INVALID_PAYLOAD", DownstreamError),
-        ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessError),
-        ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
-        ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
-        ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
-        ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
-        ("BVR_FAILURE_C55316", DownstreamError),
         ("BVR_FAILURE_C15320", DownstreamError),
-        ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
-        ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
-        ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
+        ("BVR_FAILURE_C55508", DownstreamError),
+        ("BVR_FAILURE_C55509", DownstreamError),
+        ("BVR_FAILURE_C559107", RulePropertyIncomeAllowanceClaimed),
+        ("BVR_FAILURE_C559103", RulePropertyIncomeAllowanceClaimed),
+        ("BVR_FAILURE_C559099", RuleOverConsolidatedExpensesThreshold),
+        ("BVR_FAILURE_C55503", DownstreamError),
+        ("BVR_FAILURE_C55316", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
+        ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
+        ("ASC_ALREADY_ADJUSTED", RuleAlreadyAdjusted),
+        ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
+        ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
+        ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
         ("SERVER_ERROR", DownstreamError),
-        ("INVALID_CORRELATION_ID", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVICE_UNAVAILABLE", DownstreamError),
       )
 
       input.foreach(args => (serviceError _).tupled(args))
@@ -111,4 +118,3 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   }
 
 }
-
