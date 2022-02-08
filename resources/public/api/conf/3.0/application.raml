@@ -39,6 +39,8 @@ uses:
         example: TC663795B
     /{nino}:
       get: !include list.raml
+      /trigger:
+        post: !include trigger.raml
       /self-employment/{calculationId}:
         (annotations.group):
           name: Self Employment Business
