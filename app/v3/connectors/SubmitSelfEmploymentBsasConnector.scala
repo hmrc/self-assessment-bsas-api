@@ -22,6 +22,7 @@ import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
+import play.api.http.Status
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,6 +36,8 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
     correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import v3.connectors.httpparsers.StandardDesHttpParser._
+
+    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
     put(
       body = request.body,

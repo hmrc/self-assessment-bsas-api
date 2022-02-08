@@ -19,7 +19,7 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v3.models.errors._
@@ -78,7 +78,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DesStub.onSuccess(DesStub.PUT, desUrl, NO_CONTENT, JsObject.empty)
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val result: WSResponse = await(request().post(requestBody))
@@ -94,7 +94,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DesStub.onSuccess(DesStub.PUT, desUrl, NO_CONTENT, JsObject.empty)
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val result: WSResponse = await(request().post(requestBody))
