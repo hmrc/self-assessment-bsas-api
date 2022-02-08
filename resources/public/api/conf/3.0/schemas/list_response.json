@@ -146,7 +146,7 @@
             "type": "string",
             "enum": [
               "self",
-              "trigger-business-source-accounting-summary"
+              "trigger-business-source-adjustable-summary"
             ]
           },
           "method": {
@@ -168,7 +168,7 @@
     }
   },
   "required": [
-    "businessSourceSummaries"
+    "businessSources"
   ],
   "additionalProperties": false
 }
