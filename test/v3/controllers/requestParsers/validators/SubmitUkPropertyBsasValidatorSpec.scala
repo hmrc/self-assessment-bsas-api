@@ -83,7 +83,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
         )
 
         result.length shouldBe 1
-        result shouldBe List(BsasIdFormatError)
+        result shouldBe List(CalculationIdFormatError)
       }
 
       "the submission contains consolidated expenses along with other values" in new SetUp {

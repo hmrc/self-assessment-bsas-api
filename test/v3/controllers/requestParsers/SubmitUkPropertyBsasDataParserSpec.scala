@@ -107,10 +107,10 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(BsasIdFormatError))
+          .returns(List(CalculationIdFormatError))
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, BsasIdFormatError))
+        result shouldBe Left(ErrorWrapper(correlationId, CalculationIdFormatError))
       }
 
       "the input contains consolidated expenses along with other expenses" in new Test {

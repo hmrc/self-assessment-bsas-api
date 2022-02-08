@@ -157,7 +157,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       val input = Seq(
         (BadRequestError, BAD_REQUEST),
         (NinoFormatError, BAD_REQUEST),
-        (BsasIdFormatError, BAD_REQUEST),
+        (CalculationIdFormatError, BAD_REQUEST),
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
         (FormatAdjustmentValueError, BAD_REQUEST),
         (RuleAdjustmentRangeInvalid, BAD_REQUEST),
@@ -169,7 +169,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError)))
 
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
@@ -186,7 +186,7 @@ class SubmitSelfEmploymentBsasControllerSpec
             httpStatus = BAD_REQUEST,
             errors = Some(Seq(
               AuditError(NinoFormatError.code),
-              AuditError(BsasIdFormatError.code)
+              AuditError(CalculationIdFormatError.code)
             )),
             body = None
           )
@@ -258,12 +258,12 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
-        (BsasIdFormatError, BAD_REQUEST),
+        (CalculationIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
-        (RuleBsasAlreadyAdjusted, FORBIDDEN),
+        (RuleAlreadyAdjusted, FORBIDDEN),
         (RuleResultingValueNotPermitted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
         (RuleNotSelfEmployment, FORBIDDEN),
