@@ -16,7 +16,7 @@
 
 package v3.fixtures
 
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.AccountingPeriod
@@ -25,7 +25,8 @@ import v3.models.response.TriggerBsasResponse
 
 object TriggerBsasRequestBodyFixtures {
 
-  val mtdJson: JsValue = Json.parse("""
+  val mtdJson: JsValue = Json.parse(
+    """
       |{
       |  "accountingPeriod" : {
       |     "startDate" : "2018-11-25",
@@ -34,9 +35,10 @@ object TriggerBsasRequestBodyFixtures {
       |  "typeOfBusiness" : "self-employment",
       |  "businessId" : "anId"
       |}
-  """.stripMargin)
+      |""".stripMargin)
 
-  val desJson: JsValue = Json.parse("""
+  val desJson: JsValue = Json.parse(
+    """
       |{
       |   "incomeSourceType" : "01",
       |   "incomeSourceId" : "anId",
@@ -51,40 +53,43 @@ object TriggerBsasRequestBodyFixtures {
     "anId"
   )
 
-  val responseObj = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
+  val responseObj: TriggerBsasResponse = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
-  val response = Json.parse("""{
-      |"id" : "c75f40a6-a3df-4429-a697-471eeec46435"
+  val response: JsValue = Json.parse(
+    """{
+      |"calculationId" : "c75f40a6-a3df-4429-a697-471eeec46435"
       |}""".stripMargin)
 
-  val hateoasResponseForSE = (nino: String) => s"""
-      |{
-      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
-      |  "links":[
-      |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-      |      "rel":"self",
-      |      "method":"GET"
-      |    }
-      |  ]
-      |}
+  val hateoasResponseForSE: String => String = (nino: String) =>
+    s"""
+       |{
+       |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
     """.stripMargin
 
-  val hateoasResponseForProperty = (nino: String) => s"""
-      |{
-      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
-      |  "links":[
-      |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
-      |      "rel":"self",
-      |      "method":"GET"
-      |    }
-      |  ]
-      |}
+  val hateoasResponseForProperty: String => String = (nino: String) =>
+    s"""
+       |{
+       |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
     """.stripMargin
 
-  val requestBody = Json.parse(
-   """
+  val requestBody: JsValue = Json.parse(
+    """
       |{
       |  "accountingPeriod": {
       |    "startDate": "2019-05-05",
@@ -95,7 +100,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val requestBodyForProperty = Json.parse(
+  val requestBodyForProperty: JsValue = Json.parse(
     """
       |{
       |  "accountingPeriod": {
@@ -107,7 +112,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val desResponse =
+  val desResponse: String =
     """
       |{
       | "metadata": {
@@ -213,8 +218,8 @@ object TriggerBsasRequestBodyFixtures {
 
     AnyContentAsJson(
       Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-               "typeOfBusiness"   -> typeOfBusiness,
-               "businessId" -> businessId)
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId" -> businessId)
     )
   }
 

@@ -43,7 +43,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
   }
 
   class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
-    val validator = new TriggerBSASValidator(currentDateProvider = mockCurrentDateProvider)
+    val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDateProvider)
 
     MockCurrentDateProvider.getCurrentDate().returns(date)
   }
@@ -67,7 +67,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a FORMAT_NINO error" when {
       "the nino is invalid" in new SetUp {
-        val result = validator.validate(TriggerBsasRawData("123456789", triggerBsasRawDataBody()))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData("123456789", triggerBsasRawDataBody()))
 
         result shouldBe List(NinoFormatError)
       }
@@ -75,7 +75,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a FORMAT_START_DATE error" when {
       "the start date format is incorrect" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "06-05-2019")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "06-05-2019")))
 
         result shouldBe List(StartDateFormatError)
       }
@@ -83,7 +83,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a FORMAT_END_DATE error" when {
       "the end date format is incorrect" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(endDate = "06-05-2020")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(endDate = "06-05-2020")))
 
         result shouldBe List(EndDateFormatError)
       }
@@ -91,7 +91,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a FORMAT_TYPE_OF_BUSINESS Error" when {
       "a incorrect business type is given" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "nonsense typeOfBusiness")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "nonsense typeOfBusiness")))
 
         result shouldBe List(TypeOfBusinessFormatError)
       }
@@ -99,7 +99,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a FORMAT_BUSINESS_ID error" when {
       "a business id is provided with wrong formatting" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(businessId = "nonsense businessId")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(businessId = "nonsense businessId")))
 
         result shouldBe List(BusinessIdFormatError)
       }
@@ -107,12 +107,12 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
       "an empty body is submitted" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, AnyContentAsJson(Json.obj())))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, AnyContentAsJson(Json.obj())))
 
         result shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
       "mandatory fields are missing" in new SetUp() {
-        val result = validator.validate(
+        val result: Seq[MtdError] = validator.validate(
           TriggerBsasRawData(nino,
             AnyContentAsJson(
               Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
@@ -124,7 +124,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a RULE_END_DATE_BEFORE_START_DATE error" when {
       "the end date is before the start date" in new SetUp {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2022-05-07")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2022-05-07")))
 
         result shouldBe List(RuleEndBeforeStartDateError)
       }
@@ -132,7 +132,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return a RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED error" when {
       "the accounting period is before the minimum tax year" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2015-05-05", endDate = "2016-05-06")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2015-05-05", endDate = "2016-05-06")))
 
         result shouldBe List(RuleAccountingPeriodNotSupportedError)
       }
@@ -140,7 +140,7 @@ class TriggerBSASValidatorSpec extends UnitSpec {
 
     "return multiple errors" when {
       "a request has muliple issues with the data" in new SetUp() {
-        val result = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "", businessId = "")))
+        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = "", businessId = "")))
 
         result shouldBe List(BusinessIdFormatError, TypeOfBusinessFormatError)
       }

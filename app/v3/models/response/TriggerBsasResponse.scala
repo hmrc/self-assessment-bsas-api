@@ -22,7 +22,7 @@ import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
 import v3.models.domain.TypeOfBusiness
 import v3.models.hateoas.{ HateoasData, Link }
 
-case class TriggerBsasResponse(id: String)
+case class TriggerBsasResponse(calculationId: String)
 
 object TriggerBsasResponse extends HateoasLinks {
 
@@ -37,18 +37,9 @@ object TriggerBsasResponse extends HateoasLinks {
       import data._
 
       data.typeOfBusiness match {
-        case `self-employment` =>
-          Seq(
-            getSelfEmploymentBsas(appConfig, nino, bsasId)
-          )
-        case `uk-property-fhl` | `uk-property-non-fhl` =>
-          Seq(
-            getUkPropertyBsas(appConfig, nino, bsasId)
-          )
-        case `foreign-property` | `foreign-property-fhl-eea` =>
-          Seq(
-            getForeignPropertyBsas(appConfig, nino, bsasId)
-          )
+        case `self-employment` => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId))
+        case `uk-property-fhl` | `uk-property-non-fhl` => Seq(getUkPropertyBsas(appConfig, nino, bsasId))
+        case `foreign-property` | `foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, nino, bsasId))
       }
     }
   }

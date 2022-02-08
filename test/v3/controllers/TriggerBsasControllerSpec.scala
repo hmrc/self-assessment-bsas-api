@@ -16,16 +16,15 @@
 
 package v3.controllers
 
-import mocks.MockIdGenerator
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.Result
 import domain.Nino
+import mocks.MockIdGenerator
+import play.api.libs.json.Json
+import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockTriggerBsasRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
@@ -44,13 +43,13 @@ class TriggerBsasControllerSpec
     with MockTriggerBsasRequestParser
     with MockTriggerBsasService
     with MockHateoasFactory
-    with MockAuditService
     with MockIdGenerator {
 
   private val correlationId = "X-123"
+  private val nino          = "AA123456A"
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new TriggerBsasController(
       authService = mockEnrolmentsAuthService,
@@ -58,7 +57,6 @@ class TriggerBsasControllerSpec
       requestParser = mockRequestParser,
       triggerBsasService = mockService,
       hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -69,35 +67,36 @@ class TriggerBsasControllerSpec
 
   }
 
-  private val nino          = "AA123456A"
+  private val request = TriggerBsasRequest(
+    Nino(nino),
+    triggerBsasRequestDataBody()
+  )
 
-  private val request = TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody())
-  private val requestRawData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
+  private val requestRawData = TriggerBsasRawData(
+    nino,
+    triggerBsasRawDataBody()
+  )
 
-  private val requestForProperty = TriggerBsasRequest(Nino(nino),
-    triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`))
-  private val requestRawDataForProperty = TriggerBsasRawData(nino,
-    triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString))
+  private val requestForProperty = TriggerBsasRequest(
+    Nino(nino),
+    triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
+  )
+  private val requestRawDataForProperty = TriggerBsasRawData(
+    nino,
+    triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString)
+  )
 
-  val testHateoasLinkSE = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-    method = GET, rel = "self")
+  val testHateoasLinkSE: Link = Link(
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+    method = GET,
+    rel = "self"
+  )
 
-  val testHateoasLinkProperty = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
-    method = GET, rel = "self")
-
-  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "triggerABusinessSourceAdjustableSummary",
-      transactionName = "trigger-a-business-source-adjustable-Summary",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino),
-        requestBody = requestBody,
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
+  val testHateoasLinkProperty: Link = Link(
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+    method = GET,
+    rel = "self"
+  )
 
   "triggerBsas" should {
     "return successful hateoas response for SE with status CREATED" when {
@@ -112,17 +111,14 @@ class TriggerBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.id))
+          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(Json.toJson(requestBody)))
 
-        status(result) shouldBe CREATED
+        status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForSE(nino))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForSE(nino))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
       }
 
       "a valid request supplied for business type uk-property" in new Test {
@@ -136,17 +132,14 @@ class TriggerBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.id))
+          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(Json.toJson(requestBodyForProperty)))
 
-        status(result) shouldBe CREATED
+        status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponseForProperty(nino))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForProperty(nino))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBodyForProperty))).once
       }
     }
 
@@ -164,9 +157,6 @@ class TriggerBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
           }
         }
 
@@ -203,9 +193,6 @@ class TriggerBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
           }
         }
 

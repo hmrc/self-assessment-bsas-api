@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class TriggerBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val nino: Nino = Nino("AA123456A")
+  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
@@ -47,7 +47,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     val request = TriggerBsasRequest(nino, model)
 
     "post a TriggerBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
+      val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPost: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 

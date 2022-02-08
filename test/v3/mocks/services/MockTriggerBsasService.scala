@@ -33,12 +33,10 @@ trait MockTriggerBsasService extends MockFactory {
   val mockService: TriggerBsasService = mock[TriggerBsasService]
 
   object MockTriggerBsasService {
-
     def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]]] = {
       (mockService
         .triggerBsas(_: TriggerBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
   }
-
 }

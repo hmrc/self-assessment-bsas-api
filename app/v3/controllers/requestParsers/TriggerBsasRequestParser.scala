@@ -19,10 +19,10 @@ package v3.controllers.requestParsers
 import javax.inject.Inject
 
 import domain.Nino
-import v3.controllers.requestParsers.validators.TriggerBSASValidator
+import v3.controllers.requestParsers.validators.TriggerBsasValidator
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
 
-class TriggerBsasRequestParser @Inject()(val validator: TriggerBSASValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
+class TriggerBsasRequestParser @Inject()(val validator: TriggerBsasValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
 
   override protected def requestFor(data: TriggerBsasRawData): TriggerBsasRequest = {
     val requestBody = data.body.json.as[TriggerBsasRequestBody]
