@@ -25,7 +25,7 @@ class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBs
   extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
 
   override protected def requestFor(data: SubmitUkPropertyBsasRawData): SubmitUkPropertyBsasRequestData = {
-    val requestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
+    val requestBody = data.body.as[SubmitUKPropertyBsasRequestBody]
 
     SubmitUkPropertyBsasRequestData(Nino(data.nino), data.calculationId, requestBody)
   }

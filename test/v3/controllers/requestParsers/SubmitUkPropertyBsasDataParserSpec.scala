@@ -16,127 +16,71 @@
 
 package v3.controllers.requestParsers
 
-import play.api.mvc.AnyContentAsJson
-import support.UnitSpec
 import domain.Nino
-import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import play.api.libs.json.Json
+import support.UnitSpec
 import v3.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v3.models.errors._
-import v3.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v3.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
 
-  val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino                           = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+
+  private val requestBodyJson = Json.parse(
+    """
+      |{
+      |  "nonFurnishedHolidayLet": {    
+      |    "income": {
+      |      "totalRentsReceived": 123.12
+      |    }
+      |  }
+      |}
+      |""".stripMargin
+  )
+
+  val inputData: SubmitUkPropertyBsasRawData =
+    SubmitUkPropertyBsasRawData(nino, calculationId, requestBodyJson)
 
   trait Test extends MockSubmitUkPropertyBsasValidator {
     lazy val parser = new SubmitUkPropertyBsasDataParser(mockValidator)
   }
 
   "parser" should {
-    "accept valid input" when {
-      "a non-fhl-property with expenses with full adjustments is passed" in new Test {
+    "return a request object" when {
+      "valid request data is supplied" in new Test {
+        MockValidator.validate(inputData).returns(Nil)
 
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validNonFHLInputJson))
+        val body: SubmitUKPropertyBsasRequestBody =
+          SubmitUKPropertyBsasRequestBody(
+            nonFurnishedHolidayLet = Some(NonFurnishedHolidayLet(Some(NonFHLIncome(Some(123.12), None, None, None)), None)),
+            furnishedHolidayLet = None
+          )
 
-        MockValidator
-          .validate(inputData)
-          .returns(Nil)
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validNonFHLBody))
-      }
-
-      "a fhl-property with consolidated expenses has full adjustments is passed" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(validfhlInputJson))
-
-        MockValidator
-          .validate(inputData)
-          .returns(Nil)
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validfhlBody))
-      }
-
-      "minimal adjustment is passed" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL())
-
-        MockValidator
-          .validate(inputData)
-          .returns(Nil)
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, validMinimalBody))
+        parser.parseRequest(inputData) shouldBe
+          Right(SubmitUkPropertyBsasRequestData(Nino(nino), calculationId, body))
       }
     }
 
-    "reject invalid input" when {
-      "a adjustment has zero value" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeZeroValue, nonFHLExpensesAllFields))
-
-
+    "return an ErrorWrapper" when {
+      "a single validation error occurs" in new Test {
         MockValidator
           .validate(inputData)
-          .returns(List(FormatAdjustmentValueError.copy(paths = Some(Seq("otherPropertyIncome")))))
+          .returns(List(NinoFormatError))
 
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, FormatAdjustmentValueError.copy(paths = Some(Seq("otherPropertyIncome"))), None))
+        parser.parseRequest(inputData) shouldBe
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
-      "a adjustment has a value over the range" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
-
-
+      "multiple validation errors occur" in new Test {
         MockValidator
           .validate(inputData)
-          .returns(List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("rentIncome")))))
+          .returns(List(NinoFormatError, BsasIdFormatError))
 
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("rentIncome"))), None))
-      }
-
-      "the bsas id format is incorrect" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
-
-
-        MockValidator
-          .validate(inputData)
-          .returns(List(CalculationIdFormatError))
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, CalculationIdFormatError))
-      }
-
-      "the input contains consolidated expenses along with other expenses" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlInvalidConsolidatedExpenses))
-
-
-          MockValidator
-          .validate(inputData)
-          .returns(List(RuleBothExpensesError))
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, RuleBothExpensesError, None))
-      }
-
-      "the input has multiple invalid feels" in new Test {
-
-        val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlMultipleInvalidExpenses))
-
-        MockValidator
-          .validate(inputData)
-          .returns(List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe
-          Left(ErrorWrapper(correlationId, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
+        parser.parseRequest(inputData) shouldBe
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
       }
     }
   }

@@ -17,8 +17,9 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v3.models.errors.{MtdError, RuleBothExpensesError}
-import v3.models.request.submitBsas.foreignProperty.{FhlEeaExpenses, ForeignPropertyExpenses}
+import v3.models.errors.{ MtdError, RuleBothExpensesError }
+import v3.models.request.submitBsas.foreignProperty.{ FhlEeaExpenses, ForeignPropertyExpenses }
+import v3.models.request.submitBsas.ukProperty.{ FHLExpenses, NonFHLExpenses }
 import v3.models.utils.JsonErrorValidators
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -105,7 +106,7 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
   }
 
   "validate" when {
-    "passed an ForeignPropertyExpenses model" should {
+    "passed a ForeignPropertyExpenses model" should {
       val model: ForeignPropertyExpenses =
         ForeignPropertyExpenses(None, None, None, None, None, None, None, None, consolidatedExpenses = Some(123.45))
 
@@ -144,9 +145,82 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
       }
     }
 
-    "passed an FhlEeaExpenses model" should {
+    "passed a foreign property FhlEeaExpenses model" should {
       val model: FhlEeaExpenses =
-        FhlEeaExpenses(None, None, None, None, None, None, None,  consolidatedExpenses = Some(123.45))
+        FhlEeaExpenses(None, None, None, None, None, None, None, consolidatedExpenses = Some(123.45))
+
+      "return no errors" when {
+        "a valid consolidatedExpenses model is supplied with only consolidatedExpenses" in {
+          BothExpensesValidation.validate(model, path) shouldBe Nil
+        }
+      }
+
+      "return an error" when {
+        "a model with consolidatedExpenses and premisesRunningCosts is supplied" in {
+          BothExpensesValidation.validate(model.copy(premisesRunningCosts = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and repairsAndMaintenance is supplied" in {
+          BothExpensesValidation.validate(model.copy(repairsAndMaintenance = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and financialCosts is supplied" in {
+          BothExpensesValidation.validate(model.copy(financialCosts = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and professionalFees is supplied" in {
+          BothExpensesValidation.validate(model.copy(professionalFees = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and costsOfServices is supplied" in {
+          BothExpensesValidation.validate(model.copy(costOfServices = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and travelCosts is supplied" in {
+          BothExpensesValidation.validate(model.copy(travelCosts = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and other is supplied" in {
+          BothExpensesValidation.validate(model.copy(other = Some(123.45)), path) shouldBe List(error)
+        }
+      }
+    }
+
+    "passed a uk property NonFHLExpenses model" should {
+      val model: NonFHLExpenses =
+        NonFHLExpenses(None, None, None, None, None, None, None, None, consolidatedExpenses = Some(123.45))
+
+      "return no errors" when {
+        "a valid consolidatedExpenses model is supplied with only consolidatedExpenses" in {
+          BothExpensesValidation.validate(model, path) shouldBe Nil
+        }
+      }
+
+      "return an error" when {
+        "a model with consolidatedExpenses and premisesRunningCosts is supplied" in {
+          BothExpensesValidation.validate(model.copy(premisesRunningCosts = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and repairsAndMaintenance is supplied" in {
+          BothExpensesValidation.validate(model.copy(repairsAndMaintenance = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and financialCosts is supplied" in {
+          BothExpensesValidation.validate(model.copy(financialCosts = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and professionalFees is supplied" in {
+          BothExpensesValidation.validate(model.copy(professionalFees = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and costsOfServices is supplied" in {
+          BothExpensesValidation.validate(model.copy(costOfServices = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and residentialFinancialCost is supplied" in {
+          BothExpensesValidation.validate(model.copy(residentialFinancialCost = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and travelCosts is supplied" in {
+          BothExpensesValidation.validate(model.copy(travelCosts = Some(123.45)), path) shouldBe List(error)
+        }
+        "a model with consolidatedExpenses and other is supplied" in {
+          BothExpensesValidation.validate(model.copy(other = Some(123.45)), path) shouldBe List(error)
+        }
+      }
+    }
+
+    "passed a uk property FHLExpenses model" should {
+      val model: FHLExpenses =
+        FHLExpenses(None, None, None, None, None, None, None, consolidatedExpenses = Some(123.45))
 
       "return no errors" when {
         "a valid consolidatedExpenses model is supplied with only consolidatedExpenses" in {

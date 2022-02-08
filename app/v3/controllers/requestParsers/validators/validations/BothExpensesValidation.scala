@@ -18,6 +18,7 @@ package v3.controllers.requestParsers.validators.validations
 
 import v3.models.errors.{ MtdError, RuleBothExpensesError }
 import v3.models.request.submitBsas.foreignProperty.{ FhlEeaExpenses, ForeignPropertyExpenses }
+import v3.models.request.submitBsas.ukProperty.{ FHLExpenses, NonFHLExpenses }
 
 object BothExpensesValidation {
 
@@ -54,6 +55,28 @@ object BothExpensesValidation {
         expenses match {
           case FhlEeaExpenses(None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
           case _                                                                 => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+        }
+    }
+  }
+
+  def validate(expenses: FHLExpenses, path: String): List[MtdError] = {
+    expenses.consolidatedExpenses match {
+      case None => NoValidationErrors
+      case Some(_) =>
+        expenses match {
+          case FHLExpenses(None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
+          case _                                                              => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+        }
+    }
+  }
+
+  def validate(expenses: NonFHLExpenses, path: String): List[MtdError] = {
+    expenses.consolidatedExpenses match {
+      case None => NoValidationErrors
+      case Some(_) =>
+        expenses match {
+          case NonFHLExpenses(None, None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
+          case _                                                                       => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
     }
   }
