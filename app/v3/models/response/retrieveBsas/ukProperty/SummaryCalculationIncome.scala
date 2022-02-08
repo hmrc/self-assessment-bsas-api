@@ -24,17 +24,16 @@ case class SummaryCalculationIncome(
     premiumsOfLeaseGrant: Option[BigDecimal],
     reversePremiums: Option[BigDecimal],
     otherPropertyIncome: Option[BigDecimal],
-    rentReceived: Option[BigDecimal],
-    rarRentReceived: Option[BigDecimal],
+    rarRentReceived: Option[BigDecimal]
 )
 
 object SummaryCalculationIncome {
+
   val readsFhl: Reads[SummaryCalculationIncome] = (
-    Reads.pure(None) and
+    (JsPath \ "rentReceived").readNullable[BigDecimal] and
       Reads.pure(None) and
       Reads.pure(None) and
       Reads.pure(None) and
-      (JsPath \ "rentReceived").readNullable[BigDecimal] and
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
   )(SummaryCalculationIncome.apply _)
 
@@ -43,7 +42,6 @@ object SummaryCalculationIncome {
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      Reads.pure(None) and
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
   )(SummaryCalculationIncome.apply _)
 

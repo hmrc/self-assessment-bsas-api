@@ -23,25 +23,23 @@ case class AdjustmentsIncome(
     totalRentsReceived: Option[BigDecimal],
     premiumsOfLeaseGrant: Option[BigDecimal],
     reversePremiums: Option[BigDecimal],
-    otherPropertyIncome: Option[BigDecimal],
-    rentReceived: Option[BigDecimal],
+    otherPropertyIncome: Option[BigDecimal]
 )
 
 object AdjustmentsIncome {
+
   val readsFhl: Reads[AdjustmentsIncome] = (
-    Reads.pure(None) and
+    (JsPath \ "rentReceived").readNullable[BigDecimal] and
       Reads.pure(None) and
       Reads.pure(None) and
-      Reads.pure(None) and
-      (JsPath \ "rentReceived").readNullable[BigDecimal]
+      Reads.pure(None)
   )(AdjustmentsIncome.apply _)
 
   val readsNonFhl: Reads[AdjustmentsIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
-      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
-      Reads.pure(None)
+      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
   )(AdjustmentsIncome.apply _)
 
   implicit val writes: OWrites[AdjustmentsIncome] = Json.writes[AdjustmentsIncome]
