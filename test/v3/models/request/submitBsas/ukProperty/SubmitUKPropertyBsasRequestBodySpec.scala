@@ -18,7 +18,7 @@ package v3.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsObject, Json}
 import support.UnitSpec
-import v3.fixtures.ukProperty.SubmitUkPropertyBsasFixtures._
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
 
