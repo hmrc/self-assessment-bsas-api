@@ -1,5 +1,5 @@
 {
-  "businessSourceSummaries": [
+  "businessSources": [
     {
       "businessId": "XAIS12345678910",
       "typeOfBusiness": "self-employment",
@@ -8,7 +8,7 @@
         "endDate": "2019-10-10"
       },
       "taxYear": "2019-20",
-      "bsasEntries": [
+      "summaries": [
         {
           "calculationId": "76350054-0f11-4024-a811-99bcf5ced792",
           "requestedDateTime": "2019-10-14T11:33:27Z",
@@ -46,7 +46,7 @@
         "endDate": "2020-04-05"
       },
       "taxYear": "2019-20",
-      "bsasEntries": [
+      "summaries": [
         {
           "calculationId": "56f0a4fe-cfa7-4a21-8aa8-6c8f4642b792",
           "requestedDateTime": "2020-05-14T12:17:15Z",
@@ -84,7 +84,7 @@
         "endDate": "2022-04-05"
       },
       "taxYear": "2019-20",
-      "bsasEntries": [
+      "summaries": [
         {
           "calculationId": "16332284-c01b-4046-a055-6c00454467a2",
           "requestedDateTime": "2022-05-14T12:17:15Z",
