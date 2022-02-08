@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Submit UK Property Accounting Adjustments",
+  "description": "This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The calculation ID quoted must be for a UK Property Business, and it must not have been adjusted previously. Only data for one property business (either FHL or Non-FHL) should be included in any submission. A National Insurance number and calculation ID must be provided.",
+  "type": "object",
+  "properties": {
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce"
+          },
+          "rel": {
+            "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
