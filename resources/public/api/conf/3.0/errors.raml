@@ -71,6 +71,17 @@ traits:
                 description: The format of the supplied type of business is not valid.
                 value:
                   code: FORMAT_TYPE_OF_BUSINESS
+  formatTypeOfBusinessList:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatTypeOfBusinessList:
+                description: The format of the supplied type of business is invalid.
+                value:
+                  code: FORMAT_TYPE_OF_BUSINESS
   formatBsasId:
     responses:
       400:

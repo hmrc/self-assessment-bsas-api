@@ -38,6 +38,7 @@ uses:
         type: string
         example: TC663795B
     /{nino}:
+      get: !include list.raml
       /self-employment/{calculationId}:
         (annotations.group):
           name: Self Employment Business

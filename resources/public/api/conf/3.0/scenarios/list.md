@@ -9,43 +9,23 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulate a successful response containing multiple income sources.</p></td>
+            <td><p>Simulate a successful response containing multiple business types.</p></td>
         </tr>
         <tr>
-            <td><p>SELF_EMPLOYMENT_SINGLE</p></td>
-            <td><p>Simulates a successful response containing a single self-employment.</p></td>
+            <td><p>SELF_EMPLOYMENT</p></td>
+            <td><p>Simulate a successful response containing a self-employment business.</p></td>
         </tr>
         <tr>
-            <td><p>SELF_EMPLOYMENT_MULTIPLE</p></td>
-            <td><p>Simulates a successful response containing multiple self-employments.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_FHL</p></td>
-            <td><p>Simulates a successful response containing a single uk-property-fhl.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL</p></td>
-            <td><p>Simulates a successful response containing a single uk-property-non-fhl.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_MULTIPLE</p></td>
-            <td><p>Simulates a successful response containing a mixture of uk-property-fhl and uk-property-non-fhl.</p></td>
+            <td><p>UK_PROPERTY</p></td>
+            <td><p>Simulate a successful response containing UK FHL and non-FHL property businesses..</p></td>
         </tr>
         <tr>
             <td><p>FOREIGN_PROPERTY</p></td>
-            <td><p>Simulates a successful response containing a single foreign-property.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_FHL_EEA</p></td>
-            <td><p>Simulates a successful response containing a single foreign-property-fhl-eea.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_MULTIPLE</p></td>
-            <td><p>Simulates a successful response containing a mixture of foreign-property and foreign-property-fhl-eea.</p></td>
+            <td><p>Simulate a successful response containing EEA FHL and foreign property businesses.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
-            <td><p>Simulates a scenario where no data can be found.</p></td>
+            <td><p>Simulates the scenario where no data is found.</p></td>
         </tr>
     </tbody>
 </table>
