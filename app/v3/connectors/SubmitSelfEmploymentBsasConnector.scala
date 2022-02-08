@@ -22,7 +22,6 @@ import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
