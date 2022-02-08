@@ -26,8 +26,8 @@ import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
-  val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino                           = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val invalidIncomeWithZeroValue: Income =
@@ -48,7 +48,7 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
       other = Some(100000000000.00)
     )
 
-  val invalidBsasId = "a54ba782-5ef4-/(0)*f4-ab72-4954066%%%%%%%%%%"
+  val invalidCalculationId = "a54ba782-5ef4-/(0)*f4-ab72-4954066%%%%%%%%%%"
 
   trait Test extends MockSubmitSelfEmploymentBsasValidator {
     lazy val parser = new SubmitSelfEmploymentBsasDataParser(mockValidator)
@@ -62,7 +62,7 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
     "accept valid input" when {
       "full adjustments is passed" in new Test {
 
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
           AnyContentAsJson(mtdRequest))
 
         MockValidator
@@ -70,14 +70,14 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
           .returns(Nil)
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel))
+        result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, submitSelfEmploymentBsasRequestBodyModel))
       }
     }
 
     "reject invalid input" when {
       "a adjustment has zero value" in new Test {
 
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
           AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
             submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue)))))
 
@@ -91,11 +91,9 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
       "a adjustment has a value over the range" in new Test {
 
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
           AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
             submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue)))))
-
-
 
         MockValidator
           .validate(inputData)
@@ -105,9 +103,9 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
         result shouldBe Left(ErrorWrapper(correlationId, rangeError, None))
       }
 
-      "the bsas id format is incorrect" in new Test {
+      "the calculation id format is incorrect" in new Test {
 
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, invalidBsasId,
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, invalidCalculationId,
           AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel)))
 
         MockValidator
@@ -120,7 +118,7 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
       "the input has multiple invalid feels" in new Test {
 
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
           AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
             submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithMultipleErrors)))))
 
