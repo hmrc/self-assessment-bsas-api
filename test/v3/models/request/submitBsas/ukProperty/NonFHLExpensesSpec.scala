@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{ JsError, JsObject, JsSuccess, JsValue, Json }
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class NonFHLExpensesSpec extends UnitSpec {

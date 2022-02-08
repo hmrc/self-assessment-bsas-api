@@ -26,7 +26,6 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v3.models.response.SubmitUkPropertyBsasResponse
 import v3.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +36,7 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
   def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
                 implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
                 correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[SubmitUkPropertyBsasResponse]]] = {
+  Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.submitPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))

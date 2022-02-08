@@ -21,11 +21,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.connectors.MockSubmitUkPropertyBsasConnector
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v3.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
@@ -35,8 +33,6 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val request: SubmitUkPropertyBsasRequestData = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
-
-  val response: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse(id, TypeOfBusiness.`uk-property-fhl`)
 
   trait Test extends MockSubmitUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -49,9 +45,9 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
         MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 

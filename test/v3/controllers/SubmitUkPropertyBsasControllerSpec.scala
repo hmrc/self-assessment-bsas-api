@@ -16,23 +16,22 @@
 
 package v3.controllers
 
+import domain.Nino
 import mocks.MockIdGenerator
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
 import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
-import v3.models.response.{SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse}
-import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v3.models.response.SubmitUkPropertyBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -59,8 +58,6 @@ class SubmitUkPropertyBsasControllerSpec
 
   private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
   private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
-
-  val response: SubmitUkPropertyBsasResponse = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
@@ -119,11 +116,11 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(fhlRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap(response, SubmitUkPropertyBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(response, testHateoasLinks))
+          .wrap((), SubmitUkPropertyBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validfhlInputJson)))
 
@@ -147,11 +144,11 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(nonFhlRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap(response, SubmitUkPropertyBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(response, testHateoasLinks))
+          .wrap((), SubmitUkPropertyBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validNonFHLInputJson)))
 

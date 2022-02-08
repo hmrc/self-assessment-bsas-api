@@ -341,7 +341,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val hateoasResponse: (String, String) => String = (nino: String, calcId: String) => s"""
        |{
-       |  "id": "$calcId",
        |  "links":[
        |    {
        |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$calcId",

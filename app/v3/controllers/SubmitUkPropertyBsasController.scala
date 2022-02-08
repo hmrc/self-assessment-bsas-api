@@ -78,7 +78,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             hateoasFactory
               .wrap(
                 response.responseData,
-                SubmitUkPropertyBsasHateoasData(nino, response.responseData.id)
+                SubmitUkPropertyBsasHateoasData(nino, parsedRequest.calculationId)
               )
               .asRight[ErrorWrapper])
         } yield {
