@@ -6,7 +6,7 @@ is:
   - errors.formatCalculationId
   - errors.formatValue
   - errors.ruleBothExpensesSupplied
-  - errors.ruleTypeOfBusinessIncorrectUK
+  - errors.ruleTypeOfBusinessIncorrectUk
   - errors.incorrectOrEmptyBodySubmitted
   - errors.ruleSummaryStatusInvalid
   - errors.ruleSummaryStatusSuperseded
@@ -43,7 +43,7 @@ responses:
     body:
       application/json:
         type: !include schemas/submit_uk_property_accounting_adjustments_response.json
-          example: !include examples/adjustments/submit_uk_property_accounting_adjustments_response.json
+        example: !include examples/adjustments/submit_uk_property_accounting_adjustments_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
