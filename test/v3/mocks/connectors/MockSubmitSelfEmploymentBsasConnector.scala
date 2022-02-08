@@ -31,7 +31,7 @@ trait MockSubmitSelfEmploymentBsasConnector extends MockFactory {
 
   object MockSubmitSelfEmploymentBsasConnector {
 
-    def submitSelfEmploymentBsas(requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]]] = {
+    def submitSelfEmploymentBsas(requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockConnector
         .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

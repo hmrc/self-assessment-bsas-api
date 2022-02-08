@@ -36,8 +36,6 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
   val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
 
-  val response: SubmitSelfEmploymentBsasResponse = SubmitSelfEmploymentBsasResponse(id, TypeOfBusiness.`self-employment`)
-
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitSelfEmploymentBsas")
@@ -50,9 +48,9 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
       "a valid request is supplied" in new Test {
         MockSubmitSelfEmploymentBsasConnector
           .submitSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.submitSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 

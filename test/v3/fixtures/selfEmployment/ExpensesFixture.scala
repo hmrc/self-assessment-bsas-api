@@ -23,22 +23,22 @@ object ExpensesFixture {
 
   val expensesModel: Expenses =
     Expenses(
-      costOfGoodsBought = Some(2000.25),
-      cisPaymentsToSubcontractors = Some(2000.50),
-      staffCosts = Some(2000.75),
-      travelCosts = Some(-2000.25),
-      premisesRunningCosts = Some(-2000.50),
-      maintenanceCosts = Some(-2000.75),
-      adminCosts = Some(2001.25),
-      advertisingCosts = Some(2001.50),
-      businessEntertainmentCosts = Some(2001.75),
-      interest = Some(-2001.25),
-      financialCharges = Some(-2001.50),
-      badDebt = Some(-2001.75),
-      professionalFees = Some(2002.25),
-      depreciation = Some(2002.50),
-      other = Some(2002.75),
-      None
+      costOfGoodsAllowable = Some(2000.25),
+      paymentsToSubcontractorsAllowable = Some(2000.50),
+      wagesAndStaffCostsAllowable = Some(2000.75),
+      carVanTravelExpensesAllowable = Some(-2000.25),
+      premisesRunningCostsAllowable = Some(-2000.50),
+      maintenanceCostsAllowable = Some(-2000.75),
+      adminCostsAllowable = Some(2001.25),
+      advertisingCostsAllowable = Some(2001.50),
+      businessEntertainmentCostsAllowable = Some(2001.75),
+      interestOnBankOtherLoansAllowable = Some(-2001.25),
+      financeChargesAllowable = Some(-2001.50),
+      irrecoverableDebtsAllowable = Some(-2001.75),
+      professionalFeesAllowable = Some(2002.25),
+      depreciationAllowable = Some(2002.50),
+      otherExpensesAllowable = Some(2002.75),
+      consolidatedExpenses = None
     )
 
   def expensesToDesJson(model: Expenses): JsValue = {
@@ -46,21 +46,21 @@ object ExpensesFixture {
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
-        "costOfGoodsAllowable" -> costOfGoodsBought,
-        "paymentsToSubcontractorsAllowable" -> cisPaymentsToSubcontractors,
-        "wagesAndStaffCostsAllowable" -> staffCosts,
-        "carVanTravelExpensesAllowable" -> travelCosts,
-        "premisesRunningCostsAllowable" -> premisesRunningCosts,
-        "maintenanceCostsAllowable" -> maintenanceCosts,
-        "adminCostsAllowable" -> adminCosts,
-        "advertisingCostsAllowable" -> advertisingCosts,
-        "businessEntertainmentCostsAllowable" -> businessEntertainmentCosts,
-        "interestOnBankOtherLoansAllowable" -> interest,
-        "financeChargesAllowable" -> financialCharges,
-        "irrecoverableDebtsAllowable" -> badDebt,
-        "professionalFeesAllowable" -> professionalFees,
-        "depreciationAllowable" -> depreciation,
-        "otherExpensesAllowable" -> other
+        "costOfGoodsAllowable" -> costOfGoodsAllowable,
+        "paymentsToSubcontractorsAllowable" -> paymentsToSubcontractorsAllowable,
+        "wagesAndStaffCostsAllowable" -> wagesAndStaffCostsAllowable,
+        "carVanTravelExpensesAllowable" -> carVanTravelExpensesAllowable,
+        "premisesRunningCostsAllowable" -> premisesRunningCostsAllowable,
+        "maintenanceCostsAllowable" -> maintenanceCostsAllowable,
+        "adminCostsAllowable" -> adminCostsAllowable,
+        "advertisingCostsAllowable" -> advertisingCostsAllowable,
+        "businessEntertainmentCostsAllowable" -> businessEntertainmentCostsAllowable,
+        "interestOnBankOtherLoansAllowable" -> interestOnBankOtherLoansAllowable,
+        "financeChargesAllowable" -> financeChargesAllowable,
+        "irrecoverableDebtsAllowable" -> irrecoverableDebtsAllowable,
+        "professionalFeesAllowable" -> professionalFeesAllowable,
+        "depreciationAllowable" -> depreciationAllowable,
+        "otherExpensesAllowable" -> otherExpensesAllowable
       )
 
     Json.toJsObject(queryMap(desFields))
@@ -71,21 +71,21 @@ object ExpensesFixture {
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(
-        "costOfGoodsBought" -> costOfGoodsBought,
-        "cisPaymentsToSubcontractors" -> cisPaymentsToSubcontractors,
-        "staffCosts" -> staffCosts,
-        "travelCosts" -> travelCosts,
-        "premisesRunningCosts" -> premisesRunningCosts,
-        "maintenanceCosts" -> maintenanceCosts,
-        "adminCosts" -> adminCosts,
-        "advertisingCosts" -> advertisingCosts,
-        "businessEntertainmentCosts" -> businessEntertainmentCosts,
-        "interest" -> interest,
-        "financialCharges" -> financialCharges,
-        "badDebt" -> badDebt,
-        "professionalFees" -> professionalFees,
-        "depreciation" -> depreciation,
-        "other" -> other
+        "costOfGoodsAllowable" -> costOfGoodsAllowable,
+        "paymentsToSubcontractorsAllowable" -> paymentsToSubcontractorsAllowable,
+        "wagesAndStaffCostsAllowable" -> wagesAndStaffCostsAllowable,
+        "carVanTravelExpensesAllowable" -> carVanTravelExpensesAllowable,
+        "premisesRunningCostsAllowable" -> premisesRunningCostsAllowable,
+        "maintenanceCostsAllowable" -> maintenanceCostsAllowable,
+        "adminCostsAllowable" -> adminCostsAllowable,
+        "advertisingCostsAllowable" -> advertisingCostsAllowable,
+        "businessEntertainmentCostsAllowable" -> businessEntertainmentCostsAllowable,
+        "interestOnBankOtherLoansAllowable" -> interestOnBankOtherLoansAllowable,
+        "financeChargesAllowable" -> financeChargesAllowable,
+        "irrecoverableDebtsAllowable" -> irrecoverableDebtsAllowable,
+        "professionalFeesAllowable" -> professionalFeesAllowable,
+        "depreciationAllowable" -> depreciationAllowable,
+        "otherExpensesAllowable" -> otherExpensesAllowable
       )
 
     Json.toJsObject(queryMap(vendorSuppliedFields))

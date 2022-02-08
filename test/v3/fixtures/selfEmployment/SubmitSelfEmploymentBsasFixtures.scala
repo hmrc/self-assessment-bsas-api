@@ -89,48 +89,53 @@ object SubmitSelfEmploymentBsasFixtures {
     json
   }
 
-  val mtdRequest: JsValue = Json.parse("""{
-                      |	"income": {
-                      |		"turnover": 1000.25,
-                      |		"other": 1000.5
-                      |	},
-                      |	"additions": {
-                      |		"costOfGoodsBoughtDisallowable": 3000.1,
-                      |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
-                      |		"staffCostsDisallowable": 3000.3,
-                      |		"travelCostsDisallowable": 3000.4,
-                      |		"premisesRunningCostsDisallowable": 3000.5,
-                      |		"maintenanceCostsDisallowable": -3000.1,
-                      |		"adminCostsDisallowable": -3000.2,
-                      |		"advertisingCostsDisallowable": -3000.3,
-                      |		"businessEntertainmentCostsDisallowable": -3000.4,
-                      |		"interestDisallowable": -3000.5,
-                      |		"financialChargesDisallowable": 3000.6,
-                      |		"badDebtDisallowable": -3000.6,
-                      |		"professionalFeesDisallowable": 3000.7,
-                      |		"depreciationDisallowable": -3000.7,
-                      |		"otherDisallowable": 3000.8
-                      |	},
-                      |	"expenses": {
-                      |		"costOfGoodsBought": 2000.25,
-                      |		"cisPaymentsToSubcontractors": 2000.5,
-                      |		"staffCosts": 2000.75,
-                      |		"travelCosts": -2000.25,
-                      |		"premisesRunningCosts": -2000.5,
-                      |		"maintenanceCosts": -2000.75,
-                      |		"adminCosts": 2001.25,
-                      |		"advertisingCosts": 2001.5,
-                      |		"businessEntertainmentCosts": 2001.75,
-                      |		"interest": -2001.25,
-                      |		"financialCharges": -2001.5,
-                      |		"badDebt": -2001.75,
-                      |		"professionalFees": 2002.25,
-                      |		"depreciation": 2002.5,
-                      |		"other": 2002.75
-                      |	}
-                      |}""".stripMargin)
+  val mtdRequest: JsValue = Json.parse(
+  """
+   |{
+   |   "income":{
+   |      "turnover":1000.25,
+   |      "other":1000.5
+   |   },
+   |   "expenses":{
+   |      "costOfGoodsAllowable":2000.25,
+   |      "paymentsToSubcontractorsAllowable":2000.5,
+   |      "wagesAndStaffCostsAllowable":2000.75,
+   |      "carVanTravelExpensesAllowable":-2000.25,
+   |      "premisesRunningCostsAllowable":-2000.5,
+   |      "maintenanceCostsAllowable":-2000.75,
+   |      "adminCostsAllowable":2001.25,
+   |      "advertisingCostsAllowable":2001.5,
+   |      "businessEntertainmentCostsAllowable":2001.75,
+   |      "interestOnBankOtherLoansAllowable":-2001.25,
+   |      "financeChargesAllowable":-2001.5,
+   |      "irrecoverableDebtsAllowable":-2001.75,
+   |      "professionalFeesAllowable":2002.25,
+   |      "depreciationAllowable":2002.5,
+   |      "otherExpensesAllowable":2002.75
+   |   },
+   |   "additions":{
+   |      "costOfGoodsDisallowable":3000.1,
+   |      "paymentsToSubcontractorsDisallowable":3000.2,
+   |      "wagesAndStaffCostsDisallowable":3000.3,
+   |      "carVanTravelExpensesDisallowable":3000.4,
+   |      "premisesRunningCostsDisallowable":3000.5,
+   |      "maintenanceCostsDisallowable":-3000.1,
+   |      "adminCostsDisallowable":-3000.2,
+   |      "advertisingCostsDisallowable":-3000.3,
+   |      "businessEntertainmentCostsDisallowable":-3000.4,
+   |      "interestOnBankOtherLoansDisallowable":-3000.5,
+   |      "financeChargesDisallowable":3000.6,
+   |      "irrecoverableDebtsDisallowable":-3000.6,
+   |      "professionalFeesDisallowable":3000.7,
+   |      "depreciationDisallowable":-3000.7,
+   |      "otherExpensesDisallowable":3000.8
+   |   }
+   |}
+   |""".stripMargin
+  )
 
-  val mtdRequestWithOnlyConsolidatedExpenses: JsValue = Json.parse("""{
+  val mtdRequestWithOnlyConsolidatedExpenses: JsValue = Json.parse("""
+                                |{
                                 |	"income": {
                                 |		"turnover": 1000.25,
                                 |		"other": 1000.5
@@ -138,105 +143,110 @@ object SubmitSelfEmploymentBsasFixtures {
                                 |	"expenses": {
                                 |		"consolidatedExpenses": 2002.75
                                 |	}
-                                |}""".stripMargin)
+                                |}
+                                |""".stripMargin)
 
-  val mtdRequestWithOnlyAdditionsExpenses: JsValue = Json.parse("""{
+  val mtdRequestWithOnlyAdditionsExpenses: JsValue = Json.parse("""
+                                                |{
                                                 |	"income": {
                                                 |		"turnover": 1000.25,
                                                 |		"other": 1000.5
                                                 |	},
-                                                |	"additions": {
-                                                |		"costOfGoodsBoughtDisallowable": 3000.1,
-                                                |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
-                                                |		"staffCostsDisallowable": 3000.3,
-                                                |		"travelCostsDisallowable": 3000.4,
-                                                |		"premisesRunningCostsDisallowable": 3000.5,
-                                                |		"maintenanceCostsDisallowable": -3000.1,
-                                                |		"adminCostsDisallowable": -3000.2,
-                                                |		"advertisingCostsDisallowable": -3000.3,
-                                                |		"businessEntertainmentCostsDisallowable": -3000.4,
-                                                |		"interestDisallowable": -3000.5,
-                                                |		"financialChargesDisallowable": 3000.6,
-                                                |		"badDebtDisallowable": -3000.6,
-                                                |		"professionalFeesDisallowable": 3000.7,
-                                                |		"depreciationDisallowable": -3000.7,
-                                                |		"otherDisallowable": 3000.8
-                                                |	}
-                                                |}""".stripMargin)
+                                                |   "additions":{
+                                                |      "costOfGoodsDisallowable":3000.1,
+                                                |      "paymentsToSubcontractorsDisallowable":3000.2,
+                                                |      "wagesAndStaffCostsDisallowable":3000.3,
+                                                |      "carVanTravelExpensesDisallowable":3000.4,
+                                                |      "premisesRunningCostsDisallowable":3000.5,
+                                                |      "maintenanceCostsDisallowable":-3000.1,
+                                                |      "adminCostsDisallowable":-3000.2,
+                                                |      "advertisingCostsDisallowable":-3000.3,
+                                                |      "businessEntertainmentCostsDisallowable":-3000.4,
+                                                |      "interestOnBankOtherLoansDisallowable":-3000.5,
+                                                |      "financeChargesDisallowable":3000.6,
+                                                |      "irrecoverableDebtsDisallowable":-3000.6,
+                                                |      "professionalFeesDisallowable":3000.7,
+                                                |      "depreciationDisallowable":-3000.7,
+                                                |      "otherExpensesDisallowable":3000.8
+                                                |   }
+                                                |}
+                                                |""".stripMargin)
 
-  val mtdRequestWithAdditionsAndExpenses: JsValue = Json.parse("""{
+  val mtdRequestWithAdditionsAndExpenses: JsValue = Json.parse("""
+                                                         |{
                                                          |	"income": {
                                                          |		"turnover": 1000.25,
                                                          |		"other": 1000.5
                                                          |	},
-                                                         |	"additions": {
-                                                         |		"costOfGoodsBoughtDisallowable": 3000.1,
-                                                         |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
-                                                         |		"staffCostsDisallowable": 3000.3,
-                                                         |		"travelCostsDisallowable": 3000.4,
-                                                         |		"premisesRunningCostsDisallowable": 3000.5,
-                                                         |		"maintenanceCostsDisallowable": -3000.1,
-                                                         |		"adminCostsDisallowable": -3000.2,
-                                                         |		"advertisingCostsDisallowable": -3000.3,
-                                                         |		"businessEntertainmentCostsDisallowable": -3000.4,
-                                                         |		"interestDisallowable": -3000.5,
-                                                         |		"financialChargesDisallowable": 3000.6,
-                                                         |		"badDebtDisallowable": -3000.6,
-                                                         |		"professionalFeesDisallowable": 3000.7,
-                                                         |		"depreciationDisallowable": -3000.7,
-                                                         |		"otherDisallowable": 3000.8
-                                                         |	},
+                                                         |   "additions":{
+                                                         |      "costOfGoodsDisallowable":3000.1,
+                                                         |      "paymentsToSubcontractorsDisallowable":3000.2,
+                                                         |      "wagesAndStaffCostsDisallowable":3000.3,
+                                                         |      "carVanTravelExpensesDisallowable":3000.4,
+                                                         |      "premisesRunningCostsDisallowable":3000.5,
+                                                         |      "maintenanceCostsDisallowable":-3000.1,
+                                                         |      "adminCostsDisallowable":-3000.2,
+                                                         |      "advertisingCostsDisallowable":-3000.3,
+                                                         |      "businessEntertainmentCostsDisallowable":-3000.4,
+                                                         |      "interestOnBankOtherLoansDisallowable":-3000.5,
+                                                         |      "financeChargesDisallowable":3000.6,
+                                                         |      "irrecoverableDebtsDisallowable":-3000.6,
+                                                         |      "professionalFeesDisallowable":3000.7,
+                                                         |      "depreciationDisallowable":-3000.7,
+                                                         |      "otherExpensesDisallowable":3000.8
+                                                         |   },
                                                          |	"expenses": {
                                                          |		"consolidatedExpenses": 2002.75
                                                          |	}
-                                                         |}""".stripMargin)
+                                                         |}
+                                                         |""".stripMargin)
 
-  val mtdRequestWithBothExpenses: JsValue = Json.parse("""{
+  val mtdRequestWithBothExpenses: JsValue = Json.parse("""
+                                |{
                                 |	"income": {
                                 |		"turnover": 1000.25,
                                 |		"other": 1000.5
                                 |	},
-                                |	"additions": {
-                                |		"costOfGoodsBoughtDisallowable": 3000.1,
-                                |		"cisPaymentsToSubcontractorsDisallowable": 3000.2,
-                                |		"staffCostsDisallowable": 3000.3,
-                                |		"travelCostsDisallowable": 3000.4,
-                                |		"premisesRunningCostsDisallowable": 3000.5,
-                                |		"maintenanceCostsDisallowable": -3000.1,
-                                |		"adminCostsDisallowable": -3000.2,
-                                |		"advertisingCostsDisallowable": -3000.3,
-                                |		"businessEntertainmentCostsDisallowable": -3000.4,
-                                |		"interestDisallowable": -3000.5,
-                                |		"financialChargesDisallowable": 3000.6,
-                                |		"badDebtDisallowable": -3000.6,
-                                |		"professionalFeesDisallowable": 3000.7,
-                                |		"depreciationDisallowable": -3000.7,
-                                |		"otherDisallowable": 3000.8
-                                |	},
-                                |	"expenses": {
-                                |		"costOfGoodsBought": 2000.25,
-                                |		"cisPaymentsToSubcontractors": 2000.5,
-                                |		"staffCosts": 2000.75,
-                                |		"travelCosts": -2000.25,
-                                |		"premisesRunningCosts": -2000.5,
-                                |		"maintenanceCosts": -2000.75,
-                                |		"adminCosts": 2001.25,
-                                |		"advertisingCosts": 2001.5,
-                                |		"businessEntertainmentCosts": 2001.75,
-                                |		"interest": -2001.25,
-                                |		"financialCharges": -2001.5,
-                                |		"badDebt": -2001.75,
-                                |		"professionalFees": 2002.25,
-                                |		"depreciation": 2002.5,
-                                |		"other": 2002.75,
-                                |		"consolidatedExpenses": -2002.25
-                                |	}
+                                |   "additions":{
+                                |      "costOfGoodsDisallowable":3000.1,
+                                |      "paymentsToSubcontractorsDisallowable":3000.2,
+                                |      "wagesAndStaffCostsDisallowable":3000.3,
+                                |      "carVanTravelExpensesDisallowable":3000.4,
+                                |      "premisesRunningCostsDisallowable":3000.5,
+                                |      "maintenanceCostsDisallowable":-3000.1,
+                                |      "adminCostsDisallowable":-3000.2,
+                                |      "advertisingCostsDisallowable":-3000.3,
+                                |      "businessEntertainmentCostsDisallowable":-3000.4,
+                                |      "interestOnBankOtherLoansDisallowable":-3000.5,
+                                |      "financeChargesDisallowable":3000.6,
+                                |      "irrecoverableDebtsDisallowable":-3000.6,
+                                |      "professionalFeesDisallowable":3000.7,
+                                |      "depreciationDisallowable":-3000.7,
+                                |      "otherExpensesDisallowable":3000.8
+                                |   },
+                                |   "expenses":{
+                                |      "costOfGoodsAllowable":2000.25,
+                                |      "paymentsToSubcontractorsAllowable":2000.5,
+                                |      "wagesAndStaffCostsAllowable":2000.75,
+                                |      "carVanTravelExpensesAllowable":-2000.25,
+                                |      "premisesRunningCostsAllowable":-2000.5,
+                                |      "maintenanceCostsAllowable":-2000.75,
+                                |      "adminCostsAllowable":2001.25,
+                                |      "advertisingCostsAllowable":2001.5,
+                                |      "businessEntertainmentCostsAllowable":2001.75,
+                                |      "interestOnBankOtherLoansAllowable":-2001.25,
+                                |      "financeChargesAllowable":-2001.5,
+                                |      "irrecoverableDebtsAllowable":-2001.75,
+                                |      "professionalFeesAllowable":2002.25,
+                                |      "depreciationAllowable":2002.5,
+                                |      "otherExpensesAllowable":2002.75,
+                                |      "consolidatedExpenses": -2002.25
+                                |   }
                                 |}""".stripMargin)
 
   val hateoasResponse: (String, String) => String = (nino: String, calcId: String) =>
     s"""
        |{
-       |  "id": "$calcId",
        |  "links":[
        |    {
        |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calcId",
