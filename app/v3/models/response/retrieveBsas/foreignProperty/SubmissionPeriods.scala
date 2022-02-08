@@ -19,22 +19,17 @@ package v3.models.response.retrieveBsas.foreignProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class IncomeBreakdown(rentIncome: Option[BigDecimal],
-                           premiumsOfLeaseGrant: Option[BigDecimal],
-                           otherPropertyIncome: Option[BigDecimal])
+case class SubmissionPeriods(submissionId: String,
+                             startDate: String,
+                             endDate: String,
+                             receivedDateTime: String)
 
-object IncomeBreakdown {
-  val nonFhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "rent").readNullable[BigDecimal] and
-      (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-    ) (IncomeBreakdown.apply _)
+object SubmissionPeriods {
+  implicit val reads: Reads[SubmissionPeriods] = (
+    (JsPath \ "periodId").read[String] and
+      (JsPath \ "startDate").read[String] and
+      (JsPath \ "endDate").read[String] and
+      (JsPath \ "receivedDateTime").read[String]) (SubmissionPeriods.apply _)
 
-  val fhlReads: Reads[IncomeBreakdown] = (
-    (JsPath \ "rent").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      Reads.pure(None)
-    )(IncomeBreakdown.apply _)
-
-  implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
+  implicit val writes: OWrites[SubmissionPeriods] = Json.writes[SubmissionPeriods]
 }

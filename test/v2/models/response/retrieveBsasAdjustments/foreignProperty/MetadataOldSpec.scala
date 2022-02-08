@@ -21,7 +21,7 @@ import support.UnitSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
 import v2.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class MetadataOldSpec extends UnitSpec with JsonErrorValidators {
 
   val foreignPropertyFhlEeaDesJson: JsValue = Json.parse(
     """{

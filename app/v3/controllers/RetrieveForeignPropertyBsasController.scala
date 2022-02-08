@@ -26,7 +26,7 @@ import v3.controllers.requestParsers.RetrieveForeignPropertyRequestParser
 import v3.hateoas.HateoasFactory
 import v3.models.errors._
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
-import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
+import v3.models.response.retrieveBsas.foreignPropertyOld.RetrieveForeignPropertyHateoasData
 import v3.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}

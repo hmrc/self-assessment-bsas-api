@@ -22,19 +22,62 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v3.fixtures.foreignPropertyOld.RetrieveForeignPropertyBsasFixtures._
+import v3.fixtures.foreignPropertyOld.RetrieveForeignPropertyAdjustmentsFixtures._
 import v3.models.errors._
 import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
+class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino = "AA123456B"
-    val adjustedStatus: Option[String] = Some("true")
-    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "3")
+    val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
-    def uri: String = s"/$nino/foreign-property/$bsasId"
+    val desResponse: String => String = (typeOfBusiness: String) =>
+      s"""
+         |{
+         |    "metadata": {
+         |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+         |        "requestedDateTime": "2020-10-14T11:33:27Z",
+         |        "taxableEntityId": "AA1234567A",
+         |        "taxYear": 2020,
+         |        "status": "valid"
+         |    },
+         |    "inputs": {
+         |        "incomeSourceId": "111111111111111",
+         |        "incomeSourceType": "$typeOfBusiness",
+         |        "accountingPeriodStartDate": "2020-10-11",
+         |        "accountingPeriodEndDate": "2020-01-01",
+         |        "source": "MTD-SA",
+         |        "submissionPeriods": [
+         |            {
+         |                "periodId": "0000000000000000",
+         |                "startDate": "2020-01-01",
+         |                "endDate": "2021-10-10",
+         |                "receivedDateTime": "2020-01-01T10:12:10Z"
+         |            }
+         |        ]
+         |    },
+         |    "adjustments": {
+         |        "income": {
+         |            "rentReceived": 100.49,
+         |            "premiumsOfLeaseGrant": 100.49,
+         |            "otherPropertyIncome": 100.49
+         |        },
+         |        "expenses": {
+         |            "consolidatedExpenses": 100.49,
+         |            "repairsAndMaintenance": 100.49,
+         |            "financialCosts": 100.49,
+         |            "professionalFees": 100.49,
+         |            "costOfServices": 100.49,
+         |            "travelCosts": 100.49,
+         |            "other": 100.49,
+         |            "premisesRunningCosts": 100.49
+         |        }
+         |    }
+         |}
+         |""".stripMargin
+
+    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
@@ -42,68 +85,59 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def request: WSRequest = {
 
-      val queryParams = Seq("adjustedStatus" -> adjustedStatus)
-        .collect {
-          case (k, Some(v)) => (k, v)
-        }
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
   }
 
 
-  "Calling the retrieve Foreign Property Bsas endpoint" should {
+  "Calling the retrieve Foreign Property Adjustments endpoint" should {
+
+    val desQueryParams = Map("return" -> "2")
 
     "return a valid response with status OK" when {
 
-      "valid request is made" in new Test {
+      "a valid response is received from des" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponse)
+          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desJson)
         }
 
         val response: WSResponse = await(request.get)
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.parse(hateoasResponseForeignProperty(nino, bsasId))
-      }
-    }
-
-    "return error response with status BAD_REQUEST" when {
-
-      "valid request is made but DES response has invalid type of business" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponseWithInvalidTypeOfBusiness)
-        }
-
-        val response: WSResponse = await(request.get)
-
-        response.status shouldBe BAD_REQUEST
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(RuleTypeOfBusinessIncorrectError)
+        response.json shouldBe Json.parse(hateoasResponseForForeignPropertyAdjustments(nino, bsasId))
       }
     }
 
     "return error according to spec" when {
 
+      "request made is for an invalid type of business" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, Json.parse(desResponse("01")))
+        }
+
+        val response: WSResponse = await(request.get())
+        response.status shouldBe FORBIDDEN
+        response.json shouldBe Json.toJson(RuleNotForeignProperty)
+      }
+
+
       def validationErrorTest(requestNino: String, requestBsasId: String,
-                              requestAdjustedStatus: Option[String],
-                              expectedStatus: Int, expectedBody: MtdError): Unit = {
+                             expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
           override val bsasId: String = requestBsasId
-          override val adjustedStatus: Option[String] = requestAdjustedStatus
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -119,9 +153,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("true"), BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("true"), BAD_REQUEST, BsasIdFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("test"), BAD_REQUEST, AdjustedStatusFormatError)
+        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
@@ -154,10 +187,9 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-        (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
-        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
-        (BAD_REQUEST, "INVALID_RETURN", BAD_REQUEST, AdjustedStatusFormatError),
+        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
+        (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)

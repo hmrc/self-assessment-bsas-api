@@ -23,163 +23,55 @@ import v3.models.utils.JsonErrorValidators
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators{
 
-  val nonFhlMtdJson = Json.parse(
+  val mtdJson = Json.parse(
     """{
-      |  "typeOfBusiness": "foreign-property",
-      |  "accountingPeriod": {
-      |    "startDate": "2020-10-11",
-      |    "endDate": "2021-10-10"
-      |  },
-      |  "taxYear": "2021-22",
-      |  "requestedDateTime": "2019-10-14T11:33:27Z",
-      |  "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |  "summaryStatus": "valid",
-      |  "adjustedSummary": true
+      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "requestedDateTime": "2020-12-05T16:19:44Z",
+      |  "adjustedDateTime": "2020-12-05T16:19:44Z",
+      |  "nino": "AA999999A",
+      |  "taxYear": "2019-20",
+      |  "summaryStatus": "valid"
+      |  }""".stripMargin
+  )
+
+  val desJson = Json.parse(
+    """{
+      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "requestedDateTime": "2020-12-05T16:19:44Z",
+      |  "adjustedDateTime": "2020-12-05T16:19:44Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2020,
+      |  "status": "valid"
       |}""".stripMargin
   )
 
-  val fhlMtdJson = Json.parse(
+  val desJsonWithoutADT = Json.parse(
     """{
-      |  "typeOfBusiness": "foreign-property-fhl-eea",
-      |  "accountingPeriod": {
-      |    "startDate": "2020-10-11",
-      |    "endDate": "2021-10-10"
-      |  },
-      |  "taxYear": "2021-22",
-      |  "requestedDateTime": "2019-10-14T11:33:27Z",
-      |  "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |  "summaryStatus": "valid",
-      |  "adjustedSummary": true
+      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "requestedDateTime": "2020-12-05T16:19:44Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2020,
+      |  "status": "valid"
       |}""".stripMargin
   )
 
-  val nonFhlDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "15",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "status": "valid"
-      |  },
-      |  "adjustedSummaryCalculation": {
-      |    "totalIncome": 123.12,
-      |    "totalExpenses": 123.12,
-      |    "totalAdditions": 123.12,
-      |    "totalDeductions": 123.12,
-      |    "accountingAdjustments": 123.12,
-      |    "netProfit": 123.12,
-      |    "taxableProfit": 123.12,
-      |    "netLoss": 123.12,
-      |    "adjustedIncomeTaxLoss": 123.12,
-      |    "income": {
-      |      "rentIncome": 123.12,
-      |      "premiumsOfLeaseGrant": 123.12,
-      |      "otherPropertyIncome": 123.12,
-      |      "foreignTaxTakenOff": 123.12,
-      |      "specialWithholdingTaxOrUKTaxPaid": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "travelCosts": 123.12,
-      |      "costOfServices": 123.12,
-      |      "residentialFinancialCost": 123.12,
-      |      "broughtFwdResidentialFinancialCost": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}""".stripMargin
-  )
-
-  val fhlDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "03",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "status": "valid"
-      |  },
-      |  "adjustedSummaryCalculation": {
-      |    "totalIncome": 123.12,
-      |    "totalExpenses": 123.12,
-      |    "totalAdditions": 123.12,
-      |    "totalDeductions": 123.12,
-      |    "accountingAdjustments": 123.12,
-      |    "netProfit": 123.12,
-      |    "taxableProfit": 123.12,
-      |    "netLoss": 123.12,
-      |    "adjustedIncomeTaxLoss": 123.12,
-      |    "income": {
-      |      "rentIncome": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "travelCosts": 123.12,
-      |      "costOfServices": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}""".stripMargin
-  )
-
-  val adjustedSummaryFalseDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "03",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "status": "valid"
-      |  }
-      |}""".stripMargin
-  )
 
   "reads" should {
-    "return a valid model" when {
-      "a valid non-fhl json with all fields are supplied" in {
-        nonFhlDesJson.as[Metadata] shouldBe nonFhlMetaDataModel
+    "return a valid metadata model" when {
+      "a valid json with all fields are supplied" in {
+        desJson.as[Metadata] shouldBe metaDataModel
       }
 
-      "a valid fhl json with all fields are supplied" in {
-        fhlDesJson.as[Metadata] shouldBe fhlMetaDataModel
-      }
-
-      "a valid fhl json with no adjustedSummary is supplied" in {
-        adjustedSummaryFalseDesJson.as[Metadata] shouldBe fhlMetaDataModel.copy(adjustedSummary = false)
+      "a valid json with no adjustedSummary is supplied" in {
+        desJsonWithoutADT.as[Metadata] shouldBe metaDataModel.copy(adjustedDateTime = None)
       }
     }
   }
 
   "writes" should {
-    "return a valid json" when {
-      "a valid non-fhl model is supplied" in {
-        nonFhlMetaDataModel.toJson shouldBe nonFhlMtdJson
-      }
-
-      "a valid fhl model is supplied" in {
-        fhlMetaDataModel.toJson shouldBe fhlMtdJson
+    "return a valid metadata json" when {
+      "a valid model is supplied" in {
+        metaDataModel.toJson shouldBe mtdJson
       }
     }
   }

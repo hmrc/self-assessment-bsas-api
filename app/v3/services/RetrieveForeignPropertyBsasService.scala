@@ -28,7 +28,7 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
-import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
+import v3.models.response.retrieveBsas.foreignPropertyOld.RetrieveForeignPropertyBsasResponse
 import v3.support.DesResponseMappingSupport
 
 import scala.concurrent.{ ExecutionContext, Future }

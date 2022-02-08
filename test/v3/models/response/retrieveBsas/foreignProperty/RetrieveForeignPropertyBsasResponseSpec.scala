@@ -16,645 +16,474 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.hateoas.HateoasFactory
-import v3.models.hateoas.{HateoasWrapper, Link}
-import v3.models.hateoas.Method.{GET, POST}
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures.retrieveBsasResponseModel
 import v3.models.utils.JsonErrorValidators
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators{
 
-  val nonFhlMtdJson = Json.parse(
+  val mtdJson = Json.parse(
     """{
-      |  "metadata": {
-      |    "typeOfBusiness": "foreign-property",
-      |    "accountingPeriod": {
-      |      "startDate": "2020-10-11",
-      |      "endDate": "2021-10-10"
-      |    },
-      |    "taxYear": "2021-22",
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "summaryStatus": "valid",
-      |    "adjustedSummary": true
-      |  },
-      |  "bsas": {
-      |    "total": {
-      |      "income": 100.49,
-      |      "expenses": 100.49,
-      |      "additions": 100.49,
-      |      "deductions": 100.49
-      |    },
-      |    "profit": {
-      |      "net": 100.49,
-      |      "taxable": 100
-      |    },
-      |    "loss": {
-      |      "net": 100.49,
-      |      "adjustedIncomeTax": 100
-      |    },
-      |    "incomeBreakdown": {
-      |      "rentIncome": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49
-      |    },
-      |    "expensesBreakdown": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "residentialFinancialCost": 100.49,
-      |      "broughtFwdResidentialFinancialCost": 100.49,
-      |      "other": 100.49
-      |    },
-      |    "countryLevelDetail": [ {
-      |      "countryCode":"FRA",
-      |      "total": {
-      |        "income":100.49,
-      |        "expenses":100.49,
-      |        "additions":100.49,
-      |        "deductions":100.49
-      |        },
-      |      "incomeBreakdown": {
-      |        "rentIncome":100.49,
-      |        "premiumsOfLeaseGrant":100.49,
-      |        "otherPropertyIncome":100.49
-      |        },
-      |      "expensesBreakdown": {
-      |        "premisesRunningCosts":100.49,
-      |        "repairsAndMaintenance":100.49,
-      |        "financialCosts":100.49,
-      |        "professionalFees":100.49,
-      |        "travelCosts":100.49,
-      |        "costOfServices":100.49,
-      |        "residentialFinancialCost":100.49,
-      |        "broughtFwdResidentialFinancialCost":100.49,
-      |        "other":100.49
-      |        }
-      |      }
-      |    ]
-      |  }
-      |}""".stripMargin
-  )
-
-  val fhlMtdJson = Json.parse(
-    """{
-      |  "metadata": {
-      |    "typeOfBusiness": "foreign-property-fhl-eea",
-      |    "accountingPeriod": {
-      |      "startDate": "2020-10-11",
-      |      "endDate": "2021-10-10"
-      |    },
-      |    "taxYear": "2021-22",
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "summaryStatus": "valid",
-      |    "adjustedSummary": true
-      |  },
-      |  "bsas": {
-      |    "total": {
-      |      "income": 100.49,
-      |      "expenses": 100.49,
-      |      "additions": 100.49,
-      |      "deductions": 100.49
-      |    },
-      |    "profit": {
-      |      "net": 100.49,
-      |      "taxable": 100
-      |    },
-      |    "loss": {
-      |      "net": 100.49,
-      |      "adjustedIncomeTax": 100
-      |    },
-      |    "incomeBreakdown": {
-      |      "rentIncome": 100.49
-      |    },
-      |    "expensesBreakdown": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "other": 100.49
-      |    },
-      |    "countryLevelDetail": [ {
-      |      "countryCode":"FRA",
-      |      "total": {
-      |        "income":100.49,
-      |        "expenses":100.49,
-      |        "additions":100.49,
-      |        "deductions":100.49
-      |        },
-      |      "incomeBreakdown": {
-      |        "rentIncome":100.49
-      |        },
-      |      "expensesBreakdown": {
-      |        "premisesRunningCosts":100.49,
-      |        "repairsAndMaintenance":100.49,
-      |        "financialCosts":100.49,
-      |        "professionalFees":100.49,
-      |        "travelCosts":100.49,
-      |        "costOfServices":100.49,
-      |        "other":100.49
-      |        }
-      |      }
-      |    ]
-      |  }
-      |}""".stripMargin
-  )
-
-  val nonFhlDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "15",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "status": "valid"
-      |  },
-      |  "adjustableSummaryCalculation": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49,
-      |    "accountingAdjustments": 100.49,
-      |    "netProfit": 100.49,
-      |    "taxableProfit": 100,
-      |    "netLoss": 100.49,
-      |    "adjustedIncomeTaxLoss": 100,
-      |    "income": {
-      |      "rent": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "residentialFinancialCost": 100.49,
-      |      "broughtFwdResidentialFinancialCost": 100.49,
-      |      "other": 100.49
-      |    }
-      |  },
-      |  "adjustedSummaryCalculation": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49,
-      |    "accountingAdjustments": 100.49,
-      |    "netProfit": 100.49,
-      |    "taxableProfit": 100,
-      |    "netLoss": 100.49,
-      |    "adjustedIncomeTaxLoss": 100,
-      |    "income": {
-      |      "rent": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "residentialFinancialCost": 100.49,
-      |      "broughtFwdResidentialFinancialCost": 100.49,
-      |      "other": 100.49
-      |    },
-      |    "countryLevelDetail":[
-      |    {
-      |      "countryCode": "FRA",
-      |      "total": {
-      |        "totalIncome": 100.49,
-      |        "totalExpenses": 100.49,
-      |        "totalAdditions": 100.49,
-      |        "totalDeductions": 100.49
-      |      },
-      |      "income": {
-      |        "rent": 100.49,
-      |        "premiumsOfLeaseGrant": 100.49,
-      |        "otherPropertyIncome": 100.49
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 100.49,
-      |        "repairsAndMaintenance": 100.49,
-      |        "financialCosts": 100.49,
-      |        "professionalFees": 100.49,
-      |        "travelCosts": 100.49,
-      |        "costOfServices": 100.49,
-      |        "residentialFinancialCost": 100.49,
-      |        "broughtFwdResidentialFinancialCost": 100.49,
-      |        "other": 100.49
-      |      }
-      |    }
-      |   ]
-      | }
-      |}""".stripMargin
-  )
-
-  val fhlDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "03",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "status": "valid"
-      |  },
-      |  "adjustableSummaryCalculation": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49,
-      |    "accountingAdjustments": 100.49,
-      |    "netProfit": 100.49,
-      |    "taxableProfit": 100,
-      |    "netLoss": 100.49,
-      |    "adjustedIncomeTaxLoss": 100,
-      |    "income": {
-      |      "rent": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "residentialFinancialCost": 100.49,
-      |      "broughtFwdResidentialFinancialCost": 100.49,
-      |      "other": 100.49
-      |    }
-      |  },
-      |  "adjustedSummaryCalculation": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49,
-      |    "accountingAdjustments": 100.49,
-      |    "netProfit": 100.49,
-      |    "taxableProfit": 100,
-      |    "netLoss": 100.49,
-      |    "adjustedIncomeTaxLoss": 100,
-      |    "income": {
-      |      "rent": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "other": 100.49
-      |    },
-      |    "countryLevelDetail": [
-      |    {
-      |      "countryCode":"FRA",
-      |      "total": {
-      |        "totalIncome": 100.49,
-      |        "totalExpenses": 100.49,
-      |        "totalAdditions": 100.49,
-      |        "totalDeductions": 100.49
-      |      },
-      |      "income": {
-      |        "rent":100.49
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts":100.49,
-      |        "repairsAndMaintenance":100.49,
-      |        "financialCosts":100.49,
-      |        "professionalFees":100.49,
-      |        "travelCosts":100.49,
-      |        "costOfServices":100.49,
-      |        "other":100.49
-      |      }
-      |    }
-      |  ]
-      | }
-      |}""".stripMargin
-  )
-
-  val adjustableSummaryCalculationNonFhlDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "15",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "taxYear": 2022,
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "status": "valid"
-      |  },
-      |  "adjustableSummaryCalculation": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49,
-      |    "accountingAdjustments": 100.49,
-      |    "netProfit": 100.49,
-      |    "taxableProfit": 100,
-      |    "netLoss": 100.49,
-      |    "adjustedIncomeTaxLoss": 100,
-      |    "income": {
-      |      "rent": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "otherPropertyIncome": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "residentialFinancialCost": 100.49,
-      |      "broughtFwdResidentialFinancialCost": 100.49,
-      |      "other": 100.49
-      |    },
-      |    "countryLevelDetail":[
-      |    {
-      |      "countryCode": "FRA",
-      |      "total": {
-      |        "totalIncome": 100.49,
-      |        "totalExpenses": 100.49,
-      |        "totalAdditions": 100.49,
-      |        "totalDeductions": 100.49
-      |      },
-      |      "income": {
-      |        "rent": 100.49,
-      |        "premiumsOfLeaseGrant": 100.49,
-      |        "otherPropertyIncome": 100.49
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 100.49,
-      |        "repairsAndMaintenance": 100.49,
-      |        "financialCosts": 100.49,
-      |        "professionalFees": 100.49,
-      |        "travelCosts": 100.49,
-      |        "costOfServices": 100.49,
-      |        "residentialFinancialCost": 100.49,
-      |        "broughtFwdResidentialFinancialCost": 100.49,
-      |        "other": 100.49
-      |      }
-      |    }
-      |   ]
-      |  }
-      |}""".stripMargin
-  )
-
-  val adjustableSummaryCalculationFhlDesJson = Json.parse(
-    """{
-      |  "inputs": {
-      |    "incomeSourceType": "03",
-      |    "incomeSourceId": "XAIS12345678910",
-      |    "accountingPeriodStartDate": "2020-10-11",
-      |    "accountingPeriodEndDate": "2021-10-10"
-      |  },
-      |  "metadata": {
-      |    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |    "requestedDateTime": "2019-10-14T11:33:27Z",
-      |    "adjustedDateTime": "2019-10-14T11:33:27Z",
-      |    "taxableEntityId": "string",
-      |    "taxYear": 2022,
-      |    "status": "valid"
-      |  },
-      |  "adjustableSummaryCalculation": {
-      |    "totalIncome": 0,
-      |    "income": {
-      |      "rent": 0,
-      |      "premiumsOfLeaseGrantAmount": 0,
-      |      "otherPropertyIncomeAmount": 0
-      |    },
-      |    "totalExpenses": 0,
-      |    "expenses": {
-      |      "premisesRunningCostsAmount": 0,
-      |      "repairsAndMaintenanceAmount": 0,
-      |      "financialCostsAmount": 0,
-      |      "professionalFeesAmount": 0,
-      |      "travelCostsAmount": 0,
-      |      "costOfServicesAmount": 0,
-      |      "residentialFinancialCostAmount": 0,
-      |      "broughtFwdResidentialFinancialCostAmount": 0,
-      |      "otherAmount": 0,
-      |      "consolidatedExpenseAmount": 0
-      |    },
-      |    "netProfit": 0,
-      |    "netLoss": 0,
-      |    "totalAdditions": 0,
-      |    "additions": {
-      |      "privateUseAdjustment": 0,
-      |      "balancingCharge": 0
-      |    },
-      |    "totalDeductions": 0,
-      |    "deductions": {
-      |      "annualInvestmentAllowance": 0,
-      |      "costOfReplacingDomesticItems": 0,
-      |      "zeroEmissionsGoodsVehicleAllowance": 0,
-      |      "propertyAllowance": 0,
-      |      "otherCapitalAllowance": 0,
-      |      "structureAndBuildingAllowance": 0,
-      |      "electricChargePointAllowance": 0
-      |    },
-      |    "taxableProfit": 12500,
-      |    "adjustedIncomeTaxLoss": 12500,
-      |    "countryLevelDetail": [
-      |      {
-      |        "countryCode": "CYM",
-      |        "totalIncome": 0,
-      |        "income": {
-      |          "rent": 0,
-      |          "premiumsOfLeaseGrantAmount": 0,
-      |          "otherPropertyIncomeAmount": 0
-      |        },
-      |        "totalExpenses": 0,
-      |        "expenses": {
-      |          "premisesRunningCostsAmount": 0,
-      |          "repairsAndMaintenanceAmount": 0,
-      |          "financialCostsAmount": 0,
-      |          "professionalFeesAmount": 0,
-      |          "travelCostsAmount": 0,
-      |          "costOfServicesAmount": 0,
-      |          "residentialFinancialCostAmount": 0,
-      |          "broughtFwdResidentialFinancialCostAmount": 0,
-      |          "otherAmount": 0,
-      |          "consolidatedExpenseAmount": 0
-      |        },
-      |        "netProfit": 0,
-      |        "netLoss": 0,
-      |        "totalAdditions": 0,
-      |        "additions": {
-      |          "privateUseAdjustment": 0,
-      |          "balancingCharge": 0
-      |        },
-      |        "totalDeductions": 0,
-      |        "deductions": {
-      |          "annualInvestmentAllowance": 0,
-      |          "costOfReplacingDomesticItems": 0,
-      |          "zeroEmissionsGoodsVehicleAllowance": 0,
-      |          "propertyAllowance": 0,
-      |          "otherCapitalAllowance": 0,
-      |          "structureAndBuildingAllowance": 0,
-      |          "electricChargePointAllowance": 0
-      |        },
-      |        "taxableProfit": 0,
-      |        "adjustedIncomeTaxLoss": 0
-      |      }
-      |    ]
-      |  },
-      |  "adjustments": [
-      |    {
-      |      "countryCode": "CYM",
-      |      "income": {
-      |        "rent": -99999999999.99,
-      |        "premiumsOfLeaseGrantAmount": -99999999999.99,
-      |        "otherPropertyIncomeAmount": -99999999999.99
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCostsAmount": -99999999999.99,
-      |        "repairsAndMaintenanceAmount": -99999999999.99,
-      |        "financialCostsAmount": -99999999999.99,
-      |        "professionalFeesAmount": -99999999999.99,
-      |        "travelCostsAmount": -99999999999.99,
-      |        "costOfServicesAmount": -99999999999.99,
-      |        "residentialFinancialCostAmount": -99999999999.99,
-      |        "otherAmount": -99999999999.99,
-      |        "consolidatedExpenseAmount": -99999999999.99
-      |      }
-      |    }
-      |  ],
-      |  "adjustedSummaryCalculation": {
-      |  "totalIncome": 100.49,
-      |  "totalExpenses": 100.49,
-      |  "totalAdditions": 100.49,
-      |  "totalDeductions": 100.49,
-      |  "accountingAdjustments": 100.49,
-      |  "netProfit": 100.49,
-      |  "taxableProfit": 100,
-      |  "netLoss": 100.49,
-      |  "adjustedIncomeTaxLoss": 100,
-      |  "income": {
-      |    "rent": 100.49
-      |  },
-      |  "expenses": {
-      |    "premisesRunningCosts": 100.49,
-      |    "repairsAndMaintenance": 100.49,
-      |    "financialCosts": 100.49,
-      |    "professionalFees": 100.49,
-      |    "travelCosts": 100.49,
-      |    "costOfServices": 100.49,
-      |    "other": 100.49
-      |  },
-      |  "total": {
-      |    "income": 100.49,
-      |    "expenses": 100.49,
-      |    "additions": 100.49,
-      |    "deductions": 100.49
-      |  },
-      |  "profit": {
-      |    "net": 100.49,
-      |    "taxable": 100.49
-      |  },
-      |  "loss": {
-      |    "net": 100.49,
-      |    "adjustedIncomeTax": 100.49
-      |  },
-      |  "income": {
-      |    "rent": 100.49
-      |  },
-      |  "expenses": {
-      |    "premisesRunningCosts": 100.49,
-      |    "repairsAndMaintenance": 100.49,
-      |    "financialCosts": 100.49,
-      |    "professionalFees": 100.49,
-      |    "travelCosts": 100.49,
-      |    "costOfServices": 100.49,
-      |    "other": 100.49
-      |  },
-      |  "countryLevelDetail": [
-      |  {
-      |    "countryCode":"FRA",
-      |    "total": {
-      |      "totalIncome": 100.49,
-      |      "totalExpenses": 100.49,
-      |      "totalAdditions": 100.49,
-      |      "totalDeductions": 100.49
-      |    },
-      |    "income": {
-      |      "rent":100.49
-      |      },
-      |    "expenses": {
-      |      "premisesRunningCosts":100.49,
-      |      "repairsAndMaintenance":100.49,
-      |      "financialCosts":100.49,
-      |      "professionalFees":100.49,
-      |      "travelCosts":100.49,
-      |      "costOfServices":100.49,
-      |      "other":100.49
-      |    }
+      |	"metadata": {
+      |		"calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |		"requestedDateTime": "2020-12-05T16:19:44Z",
+      |		"adjustedDateTime": "2020-12-05T16:19:44Z",
+      |		"nino": "AA999999A",
+      |		"taxYear": "2019-20",
+      |		"summaryStatus": "valid"
+      |	},
+      |	"inputs": {
+      |		"businessId": "000000000000210",
+      |		"typeOfBusiness": "foreign-property-fhl-eea",
+      |		"businessName": "Business Name",
+      |		"accountingPeriodStartDate": "2019-04-06",
+      |		"accountingPeriodEndDate": "2020-04-05",
+      |		"source": "MTD-SA",
+      |		"submissionPeriods": [{
+      |			"submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |			"startDate": "2019-04-06",
+      |			"endDate": "2020-04-05",
+      |			"receivedDateTime": "2019-02-15T09:35:04.843Z"
+      |		}]
+      |	},
+      |	"adjustableSummaryCalculation": {
+      |		"totalIncome": 0.12,
+      |		"income": {
+      |			"totalRentsReceived": 0.12,
+      |			"premiumsOfLeaseGrant": 0.12,
+      |			"otherPropertyIncome": 0.12
+      |		},
+      |		"totalExpenses": 0.12,
+      |		"expenses": {
+      |     "consolidatedExpenses": 0.12,
+      |			"premisesRunningCosts": 0.12,
+      |			"repairsAndMaintenance": 0.12,
+      |			"financialCosts": 0.12,
+      |			"professionalFees": 0.12,
+      |			"travelCosts": 0.12,
+      |			"costOfServices": 0.12,
+      |			"residentialFinancialCost": 0.12,
+      |			"broughtFwdResidentialFinancialCost": 0.12,
+      |			"other": 0.12
+      |		},
+      |		"netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |		"totalAdditions": 0.12,
+      |		"additions": {
+      |			"privateUseAdjustment": 0.12,
+      |			"balancingCharge": 0.12
+      |		},
+      |		"totalDeductions": 0.12,
+      |		"deductions": {
+      |			"annualInvestmentAllowance": 0.12,
+      |			"costOfReplacingDomesticItems": 0.12,
+      |			"zeroEmissionGoods": 0.12,
+      |     "propertyAllowance": 0.12,
+      |			"otherCapitalAllowance": 0.12,
+      |			"electricChargePointAllowance": 0.12,
+      |			"structuredBuildingAllowance": 0.12,
+      |			"zeroEmissionsCarAllowance": 0.12
+      |		},
+      |		"taxableProfit": 1,
+      |   "adjustedIncomeTaxLoss": 1,
+      |		"countryLevelDetail": [{
+      |			"countryCode": "CYM",
+      |			"totalIncome": 0.12,
+      |			"income": {
+      |				"totalRentsReceived": 0.12,
+      |				"premiumsOfLeaseGrant": 0.12,
+      |				"otherPropertyIncome": 0.12
+      |			},
+      |			"totalExpenses": 0.12,
+      |			"expenses": {
+      |       "consolidatedExpenses": 0.12,
+      |				"premisesRunningCosts": 0.12,
+      |				"repairsAndMaintenance": 0.12,
+      |				"financialCosts": 0.12,
+      |				"professionalFees": 0.12,
+      |				"travelCosts": 0.12,
+      |				"costOfServices": 0.12,
+      |				"residentialFinancialCost": 0.12,
+      |				"broughtFwdResidentialFinancialCost": 0.12,
+      |				"other": 0.12
+      |			},
+      |			"netProfit": 0.12,
+      |     "netLoss": 0.12,
+      |			"totalAdditions": 0.12,
+      |			"additions": {
+      |				"privateUseAdjustment": 0.12,
+      |				"balancingCharge": 0.12
+      |			},
+      |			"totalDeductions": 0.12,
+      |			"deductions": {
+      |				"annualInvestmentAllowance": 0.12,
+      |				"costOfReplacingDomesticItems": 0.12,
+      |				"zeroEmissionGoods": 0.12,
+      |       "propertyAllowance": 0.12,
+      |				"otherCapitalAllowance": 0.12,
+      |				"electricChargePointAllowance": 0.12,
+      |				"structuredBuildingAllowance": 0.12,
+      |				"zeroEmissionsCarAllowance": 0.12
+      |			},
+      |			"taxableProfit": 1,
+      |     "adjustedIncomeTaxLoss": 1
+      |		}]
+      |	},
+      |	"adjustments": [{
+      |		"countryCode": "CYM",
+      |		"income": {
+      |			"rentReceived": 99999999999.99,
+      |			"premiumsOfLeaseGrant": 99999999999.99,
+      |			"otherPropertyIncome": 99999999999.99
+      |		},
+      |		"expenses": {
+      |			"premisesRunningCosts": 99999999999.99,
+      |			"repairsAndMaintenance": 99999999999.99,
+      |			"financialCosts": 99999999999.99,
+      |			"professionalFees": 99999999999.99,
+      |			"travelCosts": 99999999999.99,
+      |			"costOfServices": 99999999999.99,
+      |			"residentialFinancialCost": 99999999999.99,
+      |			"other": 99999999999.99,
+      |     "consolidatedExpenses": 99999999999.99
+      |		},
+      |   "income": {
+      |     "totalRentsReceived": 99999999999.99
+      |   },
+      |   "expenses": {
+      |     "premisesRunningCosts": 99999999999.99,
+      |     "repairsAndMaintenance": 99999999999.99,
+      |			"financialCosts": 99999999999.99,
+      |			"professionalFees": 99999999999.99,
+      |			"travelCosts": 99999999999.99,
+      |			"costOfServices": 99999999999.99,
+      |			"residentialFinancialCost": 99999999999.99,
+      |			"other": 99999999999.99,
+      |     "consolidatedExpenses": 99999999999.99
       |   }
-      | ]
-      |}
+      |	}],
+      |	"adjustedSummaryCalculation": {
+      |		"totalIncome": 0.12,
+      |		"income": {
+      |			"totalRentsReceived": 0.12,
+      |			"premiumsOfLeaseGrant": 0.12,
+      |			"otherPropertyIncome": 0.12
+      |		},
+      |		"totalExpenses": 0.12,
+      |		"expenses": {
+      |     "consolidatedExpenses": 0.12,
+      |			"premisesRunningCosts": 0.12,
+      |			"repairsAndMaintenance": 0.12,
+      |			"financialCosts": 0.12,
+      |			"professionalFees": 0.12,
+      |			"travelCosts": 0.12,
+      |			"costOfServices": 0.12,
+      |			"residentialFinancialCost": 0.12,
+      |			"broughtFwdResidentialFinancialCost": 0.12,
+      |			"other": 0.12
+      |		},
+      |		"netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |		"totalAdditions": 0.12,
+      |		"additions": {
+      |			"privateUseAdjustment": 0.12,
+      |			"balancingCharge": 0.12
+      |		},
+      |		"totalDeductions": 0.12,
+      |		"deductions": {
+      |			"annualInvestmentAllowance": 0.12,
+      |			"costOfReplacingDomesticItems": 0.12,
+      |			"zeroEmissionGoods": 0.12,
+      |     "propertyAllowance": 0.12,
+      |			"otherCapitalAllowance": 0.12,
+      |			"electricChargePointAllowance": 0.12
+      |		},
+      |		"taxableProfit": 1,
+      |   "adjustedIncomeTaxLoss": 1,
+      |		"countryLevelDetail": [{
+      |			"countryCode": "CYM",
+      |			"totalIncome": 0.12,
+      |			"income": {
+      |				"totalRentsReceived": 0.12,
+      |				"premiumsOfLeaseGrant": 0.12,
+      |				"otherPropertyIncome": 0.12
+      |			},
+      |			"totalExpenses": 0.12,
+      |			"expenses": {
+      |       "consolidatedExpenses": 0.12,
+      |				"premisesRunningCosts": 0.12,
+      |				"repairsAndMaintenance": 0.12,
+      |				"financialCosts": 0.12,
+      |				"professionalFees": 0.12,
+      |				"travelCosts": 0.12,
+      |				"costOfServices": 0.12,
+      |				"residentialFinancialCost": 0.12,
+      |				"broughtFwdResidentialFinancialCost": 0.12,
+      |				"other": 0.12
+      |			},
+      |			"netProfit": 0.12,
+      |     "netLoss": 0.12,
+      |			"totalAdditions": 0.12,
+      |			"additions": {
+      |				"privateUseAdjustment": 0.12,
+      |				"balancingCharge": 0.12
+      |			},
+      |			"totalDeductions": 0.12,
+      |			"deductions": {
+      |				"annualInvestmentAllowance": 0.12,
+      |				"costOfReplacingDomesticItems": 0.12,
+      |				"zeroEmissionGoods": 0.12,
+      |       "propertyAllowance": 0.12,
+      |				"otherCapitalAllowance": 0.12,
+      |				"electricChargePointAllowance": 0.12
+      |			},
+      |			"taxableProfit": 1,
+      |     "adjustedIncomeTaxLoss": 1
+      |		}]
+      |	}
       |}""".stripMargin
   )
 
-  "reads" should {
-    "return a valid model" when {
-      "a valid non-fhl json with all fields are supplied" in {
-        nonFhlDesJson.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveForeignPropertyBsasResponseModel
-      }
+/*  val desJson = Json.parse(
+    """{
+      |	"metadata": {
+      |		"calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |		"requestedDateTime": "2020-12-05T16:19:44Z",
+      |		"adjustedDateTime": "2020-12-05T16:19:44Z",
+      |		"taxableEntityId": "AA111111A",
+      |		"taxYear": 2020,
+      |		"status": "valid"
+      |	},
+      |	"inputs": {
+      |		"incomeSourceId": "000000000000210",
+      |		"incomeSourceType": "03",
+      |		"incomeSourceName": "Business Name",
+      |		"accountingPeriodStartDate": "2019-04-06",
+      |		"accountingPeriodEndDate": "2020-04-05",
+      |		"source": "MTD-SA",
+      |		"submissionPeriods": [{
+      |			"periodId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |			"startDate": "2019-04-06",
+      |			"endDate": "2020-04-05",
+      |			"receivedDateTime": "2019-02-15T09:35:04.843Z"
+      |		}]
+      |	},
+      |	"adjustableSummaryCalculation": {
+      |		"totalIncome": 0.12,
+      |		"income": {
+      |			"rent": 0.12,
+      |			"premiumsOfLeaseGrant": 0.12,
+      |			"otherPropertyIncome": 0.12
+      |		},
+      |		"totalExpenses": 0.12,
+      |		"expenses": {
+      |     "consolidatedExpenses": 0.12,
+      |			"premisesRunningCosts": 0.12,
+      |			"repairsAndMaintenance": 0.12,
+      |			"financialCosts": 0.12,
+      |			"professionalFees": 0.12,
+      |			"travelCosts": 0.12,
+      |			"costOfServices": 0.12,
+      |			"residentialFinancialCost": 0.12,
+      |			"broughtFwdResidentialFinancialCost": 0.12,
+      |			"other": 0.12
+      |		},
+      |		"netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |		"totalAdditions": 0.12,
+      |		"additions": {
+      |			"privateUseAdjustment": 0.12,
+      |			"balancingCharge": 0.12
+      |		},
+      |		"totalDeductions": 0.12,
+      |		"deductions": {
+      |			"annualInvestmentAllowance": 0.12,
+      |			"costOfReplacingDomesticItems": 0.12,
+      |			"zeroEmissionsGoodsVehicleAllowance": 0.12,
+      |     "propertyAllowance": 0.12,
+      |			"otherCapitalAllowance": 0.12,
+      |			"electricChargePointAllowance": 0.12,
+      |			"structuredBuildingAllowance": 0.12,
+      |			"zeroEmissionsCarAllowance": 0.12
+      |		},
+      |		"taxableProfit": 1,
+      |   "adjustedIncomeTaxLoss": 1,
+      |		"countryLevelDetail": [{
+      |			"countryCode": "CYM",
+      |			"totalIncome": 0.12,
+      |			"income": {
+      |				"rent": 0.12,
+      |				"premiumsOfLeaseGrant": 0.12,
+      |				"otherPropertyIncome": 0.12
+      |			},
+      |			"totalExpenses": 0.12,
+      |			"expenses": {
+      |       "consolidatedExpenses": 0.12,
+      |				"premisesRunningCosts": 0.12,
+      |				"repairsAndMaintenance": 0.12,
+      |				"financialCosts": 0.12,
+      |				"professionalFees": 0.12,
+      |				"travelCosts": 0.12,
+      |				"costOfServices": 0.12,
+      |				"residentialFinancialCost": 0.12,
+      |				"broughtFwdResidentialFinancialCost": 0.12,
+      |				"other": 0.12
+      |			},
+      |			"netProfit": 0.12,
+      |     "netLoss": 0.12,
+      |			"totalAdditions": 0.12,
+      |			"additions": {
+      |				"privateUseAdjustment": 0.12,
+      |				"balancingCharge": 0.12
+      |			},
+      |			"totalDeductions": 0.12,
+      |			"deductions": {
+      |				"annualInvestmentAllowance": 0.12,
+      |				"costOfReplacingDomesticItems": 0.12,
+      |				"zeroEmissionsGoodsVehicleAllowance": 0.12,
+      |				"otherCapitalAllowance": 0.12,
+      |				"electricChargePointAllowance": 0.12,
+      |				"structuredBuildingAllowance": 0.12,
+      |				"zeroEmissionsCarAllowance": 0.12
+      |			},
+      |			"taxableProfit": 1,
+      |     "adjustedIncomeTaxLoss": 1
+      |		}]
+      |	},
+      |	"adjustments": [{
+      |   [
+      |		"countryCode": "CYM",
+      |		"income": {
+      |			"rentReceived": 99999999999.99,
+      |			"premiumsOfLeaseGrant": 99999999999.99,
+      |			"otherPropertyIncome": 99999999999.99
+      |		},
+      |		"expenses": {
+      |     "consolidatedExpenses": 99999999999.99,
+      |			"premisesRunningCosts": 99999999999.99,
+      |			"repairsAndMaintenance": 99999999999.99,
+      |			"financialCosts": 99999999999.99,
+      |			"professionalFees": 99999999999.99,
+      |			"travelCosts": 99999999999.99,
+      |			"costOfServices": 99999999999.99,
+      |			"residentialFinancialCost": 99999999999.99,
+      |			"other": 99999999999.99
+      |		}],
+      |  "income": {
+      |   "rent": 99999999999.99
+      |  },
+      |  "expenses": {
+      |   "premisesRunningCosts": 99999999999.99,
+      |   "repairsAndMaintenance": 99999999999.99,
+      |   "financialCosts": 99999999999.99,
+      |   "professionalFees": 99999999999.99,
+      |   "costOfServices": 99999999999.99,
+      |   "travelCosts": 99999999999.99,
+      |   "other": 99999999999.99,
+      |   "consolidatedExpenses": 99999999999.99
+      |  }
+      |	}],
+      |	"adjustedSummaryCalculation": {
+      |		"totalIncome": 0.12,
+      |		"income": {
+      |			"rent": 0.12,
+      |			"premiumsOfLeaseGrant": 0.12,
+      |			"otherPropertyIncome": 0.12
+      |		},
+      |		"totalExpenses": 0.12,
+      |		"expenses": {
+      |     "consolidatedExpenses": 0.12,
+      |			"premisesRunningCosts": 0.12,
+      |			"repairsAndMaintenance": 0.12,
+      |			"financialCosts": 0.12,
+      |			"professionalFees": 0.12,
+      |			"travelCosts": 0.12,
+      |			"costOfServices": 0.12,
+      |			"residentialFinancialCost": 0.12,
+      |			"broughtFwdResidentialFinancialCost": 0.12,
+      |			"other": 0.12
+      |		},
+      |		"netProfit": 0.12,
+      |		"totalAdditions": 0.12,
+      |		"additions": {
+      |			"privateUseAdjustment": 0.12,
+      |			"balancingCharge": 0.12
+      |		},
+      |		"totalDeductions": 0.12,
+      |		"deductions": {
+      |			"annualInvestmentAllowance": 0.12,
+      |			"costOfReplacingDomesticItems": 0.12,
+      |			"zeroEmissionsGoodsVehicleAllowance": 0.12,
+      |     "propertyAllowance": 0.12,
+      |			"otherCapitalAllowance": 0.12,
+      |			"electricChargePointAllowance": 0.12,
+      |     "structuredBuildingAllowance": 0.12,
+      |     "zeroEmissionsCarAllowance": 0.12
+      |		},
+      |		"taxableProfit": 1,
+      |		"adjustedIncomeTaxLoss": 1,
+      |		"countryLevelDetail": [{
+      |			"countryCode": "CYM",
+      |			"totalIncome": 0.12,
+      |			"income": {
+      |				"rent": 0.12,
+      |				"premiumsOfLeaseGrant": 0.12,
+      |				"otherPropertyIncome": 0.12
+      |			},
+      |			"totalExpenses": 0.12,
+      |			"expenses": {
+      |       "consolidatedExpenses": 0.12,
+      |				"premisesRunningCosts": 0.12,
+      |				"repairsAndMaintenance": 0.12,
+      |				"financialCosts": 0.12,
+      |				"professionalFees": 0.12,
+      |				"travelCosts": 0.12,
+      |				"costOfServices": 0.12,
+      |				"residentialFinancialCost": 0.12,
+      |				"broughtFwdResidentialFinancialCost": 0.12,
+      |       "structuredBuildingAllowance": 0.12,
+      |       "zeroEmissionsCarAllowance": 0.12,
+      |				"other": 0.12
+      |			},
+      |			"netProfit": 0.12,
+      |     "netLoss": 0.12,
+      |			"totalAdditions": 0.12,
+      |			"additions": {
+      |				"privateUseAdjustment": 0.12,
+      |				"balancingCharge": 0.12
+      |			},
+      |			"totalDeductions": 0.12,
+      |			"deductions": {
+      |				"annualInvestmentAllowance": 0.12,
+      |				"costOfReplacingDomesticItems": 0.12,
+      |				"zeroEmissionsGoodsVehicleAllowance": 0.12,
+      |       "propertyAllowance": 0.12,
+      |				"otherCapitalAllowance": 0.12,
+      |				"electricChargePointAllowance": 0.12
+      |			},
+      |			"taxableProfit": 1,
+      |     "adjustedIncomeTaxLoss": 1
+      |		}]
+      |	}
+      |}""".stripMargin
+  )*/
 
-      "a valid fhl json with all fields are supplied with" in {
-        fhlDesJson.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveForeignPropertyFhlEeaBsasResponseModel
-      }
-
-      "a valid non-fhl json with all fields are supplied and no adjustedSummaryCalculation" in {
-        adjustableSummaryCalculationNonFhlDesJson.as[RetrieveForeignPropertyBsasResponse] shouldBe
-          retrieveForeignPropertyBsasResponseModel.copy(metadata = nonFhlMetaDataModel.copy(adjustedSummary = false))
-      }
-
-      "a valid fhl json with all fields are supplied and no adjustedSummaryCalculation" in {
-        adjustableSummaryCalculationFhlDesJson.as[RetrieveForeignPropertyBsasResponse] shouldBe
-          retrieveForeignPropertyFhlEeaBsasResponseModel.copy(metadata = fhlMetaDataModel.copy(adjustedSummary = true))
+/*  "reads" should {
+    "return a valid retrieve BSAS model" when {
+      "a valid json with all fields are supplied" in {
+        desJson.as[RetrieveForeignPropertyBSASResponse] shouldBe retrieveBsasResponseModel
       }
     }
   }
 
   "writes" should {
     "return a valid json" when {
-      "a valid non-fhl model is supplied" in {
-        retrieveForeignPropertyBsasResponseModel.toJson shouldBe nonFhlMtdJson
-      }
-
-      "a valid fhl model is supplied" in {
-        retrieveForeignPropertyFhlEeaBsasResponseModel.toJson shouldBe fhlMtdJson
+      "a valid model is supplied" in {
+        retrieveBsasResponseModel.toJson shouldBe mtdJson
       }
     }
+<<<<<<< HEAD
   }
 
   "HateoasFactory" should {
@@ -677,4 +506,6 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
     }
   }
 
+=======
+  }*/
 }

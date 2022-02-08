@@ -18,135 +18,115 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures.countryLevelDetailModel
+import v3.models.utils.JsonErrorValidators
 
-class CountryLevelDetailSpec extends UnitSpec {
+class CountryLevelDetailSpec extends UnitSpec with JsonErrorValidators{
 
-  val nonFhlMtdJson = Json.parse(
+  val mtdJson = Json.parse(
     """{
-      |  "countryCode":"FRA",
-      |  "total": {
-      |    "income":100.49,
-      |    "expenses":100.49,
-      |    "additions":100.49,
-      |    "deductions":100.49
-      |    },
-      |  "incomeBreakdown": {
-      |    "rentIncome":100.49,
-      |    "premiumsOfLeaseGrant":100.49,
-      |    "otherPropertyIncome":100.49
-      |    },
-      |  "expensesBreakdown": {
-      |    "premisesRunningCosts":100.49,
-      |    "repairsAndMaintenance":100.49,
-      |    "financialCosts":100.49,
-      |    "professionalFees":100.49,
-      |    "travelCosts":100.49,
-      |    "costOfServices":100.49,
-      |    "residentialFinancialCost":100.49,
-      |    "broughtFwdResidentialFinancialCost":100.49,
-      |    "other":100.49
-      |    }
-      |}""".stripMargin
-  )
-
-  val fhlMtdJson = Json.parse(
-    """{
-      |  "countryCode":"FRA",
-      |  "total": {
-      |    "income":100.49,
-      |    "expenses":100.49,
-      |    "additions":100.49,
-      |    "deductions":100.49
-      |    },
-      |  "incomeBreakdown": {
-      |    "rentIncome":100.49
-      |    },
-      |  "expensesBreakdown": {
-      |    "premisesRunningCosts":100.49,
-      |    "repairsAndMaintenance":100.49,
-      |    "financialCosts":100.49,
-      |    "professionalFees":100.49,
-      |    "travelCosts":100.49,
-      |    "costOfServices":100.49,
-      |    "other":100.49
-      |  }
-      |}""".stripMargin
-  )
-
-  val nonFhlDesJson = Json.parse(
-    """{
-      |  "countryCode": "FRA",
-      |  "total": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49
-      |  },
+      |  "countryCode": "CYM",
+      |  "totalIncome": 0.12,
       |  "income": {
-      |    "rent": 100.49,
-      |    "premiumsOfLeaseGrant": 100.49,
-      |    "otherPropertyIncome": 100.49
-      |  },
+      |     "totalRentsReceived": 0.12,
+      |     "premiumsOfLeaseGrant": 0.12,
+      |     "otherPropertyIncome": 0.12
+      |     },
+      |  "totalExpenses": 0.12,
       |  "expenses": {
-      |    "premisesRunningCosts": 100.49,
-      |    "repairsAndMaintenance": 100.49,
-      |    "financialCosts": 100.49,
-      |    "professionalFees": 100.49,
-      |    "travelCosts": 100.49,
-      |    "costOfServices": 100.49,
-      |    "residentialFinancialCost": 100.49,
-      |    "broughtFwdResidentialFinancialCost": 100.49,
-      |    "other": 100.49
-      |  }
+      |     "consolidatedExpenses": 0.12,
+      |     "premisesRunningCosts": 0.12,
+      |     "repairsAndMaintenance": 0.12,
+      |     "financialCosts": 0.12,
+      |     "professionalFees": 0.12,
+      |     "travelCosts": 0.12,
+      |     "costOfServices": 0.12,
+      |     "residentialFinancialCost": 0.12,
+      |     "broughtFwdResidentialFinancialCost": 0.12,
+      |     "other": 0.12
+      |     },
+      |   "netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |   "totalAdditions": 0.12,
+      |   "additions": {
+      |     "privateUseAdjustment": 0.12,
+      |     "balancingCharge": 0.12
+      |   },
+      |   "totalDeductions": 0.12,
+      |   "deductions": {
+      |     "annualInvestmentAllowance": 0.12,
+      |     "costOfReplacingDomesticItems": 0.12,
+      |     "zeroEmissionGoods": 0.12,
+      |     "propertyAllowance": 0.12,
+      |     "otherCapitalAllowance": 0.12,
+      |     "electricChargePointAllowance": 0.12,
+      |     "structuredBuildingAllowance": 0.12,
+      |      "zeroEmissionsCarAllowance": 0.12
+      |    },
+      |    "taxableProfit": 1,
+      |    "adjustedIncomeTaxLoss": 1
       |}""".stripMargin
   )
 
-  val fhlDesJson = Json.parse(
+  val desJson = Json.parse(
     """{
-      |  "countryCode":"FRA",
-      |  "total": {
-      |    "totalIncome": 100.49,
-      |    "totalExpenses": 100.49,
-      |    "totalAdditions": 100.49,
-      |    "totalDeductions": 100.49
-      |  },
+      |  "countryCode": "CYM",
+      |  "totalIncome": 0.12,
       |  "income": {
-      |    "rent":100.49
-      |  },
+      |     "rent": 0.12,
+      |     "premiumsOfLeaseGrant": 0.12,
+      |     "otherPropertyIncome": 0.12
+      |     },
+      |  "totalExpenses": 0.12,
       |  "expenses": {
-      |    "premisesRunningCosts":100.49,
-      |    "repairsAndMaintenance":100.49,
-      |    "financialCosts":100.49,
-      |    "professionalFees":100.49,
-      |    "travelCosts":100.49,
-      |    "costOfServices":100.49,
-      |    "other":100.49
-      |  }
+      |     "consolidatedExpenses": 0.12,
+      |     "premisesRunningCosts": 0.12,
+      |     "repairsAndMaintenance": 0.12,
+      |     "financialCosts": 0.12,
+      |     "professionalFees": 0.12,
+      |     "travelCosts": 0.12,
+      |     "costOfServices": 0.12,
+      |     "residentialFinancialCost": 0.12,
+      |     "broughtFwdResidentialFinancialCost": 0.12,
+      |     "other": 0.12
+      |     },
+      |   "netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |   "totalAdditions": 0.12,
+      |   "additions": {
+      |     "privateUseAdjustment": 0.12,
+      |     "balancingCharge": 0.12
+      |   },
+      |   "totalDeductions": 0.12,
+      |   "deductions": {
+      |     "annualInvestmentAllowance": 0.12,
+      |     "costOfReplacingDomesticItems": 0.12,
+      |     "zeroEmissionsGoodsVehicleAllowance": 0.12,
+      |     "propertyAllowance": 0.12,
+      |     "otherCapitalAllowance": 0.12,
+      |     "electricChargePointAllowance": 0.12,
+      |     "structuredBuildingAllowance": 0.12,
+      |      "zeroEmissionsCarAllowance": 0.12
+      |    },
+      |    "taxableProfit": 1,
+      |    "adjustedIncomeTaxLoss": 1
       |}""".stripMargin
   )
 
   "reads" should {
-    "return a valid model" when {
-      "a valid non-fhl json with all fields are supplied" in {
-        nonFhlDesJson.as[CountryLevelDetail](CountryLevelDetail.nonFhlReads) shouldBe nonFhlCountryLevelDetail
-      }
-
-      "a valid fhl json with all fields are supplied" in {
-        fhlDesJson.as[CountryLevelDetail](CountryLevelDetail.fhlReads) shouldBe fhlCountryLevelDetail
+    "return a valid countryLevelDetail model" when {
+      "a valid json with all fields are supplied" in {
+        desJson.as[CountryLevelDetail] shouldBe countryLevelDetailModel
       }
     }
   }
 
   "writes" should {
     "return a valid json" when {
-      "a valid non-fhl model is supplied" in {
-        Json.toJson(nonFhlCountryLevelDetail) shouldBe nonFhlMtdJson
-      }
-
-      "a valid fhl model is supplied" in {
-        Json.toJson(fhlCountryLevelDetail) shouldBe fhlMtdJson
+      "a valid model is supplied" in {
+        countryLevelDetailModel.toJson shouldBe mtdJson
       }
     }
   }
 }
+

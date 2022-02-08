@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveBsasAdjustments.ukProperty
+package v3.models.response.retrieveBsasAdjustments.ukProperty
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
-import v2.models.utils.JsonErrorValidators
+import v3.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
+import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class MetadataOldSpec extends UnitSpec with JsonErrorValidators {
 
   val desJson: JsValue = Json.parse(
     """{

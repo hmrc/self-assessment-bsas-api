@@ -16,83 +16,147 @@
 
 package v3.fixtures.foreignProperty
 
-import java.time.LocalDate
-
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
-import v3.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 
-  val nonFhlExpensesModel: ExpensesBreakdown = ExpensesBreakdown(
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    None
-  )
-
-  val fhlExpensesModel: ExpensesBreakdown = ExpensesBreakdown(
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    None,
-    None,
-    Some(100.49),
-    None
-  )
-
-  val nonFhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
-
-  val fhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), None, None)
-
-  val total: TotalBsas = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
-
-  val profit: Profit = Profit(Some(100.49), Some(100))
-
-  val loss: Loss = Loss(Some(100.49), Some(100))
-
-  val nonFhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
-
-  val fhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(fhlIncomeModel), Some(fhlExpensesModel))
-
-  val nonFhlBsasDetailModel: BsasDetail =
-    BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel), Some(Seq(nonFhlCountryLevelDetail)))
-
-  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel), Some(Seq(fhlCountryLevelDetail)))
-
-  val nonFhlMetaDataModel: Metadata = Metadata(
-    TypeOfBusiness.`foreign-property`,
-    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2021-10-10")),
-    "2021-22",
-    "2019-10-14T11:33:27Z",
+  val metaDataModel: Metadata = Metadata(
     "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-    "valid",
-    true
+    "2020-12-05T16:19:44Z",
+    Some("2020-12-05T16:19:44Z"),
+    "AA999999A",
+    "2019-20",
+    "valid"
   )
 
-  val fhlMetaDataModel: Metadata = Metadata(
+  val inputsModel: Inputs = Inputs(
+    "000000000000210",
     TypeOfBusiness.`foreign-property-fhl-eea`,
-    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2021-10-10")),
-    "2021-22",
-    "2019-10-14T11:33:27Z",
-    "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-    "valid",
-    true
+    Some("Business Name"),
+    "2019-04-06",
+    "2020-04-05",
+    "MTD-SA",
+    Seq(SubmissionPeriods("617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4","2019-04-06","2020-04-05","2019-02-15T09:35:04.843Z"))
   )
 
-  val retrieveForeignPropertyBsasResponseModel: RetrieveForeignPropertyBsasResponse =
-    RetrieveForeignPropertyBsasResponse(nonFhlMetaDataModel, Some(nonFhlBsasDetailModel))
+  val submissionPeriodModel: SubmissionPeriods = SubmissionPeriods(
+    "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+    "2019-04-06",
+    "2020-04-05",
+    "2019-02-15T09:35:04.843Z"
+  )
 
-  val retrieveForeignPropertyFhlEeaBsasResponseModel: RetrieveForeignPropertyBsasResponse =
-    RetrieveForeignPropertyBsasResponse(fhlMetaDataModel.copy(typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`), Some(fhlBsasDetailModel))
+  val incomeModel = Income(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
 
+
+  val expensesModel = Expenses(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val additionsModel = Additions(
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val deductionsModel = Deductions(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val countryLevelDetailModel = CountryLevelDetail(
+    Some("CYM"),
+    Some(0.12),
+    Some(Income(Some(0.12), Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(Additions(Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(Deductions(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+    Some(1),
+    Some(1)
+  )
+
+  val adjustableSummaryCalculationModel = AdjustableSummaryCalculation(
+    Some(0.12),
+    Some(Income(Some(0.12), Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(Additions(Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(Deductions(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+    Some(1),
+    Some(1),
+    Some(Seq(CountryLevelDetail(
+    Some("CYM"),
+    Some(0.12),
+    Some(Income(Some(0.12), Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(Additions(Some(0.12), Some(0.12))),
+    Some(0.12),
+    Some(Deductions(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+    Some(1),
+    Some(1)
+  ))))
+
+  val adjustmentsModel = Adjustments(
+    None,
+    Some(Income(Some(0.12), Some(0.12), Some(0.12))),
+    Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))))
+
+  val adjustmentsArrayModel = Adjustments(
+    Some(Seq(CountryLevelDetail(
+      Some("CYM"),
+      None,
+      Some(Income(Some(0.12), Some(0.12), Some(0.12))),
+      None,
+      Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None
+    ))),
+    None,
+    None)
+
+  val retrieveBsasResponseModel = RetrieveForeignPropertyBSASResponse(
+    metadata = metaDataModel,
+    inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsModel),
+    adjustedSummaryCalculation = adjustableSummaryCalculationModel
+  )
 }

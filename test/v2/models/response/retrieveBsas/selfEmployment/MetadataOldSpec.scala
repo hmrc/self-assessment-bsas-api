@@ -25,7 +25,7 @@ import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
 }
 import v2.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class MetadataOldSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid model" when {

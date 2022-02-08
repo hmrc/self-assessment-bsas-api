@@ -22,6 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 import v3.models.response.retrieveBsas.foreignProperty._
+import v3.models.response.retrieveBsas.foreignPropertyOld.{BsasDetail, CountryLevelDetail, ExpensesBreakdown, IncomeBreakdown, MetadataOld, RetrieveForeignPropertyBsasResponse}
 
 object RetrieveForeignPropertyBsasFixtures {
 
@@ -123,7 +124,7 @@ object RetrieveForeignPropertyBsasFixtures {
   val countryLevelDetail = CountryLevelDetail("FRA", totalBsasModel, Some(incomeBreakdownModel), Some(expensesBreakdownModel))
   val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2020-04-06"), LocalDate.parse("2021-04-05"))
 
-  val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`foreign-property`,
+  val metadataModel = MetadataOld(typeOfBusiness = TypeOfBusiness.`foreign-property`,
     accountingPeriod = accountingPeriodModel,
     taxYear = "2020-21",
     requestedDateTime = "2021-10-14T11:33:27Z",
