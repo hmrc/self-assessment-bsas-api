@@ -23,6 +23,7 @@ object AdjustmentRangeValidation {
   private val minValue = BigDecimal(-99999999999.99)
   private val maxValue = BigDecimal(99999999999.99)
 
+  @deprecated(message = "Use NumberValidation.validateAdjustment")
   def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
 
     val error = RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(fieldName)))

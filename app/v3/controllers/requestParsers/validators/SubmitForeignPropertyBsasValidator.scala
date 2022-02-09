@@ -16,110 +16,194 @@
 
 package v3.controllers.requestParsers.validators
 
+import v2.controllers.requestParsers.validators.validations.NoValidationErrors
 import v3.controllers.requestParsers.validators.validations._
-import v3.models.errors._
-import v3.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
+import v3.models.errors.{ MtdError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError }
+import v3.models.request.submitBsas.foreignProperty._
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet = List(
     parameterFormatValidation,
+    validateOnePropertyOnly,
     bodyFormatValidation,
-//    incorrectOrEmptyBodySubmittedValidation,
-    bodyFieldValidation,
-//    otherBodyFieldsValidator
+    bodyFieldValidation
   )
 
   private def parameterFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
     List(
       NinoValidation.validate(data.nino),
-      BsasIdValidation.validate(data.calculationId)
+      CalculationIdValidation.validate(data.calculationId)
     )
   }
 
-  private def bodyFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
-    List(flattenErrors(List(
-      JsonFormatValidation.validate[SubmitForeignPropertyBsasRequestBody](data.body)
-    )))
-  }
-/*
-
-  private def incorrectOrEmptyBodySubmittedValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
-    val body = data.body.as[SubmitForeignPropertyBsasRequestBody]
-    if (body.isIncorrectOrEmptyBody) {
-      List(List(RuleIncorrectOrEmptyBodyError))
+  private def validateOnePropertyOnly: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
+    if (Seq("foreignFhlEea", "nonFurnishedHolidayLet").forall(field => (data.body \ field).isDefined)) {
+      List(List(RuleBothPropertiesSuppliedError))
     } else {
-      NoValidationErrors
+      Nil
     }
   }
-*/
+
+  private def bodyFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
+    JsonFormatValidation.validateAndCheckNonEmpty[SubmitForeignPropertyBsasRequestBody](data.body) match {
+      case Nil          => NoValidationErrors
+      case schemaErrors => List(schemaErrors)
+    }
+  }
 
   private def bodyFieldValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
+    val body: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
-    val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
+    List(
+      flattenErrors(
+        List(
+          body.foreignFhlEea.map(validateForeignFhlEea).getOrElse(NoValidationErrors),
+          body.nonFurnishedHolidayLet
+            .map(_.zipWithIndex.toList.flatMap {
+              case (entry, i) => validateForeignProperty(entry, i)
+            })
+            .getOrElse(NoValidationErrors),
+          body.foreignFhlEea.flatMap(_.expenses.map(validateForeignFhlEeaConsolidatedExpenses)).getOrElse(NoValidationErrors),
+          body.nonFurnishedHolidayLet
+            .map(_.zipWithIndex.toList.map {
+              case (entry, i) =>
+                entry.expenses.map(expenditure => validateForeignPropertyConsolidatedExpenses(expenditure, i)).getOrElse(NoValidationErrors)
+            })
+            .getOrElse(Nil)
+            .flatten,
+          duplicateCountryCodeValidation(body)
+        ))
+    )
+  }
 
-    def doValidationFor(fieldName: String, withValue: Option[BigDecimal]): List[MtdError] = {
-      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] = Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
-      validations.flatMap(validation => validation(withValue, fieldName)).toList
-    }
-
-    def validateForeignProperty(foreignProperty: ForeignProperty, index: Int): List[List[MtdError]] = {
-      List(
-        CountryCodeValidation.validate(field = foreignProperty.countryCode, path = s"/nonFurnishedHolidayLet/$index/countryCode"),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/income/totalRentsReceived", foreignProperty.income.flatMap(_.totalRentsReceived)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/income/premiumsOfLeaseGrant", foreignProperty.income.flatMap(_.premiumsOfLeaseGrant)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/income/otherPropertyIncome", foreignProperty.income.flatMap(_.otherPropertyIncome)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/premisesRunningCosts", foreignProperty.expenses.flatMap(_.premisesRunningCosts)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/repairsAndMaintenance", foreignProperty.expenses.flatMap(_.repairsAndMaintenance)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/financialCosts", foreignProperty.expenses.flatMap(_.financialCosts)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/professionalFees", foreignProperty.expenses.flatMap(_.professionalFees)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/travelCosts", foreignProperty.expenses.flatMap(_.travelCosts)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/costOfServices", foreignProperty.expenses.flatMap(_.costOfServices)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/residentialFinancialCost", foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/other", foreignProperty.expenses.flatMap(_.other)),
-        doValidationFor(s"/nonFurnishedHolidayLet/$index/expenses/consolidatedExpenses", foreignProperty.expenses.flatMap(_.consolidatedExpenses))
+  private def validateForeignFhlEea(foreignFhlEea: FhlEea) = {
+    List(
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.income.flatMap(_.totalRentsReceived),
+        path = "/foreignFhlEea/income/totalRentsReceived"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.premisesRunningCosts),
+        path = "/foreignFhlEea/expenses/premisesRunningCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance),
+        path = "/foreignFhlEea/expenses/repairsAndMaintenance"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.financialCosts),
+        path = "/foreignFhlEea/expenses/financialCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.professionalFees),
+        path = "/foreignFhlEea/expenses/professionalFees"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.travelCosts),
+        path = "/foreignFhlEea/expenses/travelCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.costOfServices),
+        path = "/foreignFhlEea/expenses/costOfServices"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.other),
+        path = "/foreignFhlEea/expenses/other"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignFhlEea.expenses.flatMap(_.consolidatedExpenses),
+        path = "/foreignFhlEea/expenses/consolidatedExpenses"
       )
-    }
+    ).flatten
+  }
 
-    def validateForeignFhlEea(foreignFhlEea: FhlEea): List[List[MtdError]] = {
-      List(
-        doValidationFor("/foreignFhlEea/income/totalRentsReceived", foreignFhlEea.income.flatMap(_.totalRentsReceived)),
-        doValidationFor("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts)),
-        doValidationFor("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance)),
-        doValidationFor("/foreignFhlEea/expenses/financialCosts", foreignFhlEea.expenses.flatMap(_.financialCosts)),
-        doValidationFor("/foreignFhlEea/expenses/professionalFees", foreignFhlEea.expenses.flatMap(_.professionalFees)),
-        doValidationFor("/foreignFhlEea/expenses/travelCosts", foreignFhlEea.expenses.flatMap(_.travelCosts)),
-        doValidationFor("/foreignFhlEea/expenses/costOfServices", foreignFhlEea.expenses.flatMap(_.costOfServices)),
-        doValidationFor("/foreignFhlEea/expenses/other", foreignFhlEea.expenses.flatMap(_.other)),
-        doValidationFor("/foreignFhlEea/expenses/consolidatedExpenses", foreignFhlEea.expenses.flatMap(_.consolidatedExpenses))
+  private def validateForeignProperty(foreignProperty: ForeignProperty, index: Int) = {
+    List(
+      CountryCodeValidation.validate(
+        field = foreignProperty.countryCode,
+        path = s"/nonFurnishedHolidayLet/$index/countryCode"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.income.flatMap(_.totalRentsReceived),
+        path = s"/nonFurnishedHolidayLet/$index/income/totalRentsReceived"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.income.flatMap(_.premiumsOfLeaseGrant),
+        path = s"/nonFurnishedHolidayLet/$index/income/premiumsOfLeaseGrant"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.income.flatMap(_.otherPropertyIncome),
+        path = s"/nonFurnishedHolidayLet/$index/income/otherPropertyIncome"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.premisesRunningCosts),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/premisesRunningCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.repairsAndMaintenance),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/repairsAndMaintenance"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.financialCosts),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/financialCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.professionalFees),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/professionalFees"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.travelCosts),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/travelCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.costOfServices),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/costOfServices"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.residentialFinancialCost),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/residentialFinancialCost"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.other),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/other"
+      ),
+      NumberValidation.validateAdjustment(
+        field = foreignProperty.expenses.flatMap(_.consolidatedExpenses),
+        path = s"/nonFurnishedHolidayLet/$index/expenses/consolidatedExpenses"
       )
-    }
+    ).flatten
+  }
 
-    List(flattenErrors(
-      (model.foreignFhlEea, model.nonFurnishedHolidayLet) match {
-        case (Some(foreignFhlEea), None) => validateForeignFhlEea(foreignFhlEea)
-        case (None, Some(foreignProperty)) => foreignProperty.zipWithIndex.toList.flatMap {
-          case (entry, i) => validateForeignProperty(entry, i)
-        }
-        case _ => List(List(RuleIncorrectOrEmptyBodyError))
+  private def validateForeignFhlEeaConsolidatedExpenses(expenses: FhlEeaExpenses): List[MtdError] = {
+    BothExpensesValidation.validate(
+      expenses = expenses,
+      path = "/foreignFhlEea/expenses"
+    )
+  }
+
+  private def validateForeignPropertyConsolidatedExpenses(expenses: ForeignPropertyExpenses, index: Int): List[MtdError] = {
+    BothExpensesValidation.validate(
+      expenses = expenses,
+      path = s"/nonFurnishedHolidayLet/$index/expenses"
+    )
+  }
+
+  private def duplicateCountryCodeValidation(body: SubmitForeignPropertyBsasRequestBody): List[MtdError] = {
+    body.nonFurnishedHolidayLet
+      .map { entries =>
+        entries.zipWithIndex
+          .map {
+            case (entry, idx) => (entry.countryCode, s"/nonFurnishedHolidayLet/$idx/countryCode")
+          }
+          .groupBy(_._1)
+          .collect {
+            case (code, codeAndPaths) if codeAndPaths.size >= 2 =>
+              RuleDuplicateCountryCodeError.forDuplicatedCodesAndPaths(code, codeAndPaths.map(_._2))
+          }
+          .toList
       }
-    ))
+      .getOrElse(Nil)
   }
-
-/*
-  private def otherBodyFieldsValidator: SubmitForeignPropertyRawData => List[List[MtdError]] = {
-    data =>
-
-      val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
-
-      List(
-        if (model.nonFurnishedHolidayLet.isEmpty) NoValidationErrors
-        else model.nonFurnishedHolidayLet.get.toList.flatMap {
-          entity => BothExpensesValidation.validate(entity.expenses.map(_.params))
-        },
-        BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
-      )
-  }
-*/
 
   override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
     run(validationSet, data).distinct

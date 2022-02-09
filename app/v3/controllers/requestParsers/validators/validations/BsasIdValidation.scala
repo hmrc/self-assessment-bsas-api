@@ -21,6 +21,8 @@ import v3.models.errors.{BsasIdFormatError, MtdError}
 object BsasIdValidation {
 
   private val regex = """^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"""
+
+  @deprecated(message = "Use CalculationIdValidation")
   def validate(bsasId: String): List[MtdError] =
     if(bsasId.matches(regex)) List() else List(BsasIdFormatError)
 }

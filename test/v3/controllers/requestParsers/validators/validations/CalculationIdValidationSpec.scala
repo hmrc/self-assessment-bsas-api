@@ -22,23 +22,16 @@ import v3.models.utils.JsonErrorValidators
 
 class CalculationIdValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  case class SetUp(calculationId: String)
-
   "validate" should {
     "return no errors" when {
-      "a valid calculationId is supplied" in new SetUp("a54ba782-5ef4-47f4-ab72-495406665ca9"){
-
-        CalculationIdValidation.validate(calculationId).isEmpty shouldBe true
+      "a valid CalculationId is supplied" in {
+        CalculationIdValidation.validate("a54ba782-5ef4-47f4-ab72-495406665ca9") shouldBe Nil
       }
     }
 
     "return an error" when {
-      "a invalid calculationId is supplied" in new SetUp("a54ba782-5ef4-47f4-ab72-zxasxawdsaw"){
-
-        val validationResult = CalculationIdValidation.validate(calculationId)
-
-        validationResult.length shouldBe 1
-        validationResult.head shouldBe CalculationIdFormatError
+      "a invalid CalculationId is supplied" in {
+        CalculationIdValidation.validate("badId") shouldBe List(CalculationIdFormatError)
       }
     }
   }

@@ -20,6 +20,7 @@ import v3.models.errors.{FormatAdjustmentValueError, MtdError}
 
 object AdjustmentValueValidation {
 
+  @deprecated(message = "Use NumberValidation.validateAdjustment")
   def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
 
     lazy val error = FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName)))

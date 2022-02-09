@@ -16,21 +16,45 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v3.models.errors.{RuleBothExpensesError, MtdError}
+import v3.models.errors.{ MtdError, RuleBothExpensesError }
+import v3.models.request.submitBsas.foreignProperty.{ FhlEeaExpenses, ForeignPropertyExpenses }
 
 object BothExpensesValidation {
 
+  @deprecated(message = "Use validation specific to type instead")
   def validate(expensesAdjustments: Option[Map[String, BigDecimal]]): List[MtdError] = {
 
     expensesAdjustments match {
-      case Some(expenses) => (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"),
-        expenses.size) match {
-        case (true, true, size) if size == 2 => NoValidationErrors
-        case (true, true, size) if size > 2 => List(RuleBothExpensesError)
-        case (true, _, size) if size > 1 => List(RuleBothExpensesError)
-        case (_, _, _) => NoValidationErrors
-      }
+      case Some(expenses) =>
+        (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"), expenses.size) match {
+          case (true, true, size) if size == 2 => NoValidationErrors
+          case (true, true, size) if size > 2  => List(RuleBothExpensesError)
+          case (true, _, size) if size > 1     => List(RuleBothExpensesError)
+          case (_, _, _)                       => NoValidationErrors
+        }
       case None => NoValidationErrors
+    }
+  }
+
+  def validate(expenses: ForeignPropertyExpenses, path: String): List[MtdError] = {
+    expenses.consolidatedExpenses match {
+      case None => NoValidationErrors
+      case Some(_) =>
+        expenses match {
+          case ForeignPropertyExpenses(None, None, None, None, None, None, _, None, Some(_)) => NoValidationErrors
+          case _                                                                             => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+        }
+    }
+  }
+
+  def validate(expenses: FhlEeaExpenses, path: String): List[MtdError] = {
+    expenses.consolidatedExpenses match {
+      case None => NoValidationErrors
+      case Some(_) =>
+        expenses match {
+          case FhlEeaExpenses(None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
+          case _                                                                 => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+        }
     }
   }
 }

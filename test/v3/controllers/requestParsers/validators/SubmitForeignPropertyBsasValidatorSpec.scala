@@ -16,754 +16,413 @@
 
 package v3.controllers.requestParsers.validators
 
-import play.api.libs.json.Json
+import play.api.libs.json._
 import support.UnitSpec
+import v3.models.utils.JsonErrorValidators
 import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
-class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
+class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino = "AA123456A"
-  private val validBsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val requestBodyJsonForeignPropertyNoDecimals = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123,
-      |        "premiumsOfLeaseGrant": 123,
-      |        "foreignTaxTakenOff": 123,
-      |        "otherPropertyIncome": 123
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123,
-      |        "repairsAndMaintenance": 123,
-      |        "financialCosts": 123,
-      |        "professionalFees": 123,
-      |        "travelCosts": 123,
-      |        "costOfServices": 123,
-      |        "residentialFinancialCost": 123,
-      |        "other": 123
-      |      }
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
+  private val validNino          = "AA123456A"
+  private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
 
-  private val requestBodyJsonForeignProperty = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
+  private def entryWith(countryCode: String) =
+    Json.parse(s"""{
+                  |  "countryCode": "$countryCode",
+                  |  "income": {
+                  |    "totalRentsReceived": 1000.45,
+                  |    "premiumsOfLeaseGrant": -99.99,
+                  |    "otherPropertyIncome": 1000.00
+                  |  },
+                  |  "expenses": {
+                  |    "premisesRunningCosts": 1000.45,
+                  |    "repairsAndMaintenance": -99999.99,
+                  |    "financialCosts": 5000.45,
+                  |    "professionalFees": 300.99,
+                  |    "costOfServices": 500.00,
+                  |    "residentialFinancialCost": 9000.00,
+                  |    "other": 1000.00,
+                  |    "travelCosts": 99.99
+                  |  }
+                  |}""".stripMargin)
 
-  private val requestBodyJsonForeignPropertyConsolidatedExpenses = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "residentialFinancialCost": 123.12,
-      |        "consolidatedExpenses": 123.12
-      |      }
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
+  private val entry = entryWith(countryCode = "AFG")
 
-  private val requestBodyJsonForeignPropertyFhlEea = Json.parse(
-    """
-      |{
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
+  private val entryConsolidated =
+    Json.parse("""{
+                 |  "countryCode": "AFG",
+                 |  "income": {
+                 |    "totalRentsReceived": 1000.45,
+                 |    "premiumsOfLeaseGrant": -99.99,
+                 |    "otherPropertyIncome": 1000.00
+                 |  },
+                 |  "expenses": {
+                 |    "consolidatedExpenses": 332.78
+                 |  }
+                 |}""".stripMargin)
 
-  private val requestBodyJsonForeignPropertyFhlEeaConsolidatedExpenses = Json.parse(
-    """
-      |{
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {
-      |      "consolidatedExpenses": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
-
-  private val requestBodyJsonNoForeignPropertyIncome = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
-
-  private val requestBodyJsonNoForeignPropertyExpenses = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      }
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
-
-  private val requestBodyJsonNoFhlEeaIncome = Json.parse(
-    """
-      |{
-      |  "foreignFhlEea": {
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
-
-  private val requestBodyJsonNoFhlEeaExpenses = Json.parse(
-    """
-      |{
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
-
-  private val requestBodyJsonFPAndFHLEEA = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ],
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin
+  private def nonFhlBodyWith(nonFhlEntries: JsValue*) = Json.parse(
+    s"""{
+       |  "nonFurnishedHolidayLet": ${JsArray(nonFhlEntries)}
+       |}
+       |""".stripMargin
   )
 
-  private val requestBodyJsonEmptyForeignProperty = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [],
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin
+  private val nonFhlBody = nonFhlBodyWith(entry)
+
+  private val fhlBody = Json.parse(
+    s"""{
+       |  "foreignFhlEea": {
+       |    "income": {
+       |      "totalRentsReceived": 1000.45
+       |    },
+       |    "expenses": {
+       |      "premisesRunningCosts": 1001.00,
+       |      "repairsAndMaintenance": -99999.99,
+       |      "financialCosts": 200.50,
+       |      "professionalFees": -99999.99,
+       |      "costOfServices": -1000.45,
+       |      "other": 500.00,
+       |      "travelCosts": 100.00
+       |    }
+       |  }
+       |}
+       |""".stripMargin
   )
 
-  private val requestBodyJsonEmptyFhlEea = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ],
-      |  "foreignFhlEea": {}
-      |}
-      |""".stripMargin
-  )
-
-  private val requestBodyJsonEmptyForeignPropertyAndFhlEea = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [],
-      |  "foreignFhlEea": {}
-      |}
-      |""".stripMargin
-  )
-
-  private val requestBodyJsonEmptyForeignPropertyIncome = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {},
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ],
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
-
-  private val requestBodyJsonEmptyForeignPropertyExpenses = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {}
-      |    }
-      |  ],
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin
-  )
-
-  private val requestBodyJsonEmptyFhlEeaIncome = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ],
-      |  "foreignFhlEea": {
-      |    "income": {},
-      |    "expenses": {
-      |      "premisesRunningCosts": 123.12,
-      |      "repairsAndMaintenance": 123.12,
-      |      "financialCosts": 123.12,
-      |      "professionalFees": 123.12,
-      |      "costOfServices": 123.12,
-      |      "travelCosts": 123.12,
-      |      "other": 123.12
-      |    }
-      |  }
-      |}
-      |""".stripMargin
-  )
-
-  private val requestBodyJsonEmptyFhlEeaExpenses = Json.parse(
-    """
-      |{
-      |  "nonFurnishedHolidayLet": [
-      |    {
-      |      "countryCode": "FRA",
-      |      "income": {
-      |        "totalRentsReceived": 123.12,
-      |        "premiumsOfLeaseGrant": 123.12,
-      |        "foreignTaxTakenOff": 123.12,
-      |        "otherPropertyIncome": 123.12
-      |      },
-      |      "expenses": {
-      |        "premisesRunningCosts": 123.12,
-      |        "repairsAndMaintenance": 123.12,
-      |        "financialCosts": 123.12,
-      |        "professionalFees": 123.12,
-      |        "travelCosts": 123.12,
-      |        "costOfServices": 123.12,
-      |        "residentialFinancialCost": 123.12,
-      |        "other": 123.12
-      |      }
-      |    }
-      |  ],
-      |  "foreignFhlEea": {
-      |    "income": {
-      |      "totalRentsReceived": 123.12
-      |    },
-      |    "expenses": {}
-      |  }
-      |}
-      |""".stripMargin
-  )
-
-
-  private val emptyJson = Json.parse(
-    """
-      |{}
-      |""".stripMargin
+  private val fhlBodyConsolidated = Json.parse(
+    s"""{
+       |  "foreignFhlEea": {
+       |    "income": {
+       |      "totalRentsReceived": 1000.45
+       |    },
+       |    "expenses": {
+       |      "consolidatedExpenses": 1000.45
+       |    }
+       |  }
+       |}
+       |""".stripMargin
   )
 
   val validator = new SubmitForeignPropertyBsasValidator
 
   "running a validation" should {
     "return no errors" when {
-      "a valid foreign property request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonForeignProperty)) shouldBe Nil
+      "a valid fhl request is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = fhlBody)) shouldBe Nil
       }
-      "a valid FHL EEA request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonForeignPropertyFhlEea)) shouldBe Nil
+
+      "a valid non-fhl request is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = nonFhlBody)) shouldBe Nil
       }
-      "a valid request is supplied without decimal places in the JSON" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonForeignPropertyNoDecimals)) shouldBe Nil
+
+      "a valid fhl consolidated expenses request is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = fhlBodyConsolidated)) shouldBe Nil
       }
-      "a valid request is supplied without a foreignProperty.income object" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonNoForeignPropertyIncome)) shouldBe Nil
+
+      "a valid non-fhl consolidated expenses request is supplied" in {
+        validator.validate(
+          SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
       }
-      "a valid request is supplied without a foreignProperty.expenses" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonNoForeignPropertyExpenses)) shouldBe Nil
+
+      "a minimal fhl request is supplied" in {
+        validator.validate(
+          SubmitForeignPropertyRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = Json.parse("""{
+                                |  "foreignFhlEea": {
+                                |    "income": {
+                                |      "totalRentsReceived": 1000.45
+                                |    }
+                                |  }
+                                |}
+                                |""".stripMargin)
+          )) shouldBe Nil
       }
-      "a valid request is supplied without an fhlEea.income object" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonNoFhlEeaIncome)) shouldBe Nil
-      }
-      "a valid request is supplied without an fhlEea.expenses object" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonNoFhlEeaExpenses)) shouldBe Nil
-      }
-      "a valid foreign property consolidated expenses request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonForeignPropertyConsolidatedExpenses)) shouldBe Nil
-      }
-      "a valid foreign property fhl eea consolidated expenses request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonForeignPropertyFhlEeaConsolidatedExpenses)) shouldBe Nil
+
+      "a minimal non-fhl request is supplied" in {
+        validator.validate(
+          SubmitForeignPropertyRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = Json.parse("""{
+                                |   "nonFurnishedHolidayLet":  [
+                                |       {
+                                |          "countryCode": "FRA",
+                                |          "income": {
+                                |              "totalRentsReceived": 1000.45
+                                |          }
+                                |       }
+                                |    ]
+                                |}
+                                |""".stripMargin)
+          )) shouldBe Nil
       }
     }
 
-    "return a path parameter error" when {
-      "the nino is invalid" in {
-        validator.validate(SubmitForeignPropertyRawData("A12344A", validBsasId, requestBodyJsonForeignProperty)) shouldBe List(NinoFormatError)
-      }
-      "the bsasId format is invalid" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, "Walrus", requestBodyJsonForeignProperty)) shouldBe List(BsasIdFormatError)
-      }
-      "both path parameters are invalid" in {
-        validator.validate(SubmitForeignPropertyRawData("A12344A", "Walrus", requestBodyJsonForeignProperty)) shouldBe List(NinoFormatError, BsasIdFormatError)
+    "return NinoFormatError error" when {
+      "an invalid nino is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = validCalculationId, body = fhlBody)) shouldBe
+          List(NinoFormatError)
       }
     }
-    "return RuleIncorrectOrEmptyBodyError error" when {
-      "an empty JSON body is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, emptyJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "both foreignProperty and foreignPropertyFhlEea are supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonFPAndFHLEEA)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty foreignProperty object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignProperty)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty foreignProperty.income object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyIncome)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty foreignProperty.expenses is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyExpenses)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty fhlEea object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEea)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty fhlEea.income object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEeaIncome)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty fhlEea.expenses object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEeaExpenses)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "an empty foreignProperty and fhlEea object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyAndFhlEea)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+
+    "return CalculationIdFormatError error" when {
+      "an invalid calculationId is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = "12345", body = fhlBody)) shouldBe
+          List(CalculationIdFormatError)
       }
     }
-    "return a FORMAT_ADJUSTMENT_VALUE error" when {
-      "a value field has more than 2 decimal points" in {
-        val badJson = Json.parse(
-          """
-            |{
-            |  "nonFurnishedHolidayLet": [
-            |    {
-            |      "countryCode": "FRA",
-            |      "income": {
-            |        "totalRentsReceived": 123.456,
-            |        "premiumsOfLeaseGrant": 123.12,
-            |        "foreignTaxTakenOff": 123.12,
-            |        "otherPropertyIncome": 123.12
-            |      },
-            |      "expenses": {
-            |        "premisesRunningCosts": 123.12,
-            |        "repairsAndMaintenance": 123.12,
-            |        "financialCosts": 123.12,
-            |        "professionalFees": 123.12,
-            |        "travelCosts": 123.12,
-            |        "costOfServices": 123.12,
-            |        "residentialFinancialCost": 123.12,
-            |        "other": 123.12
-            |      }
-            |    }
-            |  ]
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/income/totalRentsReceived"))))
+
+    "return RuleBothPropertiesSuppliedError" when {
+      "both fhl and non-fhl are supplied" in {
+        validator.validate(
+          SubmitForeignPropertyRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = fhlBody.as[JsObject] ++ nonFhlBodyWith(entry).as[JsObject]
+          )) shouldBe List(RuleBothPropertiesSuppliedError)
       }
-      "multiple fields have more than 2 decimal points" in {
-        val badjson = Json.parse(
-          """
-            |{
-            |  "foreignFhlEea": {
-            |    "income": {
-            |      "totalRentsReceived": 123.456
-            |    },
-            |    "expenses": {
-            |      "premisesRunningCosts": 123.456,
-            |      "repairsAndMaintenance": 123.45,
-            |      "financialCosts": 123.45,
-            |      "professionalFees": 123.45,
-            |      "costOfServices": 123.45,
-            |      "travelCosts": 123.45,
-            |      "other": 123.45
-            |    }
-            |  }
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/income/totalRentsReceived", "/foreignFhlEea/expenses/premisesRunningCosts"))))
+
+      "both fhl and non-fhl are supplied even if they are empty" in {
+        // Note: no other errors should be returned
+        validator.validate(
+          SubmitForeignPropertyRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = Json.parse(
+              s"""
+             |{
+             |  "foreignFhlEea": {},
+             |  "nonFurnishedHolidayLet": []
+             |}
+             |""".stripMargin
+            )
+          )) shouldBe List(RuleBothPropertiesSuppliedError)
       }
     }
-    "return a RULE_RANGE_INVALID error" when {
-      "a value field is above 99999999999.99" in {
-        val badJson = Json.parse(
-          """
-            |{
-            |  "nonFurnishedHolidayLet": [
-            |    {
-            |      "countryCode": "FRA",
-            |      "income": {
-            |        "totalRentsReceived": 100000000000.99,
-            |        "premiumsOfLeaseGrant": 123.12,
-            |        "foreignTaxTakenOff": 123.12,
-            |        "otherPropertyIncome": 123.12
-            |      },
-            |      "expenses": {
-            |        "premisesRunningCosts": 123.12,
-            |        "repairsAndMaintenance": 123.12,
-            |        "financialCosts": 123.12,
-            |        "professionalFees": 123.12,
-            |        "travelCosts": 123.12,
-            |        "costOfServices": 123.12,
-            |        "residentialFinancialCost": 123.12,
-            |        "other": 123.12
-            |      }
-            |    }
-            |  ]
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/income/totalRentsReceived"))))
+
+    "return RuleIncorrectOrEmptyBodyError" when {
+      "an empty body is submitted" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = Json.parse("""{}"""))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
-      "a value field is below -99999999999.99" in {
-        val badJson = Json.parse(
-          """
-            |{
-            |  "nonFurnishedHolidayLet": [
-            |    {
-            |      "countryCode": "FRA",
-            |      "income": {
-            |        "totalRentsReceived": -100000000000.00,
-            |        "premiumsOfLeaseGrant": 123.12,
-            |        "foreignTaxTakenOff": 123.12,
-            |        "otherPropertyIncome": 123.12
-            |      },
-            |      "expenses": {
-            |        "premisesRunningCosts": 123.12,
-            |        "repairsAndMaintenance": 123.12,
-            |        "financialCosts": 123.12,
-            |        "professionalFees": 123.12,
-            |        "travelCosts": 123.12,
-            |        "costOfServices": 123.12,
-            |        "residentialFinancialCost": 123.12,
-            |        "other": 123.12
-            |      }
-            |    }
-            |  ]
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/income/totalRentsReceived"))))
+
+      "an object/array is empty or mandatory field is missing" when {
+
+        Seq(
+          "/foreignFhlEea",
+          "/foreignFhlEea/income",
+          "/foreignFhlEea/expenses",
+        ).foreach(path => testWith(fhlBody.replaceWithEmptyObject(path), path))
+
+        Seq(
+          (nonFhlBodyWith(), "/nonFurnishedHolidayLet"),
+          (nonFhlBodyWith(entry.replaceWithEmptyObject("/income")), "/nonFurnishedHolidayLet/0/income"),
+          (nonFhlBodyWith(entry.replaceWithEmptyObject("/expenses")), "/nonFurnishedHolidayLet/0/expenses"),
+          (nonFhlBodyWith(entry.removeProperty("/countryCode")), "/nonFurnishedHolidayLet/0/countryCode"),
+          (nonFhlBodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/nonFurnishedHolidayLet/0"),
+        ).foreach((testWith _).tupled)
+
+        def testWith(body: JsValue, expectedPath: String): Unit =
+          s"for $expectedPath" in {
+            validator.validate(
+              SubmitForeignPropertyRawData(
+                nino = validNino,
+                calculationId = validCalculationId,
+                body
+              )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(expectedPath))))
+          }
       }
-      "multiple fields are above 99999999999.99" in {
-        val badjson = Json.parse(
-          """
-            |{
-            |  "foreignFhlEea": {
-            |    "income": {
-            |      "totalRentsReceived": 100000000000.99
-            |    },
-            |    "expenses": {
-            |      "premisesRunningCosts": 100000000000.99,
-            |      "repairsAndMaintenance": 100.99,
-            |      "financialCosts": 100.99,
-            |      "professionalFees": 100.99,
-            |      "costOfServices": 100.99,
-            |      "travelCosts": 100.99,
-            |      "other": 100.99
-            |    }
-            |  }
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/totalRentsReceived", "/foreignFhlEea/expenses/premisesRunningCosts"))))
+
+      "an object is empty except for a additional (non-schema) property" in {
+        val json = Json.parse("""{
+                                |    "foreignFhlEea":{
+                                |       "unknownField": 999.99
+                                |    }
+                                |}""".stripMargin)
+
+        validator.validate(
+          SubmitForeignPropertyRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = json
+          )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea"))))
       }
-      "multiple fields are below -99999999999.99" in {
-        val badjson = Json.parse(
-          """
-            |{
-            |  "foreignFhlEea": {
-            |    "income": {
-            |      "totalRentsReceived": -100000000000.00
-            |    },
-            |    "expenses": {
-            |      "premisesRunningCosts": -100000000000.00,
-            |      "repairsAndMaintenance": 100.99,
-            |      "financialCosts": 100.99,
-            |      "professionalFees": 100.99,
-            |      "costOfServices": 100.99,
-            |      "travelCosts": 100.99,
-            |      "other": 100.99
-            |    }
-            |  }
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badjson)) shouldBe List(
-          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/totalRentsReceived", "/foreignFhlEea/expenses/premisesRunningCosts"))))
+
+      "return ValueFormatError" when {
+        "income or (non-consolidated) expenses is invalid" when {
+          Seq(
+            "/foreignFhlEea/income/totalRentsReceived",
+            "/foreignFhlEea/expenses/premisesRunningCosts",
+            "/foreignFhlEea/expenses/repairsAndMaintenance",
+            "/foreignFhlEea/expenses/financialCosts",
+            "/foreignFhlEea/expenses/professionalFees",
+            "/foreignFhlEea/expenses/costOfServices",
+            "/foreignFhlEea/expenses/other",
+            "/foreignFhlEea/expenses/travelCosts",
+          ).foreach(path => testWith(fhlBody.update(path, _), path))
+
+          Seq(
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/totalRentsReceived", v)), "/nonFurnishedHolidayLet/0/income/totalRentsReceived"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/premiumsOfLeaseGrant", v)),
+             "/nonFurnishedHolidayLet/0/income/premiumsOfLeaseGrant"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/otherPropertyIncome", v)), "/nonFurnishedHolidayLet/0/income/otherPropertyIncome"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/premisesRunningCosts", v)),
+             "/nonFurnishedHolidayLet/0/expenses/premisesRunningCosts"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/repairsAndMaintenance", v)),
+             "/nonFurnishedHolidayLet/0/expenses/repairsAndMaintenance"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/financialCosts", v)), "/nonFurnishedHolidayLet/0/expenses/financialCosts"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/professionalFees", v)), "/nonFurnishedHolidayLet/0/expenses/professionalFees"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/costOfServices", v)), "/nonFurnishedHolidayLet/0/expenses/costOfServices"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
+             "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/other", v)), "/nonFurnishedHolidayLet/0/expenses/other"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts"),
+          ).foreach((testWith _).tupled)
+        }
+
+        "consolidated expenses is invalid" when {
+          Seq(
+            "/foreignFhlEea/expenses/consolidatedExpenses",
+          ).foreach(path => testWith(fhlBodyConsolidated.update(path, _), path))
+
+          Seq(
+            ((v: JsNumber) => nonFhlBodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
+             "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
+          ).foreach(p => (testWith _).tupled(p))
+        }
+
+        "multiple fields are invalid" in {
+          val path1 = "/nonFurnishedHolidayLet/0/expenses/travelCosts"
+          val path2 = "/nonFurnishedHolidayLet/1/income/totalRentsReceived"
+
+          val json =
+            nonFhlBodyWith(
+              entryWith(countryCode = "ZWE").update("/expenses/travelCosts", JsNumber(0)),
+              entryWith(countryCode = "AFG").update("/income/totalRentsReceived", JsNumber(123.123))
+            )
+
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = json
+            )) shouldBe List(
+            ValueFormatError.copy(paths = Some(Seq(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99"))
+        }
+
+        def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
+          def doTest(value: JsNumber) =
+            validator.validate(
+              SubmitForeignPropertyRawData(
+                nino = validNino,
+                calculationId = validCalculationId,
+                body = body(value)
+              )) shouldBe List(ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99"))
+
+          "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
+
+          "value is zero" in doTest(JsNumber(0))
+        }
+      }
+
+      "return RuleCountryCodeError" when {
+        "an invalid country code is provided" in {
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = nonFhlBodyWith(entryWith(countryCode = "QQQ"))
+            )) shouldBe List(RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+        }
+
+        "multiple invalid country codes are provided" in {
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = nonFhlBodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
+            )) shouldBe List(
+            RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode"))))
+        }
+      }
+
+      "return CountryCodeFormatError" when {
+        "an invalid country code is provided" in {
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = nonFhlBodyWith(entryWith(countryCode = "XXXX"))
+            )) shouldBe List(CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+        }
+      }
+
+      "return RuleDuplicateCountryCodeError" when {
+        "a country code is duplicated" in {
+          val code = "ZWE"
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = nonFhlBodyWith(entryWith(code), entryWith(code))
+            )) shouldBe List(
+            RuleDuplicateCountryCodeError
+              .forDuplicatedCodesAndPaths(code = code, paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode")))
+        }
+
+        "multiple country codes are duplicated" in {
+          val code1 = "AFG"
+          val code2 = "ZWE"
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = nonFhlBodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
+            )) should contain theSameElementsAs List(
+            RuleDuplicateCountryCodeError
+              .forDuplicatedCodesAndPaths(code = code1,
+                                          paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/2/countryCode")),
+            RuleDuplicateCountryCodeError
+              .forDuplicatedCodesAndPaths(code = code2,
+                                          paths = Seq("/nonFurnishedHolidayLet/1/countryCode", "/nonFurnishedHolidayLet/3/countryCode")),
+          )
+        }
+      }
+
+      "return RuleBothExpensesSuppliedError" when {
+        "consolidated and separate expenses provided for fhl" in {
+          validator.validate(
+            SubmitForeignPropertyRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = fhlBody.update("foreignFhlEea/expenses/consolidatedExpenses", JsNumber(123.45))
+            )) shouldBe
+            List(RuleBothExpensesError.copy(paths = Some(Seq("/foreignFhlEea/expenses"))))
+        }
+
+        "consolidated and separate expenses provided for non-fhl" in {
+          validator.validate(SubmitForeignPropertyRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = nonFhlBodyWith(
+              entryWith(countryCode = "ZWE").update("expenses/consolidatedExpenses", JsNumber(123.45)),
+              entryWith(countryCode = "AFG").update("expenses/consolidatedExpenses", JsNumber(123.45))
+            )
+          )) shouldBe
+            List(RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses", "/nonFurnishedHolidayLet/1/expenses"))))
+        }
+      }
+
+      "return multiple errors" when {
+        "request supplied has multiple errors" in {
+          validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = "badCalcId", body = fhlBody)) shouldBe
+            List(NinoFormatError, CalculationIdFormatError)
+        }
       }
     }
-/*    "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {
-      "both expenses and consolidated expenses are supplied" in {
-        val badJson = Json.parse(
-          """
-            |{
-            |  "nonFurnishedHolidayLet": [
-            |    {
-            |      "countryCode": "FRA",
-            |      "income": {
-            |        "totalRentsReceived": 123.12,
-            |        "premiumsOfLeaseGrant": 123.12,
-            |        "foreignTaxTakenOff": 123.12,
-            |        "otherPropertyIncome": 123.12
-            |      },
-            |      "expenses": {
-            |        "premisesRunningCosts": 123.12,
-            |        "repairsAndMaintenance": 123.12,
-            |        "financialCosts": 123.12,
-            |        "professionalFees": 123.12,
-            |        "travelCosts": 123.12,
-            |        "costOfServices": 123.12,
-            |        "residentialFinancialCost": 123.12,
-            |        "other": 123.12,
-            |        "consolidatedExpenses": 123.12
-            |      }
-            |    }
-            |  ]
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleBothExpensesError)
-      }
-    }
-    "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
-      "nothing but countryCode is supplied" in {
-        val badJson = Json.parse(
-          """
-            |{
-            |  "nonFurnishedHolidayLet": [
-            |    {
-            |      "countryCode": "FRA"
-            |    }
-            |  ]
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-      "nothing but countryCode is supplied in only one of the submitted arrays" in {
-        val badJson = Json.parse(
-          """
-            |{
-            |  "nonFurnishedHolidayLet": [
-            |    {
-            |      "countryCode": "FRA",
-            |      "income": {
-            |        "totalRentsReceived": 123,
-            |        "premiumsOfLeaseGrant": 123,
-            |        "foreignTaxTakenOff": 123,
-            |        "otherPropertyIncome": 123
-            |      },
-            |      "expenses": {
-            |        "premisesRunningCosts": 123,
-            |        "repairsAndMaintenance": 123,
-            |        "financialCosts": 123,
-            |        "professionalFees": 123,
-            |        "travelCosts": 123,
-            |        "costOfServices": 123,
-            |        "residentialFinancialCost": 123,
-            |        "other": 123
-            |      }
-            |    },
-            |    {
-            |      "countryCode": "GER"
-            |    }
-            |  ]
-            |}
-            |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
-      }
-    }*/
   }
 }
-

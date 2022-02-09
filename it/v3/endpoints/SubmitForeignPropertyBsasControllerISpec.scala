@@ -570,17 +570,17 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue,
-            BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid,
-            BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+//          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
+//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue,
+//            BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid,
+//            BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
 //          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
 //          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
-            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
-            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
+//            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
+//            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
