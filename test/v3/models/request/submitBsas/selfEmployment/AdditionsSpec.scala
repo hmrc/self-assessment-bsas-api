@@ -25,40 +25,40 @@ class AdditionsSpec extends UnitSpec {
 
   val additionsModelWithoutCosts: Additions =
     Additions(
-      costOfGoodsBoughtDisallowable = None,
-      cisPaymentsToSubcontractorsDisallowable = Some(3000.2),
-      staffCostsDisallowable = None,
-      travelCostsDisallowable = None,
+      costOfGoodsDisallowable= None,
+      paymentsToSubcontractorsDisallowable = Some(3000.2),
+      wagesAndStaffCostsDisallowable = None,
+      carVanTravelExpensesDisallowable = None,
       premisesRunningCostsDisallowable = None,
       maintenanceCostsDisallowable = None,
       adminCostsDisallowable = None,
       advertisingCostsDisallowable = None,
       businessEntertainmentCostsDisallowable = None,
-      interestDisallowable = Some(-3000.5),
-      financialChargesDisallowable = Some(3000.6),
-      badDebtDisallowable = Some(-3000.6),
+      interestOnBankOtherLoansDisallowable = Some(-3000.5),
+      financeChargesDisallowable = Some(3000.6),
+      irrecoverableDebtsDisallowable = Some(-3000.6),
       professionalFeesDisallowable = Some(3000.7),
       depreciationDisallowable = Some(-3000.7),
-      otherDisallowable = Some(3000.8)
+      otherExpensesDisallowable = Some(3000.8)
     )
 
   val emptyAdditionsModel: Additions =
     Additions(
-      costOfGoodsBoughtDisallowable = None,
-      cisPaymentsToSubcontractorsDisallowable = None,
-      staffCostsDisallowable = None,
-      travelCostsDisallowable = None,
+      costOfGoodsDisallowable = None,
+      paymentsToSubcontractorsDisallowable = None,
+      wagesAndStaffCostsDisallowable = None,
+      carVanTravelExpensesDisallowable = None,
       premisesRunningCostsDisallowable = None,
       maintenanceCostsDisallowable = None,
       adminCostsDisallowable = None,
       advertisingCostsDisallowable = None,
       businessEntertainmentCostsDisallowable = None,
-      interestDisallowable = None,
-      financialChargesDisallowable = None,
-      badDebtDisallowable = None,
+      interestOnBankOtherLoansDisallowable = None,
+      financeChargesDisallowable = None,
+      irrecoverableDebtsDisallowable = None,
       professionalFeesDisallowable = None,
       depreciationDisallowable = None,
-      otherDisallowable = None
+      otherExpensesDisallowable = None
     )
 
   "Additions" when {

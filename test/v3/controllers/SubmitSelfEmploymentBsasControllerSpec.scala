@@ -59,8 +59,6 @@ class SubmitSelfEmploymentBsasControllerSpec
   private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
   private val request = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
 
-  val response: SubmitSelfEmploymentBsasResponse = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
-
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
       href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId",
@@ -118,11 +116,11 @@ class SubmitSelfEmploymentBsasControllerSpec
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap(response, SubmitSelfEmploymentBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(response, testHateoasLinks))
+          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(Json.toJson(mtdRequest)))
 

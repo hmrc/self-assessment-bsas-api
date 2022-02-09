@@ -17,83 +17,23 @@
 package v3.models.response
 
 import mocks.MockAppConfig
-import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v3.hateoas.HateoasFactory
-import v3.models.domain.TypeOfBusiness
-import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.Link
+import v3.models.hateoas.Method
 
-class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
+class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
 
-  val desJson: JsValue = Json.parse(
-    """
-      |{
-      |   "metadata" : {
-      |       "calculationId" : "anId"
-      |   },
-      |   "inputs" : {
-      |     "incomeSourceType" : "01"
-      |   }
-      |}
-  """.stripMargin)
+  "LinksFactory" should {
+    "produce the correct links" when {
+      "called" in {
+        val data: SubmitSelfEmploymentBsasHateoasData = SubmitSelfEmploymentBsasHateoasData("mynino", "mycalcid")
 
-  val mtdJson: JsValue = Json.parse(
-    """
-      |{
-      |   "id" : "anId"
-      |}
-  """.stripMargin)
+        MockedAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes()
 
-  val invalidDesJson: JsValue = Json.parse(
-    """
-      |{
-      |   "id" : 3
-      |}
-  """.stripMargin)
-
-  val submitSelfEmploymentBsasResponseModel: SubmitSelfEmploymentBsasResponse =
-    SubmitSelfEmploymentBsasResponse(
-      id = "anId",
-      typeOfBusiness = TypeOfBusiness.`self-employment`
-    )
-
-  "SubmitSelfEmploymentBsasResponse" when {
-    "read from valid JSON" should {
-      "return the expected SubmitSelfEmploymentBsasResponse object" in {
-        desJson.as[SubmitSelfEmploymentBsasResponse] shouldBe submitSelfEmploymentBsasResponseModel
-      }
-    }
-
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidDesJson.validate[SubmitSelfEmploymentBsasResponse] shouldBe a[JsError]
-      }
-    }
-
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(submitSelfEmploymentBsasResponseModel) shouldBe mtdJson
-      }
-    }
-  }
-
-  "HateoasFactory" must {
-    class Test extends MockAppConfig {
-      val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val bsasId = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-    }
-
-    "expose the correct links for a response from Submit a Self Employment Summary Adjustment" in new Test {
-      hateoasFactory.wrap(submitSelfEmploymentBsasResponseModel, SubmitSelfEmploymentBsasHateoasData(nino, bsasId)) shouldBe
-        HateoasWrapper(
-          submitSelfEmploymentBsasResponseModel,
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId", GET, "self")
-          )
+        SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data) shouldBe Seq(
+          Link(href = s"/my/context/${data.nino}/self-employment/${data.calculationId}", method = Method.GET, rel = "self")
         )
+      }
     }
   }
 }

@@ -29,7 +29,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
-      CalculationIdValidation.validate(data.bsasId)
+      CalculationIdValidation.validate(data.calculationId)
     )
   }
 
@@ -69,40 +69,40 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
 
     def validateAdditions(additions: Additions): List[MtdError] =
       List(
-        doValidationFor("/additions/costOfGoodsBoughtDisallowable", additions.costOfGoodsBoughtDisallowable),
-        doValidationFor("/additions/cisPaymentsToSubcontractorsDisallowable", additions.cisPaymentsToSubcontractorsDisallowable),
-        doValidationFor("/additions/staffCostsDisallowable", additions.staffCostsDisallowable),
-        doValidationFor("/additions/travelCostsDisallowable", additions.travelCostsDisallowable),
+        doValidationFor("/additions/costOfGoodsBoughtDisallowable", additions.costOfGoodsDisallowable),
+        doValidationFor("/additions/cisPaymentsToSubcontractorsDisallowable", additions.paymentsToSubcontractorsDisallowable),
+        doValidationFor("/additions/staffCostsDisallowable", additions.wagesAndStaffCostsDisallowable),
+        doValidationFor("/additions/travelCostsDisallowable", additions.carVanTravelExpensesDisallowable),
         doValidationFor("/additions/premisesRunningCostsDisallowable", additions.premisesRunningCostsDisallowable),
         doValidationFor("/additions/maintenanceCostsDisallowable", additions.maintenanceCostsDisallowable),
         doValidationFor("/additions/adminCostsDisallowable", additions.adminCostsDisallowable),
         doValidationFor("/additions/advertisingCostsDisallowable", additions.advertisingCostsDisallowable),
         doValidationFor("/additions/businessEntertainmentCostsDisallowable", additions.businessEntertainmentCostsDisallowable),
-        doValidationFor("/additions/interestDisallowable", additions.interestDisallowable),
-        doValidationFor("/additions/financialChargesDisallowable", additions.financialChargesDisallowable),
-        doValidationFor("/additions/badDebtDisallowable", additions.badDebtDisallowable),
+        doValidationFor("/additions/interestDisallowable", additions.interestOnBankOtherLoansDisallowable),
+        doValidationFor("/additions/financialChargesDisallowable", additions.financeChargesDisallowable),
+        doValidationFor("/additions/badDebtDisallowable", additions.irrecoverableDebtsDisallowable),
         doValidationFor("/additions/professionalFeesDisallowable", additions.professionalFeesDisallowable),
         doValidationFor("/additions/depreciationDisallowable", additions.depreciationDisallowable),
-        doValidationFor("/additions/otherDisallowable", additions.otherDisallowable)
+        doValidationFor("/additions/otherDisallowable", additions.otherExpensesDisallowable)
       ).flatten
 
     def validateExpenses(expenses: Expenses): List[MtdError] =
       List(
-        doValidationFor("/expenses/costOfGoodsBought", expenses.costOfGoodsBought),
-        doValidationFor("/expenses/cisPaymentsToSubcontractors", expenses.cisPaymentsToSubcontractors),
-        doValidationFor("/expenses/staffCosts", expenses.staffCosts),
-        doValidationFor("/expenses/travelCosts", expenses.travelCosts),
-        doValidationFor("/expenses/premisesRunningCosts", expenses.premisesRunningCosts),
-        doValidationFor("/expenses/maintenanceCosts", expenses.maintenanceCosts),
-        doValidationFor("/expenses/adminCosts", expenses.adminCosts),
-        doValidationFor("/expenses/advertisingCosts", expenses.advertisingCosts),
-        doValidationFor("/expenses/businessEntertainmentCosts", expenses.businessEntertainmentCosts),
-        doValidationFor("/expenses/interest", expenses.interest),
-        doValidationFor("/expenses/financialCharges", expenses.financialCharges),
-        doValidationFor("/expenses/badDebt", expenses.badDebt),
-        doValidationFor("/expenses/professionalFees", expenses.professionalFees),
-        doValidationFor("/expenses/depreciation", expenses.depreciation),
-        doValidationFor("/expenses/other", expenses.other),
+        doValidationFor("/expenses/costOfGoodsBought", expenses.costOfGoodsAllowable),
+        doValidationFor("/expenses/cisPaymentsToSubcontractors", expenses.paymentsToSubcontractorsAllowable),
+        doValidationFor("/expenses/staffCosts", expenses.wagesAndStaffCostsAllowable),
+        doValidationFor("/expenses/travelCosts", expenses.carVanTravelExpensesAllowable),
+        doValidationFor("/expenses/premisesRunningCosts", expenses.premisesRunningCostsAllowable),
+        doValidationFor("/expenses/maintenanceCosts", expenses.maintenanceCostsAllowable),
+        doValidationFor("/expenses/adminCosts", expenses.adminCostsAllowable),
+        doValidationFor("/expenses/advertisingCosts", expenses.advertisingCostsAllowable),
+        doValidationFor("/expenses/businessEntertainmentCosts", expenses.businessEntertainmentCostsAllowable),
+        doValidationFor("/expenses/interest", expenses.interestOnBankOtherLoansAllowable),
+        doValidationFor("/expenses/financialCharges", expenses.financeChargesAllowable),
+        doValidationFor("/expenses/badDebt", expenses.irrecoverableDebtsAllowable),
+        doValidationFor("/expenses/professionalFees", expenses.professionalFeesAllowable),
+        doValidationFor("/expenses/depreciation", expenses.depreciationAllowable),
+        doValidationFor("/expenses/other", expenses.otherExpensesAllowable),
         doValidationFor("/expenses/consolidatedExpenses", expenses.consolidatedExpenses),
       ).flatten
 

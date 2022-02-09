@@ -21,11 +21,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.connectors.MockSubmitSelfEmploymentBsasConnector
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 
@@ -35,8 +33,6 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
-
-  val response: SubmitSelfEmploymentBsasResponse = SubmitSelfEmploymentBsasResponse(id, TypeOfBusiness.`self-employment`)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -50,9 +46,9 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
       "a valid request is supplied" in new Test {
         MockSubmitSelfEmploymentBsasConnector
           .submitSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.submitSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 

@@ -58,7 +58,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     val request = SubmitSelfEmploymentBsasRequestData(nino, bsasId, submitSelfEmploymentBsasRequestBodyModel)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)))
+      val outcome = Right(ResponseWrapper(correlationId, ()))
 
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")

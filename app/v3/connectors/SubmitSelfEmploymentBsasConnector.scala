@@ -22,7 +22,7 @@ import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.models.response.SubmitSelfEmploymentBsasResponse
+import play.api.http.Status
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,13 +33,15 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import v3.connectors.httpparsers.StandardDesHttpParser._
 
+    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
+
     put(
       body = request.body,
-      DownstreamUri[SubmitSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

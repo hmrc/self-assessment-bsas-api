@@ -26,6 +26,7 @@ trait HateoasLinks {
   private def bsasBasUri(appConfig: AppConfig, nino: String) =
     s"/${appConfig.apiGatewayContext}/$nino"
 
+  //API resource links
   //L1
   def triggerBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = bsasBasUri(appConfig, nino) + "/trigger", method = POST, rel = TRIGGER)

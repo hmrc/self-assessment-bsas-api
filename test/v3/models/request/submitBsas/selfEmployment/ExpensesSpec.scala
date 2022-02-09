@@ -25,41 +25,41 @@ class ExpensesSpec extends UnitSpec {
 
   val expensesModelWithoutCosts: Expenses =
     Expenses(
-      costOfGoodsBought = None,
-      cisPaymentsToSubcontractors = Some(2000.50),
-      staffCosts = None,
-      travelCosts = None,
-      premisesRunningCosts = None,
-      maintenanceCosts = None,
-      adminCosts = None,
-      advertisingCosts = None,
-      businessEntertainmentCosts = None,
-      interest = Some(-2001.25),
-      financialCharges = Some(-2001.50),
-      badDebt = Some(-2001.75),
-      professionalFees = Some(2002.25),
-      depreciation = Some(2002.50),
-      other = Some(2002.75),
-      None
+      costOfGoodsAllowable = None,
+      paymentsToSubcontractorsAllowable = Some(2000.50),
+      wagesAndStaffCostsAllowable = None,
+      carVanTravelExpensesAllowable = None,
+      premisesRunningCostsAllowable = None,
+      maintenanceCostsAllowable = None,
+      adminCostsAllowable = None,
+      advertisingCostsAllowable = None,
+      businessEntertainmentCostsAllowable = None,
+      interestOnBankOtherLoansAllowable = Some(-2001.25),
+      financeChargesAllowable = Some(-2001.50),
+      irrecoverableDebtsAllowable = Some(-2001.75),
+      professionalFeesAllowable = Some(2002.25),
+      depreciationAllowable = Some(2002.50),
+      otherExpensesAllowable = Some(2002.75),
+      consolidatedExpenses = None
     )
 
   val emptyExpensesModel: Expenses =
     Expenses(
-      costOfGoodsBought = None,
-      cisPaymentsToSubcontractors = None,
-      staffCosts = None,
-      travelCosts = None,
-      premisesRunningCosts = None,
-      maintenanceCosts = None,
-      adminCosts = None,
-      advertisingCosts = None,
-      businessEntertainmentCosts = None,
-      interest = None,
-      financialCharges = None,
-      badDebt = None,
-      professionalFees = None,
-      depreciation = None,
-      other = None,
+      costOfGoodsAllowable = None,
+      paymentsToSubcontractorsAllowable = None,
+      wagesAndStaffCostsAllowable = None,
+      carVanTravelExpensesAllowable = None,
+      premisesRunningCostsAllowable = None,
+      maintenanceCostsAllowable = None,
+      adminCostsAllowable = None,
+      advertisingCostsAllowable = None,
+      businessEntertainmentCostsAllowable = None,
+      interestOnBankOtherLoansAllowable = None,
+      financeChargesAllowable = None,
+      irrecoverableDebtsAllowable = None,
+      professionalFeesAllowable = None,
+      depreciationAllowable = None,
+      otherExpensesAllowable = None,
       consolidatedExpenses = None
     )
 
@@ -109,7 +109,7 @@ class ExpensesSpec extends UnitSpec {
 
     "isNonConsolidatedExpensesEmpty is called" should {
       "return true if non consolidated expenses is present" in {
-        emptyExpensesModel.copy(costOfGoodsBought = Some(100.49)).isConsolidatedExpensesEmpty shouldBe true
+        emptyExpensesModel.copy(costOfGoodsAllowable = Some(100.49)).isConsolidatedExpensesEmpty shouldBe true
       }
 
       "return true if only consolidated expenses is present" in {
