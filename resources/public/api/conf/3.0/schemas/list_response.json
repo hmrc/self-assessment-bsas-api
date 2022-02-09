@@ -68,7 +68,7 @@
                 },
                 "summaryStatus": {
                   "title": "Summary Status",
-                  "description": "The status of the this calculated summary.",
+                  "description": "The status of this calculated summary.",
                   "type": "string",
                   "enum": [ "valid", "invalid", "superseded" ]
                 },
@@ -92,7 +92,7 @@
                       "href": {
                         "description": "The relative URL of the endpoint.",
                         "type": "string",
-                        "example": "/individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}"
+                        "example": "/individuals/self-assessment/adjustable-summary/AA999999A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
                       },
                       "rel": {
                         "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -140,7 +140,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/{nino}/trigger"
+            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/trigger"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
