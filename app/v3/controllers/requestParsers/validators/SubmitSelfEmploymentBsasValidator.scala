@@ -16,33 +16,37 @@
 
 package v3.controllers.requestParsers.validators
 
-import config.FixedConfig
+import v3.controllers.requestParsers.validators.validations.NoValidationErrors
 import v3.controllers.requestParsers.validators.validations._
 import v3.models.errors.{MtdError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
 import v3.models.request.submitBsas.selfEmployment._
 
-class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] with FixedConfig {
+class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] {
 
-  private val validationSet =
-    List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, adjustmentFieldValidator, bothExpensesValidator)
+  private val validationSet = List(
+    parameterFormatValidation,
+    bodyFormatValidation,
+    incorrectOrEmptyBodyValidation,
+    adjustmentFieldValidation,
+    bothExpensesValidation
+  )
 
-  private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+  private def parameterFormatValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
       CalculationIdValidation.validate(data.calculationId)
     )
   }
 
-  private def bodyFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-    List(
-      flattenErrors(
-        List(
-          JsonFormatValidation.validate[SubmitSelfEmploymentBsasRequestBody](data.body.json)
-        )))
+  private def bodyFormatValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+    JsonFormatValidation.validateAndCheckNonEmpty[SubmitSelfEmploymentBsasRequestBody](data.body) match {
+      case Nil => NoValidationErrors
+      case schemaErrors => List(schemaErrors)
+    }
   }
 
-  private def incorrectOrEmptyBodyValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
+  private def incorrectOrEmptyBodyValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+    val model: SubmitSelfEmploymentBsasRequestBody = data.body[SubmitSelfEmploymentBsasRequestBody]
     List(
       if (model.isIncorrectOrEmptyBodyError) {
         List(RuleIncorrectOrEmptyBodyError)
@@ -52,59 +56,8 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     )
   }
 
-  private def adjustmentFieldValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
-
-    def doValidationFor(fieldName: String, withValue: Option[BigDecimal]): List[MtdError] = {
-      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
-        Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
-      validations.flatMap(validation => validation(withValue, fieldName)).toList
-    }
-
-    def validateIncome(income: Income): List[MtdError] =
-      List(
-        doValidationFor("/income/turnover", income.turnover),
-        doValidationFor("/income/other", income.other)
-      ).flatten
-
-    def validateAdditions(additions: Additions): List[MtdError] =
-      List(
-        doValidationFor("/additions/costOfGoodsBoughtDisallowable", additions.costOfGoodsDisallowable),
-        doValidationFor("/additions/cisPaymentsToSubcontractorsDisallowable", additions.paymentsToSubcontractorsDisallowable),
-        doValidationFor("/additions/staffCostsDisallowable", additions.wagesAndStaffCostsDisallowable),
-        doValidationFor("/additions/travelCostsDisallowable", additions.carVanTravelExpensesDisallowable),
-        doValidationFor("/additions/premisesRunningCostsDisallowable", additions.premisesRunningCostsDisallowable),
-        doValidationFor("/additions/maintenanceCostsDisallowable", additions.maintenanceCostsDisallowable),
-        doValidationFor("/additions/adminCostsDisallowable", additions.adminCostsDisallowable),
-        doValidationFor("/additions/advertisingCostsDisallowable", additions.advertisingCostsDisallowable),
-        doValidationFor("/additions/businessEntertainmentCostsDisallowable", additions.businessEntertainmentCostsDisallowable),
-        doValidationFor("/additions/interestDisallowable", additions.interestOnBankOtherLoansDisallowable),
-        doValidationFor("/additions/financialChargesDisallowable", additions.financeChargesDisallowable),
-        doValidationFor("/additions/badDebtDisallowable", additions.irrecoverableDebtsDisallowable),
-        doValidationFor("/additions/professionalFeesDisallowable", additions.professionalFeesDisallowable),
-        doValidationFor("/additions/depreciationDisallowable", additions.depreciationDisallowable),
-        doValidationFor("/additions/otherDisallowable", additions.otherExpensesDisallowable)
-      ).flatten
-
-    def validateExpenses(expenses: Expenses): List[MtdError] =
-      List(
-        doValidationFor("/expenses/costOfGoodsBought", expenses.costOfGoodsAllowable),
-        doValidationFor("/expenses/cisPaymentsToSubcontractors", expenses.paymentsToSubcontractorsAllowable),
-        doValidationFor("/expenses/staffCosts", expenses.wagesAndStaffCostsAllowable),
-        doValidationFor("/expenses/travelCosts", expenses.carVanTravelExpensesAllowable),
-        doValidationFor("/expenses/premisesRunningCosts", expenses.premisesRunningCostsAllowable),
-        doValidationFor("/expenses/maintenanceCosts", expenses.maintenanceCostsAllowable),
-        doValidationFor("/expenses/adminCosts", expenses.adminCostsAllowable),
-        doValidationFor("/expenses/advertisingCosts", expenses.advertisingCostsAllowable),
-        doValidationFor("/expenses/businessEntertainmentCosts", expenses.businessEntertainmentCostsAllowable),
-        doValidationFor("/expenses/interest", expenses.interestOnBankOtherLoansAllowable),
-        doValidationFor("/expenses/financialCharges", expenses.financeChargesAllowable),
-        doValidationFor("/expenses/badDebt", expenses.irrecoverableDebtsAllowable),
-        doValidationFor("/expenses/professionalFees", expenses.professionalFeesAllowable),
-        doValidationFor("/expenses/depreciation", expenses.depreciationAllowable),
-        doValidationFor("/expenses/other", expenses.otherExpensesAllowable),
-        doValidationFor("/expenses/consolidatedExpenses", expenses.consolidatedExpenses),
-      ).flatten
+  private def adjustmentFieldValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+    val model: SubmitSelfEmploymentBsasRequestBody = data.body[SubmitSelfEmploymentBsasRequestBody]
 
     List(
       flattenErrors(
@@ -117,8 +70,155 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     )
   }
 
-  private def bothExpensesValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
+  private def validateIncome(income: Income) = {
+    List(
+      NumberValidation.validateAdjustment(
+        field = income.turnover,
+        path = "/income/turnover",
+        ),
+      NumberValidation.validateAdjustment(
+        field = income.other,
+        path = "/income/other",
+      )
+    ).flatten
+  }
+
+  private def validateAdditions(additions: Additions) = {
+    List(
+      NumberValidation.validateAdjustment(
+        field = additions.costOfGoodsDisallowable,
+        path = "/additions/costOfGoodsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.paymentsToSubcontractorsDisallowable,
+        path = "/additions/paymentsToSubcontractorsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.wagesAndStaffCostsDisallowable,
+        path = "/additions/wagesAndStaffCostsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.carVanTravelExpensesDisallowable,
+        path = "/additions/carVanTravelExpensesDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.premisesRunningCostsDisallowable,
+        path = "/additions/premisesRunningCostsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.maintenanceCostsDisallowable,
+        path = "/additions/maintenanceCostsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.adminCostsDisallowable,
+        path = "/additions/adminCostsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.interestOnBankOtherLoansDisallowable,
+        path = "/additions/interestOnBankOtherLoansDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.financeChargesDisallowable,
+        path = "/additions/financeChargesDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.irrecoverableDebtsDisallowable,
+        path = "/additions/irrecoverableDebtsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.professionalFeesDisallowable,
+        path = "/additions/professionalFeesDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.depreciationDisallowable,
+        path = "/additions/depreciationDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.otherExpensesDisallowable,
+        path = "/additions/otherExpensesDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.advertisingCostsDisallowable,
+        path = "/additions/advertisingCostsDisallowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = additions.businessEntertainmentCostsDisallowable,
+        path = "/additions/businessEntertainmentCostsDisallowable",
+      )
+    ).flatten
+  }
+
+  private def validateExpenses(expenses: Expenses) = {
+    List(
+      NumberValidation.validateAdjustment(
+        field = expenses.costOfGoodsAllowable,
+        path = "/expenses/costOfGoodsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.paymentsToSubcontractorsAllowable,
+        path = "/expenses/paymentsToSubcontractorsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.wagesAndStaffCostsAllowable,
+        path = "/expenses/wagesAndStaffCostsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.carVanTravelExpensesAllowable,
+        path = "/expenses/carVanTravelExpensesAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.premisesRunningCostsAllowable,
+        path = "/expenses/premisesRunningCostsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.maintenanceCostsAllowable,
+        path = "/expenses/maintenanceCostsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.adminCostsAllowable,
+        path = "/expenses/adminCostsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.interestOnBankOtherLoansAllowable,
+        path = "/expenses/interestOnBankOtherLoansAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.financeChargesAllowable,
+        path = "/expenses/financeChargesAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.irrecoverableDebtsAllowable,
+        path = "/expenses/irrecoverableDebtsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.professionalFeesAllowable,
+        path = "/expenses/professionalFeesAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.depreciationAllowable,
+        path = "/expenses/depreciationAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.otherExpensesAllowable,
+        path = "/expenses/otherExpensesAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.advertisingCostsAllowable,
+        path = "/expenses/advertisingCostsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.businessEntertainmentCostsAllowable,
+        path = "/expenses/businessEntertainmentCostsAllowable",
+      ),
+      NumberValidation.validateAdjustment(
+        field = expenses.consolidatedExpenses,
+        path = "/expenses/consolidatedExpenses",
+      )
+    ).flatten
+  }
+
+  private def bothExpensesValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
+    val model: SubmitSelfEmploymentBsasRequestBody = data.body[SubmitSelfEmploymentBsasRequestBody]
 
     List(
       if(model.expenses.exists(_.isBothSupplied)
