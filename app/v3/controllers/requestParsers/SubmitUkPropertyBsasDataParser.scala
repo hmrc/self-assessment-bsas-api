@@ -27,6 +27,6 @@ class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBs
   override protected def requestFor(data: SubmitUkPropertyBsasRawData): SubmitUkPropertyBsasRequestData = {
     val requestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
-    SubmitUkPropertyBsasRequestData(Nino(data.nino), data.bsasId, requestBody)
+    SubmitUkPropertyBsasRequestData(Nino(data.nino), data.calculationId, requestBody)
   }
 }

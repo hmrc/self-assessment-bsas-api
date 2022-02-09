@@ -16,88 +16,106 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import support.UnitSpec
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
+class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
 
-  val nonFHLDesJson: JsValue = Json.parse(
-    """
-      |{
-      |  "incomeSourceType":"02",
-      |  "adjustments": {
-      |    "income": {
-      |      "totalRentsReceived": 1000.45,
-      |      "premiumsOfLeaseGrant": 1000.45,
-      |      "reversePremiums": 1000.45,
-      |      "otherPropertyIncome": 1000.45
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 1000.45,
-      |      "repairsAndMaintenance": 1000.45,
-      |      "financialCosts": 1000.45,
-      |      "professionalFees": 1000.45,
-      |      "travelCosts": 1000.45,
-      |      "costOfServices": 1000.45,
-      |      "residentialFinancialCost": 1000.45,
-      |      "other": 1000.45,
-      |      "consolidatedExpenses": 1000.45
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
+  val emptyModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(None, None)
 
-  val fhlDesJson: JsValue = Json.parse(
-    """
-      |{
-      |  "incomeSourceType":"04",
-      |  "adjustments": {
-      |    "income": {
-      |      "rentReceived": 1000.45
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 1000.45,
-      |      "repairsAndMaintenance": 1000.45,
-      |      "financialCosts": 1000.45,
-      |      "professionalFees": 1000.45,
-      |      "costOfServices": 1000.45,
-      |      "travelCosts": 1000.45,
-      |      "other": 1000.45,
-      |      "consolidatedExpenses": 1000.45
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
+  val nonFhlModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)),None)
 
-  "SubmitUKPropertyBsasRequestBody" when {
-    "read from valid JSON" should {
-      "return the expected SubmitUKPropertyRequestBody with a nonFHL" in {
-        nonFHLInputJson.validate[SubmitUKPropertyBsasRequestBody] shouldBe JsSuccess(nonFHLBody)
-      }
+  val fhlModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None)))
 
-      "return the expected SubmitUKPropertyRequestBody with a FHL" in {
-        fhlInputJson.validate[SubmitUKPropertyBsasRequestBody] shouldBe JsSuccess(fhlBody)
+  "reads" when {
+    "reading a simple non-fhl body" should {
+      "return the expected non-fhl model" in {
+        Json.parse("""
+            |{
+            |  "nonFurnishedHolidayLet": {
+            |  }
+            |}
+            |""".stripMargin).as[SubmitUKPropertyBsasRequestBody] shouldBe nonFhlModel
       }
     }
 
-    "read from invalid JSON" should {
-      "return the expected SubmitUKPropertyRequestBody with a nonFHL" in {
-        nonFHLInvalidJson.validate[SubmitUKPropertyBsasRequestBody] shouldBe a[JsError]
-      }
-
-      "return the expected SubmitUKPropertyRequestBody with a FHL" in {
-        fhlInvalidJson.validate[SubmitUKPropertyBsasRequestBody] shouldBe a[JsError]
+    "reading a simple fhl body" should {
+      "return the expected fhl model" in {
+        Json
+          .parse(
+            """
+            |{
+            |  "furnishedHolidayLet": {
+            |  }
+            |}
+            |""".stripMargin
+          )
+          .as[SubmitUKPropertyBsasRequestBody] shouldBe fhlModel
       }
     }
 
-    "written to JSON" should {
-      "return the expected SubmitUKPropertyRequestBody with a nonFHL" in {
-        Json.toJson(nonFHLBody) shouldBe nonFHLDesJson
+    "reading a full non-fhl body" should {
+      "return the expected non-fhl model" in {
+        mtdRequestNonFhlFull.as[SubmitUKPropertyBsasRequestBody] shouldBe requestNonFhlFullModel
       }
+    }
 
-      "return the expected SubmitUKPropertyRequestBody with a FHL" in {
-        Json.toJson(fhlBody) shouldBe fhlDesJson
+    "reading a full fhl body" should {
+      "return the expected fhl model" in {
+        mtdRequestFhlFull.as[SubmitUKPropertyBsasRequestBody] shouldBe requestFhlFullModel
+      }
+    }
+
+    "reading an empty body" should {
+      "return an empty model" in {
+        JsObject.empty.as[SubmitUKPropertyBsasRequestBody] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "writing a simple non-fhl model" should {
+      "return the downstream JSON" in {
+        Json.toJson(nonFhlModel) shouldBe Json.parse("""
+            |{
+            |  "incomeSourceType": "02",
+            |  "adjustments": {
+            |  }
+            |}
+            |""".stripMargin)
+      }
+    }
+
+    "writing a simple fhl model" should {
+      "return the downstream JSON" in {
+        Json.toJson(fhlModel) shouldBe Json.parse(
+          """
+            |{
+            |  "incomeSourceType": "04",
+            |  "adjustments": {
+            |  }
+            |}
+            |""".stripMargin
+        )
+      }
+    }
+
+    "writing a full non-fhl model" should {
+      "return the downstream JSON" in {
+        Json.toJson(requestNonFhlFullModel) shouldBe downstreamRequestNonFhlFull
+      }
+    }
+
+    "writing a full fhl model" should {
+      "return the downstream JSON" in {
+        Json.toJson(requestFhlFullModel) shouldBe downstreamRequestFhlFull
+      }
+    }
+
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

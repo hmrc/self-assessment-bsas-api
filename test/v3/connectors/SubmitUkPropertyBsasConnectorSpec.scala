@@ -16,15 +16,13 @@
 
 package v3.connectors
 
-import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import mocks.MockAppConfig
 import domain.Nino
+import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.MockHttpClient
-import v3.models.domain.TypeOfBusiness
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v3.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
@@ -48,7 +46,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
     val request = SubmitUkPropertyBsasRequestData(nino, bsasId, nonFHLBody)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)))
+      val outcome = Right(ResponseWrapper(correlationId, ()))
 
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")

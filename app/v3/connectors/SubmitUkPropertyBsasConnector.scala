@@ -17,11 +17,12 @@
 package v3.connectors
 
 import config.AppConfig
+import play.api.http.Status
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v3.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,13 +34,15 @@ class SubmitUkPropertyBsasConnector @Inject()(
   def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
                           implicit hc: HeaderCarrier,
                           ec: ExecutionContext,
-                          correlationId: String): Future[DownstreamOutcome[SubmitUkPropertyBsasResponse]] = {
+                          correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import v3.connectors.httpparsers.StandardDesHttpParser._
 
+    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
+
     put(
       body = request.body,
-      DownstreamUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

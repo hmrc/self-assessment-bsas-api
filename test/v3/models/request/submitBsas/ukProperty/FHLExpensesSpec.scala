@@ -16,78 +16,60 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class FHLExpensesSpec extends UnitSpec {
+  val json: JsValue = Json.parse("""
+                                   |{
+                                   |  "premisesRunningCosts": 1.12,
+                                   |  "repairsAndMaintenance": 2.12,
+                                   |  "financialCosts": 3.12,
+                                   |  "professionalFees": 4.12,
+                                   |  "costOfServices": 6.12,
+                                   |  "travelCosts": 5.12,
+                                   |  "other": 7.12,
+                                   |  "consolidatedExpenses": 8.12
+                                   |}
+                                   |""".stripMargin)
 
-  val inputJson: JsValue = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": -1000.49,
-      |  "repairsAndMaintenance": 1000.49,
-      |  "financialCosts": 1000.49,
-      |  "professionalFees": 1000.49,
-      |  "costOfServices": 1000.49,
-      |  "travelCosts": 1000.49,
-      |  "other": 1000.49,
-      |  "consolidatedExpenses": 1000.49
-      |}
-      |""".stripMargin
+  val model: FHLExpenses = FHLExpenses(
+    premisesRunningCosts = Some(1.12),
+    repairsAndMaintenance = Some(2.12),
+    financialCosts = Some(3.12),
+    professionalFees = Some(4.12),
+    travelCosts = Some(5.12),
+    costOfServices = Some(6.12),
+    other = Some(7.12),
+    consolidatedExpenses = Some(8.12)
   )
 
-  val requestJson: JsValue = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": -1000.49,
-      |  "repairsAndMaintenance": 1000.49,
-      |  "financialCosts": 1000.49,
-      |  "professionalFees": 1000.49,
-      |  "costOfServices": 1000.49,
-      |  "travelCosts": 1000.49,
-      |  "other": 1000.49,
-      |  "consolidatedExpenses": 1000.49
-      |}
-      |""".stripMargin
-  )
+  val emptyModel: FHLExpenses = FHLExpenses(None, None, None, None, None, None, None, None)
 
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": -1000.45,
-      |  "repairsAndMaintenance": 1000.45,
-      |  "financialCosts": 1000.45,
-      |  "professionalFees": true,
-      |  "costOfServices": -1000.45,
-      |  "travelCosts": false,
-      |  "other": 1000.45,
-      |  "consolidatedExpenses": 1000.45
-      |}
-      |""".stripMargin
-  )
-
-  val model: FHLExpenses = FHLExpenses(Some(-1000.49), Some(1000.49),
-                                      Some(1000.49), Some(1000.49),
-                                      Some(1000.49), Some(1000.49),
-                                      Some(1000.49), Some(1000.49))
-
-  "FHLExpenses" when {
-    "read from valid JSON" should {
-      "return the full expected FHLExpenses object" in {
-        inputJson.validate[FHLExpenses] shouldBe JsSuccess(model)
-      }
-
-    }
-
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[FHLExpenses] shouldBe a[JsError]
+  "reads" when {
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json.as[FHLExpenses] shouldBe model
       }
     }
 
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+    "passed an empty JSON" should {
+      "return an empty model" in {
+        JsObject.empty.as[FHLExpenses] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
+      }
+    }
+
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

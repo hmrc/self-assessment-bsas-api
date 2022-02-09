@@ -16,152 +16,52 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class NonFurnishedHolidayLetSpec extends UnitSpec {
 
-  val inputJson: JsValue = Json.parse(
-    """
-      |{
-      |      "income": {
-      |         "rentIncome": 1000.49,
-      |         "premiumsOfLeaseGrant": 1000.49,
-      |         "reversePremiums": 1000.49,
-      |         "otherPropertyIncome": 1000.49
-      |      },
-      |      "expenses": {
-      |         "premisesRunningCosts": -1000.49,
-      |         "repairsAndMaintenance": 1000.49,
-      |         "financialCosts": 1000.49,
-      |         "professionalFees": 1000.49,
-      |         "travelCosts": 1000.49,
-      |         "costOfServices": -1000.49,
-      |         "residentialFinancialCost": 1000.49,
-      |         "other": 1000.49,
-      |         "consolidatedExpenses": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
-
-  val inputWithExpensesOnlyJson: JsValue = Json.parse(
-    """
-      |{
-      |      "expenses": {
-      |         "premisesRunningCosts": -1000.49,
-      |         "repairsAndMaintenance": 1000.49,
-      |         "financialCosts": 1000.49,
-      |         "professionalFees": 1000.49,
-      |         "travelCosts": 1000.49,
-      |         "costOfServices": -1000.49,
-      |         "residentialFinancialCost": 1000.49,
-      |         "other": 1000.49,
-      |         "consolidatedExpenses": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
-
-  val requestJson: JsValue = Json.parse(
-    """
-      |{
-      |      "income": {
-      |         "totalRentsReceived": 1000.49,
-      |         "premiumsOfLeaseGrant": 1000.49,
-      |         "reversePremiums": 1000.49,
-      |         "otherPropertyIncome": 1000.49
-      |      },
-      |      "expenses": {
-      |         "premisesRunningCosts": -1000.49,
-      |         "repairsAndMaintenance": 1000.49,
-      |         "financialCosts": 1000.49,
-      |         "professionalFees": 1000.49,
-      |         "travelCosts": 1000.49,
-      |         "costOfServices": -1000.49,
-      |         "residentialFinancialCost": 1000.49,
-      |         "other": 1000.49,
-      |         "consolidatedExpenses": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
-
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |      "income": {
-      |         "rentIncome": 1000.45,
-      |         "premiumsOfLeaseGrant": 1000.45,
-      |         "reversePremiums": 1000.49,
-      |         "otherPropertyIncome": 1000.45
-      |      },
-      |      "expenses": {
-      |         "premisesRunningCosts": true,
-      |         "repairsAndMaintenance": 1000.45,
-      |         "financialCosts": 1000.45,
-      |         "professionalFees": 1000.45,
-      |         "travelCosts": 1000.45,
-      |         "costOfServices": -1000.49,
-      |         "residentialFinancialCost": 1000.45,
-      |         "other": 1000.45,
-      |         "consolidatedExpenses": 1000.49
-      |      }
-      |}
-      |""".stripMargin)
+  // Use simple case as formats for contents of income/expenses are tested elsewhere...
+  val json: JsValue = Json.parse("""
+                                   |{
+                                   |  "income": {
+                                   |  },
+                                   |  "expenses": {
+                                   |  }
+                                   |}
+                                   |""".stripMargin)
 
   val model: NonFurnishedHolidayLet = NonFurnishedHolidayLet(
-    Some(NonFHLIncome(
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49)
-    )),
-    Some(NonFHLExpenses(
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49)
-    ))
+    Some(NonFHLIncome(None, None, None, None)),
+    Some(NonFHLExpenses(None, None, None, None, None, None, None, None, None))
   )
 
-  val modelWithExpensesOnly: NonFurnishedHolidayLet = NonFurnishedHolidayLet(
-    None,
-    Some(NonFHLExpenses(
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(-1000.49),
-      Some(1000.49),
-      Some(1000.49),
-      Some(1000.49)
-    ))
-  )
+  val emptyModel: NonFurnishedHolidayLet = NonFurnishedHolidayLet(None, None)
 
-  "NonFurnishedHolidayLet" when {
-    "read from valid Json" should {
-      "return the expected NonFurnishedHolidayLet object" in {
-        inputJson.validate[NonFurnishedHolidayLet] shouldBe JsSuccess(model)
-      }
-
-      "return the expected NonFurnishedHolidayLet object without income" in {
-        inputWithExpensesOnlyJson.validate[NonFurnishedHolidayLet] shouldBe JsSuccess(modelWithExpensesOnly)
+  "reads" when {
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json.as[NonFurnishedHolidayLet] shouldBe model
       }
     }
 
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[NonFurnishedHolidayLet] shouldBe a[JsError]
+    "passed an empty JSON" should {
+      "return an empty model" in {
+        JsObject.empty.as[NonFurnishedHolidayLet] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
       }
     }
 
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

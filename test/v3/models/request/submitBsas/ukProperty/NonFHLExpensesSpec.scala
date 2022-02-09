@@ -16,123 +16,63 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
-class NonFHLExpensesSpec extends UnitSpec{
+class NonFHLExpensesSpec extends UnitSpec {
 
-  val inputJson: JsValue = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": -1000.49,
-      |  "repairsAndMaintenance": 1000.49,
-      |  "financialCosts": 1000.49,
-      |  "professionalFees": 1000.49,
-      |  "travelCosts": 1000.49,
-      |  "costOfServices": -1000.49,
-      |  "residentialFinancialCost": 1000.49,
-      |  "other": 1000.49,
-      |  "consolidatedExpenses": 1000.49
-      |}
-      |""".stripMargin
+  val json: JsValue = Json.parse("""
+            |{
+            |  "premisesRunningCosts": 1.12,
+            |  "repairsAndMaintenance": 2.12,
+            |  "financialCosts": 3.12,
+            |  "professionalFees": 4.12,
+            |  "travelCosts": 5.12,
+            |  "costOfServices": 6.12,
+            |  "residentialFinancialCost": 7.12,
+            |  "other": 8.12,
+            |  "consolidatedExpenses": 9.12
+            |}
+            |""".stripMargin)
+
+  val model: NonFHLExpenses = NonFHLExpenses(
+    premisesRunningCosts = Some(1.12),
+    repairsAndMaintenance = Some(2.12),
+    financialCosts = Some(3.12),
+    professionalFees = Some(4.12),
+    travelCosts = Some(5.12),
+    costOfServices = Some(6.12),
+    residentialFinancialCost = Some(7.12),
+    other = Some(8.12),
+    consolidatedExpenses = Some(9.12)
   )
 
-  val inputWithMissingValuesJson: JsValue = Json.parse(
-    """
-      |{
-      |  "repairsAndMaintenance": 1000.49,
-      |  "financialCosts": 1000.49,
-      |  "professionalFees": 1000.49,
-      |  "costOfServices": -1000.49,
-      |  "residentialFinancialCost": 1000.49,
-      |  "other": 1000.49,
-      |  "consolidatedExpenses": 1000.49
-      |}
-      |""".stripMargin
-  )
+  val emptyModel: NonFHLExpenses = NonFHLExpenses(None, None, None, None, None, None, None, None, None)
 
-  val requestJson: JsValue = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": -1000.49,
-      |  "repairsAndMaintenance": 1000.49,
-      |  "financialCosts": 1000.49,
-      |  "professionalFees": 1000.49,
-      |  "travelCosts": 1000.49,
-      |  "costOfServices": -1000.49,
-      |  "residentialFinancialCost": 1000.49,
-      |  "other": 1000.49,
-      |    "consolidatedExpenses": 1000.49
-      |}
-      |""".stripMargin
-  )
-
-  val requestWithMissingValuesJson: JsValue = Json.parse(
-    """
-      |{
-      |  "repairsAndMaintenance": 1000.49,
-      |  "financialCosts": 1000.49,
-      |  "professionalFees": 1000.49,
-      |  "costOfServices": -1000.49,
-      |  "residentialFinancialCost": 1000.49,
-      |  "other": 1000.49,
-      |  "consolidatedExpenses": 1000.49
-      |}
-      |""".stripMargin
-  )
-
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |  "premisesRunningCosts": "-1000.49",
-      |  "repairsAndMaintenance": "1000.49",
-      |  "financialCosts": "1000.49",
-      |  "professionalFees": true,
-      |  "travelCosts": false,
-      |  "costOfServices": "-1000.49",
-      |  "residentialFinancialCost": "1000.49",
-      |  "other": "1000.49",
-      |    "consolidatedExpenses": "1000.49"
-      |}
-      |""".stripMargin
-  )
-
-  val model: NonFHLExpenses = NonFHLExpenses(Some(-1000.49), Some(1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            Some(1000.49), Some(-1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            Some(1000.49))
-
-  val modelWithNoneValues: NonFHLExpenses = NonFHLExpenses(None, Some(1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            None, Some(-1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            Some(1000.49))
-
-  "NonFHLExpenses" when {
-    "read from valid JSON" should {
-      "return the full expected NonFHLExpenses object" in {
-        inputJson.validate[NonFHLExpenses] shouldBe JsSuccess(model)
-      }
-
-      "return part of the expected NonFHLExpenses object" in {
-        inputWithMissingValuesJson.validate[NonFHLExpenses] shouldBe JsSuccess(modelWithNoneValues)
+  "reads" when {
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json.as[NonFHLExpenses] shouldBe model
       }
     }
 
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[NonFHLExpenses] shouldBe a[JsError]
+    "passed an empty JSON" should {
+      "return an empty model" in {
+        JsObject.empty.as[NonFHLExpenses] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
       }
     }
 
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
-      }
-
-      "return the expected JsValue without missing values" in {
-        Json.toJson(modelWithNoneValues) shouldBe requestWithMissingValuesJson
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }

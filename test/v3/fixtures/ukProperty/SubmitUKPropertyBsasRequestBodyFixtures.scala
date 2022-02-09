@@ -16,7 +16,7 @@
 
 package v3.fixtures.ukProperty
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{ JsObject, JsValue, Json }
 import play.api.mvc.AnyContentAsJson
 import v3.models.request.submitBsas.ukProperty._
 
@@ -24,321 +24,323 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val invalidBsasId = "a54ba782-5ef4-/(0)*f4-ab72-4954066%%%%%%%%%%"
 
-  val nonFHLInputJson: JsValue = Json.parse(
-    """
-      |{
-      | "nonFurnishedHolidayLet": {
-      |   "income": {
-      |     "rentIncome": 1000.45,
-      |     "premiumsOfLeaseGrant": 1000.45,
-      |     "reversePremiums": 1000.45,
-      |     "otherPropertyIncome": 1000.45
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
-      |     "repairsAndMaintenance": 1000.45,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
-      |     "travelCosts": 1000.45,
-      |     "costOfServices": 1000.45,
-      |     "residentialFinancialCost": 1000.45,
-      |     "other": 1000.45,
-      |     "consolidatedExpenses": 1000.45
-      |   }
-      | }
-      |}
-      |""".stripMargin)
-
-  val validNonFHLInputJson: JsValue = Json.parse(
-    """
-      |{
-      | "nonFurnishedHolidayLet": {
-      |   "income": {
-      |     "rentIncome": 1000.45,
-      |     "premiumsOfLeaseGrant": 1000.45,
-      |     "reversePremiums": 1000.45,
-      |     "otherPropertyIncome": 1000.45
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": -1000.45,
-      |     "repairsAndMaintenance": 1000.45,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
-      |     "travelCosts": 1000.45,
-      |     "costOfServices": -1000.45,
-      |     "residentialFinancialCost": 1000.45,
-      |     "other": 1000.45
-      |   }
-      | }
-      |}
-      |""".stripMargin)
-
-  val nonFHLRequestJson: JsValue = Json.parse(
-    """
+  val mtdRequestNonFhlFull: JsValue = Json.parse("""
       |{
       |  "nonFurnishedHolidayLet": {
-      |     "income": {
-      |       "totalRentsReceived": 1000.45,
-      |       "premiumsOfLeaseGrant": 1000.45,
-      |       "reversePremiums": 1000.45,
-      |       "otherPropertyIncome": 1000.45
-      |     },
-      |     "expenses": {
-      |       "premisesRunningCosts": 1000.45,
-      |       "repairsAndMaintenance": 1000.45,
-      |       "financialCosts": 1000.45,
-      |       "professionalFees": 1000.45,
-      |       "travelCosts": 1000.45,
-      |       "costOfServices": 1000.45,
-      |       "residentialFinancialCost": 1000.45,
-      |       "other": 1000.45,
-      |       "consolidatedExpenses": 1000.45
-      |     }
-      |   }
+      |    "income": {
+      |      "totalRentsReceived": 1.45,
+      |      "premiumsOfLeaseGrant": 2.45,
+      |      "reversePremiums": 3.45,
+      |      "otherPropertyIncome": 4.45
+      |    },
+      |    "expenses": {
+      |      "consolidatedExpenses": 5.45,
+      |      "premisesRunningCosts": 6.45,
+      |      "repairsAndMaintenance": 7.45,
+      |      "financialCosts": 8.45,
+      |      "professionalFees": 9.45,
+      |      "costOfServices": 10.45,
+      |      "residentialFinancialCost": 11.45,
+      |      "other": 12.45,
+      |      "travelCosts": 13.45
+      |    }
+      |  }
       |}
       |""".stripMargin)
 
+  val validNonFHLInputJson: JsValue = Json.parse("""
+     |{
+     |  "nonFurnishedHolidayLet": {
+     |    "income": {
+     |      "totalRentsReceived": 1.45,
+     |      "premiumsOfLeaseGrant": 2.45,
+     |      "reversePremiums": 3.45,
+     |      "otherPropertyIncome": 4.45
+     |    },
+     |    "expenses": {
+     |      "premisesRunningCosts": 6.45,
+     |      "repairsAndMaintenance": 7.45,
+     |      "financialCosts": 8.45,
+     |      "professionalFees": 9.45,
+     |      "costOfServices": 10.45,
+     |      "residentialFinancialCost": 11.45,
+     |      "other": 12.45,
+     |      "travelCosts": 13.45
+     |    }
+     |  }
+     |}
+     |""".stripMargin)
 
-  val nonFHLInvalidJson: JsValue = Json.parse(
-    """
-      |{
-      |   "nonFurnishedHolidayLet": {
-      |     "income": {
-      |       "totalRentsReceived": 1000.45,
-      |       "premiumsOfLeaseGrant": true,
-      |       "reversePremiums": 1000.45,
-      |       "otherPropertyIncome": 1000.45
-      |     },
-      |     "expenses": {
-      |       "premisesRunningCosts": 1000.45,
-      |       "repairsAndMaintenance": 1000.45,
-      |       "financialCosts": true,
-      |       "professionalFees": 1000.45,
-      |       "travelCosts": 1000.45,
-      |       "costOfServices": false,
-      |       "residentialFinancialCost": 1000.45,
-      |       "other": 1000.45,
-      |       "consolidatedExpenses": 1000.45
-      |     }
-      |   }
-      |}
-      |""".stripMargin)
-
-  val nonFHLBody: SubmitUKPropertyBsasRequestBody =
-    SubmitUKPropertyBsasRequestBody(
-      Some(NonFurnishedHolidayLet(
-        Some(NonFHLIncome(Some(1000.45), Some(1000.45), Some(1000.45), Some(1000.45))),
-        Some(NonFHLExpenses(Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45), Some(1000.45)))
-      )),
-      None
-    )
-
-  val validNonFHLBody: SubmitUKPropertyBsasRequestBody =
-    SubmitUKPropertyBsasRequestBody(
-      Some(NonFurnishedHolidayLet(
-        Some(NonFHLIncome(Some(1000.45), Some(1000.45), Some(1000.45), Some(1000.45))),
-        Some(NonFHLExpenses(Some(-1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45), Some(-1000.45),
-          Some(1000.45), Some(1000.45), None))
-      )),
-      None
-    )
-
-  val nonFHLExpensesAllFields: Option[JsObject] = Some(Json.obj(
-    "premisesRunningCosts" -> -1000.45,
-    "repairsAndMaintenance" -> 1000.45,
-    "financialCosts" -> 1000.45,
-    "professionalFees" -> 1000.45,
-    "travelCosts" -> 1000.45,
-    "costOfServices" -> -1000.45,
-    "residentialFinancialCost" -> 1000.45,
-    "other" -> 1000.45
-  ))
-
-  val nonFHLIncomeZeroValue: Option[JsObject] = Some(Json.obj(
-    "rentIncome" -> 1000.45,
-    "premiumsOfLeaseGrant" -> 1000.45,
-    "reversePremiums" -> 1000.45,
-    "otherPropertyIncome" -> 0
-  ))
-
-  val nonFHLIncomeExceedRangeValue: Option[JsObject] = Some(Json.obj(
-    "rentIncome" -> "100000000000.00",
-    "premiumsOfLeaseGrant" -> 1000.45,
-    "reversePremiums" -> 1000.45,
-    "otherPropertyIncome" -> 1000.45
-  ))
-
-  val fhlInputJson: JsValue = Json.parse(
-    """
-      |{
-      | "furnishedHolidayLet": {
-      |   "income": {
-      |     "rentIncome": 1000.45
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
-      |     "repairsAndMaintenance": 1000.45,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
-      |     "costOfServices": 1000.45,
-      |     "travelCosts": 1000.45,
-      |     "other": 1000.45,
-      |     "consolidatedExpenses": 1000.45
-      |   }
-      | }
-      |}
-      |""".stripMargin)
-
-  val validfhlInputJson: JsValue = Json.parse(
-    """
-      |{
-      | "furnishedHolidayLet": {
-      |   "income": {
-      |     "rentIncome": 1000.45
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
-      |     "repairsAndMaintenance": 1000.45,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
-      |     "costOfServices": 1000.45,
-      |     "travelCosts": 1000.45,
-      |     "other": 1000.45
-      |   }
-      | }
-      |}
-      |""".stripMargin)
-
-  val fhlRequestJson: JsValue = Json.parse(
-    """
-      |{
-      | "furnishedHolidayLet": {
-      |   "income": {
-      |     "totalRentsReceived": 1000.45
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": 1000.45,
-      |     "repairsAndMaintenance": 1000.45,
-      |     "financialCosts": 1000.45,
-      |     "professionalFees": 1000.45,
-      |     "costOfServices": 1000.45,
-      |     "travelCosts": 1000.45,
-      |     "other": 1000.45,
-      |     "consolidatedExpenses": 1000.45
-      |   }
-      | }
-      |}
-      |""".stripMargin)
-
-  val fhlInvalidJson: JsValue = Json.parse(
-    """
-      |{
-      | "furnishedHolidayLet": {
-      |   "income": {
-      |     "rentIncome": "1000.45"
-      |   },
-      |   "expenses": {
-      |     "premisesRunningCosts": "1000.45",
-      |     "repairsAndMaintenance": false,
-      |     "financialCosts": "1000.45",
-      |     "professionalFees": "1000.45",
-      |     "costOfServices": true,
-      |     "travelCosts": "1000.45",
-      |     "other": "1000.45",
-      |     "consolidatedExpenses": "1000.45"
-      |   }
-      | }
-      |}
-      |""".stripMargin)
-
-  val fhlIncomeAllFields: Option[JsObject] = Some(Json.obj("rentIncome" -> 1000.45))
-
-  val fhlInvalidConsolidatedExpenses: Option[JsObject] = Some(Json.obj(
-    "consolidatedExpenses" -> 1000.45,
-    "premisesRunningCosts" -> 1000.45
-  ))
-
-  val fhlMultipleInvalidExpenses: Option[JsObject] = Some(Json.obj(
-    "premisesRunningCosts" -> 100000000000.00,
-    "repairsAndMaintenance" -> -100000000000.00,
-    "financialCosts" -> 1000230800000.00,
-    "professionalFees" -> -2001200034500.00,
-    "costOfServices" -> 1000.45,
-    "travelCosts" -> 1000.45,
-    "other" -> 1000.45
-  ))
-
-  val fhlExpensesAllFields: Option[JsObject] = Some(Json.obj(
-    "premisesRunningCosts" -> 1000.45,
-    "repairsAndMaintenance" -> 1000.45,
-    "financialCosts" -> 1000.45,
-    "professionalFees" -> 1000.45,
-    "costOfServices" -> 1000.45,
-    "travelCosts" -> 1000.45,
-    "other" -> 1000.45
-  ))
-
-  val nonFHLIncomeAllFields: Option[JsObject] = Some(Json.obj(
-    "rentIncome" -> 1000.45,
-    "premiumsOfLeaseGrant" -> 1000.45,
-    "reversePremiums" -> 1000.45,
-    "otherPropertyIncome" -> 1000.45
-  ))
-
-
-  val fhlBody: SubmitUKPropertyBsasRequestBody =
-    SubmitUKPropertyBsasRequestBody(
-      None,
-      Some(FurnishedHolidayLet(
-        Some(FHLIncome(Some(1000.45))),
-        Some(FHLExpenses(Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45)))
-      ))
-    )
-
-  val validfhlBody: SubmitUKPropertyBsasRequestBody =
-    SubmitUKPropertyBsasRequestBody(
-      None,
-      Some(FurnishedHolidayLet(
-        Some(FHLIncome(Some(1000.45))),
-        Some(FHLExpenses(Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), Some(1000.45), Some(1000.45),
-          Some(1000.45), None)
+  val requestNonFhlFullModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(
+    nonFurnishedHolidayLet = Some(
+      NonFurnishedHolidayLet(
+        income = Some(
+          NonFHLIncome(
+            totalRentsReceived = Some(1.45),
+            premiumsOfLeaseGrant = Some(2.45),
+            reversePremiums = Some(3.45),
+            otherPropertyIncome = Some(4.45)
+          )),
+        expenses = Some(NonFHLExpenses(
+          consolidatedExpenses = Some(5.45),
+          premisesRunningCosts = Some(6.45),
+          repairsAndMaintenance = Some(7.45),
+          financialCosts = Some(8.45),
+          professionalFees = Some(9.45),
+          costOfServices = Some(10.45),
+          residentialFinancialCost = Some(11.45),
+          other = Some(12.45),
+          travelCosts = Some(13.45)
         ))
-      )
-    )
+      )),
+    furnishedHolidayLet = None
+  )
+
+  val nonFHLBody: SubmitUKPropertyBsasRequestBody = requestNonFhlFullModel
+
+  val validNonFHLBody: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(
+    nonFurnishedHolidayLet = Some(
+      NonFurnishedHolidayLet(
+        income = Some(
+          NonFHLIncome(
+            totalRentsReceived = Some(1.45),
+            premiumsOfLeaseGrant = Some(2.45),
+            reversePremiums = Some(3.45),
+            otherPropertyIncome = Some(4.45)
+          )),
+        expenses = Some(NonFHLExpenses(
+          consolidatedExpenses = None,
+          premisesRunningCosts = Some(6.45),
+          repairsAndMaintenance = Some(7.45),
+          financialCosts = Some(8.45),
+          professionalFees = Some(9.45),
+          costOfServices = Some(10.45),
+          residentialFinancialCost = Some(11.45),
+          other = Some(12.45),
+          travelCosts = Some(13.45)
+        ))
+      )),
+    furnishedHolidayLet = None
+  )
+
+  val downstreamRequestNonFhlFull: JsValue = Json.parse("""
+    |{
+    |  "incomeSourceType": "02",
+    |  "adjustments": {
+    |    "income": {
+    |      "totalRentsReceived": 1.45,
+    |      "premiumsOfLeaseGrant": 2.45,
+    |      "reversePremiums": 3.45,
+    |      "otherPropertyIncome": 4.45
+    |    },
+    |    "expenses": {
+    |      "consolidatedExpenses": 5.45,
+    |      "premisesRunningCosts": 6.45,
+    |      "repairsAndMaintenance": 7.45,
+    |      "financialCosts": 8.45,
+    |      "professionalFees": 9.45,
+    |      "costOfServices": 10.45,
+    |      "residentialFinancialCost": 11.45,
+    |      "other": 12.45,
+    |      "travelCosts": 13.45
+    |    }
+    |  }
+    |}
+    |""".stripMargin)
+
+  val nonFHLExpensesAllFields: Option[JsObject] = Some(
+    Json.obj(
+      "premisesRunningCosts"     -> 6.45,
+      "repairsAndMaintenance"    -> 7.45,
+      "financialCosts"           -> 8.45,
+      "professionalFees"         -> 9.45,
+      "costOfServices"           -> 10.45,
+      "residentialFinancialCost" -> 11.45,
+      "other"                    -> 12.45,
+      "travelCosts"              -> 13.45
+    ))
+
+  val nonFHLIncomeZeroValue: Option[JsObject] = Some(
+    Json.obj(
+      "totalRentsReceived"           -> 1.45,
+      "premiumsOfLeaseGrant" -> 2.45,
+      "reversePremiums"      -> 3.45,
+      "otherPropertyIncome"  -> 0
+    ))
+
+  val nonFHLIncomeExceedRangeValue: Option[JsObject] = Some(
+    Json.obj(
+      "totalRentsReceived"           -> "100000000000.00",
+      "premiumsOfLeaseGrant" -> 2.45,
+      "reversePremiums"      -> 3.45,
+      "otherPropertyIncome"  -> 4.45
+    ))
+
+  val mtdRequestFhlFull: JsValue = Json.parse("""
+      |{
+      |  "furnishedHolidayLet": {
+      |    "income": {
+      |      "totalRentsReceived": 1.45
+      |    },
+      |    "expenses": {
+      |      "consolidatedExpenses": 2.45,
+      |      "premisesRunningCosts": 3.45,
+      |      "repairsAndMaintenance": 4.45,
+      |      "financialCosts": 5.45,
+      |      "professionalFees": 6.45,
+      |      "costOfServices": 7.45,
+      |      "other": 8.45,
+      |      "travelCosts": 9.45
+      |    }
+      |  }
+      |}
+      |""".stripMargin)
+
+  val validfhlInputJson: JsValue = Json.parse("""
+      |{
+      |  "furnishedHolidayLet": {
+      |    "income": {
+      |      "totalRentsReceived": 1.45
+      |    },
+      |    "expenses": {
+      |      "premisesRunningCosts": 3.45,
+      |      "repairsAndMaintenance": 4.45,
+      |      "financialCosts": 5.45,
+      |      "professionalFees": 6.45,
+      |      "costOfServices": 7.45,
+      |      "other": 8.45,
+      |      "travelCosts": 9.45
+      |    }
+      |  }
+      |}
+      |""".stripMargin)
+
+  val fhlIncomeAllFields: Option[JsObject] = Some(Json.obj("totalRentsReceived" -> 1.45))
+
+  val fhlInvalidConsolidatedExpenses: Option[JsObject] = Some(
+    Json.obj(
+      "consolidatedExpenses" -> 1000.45,
+      "premisesRunningCosts" -> 1000.45
+    ))
+
+  val fhlMultipleInvalidExpenses: Option[JsObject] = Some(
+    Json.obj(
+      "premisesRunningCosts"  -> 100000000000.00,
+      "repairsAndMaintenance" -> -100000000000.00,
+      "financialCosts"        -> 1000230800000.00,
+      "professionalFees"      -> -2001200034500.00,
+      "costOfServices"        -> 1000.45,
+      "travelCosts"           -> 1000.45,
+      "other"                 -> 1000.45
+    ))
+
+  val fhlExpensesAllFields: Option[JsObject] = Some(
+    Json.obj(
+      "premisesRunningCosts"  -> 3.45,
+      "repairsAndMaintenance" -> 4.45,
+      "financialCosts"        -> 5.45,
+      "professionalFees"      -> 6.45,
+      "costOfServices"        -> 7.45,
+      "other"                 -> 8.45,
+      "travelCosts"           -> 9.45
+    ))
+
+  val nonFHLIncomeAllFields: Option[JsObject] = Some(
+    Json.obj(
+      "totalRentsReceived"           -> 1.45,
+      "premiumsOfLeaseGrant" -> 2.45,
+      "reversePremiums"      -> 3.45,
+      "otherPropertyIncome"  -> 4.45
+    ))
+
+  val requestFhlFullModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(
+    nonFurnishedHolidayLet = None,
+    furnishedHolidayLet = Some(
+      FurnishedHolidayLet(
+        income = Some(
+          FHLIncome(
+            totalRentsReceived = Some(1.45),
+          )),
+        expenses = Some(FHLExpenses(
+          consolidatedExpenses = Some(2.45),
+          premisesRunningCosts = Some(3.45),
+          repairsAndMaintenance = Some(4.45),
+          financialCosts = Some(5.45),
+          professionalFees = Some(6.45),
+          costOfServices = Some(7.45),
+          other = Some(8.45),
+          travelCosts = Some(9.45)
+        ))
+      ))
+  )
+
+  val fhlBody: SubmitUKPropertyBsasRequestBody = requestFhlFullModel
+
+  val validfhlBody: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(
+    nonFurnishedHolidayLet = None,
+    furnishedHolidayLet = Some(
+      FurnishedHolidayLet(
+        income = Some(
+          FHLIncome(
+            totalRentsReceived = Some(1.45),
+          )),
+        expenses = Some(FHLExpenses(
+          consolidatedExpenses = None,
+          premisesRunningCosts = Some(3.45),
+          repairsAndMaintenance = Some(4.45),
+          financialCosts = Some(5.45),
+          professionalFees = Some(6.45),
+          costOfServices = Some(7.45),
+          other = Some(8.45),
+          travelCosts = Some(9.45)
+        ))
+      ))
+  )
 
   val validMinimalBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
 
-  def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
-                               expenses: Option[JsObject] = None): AnyContentAsJson = {
+  val downstreamRequestFhlFull: JsValue = Json.parse("""
+     |{
+     |  "incomeSourceType": "04",
+     |  "adjustments": {
+     |    "income": {
+     |      "rentReceived": 1.45
+     |    },
+     |    "expenses": {
+     |      "consolidatedExpenses": 2.45,
+     |      "premisesRunningCosts": 3.45,
+     |      "repairsAndMaintenance": 4.45,
+     |      "financialCosts": 5.45,
+     |      "professionalFees": 6.45,
+     |      "costOfServices": 7.45,
+     |      "other": 8.45,
+     |      "travelCosts": 9.45
+     |    }
+     |  }
+     |}
+     |""".stripMargin)
+
+  def submitBsasRawDataBodyFHL(income: Option[JsObject] = None, expenses: Option[JsObject] = None): AnyContentAsJson = {
     AnyContentAsJson(
-      Json.obj("furnishedHolidayLet" ->
-        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
-          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses)))
-      )
+      Json.obj(
+        "furnishedHolidayLet" ->
+          (income.fold(Json.obj())(income => Json.obj("income"        -> income)) ++
+            expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
     )
   }
 
-  def submitBsasRawDataBodyNonFHL(income: Option[JsObject] = None,
-                                  expenses: Option[JsObject] = None): AnyContentAsJson = {
+  def submitBsasRawDataBodyNonFHL(income: Option[JsObject] = None, expenses: Option[JsObject] = None): AnyContentAsJson = {
     AnyContentAsJson(
-      Json.obj("nonFurnishedHolidayLet" ->
-        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
-          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses)))
-      )
+      Json.obj(
+        "nonFurnishedHolidayLet" ->
+          (income.fold(Json.obj())(income => Json.obj("income"        -> income)) ++
+            expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
     )
   }
 
-  val hateoasResponse: (String, String) => String = (nino: String, calcId: String) =>
-    s"""
+  val hateoasResponse: (String, String) => String = (nino: String, calcId: String) => s"""
        |{
-       |  "id": "$calcId",
        |  "links":[
        |    {
        |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$calcId",
@@ -349,8 +351,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |}
     """.stripMargin
 
-  val fhlDesResponse: (String, String) => String = (calcId: String, typeOfBusiness: String) =>
-    s"""
+  val fhlDesResponse: (String, String) => String = (calcId: String, typeOfBusiness: String) => s"""
        |{
        |      "metadata":{
        |        "calculationId":"$calcId",

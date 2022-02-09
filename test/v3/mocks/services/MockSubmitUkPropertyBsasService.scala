@@ -23,7 +23,6 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors.ErrorWrapper
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v3.models.response.SubmitUkPropertyBsasResponse
 import v3.services.SubmitUkPropertyBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +34,7 @@ trait MockSubmitUkPropertyBsasService extends MockFactory {
   object MockSubmitUkPropertyBsasService {
 
     def submitPropertyBsas(requestData: SubmitUkPropertyBsasRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SubmitUkPropertyBsasResponse]]]] = {
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockService
         .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)

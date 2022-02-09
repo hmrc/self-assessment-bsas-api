@@ -16,61 +16,56 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{ JsObject, JsValue, Json }
 import support.UnitSpec
 
 class NonFHLIncomeSpec extends UnitSpec {
 
-  val inputJson: JsValue = Json.parse(
-    """
-      |{
-      | "totalRentsReceived": 1000.45,
-      | "premiumsOfLeaseGrant": 1000.45,
-      | "reversePremiums": 1000.45,
-      | "otherPropertyIncome": 1000.45
-      |}
-      |""".stripMargin)
+  val json: JsValue = Json
+    .parse("""
+              |{
+              |   "totalRentsReceived": 1.12,
+              |   "premiumsOfLeaseGrant": 2.12,
+              |   "reversePremiums": 3.12,
+              |   "otherPropertyIncome": 4.12
+              |}
+              |""".stripMargin)
 
-  val requestJson: JsValue = Json.parse(
-    """
-      |{
-      | "totalRentsReceived": 1000.45,
-      | "premiumsOfLeaseGrant": 1000.45,
-      | "reversePremiums": 1000.45,
-      | "otherPropertyIncome": 1000.45
-      |}
-      |""".stripMargin)
+  val model: NonFHLIncome =
+    NonFHLIncome(
+      totalRentsReceived = Some(1.12),
+      premiumsOfLeaseGrant = Some(2.12),
+      reversePremiums = Some(3.12),
+      otherPropertyIncome = Some(4.12)
+    )
 
-  val invalidJson: JsValue = Json.parse(
-    """
-      |{
-      |"rentIncome": 1000.45,
-      |"premiumsOfLeaseGrant": true,
-      |"reversePremiums": 809,
-      |"otherPropertyIncome": 20101
-      |}
-      |""".stripMargin
-  )
+  val emptyModel: NonFHLIncome = NonFHLIncome(None, None, None, None)
 
-  val modelWithNoneValues: NonFHLIncome = NonFHLIncome(None,Some(1000.45),Some(1000.45),Some(1000.45))
-  val model: NonFHLIncome = NonFHLIncome(Some(1000.45),Some(1000.45),Some(1000.45),Some(1000.45))
-
-  "NonFHLIncome" when {
-    "read from valid JSON" should {
-      "return the expected NonFHLIncome object" in {
-        inputJson.validate[NonFHLIncome] shouldBe JsSuccess(modelWithNoneValues)
+  "reads" when {
+    "passed mtd json" should {
+      "return the corresponding model" in {
+        json
+          .as[NonFHLIncome] shouldBe model
       }
     }
 
-    "read from invalid JSON" should {
-      "return a JsError" in {
-        invalidJson.validate[NonFHLIncome] shouldBe a[JsError]
+    "passed an empty JSON" should {
+      "return an empty model" in {
+        JsObject.empty.as[NonFHLIncome] shouldBe emptyModel
+      }
+    }
+  }
+
+  "writes" when {
+    "passed a model" should {
+      "return the downstream JSON" in {
+        Json.toJson(model) shouldBe json
       }
     }
 
-    "written to JSON" should {
-      "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+    "passed an empty model" should {
+      "return an empty JSON" in {
+        Json.toJson(emptyModel) shouldBe JsObject.empty
       }
     }
   }
