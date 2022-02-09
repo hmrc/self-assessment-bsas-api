@@ -128,35 +128,38 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(1)
   ))))
 
-  val adjustmentsModel = Adjustments(
+  val adjustmentsFhlEeaModel = Adjustments(
     None,
-    Some(Income(Some(0.12), Some(0.12), Some(0.12))),
-    Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))))
+    Some(Income(Some(99999999999.99), Some(99999999999.99), Some(99999999999.99))),
+    Some(Expenses(Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99),
+                  Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99))))
 
-  val adjustmentsArrayModel = Adjustments(
+  val adjustmentsNonFhlModel = Adjustments(
     Some(Seq(CountryLevelDetail(
       Some("CYM"),
       None,
-      Some(Income(Some(0.12), Some(0.12), Some(0.12))),
+      Some(Income(Some(99999999999.99), Some(99999999999.99), Some(99999999999.99))),
       None,
-      Some(Expenses(Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12), Some(0.12))),
-      None,
-      None,
-      None,
-      None,
-      None,
-      None,
-      None,
-      None
-    ))),
+      Some(Expenses(Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99),
+        Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99), Some(99999999999.99))),
+      None, None, None, None, None, None, None, None))),
     None,
-    None)
+    None
+  )
 
-  val retrieveBsasResponseModel = RetrieveForeignPropertyBSASResponse(
+  val retrieveBsasResponseFhlEeaModel = RetrieveForeignPropertyBsasResponse(
     metadata = metaDataModel,
     inputs = inputsModel,
     adjustableSummaryCalculation = adjustableSummaryCalculationModel,
-    adjustments = Some(adjustmentsModel),
+    adjustments = Some(adjustmentsFhlEeaModel),
+    adjustedSummaryCalculation = adjustableSummaryCalculationModel
+  )
+
+  val retrieveBsasResponseNonFhlModel = RetrieveForeignPropertyBsasResponse(
+    metadata = metaDataModel,
+    inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsNonFhlModel),
     adjustedSummaryCalculation = adjustableSummaryCalculationModel
   )
 }

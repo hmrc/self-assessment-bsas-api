@@ -23,111 +23,94 @@ import v3.models.utils.JsonErrorValidators
 
 class AdjustmentsSpec extends UnitSpec with JsonErrorValidators{
 
-  val mtdJson = Json.parse(
+
+
+  val mtdFhlEeaJson = Json.parse(
     """{
       |		"income": {
-      |			"totalRentsReceived": 0.12,
-      |			"premiumsOfLeaseGrant": 0.12,
-      |			"otherPropertyIncome": 0.12
+      |			"totalRentsReceived": 99999999999.99,
+      |			"premiumsOfLeaseGrant": 99999999999.99,
+      |			"otherPropertyIncome": 99999999999.99
       |		},
       |		"expenses": {
-      |     "consolidatedExpenses": 0.12,
-      |			"premisesRunningCosts": 0.12,
-      |			"repairsAndMaintenance": 0.12,
-      |			"financialCosts": 0.12,
-      |			"professionalFees": 0.12,
-      |			"travelCosts": 0.12,
-      |			"costOfServices": 0.12,
-      |			"residentialFinancialCost": 0.12,
-      |			"broughtFwdResidentialFinancialCost": 0.12,
-      |			"other": 0.12
+      |     "consolidatedExpenses": 99999999999.99,
+      |			"premisesRunningCosts": 99999999999.99,
+      |			"repairsAndMaintenance": 99999999999.99,
+      |			"financialCosts": 99999999999.99,
+      |			"professionalFees": 99999999999.99,
+      |			"travelCosts": 99999999999.99,
+      |			"costOfServices": 99999999999.99,
+      |			"residentialFinancialCost": 99999999999.99,
+      |			"broughtFwdResidentialFinancialCost": 99999999999.99,
+      |			"other": 99999999999.99
       |		}
       |}""".stripMargin
   )
 
-  val mtdJsonArray = Json.parse(
-    """{[{
-      |			"countryCode": "CYM",
-      |			"income": {
-      |				"totalRentsReceived": 0.12,
-      |				"premiumsOfLeaseGrant": 0.12,
-      |				"otherPropertyIncome": 0.12
-      |			},
-      |			"expenses": {
-      |				"consolidatedExpenses": 0.12,
-      |				"premisesRunningCosts": 0.12,
-      |				"repairsAndMaintenance": 0.12,
-      |				"financialCosts": 0.12,
-      |				"professionalFees": 0.12,
-      |				"travelCosts": 0.12,
-      |				"costOfServices": 0.12,
-      |				"residentialFinancialCost": 0.12,
-      |				"broughtFwdResidentialFinancialCost": 0.12,
-      |				"other": 0.12
-      |			}
-      |		}]
-      |}""".stripMargin
-  )
-
-  val desJson = Json.parse(
+  val desFhlEeaJson = Json.parse(
     """{
       |		"income": {
-      |			"rent": 0.12,
-      |			"premiumsOfLeaseGrant": 0.12,
-      |			"otherPropertyIncome": 0.12
+      |			"rent": 99999999999.99,
+      |			"premiumsOfLeaseGrant": 99999999999.99,
+      |			"otherPropertyIncome": 99999999999.99
       |		},
       |		"expenses": {
-      |     "consolidatedExpenses": 0.12,
-      |			"premisesRunningCosts": 0.12,
-      |			"repairsAndMaintenance": 0.12,
-      |			"financialCosts": 0.12,
-      |			"professionalFees": 0.12,
-      |			"travelCosts": 0.12,
-      |			"costOfServices": 0.12,
-      |			"residentialFinancialCost": 0.12,
-      |			"broughtFwdResidentialFinancialCost": 0.12,
-      |			"other": 0.12
+      |     "consolidatedExpenses": 99999999999.99,
+      |			"premisesRunningCosts": 99999999999.99,
+      |			"repairsAndMaintenance": 99999999999.99,
+      |			"financialCosts": 99999999999.99,
+      |			"professionalFees": 99999999999.99,
+      |			"travelCosts": 99999999999.99,
+      |			"costOfServices": 99999999999.99,
+      |			"residentialFinancialCost": 99999999999.99,
+      |			"broughtFwdResidentialFinancialCost": 99999999999.99,
+      |			"other": 99999999999.99
       |		}
       |}""".stripMargin
   )
 
-  val desJsonArray = Json.parse(
-    """[{
-      | 	"countryCode": "CYM",
-      | 	"income": {
-      | 		"rentReceived": 99999999999.99,
-      | 		"premiumsOfLeaseGrant": 99999999999.99,
-      | 		"otherPropertyIncome": 99999999999.99
-      | 	},
-      | 	"expenses": {
-      | 		"premisesRunningCosts": 99999999999.99,
-      | 		"repairsAndMaintenance": 99999999999.99,
-      | 		"financialCosts": 99999999999.99,
-      | 		"professionalFees": 99999999999.99,
-      | 		"travelCosts": 99999999999.99,
-      | 		"costOfServices": 99999999999.99,
-      | 		"residentialFinancialCost": 99999999999.99,
-      | 		"other": 99999999999.99
-      | 	}
-      |}]""".stripMargin
+  val mtdNonFhlJson = Json.parse(
+    """{
+      |	"countryLevelDetail": [{
+      |		"countryCode": "CYM",
+      |		"income": {
+      |			"totalRentsReceived": 99999999999.99,
+      |			"premiumsOfLeaseGrant": 99999999999.99,
+      |			"otherPropertyIncome": 99999999999.99
+      |		},
+      |		"expenses": {
+      |			"consolidatedExpenses": 99999999999.99,
+      |			"premisesRunningCosts": 99999999999.99,
+      |			"repairsAndMaintenance": 99999999999.99,
+      |			"financialCosts": 99999999999.99,
+      |			"professionalFees": 99999999999.99,
+      |			"travelCosts": 99999999999.99,
+      |			"costOfServices": 99999999999.99,
+      |			"residentialFinancialCost": 99999999999.99,
+      |			"broughtFwdResidentialFinancialCost": 99999999999.99,
+      |			"other": 99999999999.99
+      |		}
+      |	}]
+      |}""".stripMargin
   )
+
 
   "reads" should {
     "return a valid adjustments model" when {
-      "a valid json with country code are supplied" in {
-        desJsonArray.as[Adjustments] shouldBe adjustmentsArrayModel
-      }
-
-      "a valid json without a country code are supplied" in {
-        desJson.as[Adjustments] shouldBe adjustmentsModel
+      "a valid json for fhlEea is supplied" in {
+        desFhlEeaJson.as[Adjustments](Adjustments.reads) shouldBe adjustmentsFhlEeaModel
       }
     }
   }
 
   "writes" should {
     "return a valid json" when {
-      "a valid model is supplied" in {
-        adjustmentsModel.toJson shouldBe mtdJson
+      "a valid fhlEea model is supplied" in {
+        adjustmentsFhlEeaModel.toJson shouldBe mtdFhlEeaJson
+      }
+
+      "a valid nonFhl model is supplied" in {
+        adjustmentsNonFhlModel.toJson shouldBe mtdNonFhlJson
       }
     }
   }
