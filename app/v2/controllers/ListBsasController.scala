@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{CurrentDateProvider, DateUtils, DesTaxYear, IdGenerator, Logging}
+import utils.{CurrentDateProvider, DateUtils, DownstreamTaxYear, IdGenerator, Logging}
 import v2.controllers.requestParsers.ListBsasRequestParser
 import v2.hateoas.HateoasFactory
 import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -64,7 +64,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      lazy val currentMtdTaxYear = DesTaxYear.fromDes(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()).toString)
+      lazy val currentMtdTaxYear = DownstreamTaxYear.fromDownstream(DateUtils.getDownstreamTaxYear(currentDateProvider.getCurrentDate()).toString)
 
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
       val result =

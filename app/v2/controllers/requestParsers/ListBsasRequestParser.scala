@@ -39,7 +39,7 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
 
     ListBsasRequest(
       nino = Nino(data.nino),
-      taxYear = data.taxYear.fold(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDesTaxYear),
+      taxYear = data.taxYear.fold(DateUtils.getDownstreamTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDownstreamTaxYear),
       incomeSourceId = data.businessId,
       incomeSourceType = incomeSourceType
     )

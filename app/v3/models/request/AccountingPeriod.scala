@@ -16,17 +16,10 @@
 
 package v3.models.request
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class AccountingPeriod(startDate: String, endDate: String)
 
 object AccountingPeriod {
-  implicit val reads: Reads[AccountingPeriod] = Json.reads[AccountingPeriod]
-  implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
-
-  val desReads: Reads[AccountingPeriod] = (
-    (JsPath \ "accountingStartDate").read[String] and
-      (JsPath \ "accountingEndDate").read[String]
-    )(AccountingPeriod.apply _)
+  implicit val format: OFormat[AccountingPeriod] = Json.format[AccountingPeriod]
 }

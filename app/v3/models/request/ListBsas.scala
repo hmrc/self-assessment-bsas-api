@@ -17,9 +17,8 @@
 package v3.models.request
 
 import domain.Nino
-import utils.DesTaxYear
-
+import utils.DownstreamTaxYear
 
 case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]) extends RawData
 
-case class ListBsasRequest(nino: Nino, taxYear: DesTaxYear, incomeSourceId: Option[String], incomeSourceType: Option[String])
+case class ListBsasRequest(nino: Nino, taxYear: DownstreamTaxYear, incomeSourceId: Option[String], incomeSourceType: Option[String])

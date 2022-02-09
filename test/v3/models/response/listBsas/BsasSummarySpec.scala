@@ -16,29 +16,28 @@
 
 package v3.models.response.listBsas
 
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v3.fixtures.ListBsasFixtures._
-import v3.models.domain.Status
+import v3.fixtures.ListBsasFixture
+class BsasSummarySpec extends UnitSpec with ListBsasFixture {
 
-class BsasEntriesSpec extends UnitSpec{
-
-  val model =
-    BsasEntries(
-      bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      requestedDateTime = "2019-10-14T11:33:27Z",
-      summaryStatus = Status.`valid`,
-      adjustedSummary = false
-      )
-
-  "BSAS Entries" should {
-
-    "write correctly to json" in {
-      Json.toJson(model) shouldBe bsasEntriesJSON
+  "BsasSummary" when {
+    "read from valid JSON" should {
+      "return the expected model" in {
+        bsasSummaryDownstreamJson.as[BsasSummary] shouldBe bsasSummaryModel
+      }
     }
 
-    "read correctly to json" in {
-      bsasEntriesFromDesJSON.validate[BsasEntries] shouldBe JsSuccess(model)
+    "read from invalid JSON" should {
+      "return a JsError" in {
+        JsObject.empty.validate[BsasSummary] shouldBe a[JsError]
+      }
+    }
+
+    "written to JSON" should {
+      "return the expected JSON" in {
+          Json.toJson(bsasSummaryModel) shouldBe bsasSummaryJson
+      }
     }
   }
 }

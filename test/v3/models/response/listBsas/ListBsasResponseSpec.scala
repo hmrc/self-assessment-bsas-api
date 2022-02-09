@@ -17,178 +17,110 @@
 package v3.models.response.listBsas
 
 import mocks.MockAppConfig
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v3.fixtures.ListBsasFixtures._
-import v3.models.domain.{Status, TypeOfBusiness}
-import v3.models.hateoas.Method.{GET, POST}
+import v3.fixtures.ListBsasFixture
+import v3.models.domain.TypeOfBusiness
 import v3.models.hateoas.Link
-import v3.models.request.AccountingPeriod
+import v3.models.hateoas.Method.{GET, POST}
 
-class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
+class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixture {
 
+  val selfEmploymentBsasModel: ListBsasResponse[BsasSummary] = listBsasResponseModel
 
-  val selfEmploymentBsasModel =
-    ListBsasResponse(
-      Seq(BusinessSourceSummary(
-        typeOfBusiness = TypeOfBusiness.`self-employment`,
-        businessId = Some("000000000000210"),
-        AccountingPeriod(
-          startDate = "2018-10-11",
-          endDate = "2019-10-10"
-        ),
-        Seq(
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
-          )
-        )
-      ))
-    )
+  val ukPropertyBsasModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(
+    businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
+  ))
 
-  val ukPropertyBsasModel =
-    ListBsasResponse(
-      Seq(BusinessSourceSummary(
-        typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-        businessId = Some("000000000000210"),
-        AccountingPeriod(
-          startDate = "2018-10-11",
-          endDate = "2019-10-10"
-        ),
-        Seq(
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
-          )
-        )
-      ))
-    )
+  val foreignPropertyBsasModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(
+    businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`foreign-property`)
+  ))
 
-  val foreignPropertyBsasModel =
-    ListBsasResponse(
-      Seq(BusinessSourceSummary(
-        typeOfBusiness = TypeOfBusiness.`foreign-property`,
-        businessId = Some("000000000000210"),
-        AccountingPeriod(
-          startDate = "2018-10-11",
-          endDate = "2019-10-10"
-        ),
-        Seq(
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
-          )
-        )
-      ))
-    )
-
-  val bsasSummariesModel = Seq(BusinessSourceSummary(
-      typeOfBusiness = TypeOfBusiness.`foreign-property`,
-      businessId = Some("000000000000210"),
-      AccountingPeriod(
-        startDate = "2018-10-11",
-        endDate = "2019-10-10"
-      ),
-      Seq(
-        BsasEntries(
-          bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-          requestedDateTime = "2019-10-14T11:33:27Z",
-          summaryStatus = Status.`valid`,
-          adjustedSummary = false
-        )
-      )
-    )
-  )
-
-  "BusinessSourceSummaries" should {
-
-    "write correctly to json" in {
-
-      Json.toJson(summaryModel) shouldBe summariesJSON
+  "ListBsasResponse" when {
+    "read from valid JSON" should {
+      "return the expected object" in {
+        listBsasResponseDownstreamJson.as[ListBsasResponse[BsasSummary]] shouldBe listBsasResponseModel
+      }
     }
 
-    "read correctly to json" in {
-      summariesFromDesJSONSingle.validate[ListBsasResponse[BsasEntries]] shouldBe JsSuccess(summaryModel)
+    "read from invalid JSON" should {
+      "return a JsError" in {
+        JsObject.empty.validate[ListBsasResponse[BsasSummary]] shouldBe a[JsError]
+      }
     }
 
-    "Links Factory" should {
-      val nino = "someNino"
-      val selfEmployment = "self-employment"
-      val ukProperty = "property"
-      val foreignProperty = "foreign-property"
-      val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
-
-      "expose the correct top level links for a self employment list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-        ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasModel)) shouldBe
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
-          )
+    "written to JSON" should {
+      "return the expected JSON" in {
+        Json.toJson(listBsasResponseModel) shouldBe listBsasResponseJson
       }
+    }
+  }
 
-      "expose the correct top level links for a uk property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-        ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, ukPropertyBsasModel)) shouldBe
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
-          )
-      }
+  "Links Factory" should {
+    val nino = "someNino"
+    val selfEmployment = "self-employment"
+    val ukProperty = "property"
+    val foreignProperty = "foreign-property"
+    val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
-      "expose the correct top level links for a foreign property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-        ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasModel)) shouldBe
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
-          )
-      }
+    "expose the correct top level links for a self employment list" in {
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
 
-      "expose the correct item level links for a self employment list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-        ListBsasResponse.LinksFactory.itemLinks(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasModel),
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false)) shouldBe
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/$selfEmployment/$bsasId", GET, "self")
-          )
-      }
+      ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasModel)) shouldBe
+        Seq(
+          Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
+          Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
+        )
+    }
 
-      "expose the correct item level links for a uk property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-        ListBsasResponse.LinksFactory.itemLinks(mockAppConfig, ListBsasHateoasData(nino, ukPropertyBsasModel),
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false)) shouldBe
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/$ukProperty/$bsasId", GET, "self")
-          )
-      }
+    "expose the correct top level links for a uk property list" in {
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
 
-      "expose the correct item level links for a foreign property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
-        ListBsasResponse.LinksFactory.itemLinks(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasModel),
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false)) shouldBe
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/$foreignProperty/$bsasId", GET, "self")
-          )
-      }
+      ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, ukPropertyBsasModel)) shouldBe
+        Seq(
+          Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
+          Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
+        )
+    }
+
+    "expose the correct top level links for a foreign property list" in {
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+
+      ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasModel)) shouldBe
+        Seq(
+          Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
+          Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
+        )
+    }
+
+    "expose the correct item level links for a self employment list" in {
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+
+      ListBsasResponse.LinksFactory.itemLinks(
+        mockAppConfig,
+        ListBsasHateoasData(nino, selfEmploymentBsasModel),
+        selfEmploymentBsasModel.businessSourceSummaries.head.summaries.head
+      ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$selfEmployment/$bsasId", GET, "self"))
+    }
+
+    "expose the correct item level links for a uk property list" in {
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+
+      ListBsasResponse.LinksFactory.itemLinks(
+        mockAppConfig,
+        ListBsasHateoasData(nino, ukPropertyBsasModel),
+        ukPropertyBsasModel.businessSourceSummaries.head.summaries.head
+      ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$ukProperty/$bsasId", GET, "self"))
+    }
+
+    "expose the correct item level links for a foreign property list" in {
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+
+      ListBsasResponse.LinksFactory.itemLinks(
+        mockAppConfig,
+        ListBsasHateoasData(nino, foreignPropertyBsasModel),
+        foreignPropertyBsasModel.businessSourceSummaries.head.summaries.head
+      ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$foreignProperty/$bsasId", GET, "self"))
     }
   }
 }

@@ -21,7 +21,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +32,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
   def listBsas(request: ListBsasRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]] = {
+    correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
 
     import v3.connectors.httpparsers.StandardDesHttpParser._
 
@@ -51,7 +51,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DownstreamUri[ListBsasResponse[BsasEntries]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
+      DownstreamUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
     )
   }
 }

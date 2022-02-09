@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas.ukProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 import v3.models.domain.Status
 
 case class Metadata(
@@ -36,7 +36,7 @@ object Metadata {
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "adjustedDateTime").readNullable[String] and
       (JsPath \ "taxableEntityId").read[String] and
-      (JsPath \ "taxYear").read[BigInt].map(taxYear => DesTaxYear.fromDes(taxYear.toString())) and
+      (JsPath \ "taxYear").read[BigInt].map(taxYear => DownstreamTaxYear.fromDownstream(taxYear.toString())) and
       (JsPath \ "status").read[Status]
   )(Metadata.apply _)
 

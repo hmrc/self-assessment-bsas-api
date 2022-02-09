@@ -18,21 +18,18 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{CurrentDateProvider, DateUtils, DesTaxYear, IdGenerator, Logging}
+import utils._
 import v3.controllers.requestParsers.ListBsasRequestParser
 import v3.hateoas.HateoasFactory
-import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors._
 import v3.models.request.ListBsasRawData
 import v3.models.response.listBsas.ListBsasHateoasData
-import v3.services.{AuditService, EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
+import v3.services.{EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -41,9 +38,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    requestParser: ListBsasRequestParser,
                                    service: ListBsasService,
                                    hateoasFactory: HateoasFactory,
-                                   auditService: AuditService,
                                    cc: ControllerComponents,
-                                   val currentDateProvider: CurrentDateProvider,
                                    val idGenerator: IdGenerator
                                   )(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -64,8 +59,6 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      lazy val currentMtdTaxYear = DesTaxYear.fromDes(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()).toString)
-
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
       val result =
         for {
@@ -82,15 +75,6 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
-              requestBody = None, `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
-            )
-          )
-
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
@@ -101,16 +85,6 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
-            requestBody = None,
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-            )
-          )
 
         result
       }.merge
@@ -129,18 +103,5 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
-  }
-
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "listBusinessSourceAdjustableSummaries",
-      transactionName = "list-business-source-adjustable-summaries",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
   }
 }

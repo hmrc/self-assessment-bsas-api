@@ -23,7 +23,7 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors.ErrorWrapper
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 import v3.services.ListBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +34,7 @@ trait MockListBsasService extends MockFactory{
 
   object MockListBsasService{
 
-    def listBsas(requestData: ListBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasEntries]]]]] = {
+    def listBsas(requestData: ListBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]]] = {
       (mockService
         .listBsas(_: ListBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)

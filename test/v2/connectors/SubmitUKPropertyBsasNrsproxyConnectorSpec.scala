@@ -18,7 +18,7 @@ package v2.connectors
 
 
 import mocks.MockAppConfig
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 import v2.mocks.MockHttpClient
 import v2.models.request.submitBsas.ukProperty._
 
@@ -28,7 +28,7 @@ class SubmitUKPropertyBsasNrsproxyConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 
-  val taxYear: DesTaxYear = DesTaxYear.fromMtd("2021-22")
+  val taxYear: DownstreamTaxYear = DownstreamTaxYear.fromMtd("2021-22")
 
   val request: SubmitUKPropertyBsasRequestBody = {
     SubmitUKPropertyBsasRequestBody(

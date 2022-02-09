@@ -16,35 +16,27 @@
 
 package v3.endpoints
 
-import v3.fixtures.ListBsasFixtures._
 import play.api.http.HeaderNames.ACCEPT
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import utils.DesTaxYear
+import v3.fixtures.ListBsasFixture
 import v3.models.errors._
 import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class ListBsasControllerISpec extends IntegrationBaseSpec {
+class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
 
   private trait Test {
     val nino = "AA123456B"
     val taxYear: Option[String] = Some("2019-20")
-    val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
-    val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String] = None
-    val correlationId = "X-123"
-    val desTaxYear: DesTaxYear = DesTaxYear("2019")
 
     def uri: String = s"/$nino"
-
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino"
-
     def setupStubs(): StubMapping
-
     def request: WSRequest = {
 
       val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
@@ -58,18 +50,15 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-
   "Calling the list Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONMultiple)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get)
@@ -85,7 +74,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONForeign)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, listBsasResponseDownstreamJsonForeign)
         }
 
         val response: WSResponse = await(request.get)
@@ -96,14 +85,13 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       "valid request is made without a tax year" in new Test {
-
         override val taxYear: Option[String] = None
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONMultiple)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get)
@@ -178,8 +166,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_TAXYEAR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_INCOMESOURCEID", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
+        (BAD_REQUEST, "INVALID_INCOMESOURCEID", BAD_REQUEST, BusinessIdFormatError),
         (BAD_REQUEST, "INVALID_INCOMESOURCE_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),

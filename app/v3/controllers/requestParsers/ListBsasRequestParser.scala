@@ -29,17 +29,11 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
 
-    val incomeSourceType: Option[String] = data.typeOfBusiness.map(TypeOfBusiness.parser).map {
-      case TypeOfBusiness.`self-employment` => TypeOfBusiness.`self-employment`.toIdentifierValue
-      case TypeOfBusiness.`uk-property-fhl` => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
-      case TypeOfBusiness.`uk-property-non-fhl` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
-      case TypeOfBusiness.`foreign-property` => TypeOfBusiness.`foreign-property`.toIdentifierValue
-      case TypeOfBusiness.`foreign-property-fhl-eea` => TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue
-    }
+    val incomeSourceType: Option[String] = data.typeOfBusiness.map(TypeOfBusiness.parser).map(_.toIdentifierValue)
 
     ListBsasRequest(
       nino = Nino(data.nino),
-      taxYear = data.taxYear.fold(DateUtils.getDesTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDesTaxYear),
+      taxYear = data.taxYear.fold(DateUtils.getDownstreamTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDownstreamTaxYear),
       incomeSourceId = data.businessId,
       incomeSourceType = incomeSourceType
     )

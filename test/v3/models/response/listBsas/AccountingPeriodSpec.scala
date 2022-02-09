@@ -20,23 +20,24 @@ import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
 
-class BusinessSourceSummarySpec extends UnitSpec with ListBsasFixture {
-  "BusinessSourceSummary" when {
+class AccountingPeriodSpec extends UnitSpec with ListBsasFixture {
+
+  "AccountingPeriod" when {
     "read from valid JSON" should {
       "return the expected model" in {
-        businessSourceSummaryDownstreamJson.as[BusinessSourceSummary[BsasSummary]] shouldBe businessSourceSummaryModel
+        accountingPeriodDownstreamJson.as[AccountingPeriod] shouldBe accountingPeriodModel
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        JsObject.empty.validate[BusinessSourceSummary[BsasSummary]] shouldBe a[JsError]
+        JsObject.empty.validate[AccountingPeriod] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "return the expected JSON" in {
-        Json.toJson(businessSourceSummaryModel) shouldBe businessSourceSummaryJson
+          Json.toJson(accountingPeriodModel) shouldBe accountingPeriodJson
       }
     }
   }

@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package utils
+package v3.models.response.listBsas
 
-import java.time.LocalDate
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-object DateUtils {
+case class AccountingPeriod(startDate: String, endDate: String)
 
-  def getDownstreamTaxYear(dateProvided: Any): DownstreamTaxYear = dateProvided match {
-    case taxYear: String => DownstreamTaxYear.fromMtd(taxYear)
-    case current: LocalDate =>
-      val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
+object AccountingPeriod {
+  implicit val reads: Reads[AccountingPeriod] = (
+    (JsPath \ "accountingStartDate").read[String] and
+      (JsPath \ "accountingEndDate").read[String]
+    )(AccountingPeriod.apply _)
 
-      if(current.isAfter(fiscalYearStartDate)) DownstreamTaxYear((current.getYear + 1).toString)
-      else DownstreamTaxYear(current.getYear.toString)
-  }
+  implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
 }

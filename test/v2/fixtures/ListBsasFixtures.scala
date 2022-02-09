@@ -21,7 +21,6 @@ import v2.models.domain.{Status, TypeOfBusiness}
 import v2.models.request.AccountingPeriod
 import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasResponse}
 
-
 object ListBsasFixtures {
 
   val accountingJSON: JsValue = Json.parse(
@@ -342,12 +341,12 @@ object ListBsasFixtures {
        |""".stripMargin
   )
 
-  val summariesFromDesJSONSingle = JsArray(Seq(summaryFromDesJSONSE))
-  val summariesFromDesJSONMultiple = JsArray(Seq(summaryFromDesJSONSE, summaryFromDesJSONUkFhl, summaryFromDesJSONUkNonFhl))
-  val summariesFromDesJSONForeign = JsArray(Seq(summaryFromDesJSONForeign))
-  val summariesFromDesJSONFhlEea = JsArray(Seq(summaryFromDesJSONFhlEea))
+  val summariesFromDesJSONSingle: JsArray = JsArray(Seq(summaryFromDesJSONSE))
+  val summariesFromDesJSONMultiple: JsArray = JsArray(Seq(summaryFromDesJSONSE, summaryFromDesJSONUkFhl, summaryFromDesJSONUkNonFhl))
+  val summariesFromDesJSONForeign: JsArray = JsArray(Seq(summaryFromDesJSONForeign))
+  val summariesFromDesJSONFhlEea: JsArray = JsArray(Seq(summaryFromDesJSONFhlEea))
 
-  val summaryModel =
+  val summaryModel: ListBsasResponse[BsasEntries] =
     ListBsasResponse(
       Seq(BusinessSourceSummary(
         typeOfBusiness = TypeOfBusiness.`self-employment`,

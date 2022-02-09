@@ -18,24 +18,18 @@ package v3.controllers.requestParsers.validators
 
 import config.FixedConfig
 import v3.controllers.requestParsers.validators.validations._
-import v3.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import v3.models.errors.MtdError
 import v3.models.request.ListBsasRawData
-
 
 class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
+  private val validationSet = List(parameterFormatValidation)
 
   private def parameterFormatValidation: ListBsasRawData => List[List[MtdError]] = (data: ListBsasRawData) => List(
     NinoValidation.validate(data.nino),
-    data.taxYear.map(TaxYearValidation.validate).getOrElse(Nil),
+    data.taxYear.map(TaxYearValidation.validate(listMinimumTaxYear, _)).getOrElse(Nil),
     data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
     data.businessId.map(BusinessIdValidation.validate).getOrElse(Nil)
-  )
-
-
-  private def parameterRuleValidation: ListBsasRawData => List[List[MtdError]] = (data: ListBsasRawData) => List(
-    data.taxYear.map(MtdTaxYearValidation.validate(_, RuleTaxYearNotSupportedError, listMinimumTaxYear)).getOrElse(Nil)
   )
 
   override def validate(data: ListBsasRawData): List[MtdError] = run(validationSet, data).distinct
