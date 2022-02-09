@@ -17,7 +17,7 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v3.models.errors.{ BsasIdFormatError, CalculationIdFormatError }
+import v3.models.errors.CalculationIdFormatError
 import v3.models.utils.JsonErrorValidators
 
 class CalculationIdValidationSpec extends UnitSpec with JsonErrorValidators {
