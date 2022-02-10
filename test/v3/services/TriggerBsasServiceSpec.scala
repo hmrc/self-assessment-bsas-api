@@ -31,11 +31,10 @@ import scala.concurrent.Future
 class TriggerBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = TriggerBsasRequest(nino, model)
-
-  val response = TriggerBsasResponse(id)
+  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val request: TriggerBsasRequest = TriggerBsasRequest(nino, model)
+  val response: TriggerBsasResponse = TriggerBsasResponse(calculationId)
 
   trait Test extends MockTriggerBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -75,7 +74,6 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("INVALID_PAYLOAD", DownstreamError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError),
-        ("INCOME_SOURCEID_NOT_PROVIDED", DownstreamError),
         ("INVALID_CORRELATIONID", DownstreamError)
       )
 

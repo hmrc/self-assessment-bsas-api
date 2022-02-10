@@ -36,13 +36,13 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
   val mtdJson: JsValue = Json.parse("""
       |{
-      |   "id" : "anId"
+      |   "calculationId" : "anId"
       |}
   """.stripMargin)
 
   val invalidDesJson: JsValue = Json.parse("""
       |{
-      |   "id" : 3
+      |   "calculationId" : 3
       |}
   """.stripMargin)
 
@@ -121,6 +121,5 @@ class TriggerBsasResponseSpec extends UnitSpec {
           )
         )
     }
-
   }
 }

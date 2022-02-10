@@ -18,13 +18,13 @@ package v3.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v3.controllers.requestParsers.validators.TriggerBSASValidator
+import v3.controllers.requestParsers.validators.TriggerBsasValidator
 import v3.models.errors.MtdError
 import v3.models.request.triggerBsas.TriggerBsasRawData
 
-class MockTriggerBSASValidator extends MockFactory {
+trait MockTriggerBsasValidator extends MockFactory {
 
-  val mockValidator: TriggerBSASValidator = mock[TriggerBSASValidator]
+  val mockValidator: TriggerBsasValidator = mock[TriggerBsasValidator]
 
   object MockValidator {
     def validate(data: TriggerBsasRawData): CallHandler1[TriggerBsasRawData, List[MtdError]] = {

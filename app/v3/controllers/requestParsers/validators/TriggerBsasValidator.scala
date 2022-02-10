@@ -24,7 +24,7 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
-class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
+class TriggerBsasValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidation, incorrectOrEmptyBodyValidation, bodyFormatValidation, bodyRuleValidation)
 

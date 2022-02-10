@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import domain.Nino
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
-import v3.mocks.validators.MockTriggerBSASValidator
+import v3.mocks.validators.MockTriggerBsasValidator
 import v3.models.errors._
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
@@ -30,15 +30,14 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
   val nino = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  trait Test extends MockTriggerBSASValidator {
+  trait Test extends MockTriggerBsasValidator {
     lazy val parser = new TriggerBsasRequestParser(mockValidator)
   }
 
   "parser" should {
     "parse request" when {
       s"passed valid input" in new Test {
-        val inputData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
-
+        val inputData: TriggerBsasRawData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
 
         MockValidator
           .validate(inputData)
@@ -51,8 +50,7 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
 
     "reject invalid input" when {
       "a single error is present" in new Test {
-        val inputData = TriggerBsasRawData(nino, AnyContentAsJson(Json.obj()))
-
+        val inputData: TriggerBsasRawData = TriggerBsasRawData(nino, AnyContentAsJson(Json.obj()))
 
         MockValidator
           .validate(inputData)
@@ -63,8 +61,7 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
       }
 
       "multiple errors are present" in new Test {
-        val inputData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
-
+        val inputData: TriggerBsasRawData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
 
         MockValidator
           .validate(inputData)
@@ -76,6 +73,3 @@ class TriggerBsasRequestParserSpec extends UnitSpec {
     }
   }
 }
-
-
-

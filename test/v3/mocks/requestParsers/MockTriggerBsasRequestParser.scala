@@ -31,5 +31,4 @@ trait MockTriggerBsasRequestParser extends MockFactory {
       (mockRequestParser.parseRequest(_: TriggerBsasRawData)(_: String)).expects(data, *)
     }
   }
-
 }
