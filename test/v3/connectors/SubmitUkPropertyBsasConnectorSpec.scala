@@ -34,12 +34,12 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
     val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnv returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns false
+    val ifsRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnv returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.ifsEnabled returns true
   }
 
   "submitBsas" must {
@@ -49,7 +49,7 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-      val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
+      val requiredHeadersPut: Seq[(String, String)] = ifsRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
