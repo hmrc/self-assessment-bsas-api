@@ -59,10 +59,17 @@ object BusinessIdFormatError extends MtdError("FORMAT_BUSINESS_ID", "The supplie
 
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided Country code is invalid")
 
+object ValueFormatError        extends MtdError("FORMAT_VALUE", "The value must be between 0 and 99999999999.99"){
+  def forPathAndRange(path : String, min: String, max: String): MtdError =
+    ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be between $min and $max" )
+}
 // Rule Errors
 
 object RuleEndBeforeStartDateError
   extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The accounting period end date predates the start date")
+
+object RuleBothPropertiesSuppliedError
+  extends MtdError("RULE_BOTH_PROPERTIES_SUPPLIED", "Both FHL and Non-FHL properties cannot be present at the same time")
 
 object RuleBothExpensesError
   extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both expenses and consolidated expenses cannot be present at the same time")
@@ -80,6 +87,11 @@ object RuleTaxYearNotSupportedError
 object RuleCountryCodeError
   extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 
+object RuleDuplicateCountryCodeError    extends MtdError("RULE_DUPLICATE_COUNTRY_CODE", "The same countryCode cannot be supplied multiple times") {
+  def forDuplicatedCodesAndPaths(code: String, paths: Seq[String]): MtdError =
+    RuleDuplicateCountryCodeError.copy(message = s"The country code '$code' is supplied multiple times", paths = Some(paths))
+}
+
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
 object RuleTaxYearRangeInvalidError
@@ -91,7 +103,7 @@ object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCO
 
 object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The accounting period given does not exist")
 
-object RuleTypeOfBusinessError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The submission is for a different type of business")
+object RuleTypeOfBusinessIncorrectError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The submission is for a different type of business")
 
 object RuleSummaryStatusInvalid extends MtdError( "RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary")
 

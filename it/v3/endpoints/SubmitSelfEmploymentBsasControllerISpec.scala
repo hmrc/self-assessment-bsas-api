@@ -164,7 +164,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "BVR_FAILURE_C559107", INTERNAL_SERVER_ERROR, DownstreamError),
           (FORBIDDEN, "BVR_FAILURE_C559103", INTERNAL_SERVER_ERROR, DownstreamError),
           (FORBIDDEN, "BVR_FAILURE_C559099", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessError),
+          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),

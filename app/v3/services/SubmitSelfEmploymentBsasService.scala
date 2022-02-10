@@ -54,7 +54,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
     "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
-    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessError,
+    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
     "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
     "BVR_FAILURE_C15320"            -> RuleTradingIncomeAllowanceClaimed,
     "BVR_FAILURE_C55503"            -> DownstreamError,
