@@ -382,7 +382,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -397,7 +397,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -411,7 +411,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
 
@@ -425,7 +425,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyConsolidatedJson))
@@ -438,7 +438,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))

@@ -27,6 +27,7 @@ import v3.hateoas.HateoasFactory
 import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
+import v3.models.response.SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory
 import v3.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}

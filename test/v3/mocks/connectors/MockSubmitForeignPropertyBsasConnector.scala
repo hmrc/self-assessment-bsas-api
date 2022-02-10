@@ -31,7 +31,7 @@ trait MockSubmitForeignPropertyBsasConnector extends MockFactory {
 
   object MockSubmitForeignPropertyBsasConnector {
 
-    def submitForeignPropertyBsas(requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[SubmitForeignPropertyBsasResponse]]] = {
+    def submitForeignPropertyBsas(requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockConnector
         .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

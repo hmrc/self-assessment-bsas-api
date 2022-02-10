@@ -17,30 +17,14 @@
 package v3.models.response
 
 import config.AppConfig
-import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
-import play.api.libs.functional.syntax._
 import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v3.models.hateoas.{HateoasData, Link}
 
-case class SubmitForeignPropertyBsasResponse(id: String, typeOfBusiness: TypeOfBusiness)
 
 object SubmitForeignPropertyBsasResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[SubmitForeignPropertyBsasResponse] = new OWrites[SubmitForeignPropertyBsasResponse] {
-    def writes(response: SubmitForeignPropertyBsasResponse): JsObject =
-      Json.obj(
-        "id" -> response.id
-      )
-  }
-
-  implicit val reads: Reads[SubmitForeignPropertyBsasResponse] = (
-    (JsPath \ "metadata" \ "calculationId").read[String] and
-      (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
-    )(SubmitForeignPropertyBsasResponse.apply _)
-
   implicit object SubmitForeignPropertyAdjustmentHateoasFactory
-    extends HateoasLinksFactory[SubmitForeignPropertyBsasResponse, SubmitForeignPropertyBsasHateoasData] {
+    extends HateoasLinksFactory[Unit, SubmitForeignPropertyBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitForeignPropertyBsasHateoasData): Seq[Link] = {
       import data._
 
