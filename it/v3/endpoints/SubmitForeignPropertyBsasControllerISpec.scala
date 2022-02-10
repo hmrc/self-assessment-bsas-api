@@ -30,7 +30,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -343,7 +343,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
          |    {
-         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
+         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
          |      "rel":"self",
          |      "method":"GET"
          |    }
@@ -353,9 +353,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
+    def uri: String = s"/$nino/foreign-property/$calculationId/adjust"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
+    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
     def request(): WSRequest = {
       setupStubs()
@@ -549,11 +549,11 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |""".stripMargin)
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestBsasId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String, requestcalculationId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
-            override val bsasId: String = requestBsasId
+            override val calculationId: String = requestcalculationId
             override val requestBodyForeignPropertyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -570,7 +570,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
-//          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
+//          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, calculationIdFormatError),
 //          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue,
 //            BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
 //          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid,
