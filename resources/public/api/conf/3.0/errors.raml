@@ -46,7 +46,7 @@ traits:
             type: types.errorResponse
             examples:
               formatStartDate:
-                description: The format of the supplied accounting period start date is not valid.
+                description: The format of the supplied accounting period start date is invalid.
                 value:
                   code: FORMAT_START_DATE
   formatEndDate:
@@ -57,7 +57,7 @@ traits:
             type: types.errorResponse
             examples:
               formatEndDate:
-                description: The format of the supplied accounting period end date is not valid.
+                description: The format of the supplied accounting period end date is invalid.
                 value:
                   code: FORMAT_END_DATE
   formatTypeOfBusiness:
@@ -90,7 +90,7 @@ traits:
             type: types.errorResponse
             examples:
               formatBusinessId:
-                description: The format of the supplied business ID is invalid.
+                description: The format of the supplied business ID is not valid.
                 value:
                   code: FORMAT_BUSINESS_ID
   formatAdjustedStatus:
@@ -321,7 +321,7 @@ traits:
             type: types.errorResponse
             examples:
               rulePeriodicDataIncomplete:
-                description: One or more Periodic updates are missing for this accounting period.
+                description: One or more periodic updates are missing for this accounting period.
                 value:
                   code: RULE_PERIODIC_DATA_INCOMPLETE
   ruleEndDateBeforeStartDate:
@@ -343,7 +343,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleAccountingPeriodNotSupported:
-                description: The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
+                description: The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value.
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
   ruleDuplicateCountryCode:
@@ -519,7 +519,7 @@ traits:
             type: types.errorResponse
             examples:
               triggerAndListNotFound:
-                description: The supplied income source could not be found.
+                description: The supplied income source could not be found, or the type of business does not relate to the business ID.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   bsasNotFound:

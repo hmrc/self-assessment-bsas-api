@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Trigger a Business Source Adjustable Summary (BSAS)",
-  "description": "Trigger a Business Source Adjustable Summary (BSAS)",
+  "title": "Trigger a Business Source Adjustable Summary",
+  "description": "Trigger a Business Source Adjustable Summary",
   "type": "object",
   "properties": {
-    "id": {
+    "calculationId": {
       "$ref": "definitions.json#/definitions/bsasId"
     },
     "links": {
@@ -16,7 +16,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}"
+            "example": "/individuals/self-assessment/adjustable-summary/AA123456A/self-employment/a5667b29-c442-4df0-8e78-7b724212e537"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The 'rel' will be 'self' where the action is retrieval of the same resource.",
@@ -43,7 +43,7 @@
     }
   },
   "required": [
-    "id"
+    "calculationId"
   ],
   "additionalProperties": false
 }
