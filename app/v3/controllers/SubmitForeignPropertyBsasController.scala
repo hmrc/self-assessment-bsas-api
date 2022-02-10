@@ -89,8 +89,8 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
     (errorWrapper.error: @unchecked) match {
       case BadRequestError |
            NinoFormatError |
-           BsasIdFormatError |
            CalculationIdFormatError |
+           ValueFormatError |
            RuleTypeOfBusinessIncorrectError |
            CustomMtdError(FormatAdjustmentValueError.code) |
            CustomMtdError(RuleAdjustmentRangeInvalid.code) |
