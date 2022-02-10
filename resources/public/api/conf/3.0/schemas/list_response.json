@@ -1,19 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "List BSAS",
-  "description": "List BSAS",
+  "title": "List Business Source Adjustable Summaries Response",
+  "description": "List Business Source Adjustable Summaries Response",
   "type": "object",
   "properties": {
-    "businessSourceSummaries": {
-      "title": "Business Source Summaries",
-      "description": "The array holding Business Source Adjustable Summary (BSAS) entries, by Business Income Source.",
+    "businessSources": {
+      "title": "Business Source",
+      "description": "The array holding Business Source Accounting Summary Entries, by business Income Source.",
       "type": "array",
       "items": {
         "type": "object",
         "required": [
           "typeOfBusiness",
+          "businessId",
           "accountingPeriod",
-          "bsasEntries"
+          "taxYear",
+          "summaries"
         ],
         "properties": {
           "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
@@ -30,28 +32,33 @@
               "startDate": {
                 "type": "string",
                 "description": "The date the accounting period began.",
-                "example": "2019-04-06"
+                "example": "2018-05-01"
               },
               "endDate": {
                 "type": "string",
                 "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
-                "example": "2020-04-05"
+                "example": "2019-04-30"
               }
             },
             "additionalProperties": false
           },
-          "bsasEntries": {
-            "title": "BSAS Entries",
-            "description": "The array holding Business Source Adjustable Summary (BSAS) entries.",
+          "taxYear": {
+            "type": "string",
+            "description": "The tax year that the Adjustable Summary Calculation relates to.",
+            "example": "2020-21"
+          },
+          "summaries": {
+            "title": "Summaries",
+            "description": "The array holding Business Source Accounting Summary Entries.",
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "bsasId": {
-                  "title": "BSAS ID",
+                "calculationId": {
+                  "title": "Calculation ID",
                   "description": "The unique identifier of the summary calculation.",
                   "type": "string",
-                  "example": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+                  "example": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
                   "pattern": "^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                 },
                 "requestedDateTime": {
@@ -61,7 +68,7 @@
                 },
                 "summaryStatus": {
                   "title": "Summary Status",
-                  "description": "Whether the summary calculation with this ID is current, has been invalidated (by subsequent changes) or has been superseded by a more recent request for a summary calculation.",
+                  "description": "The status of this calculated summary.",
                   "type": "string",
                   "enum": [ "valid", "invalid", "superseded" ]
                 },
@@ -70,6 +77,11 @@
                   "description": "Indicates whether the original summary calculation has had adjustments applied.",
                   "type": "boolean",
                   "example": "false"
+                },
+                "adjustedDateTime": {
+                  "title": "Adjusted Datetime",
+                  "description": "The date and time this calculation was adjusted.",
+                  "type": "string"
                 },
                 "links": {
                   "type": "array",
@@ -80,7 +92,7 @@
                       "href": {
                         "description": "The relative URL of the endpoint.",
                         "type": "string",
-                        "example": "/individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}"
+                        "example": "/individuals/self-assessment/adjustable-summary/AA999999A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
                       },
                       "rel": {
                         "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -107,7 +119,7 @@
                 }
               },
               "required": [
-                "bsasId",
+                "calculationId",
                 "requestedDateTime",
                 "summaryStatus",
                 "adjustedSummary"
@@ -128,14 +140,14 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/{nino}/trigger"
+            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/trigger"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
               "self",
-              "trigger-business-source-accounting-summary"
+              "trigger-business-source-adjustable-summary"
             ]
           },
           "method": {
@@ -157,7 +169,7 @@
     }
   },
   "required": [
-    "businessSourceSummaries"
+    "businessSources"
   ],
   "additionalProperties": false
 }
