@@ -16,89 +16,16 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators
 
 class AdjustmentsSpec extends UnitSpec with JsonErrorValidators{
 
-
-
-  val mtdFhlEeaJson = Json.parse(
-    """{
-      |		"income": {
-      |			"totalRentsReceived": 99999999999.99,
-      |			"premiumsOfLeaseGrant": 99999999999.99,
-      |			"otherPropertyIncome": 99999999999.99
-      |		},
-      |		"expenses": {
-      |     "consolidatedExpenses": 99999999999.99,
-      |			"premisesRunningCosts": 99999999999.99,
-      |			"repairsAndMaintenance": 99999999999.99,
-      |			"financialCosts": 99999999999.99,
-      |			"professionalFees": 99999999999.99,
-      |			"travelCosts": 99999999999.99,
-      |			"costOfServices": 99999999999.99,
-      |			"residentialFinancialCost": 99999999999.99,
-      |			"broughtFwdResidentialFinancialCost": 99999999999.99,
-      |			"other": 99999999999.99
-      |		}
-      |}""".stripMargin
-  )
-
-  val desFhlEeaJson = Json.parse(
-    """{
-      |		"income": {
-      |			"rent": 99999999999.99,
-      |			"premiumsOfLeaseGrant": 99999999999.99,
-      |			"otherPropertyIncome": 99999999999.99
-      |		},
-      |		"expenses": {
-      |     "consolidatedExpenses": 99999999999.99,
-      |			"premisesRunningCosts": 99999999999.99,
-      |			"repairsAndMaintenance": 99999999999.99,
-      |			"financialCosts": 99999999999.99,
-      |			"professionalFees": 99999999999.99,
-      |			"travelCosts": 99999999999.99,
-      |			"costOfServices": 99999999999.99,
-      |			"residentialFinancialCost": 99999999999.99,
-      |			"broughtFwdResidentialFinancialCost": 99999999999.99,
-      |			"other": 99999999999.99
-      |		}
-      |}""".stripMargin
-  )
-
-  val mtdNonFhlJson = Json.parse(
-    """{
-      |	"countryLevelDetail": [{
-      |		"countryCode": "CYM",
-      |		"income": {
-      |			"totalRentsReceived": 99999999999.99,
-      |			"premiumsOfLeaseGrant": 99999999999.99,
-      |			"otherPropertyIncome": 99999999999.99
-      |		},
-      |		"expenses": {
-      |			"consolidatedExpenses": 99999999999.99,
-      |			"premisesRunningCosts": 99999999999.99,
-      |			"repairsAndMaintenance": 99999999999.99,
-      |			"financialCosts": 99999999999.99,
-      |			"professionalFees": 99999999999.99,
-      |			"travelCosts": 99999999999.99,
-      |			"costOfServices": 99999999999.99,
-      |			"residentialFinancialCost": 99999999999.99,
-      |			"broughtFwdResidentialFinancialCost": 99999999999.99,
-      |			"other": 99999999999.99
-      |		}
-      |	}]
-      |}""".stripMargin
-  )
-
-
   "reads" should {
     "return a valid adjustments model" when {
       "a valid json for fhlEea is supplied" in {
-        desFhlEeaJson.as[Adjustments](Adjustments.reads) shouldBe adjustmentsFhlEeaModel
+        adjustmentsDesFhlEeaJson.as[Adjustments](Adjustments.reads) shouldBe adjustmentsFhlEeaModel
       }
     }
   }
@@ -106,11 +33,11 @@ class AdjustmentsSpec extends UnitSpec with JsonErrorValidators{
   "writes" should {
     "return a valid json" when {
       "a valid fhlEea model is supplied" in {
-        adjustmentsFhlEeaModel.toJson shouldBe mtdFhlEeaJson
+        adjustmentsFhlEeaModel.toJson shouldBe adjustmentsMtdFhlEeaJson
       }
 
       "a valid nonFhl model is supplied" in {
-        adjustmentsNonFhlModel.toJson shouldBe mtdNonFhlJson
+        adjustmentsNonFhlModel.toJson shouldBe adjustmentsMtdNonFhlJson
       }
     }
   }

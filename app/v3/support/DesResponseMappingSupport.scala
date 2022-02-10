@@ -20,17 +20,6 @@ import utils.Logging
 import v3.controllers.EndpointLogContext
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-import v3.models.response.retrieveBsas
-import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
-=======
-import v3.models.response.retrieveBsas.foreignPropertyOld.{MetadataOld, RetrieveForeignPropertyBsasResponse}
->>>>>>> dcf0ae7 ([MTDSA-10944] Some of the Models)
-import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
-import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
->>>>>>> 5cee054 ([MTDSA-10944] Some of the Models)
 
 trait DesResponseMappingSupport {
   self: Logging =>

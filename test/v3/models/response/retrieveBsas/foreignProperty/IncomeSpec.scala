@@ -16,33 +16,16 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures.incomeModel
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators
 
 class IncomeSpec extends UnitSpec with JsonErrorValidators{
 
-  val mtdJson = Json.parse(
-    """{
-      |  "totalRentsReceived": 0.12,
-      |  "premiumsOfLeaseGrant": 0.12,
-      |  "otherPropertyIncome": 0.12
-      |}""".stripMargin
-  )
-
-  val desJson = Json.parse(
-    """{
-      |  "rent": 0.12,
-      |  "premiumsOfLeaseGrant": 0.12,
-      |  "otherPropertyIncome": 0.12
-      |}""".stripMargin
-  )
-
   "reads" should {
     "return a valid income model" when {
       "a valid json with all fields are supplied" in {
-        desJson.as[Income] shouldBe incomeModel
+        incomeDesJson.as[Income] shouldBe incomeModel
       }
     }
   }
@@ -50,7 +33,7 @@ class IncomeSpec extends UnitSpec with JsonErrorValidators{
   "writes" should {
     "return a valid json" when {
       "a valid model is supplied" in {
-        incomeModel.toJson shouldBe mtdJson
+        incomeModel.toJson shouldBe incomeMtdJson
       }
     }
   }

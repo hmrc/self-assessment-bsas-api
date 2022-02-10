@@ -154,7 +154,7 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec extends ControllerBaseSpe
           (DownstreamError, INTERNAL_SERVER_ERROR),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (RuleNotForeignProperty, FORBIDDEN)
+          (RuleTypeOfBusinessIncorrect, FORBIDDEN)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

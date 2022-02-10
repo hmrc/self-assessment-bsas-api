@@ -128,7 +128,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
 
         val response: WSResponse = await(request.get())
         response.status shouldBe FORBIDDEN
-        response.json shouldBe Json.toJson(RuleNotForeignProperty)
+        response.json shouldBe Json.toJson(RuleTypeOfBusinessIncorrect)
       }
 
 

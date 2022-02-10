@@ -16,47 +16,16 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures.expensesModel
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators
 
 class ExpensesSpec extends UnitSpec with JsonErrorValidators{
 
-  val mtdJson = Json.parse(
-    """{
-      | "consolidatedExpenses": 0.12,
-      |  "premisesRunningCosts": 0.12,
-      |  "repairsAndMaintenance": 0.12,
-      |  "financialCosts": 0.12,
-      |  "professionalFees": 0.12,
-      |  "travelCosts": 0.12,
-      |  "costOfServices": 0.12,
-      |  "residentialFinancialCost": 0.12,
-      |  "broughtFwdResidentialFinancialCost": 0.12,
-      |  "other": 0.12
-      |}""".stripMargin
-  )
-
-  val desJson = Json.parse(
-    """{
-      | "consolidatedExpenses": 0.12,
-      |  "premisesRunningCosts": 0.12,
-      |  "repairsAndMaintenance": 0.12,
-      |  "financialCosts": 0.12,
-      |  "professionalFees": 0.12,
-      |  "travelCosts": 0.12,
-      |  "costOfServices": 0.12,
-      |  "residentialFinancialCost": 0.12,
-      |  "broughtFwdResidentialFinancialCost": 0.12,
-      |  "other": 0.12
-      |}""".stripMargin
-  )
-
   "reads" should {
     "return a valid expenses model" when {
       "a valid json with all fields are supplied" in {
-        desJson.as[Expenses] shouldBe expensesModel
+        expensesDesJson.as[Expenses] shouldBe expensesModel
       }
     }
   }
@@ -64,7 +33,7 @@ class ExpensesSpec extends UnitSpec with JsonErrorValidators{
   "writes" should {
     "return a valid json" when {
       "a valid model is supplied" in {
-        expensesModel.toJson shouldBe mtdJson
+        expensesModel.toJson shouldBe expensesMtdJson
       }
     }
   }
