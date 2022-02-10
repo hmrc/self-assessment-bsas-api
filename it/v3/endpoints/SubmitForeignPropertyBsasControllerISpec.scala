@@ -340,7 +340,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val responseBody: JsValue = Json.parse(
       s"""
          |{
-         |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
          |    {
          |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
