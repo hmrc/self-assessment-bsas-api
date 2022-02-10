@@ -17,106 +17,166 @@
 package v3.controllers.requestParsers.validators
 
 import config.FixedConfig
-import v3.controllers.requestParsers.validators.validations.{JsonFormatValidation, _}
-import v3.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v2.controllers.requestParsers.validators.validations.NoValidationErrors
+import v3.controllers.requestParsers.validators.validations._
+import v3.models.errors.{MtdError, RuleBothPropertiesSuppliedError}
 import v3.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawData] with FixedConfig {
 
   private val validationSet = List(
     parameterFormatValidator,
-    bodyFormatValidator,
-    adjustmentFieldValidator)
+    validateOnePropertyOnly,
+    bodyFormatValidation,
+    bodyFieldValidation)
 
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-
     List(
       NinoValidation.validate(data.nino),
       CalculationIdValidation.validate(data.calculationId)
     )
   }
 
-  private def bodyFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-    List(flattenErrors(List(
-      JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json)
-    )))
+  private def validateOnePropertyOnly: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
+    if (Seq("furnishedHolidayLet", "nonFurnishedHolidayLet").forall(field => (data.body \ field).isDefined)) {
+      List(List(RuleBothPropertiesSuppliedError))
+    } else {
+      Nil
+    }
   }
 
-  /*
-  private def incorrectOrEmptyBodyValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-    val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
-    List(
-      if (model.isIncorrectOrEmptyBody) {
-        List(RuleIncorrectOrEmptyBodyError)
-      } else {
-        NoValidationErrors
-      }
-    )
-  }
-   */
-
-  private def adjustmentFieldValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-    val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
-
-    def doValidationFor(fieldName: String, withValue: Option[BigDecimal]): List[MtdError] = {
-      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] = Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
-      validations.flatMap(validation => validation(withValue, fieldName)).toList
+  private def bodyFormatValidation: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
+    JsonFormatValidation.validateAndCheckNonEmpty[SubmitUKPropertyBsasRequestBody](data.body) match {
+      case Nil          => NoValidationErrors
+      case schemaErrors => List(schemaErrors)
     }
-
-    def validateNonFHL(nonFurnishedHolidayLet: NonFurnishedHolidayLet): List[List[MtdError]] = {
-      val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
-      val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
-      List(
-        doValidationFor("/nonFurnishedHolidayLet/income/rentIncome", income.flatMap(_.totalRentsReceived)),
-        doValidationFor("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", income.flatMap(_.premiumsOfLeaseGrant)),
-        doValidationFor("/nonFurnishedHolidayLet/income/reversePremiums", income.flatMap(_.reversePremiums)),
-        doValidationFor("/nonFurnishedHolidayLet/income/otherPropertyIncome", income.flatMap(_.otherPropertyIncome)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/financialCosts", expenses.flatMap(_.financialCosts)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/professionalFees", expenses.flatMap(_.professionalFees)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/travelCosts", expenses.flatMap(_.travelCosts)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/costOfServices", expenses.flatMap(_.costOfServices)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", expenses.flatMap(_.residentialFinancialCost)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/other", expenses.flatMap(_.other)),
-        doValidationFor("/nonFurnishedHolidayLet/expenses/consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))
-      )
-    }
-
-    def validateFHL(furnishedHolidayLet: FurnishedHolidayLet): List[List[MtdError]] = {
-      val income: Option[FHLIncome] = furnishedHolidayLet.income
-      val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
-      List(
-        doValidationFor("/furnishedHolidayLet/income/rentIncome", income.flatMap(_.totalRentsReceived)),
-        doValidationFor("/furnishedHolidayLet/expenses/premisesRunningCosts", expenses.flatMap(_.premisesRunningCosts)),
-        doValidationFor("/furnishedHolidayLet/expenses/repairsAndMaintenance", expenses.flatMap(_.repairsAndMaintenance)),
-        doValidationFor("/furnishedHolidayLet/expenses/financialCosts", expenses.flatMap(_.financialCosts)),
-        doValidationFor("/furnishedHolidayLet/expenses/professionalFees", expenses.flatMap(_.professionalFees)),
-        doValidationFor("/furnishedHolidayLet/expenses/travelCosts", expenses.flatMap(_.travelCosts)),
-        doValidationFor("/furnishedHolidayLet/expenses/costOfServices", expenses.flatMap(_.costOfServices)),
-        doValidationFor("/furnishedHolidayLet/expenses/other", expenses.flatMap(_.other)),
-        doValidationFor("/furnishedHolidayLet/expenses/consolidatedExpenses", expenses.flatMap(_.consolidatedExpenses))
-      )
-    }
-
-    List(flattenErrors((model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
-      case (None, Some(nonFurnishedHolidayLet)) => validateNonFHL(nonFurnishedHolidayLet)
-      case (Some(furnishedHolidayLet), None) =>validateFHL(furnishedHolidayLet)
-      case _ => List(List(RuleIncorrectOrEmptyBodyError))
-    }))
   }
 
-/*
-  private def otherBodyFieldsValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-
-    val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
+  private def bodyFieldValidation: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
+    val body: SubmitUKPropertyBsasRequestBody = data.body.as[SubmitUKPropertyBsasRequestBody]
 
     List(
-      BothExpensesValidation.validate(model.furnishedHolidayLet.flatMap(_.expenses.map(_.params))),
-      BothExpensesValidation.validate(model.nonFurnishedHolidayLet.flatMap(_.expenses.map(_.params)))
+      flattenErrors(
+        List(
+          body.furnishedHolidayLet.map(validateFhl).getOrElse(NoValidationErrors),
+          body.nonFurnishedHolidayLet.map(validateNonFhl).getOrElse(NoValidationErrors),
+          body.furnishedHolidayLet.flatMap(_.expenses.map(validateFhlConsolidatedExpenses)).getOrElse(NoValidationErrors),
+          body.nonFurnishedHolidayLet.flatMap(_.expenses.map(validateNonFhlConsolidatedExpenses)).getOrElse(NoValidationErrors),
+        ))
     )
   }
-*/
+
+  private def validateFhl(fhl: FurnishedHolidayLet) = {
+    List(
+      NumberValidation.validateAdjustment(
+        field = fhl.income.flatMap(_.totalRentsReceived),
+        path = "/furnishedHolidayLet/income/totalRentsReceived"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.premisesRunningCosts),
+        path = "/furnishedHolidayLet/expenses/premisesRunningCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.repairsAndMaintenance),
+        path = "/furnishedHolidayLet/expenses/repairsAndMaintenance"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.financialCosts),
+        path = "/furnishedHolidayLet/expenses/financialCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.professionalFees),
+        path = "/furnishedHolidayLet/expenses/professionalFees"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.travelCosts),
+        path = "/furnishedHolidayLet/expenses/travelCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.costOfServices),
+        path = "/furnishedHolidayLet/expenses/costOfServices"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.other),
+        path = "/furnishedHolidayLet/expenses/other"
+      ),
+      NumberValidation.validateAdjustment(
+        field = fhl.expenses.flatMap(_.consolidatedExpenses),
+        path = "/furnishedHolidayLet/expenses/consolidatedExpenses"
+      )
+    ).flatten
+  }
+
+  private def validateNonFhl(nonFhl: NonFurnishedHolidayLet) = {
+    List(
+      NumberValidation.validateAdjustment(
+        field = nonFhl.income.flatMap(_.totalRentsReceived),
+        path = "/nonFurnishedHolidayLet/income/totalRentsReceived"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.income.flatMap(_.premiumsOfLeaseGrant),
+        path = "/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.income.flatMap(_.reversePremiums),
+        path = "/nonFurnishedHolidayLet/income/reversePremiums"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.income.flatMap(_.otherPropertyIncome),
+        path = "/nonFurnishedHolidayLet/income/otherPropertyIncome"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.premisesRunningCosts),
+        path = "/nonFurnishedHolidayLet/expenses/premisesRunningCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.repairsAndMaintenance),
+        path = "/nonFurnishedHolidayLet/expenses/repairsAndMaintenance"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.financialCosts),
+        path = "/nonFurnishedHolidayLet/expenses/financialCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.professionalFees),
+        path = "/nonFurnishedHolidayLet/expenses/professionalFees"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.travelCosts),
+        path = "/nonFurnishedHolidayLet/expenses/travelCosts"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.costOfServices),
+        path = "/nonFurnishedHolidayLet/expenses/costOfServices"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.residentialFinancialCost),
+        path = "/nonFurnishedHolidayLet/expenses/residentialFinancialCost"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.other),
+        path = "/nonFurnishedHolidayLet/expenses/other"
+      ),
+      NumberValidation.validateAdjustment(
+        field = nonFhl.expenses.flatMap(_.consolidatedExpenses),
+        path = "/nonFurnishedHolidayLet/expenses/consolidatedExpenses"
+      )
+    ).flatten
+  }
+
+  private def validateFhlConsolidatedExpenses(expenses: FHLExpenses): List[MtdError] = {
+    BothExpensesValidation.validate(
+      expenses = expenses,
+      path = "/furnishedHolidayLet/expenses"
+    )
+  }
+
+  private def validateNonFhlConsolidatedExpenses(expenses: NonFHLExpenses): List[MtdError] = {
+    BothExpensesValidation.validate(
+      expenses = expenses,
+      path = "/nonFurnishedHolidayLet/expenses"
+    )
+  }
 
   override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
 }

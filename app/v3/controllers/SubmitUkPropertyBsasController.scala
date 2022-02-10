@@ -63,7 +63,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+      val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, request.body)
 
       val result =
         for {
