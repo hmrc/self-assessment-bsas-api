@@ -18,13 +18,8 @@ package v3.support
 
 import utils.Logging
 import v3.controllers.EndpointLogContext
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-import v3.models.response.retrieveBsas
-import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
-import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
-import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -58,31 +53,4 @@ trait DesResponseMappingSupport {
         ErrorWrapper(correlationId, error, errors)
     }
   }
-
-  final def validateRetrieveForeignPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case RetrieveForeignPropertyBsasResponse(retrieveBsas.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
-
-      case _ => Right(desResponseWrapper)
-    }
-
-  final def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case RetrieveSelfEmploymentBsasResponse(_, retrieveBsas.selfEmployment.Inputs(typeOfBusiness, _, _, _, _, _, _), _, _, _)
-          if typeOfBusiness != TypeOfBusiness.`self-employment` =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
-
-      case _ => Right(desResponseWrapper)
-    }
-
-  final def validateRetrieveUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
-    desResponseWrapper.responseData match {
-      case RetrieveUkPropertyBsasResponse(_, retrieveBsas.ukProperty.Inputs(typeOfBusiness, _, _, _, _, _, _), _, _, _)
-          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
-
-      case _ => Right(desResponseWrapper)
-    }
 }

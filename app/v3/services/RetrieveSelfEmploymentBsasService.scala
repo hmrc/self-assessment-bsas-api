@@ -18,31 +18,38 @@ package v3.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
+
+import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
 import v3.controllers.EndpointLogContext
+import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v3.support.DesResponseMappingSupport
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging{
+class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector)
+    extends BaseRetrieveBsasService
+    with DesResponseMappingSupport
+    with Logging {
+
+  protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`self-employment`)
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-                                implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-                                correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <-
-      EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveSelfEmploymentBsasSuccessResponse(desResponseWrapper))
+      desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
@@ -50,12 +57,12 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
-    "INVALID_CORRELATIONID" -> DownstreamError,
-    "INVALID_RETURN" -> DownstreamError,
-    "UNPROCESSABLE_ENTITY" -> DownstreamError,
-    "NO_DATA_FOUND" -> NotFoundError,
-    "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError
+    "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
+    "INVALID_CORRELATIONID"     -> DownstreamError,
+    "INVALID_RETURN"            -> DownstreamError,
+    "UNPROCESSABLE_ENTITY"      -> DownstreamError,
+    "NO_DATA_FOUND"             -> NotFoundError,
+    "SERVER_ERROR"              -> DownstreamError,
+    "SERVICE_UNAVAILABLE"       -> DownstreamError
   )
 }

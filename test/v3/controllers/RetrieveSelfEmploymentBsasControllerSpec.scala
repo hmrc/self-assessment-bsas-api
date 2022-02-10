@@ -153,7 +153,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
           (CalculationIdFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR),
           (NotFoundError, NOT_FOUND),
-          (RuleNotSelfEmployment, BAD_REQUEST)
+          (RuleTypeOfBusinessIncorrectError, BAD_REQUEST)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

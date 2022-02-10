@@ -33,11 +33,11 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus = Some("03")
+  val adjustedStatus: Some[String] = Some("03")
 
-  val request = RetrieveForeignPropertyBsasRequestData(nino, id, adjustedStatus)
+  val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id, adjustedStatus)
 
-  val response = RetrieveForeignPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
+  val response: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
   trait Test extends MockRetrieveForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -56,16 +56,20 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
       }
     }
 
-
     "return error response" when {
+      "downstream returns a success response with invalid type of business" should {
+        import TypeOfBusiness._
+        Seq(`self-employment`, `uk-property-fhl`, `uk-property-non-fhl`).foreach(typeOfBusiness =>
+          s"return an error for $typeOfBusiness" in new Test {
+            val response: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel.copy(typeOfBusiness),
+              Some(bsasDetailModel))
 
-      "des return success response with invalid type of business" in new Test {
-        val response = RetrieveForeignPropertyBsasResponse(metadataModel.copy(typeOfBusiness = TypeOfBusiness.`self-employment`),
-          Some(bsasDetailModel))
-        MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+            MockRetrieveForeignPropertyBsasConnector
+              .retrieveForeignPropertyBsas(request)
+              .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotForeignProperty))
+            await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
+          })
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =

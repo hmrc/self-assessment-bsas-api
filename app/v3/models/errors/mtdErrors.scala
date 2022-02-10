@@ -122,14 +122,8 @@ object RulePropertyIncomeAllowanceClaimed
 
 object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An adjusted summary calculation does not exist")
 
-object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The adjustments requested are not for a UK property business")
-
-object RuleNotForeignProperty extends MtdError("RULE_NOT_FOREIGN_PROPERTY", "The summary calculation requested is not for a foreign property business")
-
+@deprecated("replace with RuleTypeOfBusinessIncorrectError")
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business")
-
-object RuleIncorrectPropertyAdjusted extends MtdError("RULE_INCORRECT_PROPERTY_ADJUSTED",
-  "An adjustment has been made to an incorrect property type. Re-trigger an adjustable summary for this BSAS ID to correct")
 
 object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "Adjustment value falls outside accepted range")
 

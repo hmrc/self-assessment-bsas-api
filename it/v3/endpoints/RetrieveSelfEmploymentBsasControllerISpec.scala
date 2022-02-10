@@ -82,7 +82,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe BAD_REQUEST
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(RuleNotSelfEmployment)
+        response.json shouldBe Json.toJson(RuleTypeOfBusinessIncorrectError)
       }
     }
 
