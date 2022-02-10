@@ -174,7 +174,7 @@ trait ListBsasFixture {
   val listBsasResponseJson: JsValue = Json.parse(
     """
       |{
-      |  "businessSourceSummaries": [
+      |  "businessSources": [
       |    {
       |      "businessId": "000000000000210",
       |      "typeOfBusiness": "self-employment",
@@ -260,7 +260,7 @@ trait ListBsasFixture {
   val summariesJSONWithHateoas: String => JsValue = nino => Json.parse(
     s"""
       |{
-      |  "businessSourceSummaries": [
+      |  "businessSources": [
       |    {
       |      "businessId": "000000000000210",
       |      "typeOfBusiness": "self-employment",
@@ -353,7 +353,7 @@ trait ListBsasFixture {
   val summariesJSONForeignWithHateoas: String => JsValue = nino => Json.parse(
     s"""
        |{
-       |  "businessSourceSummaries": [
+       |  "businessSources": [
        |    {
        |      "typeOfBusiness": "foreign-property",
        |      "businessId": "000000000000210",

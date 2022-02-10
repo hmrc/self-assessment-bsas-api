@@ -99,7 +99,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
       ListBsasResponse.LinksFactory.itemLinks(
         mockAppConfig,
         ListBsasHateoasData(nino, selfEmploymentBsasModel),
-        selfEmploymentBsasModel.businessSourceSummaries.head.summaries.head
+        selfEmploymentBsasModel.businessSources.head.summaries.head
       ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$selfEmployment/$bsasId", GET, "self"))
     }
 
@@ -109,7 +109,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
       ListBsasResponse.LinksFactory.itemLinks(
         mockAppConfig,
         ListBsasHateoasData(nino, ukPropertyBsasModel),
-        ukPropertyBsasModel.businessSourceSummaries.head.summaries.head
+        ukPropertyBsasModel.businessSources.head.summaries.head
       ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$ukProperty/$bsasId", GET, "self"))
     }
 
@@ -119,7 +119,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
       ListBsasResponse.LinksFactory.itemLinks(
         mockAppConfig,
         ListBsasHateoasData(nino, foreignPropertyBsasModel),
-        foreignPropertyBsasModel.businessSourceSummaries.head.summaries.head
+        foreignPropertyBsasModel.businessSources.head.summaries.head
       ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$foreignProperty/$bsasId", GET, "self"))
     }
   }

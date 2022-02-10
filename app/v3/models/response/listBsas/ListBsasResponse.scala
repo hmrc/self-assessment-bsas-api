@@ -23,7 +23,7 @@ import v3.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v3.models.domain.TypeOfBusiness
 import v3.models.hateoas.{HateoasData, Link}
 
-case class ListBsasResponse[I](businessSourceSummaries: Seq[BusinessSourceSummary[I]])
+case class ListBsasResponse[I](businessSources: Seq[BusinessSourceSummary[I]])
 
 object ListBsasResponse extends HateoasLinks {
 
@@ -36,7 +36,7 @@ object ListBsasResponse extends HateoasLinks {
     )
 
     override def itemLinks(appConfig: AppConfig, data: ListBsasHateoasData, item: BsasSummary): Seq[Link] = {
-      val filteredSummary: Seq[BusinessSourceSummary[BsasSummary]] = data.listBsasResponse.businessSourceSummaries.filter(_.summaries.contains(item))
+      val filteredSummary: Seq[BusinessSourceSummary[BsasSummary]] = data.listBsasResponse.businessSources.filter(_.summaries.contains(item))
 
       filteredSummary.flatMap(summary =>
         summary.summaries.filter(_ == item).flatMap(_ =>
@@ -52,7 +52,7 @@ object ListBsasResponse extends HateoasLinks {
 
   implicit object ResponseFunctor extends Functor[ListBsasResponse] {
     override def map[A, B](fa: ListBsasResponse[A])(f: A => B): ListBsasResponse[B] =
-      ListBsasResponse(fa.businessSourceSummaries.map {
+      ListBsasResponse(fa.businessSources.map {
         summary => summary.copy(summaries = summary.summaries.map(f))
       })
   }
