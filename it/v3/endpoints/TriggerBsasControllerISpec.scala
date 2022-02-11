@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -89,7 +89,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onSuccess(DesStub.POST, desUrl, OK, Json.parse(desResponse))
+              DownstreamStub.onSuccess(DownstreamStub.POST, desUrl, OK, Json.parse(desResponse))
             }
 
             val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
@@ -191,7 +191,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.POST, desUrl, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.POST, desUrl, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().post(requestBody("self-employment")))

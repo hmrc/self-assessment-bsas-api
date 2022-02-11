@@ -21,7 +21,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import support.WireMockMethods
 
-object DesStub extends WireMockMethods {
+object DownstreamStub extends WireMockMethods {
 
   def onSuccess(method: HTTPMethod, uri: String, status: Int, body: JsValue): StubMapping = {
     when(method = method, uri = uri)

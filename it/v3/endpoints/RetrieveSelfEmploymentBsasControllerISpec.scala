@@ -25,7 +25,7 @@ import support.IntegrationBaseSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.domain.IncomeSourceType
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -56,7 +56,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -75,7 +75,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
         }
 
         val response: WSResponse = await(request.get)
@@ -130,7 +130,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)

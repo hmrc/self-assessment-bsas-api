@@ -41,8 +41,8 @@ object NumberValidation {
 
   private def doValidate(field: BigDecimal,
                          path: String,
-                         min: BigDecimal = 0,
-                         max: BigDecimal = 99999999999.99,
+                         min: BigDecimal,
+                         max: BigDecimal,
                          disallowZero: Boolean): List[MtdError] = {
     if (field >= min && field <= max && field.scale <= 2 && (!disallowZero || field != 0)) {
       Nil

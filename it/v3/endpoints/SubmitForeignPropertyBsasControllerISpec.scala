@@ -23,7 +23,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
+import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub}
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -381,7 +381,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -396,7 +396,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -410,7 +410,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
         }
 
 
@@ -424,7 +424,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyConsolidatedJson))
@@ -437,7 +437,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
@@ -597,7 +597,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.PUT, desUrl, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, desUrl, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))

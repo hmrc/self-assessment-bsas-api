@@ -19,19 +19,19 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
+import v3.models.utils.JsonErrorValidators
+import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub}
 
-class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
-
+class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   private trait Test {
 
-    val nino             = "AA123456A"
-    val bsasId           = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val nino: String = "AA123456A"
+    val calculationId: String = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -45,9 +45,9 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/uk-property/$bsasId/adjust"
+    def uri: String = s"/$nino/uk-property/$calculationId/adjust"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
+    def ifsUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
     def request(): WSRequest = {
       setupStubs()
@@ -57,18 +57,18 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "des message"
-         |      }
-    """.stripMargin
+         |{
+         |  "code": "$code",
+         |  "reason": "ifs message"
+         |}
+       """.stripMargin
   }
 
   import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
   val requestBody: JsValue = validfhlInputJson
 
-  "Calling the Submit Adjustments to your UK Property Summary endpoint" should {
+  "Calling the Submit UK Property Accounting Adjustments endpoint" should {
 
     "return a 200 status code" when {
 
@@ -79,12 +79,12 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "04")))
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUrl, OK)
         }
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -95,12 +95,12 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(fhlDesResponse(bsasId, "04")))
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUrl, OK)
         }
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
       }
     }
@@ -108,10 +108,15 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestCalculationId: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
+            override val calculationId: String = requestCalculationId
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -125,20 +130,48 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(("AA1234A", BAD_REQUEST, NinoFormatError))
+        val input = Seq(
+          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "041f7e4d87b9", requestBody, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            requestBody.replaceWithEmptyObject("/furnishedHolidayLet/income"),
+            BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))
+          ),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            requestBody.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
+            BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))
+          ),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            requestBody.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
+            BAD_REQUEST, RuleBothPropertiesSuppliedError
+          ),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            requestBody
+              .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
+              .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
+            BAD_REQUEST,
+            ValueFormatError.copy(
+              message = "The value must be between -99999999999.99 and 99999999999.99",
+              paths = Some(Seq(
+                "/furnishedHolidayLet/expenses/travelCosts",
+                "/furnishedHolidayLet/expenses/other"
+              ))
+            )
+          )
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.PUT, desUrl, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUrl, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().post(requestBody))
@@ -150,18 +183,22 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
+          (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C559107", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C559103", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C559099", INTERNAL_SERVER_ERROR, DownstreamError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (CONFLICT, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
           (CONFLICT, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleAlreadyAdjusted),
           (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
-          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleTypeOfBusinessIncorrectError),
-          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
-          (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, DownstreamError),
-          (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
-          (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
-          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
+          (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )

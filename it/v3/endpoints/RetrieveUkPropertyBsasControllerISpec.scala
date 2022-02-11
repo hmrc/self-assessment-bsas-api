@@ -25,7 +25,7 @@ import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.domain.IncomeSourceType
 import v3.models.errors._
-import v3.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 
 class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -56,7 +56,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasFhlResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasFhlResponseJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -72,7 +72,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasNonFhlResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasNonFhlResponseJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -91,7 +91,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
         }
 
         val response: WSResponse = await(request.get)
@@ -146,7 +146,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)

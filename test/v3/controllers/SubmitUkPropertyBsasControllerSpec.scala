@@ -18,14 +18,13 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
@@ -44,24 +43,29 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUkPropertyBsasService
     with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
-    with MockAuditService
     with MockIdGenerator {
 
   private val correlationId = "X-123"
+  private val nino = "AA123456A"
+  private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
-  private val nino   = "AA123456A"
-
-  private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
-
-  private val fhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields))
-  private val fhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, fhlBody)
-
-  private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
-  private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
+  private val rawData = SubmitUkPropertyBsasRawData(
+    nino = nino,
+    calculationId = calculationId,
+    body = submitBsasRawDataBodyNonFHL(
+      income = nonFHLIncomeAllFields,
+      expenses = nonFHLExpensesAllFields
+    )
+  )
+  private val requestData = SubmitUkPropertyBsasRequestData(
+    nino = Nino(nino),
+    calculationId = calculationId,
+    body = nonFHLBody
+  )
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$bsasId",
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId",
       method = GET,
       rel = "self"
     )
@@ -77,7 +81,6 @@ class SubmitUkPropertyBsasControllerSpec
       service = mockService,
       nrsService = mockSubmitUKPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -88,76 +91,31 @@ class SubmitUkPropertyBsasControllerSpec
 
   }
 
-  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "submitBusinessSourceAccountingAdjustments",
-      transactionName = "submit-uk-property-accounting-adjustments",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "bsasId" -> bsasId),
-        requestBody = requestBody,
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
-
   "submitUkPropertyBsas" should {
     "return a successful hateoas response with status 200 (OK)" when {
-      "a valid request is supplied for an FHL property" in new Test {
+      "a valid request is supplied" in new Test {
 
         MockSubmitUkPropertyBsasDataParser
-          .parse(fhlRawRequest)
-          .returns(Right(fhlRequest))
+          .parse(rawData)
+          .returns(Right(requestData))
 
         MockSubmitUKPropertyBsasNrsProxyService
           .submit(nino)
           .returns(Future.successful(Unit))
 
         MockSubmitUkPropertyBsasService
-          .submitPropertyBsas(fhlRequest)
+          .submitPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino, bsasId))
+          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validfhlInputJson)))
+        val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson) )).once
-      }
-
-      "a valid request is supplied for a non-FHL property" in new Test {
-
-        MockSubmitUkPropertyBsasDataParser
-          .parse(nonFhlRawRequest)
-          .returns(Right(nonFhlRequest))
-
-        MockSubmitUKPropertyBsasNrsProxyService
-          .submit(nino)
-          .returns(Future.successful(Unit))
-
-        MockSubmitUkPropertyBsasService
-          .submitPropertyBsas(nonFhlRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-
-        MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
-        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validNonFHLInputJson)))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validNonFHLInputJson))).once
       }
     }
 
@@ -166,29 +124,26 @@ class SubmitUkPropertyBsasControllerSpec
         s"a ${error.code} error is returned from the parser" in new Test {
 
           MockSubmitUkPropertyBsasDataParser
-            .parse(fhlRawRequest)
+            .parse(rawData)
             .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-          val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+          val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
         }
       }
 
+      val paths = Some(Seq("/path"))
       val input = Seq(
         (BadRequestError, BAD_REQUEST),
         (NinoFormatError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
-        (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-        (DownstreamError, INTERNAL_SERVER_ERROR),
-        (RuleBothExpensesError, BAD_REQUEST),
-        (FormatAdjustmentValueError, BAD_REQUEST),
-        (RuleAdjustmentRangeInvalid, BAD_REQUEST)
+        (ValueFormatError.copy(paths = paths), BAD_REQUEST),
+        (RuleBothExpensesError.copy(paths = paths), BAD_REQUEST),
+        (RuleIncorrectOrEmptyBodyError.copy(paths = paths), BAD_REQUEST),
+        (RuleBothPropertiesSuppliedError, BAD_REQUEST)
       )
 
       input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -198,47 +153,14 @@ class SubmitUkPropertyBsasControllerSpec
         val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError)))
 
         MockSubmitUkPropertyBsasDataParser
-          .parse(fhlRawRequest)
+          .parse(rawData)
           .returns(Left(error))
 
-        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+        val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(CalculationIdFormatError.code))), None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
-      }
-
-      "multiple errors occur for the customised errors" in new Test {
-        val error: ErrorWrapper = ErrorWrapper(
-          correlationId,
-          BadRequestError,
-          Some(
-            Seq(
-              FormatAdjustmentValueError,
-              RuleAdjustmentRangeInvalid
-            )
-          )
-        )
-
-        MockSubmitUkPropertyBsasDataParser
-          .parse(fhlRawRequest)
-          .returns(Left(error))
-
-        val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
-
-        status(result) shouldBe BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson(error)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(
-              AuditError(FormatAdjustmentValueError.code),
-              AuditError(RuleAdjustmentRangeInvalid.code)
-            )), None)
-
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
     }
 
@@ -247,40 +169,37 @@ class SubmitUkPropertyBsasControllerSpec
         s"a ${mtdError.code} error is returned from the service" in new Test {
 
           MockSubmitUkPropertyBsasDataParser
-            .parse(fhlRawRequest)
-            .returns(Right(fhlRequest))
+            .parse(rawData)
+            .returns(Right(requestData))
 
           MockSubmitUKPropertyBsasNrsProxyService
             .submit(nino)
             .returns(Future.successful(Unit))
 
           MockSubmitUkPropertyBsasService
-            .submitPropertyBsas(fhlRequest)
+            .submitPropertyBsas(requestData)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-          val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(validfhlInputJson))
+          val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
         }
       }
 
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
-        (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
-        (RuleTypeOfBusinessIncorrectError, FORBIDDEN),
-        (RuleSummaryStatusInvalid, FORBIDDEN),
+        (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
+        (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+        (NotFoundError, NOT_FOUND),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleAlreadyAdjusted, FORBIDDEN),
-        (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
-        (RuleResultingValueNotPermitted, FORBIDDEN)
+        (RuleResultingValueNotPermitted, FORBIDDEN),
+        (RuleSummaryStatusInvalid, FORBIDDEN),
+        (RuleTypeOfBusinessIncorrectError, BAD_REQUEST)
       )
       input.foreach(args => (serviceErrors _).tupled(args))
     }

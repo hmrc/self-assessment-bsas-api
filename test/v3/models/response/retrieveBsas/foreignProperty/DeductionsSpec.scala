@@ -16,7 +16,6 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators

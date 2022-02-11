@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
 
@@ -58,7 +58,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get)
@@ -74,7 +74,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, listBsasResponseDownstreamJsonForeign)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, listBsasResponseDownstreamJsonForeign)
         }
 
         val response: WSResponse = await(request.get)
@@ -91,7 +91,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get)
@@ -154,7 +154,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)
