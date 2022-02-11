@@ -98,7 +98,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
            CustomMtdError(RuleCountryCodeError.code) |
            CustomMtdError(CountryCodeFormatError.code) |
-           RuleBothExpensesError => BadRequest(Json.toJson(errorWrapper))
+           CustomMtdError(RuleBothExpensesError.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid |
            RuleSummaryStatusSuperseded |
            RuleAlreadyAdjusted |
