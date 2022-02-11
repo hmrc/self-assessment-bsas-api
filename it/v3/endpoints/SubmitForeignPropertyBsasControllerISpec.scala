@@ -463,31 +463,39 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyAdjustmentValue: JsValue = Json.parse(
+      val requestBodyIncorrectBody: JsValue = Json.parse(
         s"""
            |{
            |    "foreignFhlEea": {
-           |        "income": {
-           |            "totalRentsReceived": 123.12
-           |        },
-           |        "expenses": {
-           |            "consolidatedExpenses": 123.12345
-           |        }
            |    }
            |}
            |""".stripMargin)
 
-      val requestBodyRangeInvalid: JsValue = Json.parse(
+      val requestBodyBothExpenses: JsValue = Json.parse(
         s"""
            |{
-           |    "foreignFhlEea": {
-           |        "income": {
-           |            "totalRentsReceived": 123.12
-           |        },
-           |        "expenses": {
-           |            "consolidatedExpenses": -100000000000.99
-           |        }
+           |  "nonFurnishedHolidayLet": [
+           |    {
+           |      "countryCode": "DEU",
+           |      "income": {
+           |        "totalRentsReceived": 123.12,
+           |        "premiumsOfLeaseGrant": 123.12,
+           |        "foreignTaxTakenOff": 123.12,
+           |        "otherPropertyIncome": 123.12
+           |      },
+           |      "expenses": {
+           |        "premisesRunningCosts": 123.12,
+           |        "repairsAndMaintenance": 123.12,
+           |        "financialCosts": 123.12,
+           |        "professionalFees": 123.12,
+           |        "travelCosts": 123.12,
+           |        "costOfServices": 123.12,
+           |        "residentialFinancialCost": 123.12,
+           |        "other": 123.12,
+           |        "consolidatedExpenses": 123.12
+           |      }
            |    }
+           |  ]
            |}
            |""".stripMargin)
 
@@ -511,8 +519,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |        "travelCosts": 123.12,
            |        "costOfServices": 123.12,
            |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12,
-           |        "consolidatedExpenses": 123.12
+           |        "other": 123.12
            |      }
            |    }
            |  ]
@@ -539,8 +546,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |        "travelCosts": 123.12,
            |        "costOfServices": 123.12,
            |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12,
-           |        "consolidatedExpenses": 123.12
+           |        "other": 123.12
            |      }
            |    }
            |  ]
@@ -569,17 +575,14 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
-//          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, calculationIdFormatError),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue,
-//            BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid,
-//            BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
-//            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
-//            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody,
+            BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
+            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
+            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
