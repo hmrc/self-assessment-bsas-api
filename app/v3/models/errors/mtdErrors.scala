@@ -103,7 +103,7 @@ object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCO
 
 object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The supplied accounting period does not exist")
 
-object RuleTypeOfBusinessIncorrectError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The submission is for a different type of business")
+object RuleTypeOfBusinessIncorrectError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The calculation ID supplied relates to a different type of business")
 
 object RuleSummaryStatusInvalid extends MtdError( "RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary")
 
