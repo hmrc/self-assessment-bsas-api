@@ -18,26 +18,26 @@ package v3.services
 
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 import v3.controllers.EndpointLogContext
-import v3.fixtures.ListBsasFixtures._
+import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.Future
 
-class ListBsasServiceSpec extends ServiceSpec {
+class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
 
   private val nino = Nino("AA123456A")
-  private val taxYear = DesTaxYear("2019-20")
+  private val taxYear = DownstreamTaxYear("2019-20")
   private val incomeSourceIdentifier = Some("IncomeSourceType")
   private val identifierValue = Some("01")
 
   val request: ListBsasRequest = ListBsasRequest(nino, taxYear, incomeSourceIdentifier, identifierValue)
-  val response: ListBsasResponse[BsasEntries] = summaryModel
+  val response: ListBsasResponse[BsasSummary] = listBsasResponseModel
 
   trait Test extends MockListBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -68,13 +68,13 @@ class ListBsasServiceSpec extends ServiceSpec {
         }
 
       val input = Seq(
-        ("INVALID_TAXABLE_ENTITY_ID" , NinoFormatError),
-        ("NO_DATA_FOUND" , NotFoundError),
-        ("INVALID_TAXYEAR" , DownstreamError),
-        ("INVALID_INCOMESOURCEID" , DownstreamError),
-        ("INVALID_INCOMESOURCE_TYPE" , DownstreamError),
-        ("SERVER_ERROR" , DownstreamError),
-        ("SERVICE_UNAVAILABLE" , DownstreamError)
+        ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
+        ("NO_DATA_FOUND", NotFoundError),
+        ("INVALID_TAXYEAR", TaxYearFormatError),
+        ("INVALID_INCOMESOURCEID", BusinessIdFormatError),
+        ("INVALID_INCOMESOURCE_TYPE", DownstreamError),
+        ("SERVER_ERROR", DownstreamError),
+        ("SERVICE_UNAVAILABLE", DownstreamError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

@@ -26,7 +26,7 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 import v3.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,21 +37,22 @@ class ListBsasService @Inject()(connector: ListBsasConnector) extends DesRespons
   def listBsas(request: ListBsasRequest)
               (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
                correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasEntries]]]] = {
+  Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.listBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-    } yield desResponseWrapper.map(des => des)
+      desResponseWrapper <- EitherT(connector.listBsas(request)).leftMap(mapDesErrors(mapDownstreamErrors))
+    } yield desResponseWrapper
 
     result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
+  private def mapDownstreamErrors: Map[String, MtdError] = Map(
+    "INVALID_CORRELATIONID" -> DownstreamError,
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "NO_DATA_FOUND" -> NotFoundError,
-    "INVALID_TAXYEAR" -> DownstreamError,
-    "INVALID_INCOMESOURCEID" -> DownstreamError,
+    "INVALID_TAXYEAR" -> TaxYearFormatError,
+    "INVALID_INCOMESOURCEID" -> BusinessIdFormatError,
     "INVALID_INCOMESOURCE_TYPE" -> DownstreamError,
+    "NO_DATA_FOUND" -> NotFoundError,
     "SERVER_ERROR" -> DownstreamError,
     "SERVICE_UNAVAILABLE" -> DownstreamError
   )

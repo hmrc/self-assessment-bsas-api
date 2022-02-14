@@ -17,7 +17,7 @@
 package v3.connectors
 
 import mocks.MockAppConfig
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 import v3.mocks.MockHttpClient
 import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
 
@@ -27,7 +27,7 @@ class SubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 
-  val taxYear: DesTaxYear = DesTaxYear.fromMtd("2021-22")
+  val taxYear: DownstreamTaxYear = DownstreamTaxYear.fromMtd("2021-22")
 
   val income: Income =  Income(Some(100.99), Some(100.99))
 

@@ -18,7 +18,7 @@ package v2.services
 
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 import v2.controllers.EndpointLogContext
 import v2.fixtures.ListBsasFixtures._
 import v2.mocks.connectors.MockListBsasConnector
@@ -32,7 +32,7 @@ import scala.concurrent.Future
 class ListBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  private val taxYear = DesTaxYear("2019-20")
+  private val taxYear = DownstreamTaxYear("2019-20")
   private val incomeSourceIdentifier = Some("IncomeSourceType")
   private val identifierValue = Some("01")
 

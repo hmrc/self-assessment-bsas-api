@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{DateUtils, DesTaxYear}
+import utils.{DateUtils, DownstreamTaxYear}
 import v2.fixtures.ListBsasFixtures._
 import v2.hateoas.HateoasLinks
 import v2.mocks.MockCurrentDateProvider
@@ -55,9 +55,13 @@ class ListBsasControllerSpec
     with MockIdGenerator {
 
   private val correlationId = "X-123"
+  private val nino = "AA123456A"
+  private val taxYear = Some("2019-20")
+  private val typeOfBusiness = Some("uk-property-fhl")
+  private val businessId = Some("XAIS12345678901")
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new ListBsasController(
       authService = mockEnrolmentsAuthService,
@@ -78,11 +82,6 @@ class ListBsasControllerSpec
     val date: LocalDate = LocalDate.of(2019, 6, 18)
     MockCurrentDateProvider.getCurrentDate().returns(date).anyNumberOfTimes()
   }
-
-  private val nino = "AA123456A"
-  private val taxYear = Some("2019-20")
-  private val typeOfBusiness = Some("uk-property-fhl")
-  private val businessId = Some("XAIS12345678901")
 
   val response: ListBsasResponse[BsasEntries] =
     ListBsasResponse(
@@ -133,7 +132,7 @@ class ListBsasControllerSpec
     )
 
   private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
-  private val requestData = ListBsasRequest(Nino(nino), DesTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
+  private val requestData = ListBsasRequest(Nino(nino), DownstreamTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
 
   def event(auditResponse: AuditResponse, taxYear: String = "2019-20"): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -309,8 +308,8 @@ class ListBsasControllerSpec
     "audit correctly with taxYear" when {
       "the taxYear parameter is not provided (success)" in new Test {
 
-        val desTaxYear: DesTaxYear = DateUtils.getDesTaxYear(mockCurrentDateProvider.getCurrentDate())
-        val mtdTaxYear: String = DesTaxYear.fromDes(desTaxYear.toString)
+        val desTaxYear: DownstreamTaxYear = DateUtils.getDownstreamTaxYear(mockCurrentDateProvider.getCurrentDate())
+        val mtdTaxYear: String = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
 
         MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes()
 
@@ -397,8 +396,8 @@ class ListBsasControllerSpec
 
       "the taxYear parameter is not provided (failure)" in new Test {
 
-        val desTaxYear: DesTaxYear = DateUtils.getDesTaxYear(mockCurrentDateProvider.getCurrentDate())
-        val mtdTaxYear: String = DesTaxYear.fromDes(desTaxYear.toString)
+        val desTaxYear: DownstreamTaxYear = DateUtils.getDownstreamTaxYear(mockCurrentDateProvider.getCurrentDate())
+        val mtdTaxYear: String = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
 
         MockListBsasRequestDataParser
           .parse(rawData.copy(taxYear = None))

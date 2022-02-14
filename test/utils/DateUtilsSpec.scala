@@ -25,7 +25,7 @@ class DateUtilsSpec extends UnitSpec{
   "getDesTaxYear with tax year param" should {
     "return a valid DesTaxYear" when {
       "mtd formatted string tax year is supplied" in {
-        DateUtils.getDesTaxYear("2018-19") shouldBe DesTaxYear("2019")
+        DateUtils.getDownstreamTaxYear("2018-19") shouldBe DownstreamTaxYear("2019")
       }
     }
   }
@@ -33,11 +33,11 @@ class DateUtilsSpec extends UnitSpec{
   "getDesTaxYear with date param" should {
     "return a valid DesTaxYear" when {
       "no tax year is supplied when the date is 5th April of the current year" in {
-        DateUtils.getDesTaxYear(LocalDate.parse(s"2019-04-05")) shouldBe DesTaxYear("2019")
+        DateUtils.getDownstreamTaxYear(LocalDate.parse(s"2019-04-05")) shouldBe DownstreamTaxYear("2019")
       }
 
       "no tax year is supplied when the date is 6th April of the current year" in {
-        DateUtils.getDesTaxYear(LocalDate.parse("2019-04-06")) shouldBe DesTaxYear("2020")
+        DateUtils.getDownstreamTaxYear(LocalDate.parse("2019-04-06")) shouldBe DownstreamTaxYear("2020")
       }
     }
   }

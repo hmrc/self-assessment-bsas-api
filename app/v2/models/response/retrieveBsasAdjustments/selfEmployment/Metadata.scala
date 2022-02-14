@@ -18,7 +18,7 @@ package v2.models.response.retrieveBsasAdjustments.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
 
@@ -37,7 +37,7 @@ object Metadata {
     (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       (JsPath \ "inputs" \ "incomeSourceId").readNullable[String] and
       JsPath.read[AccountingPeriod] and
-      (JsPath \ "metadata" \ "taxYear").read[Int].map(DesTaxYear.fromDesIntToString) and
+      (JsPath \ "metadata" \ "taxYear").read[Int].map(DownstreamTaxYear.fromDownstreamIntToString) and
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and

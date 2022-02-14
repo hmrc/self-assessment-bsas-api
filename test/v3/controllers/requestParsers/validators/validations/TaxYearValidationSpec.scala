@@ -17,63 +17,38 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v3.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import v3.models.utils.JsonErrorValidators
+import v3.models.errors.{RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 
-class TaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
+class TaxYearValidationSpec extends UnitSpec {
+
+  val minTaxYear = 2022
+  val taxYear    = "2021-22"
 
   "validate" should {
     "return no errors" when {
-      "when a valid tax year is supplied" in {
+      "a valid taxYear is supplied" in {
+        val validationResult = TaxYearValidation.validate(minTaxYear, taxYear)
 
-        val validTaxYear = "2018-19"
-        val validationResult = TaxYearValidation.validate(validTaxYear)
-        validationResult.isEmpty shouldBe true
-
+        validationResult shouldBe Nil
       }
     }
-
     "return an error" when {
-      "when an invalid tax year format is supplied" in {
+      "a taxYear with an invalid format is supplied" in {
+        val validationResult = TaxYearValidation.validate(minTaxYear, "2019/20")
 
-        val invalidTaxYear = "2019"
-        val validationResult = TaxYearValidation.validate(invalidTaxYear)
-        validationResult.isEmpty shouldBe false
-        validationResult.length shouldBe 1
-        validationResult.head shouldBe TaxYearFormatError
+        validationResult shouldBe List(TaxYearFormatError)
+      }
+      "a taxYear with a range longer than 1 is supplied" in {
+        val validationResult = TaxYearValidation.validate(minTaxYear, "2021-23")
 
+        validationResult shouldBe List(RuleTaxYearRangeInvalidError)
+      }
+      "a taxYear that isn't the minimum is supplied" in {
+        val validationResult = TaxYearValidation.validate(2025, taxYear)
+
+        validationResult shouldBe List(RuleTaxYearNotSupportedError)
       }
     }
-
-    "the difference in years is greater than 1 year" in {
-
-      val invalidTaxYear = "2017-19"
-      val validationResult = TaxYearValidation.validate(invalidTaxYear)
-      validationResult.isEmpty shouldBe false
-      validationResult.length shouldBe 1
-      validationResult.head shouldBe RuleTaxYearRangeInvalidError
-
-    }
-
-    "the end year is before the start year" in {
-
-      val invalidTaxYear = "2018-17"
-      val validationResult = TaxYearValidation.validate(invalidTaxYear)
-      validationResult.isEmpty shouldBe false
-      validationResult.length shouldBe 1
-      validationResult.head shouldBe RuleTaxYearRangeInvalidError
-
-    }
-
-    "the start and end years are the same" in {
-
-      val invalidTaxYear = "2017-17"
-      val validationResult = TaxYearValidation.validate(invalidTaxYear)
-      validationResult.isEmpty shouldBe false
-      validationResult.length shouldBe 1
-      validationResult.head shouldBe RuleTaxYearRangeInvalidError
-
-    }
-
   }
+
 }

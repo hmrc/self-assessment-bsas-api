@@ -16,28 +16,26 @@
 
 package v3.controllers
 
-import java.time.LocalDate
-
+import domain.Nino
 import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{DateUtils, DesTaxYear}
-import v3.fixtures.ListBsasFixtures._
+import utils.DownstreamTaxYear
+import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks
 import v3.mocks.MockCurrentDateProvider
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockListBsasRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v3.models.domain.{Status, TypeOfBusiness}
+import v3.mocks.services.{MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
+import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.hateoas.HateoasWrapper
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
-import v3.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.models.response.listBsas.{BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -50,25 +48,41 @@ class ListBsasControllerSpec
     with MockHateoasFactory
     with MockAppConfig
     with HateoasLinks
-    with MockAuditService
     with MockCurrentDateProvider
-    with MockIdGenerator {
+    with MockIdGenerator
+    with ListBsasFixture{
 
   private val correlationId = "X-123"
+  private val nino = "AA123456A"
+  private val taxYear = Some("2019-20")
+  private val typeOfBusiness = Some("self-employment")
+  private val businessId = Some("XAIS12345678901")
+
+  private val rawData = ListBsasRawData(
+    nino = nino,
+    taxYear = taxYear,
+    typeOfBusiness = typeOfBusiness,
+    businessId = businessId
+  )
+
+  private val requestData = ListBsasRequest(
+    nino = Nino(nino),
+    taxYear = DownstreamTaxYear("2019"),
+    incomeSourceId = Some("self-employment"),
+    incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
+  )
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new ListBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRequestParser,
       service = mockService,
-      auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator,
-      currentDateProvider = mockCurrentDateProvider
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
@@ -79,80 +93,19 @@ class ListBsasControllerSpec
     MockCurrentDateProvider.getCurrentDate().returns(date).anyNumberOfTimes()
   }
 
-  private val nino = "AA123456A"
-  private val taxYear = Some("2019-20")
-  private val typeOfBusiness = Some("uk-property-fhl")
-  private val businessId = Some("XAIS12345678901")
-
-  val response: ListBsasResponse[BsasEntries] =
-    ListBsasResponse(
-      Seq(
-        BusinessSourceSummary(
-          typeOfBusiness = TypeOfBusiness.`self-employment`,
-          businessId = Some("000000000000210"),
-          AccountingPeriod(
-            startDate = "2018-10-11",
-            endDate = "2019-10-10"
-          ),
-          Seq(BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
-          ))
-        ),
-        BusinessSourceSummary(
-          typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-          businessId = None,
-          AccountingPeriod(
-            startDate = "2018-10-11",
-            endDate = "2019-10-10"
-          ),
-          Seq(BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
-          ))
-        ),
-        BusinessSourceSummary(
-          typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-          businessId = None,
-          AccountingPeriod(
-            startDate = "2018-10-11",
-            endDate = "2019-10-10"
-          ),
-          Seq(BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
-          ))
-        )
-      )
-    )
-
-  private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
-  private val requestData = ListBsasRequest(Nino(nino), DesTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
-
-  def event(auditResponse: AuditResponse, taxYear: String = "2019-20"): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "listBusinessSourceAdjustableSummaries",
-      transactionName = "list-business-source-adjustable-summaries",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        requestBody = None,
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
+  val response: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(
+    businessSourceSummaryModel,
+    businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`, summaries = Seq(
+      bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
+    )),
+    businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`, summaries = Seq(
+      bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
+    ))
+  ))
 
   "list bsas" should {
     "return successful response with status OK" when {
       "valid request" in new Test {
-
         MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes()
 
         MockListBsasRequestDataParser
@@ -163,58 +116,37 @@ class ListBsasControllerSpec
           .listBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        val responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasEntries]]] = HateoasWrapper(
+        val responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
           ListBsasResponse(
             Seq(
               BusinessSourceSummary(
+                businessId = "000000000000210",
                 typeOfBusiness = TypeOfBusiness.`self-employment`,
-                businessId = Some("000000000000210"),
-                AccountingPeriod(
-                  startDate = "2018-10-11",
-                  endDate = "2019-10-10"
-                ),
+                accountingPeriodModel,
+                taxYear = "2019-20",
                 Seq(HateoasWrapper(
-                  BsasEntries(
-                    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-                    requestedDateTime = "2019-10-14T11:33:27Z",
-                    summaryStatus = Status.`valid`,
-                    adjustedSummary = false
-                  ),
+                  bsasSummaryModel,
                   Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"))
                 ))
               ),
               BusinessSourceSummary(
+                businessId = "000000000000210",
                 typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                businessId = None,
-                AccountingPeriod(
-                  startDate = "2018-10-11",
-                  endDate = "2019-10-10"
-                ),
+                accountingPeriodModel,
+                taxYear = "2019-20",
                 Seq(HateoasWrapper(
-                  BsasEntries(
-                    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
-                    requestedDateTime = "2019-10-14T11:33:27Z",
-                    summaryStatus = Status.`valid`,
-                    adjustedSummary = false
-                  ),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3"))
+                  bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"))
                 ))
               ),
               BusinessSourceSummary(
+                businessId = "000000000000210",
                 typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                businessId = None,
-                AccountingPeriod(
-                  startDate = "2018-10-11",
-                  endDate = "2019-10-10"
-                ),
+                accountingPeriodModel,
+                taxYear = "2019-20",
                 Seq(HateoasWrapper(
-                  BsasEntries(
-                    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-                    requestedDateTime = "2019-10-14T11:33:27Z",
-                    summaryStatus = Status.`valid`,
-                    adjustedSummary = false
-                  ),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2"))
+                  bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"))
                 ))
               )
             )
@@ -231,9 +163,6 @@ class ListBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -251,9 +180,6 @@ class ListBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -269,7 +195,6 @@ class ListBsasControllerSpec
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
       }
-
 
       "service errors occur" must {
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
@@ -288,16 +213,13 @@ class ListBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (TypeOfBusinessFormatError, BAD_REQUEST),
+          (BusinessIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
@@ -305,119 +227,5 @@ class ListBsasControllerSpec
         input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
-
-    "audit correctly with taxYear" when {
-      "the taxYear parameter is not provided (success)" in new Test {
-
-        val desTaxYear: DesTaxYear = DateUtils.getDesTaxYear(mockCurrentDateProvider.getCurrentDate())
-        val mtdTaxYear: String = DesTaxYear.fromDes(desTaxYear.toString)
-
-        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes()
-
-        MockListBsasRequestDataParser
-          .parse(rawData.copy(taxYear = None))
-          .returns(Right(requestData.copy(taxYear = desTaxYear)))
-
-        MockListBsasService
-          .listBsas(requestData.copy(taxYear = desTaxYear))
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-
-        val responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasEntries]]] = HateoasWrapper(
-          ListBsasResponse(
-            Seq(
-              BusinessSourceSummary(
-                typeOfBusiness = TypeOfBusiness.`self-employment`,
-                businessId = Some("000000000000210"),
-                AccountingPeriod(
-                  startDate = "2018-10-11",
-                  endDate = "2019-10-10"
-                ),
-                Seq(HateoasWrapper(
-                  BsasEntries(
-                    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-                    requestedDateTime = "2019-10-14T11:33:27Z",
-                    summaryStatus = Status.`valid`,
-                    adjustedSummary = false
-                  ),
-                  Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"))
-                ))
-              ),
-              BusinessSourceSummary(
-                typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                businessId = None,
-                AccountingPeriod(
-                  startDate = "2018-10-11",
-                  endDate = "2019-10-10"
-                ),
-                Seq(HateoasWrapper(
-                  BsasEntries(
-                    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
-                    requestedDateTime = "2019-10-14T11:33:27Z",
-                    summaryStatus = Status.`valid`,
-                    adjustedSummary = false
-                  ),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3"))
-                ))
-              ),
-              BusinessSourceSummary(
-                typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                businessId = None,
-                AccountingPeriod(
-                  startDate = "2018-10-11",
-                  endDate = "2019-10-10"
-                ),
-                Seq(HateoasWrapper(
-                  BsasEntries(
-                    bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-                    requestedDateTime = "2019-10-14T11:33:27Z",
-                    summaryStatus = Status.`valid`,
-                    adjustedSummary = false
-                  ),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2"))
-                ))
-              )
-            )
-          ),
-          Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino))
-        )
-
-        MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(nino, response))
-          .returns(responseWithHateoas)
-
-        val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, businessId)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once
-      }
-
-      "the taxYear parameter is not provided (failure)" in new Test {
-
-        val desTaxYear: DesTaxYear = DateUtils.getDesTaxYear(mockCurrentDateProvider.getCurrentDate())
-        val mtdTaxYear: String = DesTaxYear.fromDes(desTaxYear.toString)
-
-        MockListBsasRequestDataParser
-          .parse(rawData.copy(taxYear = None))
-          .returns(Right(requestData.copy(taxYear = desTaxYear)))
-
-        MockListBsasService
-          .listBsas(requestData.copy(taxYear = desTaxYear))
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
-
-        val result: Future[Result] = controller.listBsas(nino, None, typeOfBusiness, businessId)(fakeGetRequest)
-
-        status(result) shouldBe BAD_REQUEST
-        contentAsJson(result) shouldBe Json.toJson(NinoFormatError)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code))), None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once
-      }
-    }
-
   }
 }

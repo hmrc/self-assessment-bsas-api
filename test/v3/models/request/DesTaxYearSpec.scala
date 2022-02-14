@@ -17,7 +17,7 @@
 package v3.models.request
 
 import support.UnitSpec
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 
 class DesTaxYearSpec extends UnitSpec {
 
@@ -27,13 +27,13 @@ class DesTaxYearSpec extends UnitSpec {
   "DesTaxYear" when {
     "toString is called" should {
       "return the value instead of a String representation of the case class" in {
-        DesTaxYear(desValue).toString shouldBe desValue
+        DownstreamTaxYear(desValue).toString shouldBe desValue
       }
     }
 
     "fromMtd is called" should {
       "return the DES representation of the tax year" in {
-        DesTaxYear.fromMtd(mtdValue) shouldBe DesTaxYear(desValue)
+        DownstreamTaxYear.fromMtd(mtdValue) shouldBe DownstreamTaxYear(desValue)
       }
     }
   }
