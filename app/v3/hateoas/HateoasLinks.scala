@@ -37,7 +37,7 @@ trait HateoasLinks {
 
   //L3
   def getUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String): Link =
-    Link(href = bsasBasUri(appConfig, nino) + s"/property/$calcId", method = GET, rel = SELF)
+    Link(href = bsasBasUri(appConfig, nino) + s"/uk-property/$calcId", method = GET, rel = SELF)
 
   //L4
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, calcId: String): Link =
@@ -56,9 +56,9 @@ trait HateoasLinks {
     )
 
   //L7
-  def adjustPropertyBsas(appConfig: AppConfig, nino: String, calcId: String): Link =
+  def adjustUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String): Link =
     Link(
-      href = bsasBasUri(appConfig, nino) + s"/property/$calcId/adjust",
+      href = bsasBasUri(appConfig, nino) + s"/uk-property/$calcId/adjust",
       method = POST,
       rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS
     )

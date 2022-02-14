@@ -301,7 +301,7 @@ trait ListBsasFixture {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -325,7 +325,7 @@ trait ListBsasFixture {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
       |              "method": "GET",
       |              "rel": "self"
       |            }

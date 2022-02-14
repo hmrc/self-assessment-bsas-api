@@ -254,7 +254,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |{
        |  "links":[
        |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$calcId",
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calcId",
        |      "rel":"self",
        |      "method":"GET"
        |    }
