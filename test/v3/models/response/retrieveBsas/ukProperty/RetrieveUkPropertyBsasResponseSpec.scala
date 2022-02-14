@@ -44,8 +44,8 @@ class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidato
         HateoasWrapper(
           retrieveBsasResponseFhlModel,
           Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust", POST, "submit-uk-property-accounting-adjustments")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId", GET, "self"),
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust", POST, "submit-uk-property-accounting-adjustments")
           )
         )
     }
