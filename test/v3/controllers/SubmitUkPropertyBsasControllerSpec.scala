@@ -61,7 +61,7 @@ class SubmitUkPropertyBsasControllerSpec
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId",
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$bsasId",
       method = GET,
       rel = "self"
     )

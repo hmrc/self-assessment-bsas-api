@@ -36,7 +36,7 @@ class SubmitUkPropertyBsasHateoasDataSpec extends UnitSpec {
       hateoasFactory.wrap((), SubmitUkPropertyBsasHateoasData(nino, calcId)) shouldBe
         HateoasWrapper((),
                        Seq(
-                         Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$calcId", GET, "self")
+                         Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calcId", GET, "self")
                        ))
     }
   }

@@ -2,9 +2,9 @@ GET         /:nino                                        v3.controllers.ListBsa
 
 POST        /:nino/trigger                                v3.controllers.TriggerBsasController.triggerBsas(nino: String)
 
-GET         /:nino/property/:calculationId                v3.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String)
+GET         /:nino/uk-property/:calculationId                v3.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String)
 
-POST        /:nino/property/:bsasId/adjust                v3.controllers.SubmitUkPropertyBsasController.submitUkPropertyBsas(nino: String, bsasId: String)
+POST        /:nino/uk-property/:bsasId/adjust                v3.controllers.SubmitUkPropertyBsasController.submitUkPropertyBsas(nino: String, bsasId: String)
 
 GET         /:nino/self-employment/:calculationId         v3.controllers.RetrieveSelfEmploymentBsasController.retrieve(nino:String, calculationId: String)
 

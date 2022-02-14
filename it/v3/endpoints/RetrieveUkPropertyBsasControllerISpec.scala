@@ -33,7 +33,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val nino          = "AA123456B"
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-    def uri: String = s"/$nino/property/$calculationId"
+    def uri: String = s"/$nino/uk-property/$calculationId"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
