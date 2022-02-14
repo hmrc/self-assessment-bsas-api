@@ -553,11 +553,11 @@ object RetrieveUkPropertyBsasFixtures {
       |{
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId",
       |      "method": "GET",
       |      "rel": "self"
       |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
       |      "method": "POST",
       |      "rel": "submit-uk-property-accounting-adjustments"
       |    }
@@ -570,11 +570,11 @@ object RetrieveUkPropertyBsasFixtures {
       |{
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId",
       |      "method": "GET",
       |      "rel": "self"
       |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$calculationId/adjust",
       |      "method": "POST",
       |      "rel": "submit-uk-property-accounting-adjustments"
       |    }

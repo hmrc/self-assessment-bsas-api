@@ -80,7 +80,7 @@ object TriggerBsasRequestBodyFixtures {
        |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
        |  "links":[
        |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
        |      "rel":"self",
        |      "method":"GET"
        |    }

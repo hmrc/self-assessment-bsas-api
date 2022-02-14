@@ -59,7 +59,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
   "Links Factory" should {
     val nino = "someNino"
     val selfEmployment = "self-employment"
-    val ukProperty = "uk-property"
+    val ukProperty = "property"
     val foreignProperty = "foreign-property"
     val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 

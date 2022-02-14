@@ -77,8 +77,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
       List(
         ("self-employment", "self-employment"),
-        ("uk-property-fhl", "uk-property"),
-        ("uk-property-non-fhl", "uk-property"),
+        ("uk-property-fhl", "property"),
+        ("uk-property-non-fhl", "property"),
         ("foreign-property-fhl-eea", "foreign-property"),
         ("foreign-property", "foreign-property"),
       ).foreach {

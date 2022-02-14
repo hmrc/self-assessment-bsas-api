@@ -90,7 +90,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$bsasId", GET, "self")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }
@@ -99,7 +99,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
         HateoasWrapper(
           triggerBsasResponse,
           Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$bsasId", GET, "self")
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", GET, "self")
           )
         )
     }

@@ -63,7 +63,7 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks {
 
       Seq(
         getUkPropertyBsas(appConfig, nino, calculationId),
-        adjustUkPropertyBsas(appConfig, nino, calculationId)
+        adjustPropertyBsas(appConfig, nino, calculationId)
       )
     }
   }
