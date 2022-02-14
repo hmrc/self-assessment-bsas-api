@@ -27,8 +27,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     parameterFormatValidation,
     bodyFormatValidation,
     incorrectOrEmptyBodyValidation,
-    adjustmentFieldValidation,
-    bothExpensesValidation
+    adjustmentFieldValidation
   )
 
   private def parameterFormatValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
@@ -216,21 +215,6 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
         path = "/additions/businessEntertainmentCostsDisallowable",
       )
     ).flatten
-  }
-
-  private def bothExpensesValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
-
-    List(
-      if (model.expenses.exists(_.isBothSupplied)
-        || (model.expenses.exists(x => x.consolidatedExpenses.isDefined)
-        && model.additions.exists(x => !x.isEmpty)
-        )) {
-        List(RuleBothExpensesError)
-      } else {
-        NoValidationErrors
-      }
-    )
   }
 
   override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)

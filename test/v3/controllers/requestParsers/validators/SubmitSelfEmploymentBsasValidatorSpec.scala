@@ -111,18 +111,6 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
       }
     }
 
-    "return RuleBothExpensesError" when {
-      "both expenses are present" in {
-        validator.validate(
-          SubmitSelfEmploymentBsasRawData(
-            nino,
-            calculationId,
-            AnyContentAsJson(mtdRequestWithBothExpenses)
-          )) shouldBe
-          List(RuleBothExpensesError)
-      }
-    }
-
     "return ValueFormatError" when {
       "single fields are invalid" when {
         Seq(
