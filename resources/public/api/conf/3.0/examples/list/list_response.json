@@ -54,7 +54,7 @@
           "adjustedSummary": false,
           "links": [
             {
-              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/56f0a4fe-cfa7-4a21-8aa8-6c8f4642b792",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/uk-property/56f0a4fe-cfa7-4a21-8aa8-6c8f4642b792",
               "rel": "self",
               "method": "GET"
             }
@@ -68,7 +68,7 @@
           "adjustedDateTime": "2020-04-11T13:03:17Z",
           "links": [
             {
-              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/property/7f1fd081-3f59-4fd6-9b1c-c90521e0f7a8",
+              "href": "/individuals/self-assessment/adjustable-summary/AA123456A/uk-property/7f1fd081-3f59-4fd6-9b1c-c90521e0f7a8",
               "rel": "self",
               "method": "GET"
             }
