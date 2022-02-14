@@ -56,7 +56,7 @@ trait HateoasLinks {
     )
 
   //L7
-  def adjustPropertyBsas(appConfig: AppConfig, nino: String, calcId: String): Link =
+  def adjustUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String): Link =
     Link(
       href = bsasBasUri(appConfig, nino) + s"/uk-property/$calcId/adjust",
       method = POST,
