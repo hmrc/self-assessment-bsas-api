@@ -20,6 +20,7 @@ import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 import v3.models.hateoas.{HateoasData, Link}
 
 case class RetrieveSelfEmploymentBsasResponse(
@@ -28,7 +29,9 @@ case class RetrieveSelfEmploymentBsasResponse(
     adjustableSummaryCalculation: AdjustableSummaryCalculation,
     adjustments: Option[Adjustments],
     adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
-)
+) extends HasTypeOfBusiness {
+  override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
+}
 
 object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
 

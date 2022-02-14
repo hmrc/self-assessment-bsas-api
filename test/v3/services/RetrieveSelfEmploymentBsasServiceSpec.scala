@@ -26,6 +26,7 @@ import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.retrieveBsasResponseModel
 import v3.models.domain.TypeOfBusiness
+import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 
@@ -34,7 +35,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = RetrieveSelfEmploymentBsasRequestData(nino, id)
+  val request: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(nino, id)
 
   trait Test extends MockRetrieveSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -53,12 +54,19 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
       }
     }
 
-    "return an error response" when {
-      "des return success response with invalid type of business" in new Test {
-        MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseInvalidTypeOfBusinessModel(TypeOfBusiness.`uk-property-fhl`)))))
+    "return error response" when {
+      "downstream returns a success response with invalid type of business" should {
+        import TypeOfBusiness._
+        Seq(`uk-property-fhl`, `uk-property-non-fhl`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
+          s"return an error for $typeOfBusiness" in new Test {
+            val response: RetrieveSelfEmploymentBsasResponse = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
 
-        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotSelfEmployment))
+            MockRetrieveSelfEmploymentBsasConnector
+              .retrieveSelfEmploymentBsas(request)
+              .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+            await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
+          })
       }
 
       def serviceError(desErrorCode: String, error: MtdError): Unit =

@@ -19,12 +19,8 @@ package v3.support
 import support.UnitSpec
 import utils.Logging
 import v3.controllers.EndpointLogContext
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{retrieveBsasResponseInvalidTypeOfBusinessModel => retrieveSEBsasResponseInvalidTypeOfBusinessModel}
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{retrieveBsasResponseInvalidTypeOfBusinessModel => retrieveUKPropertyBsasResponseInvalidTypeOfBusinessModel}
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
-import v3.models.response.retrieveBsas
 
 import java.time.LocalDate
 
@@ -105,73 +101,4 @@ class DesResponseMappingSupportSpec extends UnitSpec {
       }
     }
   }
-
-  "validateRetrieveSelfEmploymentBsasSuccessResponse" should {
-    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse] =
-      ResponseWrapper(
-        correlationId = "",
-        responseData = retrieveSEBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
-      )
-    "return Left" when {
-      List(
-        TypeOfBusiness.`uk-property-fhl`,
-        TypeOfBusiness.`uk-property-non-fhl`,
-        TypeOfBusiness.`foreign-property`,
-        TypeOfBusiness.`foreign-property-fhl-eea`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveSelfEmploymentBsasSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper("", RuleNotSelfEmployment, None))
-          }
-        }
-      }
-    }
-    "return Right" when {
-      List(TypeOfBusiness.`self-employment`).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveSelfEmploymentBsasSuccessResponse(input) shouldBe {
-            Right(input)
-          }
-        }
-      }
-    }
-  }
-
-  "validateRetrieveUkPropertyBsasSuccessResponse" should {
-    def generateResponseWrapper(typeOfBusiness: TypeOfBusiness): ResponseWrapper[retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse] =
-      ResponseWrapper(
-        correlationId = "",
-        responseData = retrieveUKPropertyBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
-      )
-    "return Left" when {
-      List(
-        TypeOfBusiness.`self-employment`,
-        TypeOfBusiness.`foreign-property`,
-        TypeOfBusiness.`foreign-property-fhl-eea`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveUkPropertyBsasSuccessResponse(input) shouldBe {
-            Left(ErrorWrapper("", RuleNotUkProperty, None))
-          }
-        }
-      }
-    }
-    "return Right" when {
-      List(
-        TypeOfBusiness.`uk-property-fhl`,
-        TypeOfBusiness.`uk-property-non-fhl`
-      ).foreach { typeOfBusiness =>
-        s"provided a model with $typeOfBusiness" in {
-          val input = generateResponseWrapper(typeOfBusiness)
-          mapping.validateRetrieveUkPropertyBsasSuccessResponse(input) shouldBe {
-            Right(input)
-          }
-        }
-      }
-    }
-  }
-
 }

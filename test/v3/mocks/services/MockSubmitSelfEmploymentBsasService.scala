@@ -23,7 +23,6 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors.ErrorWrapper
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.models.response.SubmitSelfEmploymentBsasResponse
 import v3.services.SubmitSelfEmploymentBsasService
 
 import scala.concurrent.{ExecutionContext, Future}

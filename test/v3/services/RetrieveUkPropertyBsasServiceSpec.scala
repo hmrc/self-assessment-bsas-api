@@ -25,6 +25,7 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
@@ -33,7 +34,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request = RetrieveUkPropertyBsasRequestData(nino, id)
+  val request: RetrieveUkPropertyBsasRequestData = RetrieveUkPropertyBsasRequestData(nino, id)
 
   trait Test extends MockRetrieveUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -54,16 +55,17 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
     }
 
     "return error response" when {
-
-      "des return success response with invalid type of business" should {
-        Seq(TypeOfBusiness.`self-employment`, TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).foreach(typeOfBusiness =>
+      "downstream returns a success response with invalid type of business" should {
+        import TypeOfBusiness._
+        Seq(`self-employment`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
-            val response = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
+            val response: RetrieveUkPropertyBsasResponse = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
+
             MockRetrievePropertyBsasConnector
               .retrievePropertyBsas(request)
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotUkProperty))
+            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
         })
       }
 

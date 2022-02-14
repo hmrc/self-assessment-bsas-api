@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v3.connectors.RetrieveUkPropertyBsasConnector
 import v3.controllers.EndpointLogContext
+import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
@@ -32,7 +33,12 @@ import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector)
+    extends BaseRetrieveBsasService
+    with DesResponseMappingSupport
+    with Logging {
+
+  protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`)
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
       implicit hc: HeaderCarrier,
@@ -42,7 +48,7 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveUkPropertyBsasSuccessResponse(desResponseWrapper))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
 
     } yield mtdResponseWrapper
 
@@ -51,12 +57,12 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
-    "INVALID_CORRELATIONID" -> DownstreamError,
-    "INVALID_RETURN" -> DownstreamError,
-    "UNPROCESSABLE_ENTITY" -> DownstreamError,
-    "NO_DATA_FOUND" -> NotFoundError,
-    "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError
+    "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
+    "INVALID_CORRELATIONID"     -> DownstreamError,
+    "INVALID_RETURN"            -> DownstreamError,
+    "UNPROCESSABLE_ENTITY"      -> DownstreamError,
+    "NO_DATA_FOUND"             -> NotFoundError,
+    "SERVER_ERROR"              -> DownstreamError,
+    "SERVICE_UNAVAILABLE"       -> DownstreamError
   )
 }

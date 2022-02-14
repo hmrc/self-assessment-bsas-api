@@ -103,7 +103,7 @@ object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCO
 
 object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The supplied accounting period does not exist")
 
-object RuleTypeOfBusinessIncorrectError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The submission is for a different type of business")
+object RuleTypeOfBusinessIncorrectError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The calculation ID supplied relates to a different type of business")
 
 object RuleSummaryStatusInvalid extends MtdError( "RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary")
 
@@ -122,14 +122,8 @@ object RulePropertyIncomeAllowanceClaimed
 
 object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An adjusted summary calculation does not exist")
 
-object RuleNotUkProperty extends MtdError("RULE_NOT_UK_PROPERTY", "The adjustments requested are not for a UK property business")
-
-object RuleNotForeignProperty extends MtdError("RULE_NOT_FOREIGN_PROPERTY", "The summary calculation requested is not for a foreign property business")
-
+@deprecated("replace with RuleTypeOfBusinessIncorrectError")
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business")
-
-object RuleIncorrectPropertyAdjusted extends MtdError("RULE_INCORRECT_PROPERTY_ADJUSTED",
-  "An adjustment has been made to an incorrect property type. Re-trigger an adjustable summary for this BSAS ID to correct")
 
 object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "Adjustment value falls outside accepted range")
 

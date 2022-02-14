@@ -23,6 +23,10 @@ sealed trait TypeOfBusiness {
   def toIdentifierValue: String
 }
 
+trait HasTypeOfBusiness{
+  def typeOfBusiness: TypeOfBusiness
+}
+
 //noinspection ScalaStyle
 object TypeOfBusiness {
 

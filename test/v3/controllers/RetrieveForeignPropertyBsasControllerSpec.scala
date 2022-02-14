@@ -156,7 +156,7 @@ class RetrieveForeignPropertyBsasControllerSpec
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR),
-          (RuleNotForeignProperty, FORBIDDEN)
+          (RuleTypeOfBusinessIncorrectError, BAD_REQUEST)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -98,7 +98,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe BAD_REQUEST
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(RuleNotUkProperty)
+        response.json shouldBe Json.toJson(RuleTypeOfBusinessIncorrectError)
       }
     }
 

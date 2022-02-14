@@ -148,50 +148,6 @@ traits:
                 description: Not a valid ISO 3166-1 alpha-3 country code.
                 value:
                   code: RULE_COUNTRY_CODE
-  ruleNotSelfEmployment:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleNotSelfEmployment:
-                description: The calculation ID supplied does not relate to a self-employment business.
-                value:
-                  code: RULE_NOT_SELF_EMPLOYMENT
-  ruleNotUkProperty:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleNotUkProperty:
-                description: The BSAS ID supplied does not relate to a UK property business.
-                value:
-                  code: RULE_NOT_UK_PROPERTY
-  ruleNotUKPropertyCalId:
-      responses:
-        400:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                ruleNotForeignProperty:
-                  description: The calculation ID supplied does not relate to a UK property business.
-                  value:
-                    code: RULE_NOT_UK_PROPERTY
-  ruleNotForeignProperty:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleNotForeignProperty:
-                description: The Calculation ID supplied does not relate to a foreign property business.
-                value:
-                  code: RULE_NOT_FOREIGN_PROPERTY
   ruleSelfEmploymentId:
     responses:
       400:
@@ -247,17 +203,6 @@ traits:
                 description: The format of the supplied calculation ID is invalid.
                 value:
                   code: FORMAT_CALCULATION_ID
-  ruleTypeOfBusinessIncorrect:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleTypeOfBusinessIncorrect:
-                description:  The calculation ID supplied does not relate to a self-employment business.
-                value:
-                  code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleTypeOfBusinessIncorrectSE:
     responses:
       400:
