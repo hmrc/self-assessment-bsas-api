@@ -18,4 +18,4 @@ package v3.models.request.retrieveBsas.foreignProperty
 
 import v3.models.request.RawData
 
-case class RetrieveForeignPropertyRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
+case class RetrieveForeignPropertyBsasRawData(nino: String, calculationId: String) extends RawData
