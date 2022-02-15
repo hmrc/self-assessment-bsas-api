@@ -16,8 +16,7 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, OWrites, Reads}
 
 
 case class CountryLevelDetail(countryCode: Option[String],
@@ -36,21 +35,7 @@ case class CountryLevelDetail(countryCode: Option[String],
                              )
 
 object CountryLevelDetail {
-  implicit val reads: Reads[CountryLevelDetail] = (
-    (JsPath \ "countryCode").readNullable[String] and
-      (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[Income] and
-      (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[Expenses] and
-      (JsPath \ "netProfit").readNullable[BigDecimal] and
-      (JsPath \ "netLoss").readNullable[BigDecimal] and
-      (JsPath \ "totalAdditions").readNullable[BigDecimal] and
-      (JsPath \ "additions").readNullable[Additions] and
-      (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[Deductions] and
-      (JsPath \ "taxableProfit").readNullable[BigInt] and
-      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigInt]
-    ) (CountryLevelDetail.apply _)
+  implicit val reads: Reads[CountryLevelDetail] = Json.reads[CountryLevelDetail]
 
   implicit val writes: OWrites[CountryLevelDetail] = Json.writes[CountryLevelDetail]
 }
