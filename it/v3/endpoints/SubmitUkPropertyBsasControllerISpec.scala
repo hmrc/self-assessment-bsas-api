@@ -45,7 +45,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/property/$bsasId/adjust"
+    def uri: String = s"/$nino/uk-property/$bsasId/adjust"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
