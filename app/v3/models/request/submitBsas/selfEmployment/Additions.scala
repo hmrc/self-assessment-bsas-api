@@ -34,11 +34,6 @@ case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
                      advertisingCostsDisallowable: Option[BigDecimal],
                      businessEntertainmentCostsDisallowable: Option[BigDecimal]) {
 
-  def isEmpty: Boolean =
-    Additions.unapply(this).forall {
-      case (None, None, None, None, None, None, None, None, None, None, None, None, None, None, None) => true
-      case _                                                                                          => false
-    }
 }
 
 object Additions {

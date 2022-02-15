@@ -54,8 +54,6 @@ case class Expenses(costOfGoodsAllowable: Option[BigDecimal],
 
   def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
 
-  def isEmpty: Boolean = isNonConsolidatedExpensesEmpty && isConsolidatedExpensesEmpty
-
   def isBothSupplied: Boolean = !isNonConsolidatedExpensesEmpty && !isConsolidatedExpensesEmpty
 }
 

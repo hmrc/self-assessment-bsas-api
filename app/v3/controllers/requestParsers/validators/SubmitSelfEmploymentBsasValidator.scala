@@ -16,7 +16,6 @@
 
 package v3.controllers.requestParsers.validators
 
-import v3.controllers.requestParsers.validators.validations.NoValidationErrors
 import v3.controllers.requestParsers.validators.validations._
 import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment._
@@ -26,7 +25,6 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private val validationSet = List(
     parameterFormatValidation,
     bodyFormatValidation,
-//    incorrectOrEmptyBodyValidation,
     adjustmentFieldValidation,
     bothExpensesSuppliedValidation
   )
@@ -45,17 +43,6 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
           JsonFormatValidation.validateAndCheckNonEmpty[SubmitSelfEmploymentBsasRequestBody](data.body.json)
         )))
   }
-
-//  private def incorrectOrEmptyBodyValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-//    val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
-//    List(
-//      if (model.isIncorrectOrEmptyBodyError) {
-//        List(RuleIncorrectOrEmptyBodyError)
-//      } else {
-//        NoValidationErrors
-//      }
-//    )
-//  }
 
   private def adjustmentFieldValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
