@@ -32,7 +32,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val nino = "AA123456B"
     val adjustedStatus: Option[String] = Some("true")
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "3")
 
     def uri: String = s"/$nino/foreign-property/$bsasId"
 
@@ -42,13 +41,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def request: WSRequest = {
 
-      val queryParams = Seq("adjustedStatus" -> adjustedStatus)
-        .collect {
-          case (k, Some(v)) => (k, v)
-        }
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
   }
@@ -64,7 +58,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponse)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desRetrieveBsasResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -83,7 +77,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponseWithInvalidTypeOfBusiness)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desRetrieveBsasResponseWithInvalidTypeOfBusiness)
         }
 
         val response: WSResponse = await(request.get)
@@ -121,7 +115,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       val input = Seq(
         ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("true"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("true"), BAD_REQUEST, BsasIdFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("test"), BAD_REQUEST, AdjustedStatusFormatError)
+//        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("test"), BAD_REQUEST, AdjustedStatusFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
@@ -156,7 +150,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
+//        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),

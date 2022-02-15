@@ -171,7 +171,7 @@ class SubmitForeignPropertyBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (BsasIdFormatError, BAD_REQUEST),
+//          (BsasIdFormatError, BAD_REQUEST),
           (FormatAdjustmentValueError, BAD_REQUEST),
           (RuleAdjustmentRangeInvalid, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
