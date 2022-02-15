@@ -36,11 +36,11 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
     correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
     val nino = request.nino.nino
-    val bsasId = request.bsasId
+    val calcId = request.bsasId
 
 
     get(
-      DownstreamUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId")
+      DownstreamUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
     )
   }
 }
