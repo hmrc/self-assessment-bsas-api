@@ -25,10 +25,10 @@ import v3.models.request.submitBsas.selfEmployment._
 import v3.models.utils.JsonErrorValidators
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
-  val validator = new SubmitSelfEmploymentBsasValidator()
 
+  val validator     = new SubmitSelfEmploymentBsasValidator()
   val calculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val nino          = "AA123456A"
 
   "validator" should {
     "return no errors" when {
@@ -61,15 +61,52 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
 
     "return RuleIncorrectOrEmptyBodyError" when {
       "an empty body is submitted" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino = nino, calculationId = calculationId, AnyContentAsJson(Json.obj()))) shouldBe List(
+        validator.validate(
+          SubmitSelfEmploymentBsasRawData(
+            nino = nino,
+            calculationId = calculationId,
+            AnyContentAsJson(Json.obj())
+          )) shouldBe List(
           RuleIncorrectOrEmptyBodyError)
+      }
+
+      "an object/array is empty or mandatory field is missing" when {
+
+        Seq(
+          "/income",
+          "/income/turnover",
+          "/income/other"
+        ).foreach(path => testWith(AnyContentAsJson(mtdRequest.replaceWithEmptyObject(path)), path))
+
+        Seq(
+          "/expenses",
+          "/expenses/costOfGoodsAllowable",
+          "/expenses/paymentsToSubcontractorsAllowable",
+          "/expenses/wagesAndStaffCostsAllowable"
+        ).foreach(path => testWith(AnyContentAsJson(mtdRequest.replaceWithEmptyObject(path)), path))
+
+        Seq(
+          "/additions",
+          "/additions/costOfGoodsDisallowable",
+          "/additions/paymentsToSubcontractorsDisallowable"
+        ).foreach(path => testWith(AnyContentAsJson(mtdRequest.replaceWithEmptyObject(path)), path))
+
+        def testWith(body: AnyContentAsJson, expectedPath: String): Unit =
+          s"for $expectedPath" in {
+            validator.validate(
+              SubmitSelfEmploymentBsasRawData(
+                nino,
+                calculationId,
+                body
+              )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(expectedPath))))
+          }
       }
 
       "income object is empty" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          AnyContentAsJson(Json.obj("income" -> JsObject.empty)))
+          AnyContentAsJson(Json.obj("/income" -> JsObject.empty)))
         ) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
@@ -77,7 +114,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          AnyContentAsJson(Json.obj("expenses" -> JsObject.empty)))
+          AnyContentAsJson(Json.obj("/expenses" -> JsObject.empty)))
         ) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
@@ -85,7 +122,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          AnyContentAsJson(Json.obj("additions" -> JsObject.empty)))
+          AnyContentAsJson(Json.obj("/additions" -> JsObject.empty)))
         ) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
@@ -93,12 +130,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          body = AnyContentAsJson(Json.parse(
-            """{
-              |  "income": {}
-              |}
-              |""".stripMargin
-          ))
+          AnyContentAsJson(Json.obj("wagesAndStaffCostsDisallowable" -> JsObject.empty))
         )) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
@@ -147,7 +179,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
           "/additions/otherExpensesDisallowable",
           "/additions/advertisingCostsDisallowable",
           "/additions/businessEntertainmentCostsDisallowable"
-        ).foreach(path => testWith(mtdRequestWithBothExpenses.update(path, _), path))
+        ).foreach(path => testWith(mtdRequest.update(path, _), path))
       }
 
       "consolidated expenses is invalid" when {
@@ -197,6 +229,18 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
         "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
 
         "value is zero" in doTest(JsNumber(0))
+      }
+    }
+
+    "return RuleBothExpensesSuppliedError" when {
+      "consolidated and separate expenses provided" in {
+        validator.validate(
+          SubmitSelfEmploymentBsasRawData(
+            nino,
+            calculationId,
+            body = AnyContentAsJson(mtdRequestWithBothExpenses)
+          )) shouldBe
+          List(RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))))
       }
     }
 
