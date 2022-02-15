@@ -89,10 +89,10 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
       "multiple validation errors occur" in new Test {
         MockValidator
           .validate(inputData)
-          .returns(List(NinoFormatError, BsasIdFormatError))
+          .returns(List(NinoFormatError, CalculationIdFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError))))
       }
     }
   }
