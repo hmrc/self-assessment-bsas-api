@@ -57,11 +57,11 @@ class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPro
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
   "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-  "INVALID_CORRELATIONID"     -> DownstreamError,
-  "INVALID_RETURN"            -> DownstreamError,
   "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-  "UNPROCESSABLE_ENTITY"      -> DownstreamError,
+  "INVALID_RETURN"            -> DownstreamError,
+  "INVALID_CORRELATIONID"     -> DownstreamError,
   "NO_DATA_FOUND"             -> NotFoundError,
+  "UNPROCESSABLE_ENTITY"      -> DownstreamError,
   "SERVER_ERROR"              -> DownstreamError,
   "SERVICE_UNAVAILABLE"       -> DownstreamError
   )

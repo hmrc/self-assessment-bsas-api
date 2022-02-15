@@ -19,7 +19,7 @@ package v3.services
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.connectors.MockRetrieveForeignPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
@@ -37,11 +37,11 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
 
   val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id, adjustedStatus)
 
-  val response: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
+  val response: RetrieveForeignPropertyBsasResponse = retrieveBsasResponseNonFhlModel
 
   trait Test extends MockRetrieveForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveUkPropertyBsasConnector", "retrieve")
+    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveForeignPropertyBSAS", "retrieve")
 
     val service = new RetrieveForeignPropertyBsasService(mockConnector)
   }
@@ -61,8 +61,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
         import TypeOfBusiness._
         Seq(`self-employment`, `uk-property-fhl`, `uk-property-non-fhl`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
-            val response: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel.copy(typeOfBusiness),
-              Some(bsasDetailModel))
+            val response: RetrieveForeignPropertyBsasResponse = retrieveBsasResponseNonFhlModelWith(typeOfBusiness)
 
             MockRetrieveForeignPropertyBsasConnector
               .retrieveForeignPropertyBsas(request)
@@ -82,14 +81,12 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
         }
 
       val input = Seq(
-
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("UNPROCESSABLE_ENTITY", DownstreamError),
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("INVALID_RETURN", DownstreamError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
+        ("INVALID_RETURN", DownstreamError),
+        ("INVALID_CORRELATIONID", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
+        ("UNPROCESSABLE_ENTITY", DownstreamError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )

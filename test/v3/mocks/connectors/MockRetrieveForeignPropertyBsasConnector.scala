@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package v3.connectors
+package v3.mocks.connectors
 
-import config.AppConfig
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import v3.connectors.{DownstreamOutcome, RetrieveForeignPropertyBsasConnector}
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
-import v3.connectors.httpparsers.StandardDesHttpParser._
 
-@Singleton
-class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+trait MockRetrieveForeignPropertyBsasConnector extends MockFactory {
 
-  def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
+  val mockConnector: RetrieveForeignPropertyBsasConnector = mock[RetrieveForeignPropertyBsasConnector]
 
-    val nino = request.nino.nino
-    val calcId = request.calculationId
+  object MockRetrieveForeignPropertyBsasConnector {
 
-    get(
-      DownstreamUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
-    )
+    def retrieveForeignPropertyBsas(
+        requestData: RetrieveForeignPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]]] = {
+      (mockConnector
+        .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
+    }
   }
 }

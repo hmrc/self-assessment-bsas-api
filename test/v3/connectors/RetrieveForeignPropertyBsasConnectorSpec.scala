@@ -22,38 +22,37 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
-  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
+  val nino: Nino = Nino("AA123456A")
+  val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: RetrieveForeignPropertyBsasConnector = new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnv returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns false
+    val ifsRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> "Bearer ifs-token")
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnv returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.ifsEnabled returns true
   }
 
-  "retrievePropertyBsas" should {
+  "retrieveForeignPropertyBsas" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+      val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))
 
       "a valid request with queryParams is supplied" in new Test {
-        val request = RetrieveForeignPropertyBsasRequestData(nino, bsasId, Some("01"))
+        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some("01"))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.get(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId",
           config = dummyDesHeaderCarrierConfig,
-          requiredHeaders = desRequestHeaders,
+          requiredHeaders = ifsRequestHeaders,
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
         ).returns(Future.successful(outcome))
 

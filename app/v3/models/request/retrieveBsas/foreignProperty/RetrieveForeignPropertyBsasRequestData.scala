@@ -18,4 +18,4 @@ package v3.models.request.retrieveBsas.foreignProperty
 
 import domain.Nino
 
-case class RetrieveForeignPropertyBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])
+case class RetrieveForeignPropertyBsasRequestData(nino: Nino, calculationId: String, adjustedStatus: Option[String])
