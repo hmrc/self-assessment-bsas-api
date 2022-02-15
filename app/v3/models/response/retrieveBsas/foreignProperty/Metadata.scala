@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import utils.DesTaxYear
+import utils.DownstreamTaxYear
 
 case class Metadata(calculationId: String,
                     requestedDateTime: String,
@@ -33,7 +33,7 @@ object Metadata {
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "adjustedDateTime").readNullable[String] and
       (JsPath \ "taxableEntityId").read[String] and
-      (JsPath \ "taxYear").read[Int].map(DesTaxYear.fromDesIntToString) and
+      (JsPath \ "taxYear").read[Int].map(DownstreamTaxYear.fromDownstreamIntToString) and
       (JsPath \ "status").read[String]) (Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
