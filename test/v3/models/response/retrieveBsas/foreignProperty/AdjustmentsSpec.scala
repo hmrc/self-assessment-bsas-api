@@ -16,28 +16,28 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import support.UnitSpec
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators{
+class AdjustmentsSpec extends UnitSpec with JsonErrorValidators{
 
   "reads" should {
-    "return a valid metadata model" when {
-      "a valid json with all fields are supplied" in {
-        metadataDesJson.as[Metadata] shouldBe metaDataModel
-      }
-
-      "a valid json with no adjustedSummary is supplied" in {
-        metadataDesJsonWithoutADT.as[Metadata] shouldBe metaDataModel.copy(adjustedDateTime = None)
+    "return a valid adjustments model" when {
+      "a valid json for fhlEea is supplied" in {
+        adjustmentsDesFhlEeaJson.as[Adjustments](Adjustments.reads) shouldBe adjustmentsFhlEeaModel
       }
     }
   }
 
   "writes" should {
-    "return a valid metadata json" when {
-      "a valid model is supplied" in {
-        metaDataModel.toJson shouldBe metadataMtdJson
+    "return a valid json" when {
+      "a valid fhlEea model is supplied" in {
+        adjustmentsFhlEeaModel.toJson shouldBe adjustmentsMtdFhlEeaJson
+      }
+
+      "a valid nonFhl model is supplied" in {
+        adjustmentsNonFhlModel.toJson shouldBe adjustmentsMtdNonFhlJson
       }
     }
   }

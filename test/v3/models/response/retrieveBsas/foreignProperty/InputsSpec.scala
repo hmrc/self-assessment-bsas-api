@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveBsas.ukProperty
+package v3.models.response.retrieveBsas.foreignProperty
 
 import support.UnitSpec
-import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v2.models.utils.JsonErrorValidators
+import v3.models.utils.JsonErrorValidators
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators{
+
+class InputsSpec extends UnitSpec with JsonErrorValidators{
 
   "reads" should {
-    "return a valid model" when {
-
+    "return a valid inputs model" when {
       "a valid json with all fields are supplied" in {
-        desRetrieveBsasResponse.as[Metadata] shouldBe metadataModel
+        inputsDesJson.as[Inputs] shouldBe inputsModel
       }
 
-      "a valid json with only adjustable summary fields are supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[Metadata] shouldBe metadataModelWithAdjustableSummary
+      "a valid json with no businessName is supplied" in {
+        inputsDesJsonWithoutBusinessName.as[Inputs] shouldBe inputsModel.copy(businessName = None)
       }
     }
   }
 
   "writes" should {
-    "return a valid json" when {
+    "return a valid metadata json" when {
       "a valid model is supplied" in {
-        metadataModel.toJson shouldBe mtdMetadataJson
+        inputsModel.toJson shouldBe inputsMtdJson
       }
     }
   }

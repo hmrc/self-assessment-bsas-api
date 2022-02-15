@@ -17,32 +17,24 @@
 package v3.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.DownstreamTaxYear
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v3.models.response.retrieveBsas.AccountingPeriod
 
-case class Metadata(typeOfBusiness: TypeOfBusiness,
-                    accountingPeriod: AccountingPeriod,
-                    taxYear: String,
+case class Metadata(calculationId: String,
                     requestedDateTime: String,
-                    bsasId: String,
-                    summaryStatus: String,
-                    adjustedSummary: Boolean)
+                    adjustedDateTime: Option[String],
+                    nino: String,
+                    taxYear: String,
+                    summaryStatus: String)
 
 object Metadata {
   implicit val reads: Reads[Metadata] = (
-    (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
-      JsPath.read[AccountingPeriod] and
-      (JsPath \ "metadata" \ "taxYear").read[Int].map(DownstreamTaxYear.fromDownstreamIntToString) and
-      (JsPath \ "metadata" \ "requestedDateTime").read[String] and
-      (JsPath \ "metadata" \ "calculationId").read[String] and
-      (JsPath \ "metadata" \ "status").read[String] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map{
-        case Some(_) => true
-        case _ => false
-      }
-    )(Metadata.apply _)
+    (JsPath \ "calculationId").read[String] and
+      (JsPath \ "requestedDateTime").read[String] and
+      (JsPath \ "adjustedDateTime").readNullable[String] and
+      (JsPath \ "taxableEntityId").read[String] and
+      (JsPath \ "taxYear").read[Int].map(DownstreamTaxYear.fromDownstreamIntToString) and
+      (JsPath \ "status").read[String]) (Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

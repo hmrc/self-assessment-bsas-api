@@ -16,50 +16,29 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import config.AppConfig
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
-import play.api.libs.json._
-import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v3.models.domain.{HasTypeOfBusiness, IncomeSourceType, TypeOfBusiness}
-import v3.models.hateoas.{HateoasData, Link}
 
-case class RetrieveForeignPropertyBsasResponse(metadata: Metadata, bsas: Option[BsasDetail])
-  extends HasTypeOfBusiness {
-  override def typeOfBusiness: TypeOfBusiness = metadata.typeOfBusiness
-}
+case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
+                                               inputs: Inputs,
+                                               adjustableSummaryCalculation: AdjustableSummaryCalculation,
+                                               adjustments: Option[Adjustments],
+                                               adjustedSummaryCalculation: Option[AdjustableSummaryCalculation])
 
-object RetrieveForeignPropertyBsasResponse extends HateoasLinks {
-
+object RetrieveForeignPropertyBsasResponse {
   implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (
-    JsPath.read[Metadata] and
-      (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`foreign-property-fhl-eea` => fhlBsasDetailReads
-        case TypeOfBusiness.`foreign-property` => nonFhlBsasDetailReads
-        case _ => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
-      }
-    )(RetrieveForeignPropertyBsasResponse.apply _)
-
-  private val fhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-    case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
-    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
-  }
-
-  private val nonFhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
-    case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
-    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
-  }
+    (JsPath \ "metadata").read[Metadata] and
+      (JsPath \ "inputs").read[Inputs] and
+      (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
+      (JsPath \ "adjustments")
+        .read[Seq[CountryLevelDetail]]
+        .map(s => Adjustments(Some(s), None, None))
+        .map(Option(_))
+        .orElse(
+          (JsPath \ "adjustments").readNullable[Adjustments]
+        ) and
+      (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustableSummaryCalculation]
+    ) (RetrieveForeignPropertyBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
-
-  implicit object RetrieveForeignPropertyBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
-    override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
-      Seq(
-        getForeignPropertyBsas(appConfig, data.nino, data.bsasId),
-        adjustForeignPropertyBsas(appConfig, data.nino, data.bsasId)
-      )
-    }
-  }
 }
-
-case class RetrieveForeignPropertyHateoasData(nino: String, bsasId: String) extends HateoasData

@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package v3.models.response.retrieveBsas.foreignProperty
+package v3.models.response.retrieveBsas.ukProperty
 
 import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
 import v3.models.utils.JsonErrorValidators
 
-class CountryLevelDetailSpec extends UnitSpec with JsonErrorValidators{
+class MetadataOldSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  "reads" should {
-    "return a valid countryLevelDetail model" when {
-      "a valid json with all fields are supplied" in {
-        countryLevelDetailDesJson.as[CountryLevelDetail] shouldBe countryLevelDetailModel
-      }
-    }
-  }
+  import Metadata._
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        countryLevelDetailModel.toJson shouldBe countryLevelDetailsMtdJson
-      }
-    }
-  }
+  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
+
 }
-

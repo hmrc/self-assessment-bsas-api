@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
-package v3.models.response.retrieveBsas.ukProperty
+package v3.models.response.retrieveBsas.foreignProperty
 
 import support.UnitSpec
-import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class IncomeSpec extends UnitSpec with JsonErrorValidators{
 
-  import Metadata._
+  "reads" should {
+    "return a valid income model" when {
+      "a valid json with all fields are supplied" in {
+        incomeDesJson.as[Income] shouldBe incomeModel
+      }
+    }
+  }
 
-  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
-
+  "writes" should {
+    "return a valid json" when {
+      "a valid model is supplied" in {
+        incomeModel.toJson shouldBe incomeMtdJson
+      }
+    }
+  }
 }
+

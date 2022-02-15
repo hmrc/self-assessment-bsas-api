@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators{
+class MetadataOldSpec extends UnitSpec with JsonErrorValidators{
 
   val nonFhlMtdJson = Json.parse(
     """{

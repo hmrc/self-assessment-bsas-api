@@ -16,83 +16,452 @@
 
 package v3.fixtures.foreignProperty
 
-import java.time.LocalDate
-
+import play.api.libs.json.Json
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
-import v3.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 
-  val nonFhlExpensesModel: ExpensesBreakdown = ExpensesBreakdown(
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    None
+  val metadataMtdJson = Json.parse(
+    """{
+      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "requestedDateTime": "2020-12-05T16:19:44Z",
+      |  "adjustedDateTime": "2020-12-05T16:19:44Z",
+      |  "nino": "AA999999A",
+      |  "taxYear": "2019-20",
+      |  "summaryStatus": "valid"
+      |  }""".stripMargin
   )
 
-  val fhlExpensesModel: ExpensesBreakdown = ExpensesBreakdown(
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    Some(100.49),
-    None,
-    None,
-    Some(100.49),
-    None
+  val metadataDesJson = Json.parse(
+    """{
+      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "requestedDateTime": "2020-12-05T16:19:44Z",
+      |  "adjustedDateTime": "2020-12-05T16:19:44Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2020,
+      |  "status": "valid"
+      |}""".stripMargin
   )
 
-  val nonFhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
+  val metadataDesJsonWithoutADT = Json.parse(
+    """{
+      |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |  "requestedDateTime": "2020-12-05T16:19:44Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2020,
+      |  "status": "valid"
+      |}""".stripMargin
+  )
 
-  val fhlIncomeModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), None, None)
+  val inputsMtdJson = Json.parse(
+    """{
+      |  "businessId": "000000000000210",
+      |  "typeOfBusiness": "foreign-property-fhl-eea",
+      |  "businessName": "Business Name",
+      |  "accountingPeriodStartDate": "2019-04-06",
+      |  "accountingPeriodEndDate": "2020-04-05",
+      |  "source": "MTD-SA",
+      |  "submissionPeriods": [
+      |   {
+      |     "submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |     "startDate": "2019-04-06",
+      |     "endDate": "2020-04-05",
+      |     "receivedDateTime": "2019-02-15T09:35:04.843Z"
+      |   }]
+      |}""".stripMargin
+  )
 
-  val total: TotalBsas = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val inputsDesJson = Json.parse(
+    """{
+      |  "incomeSourceId": "000000000000210",
+      |  "incomeSourceType": "03",
+      |  "incomeSourceName": "Business Name",
+      |  "accountingPeriodStartDate": "2019-04-06",
+      |  "accountingPeriodEndDate": "2020-04-05",
+      |  "source": "MTD-SA",
+      |  "submissionPeriods": [
+      |    {
+      |      "periodId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |      "startDate": "2019-04-06",
+      |      "endDate": "2020-04-05",
+      |      "receivedDateTime": "2019-02-15T09:35:04.843Z"
+      |    }
+      |  ]
+      |}""".stripMargin
+  )
 
-  val profit: Profit = Profit(Some(100.49), Some(100))
+  val inputsDesJsonWithoutBusinessName = Json.parse(
+    """{
+      |  "incomeSourceId": "000000000000210",
+      |  "incomeSourceType": "03",
+      |  "accountingPeriodStartDate": "2019-04-06",
+      |  "accountingPeriodEndDate": "2020-04-05",
+      |  "source": "MTD-SA",
+      |  "submissionPeriods": [
+      |    {
+      |      "periodId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |      "startDate": "2019-04-06",
+      |      "endDate": "2020-04-05",
+      |      "receivedDateTime": "2019-02-15T09:35:04.843Z"
+      |    }
+      |  ]
+      |}""".stripMargin
+  )
 
-  val loss: Loss = Loss(Some(100.49), Some(100))
+  val incomeMtdJson = Json.parse(
+    """{
+      |  "totalRentsReceived": 0.12,
+      |  "premiumsOfLeaseGrant": 0.12,
+      |  "otherPropertyIncome": 0.12
+      |}""".stripMargin
+  )
 
-  val nonFhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(nonFhlIncomeModel), Some(nonFhlExpensesModel))
+  val incomeDesJson = Json.parse(
+    """{
+      |  "rent": 0.12,
+      |  "premiumsOfLeaseGrant": 0.12,
+      |  "otherPropertyIncome": 0.12
+      |}""".stripMargin
+  )
 
-  val fhlCountryLevelDetail: CountryLevelDetail = CountryLevelDetail("FRA", total, Some(fhlIncomeModel), Some(fhlExpensesModel))
+  val expensesMtdJson = Json.parse(
+    """{
+      | "consolidatedExpenses": 0.12,
+      |  "premisesRunningCosts": 0.12,
+      |  "repairsAndMaintenance": 0.12,
+      |  "financialCosts": 0.12,
+      |  "professionalFees": 0.12,
+      |  "travelCosts": 0.12,
+      |  "costOfServices": 0.12,
+      |  "residentialFinancialCost": 0.12,
+      |  "broughtFwdResidentialFinancialCost": 0.12,
+      |  "other": 0.12
+      |}""".stripMargin
+  )
 
-  val nonFhlBsasDetailModel: BsasDetail =
-    BsasDetail(total, Some(profit), Some(loss), Some(nonFhlIncomeModel), Some(nonFhlExpensesModel), Some(Seq(nonFhlCountryLevelDetail)))
+  val expensesDesJson = Json.parse(
+    """{
+      | "consolidatedExpenses": 0.12,
+      |  "premisesRunningCosts": 0.12,
+      |  "repairsAndMaintenance": 0.12,
+      |  "financialCosts": 0.12,
+      |  "professionalFees": 0.12,
+      |  "travelCosts": 0.12,
+      |  "costOfServices": 0.12,
+      |  "residentialFinancialCost": 0.12,
+      |  "broughtFwdResidentialFinancialCost": 0.12,
+      |  "other": 0.12
+      |}""".stripMargin
+  )
 
-  val fhlBsasDetailModel: BsasDetail = BsasDetail(total, Some(profit), Some(loss), Some(fhlIncomeModel), Some(fhlExpensesModel), Some(Seq(fhlCountryLevelDetail)))
+  val deductionsMtdJson = Json.parse(
+    """{
+      |   "annualInvestmentAllowance": 0.12,
+      |   "costOfReplacingDomesticItems": 0.12,
+      |   "zeroEmissionGoods": 0.12,
+      |   "propertyAllowance": 0.12,
+      |   "otherCapitalAllowance": 0.12,
+      |   "electricChargePointAllowance": 0.12,
+      |   "structuredBuildingAllowance": 0.12,
+      |   "zeroEmissionsCarAllowance": 0.12
+      |}""".stripMargin
+  )
 
-  val nonFhlMetaDataModel: Metadata = Metadata(
-    TypeOfBusiness.`foreign-property`,
-    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2021-10-10")),
-    "2021-22",
-    "2019-10-14T11:33:27Z",
+  val deductionsDesJson = Json.parse(
+    """{
+      |   "annualInvestmentAllowance": 0.12,
+      |   "costOfReplacingDomesticItems": 0.12,
+      |   "zeroEmissionsGoodsVehicleAllowance": 0.12,
+      |   "propertyAllowance": 0.12,
+      |   "otherCapitalAllowance": 0.12,
+      |   "electricChargePointAllowance": 0.12,
+      |   "structuredBuildingAllowance": 0.12,
+      |   "zeroEmissionsCarAllowance": 0.12
+      |}""".stripMargin
+  )
+
+  val additionsMtdJson = Json.parse(
+    """{
+      |  "privateUseAdjustment": 0.12,
+      |  "balancingCharge": 0.12
+      |}""".stripMargin
+  )
+
+  val additionsDesJson = Json.parse(
+    """{
+      |  "privateUseAdjustment": 0.12,
+      |  "balancingCharge": 0.12
+      |}""".stripMargin
+  )
+
+  val countryLevelDetailsMtdJson = Json.parse(
+    s"""{
+      |  "countryCode": "CYM",
+      |  "totalIncome": 0.12,
+      |  "income": $incomeMtdJson,
+      |  "totalExpenses": 0.12,
+      |  "expenses": $expensesMtdJson,
+      |   "netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |   "totalAdditions": 0.12,
+      |   "additions": $additionsMtdJson,
+      |   "totalDeductions": 0.12,
+      |   "deductions": $deductionsMtdJson,
+      |    "taxableProfit": 1,
+      |    "adjustedIncomeTaxLoss": 1
+      |}""".stripMargin
+  )
+
+  val countryLevelDetailDesJson = Json.parse(
+    s"""{
+      |  "countryCode": "CYM",
+      |  "totalIncome": 0.12,
+      |  "income": $incomeDesJson,
+      |  "totalExpenses": 0.12,
+      |  "expenses": $expensesDesJson,
+      |   "netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |   "totalAdditions": 0.12,
+      |   "additions": $additionsDesJson,
+      |   "totalDeductions": 0.12,
+      |   "deductions": $deductionsDesJson,
+      |    "taxableProfit": 1,
+      |    "adjustedIncomeTaxLoss": 1
+      |}""".stripMargin
+  )
+
+  val adjustableSCMtdJson = Json.parse(
+    s"""{
+      |		"totalIncome": 0.12,
+      |		"income": $incomeMtdJson,
+      |		"totalExpenses": 0.12,
+      |		"expenses": $expensesMtdJson,
+      |		"netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |		"totalAdditions": 0.12,
+      |		"additions": $additionsMtdJson,
+      |		"totalDeductions": 0.12,
+      |		"deductions": $deductionsMtdJson,
+      |		"taxableProfit": 1,
+      |   "adjustedIncomeTaxLoss": 1,
+      |		"countryLevelDetail": [$countryLevelDetailsMtdJson]
+      |}""".stripMargin
+  )
+
+  val adjustableSCDesJson = Json.parse(
+    s"""{
+      |		"totalIncome": 0.12,
+      |		"income": $incomeDesJson,
+      |		"totalExpenses": 0.12,
+      |		"expenses": $expensesDesJson,
+      |		"netProfit": 0.12,
+      |   "netLoss": 0.12,
+      |		"totalAdditions": 0.12,
+      |		"additions": $additionsDesJson,
+      |		"totalDeductions": 0.12,
+      |		"deductions": $deductionsDesJson,
+      |		"taxableProfit": 1,
+      |   "adjustedIncomeTaxLoss": 1,
+      |		"countryLevelDetail": [$countryLevelDetailDesJson]
+      |}""".stripMargin
+  )
+
+  val adjustmentsMtdNonFhlJson = Json.parse(
+    s"""{
+      |	"countryLevelDetail": [{
+      |		"countryCode": "CYM",
+      |		"income": $incomeMtdJson,
+      |		"expenses": $expensesMtdJson
+      |	}]
+      |}""".stripMargin
+  )
+
+  val adjustmentsDesNonFhlJson = Json.parse(
+    s"""{
+       |  "countryCode": "CYM",
+       |	"income": $incomeDesJson,
+       |	"expenses": $expensesDesJson
+       |}""".stripMargin
+  )
+
+  val adjustmentsMtdFhlEeaJson = Json.parse(
+    s"""{
+      |		"income": $incomeMtdJson,
+      |		"expenses": $expensesMtdJson
+      |}""".stripMargin
+  )
+
+  val adjustmentsDesFhlEeaJson = Json.parse(
+    s"""{
+      |		"income": $incomeDesJson,
+      |		"expenses": $expensesDesJson
+      |}""".stripMargin
+  )
+
+
+  val metaDataModel: Metadata = Metadata(
     "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-    "valid",
-    true
+    "2020-12-05T16:19:44Z",
+    Some("2020-12-05T16:19:44Z"),
+    "AA999999A",
+    "2019-20",
+    "valid"
   )
 
-  val fhlMetaDataModel: Metadata = Metadata(
+  val inputsModel: Inputs = Inputs(
+    "000000000000210",
     TypeOfBusiness.`foreign-property-fhl-eea`,
-    AccountingPeriod(LocalDate.parse("2020-10-11"), LocalDate.parse("2021-10-10")),
-    "2021-22",
-    "2019-10-14T11:33:27Z",
-    "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-    "valid",
-    true
+    Some("Business Name"),
+    "2019-04-06",
+    "2020-04-05",
+    "MTD-SA",
+    Seq(SubmissionPeriods("617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4","2019-04-06","2020-04-05","2019-02-15T09:35:04.843Z"))
   )
 
-  val retrieveForeignPropertyBsasResponseModel: RetrieveForeignPropertyBsasResponse =
-    RetrieveForeignPropertyBsasResponse(nonFhlMetaDataModel, Some(nonFhlBsasDetailModel))
+  val submissionPeriodModel: SubmissionPeriods = SubmissionPeriods(
+    "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+    "2019-04-06",
+    "2020-04-05",
+    "2019-02-15T09:35:04.843Z"
+  )
 
-  val retrieveForeignPropertyFhlEeaBsasResponseModel: RetrieveForeignPropertyBsasResponse =
-    RetrieveForeignPropertyBsasResponse(fhlMetaDataModel.copy(typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`), Some(fhlBsasDetailModel))
+  val retrieveForeignPropertyBsasMtdJsonNonFhl = Json.parse(
+    s"""{
+       |	"metadata": $metadataMtdJson,
+       |	"inputs": $inputsMtdJson,
+       |	"adjustableSummaryCalculation": $adjustableSCMtdJson,
+       |	"adjustments": $adjustmentsMtdNonFhlJson,
+       |	"adjustedSummaryCalculation": $adjustableSCMtdJson
+       |}""".stripMargin
+  )
 
+  val retrieveForeignPropertyBsasMtdJsonFhlEea = Json.parse(
+    s"""{
+      |	"metadata": $metadataMtdJson,
+      |	"inputs": $inputsMtdJson,
+      |	"adjustableSummaryCalculation": $adjustableSCMtdJson,
+      |	"adjustments": $adjustmentsMtdFhlEeaJson,
+      |	"adjustedSummaryCalculation": $adjustableSCMtdJson
+      |}""".stripMargin
+  )
+
+  val retrieveForeignPropertyBsasDesJsonNonFhl = Json.parse(
+    s"""{
+      |	"metadata": $metadataDesJson,
+      |	"inputs": $inputsDesJson,
+      |	"adjustableSummaryCalculation": $adjustableSCDesJson,
+      |	"adjustments": [$adjustmentsDesNonFhlJson],
+      |	"adjustedSummaryCalculation": $adjustableSCDesJson
+      |}""".stripMargin
+  )
+
+  val retrieveForeignPropertyBsasDesJsonFhlEea = Json.parse(
+    s"""{
+       |	"metadata": $metadataDesJson,
+       |	"inputs": $inputsDesJson,
+       |	"adjustableSummaryCalculation": $adjustableSCDesJson,
+       |	"adjustments": $adjustmentsDesFhlEeaJson,
+       |	"adjustedSummaryCalculation": $adjustableSCDesJson
+       |}""".stripMargin
+  )
+
+  val incomeModel = Income(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val expensesModel = Expenses(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val additionsModel = Additions(
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val deductionsModel = Deductions(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val countryLevelDetailModel = CountryLevelDetail(
+    Some("CYM"),
+    Some(0.12),
+    Some(incomeModel),
+    Some(0.12),
+    Some(expensesModel),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(additionsModel),
+    Some(0.12),
+    Some(deductionsModel),
+    Some(1),
+    Some(1)
+  )
+
+  val adjustableSummaryCalculationModel = AdjustableSummaryCalculation(
+    Some(0.12),
+    Some(incomeModel),
+    Some(0.12),
+    Some(expensesModel),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(additionsModel),
+    Some(0.12),
+    Some(deductionsModel),
+    Some(1),
+    Some(1),
+    Some(Seq(countryLevelDetailModel)))
+
+  val adjustmentsFhlEeaModel = Adjustments(
+    None,
+    Some(incomeModel),
+    Some(expensesModel))
+
+  val adjustmentsNonFhlModel = Adjustments(
+    Some(Seq(CountryLevelDetail(
+      Some("CYM"),
+      None,
+      Some(incomeModel),
+      None,
+      Some(expensesModel),
+      None, None, None, None, None, None, None, None))),
+    None,
+    None
+  )
+
+  val retrieveBsasResponseFhlEeaModel = RetrieveForeignPropertyBsasResponse(
+    metadata = metaDataModel,
+    inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsFhlEeaModel),
+    adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel)
+  )
+
+  val retrieveBsasResponseNonFhlModel = RetrieveForeignPropertyBsasResponse(
+    metadata = metaDataModel,
+    inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsNonFhlModel),
+    adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel)
+  )
 }

@@ -14,43 +14,46 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveBsasAdjustments.selfEmployment
+package v2.models.response.retrieveBsasAdjustments.ukProperty
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v2.models.utils.JsonErrorValidators
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class MetadataOldSpec extends UnitSpec with JsonErrorValidators {
 
   val desJson: JsValue = Json.parse(
     """{
       | "inputs": {
-      |   "incomeSourceType" : "01",
-      |   "incomeSourceId" : "000000000000210",
+      |   "incomeSourceType" : "04",
+      |   "incomeSourceId":"XAIS00000000210",
       |   "accountingPeriodStartDate" : "2018-10-11",
       |   "accountingPeriodEndDate" : "2019-10-10"
       | },
       | "metadata": {
       |   "taxYear" : 2020,
-      |   "calculationId" : "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      |   "calculationId" : "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |   "requestedDateTime" : "2019-10-14T11:33:27Z",
       |   "status" : "superseded"
+      | },
+      | "adjustedSummaryCalculation" : {
+      |
       | }
       |}
     """.stripMargin)
 
   val mtdJson: JsValue = Json.parse(
     """{
-      | "typeOfBusiness": "self-employment",
-      |   "businessId": "000000000000210",
+      | "typeOfBusiness": "uk-property-fhl",
+      | "businessId": "XAIS00000000210",
       |   "accountingPeriod": {
       |     "startDate": "2018-10-11",
       |     "endDate": "2019-10-10"
       |   },
       |   "taxYear": "2019-20",
       |   "requestedDateTime": "2019-10-14T11:33:27Z",
-      |   "bsasId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      |   "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |   "summaryStatus": "superseded",
       |   "adjustedSummary": true
       |}
@@ -62,7 +65,6 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
         desJson.as[Metadata] shouldBe metaDataModel
       }
     }
-
 
     "writing to valid json" should {
       "return valid json" in {

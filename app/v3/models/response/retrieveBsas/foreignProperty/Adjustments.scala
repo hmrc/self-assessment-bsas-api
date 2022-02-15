@@ -16,26 +16,20 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.utils.JsonErrorValidators
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
 
-class CountryLevelDetailSpec extends UnitSpec with JsonErrorValidators{
+case class Adjustments(countryLevelDetail: Option[Seq[CountryLevelDetail]],
+                       income: Option[Income],
+                       expenses: Option[Expenses]
+                    )
 
-  "reads" should {
-    "return a valid countryLevelDetail model" when {
-      "a valid json with all fields are supplied" in {
-        countryLevelDetailDesJson.as[CountryLevelDetail] shouldBe countryLevelDetailModel
-      }
-    }
-  }
+object Adjustments {
+  implicit val reads: Reads[Adjustments] = (
+    Reads.pure(None) and
+      (JsPath \ "income").readNullable[Income] and
+      (JsPath \ "expenses").readNullable[Expenses]
+    ) (Adjustments.apply _)
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        countryLevelDetailModel.toJson shouldBe countryLevelDetailsMtdJson
-      }
-    }
-  }
+  implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }
-

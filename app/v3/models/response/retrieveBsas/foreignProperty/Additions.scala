@@ -16,26 +16,14 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.utils.JsonErrorValidators
+import play.api.libs.json.{Json, OWrites, Reads}
 
-class CountryLevelDetailSpec extends UnitSpec with JsonErrorValidators{
+case class Additions(privateUseAdjustment: Option[BigDecimal],
+                     balancingCharge: Option[BigDecimal]
+                    )
 
-  "reads" should {
-    "return a valid countryLevelDetail model" when {
-      "a valid json with all fields are supplied" in {
-        countryLevelDetailDesJson.as[CountryLevelDetail] shouldBe countryLevelDetailModel
-      }
-    }
-  }
+object Additions {
+  implicit val reads: Reads[Additions] = Json.reads[Additions]
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        countryLevelDetailModel.toJson shouldBe countryLevelDetailsMtdJson
-      }
-    }
-  }
+  implicit val writes: OWrites[Additions] = Json.writes[Additions]
 }
-
