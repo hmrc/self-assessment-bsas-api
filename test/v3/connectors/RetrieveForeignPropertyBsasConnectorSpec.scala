@@ -47,7 +47,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))
 
       "a valid request with queryParams is supplied" in new Test {
-        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some("01"))
+        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId)
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId",

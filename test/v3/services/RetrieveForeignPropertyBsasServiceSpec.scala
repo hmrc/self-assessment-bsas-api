@@ -33,9 +33,8 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
 
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus: Some[String] = Some("03")
 
-  val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id, adjustedStatus)
+  val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id)
 
   val response: RetrieveForeignPropertyBsasResponse = retrieveBsasResponseNonFhlModel
 
