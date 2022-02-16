@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package v3.mocks.validators
+package v3.controllers.requestParsers
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
+import domain.Nino
+import javax.inject.Inject
 import v3.controllers.requestParsers.validators.RetrieveForeignPropertyValidator
-import v3.models.errors.MtdError
-import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRawData
+import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyBsasRawData}
 
-class MockRetrieveForeignPropertyValidator extends MockFactory {
-  val mockValidator: RetrieveForeignPropertyValidator = mock[RetrieveForeignPropertyValidator]
+class RetrieveForeignPropertyRequestParser @Inject()(val validator: RetrieveForeignPropertyValidator)
+  extends RequestParser[RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData] {
 
-  object MockValidator {
-    def validate(data: RetrieveForeignPropertyBsasRawData): CallHandler1[RetrieveForeignPropertyBsasRawData, List[MtdError]] = {
-      (mockValidator.validate(_: RetrieveForeignPropertyBsasRawData))
-        .expects(data)
-    }
+  override protected def requestFor(data: RetrieveForeignPropertyBsasRawData): RetrieveForeignPropertyBsasRequestData = {
+    RetrieveForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId)
   }
 }
