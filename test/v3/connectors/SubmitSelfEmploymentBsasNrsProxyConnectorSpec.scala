@@ -46,7 +46,7 @@ class SubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
     Some(100.99), Some(100.99), Some(100.99))
 
   val request: SubmitSelfEmploymentBsasRequestBody =
-    SubmitSelfEmploymentBsasRequestBody(Some(income), Some(additions), Some(expenses))
+    SubmitSelfEmploymentBsasRequestBody(Some(income), Some(expenses), Some(additions))
 
   class Test extends MockHttpClient with MockAppConfig {
 

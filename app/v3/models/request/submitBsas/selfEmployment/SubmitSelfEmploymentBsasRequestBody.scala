@@ -19,13 +19,11 @@ package v3.models.request.submitBsas.selfEmployment
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
-case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses]){
+case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income],
+                                               expenses: Option[Expenses],
+                                               additions: Option[Additions]){
 
-  def isEmpty: Boolean = !(income.isDefined || additions.isDefined || expenses.isDefined)
-
-  def isIncorrectOrEmptyBodyError: Boolean = isEmpty || (income.isDefined && income.get.isEmpty) ||
-    (additions.isDefined && additions.get.isEmpty) ||
-    (expenses.isDefined && expenses.get.isEmpty)
+  def isEmpty: Boolean = !(income.isDefined || expenses.isDefined || additions.isDefined)
 }
 
 object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil{

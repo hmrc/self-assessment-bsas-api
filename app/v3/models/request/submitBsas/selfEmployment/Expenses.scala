@@ -35,28 +35,6 @@ case class Expenses(costOfGoodsAllowable: Option[BigDecimal],
                     businessEntertainmentCostsAllowable: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]) {
 
-  //noinspection ScalaStyle
-  def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsAllowable.isEmpty &&
-                        paymentsToSubcontractorsAllowable.isEmpty &&
-                        wagesAndStaffCostsAllowable.isEmpty &&
-                        carVanTravelExpensesAllowable.isEmpty &&
-                        premisesRunningCostsAllowable.isEmpty &&
-                        maintenanceCostsAllowable.isEmpty &&
-                        adminCostsAllowable.isEmpty &&
-                        interestOnBankOtherLoansAllowable.isEmpty &&
-                        financeChargesAllowable.isEmpty &&
-                        irrecoverableDebtsAllowable.isEmpty &&
-                        professionalFeesAllowable.isEmpty &&
-                        depreciationAllowable.isEmpty &&
-                        otherExpensesAllowable.isEmpty &&
-                        advertisingCostsAllowable.isEmpty &&
-                        businessEntertainmentCostsAllowable.isEmpty
-
-  def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
-
-  def isEmpty: Boolean = isNonConsolidatedExpensesEmpty && isConsolidatedExpensesEmpty
-
-  def isBothSupplied: Boolean = !isNonConsolidatedExpensesEmpty && !isConsolidatedExpensesEmpty
 }
 
 object Expenses {

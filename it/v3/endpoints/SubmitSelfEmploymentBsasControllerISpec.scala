@@ -126,7 +126,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("AA1234A", BAD_REQUEST, NinoFormatError, requestBody),
-          ("AA123456A", BAD_REQUEST, RuleBothExpensesError, mtdRequestWithBothExpenses),
+         // ("AA123456A", BAD_REQUEST, RuleBothExpensesError, mtdRequestWithBothExpenses),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

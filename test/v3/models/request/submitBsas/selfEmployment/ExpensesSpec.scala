@@ -96,25 +96,5 @@ class ExpensesSpec extends UnitSpec {
         Json.toJson(emptyExpensesModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
-
-    "isEmpty is called" should {
-      "return true when all empty fields are supplied" in {
-        expensesFromMtdJson(emptyExpensesModel).as[Expenses].isEmpty shouldBe true
-      }
-
-      "return false when non-empty fields is supplied" in {
-        expensesFromMtdJson(emptyExpensesModel.copy(Some(1000.49))).as[Expenses].isEmpty shouldBe false
-      }
-    }
-
-    "isNonConsolidatedExpensesEmpty is called" should {
-      "return true if non consolidated expenses is present" in {
-        emptyExpensesModel.copy(costOfGoodsAllowable = Some(100.49)).isConsolidatedExpensesEmpty shouldBe true
-      }
-
-      "return true if only consolidated expenses is present" in {
-        emptyExpensesModel.copy(consolidatedExpenses = Some(100.49)).isNonConsolidatedExpensesEmpty shouldBe true
-      }
-    }
   }
 }

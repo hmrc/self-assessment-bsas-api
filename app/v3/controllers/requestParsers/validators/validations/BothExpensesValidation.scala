@@ -16,9 +16,10 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v3.models.errors.{ MtdError, RuleBothExpensesError }
-import v3.models.request.submitBsas.foreignProperty.{ FhlEeaExpenses, ForeignPropertyExpenses }
-import v3.models.request.submitBsas.ukProperty.{ FHLExpenses, NonFHLExpenses }
+import v3.models.errors.{MtdError, RuleBothExpensesError}
+import v3.models.request.submitBsas.foreignProperty.{FhlEeaExpenses, ForeignPropertyExpenses}
+import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses}
+import v3.models.request.submitBsas.ukProperty.{FHLExpenses, NonFHLExpenses}
 
 object BothExpensesValidation {
 
@@ -78,6 +79,25 @@ object BothExpensesValidation {
           case NonFHLExpenses(None, None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
           case _                                                                       => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
+    }
+  }
+
+  def bothExpensesValidation(expenses: Expenses, additions: Option[Additions], path: String): List[MtdError] = {
+    expenses.consolidatedExpenses match {
+      case None => NoValidationErrors
+      case Some(_) =>
+        val hasOtherExpenses = expenses match {
+          case Expenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(_)) => false
+          case _                                                                                                           => true
+        }
+
+        val hasAdditions = additions match {
+          case None => false
+          case Some(Additions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => false
+          case _                                                                                                         => true
+        }
+
+        if (hasOtherExpenses || hasAdditions) List(RuleBothExpensesError.copy(paths = Some(Seq(path)))) else NoValidationErrors
     }
   }
 }

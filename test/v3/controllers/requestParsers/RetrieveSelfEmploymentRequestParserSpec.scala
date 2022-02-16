@@ -32,8 +32,8 @@ class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
   val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
-  val outputRequestData = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
+  val inputRawData: RetrieveSelfEmploymentBsasRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
+  val outputRequestData: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
 
   "parser" should {
     "return a valid request object" when {

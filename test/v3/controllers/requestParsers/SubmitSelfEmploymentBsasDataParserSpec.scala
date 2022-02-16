@@ -26,8 +26,8 @@ import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
-  val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino                           = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val invalidIncomeWithZeroValue: Income =
@@ -48,21 +48,23 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
       other = Some(100000000000.00)
     )
 
-  val invalidBsasId = "a54ba782-5ef4-/(0)*f4-ab72-4954066%%%%%%%%%%"
+  val invalidCalculationId = "a54ba782-5ef4-/(0)*f4-ab72-4954066%%%%%%%%%%"
 
   trait Test extends MockSubmitSelfEmploymentBsasValidator {
     lazy val parser = new SubmitSelfEmploymentBsasDataParser(mockValidator)
   }
 
-  "parser" should {
+  val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
+    AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
+      submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue)))))
 
-    val rangeError: MtdError = MtdError("RULE_RANGE_INVALID", s"Adjustment value for 'other' falls outside the accepted range")
-    val formatError: MtdError = MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the 'turnover' value is invalid")
+
+  "parser" should {
 
     "accept valid input" when {
       "full adjustments is passed" in new Test {
 
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
           AnyContentAsJson(mtdRequest))
 
         MockValidator
@@ -70,67 +72,27 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
           .returns(Nil)
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel))
+        result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, submitSelfEmploymentBsasRequestBodyModel))
       }
     }
 
-    "reject invalid input" when {
-      "a adjustment has zero value" in new Test {
-
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
-            submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue)))))
-
+    "return an ErrorWrapper" when {
+      "a single validation error occurs" in new Test {
         MockValidator
           .validate(inputData)
-          .returns(List(formatError))
+          .returns(List(NinoFormatError))
 
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, formatError, None))
+        parser.parseRequest(inputData) shouldBe
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
-      "a adjustment has a value over the range" in new Test {
-
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
-            submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue)))))
-
-
-
+      "multiple validation errors occur" in new Test {
         MockValidator
           .validate(inputData)
-          .returns(List(rangeError))
+          .returns(List(NinoFormatError, CalculationIdFormatError))
 
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, rangeError, None))
-      }
-
-      "the bsas id format is incorrect" in new Test {
-
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, invalidBsasId,
-          AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel)))
-
-        MockValidator
-          .validate(inputData)
-          .returns(List(CalculationIdFormatError))
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe Left(ErrorWrapper(correlationId, CalculationIdFormatError))
-      }
-
-      "the input has multiple invalid feels" in new Test {
-
-        val inputData = SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
-            submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithMultipleErrors)))))
-
-        MockValidator
-          .validate(inputData)
-          .returns(List(formatError, rangeError))
-
-        private val result = parser.parseRequest(inputData)
-        result shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(formatError, rangeError))))
+        parser.parseRequest(inputData) shouldBe
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError))))
       }
     }
   }
