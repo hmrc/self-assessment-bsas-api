@@ -25,7 +25,6 @@ import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v3.mocks.services._
 import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
