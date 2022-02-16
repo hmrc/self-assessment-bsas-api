@@ -93,7 +93,7 @@ class TriggerBsasControllerSpec
   )
 
   val testHateoasLinkProperty: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET,
     rel = "self"
   )

@@ -73,7 +73,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, submitForeignPropertyBsasRequestBodyModel)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, SubmitForeignPropertyBsasResponse(bsasId, TypeOfBusiness.`foreign-property`)))
+      val outcome = Right(ResponseWrapper(correlationId, ()))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 

@@ -58,7 +58,6 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
 
-  private val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property-fhl-eea`)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -72,9 +71,9 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
       "a valid request is supplied" in new Test {
         MockSubmitForeignPropertyBsasConnector
           .submitForeignPropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.submitForeignPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.submitForeignPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 

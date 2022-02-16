@@ -18,10 +18,10 @@ package v3.connectors
 
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
+import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
-import v3.models.response.SubmitForeignPropertyBsasResponse
 import v3.connectors.httpparsers.StandardDesHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,11 +33,13 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[SubmitForeignPropertyBsasResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+
+    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
     put(
       body = request.body,
-      DownstreamUri[SubmitForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
+      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }
