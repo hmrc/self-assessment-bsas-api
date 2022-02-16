@@ -26,9 +26,9 @@ import v3.models.utils.JsonErrorValidators
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  val path            = "path"
+  val path = "path"
   val error: MtdError = RuleBothExpensesError.copy(paths = Some(Seq(path)))
-  val figure          = BigDecimal(100.20)
+  val figure = BigDecimal(100.20)
 
 
   def inputData(mappedData: Map[String, BigDecimal]): Option[Map[String, BigDecimal]] = {
@@ -263,57 +263,139 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
             consolidatedExpenses = Some(123.45)
           )
 
+        val additionModel: Additions =
+          Additions(
+            None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+
         "return no errors" when {
           "a valid consolidatedExpenses model is supplied with only consolidatedExpenses" in {
-            BothExpensesValidation.bothExpensesValidation(model, path) shouldBe Nil
+            BothExpensesValidation.bothExpensesValidation(model, additionModel, path) shouldBe Nil
           }
         }
 
         "return an error" when {
           "a model with consolidatedExpenses and costOfGoodsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(costOfGoodsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(costOfGoodsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and paymentsToSubcontractorsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(paymentsToSubcontractorsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(paymentsToSubcontractorsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and wagesAndStaffCostsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(wagesAndStaffCostsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(wagesAndStaffCostsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and carVanTravelExpensesAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(carVanTravelExpensesAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(carVanTravelExpensesAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and premisesRunningCostsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(premisesRunningCostsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(premisesRunningCostsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and maintenanceCostsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(maintenanceCostsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(maintenanceCostsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and adminCostsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(adminCostsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(adminCostsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and interestOnBankOtherLoansAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(interestOnBankOtherLoansAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(interestOnBankOtherLoansAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and financeChargesAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(financeChargesAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(financeChargesAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and irrecoverableDebtsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(irrecoverableDebtsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(irrecoverableDebtsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and professionalFeesAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(professionalFeesAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(professionalFeesAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and depreciationAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(depreciationAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(depreciationAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and otherExpensesAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(otherExpensesAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(otherExpensesAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and advertisingCostsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(advertisingCostsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(advertisingCostsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
           }
           "a model with consolidatedExpenses and businessEntertainmentCostsAllowable is supplied" in {
-            BothExpensesValidation.bothExpensesValidation(model.copy(businessEntertainmentCostsAllowable = Some(123.45)), path) shouldBe List(error)
+            BothExpensesValidation.bothExpensesValidation(
+              model.copy(businessEntertainmentCostsAllowable = Some(123.45)),additionModel, path) shouldBe List(error)
+          }
+        }
+
+        "return an error" when {
+          "a model with consolidatedExpenses and costOfGoodsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(costOfGoodsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and paymentsToSubcontractorsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(paymentsToSubcontractorsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and wagesAndStaffCostsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(wagesAndStaffCostsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and carVanTravelExpensesDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(carVanTravelExpensesDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and premisesRunningCostsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(premisesRunningCostsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and maintenanceCostsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(maintenanceCostsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and adminCostsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(adminCostsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and interestOnBankOtherLoansDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(interestOnBankOtherLoansDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and financeChargesDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(financeChargesDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and irrecoverableDebtsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(irrecoverableDebtsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and professionalFeesDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(professionalFeesDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and depreciationDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(depreciationDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and otherExpensesDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(otherExpensesDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and advertisingCostsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(advertisingCostsDisallowable = Some(123.45)), path) shouldBe List(error)
+          }
+          "a model with consolidatedExpenses and businessEntertainmentCostsDisallowable is supplied" in {
+            BothExpensesValidation.bothExpensesValidation(
+              model, additionModel.copy(businessEntertainmentCostsDisallowable = Some(123.45)), path) shouldBe List(error)
           }
         }
       }

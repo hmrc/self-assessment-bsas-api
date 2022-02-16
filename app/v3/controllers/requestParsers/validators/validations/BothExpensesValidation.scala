@@ -82,7 +82,7 @@ object BothExpensesValidation {
     }
   }
 
-  def bothExpensesValidation(expenses: Expenses, path: String): List[MtdError] = {
+  def bothExpensesValidation(expenses: Expenses, additions: Additions, path: String): List[MtdError] = {
     expenses.consolidatedExpenses match {
       case None => NoValidationErrors
       case Some(_) =>
@@ -90,6 +90,11 @@ object BothExpensesValidation {
           case Expenses(
           None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
           Some(_)) => NoValidationErrors
+          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+        }
+        additions match {
+          case Additions(
+          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None) => NoValidationErrors
           case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
     }
