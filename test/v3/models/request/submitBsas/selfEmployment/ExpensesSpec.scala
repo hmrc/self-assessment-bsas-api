@@ -96,15 +96,5 @@ class ExpensesSpec extends UnitSpec {
         Json.toJson(emptyExpensesModel) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
-
-    "isNonConsolidatedExpensesEmpty is called" should {
-      "return true if non consolidated expenses is present" in {
-        emptyExpensesModel.copy(costOfGoodsAllowable = Some(100.49)).isConsolidatedExpensesEmpty shouldBe true
-      }
-
-      "return true if only consolidated expenses is present" in {
-        emptyExpensesModel.copy(consolidatedExpenses = Some(100.49)).isNonConsolidatedExpensesEmpty shouldBe true
-      }
-    }
   }
 }

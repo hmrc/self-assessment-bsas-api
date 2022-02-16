@@ -86,17 +86,18 @@ object BothExpensesValidation {
     expenses.consolidatedExpenses match {
       case None => NoValidationErrors
       case Some(_) =>
-        expenses match {
-          case Expenses(
-          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-          Some(_)) => NoValidationErrors
-          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+        val hasOtherExpenses = expenses match {
+          case Expenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(_)) => false
+          case _                                                                                                           => true
         }
-        additions match {
-          case Some(Additions(
-          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => NoValidationErrors
-          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+
+        val hasAdditions = additions match {
+          case None => false
+          case Some(Additions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => false
+          case _                                                                                                         => true
         }
+
+        if (hasOtherExpenses || hasAdditions) List(RuleBothExpensesError.copy(paths = Some(Seq(path)))) else NoValidationErrors
     }
   }
 }
