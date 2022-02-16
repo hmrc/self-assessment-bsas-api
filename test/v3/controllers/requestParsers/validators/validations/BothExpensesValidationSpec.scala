@@ -17,10 +17,10 @@
 package v3.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v3.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
+import v3.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v3.models.errors.{MtdError, RuleBothExpensesError}
 import v3.models.request.submitBsas.foreignProperty.{FhlEeaExpenses, ForeignPropertyExpenses}
-import v3.models.request.submitBsas.selfEmployment.Expenses
+import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses}
 import v3.models.request.submitBsas.ukProperty.{FHLExpenses, NonFHLExpenses}
 import v3.models.utils.JsonErrorValidators
 
@@ -37,13 +37,16 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
   val validConsolidatedExpensesOnly =
     Map("consolidatedExpenses" -> figure)
+
   val validConsolidatedExpenses =
     Map(
       "consolidatedExpenses" -> figure,
       "residentialFinancialCost" -> figure
     )
+
   val validOtherExpense =
     Map("testfield1" -> figure)
+
   val multipleValidOtherExpenses =
     Map(
       "testfield1" -> figure,

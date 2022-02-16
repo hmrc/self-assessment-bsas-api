@@ -18,7 +18,7 @@ package v3.controllers.requestParsers.validators.validations
 
 import v3.models.errors.{MtdError, RuleBothExpensesError}
 import v3.models.request.submitBsas.foreignProperty.{FhlEeaExpenses, ForeignPropertyExpenses}
-import v3.models.request.submitBsas.selfEmployment.Expenses
+import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses, SubmitSelfEmploymentBsasRequestBody}
 import v3.models.request.submitBsas.ukProperty.{FHLExpenses, NonFHLExpenses}
 
 object BothExpensesValidation {

@@ -26,9 +26,9 @@ import v3.models.utils.JsonErrorValidators
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
-  val validator     = new SubmitSelfEmploymentBsasValidator()
+  val validator = new SubmitSelfEmploymentBsasValidator()
   val calculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino          = "AA123456A"
+  val nino = "AA123456A"
 
   "validator" should {
     "return no errors" when {
@@ -233,14 +233,35 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
     }
 
     "return RuleBothExpensesSuppliedError" when {
-      "consolidated and separate expenses provided" in {
-        validator.validate(
-          SubmitSelfEmploymentBsasRawData(
-            nino,
-            calculationId,
-            body = AnyContentAsJson(mtdRequestWithBothExpenses)
-          )) shouldBe
-          List(RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))))
+      "consolidated and separate expenses provided" when {
+        Seq(
+          "/expenses/costOfGoodsAllowable",
+          "/expenses/paymentsToSubcontractorsAllowable",
+          "/expenses/wagesAndStaffCostsAllowable",
+          "/expenses/carVanTravelExpensesAllowable",
+          "/expenses/premisesRunningCostsAllowable",
+          "/expenses/maintenanceCostsAllowable",
+          "/expenses/adminCostsAllowable",
+          "/expenses/interestOnBankOtherLoansAllowable",
+          "/expenses/financeChargesAllowable",
+          "/expenses/irrecoverableDebtsAllowable",
+          "/expenses/professionalFeesAllowable",
+          "/expenses/depreciationAllowable",
+          "/expenses/otherExpensesAllowable",
+          "/expenses/advertisingCostsAllowable",
+          "/expenses/businessEntertainmentCostsAllowable",
+          "/expenses/consolidatedExpenses",
+        ).foreach(path => testWith(mtdRequestWithBothExpenses.update(path, _), path))
+      }
+
+      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
+        def doTest(value: JsNumber) =
+          validator.validate(
+            SubmitSelfEmploymentBsasRawData(
+              nino,
+              calculationId,
+              body = AnyContentAsJson(body(value))
+            )) shouldBe List(RuleBothExpensesError.copy(paths = Some(Seq(expectedPath))))
       }
     }
 
