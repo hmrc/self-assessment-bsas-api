@@ -27,6 +27,7 @@ import v3.hateoas.HateoasFactory
 import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
+import v3.models.response.SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory
 import v3.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +45,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitForeignPropertyBsasController", endpointName = "SubmitForeignPropertyBsas")
-  def handleRequest(nino: String, bsasId: String): Action[JsValue] =
+  def handleRequest(nino: String, calculationId: String): Action[JsValue] =
 
     authorisedAction(nino).async(parse.json) { implicit request =>
 
@@ -53,7 +54,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = SubmitForeignPropertyRawData(nino, bsasId, request.body)
+      val rawData = SubmitForeignPropertyRawData(nino, calculationId, request.body)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
@@ -64,7 +65,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             EitherT(service.submitForeignPropertyBsas(parsedRequest))
           }
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData, SubmitForeignPropertyBsasHateoasData(nino, bsasId)).asRight[ErrorWrapper])
+            hateoasFactory.wrap(response.responseData, SubmitForeignPropertyBsasHateoasData(nino, calculationId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -89,15 +90,15 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
     (errorWrapper.error: @unchecked) match {
       case BadRequestError |
            NinoFormatError |
-           BsasIdFormatError |
            CalculationIdFormatError |
+           CustomMtdError(ValueFormatError.code) |
            RuleTypeOfBusinessIncorrectError |
-           CustomMtdError(FormatAdjustmentValueError.code) |
-           CustomMtdError(RuleAdjustmentRangeInvalid.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
            CustomMtdError(RuleCountryCodeError.code) |
            CustomMtdError(CountryCodeFormatError.code) |
-           RuleBothExpensesError => BadRequest(Json.toJson(errorWrapper))
+           CustomMtdError(RuleDuplicateCountryCodeError.code) |
+           RuleBothPropertiesSuppliedError |
+           CustomMtdError(RuleBothExpensesError.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid |
            RuleSummaryStatusSuperseded |
            RuleAlreadyAdjusted |

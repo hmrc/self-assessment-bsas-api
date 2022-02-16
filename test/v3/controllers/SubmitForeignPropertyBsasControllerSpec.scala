@@ -121,7 +121,6 @@ class SubmitForeignPropertyBsasControllerSpec
   val requestBody: SubmitForeignPropertyBsasRequestBody =
     SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
 
-  val responseBody = SubmitForeignPropertyBsasResponse("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", TypeOfBusiness.`foreign-property`)
 
   private val rawData = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
   private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, requestBody)
@@ -140,11 +139,11 @@ class SubmitForeignPropertyBsasControllerSpec
 
         MockSubmitForeignPropertyBsasService
           .submitForeignPropertyBsas(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseBody))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap(responseBody, SubmitForeignPropertyBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(responseBody, Seq(testHateoasLink)))
+          .wrap((), SubmitForeignPropertyBsasHateoasData(nino, bsasId))
+          .returns(HateoasWrapper((), Seq(testHateoasLink)))
 
         val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
         status(result) shouldBe OK
@@ -171,9 +170,12 @@ class SubmitForeignPropertyBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (BsasIdFormatError, BAD_REQUEST),
-          (FormatAdjustmentValueError, BAD_REQUEST),
-          (RuleAdjustmentRangeInvalid, BAD_REQUEST),
+          (CalculationIdFormatError, BAD_REQUEST),
+          (ValueFormatError, BAD_REQUEST),
+          (CountryCodeFormatError, BAD_REQUEST),
+          (RuleDuplicateCountryCodeError, BAD_REQUEST),
+          (RuleCountryCodeError, BAD_REQUEST),
+          (RuleBothPropertiesSuppliedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (RuleBothExpensesError, BAD_REQUEST)
         )

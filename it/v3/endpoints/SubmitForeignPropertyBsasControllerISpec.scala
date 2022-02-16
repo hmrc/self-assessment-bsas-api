@@ -30,7 +30,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -340,10 +340,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val responseBody: JsValue = Json.parse(
       s"""
          |{
-         |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
          |    {
-         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
+         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
          |      "rel":"self",
          |      "method":"GET"
          |    }
@@ -353,9 +352,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
+    def uri: String = s"/$nino/foreign-property/$calculationId/adjust"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
+    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
     def request(): WSRequest = {
       setupStubs()
@@ -382,7 +381,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -397,7 +396,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -411,7 +410,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
 
@@ -425,7 +424,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyConsolidatedJson))
@@ -438,7 +437,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
+          DesStub.onSuccess(DesStub.PUT, desUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
@@ -464,33 +463,41 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyAdjustmentValue: JsValue = Json.parse(
+      val requestBodyIncorrectBody: JsValue = Json.parse(
         s"""
            |{
            |    "foreignFhlEea": {
-           |        "income": {
-           |            "totalRentsReceived": 123.12
-           |        },
-           |        "expenses": {
-           |            "consolidatedExpenses": 123.12345
-           |        }
            |    }
            |}
            |""".stripMargin)
 
-      val requestBodyRangeInvalid: JsValue = Json.parse(
-        s"""
-           |{
-           |    "foreignFhlEea": {
-           |        "income": {
-           |            "totalRentsReceived": 123.12
-           |        },
-           |        "expenses": {
-           |            "consolidatedExpenses": -100000000000.99
-           |        }
-           |    }
-           |}
-           |""".stripMargin)
+      val requestBodyBothExpenses: JsValue = Json.parse(
+        """
+          |{
+          |  "nonFurnishedHolidayLet": [
+          |    {
+          |      "countryCode": "FRA",
+          |      "income": {
+          |        "totalRentsReceived": 123.12,
+          |        "premiumsOfLeaseGrant": 123.12,
+          |        "foreignTaxTakenOff": 123.12,
+          |        "otherPropertyIncome": 123.12
+          |      },
+          |      "expenses": {
+          |        "premisesRunningCosts": 123.12,
+          |        "repairsAndMaintenance": 123.12,
+          |        "financialCosts": 123.12,
+          |        "professionalFees": 123.12,
+          |        "travelCosts": 123.12,
+          |        "costOfServices": 123.12,
+          |        "residentialFinancialCost": 123.12,
+          |        "other": 123.12,
+          |        "consolidatedExpenses": 123.12
+          |      }
+          |    }
+          |  ]
+          |}
+          |""".stripMargin)
 
       val requestBodyInvalidCountryCode: JsValue = Json.parse(
         s"""
@@ -512,8 +519,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |        "travelCosts": 123.12,
            |        "costOfServices": 123.12,
            |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12,
-           |        "consolidatedExpenses": 123.12
+           |        "other": 123.12
            |      }
            |    }
            |  ]
@@ -540,8 +546,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |        "travelCosts": 123.12,
            |        "costOfServices": 123.12,
            |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12,
-           |        "consolidatedExpenses": 123.12
+           |        "other": 123.12
            |      }
            |    }
            |  ]
@@ -549,11 +554,11 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |""".stripMargin)
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestBsasId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String, requestcalculationId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
-            override val bsasId: String = requestBsasId
+            override val calculationId: String = requestcalculationId
             override val requestBodyForeignPropertyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -570,17 +575,15 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
-//          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue,
-//            BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid,
-//            BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
-//            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
-//          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
-//            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody,
+            BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses,
+            BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
+            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
+            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
