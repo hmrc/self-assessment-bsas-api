@@ -213,7 +213,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
         List(
           BothExpensesValidation.bothExpensesValidation(
             expenses = e,
-            additions = Additions,
+            additions = model.additions,
             path = "/expenses",
           )))
       .getOrElse(Nil)
