@@ -206,12 +206,16 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   }
 
   private def bothExpensesSuppliedValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
-    val model: Expenses = data.body.json.as[Expenses]
-    List(
-    BothExpensesValidation.bothExpensesValidation(
-      expenses = model,
-      path = "/expenses"
-    ))
+    val model = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
+
+    model.expenses
+      .map(e =>
+        List(
+          BothExpensesValidation.bothExpensesValidation(
+            expenses = e,
+            path = "/expenses"
+          )))
+      .getOrElse(Nil)
   }
 
   override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)

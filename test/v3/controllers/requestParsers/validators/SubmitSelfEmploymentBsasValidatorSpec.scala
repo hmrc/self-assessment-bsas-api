@@ -106,24 +106,24 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          AnyContentAsJson(Json.obj("/income" -> JsObject.empty)))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError)
+          AnyContentAsJson(Json.obj("income" -> JsObject.empty)))
+        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
       }
 
       "expenses object is empty" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          AnyContentAsJson(Json.obj("/expenses" -> JsObject.empty)))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError)
+          AnyContentAsJson(Json.obj("expenses" -> JsObject.empty)))
+        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/expenses"))))
       }
 
       "additions object is empty" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(
           nino,
           calculationId,
-          AnyContentAsJson(Json.obj("/additions" -> JsObject.empty)))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError)
+          AnyContentAsJson(Json.obj("additions" -> JsObject.empty)))
+        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/additions"))))
       }
 
       "fields are empty" in {
@@ -233,35 +233,12 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
     }
 
     "return RuleBothExpensesSuppliedError" when {
-      "consolidated and separate expenses provided" when {
-        Seq(
-          "/expenses/costOfGoodsAllowable",
-          "/expenses/paymentsToSubcontractorsAllowable",
-          "/expenses/wagesAndStaffCostsAllowable",
-          "/expenses/carVanTravelExpensesAllowable",
-          "/expenses/premisesRunningCostsAllowable",
-          "/expenses/maintenanceCostsAllowable",
-          "/expenses/adminCostsAllowable",
-          "/expenses/interestOnBankOtherLoansAllowable",
-          "/expenses/financeChargesAllowable",
-          "/expenses/irrecoverableDebtsAllowable",
-          "/expenses/professionalFeesAllowable",
-          "/expenses/depreciationAllowable",
-          "/expenses/otherExpensesAllowable",
-          "/expenses/advertisingCostsAllowable",
-          "/expenses/businessEntertainmentCostsAllowable",
-          "/expenses/consolidatedExpenses",
-        ).foreach(path => testWith(mtdRequestWithBothExpenses.update(path, _), path))
-      }
-
-      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
-        def doTest(value: JsNumber) =
-          validator.validate(
-            SubmitSelfEmploymentBsasRawData(
-              nino,
-              calculationId,
-              body = AnyContentAsJson(body(value))
-            )) shouldBe List(RuleBothExpensesError.copy(paths = Some(Seq(expectedPath))))
+      "consolidated and separate expenses provided" in {
+        validator.validate(SubmitSelfEmploymentBsasRawData(
+          nino,
+          calculationId,
+          AnyContentAsJson(mtdRequestWithBothExpenses)
+        )) shouldBe List(RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))))
       }
     }
 
