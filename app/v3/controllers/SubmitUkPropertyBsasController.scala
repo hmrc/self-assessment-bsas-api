@@ -19,19 +19,15 @@ package v3.controllers
 import cats.data.EitherT
 import cats.implicits._
 import javax.inject.{Inject, Singleton}
-import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import play.api.mvc.{Action, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v3.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v3.hateoas.HateoasFactory
-import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v3.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
+import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v3.models.response.SubmitUkPropertyBsasHateoasData
-import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService, SubmitUKPropertyBsasNrsProxyService}
+import v3.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService, SubmitUKPropertyBsasNrsProxyService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,7 +38,6 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
                                                requestParser: SubmitUkPropertyBsasDataParser,
                                                service: SubmitUkPropertyBsasService,
                                                hateoasFactory: HateoasFactory,
-                                               auditService: AuditService,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -55,7 +50,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       endpointName = "submitUkPropertyBsas"
     )
 
-  def submitUkPropertyBsas(nino: String, bsasId: String): Action[JsValue] =
+  def submitUkPropertyBsas(nino: String, calculationId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
 
       implicit val correlationId: String = idGenerator.generateCorrelationId
@@ -63,7 +58,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = SubmitUkPropertyBsasRawData(nino, bsasId, request.body)
+      val rawData = SubmitUkPropertyBsasRawData(nino, calculationId, request.body)
 
       val result =
         for {
@@ -78,7 +73,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             hateoasFactory
               .wrap(
                 response.responseData,
-                SubmitUkPropertyBsasHateoasData(nino, parsedRequest.calculationId)
+                SubmitUkPropertyBsasHateoasData(nino, calculationId)
               )
               .asRight[ErrorWrapper])
         } yield {
@@ -87,18 +82,8 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
               s"Success response received with CorrelationId: ${response.correlationId}"
           )
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "bsasId" -> bsasId),
-              requestBody = Some(request.body), `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
-            )
-          )
-
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
         }
 
       result.leftMap { errorWrapper =>
@@ -108,16 +93,6 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "bsasId" -> bsasId),
-            requestBody = Some(request.body),
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
         result
       }.merge
     }
@@ -125,26 +100,14 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | CalculationIdFormatError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | RuleBothExpensesError |
-           CustomMtdError(FormatAdjustmentValueError.code) |
-           CustomMtdError(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
-      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
-           RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
-           RulePropertyIncomeAllowanceClaimed | RuleResultingValueNotPermitted |
-           RuleTypeOfBusinessIncorrectError => Forbidden(Json.toJson(errorWrapper))
+           CustomMtdError(ValueFormatError.code) | CustomMtdError(RuleBothExpensesError.code) |
+           RuleTypeOfBusinessIncorrectError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           RuleBothPropertiesSuppliedError => BadRequest(Json.toJson(errorWrapper))
+      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleAlreadyAdjusted |
+           RuleResultingValueNotPermitted | RuleOverConsolidatedExpensesThreshold |
+           RulePropertyIncomeAllowanceClaimed  => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
-  }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "submitBusinessSourceAccountingAdjustments",
-      transactionName = "submit-uk-property-accounting-adjustments",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
   }
 }

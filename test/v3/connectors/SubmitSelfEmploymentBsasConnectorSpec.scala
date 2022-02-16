@@ -25,7 +25,6 @@ import v3.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
-import v3.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 

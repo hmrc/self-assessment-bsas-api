@@ -30,7 +30,7 @@ import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
-import v3.models.response.{SubmitSelfEmploymentBsasHateoasData, SubmitSelfEmploymentBsasResponse}
+import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
