@@ -16,21 +16,20 @@
 
 package v3.controllers
 
+import domain.Nino
 import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitForeignPropertyBsasNrsProxyService, MockSubmitForeignPropertyBsasService}
-import v3.models.domain.TypeOfBusiness
+import v3.mocks.services._
 import v3.models.errors._
-import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.hateoas.Method.GET
+import v3.models.hateoas.{HateoasWrapper, Link}
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
-import v3.models.response.{SubmitForeignPropertyBsasHateoasData, SubmitForeignPropertyBsasResponse}
+import v3.models.response.SubmitForeignPropertyBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

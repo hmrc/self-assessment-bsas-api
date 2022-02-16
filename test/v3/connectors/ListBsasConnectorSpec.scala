@@ -55,7 +55,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture{
       "return a ListBsasResponse" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, listBsasResponseModel))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
-        MockedHttpClient.parameterGet(
+        MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
           config = dummyDesHeaderCarrierConfig,
           queryParams.toSeq,

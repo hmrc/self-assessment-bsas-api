@@ -90,7 +90,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
   "get" must {
     "get with the required des headers and return the result" in new DesTest {
       MockedHttpClient
-        .get(absoluteUrl,  dummyDesHeaderCarrierConfig, desRequestHeaders)
+        .get(absoluteUrl,  dummyDesHeaderCarrierConfig, requiredHeaders = desRequestHeaders)
         .returns(Future.successful(outcome))
 
       await(connector.get(DownstreamUri[Result](url))) shouldBe outcome
@@ -98,17 +98,17 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
 
     "get with the required ifs headers and return the result" in new IFSTest {
       MockedHttpClient
-        .get(absoluteUrl, dummyDesHeaderCarrierConfig, ifsRequestHeaders)
+        .get(absoluteUrl, dummyDesHeaderCarrierConfig, requiredHeaders = ifsRequestHeaders)
         .returns(Future.successful(outcome))
 
       await(connector.get(DownstreamUri[Result](url))) shouldBe outcome
     }
   }
 
-  "parameterGet" must {
+  "get with parameters" must {
     "get with the required des headers and return the result" in new DesTest {
       MockedHttpClient
-        .parameterGet(absoluteUrl, dummyDesHeaderCarrierConfig, Seq("param" -> "value"), desRequestHeaders)
+        .get(absoluteUrl, dummyDesHeaderCarrierConfig, Seq("param" -> "value"), desRequestHeaders)
         .returns(Future.successful(outcome))
 
       await(connector.get(DownstreamUri[Result](url), Seq("param" -> "value"))) shouldBe outcome
@@ -116,7 +116,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
 
     "get with the required ifs headers and return the result" in new IFSTest {
       MockedHttpClient
-        .parameterGet(absoluteUrl, dummyDesHeaderCarrierConfig, Seq("param" -> "value"), ifsRequestHeaders)
+        .get(absoluteUrl, dummyDesHeaderCarrierConfig, Seq("param" -> "value"), ifsRequestHeaders)
         .returns(Future.successful(outcome))
 
       await(connector.get(DownstreamUri[Result](url), Seq("param" -> "value"))) shouldBe outcome

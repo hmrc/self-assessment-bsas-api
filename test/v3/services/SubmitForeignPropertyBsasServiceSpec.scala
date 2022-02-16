@@ -20,11 +20,9 @@ import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
 import v3.mocks.connectors.MockSubmitForeignPropertyBsasConnector
-import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
-import v3.models.response.SubmitForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 

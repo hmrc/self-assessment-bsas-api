@@ -16,13 +16,13 @@
 
 package v3.fixtures.foreignProperty
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 
-  val metadataMtdJson = Json.parse(
+  val metadataMtdJson: JsValue = Json.parse(
     """{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
@@ -33,7 +33,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  }""".stripMargin
   )
 
-  val metadataDesJson = Json.parse(
+  val metadataDesJson: JsValue = Json.parse(
     """{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
@@ -44,7 +44,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val metadataDesJsonWithoutADT = Json.parse(
+  val metadataDesJsonWithoutADT: JsValue = Json.parse(
     """{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
@@ -54,7 +54,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val inputsMtdJson = Json.parse(
+  val inputsMtdJson: JsValue = Json.parse(
     """{
       |  "businessId": "000000000000210",
       |  "typeOfBusiness": "foreign-property-fhl-eea",
@@ -72,7 +72,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val inputsDesJson = Json.parse(
+  val inputsDesJson: JsValue = Json.parse(
     """{
       |  "incomeSourceId": "000000000000210",
       |  "incomeSourceType": "03",
@@ -91,7 +91,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val inputsDesJsonWithoutBusinessName = Json.parse(
+  val inputsDesJsonWithoutBusinessName: JsValue = Json.parse(
     """{
       |  "incomeSourceId": "000000000000210",
       |  "incomeSourceType": "03",
@@ -109,7 +109,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val incomeMtdJson = Json.parse(
+  val incomeMtdJson: JsValue = Json.parse(
     """{
       |  "totalRentsReceived": 0.12,
       |  "premiumsOfLeaseGrant": 0.12,
@@ -117,7 +117,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val incomeDesJson = Json.parse(
+  val incomeDesJson: JsValue = Json.parse(
     """{
       |  "rent": 0.12,
       |  "premiumsOfLeaseGrant": 0.12,
@@ -125,7 +125,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val expensesMtdJson = Json.parse(
+  val expensesMtdJson: JsValue = Json.parse(
     """{
       | "consolidatedExpenses": 0.12,
       |  "premisesRunningCosts": 0.12,
@@ -140,7 +140,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val expensesDesJson = Json.parse(
+  val expensesDesJson: JsValue = Json.parse(
     """{
       | "consolidatedExpenses": 0.12,
       |  "premisesRunningCosts": 0.12,
@@ -155,7 +155,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val deductionsMtdJson = Json.parse(
+  val deductionsMtdJson: JsValue = Json.parse(
     """{
       |   "annualInvestmentAllowance": 0.12,
       |   "costOfReplacingDomesticItems": 0.12,
@@ -168,7 +168,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val deductionsDesJson = Json.parse(
+  val deductionsDesJson: JsValue = Json.parse(
     """{
       |   "annualInvestmentAllowance": 0.12,
       |   "costOfReplacingDomesticItems": 0.12,
@@ -181,21 +181,21 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val additionsMtdJson = Json.parse(
+  val additionsMtdJson: JsValue = Json.parse(
     """{
       |  "privateUseAdjustment": 0.12,
       |  "balancingCharge": 0.12
       |}""".stripMargin
   )
 
-  val additionsDesJson = Json.parse(
+  val additionsDesJson: JsValue = Json.parse(
     """{
       |  "privateUseAdjustment": 0.12,
       |  "balancingCharge": 0.12
       |}""".stripMargin
   )
 
-  val countryLevelDetailsMtdJson = Json.parse(
+  val countryLevelDetailsMtdJson: JsValue = Json.parse(
     s"""{
       |  "countryCode": "CYM",
       |  "totalIncome": 0.12,
@@ -213,7 +213,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val countryLevelDetailDesJson = Json.parse(
+  val countryLevelDetailDesJson: JsValue = Json.parse(
     s"""{
       |  "countryCode": "CYM",
       |  "totalIncome": 0.12,
@@ -231,7 +231,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val adjustableSCMtdJson = Json.parse(
+  val adjustableSCMtdJson: JsValue = Json.parse(
     s"""{
       |		"totalIncome": 0.12,
       |		"income": $incomeMtdJson,
@@ -249,7 +249,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val adjustableSCDesJson = Json.parse(
+  val adjustableSCDesJson: JsValue = Json.parse(
     s"""{
       |		"totalIncome": 0.12,
       |		"income": $incomeDesJson,
@@ -267,7 +267,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val adjustmentsMtdNonFhlJson = Json.parse(
+  val adjustmentsMtdNonFhlJson: JsValue = Json.parse(
     s"""{
       |	"countryLevelDetail": [{
       |		"countryCode": "CYM",
@@ -277,7 +277,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val adjustmentsDesNonFhlJson = Json.parse(
+  val adjustmentsDesNonFhlJson: JsValue = Json.parse(
     s"""{
        |  "countryCode": "CYM",
        |	"income": $incomeDesJson,
@@ -285,14 +285,14 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  val adjustmentsMtdFhlEeaJson = Json.parse(
+  val adjustmentsMtdFhlEeaJson: JsValue = Json.parse(
     s"""{
       |		"income": $incomeMtdJson,
       |		"expenses": $expensesMtdJson
       |}""".stripMargin
   )
 
-  val adjustmentsDesFhlEeaJson = Json.parse(
+  val adjustmentsDesFhlEeaJson: JsValue = Json.parse(
     s"""{
       |		"income": $incomeDesJson,
       |		"expenses": $expensesDesJson
@@ -326,7 +326,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     "2019-02-15T09:35:04.843Z"
   )
 
-  val retrieveForeignPropertyBsasMtdJsonNonFhl = Json.parse(
+  val retrieveForeignPropertyBsasMtdJsonNonFhl: JsValue = Json.parse(
     s"""{
        |	"metadata": $metadataMtdJson,
        |	"inputs": $inputsMtdJson,
@@ -336,7 +336,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  val retrieveForeignPropertyBsasMtdJsonFhlEea = Json.parse(
+  val retrieveForeignPropertyBsasMtdJsonFhlEea: JsValue = Json.parse(
     s"""{
       |	"metadata": $metadataMtdJson,
       |	"inputs": $inputsMtdJson,
@@ -346,7 +346,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val retrieveForeignPropertyBsasDesJsonNonFhl = Json.parse(
+  val retrieveForeignPropertyBsasDesJsonNonFhl: JsValue = Json.parse(
     s"""{
       |	"metadata": $metadataDesJson,
       |	"inputs": $inputsDesJson,
@@ -356,7 +356,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val retrieveForeignPropertyBsasDesJsonFhlEea = Json.parse(
+  val retrieveForeignPropertyBsasDesJsonFhlEea: JsValue = Json.parse(
     s"""{
        |	"metadata": $metadataDesJson,
        |	"inputs": $inputsDesJson,
@@ -366,31 +366,15 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  val incomeModel = Income(
+  val incomeModel: Income = Income(
     Some(0.12),
     Some(0.12),
     Some(0.12)
   )
 
-  val expensesModel = Expenses(
+  val expensesModel: Expenses = Expenses(
     Some(0.12),
     Some(0.12),
-    Some(0.12),
-    Some(0.12),
-    Some(0.12),
-    Some(0.12),
-    Some(0.12),
-    Some(0.12),
-    Some(0.12),
-    Some(0.12)
-  )
-
-  val additionsModel = Additions(
-    Some(0.12),
-    Some(0.12)
-  )
-
-  val deductionsModel = Deductions(
     Some(0.12),
     Some(0.12),
     Some(0.12),
@@ -401,7 +385,23 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(0.12)
   )
 
-  val countryLevelDetailModel = CountryLevelDetail(
+  val additionsModel: Additions = Additions(
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val deductionsModel: Deductions = Deductions(
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12),
+    Some(0.12)
+  )
+
+  val countryLevelDetailModel: CountryLevelDetail = CountryLevelDetail(
     Some("CYM"),
     Some(0.12),
     Some(incomeModel),
@@ -417,7 +417,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(1)
   )
 
-  val adjustableSummaryCalculationModel = AdjustableSummaryCalculation(
+  val adjustableSummaryCalculationModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
     Some(0.12),
     Some(incomeModel),
     Some(0.12),
@@ -432,12 +432,12 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(1),
     Some(Seq(countryLevelDetailModel)))
 
-  val adjustmentsFhlEeaModel = Adjustments(
+  val adjustmentsFhlEeaModel: Adjustments = Adjustments(
     None,
     Some(incomeModel),
     Some(expensesModel))
 
-  val adjustmentsNonFhlModel = Adjustments(
+  val adjustmentsNonFhlModel: Adjustments = Adjustments(
     Some(Seq(CountryLevelDetail(
       Some("CYM"),
       None,
@@ -449,7 +449,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     None
   )
 
-  val retrieveBsasResponseFhlEeaModel = RetrieveForeignPropertyBsasResponse(
+  val retrieveBsasResponseFhlEeaModel: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
     metadata = metaDataModel,
     inputs = inputsModel,
     adjustableSummaryCalculation = adjustableSummaryCalculationModel,
@@ -457,9 +457,17 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel)
   )
 
-  val retrieveBsasResponseNonFhlModel = RetrieveForeignPropertyBsasResponse(
+  val retrieveBsasResponseNonFhlModel: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
     metadata = metaDataModel,
     inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = Some(adjustmentsNonFhlModel),
+    adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel)
+  )
+
+  def retrieveBsasResponseNonFhlModelWith(typeOfBusiness: TypeOfBusiness): RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
+    metadata = metaDataModel,
+    inputs = inputsModel.copy(typeOfBusiness = typeOfBusiness),
     adjustableSummaryCalculation = adjustableSummaryCalculationModel,
     adjustments = Some(adjustmentsNonFhlModel),
     adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel)

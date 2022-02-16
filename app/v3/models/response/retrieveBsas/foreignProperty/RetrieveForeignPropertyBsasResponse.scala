@@ -18,12 +18,16 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
+import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 
 case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
                                                inputs: Inputs,
                                                adjustableSummaryCalculation: AdjustableSummaryCalculation,
                                                adjustments: Option[Adjustments],
                                                adjustedSummaryCalculation: Option[AdjustableSummaryCalculation])
+  extends HasTypeOfBusiness {
+  override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
+}
 
 object RetrieveForeignPropertyBsasResponse {
   implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (
