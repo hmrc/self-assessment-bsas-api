@@ -26,11 +26,11 @@ class MetadataOldSpec extends UnitSpec with JsonErrorValidators{
     "return a valid model" when {
 
       "a valid json with all fields are supplied" in {
-        desRetrieveBsasResponse.as[Metadata] shouldBe metadataModel
+        downstreamRetrieveBsasResponse.as[Metadata] shouldBe metadataModel
       }
 
       "a valid json with only adjustable summary fields are supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[Metadata] shouldBe metadataModelWithAdjustableSummary
+        downstreamRetrieveBsasResponseWithAdjustableSummary.as[Metadata] shouldBe metadataModelWithAdjustableSummary
       }
     }
   }

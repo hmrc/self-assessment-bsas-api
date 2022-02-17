@@ -16,11 +16,15 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
+import mocks.MockAppConfig
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v3.hateoas.HateoasFactory
+import v3.models.hateoas.Method.{ GET, POST }
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.utils.JsonErrorValidators
 
-class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators{
+class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid retrieve BSAS model" when {
@@ -43,6 +47,30 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       "a valid nonFhl model is supplied" in {
         retrieveBsasResponseNonFhlModel.toJson shouldBe retrieveForeignPropertyBsasMtdJsonNonFhl
       }
+    }
+  }
+
+  "HateoasFactory" should {
+    class Test extends MockAppConfig {
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino           = "someNino"
+      val calculationId  = "anId"
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+    }
+
+    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
+      val rawResponse: RetrieveForeignPropertyBsasResponse = retrieveBsasResponseFhlEeaModel
+
+      hateoasFactory.wrap(rawResponse, RetrieveForeignPropertyHateoasData(nino, calculationId)) shouldBe
+        HateoasWrapper(
+          rawResponse,
+          Seq(
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId", GET, "self"),
+            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
+                 POST,
+                 "submit-foreign-property-accounting-adjustments")
+          )
+        )
     }
   }
 }

@@ -37,20 +37,7 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
       }
   )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
 
-  implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] =
-    (o: RetrieveForeignPropertyAdjustmentsResponse) =>
-      o.metadata.typeOfBusiness match {
-        case TypeOfBusiness.`foreign-property` =>
-          Json.obj(
-            "metadata"    -> o.metadata,
-            "adjustments" -> o.adjustments
-          )
-        case TypeOfBusiness.`foreign-property-fhl-eea` =>
-          Json.obj(
-            "metadata"    -> o.metadata,
-            "adjustments" -> o.adjustments
-          )
-      }
+  implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] = Json.writes[RetrieveForeignPropertyAdjustmentsResponse]
 
   implicit object RetrieveForeignPropertyAdjustmentsHateoasFactory
       extends HateoasLinksFactory[RetrieveForeignPropertyAdjustmentsResponse, RetrieveForeignPropertyAdjustmentsHateoasData] {

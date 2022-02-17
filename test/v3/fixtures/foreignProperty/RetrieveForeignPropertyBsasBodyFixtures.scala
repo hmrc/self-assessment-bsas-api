@@ -16,7 +16,7 @@
 
 package v3.fixtures.foreignProperty
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
 
@@ -298,7 +298,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |		"expenses": $expensesDesJson
       |}""".stripMargin
   )
-
 
   val metaDataModel: Metadata = Metadata(
     "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
