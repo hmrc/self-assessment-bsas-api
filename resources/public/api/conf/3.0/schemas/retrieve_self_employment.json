@@ -132,9 +132,11 @@
       },
       "required": [
         "businessId",
+        "typeOfBusiness",
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
-        "source"
+        "source",
+        "submissionPeriods"
       ]
     },
     "adjustableSummaryCalculation": {
