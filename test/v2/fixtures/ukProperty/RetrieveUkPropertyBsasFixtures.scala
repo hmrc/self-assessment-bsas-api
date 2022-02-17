@@ -17,29 +17,28 @@
 package v2.fixtures.ukProperty
 
 import java.time.LocalDate
-
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.ukProperty._
 import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
 object RetrieveUkPropertyBsasFixtures {
 
-  val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
-  val profitModel = Profit(Some(100.49),Some(100))
-  val lossModel = Loss(Some(100.49),Some(100))
-  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
-  val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
+  val totalBsasModel: TotalBsas = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
+  val profitModel: Profit = Profit(Some(100.49),Some(100))
+  val lossModel: Loss = Loss(Some(100.49),Some(100))
+  val incomeBreakdownModel: IncomeBreakdown = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val expensesBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
     Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
-  val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2019-04-06"), LocalDate.parse("2020-04-05"))
+  val accountingPeriodModel: AccountingPeriod = AccountingPeriod(LocalDate.parse("2019-04-06"), LocalDate.parse("2020-04-05"))
 
-  val bsasDetailModel = BsasDetail(total = totalBsasModel,
+  val bsasDetailModel: BsasDetail = BsasDetail(total = totalBsasModel,
     profit = Some(profitModel),
     loss = Some(lossModel),
     incomeBreakdown = Some(incomeBreakdownModel),
     expensesBreakdown = Some(expensesBreakdownModel))
 
-  val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+  val metadataModel: Metadata = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
     businessId = Some("111111111111111"),
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
@@ -49,7 +48,7 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedSummary = true
   )
 
-  val metadataModelWithAdjustableSummary = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+  val metadataModelWithAdjustableSummary: Metadata = Metadata(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
     businessId = Some("111111111111111"),
     accountingPeriod = accountingPeriodModel,
     taxYear = "2019-20",
@@ -61,7 +60,7 @@ object RetrieveUkPropertyBsasFixtures {
 
   val retrieveUkPropertyBsasResponseModel: RetrieveUkPropertyBsasResponse = RetrieveUkPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
-  val mtdResponse = Json.parse(
+  val mtdResponse: JsValue = Json.parse(
     """{
       |   "metadata": {
       |      "typeOfBusiness": "uk-property-fhl",
@@ -112,7 +111,7 @@ object RetrieveUkPropertyBsasFixtures {
       |   }
       |}""".stripMargin)
 
-  val mtdBsasDetailJson = Json.parse(
+  val mtdBsasDetailJson: JsValue = Json.parse(
     """{
       |      "total": {
       |         "income": 100.49,
@@ -148,7 +147,7 @@ object RetrieveUkPropertyBsasFixtures {
       |      }
       |}""".stripMargin)
 
-  val mtdMetadataJson = Json.parse(
+  val mtdMetadataJson: JsValue = Json.parse(
     """{
       |"typeOfBusiness": "uk-property-fhl",
       |"businessId": "111111111111111",
@@ -163,7 +162,7 @@ object RetrieveUkPropertyBsasFixtures {
       |    "adjustedSummary": true
       |}""".stripMargin)
 
-  val desRetrieveBsasResponse = Json.parse(
+  val downstreamRetrieveBsasResponse: JsValue = Json.parse(
     """{
       | "metadata": {
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -247,7 +246,7 @@ object RetrieveUkPropertyBsasFixtures {
       | }
       |}""".stripMargin)
 
-  val desRetrieveBsasResponseWithAdjustableSummary = Json.parse(
+  val downstreamRetrieveBsasResponseWithAdjustableSummary: JsValue = Json.parse(
     """{
       | "metadata": {
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -319,7 +318,7 @@ object RetrieveUkPropertyBsasFixtures {
       | }
       |}""".stripMargin)
 
-  val desRetrieveBsasResponseWithInvalidTypeOfBusiness = Json.parse(
+  val downstreamRetrieveBsasResponseWithInvalidTypeOfBusiness: JsValue = Json.parse(
     """{
       | "metadata": {
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -403,7 +402,7 @@ object RetrieveUkPropertyBsasFixtures {
       | }
       |}""".stripMargin)
 
-  val hateoasResponseForProperty = (nino: String, bsasId: String) => s"""
+  val hateoasResponseForProperty: (String, String) => String = (nino: String, bsasId: String) => s"""
                                                         |{
                                                         |   "metadata": {
                                                         |      "typeOfBusiness": "uk-property-fhl",

@@ -16,7 +16,7 @@
 
 package v3.fixtures.foreignProperty
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
 
@@ -298,6 +298,24 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |		"expenses": $expensesDesJson
       |}""".stripMargin
   )
+
+  def retrieveForeignPropertyBsasMtdJsonNonFhlWithHateoas(nino: String, calculationId: String): JsValue =
+    retrieveForeignPropertyBsasMtdJsonNonFhl.as[JsObject] ++ Json.parse(
+      s"""
+         |{
+         |  "links": [
+         |    {
+         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
+         |      "method": "GET",
+         |      "rel": "self"
+         |    }, {
+         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
+         |      "method": "POST",
+         |      "rel": "submit-foreign-property-accounting-adjustments"
+         |    }
+         |  ]
+         |}
+         |""".stripMargin).as[JsObject]
 
 
   val metaDataModel: Metadata = Metadata(

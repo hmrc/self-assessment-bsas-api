@@ -66,7 +66,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponse)
+          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, downstreamRetrieveBsasResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -85,7 +85,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponseWithInvalidTypeOfBusiness)
+          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, downstreamRetrieveBsasResponseWithInvalidTypeOfBusiness)
         }
 
         val response: WSResponse = await(request.get)
