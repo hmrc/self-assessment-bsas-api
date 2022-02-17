@@ -23,7 +23,6 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors.ErrorWrapper
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
-import v3.models.response.SubmitForeignPropertyBsasResponse
 import v3.services.SubmitForeignPropertyBsasService
 
 import scala.concurrent.{ExecutionContext, Future}
