@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveForeignPropertyRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveForeignPropertyBsasService}
+import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveForeignPropertyBsasService}
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
@@ -42,7 +42,6 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockRetrieveForeignPropertyRequestParser
     with MockRetrieveForeignPropertyBsasService
     with MockHateoasFactory
-    with MockAuditService
     with MockIdGenerator {
 
   private val correlationId = "X-123"

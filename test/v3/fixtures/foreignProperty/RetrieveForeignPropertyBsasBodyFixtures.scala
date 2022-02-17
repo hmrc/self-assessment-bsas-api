@@ -299,25 +299,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  def retrieveForeignPropertyBsasMtdJsonNonFhlWithHateoas(nino: String, calculationId: String): JsValue =
-    retrieveForeignPropertyBsasMtdJsonNonFhl.as[JsObject] ++ Json.parse(
-      s"""
-         |{
-         |  "links": [
-         |    {
-         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
-         |      "method": "GET",
-         |      "rel": "self"
-         |    }, {
-         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
-         |      "method": "POST",
-         |      "rel": "submit-foreign-property-accounting-adjustments"
-         |    }
-         |  ]
-         |}
-         |""".stripMargin).as[JsObject]
-
-
   val metaDataModel: Metadata = Metadata(
     "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
     "2020-12-05T16:19:44Z",

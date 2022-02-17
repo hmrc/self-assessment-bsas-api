@@ -18,7 +18,7 @@ package v3.endpoints
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
@@ -42,18 +42,44 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       buildRequest(s"/$nino/foreign-property/$calcId")
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
     }
+
+    def responseWithHateoas(response: JsValue, nino: String, calculationId: String): JsValue =
+      response.as[JsObject] ++ Json.parse(
+        s"""
+           |{
+           |  "links": [
+           |    {
+           |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
+           |      "method": "GET",
+           |      "rel": "self"
+           |    }, {
+           |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
+           |      "method": "POST",
+           |      "rel": "submit-foreign-property-accounting-adjustments"
+           |    }
+           |  ]
+           |}
+           |""".stripMargin).as[JsObject]
   }
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
-      "valid request is made" in new Test {
+      "valid request is made and Non-fhl is returned" in new Test {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJsonNonFhl)
 
         val response: WSResponse = await(request.get)
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdJsonNonFhlWithHateoas(nino, calcId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdJsonNonFhl, nino, calcId)
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "valid request is made and fhl is returned" in new Test {
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJsonFhlEea)
+
+        val response: WSResponse = await(request.get)
+
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdJsonFhlEea, nino, calcId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
       }
@@ -81,7 +107,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-
       def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit =
         s"validation fails with ${expectedBody.code} error" in new Test {
           override val nino: String   = requestNino
@@ -103,7 +128,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "downstream service error" when {
-
       def errorBody(code: String): String =
         s"""{
            |  "code": "$code",
