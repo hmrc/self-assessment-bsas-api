@@ -13,7 +13,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce"
+            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
           },
           "rel": {
             "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
