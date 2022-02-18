@@ -16,7 +16,7 @@
 
 package v3.fixtures.foreignProperty
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
 
