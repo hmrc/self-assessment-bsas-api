@@ -20,21 +20,19 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
-    val taxYear: Option[String] = Some("2019-20")
+    val nino                           = "AA123456B"
     val adjustedStatus: Option[String] = Some("true")
-    val correlationId = "X-123"
-    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "3")
+    val bsasId                         = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val desQueryParams                 = Map("return" -> "3")
 
     def uri: String = s"/$nino/property/$bsasId"
 
@@ -54,7 +52,6 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
     }
   }
-
 
   "Calling the retrieve UK Property Bsas endpoint" should {
 
@@ -98,13 +95,15 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestBsasId: String,
+      def validationErrorTest(requestNino: String,
+                              requestBsasId: String,
                               requestAdjustedStatus: Option[String],
-                              expectedStatus: Int, expectedBody: MtdError): Unit = {
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
-          override val bsasId: String = requestBsasId
+          override val nino: String                   = requestNino
+          override val bsasId: String                 = requestBsasId
           override val adjustedStatus: Option[String] = requestAdjustedStatus
 
           override def setupStubs(): StubMapping = {
