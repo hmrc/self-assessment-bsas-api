@@ -8,6 +8,6 @@ POST        /:nino/uk-property/:calculationId/adjust      v3.controllers.SubmitU
 
 GET         /:nino/self-employment/:calculationId         v3.controllers.RetrieveSelfEmploymentBsasController.retrieve(nino:String, calculationId: String)
 
-POST        /:nino/self-employment/:bsasId/adjust         v3.controllers.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, bsasId: String)
+POST        /:nino/self-employment/:calculationId/adjust  v3.controllers.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, calculationId: String)
 
 POST        /:nino/foreign-property/:calculationId/adjust v3.controllers.SubmitForeignPropertyBsasController.handleRequest(nino: String, calculationId: String)

@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
                      paymentsToSubcontractorsDisallowable: Option[BigDecimal],
@@ -34,6 +34,10 @@ case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
                      advertisingCostsDisallowable: Option[BigDecimal],
                      businessEntertainmentCostsDisallowable: Option[BigDecimal]) {
 
+  val nonEmpty: Boolean = this match {
+    case Additions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None) => false
+    case _                                                                                                   => true
+  }
 }
 
 object Additions {
