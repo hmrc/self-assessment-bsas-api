@@ -27,83 +27,6 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
   val path            = "path"
   val error: MtdError = RuleBothExpensesError.copy(paths = Some(Seq(path)))
-  val figure          = BigDecimal(100.20)
-
-  def inputData(mappedData: Map[String, BigDecimal]): Option[Map[String, BigDecimal]] = {
-    Some(mappedData)
-  }
-
-  val validConsolidatedExpensesOnly =
-    Map("consolidatedExpenses" -> figure)
-
-  val validConsolidatedExpenses =
-    Map(
-      "consolidatedExpenses"     -> figure,
-      "residentialFinancialCost" -> figure
-    )
-
-  val validOtherExpense =
-    Map("testfield1" -> figure)
-
-  val multipleValidOtherExpenses =
-    Map(
-      "testfield1" -> figure,
-      "testfield2" -> figure
-    )
-
-  case class SetUp(expensesAdjusted: Option[Map[String, BigDecimal]])
-
-  "validate" should {
-    "return no errors" when {
-      "an expense is present" in new SetUp(inputData(validOtherExpense)) {
-
-        BothExpensesValidation.validate(expensesAdjusted).isEmpty shouldBe true
-      }
-
-      "expenses are present" in new SetUp(inputData(multipleValidOtherExpenses)) {
-
-        BothExpensesValidation.validate(expensesAdjusted).isEmpty shouldBe true
-      }
-
-      "consolidated expenses is present" in new SetUp(inputData(validConsolidatedExpensesOnly)) {
-
-        BothExpensesValidation.validate(expensesAdjusted).isEmpty shouldBe true
-      }
-
-      "consolidated expenses is present with residential cost" in new SetUp(inputData(validConsolidatedExpenses)) {
-
-        BothExpensesValidation.validate(expensesAdjusted).isEmpty shouldBe true
-      }
-    }
-
-    "return errors" when {
-      "when consolidated expenses is present with another expense" in
-        new SetUp(inputData(validConsolidatedExpensesOnly ++ validOtherExpense)) {
-
-          val result = BothExpensesValidation.validate(expensesAdjusted)
-
-          result.length shouldBe 1
-          result.head shouldBe RuleBothExpensesError
-        }
-
-      "when consolidated expenses and residential cost is present with another expense" in
-        new SetUp(inputData(validConsolidatedExpenses ++ validOtherExpense)) {
-
-          val result = BothExpensesValidation.validate(expensesAdjusted)
-
-          result.length shouldBe 1
-          result.head shouldBe RuleBothExpensesError
-        }
-
-      "when consolidated expenses and residential cost is present with multiple expenses" in
-        new SetUp(inputData(validConsolidatedExpenses ++ multipleValidOtherExpenses)) {
-          val result = BothExpensesValidation.validate(expensesAdjusted)
-
-          result.length shouldBe 1
-          result.head shouldBe RuleBothExpensesError
-        }
-    }
-  }
 
   "validate" when {
     "passed a ForeignPropertyExpenses model" should {
@@ -255,25 +178,11 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
     "passed a self employment Expenses model" should {
       "both expenses are present" when {
+        // @formatter:off
+
         val model: Expenses =
-          Expenses(
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            consolidatedExpenses = Some(123.45)
-          )
+          Expenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+            consolidatedExpenses = Some(123.45))
 
         val additionModel: Additions =
           Additions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
@@ -399,6 +308,7 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
                                                           path) shouldBe List(error)
           }
         }
+        // @formatter:on
       }
     }
   }
