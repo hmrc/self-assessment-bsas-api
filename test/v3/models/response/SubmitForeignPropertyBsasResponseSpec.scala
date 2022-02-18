@@ -17,11 +17,9 @@
 package v3.models.response
 
 import mocks.MockAppConfig
-import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v3.models.hateoas.Link
 import v3.models.hateoas.Method.GET
-import v3.models.domain.TypeOfBusiness
 
 class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig {
 

@@ -25,11 +25,11 @@ class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidato
   "reads" should {
     "return a valid model" when {
       "a valid json is supplied" in {
-        desRetrieveBsasResponse.as[RetrieveUkPropertyBsasResponse] shouldBe retrieveUkPropertyBsasResponseModel
+        downstreamRetrieveBsasResponse.as[RetrieveUkPropertyBsasResponse] shouldBe retrieveUkPropertyBsasResponseModel
       }
 
       "a valid json with out adjusted summary is supplied" in {
-        desRetrieveBsasResponseWithAdjustableSummary.as[RetrieveUkPropertyBsasResponse] shouldBe
+        downstreamRetrieveBsasResponseWithAdjustableSummary.as[RetrieveUkPropertyBsasResponse] shouldBe
           retrieveUkPropertyBsasResponseModel.copy(metadata = metadataModelWithAdjustableSummary)
       }
     }

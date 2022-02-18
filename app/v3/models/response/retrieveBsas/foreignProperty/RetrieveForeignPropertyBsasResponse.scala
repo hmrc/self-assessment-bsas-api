@@ -16,9 +16,13 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import config.AppConfig
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v3.hateoas.HateoasLinksFactory
 import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
+import v3.models.hateoas.{HateoasData, Link}
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse._
 
 case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
                                                inputs: Inputs,
@@ -45,4 +49,19 @@ object RetrieveForeignPropertyBsasResponse {
     ) (RetrieveForeignPropertyBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
+
+  implicit object RetrieveSelfAssessmentBsasHateoasFactory
+    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
+      import data._
+
+      Seq(
+        getForeignPropertyBsas(appConfig, nino, calculationId),
+        adjustForeignPropertyBsas(appConfig, nino, calculationId)
+      )
+    }
+  }
 }
+
+
+case class RetrieveForeignPropertyHateoasData(nino: String, calculationId: String) extends HateoasData
