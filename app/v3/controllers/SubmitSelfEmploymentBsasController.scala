@@ -129,7 +129,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
            CustomMtdError(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
            RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
-           RuleTradingIncomeAllowanceClaimed | RuleNotSelfEmployment |
+           RuleTradingIncomeAllowanceClaimed |
            RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
