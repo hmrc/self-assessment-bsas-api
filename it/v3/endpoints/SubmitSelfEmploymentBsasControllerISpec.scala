@@ -19,18 +19,18 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.IntegrationBaseSpec
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub}
+import v3.stubs._
 
 class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino   = "AA123456A"
-    val bsasId = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val nino          = "AA123456A"
+    val calculationId = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -44,9 +44,9 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/self-employment/$bsasId/adjust"
+    def uri: String = s"/$nino/self-employment/$calculationId/adjust"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
+    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
     def request(): WSRequest = {
       setupStubs()
@@ -83,7 +83,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -99,7 +99,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
       }
     }
@@ -126,7 +126,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("AA1234A", BAD_REQUEST, NinoFormatError, requestBody),
-         // ("AA123456A", BAD_REQUEST, RuleBothExpensesError, mtdRequestWithBothExpenses),
+          // ("AA123456A", BAD_REQUEST, RuleBothExpensesError, mtdRequestWithBothExpenses),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
