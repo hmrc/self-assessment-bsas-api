@@ -27,8 +27,6 @@ object AccountingPeriodNotSupportedValidation {
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def validate(typeOfBusiness: TypeOfBusiness, endDate: String, config: AppConfig): List[MtdError] = {
-    // self-employment and uk property: end date earliest 2019-20
-    // foreign property: end date earliest 2021-22
     lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
       s"${config.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
       DateTimeFormatter.ISO_LOCAL_DATE
@@ -37,7 +35,6 @@ object AccountingPeriodNotSupportedValidation {
       s"${config.v3TriggerNonForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
       DateTimeFormatter.ISO_LOCAL_DATE
     )
-
 
     val earliestDate: LocalDate = typeOfBusiness match {
       case TypeOfBusiness.`self-employment` | TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` =>
