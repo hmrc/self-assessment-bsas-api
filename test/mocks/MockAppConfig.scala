@@ -17,7 +17,7 @@
 package mocks
 
 import config.{AppConfig, ConfidenceLevelConfig}
-import org.scalamock.handlers.CallHandler
+import org.scalamock.handlers.{CallHandler, CallHandler0}
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration
 
@@ -52,5 +52,9 @@ trait MockAppConfig extends MockFactory {
     def endpointsEnabled: CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: String => Boolean).expects(*)
     def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] = (mockAppConfig.confidenceLevelConfig _: () => ConfidenceLevelConfig).expects()
     def mtdNrsProxyBaseUrl: CallHandler[String] = (mockAppConfig.mtdNrsProxyBaseUrl _).expects()
+
+    // Trigger BSAS minimum tax years
+    def v3TriggerForeignBsasMinimumTaxYear: CallHandler[String] = (mockAppConfig.v3TriggerForeignBsasMinimumTaxYear _: () => String).expects()
+    def v3TriggerNonForeignBsasMinimumTaxYear: CallHandler0[String] = (mockAppConfig.v3TriggerNonForeignBsasMinimumTaxYear _: () => String).expects()
   }
 }

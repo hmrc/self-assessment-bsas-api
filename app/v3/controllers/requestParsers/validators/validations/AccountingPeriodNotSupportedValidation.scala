@@ -16,21 +16,25 @@
 
 package v3.controllers.requestParsers.validators.validations
 
+import config.AppConfig
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors.{MtdError, RuleAccountingPeriodNotSupportedError}
 
 object AccountingPeriodNotSupportedValidation {
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-  // self-employment and uk property: end date earliest 2019-20
-  // foreign property: end date earliest 2021-22
-  private lazy val foreignPropertyEarliestEndDate = LocalDate.parse("2021-04-06", DateTimeFormatter.ISO_LOCAL_DATE)
-  private lazy val selfEmploymentAndUkPropertyEarliestEndDate = LocalDate.parse("2019-04-06", DateTimeFormatter.ISO_LOCAL_DATE)
-
-  def validate(typeOfBusiness: TypeOfBusiness, endDate: String): List[MtdError] = {
+  def validate(typeOfBusiness: TypeOfBusiness, endDate: String, config: AppConfig): List[MtdError] = {
+    lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
+      s"${config.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
+      DateTimeFormatter.ISO_LOCAL_DATE
+    )
+    lazy val selfEmploymentAndUkPropertyEarliestEndDate: LocalDate = LocalDate.parse(
+      s"${config.v3TriggerNonForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
+      DateTimeFormatter.ISO_LOCAL_DATE
+    )
 
     val earliestDate: LocalDate = typeOfBusiness match {
       case TypeOfBusiness.`self-employment` | TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` =>

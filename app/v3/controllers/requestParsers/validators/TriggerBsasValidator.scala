@@ -16,7 +16,8 @@
 
 package v3.controllers.requestParsers.validators
 
-import config.FixedConfig
+import config.{AppConfig, FixedConfig}
+
 import javax.inject.Inject
 import utils.CurrentDateProvider
 import v3.controllers.requestParsers.validators.validations._
@@ -24,7 +25,7 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
-class TriggerBsasValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
+class TriggerBsasValidator @Inject()(val currentDateProvider: CurrentDateProvider, appConfig: AppConfig) extends Validator[TriggerBsasRawData] {
 
   private val validationSet = List(parameterFormatValidation, incorrectOrEmptyBodyValidation, bodyFormatValidation, bodyRuleValidation)
 
@@ -56,7 +57,7 @@ class TriggerBsasValidator @Inject()(val currentDateProvider: CurrentDateProvide
     val typeOfBusiness = TypeOfBusiness.parser(req.typeOfBusiness)
     List(
       EndBeforeStartDateValidation.validate(req.accountingPeriod.startDate, req.accountingPeriod.endDate),
-      AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, req.accountingPeriod.endDate)
+      AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, req.accountingPeriod.endDate, appConfig)
     )
   }
 
