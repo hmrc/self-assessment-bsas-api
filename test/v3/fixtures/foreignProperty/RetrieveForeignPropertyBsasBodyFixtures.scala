@@ -208,8 +208,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |   "additions": $additionsMtdJson,
       |   "totalDeductions": 0.12,
       |   "deductions": $deductionsMtdJson,
-      |    "taxableProfit": 1,
-      |    "adjustedIncomeTaxLoss": 1
+      |    "taxableProfit": 1.12,
+      |    "adjustedIncomeTaxLoss": 1.12
       |}""".stripMargin
   )
 
@@ -226,8 +226,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |   "additions": $additionsDesJson,
       |   "totalDeductions": 0.12,
       |   "deductions": $deductionsDesJson,
-      |    "taxableProfit": 1,
-      |    "adjustedIncomeTaxLoss": 1
+      |    "taxableProfit": 1.12,
+      |    "adjustedIncomeTaxLoss": 1.12
       |}""".stripMargin
   )
 
@@ -448,8 +448,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(additionsModel),
     Some(0.12),
     Some(deductionsModel),
-    Some(1),
-    Some(1)
+    Some(1.12),
+    Some(1.12)
   )
 
   val adjustableSummaryCalculationModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
