@@ -34,11 +34,11 @@ class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonError
   "validate" should {
     "return no errors" when {
       List(
-        (TypeOfBusiness.`self-employment`, "2019-04-07"),
-        (TypeOfBusiness.`uk-property-fhl`, "2019-04-07"),
-        (TypeOfBusiness.`uk-property-non-fhl`, "2019-04-07"),
-        (TypeOfBusiness.`foreign-property-fhl-eea`, "2021-04-07"),
-        (TypeOfBusiness.`foreign-property`, "2021-04-07"),
+        (TypeOfBusiness.`self-employment`, "2019-04-06"),
+        (TypeOfBusiness.`uk-property-fhl`, "2019-04-06"),
+        (TypeOfBusiness.`uk-property-non-fhl`, "2019-04-06"),
+        (TypeOfBusiness.`foreign-property-fhl-eea`, "2021-04-06"),
+        (TypeOfBusiness.`foreign-property`, "2021-04-06"),
       ).foreach {
         case (typeOfBusiness, endDate) =>
           s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in {
