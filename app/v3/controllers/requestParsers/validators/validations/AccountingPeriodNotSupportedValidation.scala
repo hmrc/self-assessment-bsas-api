@@ -38,7 +38,6 @@ object AccountingPeriodNotSupportedValidation {
       DateTimeFormatter.ISO_LOCAL_DATE
     )
 
-    println(foreignPropertyEarliestEndDate + " " + selfEmploymentAndUkPropertyEarliestEndDate)
 
     val earliestDate: LocalDate = typeOfBusiness match {
       case TypeOfBusiness.`self-employment` | TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` =>
