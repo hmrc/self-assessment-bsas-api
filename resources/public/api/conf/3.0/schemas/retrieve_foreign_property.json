@@ -508,7 +508,10 @@
                 "type": "integer",
                 "example": "1000"
               }
-            }
+            },
+            "required": [
+              "countryCode"
+            ]
           }
         }
       }
@@ -600,7 +603,10 @@
                   }
                 }
               }
-            }
+            },
+            "required": [
+              "countryCode"
+            ]
           }
         }
       }
@@ -1035,7 +1041,10 @@
                 "type": "integer",
                 "example": "1000"
               }
-            }
+            },
+            "required": [
+              "countryCode"
+            ]
           }
         }
       }

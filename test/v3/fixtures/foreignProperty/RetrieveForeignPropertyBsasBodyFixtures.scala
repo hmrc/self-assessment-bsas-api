@@ -437,7 +437,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   )
 
   val countryLevelDetailModel: CountryLevelDetail = CountryLevelDetail(
-    Some("CYM"),
+    "CYM",
     Some(0.12),
     Some(incomeModel),
     Some(0.12),
@@ -520,7 +520,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   val adjustmentsNonFhlModel: Adjustments = Adjustments(
     Some(Seq(CountryLevelDetail(
-      Some("CYM"),
+      "CYM",
       None,
       Some(incomeModel),
       None,

@@ -19,7 +19,7 @@ package v3.models.response.retrieveBsas.foreignProperty
 import play.api.libs.json.{Json, OWrites, Reads}
 
 
-case class CountryLevelDetail(countryCode: Option[String],
+case class CountryLevelDetail(countryCode: String,
                               totalIncome: Option[BigDecimal],
                               income: Option[Income],
                               totalExpenses: Option[BigDecimal],
