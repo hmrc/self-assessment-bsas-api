@@ -196,8 +196,8 @@ class SubmitSelfEmploymentBsasControllerSpec
           BadRequestError,
           Some(
             Seq(
-              FormatAdjustmentValueError.copy(paths = Some(Seq("turnover"))),
-              RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("other")))
+              RuleBothExpensesError.copy(paths = Some(Seq("expenses"))),
+              ValueFormatError.copy(paths = Some(Seq("turnover")))
             )
           )
         )
@@ -216,8 +216,8 @@ class SubmitSelfEmploymentBsasControllerSpec
           AuditResponse(httpStatus = BAD_REQUEST,
                         errors = Some(
                           Seq(
-                            AuditError(FormatAdjustmentValueError.code),
-                            AuditError(RuleAdjustmentRangeInvalid.code)
+                            AuditError(RuleBothExpensesError.code),
+                            AuditError(ValueFormatError.code)
                           )),
                         body = None)
 

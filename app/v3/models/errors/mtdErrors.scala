@@ -50,8 +50,6 @@ object AdjustedStatusFormatError
 object CalculationIdFormatError
   extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid")
 
-object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "The format of the adjustment value is invalid")
-
 object BsasIdFormatError extends MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
 
 
@@ -124,8 +122,6 @@ object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An ad
 
 @deprecated("replace with RuleTypeOfBusinessIncorrectError", since = "v0.9")
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business")
-
-object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "Adjustment value falls outside accepted range")
 
 object RuleResultingValueNotPermitted
   extends MtdError("RULE_RESULTING_VALUE_NOT_PERMITTED","The adjustments provided would produce an unacceptable negative monetary value")
