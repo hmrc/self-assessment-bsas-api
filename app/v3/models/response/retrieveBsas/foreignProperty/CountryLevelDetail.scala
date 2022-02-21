@@ -16,8 +16,7 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{Json, OWrites, Reads}
-
+import play.api.libs.json.{Json, OFormat}
 
 case class CountryLevelDetail(countryCode: String,
                               totalIncome: Option[BigDecimal],
@@ -30,12 +29,10 @@ case class CountryLevelDetail(countryCode: String,
                               additions: Option[Additions],
                               totalDeductions: Option[BigDecimal],
                               deductions: Option[Deductions],
-                              taxableProfit: Option[BigInt],
-                              adjustedIncomeTaxLoss: Option[BigInt]
+                              taxableProfit: Option[BigDecimal],
+                              adjustedIncomeTaxLoss: Option[BigDecimal]
                              )
 
 object CountryLevelDetail {
-  implicit val reads: Reads[CountryLevelDetail] = Json.reads[CountryLevelDetail]
-
-  implicit val writes: OWrites[CountryLevelDetail] = Json.writes[CountryLevelDetail]
+  implicit val format: OFormat[CountryLevelDetail] = Json.format[CountryLevelDetail]
 }

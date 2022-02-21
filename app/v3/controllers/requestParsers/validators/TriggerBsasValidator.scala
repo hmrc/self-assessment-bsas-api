@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators
 
-import config.{AppConfig, FixedConfig}
+import config.AppConfig
 
 import javax.inject.Inject
 import utils.CurrentDateProvider
