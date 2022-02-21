@@ -155,8 +155,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (NinoFormatError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-        (FormatAdjustmentValueError, BAD_REQUEST),
-        (RuleAdjustmentRangeInvalid, BAD_REQUEST),
+        (ValueFormatError, BAD_REQUEST),
         (RuleBothExpensesError, BAD_REQUEST),
         (DownstreamError, INTERNAL_SERVER_ERROR)
       )
@@ -263,7 +262,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleAlreadyAdjusted, FORBIDDEN),
         (RuleResultingValueNotPermitted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RuleNotSelfEmployment, FORBIDDEN),
+        (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
       )
       input.foreach(args => (serviceErrors _).tupled(args))
