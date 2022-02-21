@@ -122,7 +122,7 @@ object RulePropertyIncomeAllowanceClaimed
 
 object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An adjusted summary calculation does not exist")
 
-@deprecated("replace with RuleTypeOfBusinessIncorrectError")
+@deprecated("replace with RuleTypeOfBusinessIncorrectError", since = "v0.9")
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business")
 
 object RuleAdjustmentRangeInvalid extends MtdError("RULE_RANGE_INVALID", "Adjustment value falls outside accepted range")

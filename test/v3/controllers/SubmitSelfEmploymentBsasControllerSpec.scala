@@ -255,6 +255,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
+        (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleSummaryStatusInvalid, FORBIDDEN),
@@ -262,7 +263,6 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleAlreadyAdjusted, FORBIDDEN),
         (RuleResultingValueNotPermitted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
       )
       input.foreach(args => (serviceErrors _).tupled(args))

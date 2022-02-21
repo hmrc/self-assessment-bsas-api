@@ -27,6 +27,18 @@ class AdjustableSummaryCalculationSpec extends UnitSpec with JsonErrorValidators
       "a valid json with all fields are supplied" in {
         adjustableSCDesJson.as[AdjustableSummaryCalculation] shouldBe adjustableSummaryCalculationModel
       }
+
+      "a valid json with income and expenses fields is supplied" in {
+        adjustableSCDesJsonIncomeAndExpenses.as[AdjustableSummaryCalculation] shouldBe adjustableSummaryCalculationModelIncomeAndExpenses
+      }
+
+      "a valid json with additions and deductions fields is supplied" in {
+        adjustableSCDesJsonAdditionsAndDeductions.as[AdjustableSummaryCalculation] shouldBe adjustableSummaryCalculationModelAdditionsAndDeductions
+      }
+
+      "a valid json with just the countryLevelDetail field is supplied" in {
+        adjustableSCDesJsonCountryLevel.as[AdjustableSummaryCalculation] shouldBe adjustableSummaryCalculationModelCountryLevel
+      }
     }
   }
 

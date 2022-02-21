@@ -123,15 +123,14 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     // @formatter:off
     
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | CalculationIdFormatError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-          CustomMtdError(RuleBothExpensesError.code) |
-          CustomMtdError(ValueFormatError.code) | RuleTypeOfBusinessIncorrectError =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
-          RuleTradingIncomeAllowanceClaimed | RuleResultingValueNotPermitted =>
-        Forbidden(Json.toJson(errorWrapper))
-
+      case BadRequestError | NinoFormatError | CalculationIdFormatError |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | RuleBothExpensesError |
+           CustomMtdError(FormatAdjustmentValueError.code) | RuleTypeOfBusinessIncorrectError |
+           CustomMtdError(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
+      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
+           RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
+           RuleTradingIncomeAllowanceClaimed |
+           RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

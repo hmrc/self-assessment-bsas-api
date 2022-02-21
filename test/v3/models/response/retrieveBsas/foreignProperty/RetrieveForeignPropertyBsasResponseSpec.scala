@@ -28,12 +28,16 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
 
   "reads" should {
     "return a valid retrieve BSAS model" when {
-      "a valid FhlEea json with all fields are supplied" in {
+      "a valid FhlEea json with all fields is supplied" in {
         retrieveForeignPropertyBsasDesJsonFhlEea.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveBsasResponseFhlEeaModel
       }
 
-      "a valid NonFhl json with all fields are supplied" in {
+      "a valid NonFhl json with all fields is supplied" in {
         retrieveForeignPropertyBsasDesJsonNonFhl.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveBsasResponseNonFhlModel
+      }
+
+      "a valid FhlEea json without adjustments is supplied" in {
+        retrieveForeignPropertyBsasDesJsonFhlEeaNoAdjustmentsDone.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveBsasResponseFhlEeaModelNoAdjustmentsDone
       }
     }
   }
