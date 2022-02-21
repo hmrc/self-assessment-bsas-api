@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{ Json, OFormat }
 
 case class Expenses(costOfGoodsAllowable: Option[BigDecimal],
                     paymentsToSubcontractorsAllowable: Option[BigDecimal],
@@ -35,6 +35,10 @@ case class Expenses(costOfGoodsAllowable: Option[BigDecimal],
                     businessEntertainmentCostsAllowable: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]) {
 
+  val hasOnlyConsolidatedExpenses = this match {
+    case Expenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(_)) => true
+    case _                                                                                                           => false
+  }
 }
 
 object Expenses {
