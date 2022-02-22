@@ -88,7 +88,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
-      auditType = "submitBusinessSourceAccountingAdjustments",
+      auditType = "SubmitSelfEmploymentAccountingAdjustments",
       transactionName = "submit-self-employment-accounting-adjustments",
       detail = GenericAuditDetail(
         userType = "Individual",
@@ -96,6 +96,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         params = Map("nino" -> nino, "calculationId" -> calculationId),
         requestBody = Some(Json.toJson(mtdRequest)),
         `X-CorrelationId` = correlationId,
+        versionNumber = Some("3.0"),
         auditResponse = auditResponse
       )
     )

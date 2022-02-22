@@ -18,12 +18,13 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
 import v3.mocks.services._
+import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
@@ -46,10 +47,12 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockIdGenerator
 {
 
+  private val nino = "AA123456A"
+  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new SubmitForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
@@ -58,6 +61,7 @@ class SubmitForeignPropertyBsasControllerSpec
       service = mockService,
       nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -67,9 +71,6 @@ class SubmitForeignPropertyBsasControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
   }
-
-  private val nino = "AA123456A"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   private val testHateoasLink = Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
 
@@ -120,9 +121,36 @@ class SubmitForeignPropertyBsasControllerSpec
   val requestBody: SubmitForeignPropertyBsasRequestBody =
     SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
 
-
   private val rawData = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
   private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, requestBody)
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "SubmitForeignPropertyAccountingAdjustments",
+      transactionName = "submit-foreign-property-accounting-adjustments",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "calculationId" -> bsasId),
+        requestBody = Some(requestJson),
+        `X-CorrelationId` = correlationId,
+        versionNumber = Some("3.0"),
+        auditResponse = auditResponse
+      )
+    )
+
+  val responseBody: JsValue = Json.parse(
+    s"""
+       |{
+       |  "links":[
+       |    {
+       |      "href":"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
+       |""".stripMargin)
 
   "handleRequest" should {
     "return Ok" when {
@@ -147,8 +175,12 @@ class SubmitForeignPropertyBsasControllerSpec
         val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
         status(result) shouldBe OK
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(responseBody))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
+
     "return the error as per spec" when {
       "parser errors occur" should {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
@@ -163,6 +195,9 @@ class SubmitForeignPropertyBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -203,6 +238,9 @@ class SubmitForeignPropertyBsasControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

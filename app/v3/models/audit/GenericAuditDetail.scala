@@ -25,6 +25,7 @@ case class GenericAuditDetail(userType: String,
                               params: Map[String, String],
                               requestBody: Option[JsValue],
                               `X-CorrelationId`: String,
+                              versionNumber: Option[String],
                               auditResponse: AuditResponse)
 
 object GenericAuditDetail {
@@ -35,6 +36,7 @@ object GenericAuditDetail {
       JsPath.write[Map[String, String]] and
       (JsPath \ "request").writeNullable[JsValue] and
       (JsPath \ "X-CorrelationId").write[String] and
+      (JsPath \ "versionNumber").writeNullable[String] and
       (JsPath \ "response").write[AuditResponse]
     ) (unlift(GenericAuditDetail.unapply))
 
@@ -42,6 +44,7 @@ object GenericAuditDetail {
             params: Map[String, String],
             requestBody: Option[JsValue],
             `X-CorrelationId`: String,
+            versionNumber: Option[String],
             auditResponse: AuditResponse): GenericAuditDetail = {
 
     GenericAuditDetail(
@@ -50,6 +53,7 @@ object GenericAuditDetail {
       params = params,
       requestBody = requestBody,
       `X-CorrelationId` = `X-CorrelationId`,
+      versionNumber = versionNumber,
       auditResponse = auditResponse
     )
   }

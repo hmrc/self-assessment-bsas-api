@@ -37,6 +37,7 @@ object GenericAuditDetailFixture {
       params = pathParams,
       requestBody = requestBody,
       `X-CorrelationId` = xCorrId,
+      None,
       auditResponse = auditResponseModelWithBody
     )
 

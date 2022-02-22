@@ -18,16 +18,20 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v3.controllers.requestParsers.SubmitUkPropertyBsasDataParser
 import v3.hateoas.HateoasFactory
+import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v3.models.response.SubmitUkPropertyBsasHateoasData
-import v3.services.{EnrolmentsAuthService, MtdIdLookupService, SubmitUkPropertyBsasService, SubmitUKPropertyBsasNrsProxyService}
+import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUKPropertyBsasNrsProxyService, SubmitUkPropertyBsasService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +42,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
                                                requestParser: SubmitUkPropertyBsasDataParser,
                                                service: SubmitUkPropertyBsasService,
                                                hateoasFactory: HateoasFactory,
+                                               auditService: AuditService,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -81,6 +86,16 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}"
           )
+          auditSubmission(
+            GenericAuditDetail(
+              userDetails = request.userDetails,
+              params = Map("nino" -> nino, "calculationId" -> calculationId),
+              requestBody = Some(request.body),
+              `X-CorrelationId` = response.correlationId,
+              versionNumber = Some("3.0"),
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+            )
+          )
 
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(response.correlationId)
@@ -92,7 +107,16 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
-
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            params = Map("nino" -> nino, "calculationId" -> calculationId),
+            requestBody = Some(request.body),
+            `X-CorrelationId` = resCorrelationId,
+            versionNumber = Some("3.0"),
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
         result
       }.merge
     }
@@ -109,5 +133,16 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+
+    val event = AuditEvent(
+      auditType = "SubmitUKPropertyAccountingAdjustments",
+      transactionName = "submit-uk-property-accounting-adjustments",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
   }
 }

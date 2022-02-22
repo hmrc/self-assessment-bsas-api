@@ -25,6 +25,7 @@ import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
+import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
@@ -43,7 +44,8 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUkPropertyBsasService
     with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAuditService {
 
   private val correlationId = "X-123"
   private val nino = "AA123456A"
@@ -81,6 +83,7 @@ class SubmitUkPropertyBsasControllerSpec
       service = mockService,
       nrsService = mockSubmitUKPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
+      auditService =mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -90,6 +93,21 @@ class SubmitUkPropertyBsasControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "SubmitUKPropertyAccountingAdjustments",
+      transactionName = "submit-uk-property-accounting-adjustments",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "calculationId" -> calculationId),
+        requestBody = Some(validNonFHLInputJson),
+        `X-CorrelationId` = correlationId,
+        versionNumber = Some("3.0"),
+        auditResponse = auditResponse
+      )
+    )
 
   "submitUkPropertyBsas" should {
     "return a successful hateoas response with status 200 (OK)" when {
@@ -116,6 +134,9 @@ class SubmitUkPropertyBsasControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, calculationId))))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -132,6 +153,9 @@ class SubmitUkPropertyBsasControllerSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
         }
       }
 
@@ -161,6 +185,18 @@ class SubmitUkPropertyBsasControllerSpec
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse =
+          AuditResponse(
+            httpStatus = BAD_REQUEST,
+            errors = Some(Seq(
+              AuditError(NinoFormatError.code),
+              AuditError(CalculationIdFormatError.code)
+            )),
+            body = None
+          )
+
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -185,6 +221,9 @@ class SubmitUkPropertyBsasControllerSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
         }
       }
 
