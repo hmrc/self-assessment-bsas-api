@@ -125,7 +125,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | CalculationIdFormatError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleBothExpensesError.code) |
-           ValueFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
+           CustomMtdError(ValueFormatError.code) | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
            RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
            RuleTradingIncomeAllowanceClaimed |
