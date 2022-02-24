@@ -16,9 +16,8 @@
 
 package v3.controllers.requestParsers.validators
 
-import config.AppConfig
-
 import javax.inject.Inject
+import config.AppConfig
 import utils.CurrentDateProvider
 import v3.controllers.requestParsers.validators.validations._
 import v3.models.domain.TypeOfBusiness

@@ -29,10 +29,10 @@ import v3.hateoas.HateoasFactory
 import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody }
+
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
 import v3.services._
-
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -139,7 +139,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(
-      auditType = "submitBusinessSourceAccountingAdjustments",
+      auditType = "SubmitSelfEmploymentAccountingAdjustments",
       transactionName = "submit-self-employment-accounting-adjustments",
       detail = details
     )
