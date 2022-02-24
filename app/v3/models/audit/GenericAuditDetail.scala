@@ -20,23 +20,23 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, OWrites}
 import v3.models.auth.UserDetails
 
-case class GenericAuditDetail(userType: String,
+case class GenericAuditDetail(versionNumber: String,
+                              userType: String,
                               agentReferenceNumber: Option[String],
                               params: Map[String, String],
                               requestBody: Option[JsValue],
                               `X-CorrelationId`: String,
-                              versionNumber: Option[String],
                               auditResponse: AuditResponse)
 
 object GenericAuditDetail {
 
   implicit val writes: OWrites[GenericAuditDetail] = (
-    (JsPath \ "userType").write[String] and
+    (JsPath \ "versionNumber").write[String] and
+      (JsPath \ "userType").write[String] and
       (JsPath \ "agentReferenceNumber").writeNullable[String] and
       JsPath.write[Map[String, String]] and
       (JsPath \ "request").writeNullable[JsValue] and
       (JsPath \ "X-CorrelationId").write[String] and
-      (JsPath \ "versionNumber").writeNullable[String] and
       (JsPath \ "response").write[AuditResponse]
     ) (unlift(GenericAuditDetail.unapply))
 
@@ -44,16 +44,15 @@ object GenericAuditDetail {
             params: Map[String, String],
             requestBody: Option[JsValue],
             `X-CorrelationId`: String,
-            versionNumber: Option[String],
             auditResponse: AuditResponse): GenericAuditDetail = {
 
     GenericAuditDetail(
+      versionNumber = "3.0",
       userType = userDetails.userType,
       agentReferenceNumber = userDetails.agentReferenceNumber,
       params = params,
       requestBody = requestBody,
       `X-CorrelationId` = `X-CorrelationId`,
-      versionNumber = versionNumber,
       auditResponse = auditResponse
     )
   }

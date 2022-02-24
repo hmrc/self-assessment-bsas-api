@@ -129,12 +129,12 @@ class SubmitForeignPropertyBsasControllerSpec
       auditType = "SubmitForeignPropertyAccountingAdjustments",
       transactionName = "submit-foreign-property-accounting-adjustments",
       detail = GenericAuditDetail(
+        versionNumber = "3.0",
         userType = "Individual",
         agentReferenceNumber = None,
         params = Map("nino" -> nino, "calculationId" -> bsasId),
         requestBody = Some(requestJson),
         `X-CorrelationId` = correlationId,
-        versionNumber = Some("3.0"),
         auditResponse = auditResponse
       )
     )

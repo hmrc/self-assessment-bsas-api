@@ -29,15 +29,16 @@ object GenericAuditDetailFixture {
   val pathParams: Map[String, String] = Map("nino" -> nino, "calculationId" -> calculationId)
   val requestBody: Option[JsValue] = None
   val xCorrId = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val versionNumber: String = "3.0"
 
   val genericAuditDetailModelSuccess: GenericAuditDetail =
     GenericAuditDetail(
+      versionNumber = versionNumber,
       userType = userType,
       agentReferenceNumber = agentReferenceNumber,
       params = pathParams,
       requestBody = requestBody,
       `X-CorrelationId` = xCorrId,
-      None,
       auditResponse = auditResponseModelWithBody
     )
 
@@ -49,6 +50,7 @@ object GenericAuditDetailFixture {
   val genericAuditDetailJsonSuccess: JsValue = Json.parse(
     s"""
        |{
+       |   "versionNumber": "$versionNumber",
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino" : "$nino",
@@ -65,6 +67,7 @@ object GenericAuditDetailFixture {
   val genericAuditDetailJsonError: JsValue = Json.parse(
     s"""
        |{
+       |   "versionNumber": "$versionNumber",
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino": "$nino",

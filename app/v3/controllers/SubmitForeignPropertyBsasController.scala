@@ -82,7 +82,6 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
               params = Map("nino" -> nino, "calculationId" -> calculationId),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
-              versionNumber = Some("3.0"),
               auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
@@ -104,7 +103,6 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             params = Map("nino" -> nino, "calculationId" -> calculationId),
             requestBody = Some(request.body),
             `X-CorrelationId` = resCorrelationId,
-            versionNumber = Some("3.0"),
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )

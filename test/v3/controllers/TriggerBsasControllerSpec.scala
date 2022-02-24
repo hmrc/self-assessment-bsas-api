@@ -105,12 +105,12 @@ class TriggerBsasControllerSpec
       auditType = "TriggerBusinessSourceAdjustableSummary",
       transactionName = "trigger-business-source-adjustable-summary",
       detail = GenericAuditDetail(
+        versionNumber = "3.0",
         userType = "Individual",
         agentReferenceNumber = None,
         params = Map("nino" -> nino),
         requestBody = requestBody,
         `X-CorrelationId` = correlationId,
-        versionNumber = Some("3.0"),
         auditResponse = auditResponse
       )
     )
