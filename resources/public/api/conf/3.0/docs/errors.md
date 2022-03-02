@@ -34,25 +34,25 @@ Where arrays are submitted a number indicates the object in the array sequence, 
 
 An example with single error:<br>
 `{
-    "code": "FORMAT_STRING_NAME",
-    "message": "The provided field is not valid",
-    "paths": [ "/arrayName/0/fieldName" ]
+    "code": "FORMAT_STRING_NAME",
+    "message": "The provided field is not valid",
+    "paths": [ "/arrayName/0/fieldName" ]
 }`
 
 An example with multiple errors:<br>
 `{
-    "code": "INVALID_REQUEST",
-    "message": "Invalid request",
-    "errors": [
-        {
-            "code": "FORMAT_VALUE",
-            "message": "The field should be between 0 and 99999999999.99",
-            "paths": [ "/objectName/fieldName1", "/arrayName/0/fieldName2" ]
-        },
-        {
-            "code": "FORMAT_STRING_NAME",
-            "message": "The provided field is not valid",
-            "paths": [ "/arrayName/0/fieldName3", "/arrayName/1/fieldName3" ]
-        }
+    "code": "INVALID_REQUEST",
+    "message": "Invalid request",
+    "errors": [
+        {
+           "code": "FORMAT_VALUE",
+           "message": "The value should be between 0 and 99999999999.99",
+           "paths": [ "/objectName/fieldName1", "/arrayName/0/fieldName2" ]
+        },
+        {
+           "code": "FORMAT_STRING_NAME",
+           "message": "The provided field is not valid",
+           "paths": [ "/arrayName/0/fieldName3", "/arrayName/1/fieldName3" ]
+        }
     ]
 }`
