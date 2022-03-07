@@ -116,8 +116,8 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError |
            NinoFormatError |
            RuleAccountingPeriodNotSupportedError |
@@ -129,8 +129,8 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
       case RuleAccountingPeriodNotEndedError | RulePeriodicDataIncompleteError | RuleNoAccountingPeriodError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 

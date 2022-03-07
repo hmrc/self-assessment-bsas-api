@@ -84,9 +84,8 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError |
            NinoFormatError |
            BsasIdFormatError |
@@ -105,6 +104,6 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
            RulePropertyIncomeAllowanceClaimed => Forbidden(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 }

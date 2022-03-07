@@ -119,10 +119,10 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
+  private def errorResult(errorWrapper: ErrorWrapper) =
     // @formatter:off
-    
-    (errorWrapper.error: @unchecked) match {
+
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | CalculationIdFormatError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleBothExpensesError.code) |
            CustomMtdError(ValueFormatError.code) | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
@@ -132,10 +132,10 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
            RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
 
     // @formatter:on
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(
