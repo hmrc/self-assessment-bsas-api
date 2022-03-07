@@ -18,23 +18,23 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.{ IdGenerator, Logging }
 import v3.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v3.hateoas.HateoasFactory
-import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v3.models.errors.{FormatAdjustmentValueError, RuleAdjustmentRangeInvalid, _}
-import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody}
+import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import v3.models.errors._
+import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody }
+
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
-import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitSelfEmploymentBsasNrsProxyService, SubmitSelfEmploymentBsasService}
-
-import scala.concurrent.{ExecutionContext, Future}
+import v3.services._
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -46,7 +46,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -56,29 +56,27 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       endpointName = "submitSelfEmploymentBsas"
     )
 
-  def submitSelfEmploymentBsas(nino: String, bsasId: String): Action[JsValue] =
+  def submitSelfEmploymentBsas(nino: String, calculationId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(request.body))
+      val rawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(request.body))
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- {
+          response <- {
             //Submit asynchronously to NRS
             nrsService.submit(nino, request.body.as[SubmitSelfEmploymentBsasRequestBody])
             //Submit Return to ETMP
             EitherT(service.submitSelfEmploymentBsas(parsedRequest))
           }
           hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(
-              response.responseData,
-              SubmitSelfEmploymentBsasHateoasData(nino, bsasId)
-            ).asRight[ErrorWrapper])
+            hateoasFactory
+              .wrap(response.responseData, SubmitSelfEmploymentBsasHateoasData(nino, calculationId))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -88,7 +86,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
           auditSubmission(
             GenericAuditDetail(
               userDetails = request.userDetails,
-              params = Map("nino" -> nino, "bsasId" -> bsasId),
+              params = Map("nino" -> nino, "calculationId" -> calculationId),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
               auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
@@ -102,7 +100,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -110,7 +108,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
-            params = Map("nino" -> nino, "bsasId" -> bsasId),
+            params = Map("nino" -> nino, "calculationId" -> calculationId),
             requestBody = Some(request.body),
             `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
@@ -122,24 +120,26 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
+    // @formatter:off
+    
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | CalculationIdFormatError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | RuleBothExpensesError |
-           CustomMtdError(FormatAdjustmentValueError.code) | RuleTypeOfBusinessIncorrectError |
-           CustomMtdError(RuleAdjustmentRangeInvalid.code) => BadRequest(Json.toJson(errorWrapper))
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleBothExpensesError.code) |
+           CustomMtdError(ValueFormatError.code) | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
       case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
            RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
-           RuleTradingIncomeAllowanceClaimed | RuleNotSelfEmployment |
+           RuleTradingIncomeAllowanceClaimed |
            RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+
+    // @formatter:on
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
     val event = AuditEvent(
-      auditType = "submitBusinessSourceAccountingAdjustments",
+      auditType = "SubmitSelfEmploymentAccountingAdjustments",
       transactionName = "submit-self-employment-accounting-adjustments",
       detail = details
     )

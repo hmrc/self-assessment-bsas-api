@@ -27,11 +27,13 @@ object GenericAuditDetailFixture {
   val userType: String = "Agent"
   val agentReferenceNumber: Option[String] = Some("012345678")
   val pathParams: Map[String, String] = Map("nino" -> nino, "calculationId" -> calculationId)
-  val requestBody: Option[JsValue] = None
+  val requestBody: Option[JsValue] = Some(Json.obj("field1" -> "value1"))
   val xCorrId = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val versionNumber: String = "3.0"
 
   val genericAuditDetailModelSuccess: GenericAuditDetail =
     GenericAuditDetail(
+      versionNumber = versionNumber,
       userType = userType,
       agentReferenceNumber = agentReferenceNumber,
       params = pathParams,
@@ -48,10 +50,14 @@ object GenericAuditDetailFixture {
   val genericAuditDetailJsonSuccess: JsValue = Json.parse(
     s"""
        |{
+       |   "versionNumber": "$versionNumber",
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino" : "$nino",
        |   "calculationId" : "$calculationId",
+       |   "request":{
+       |     "field1":"value1"
+       |   },
        |   "response":{
        |     "httpStatus": ${auditResponseModelWithBody.httpStatus},
        |     "body": ${auditResponseModelWithBody.body.get}
@@ -64,10 +70,14 @@ object GenericAuditDetailFixture {
   val genericAuditDetailJsonError: JsValue = Json.parse(
     s"""
        |{
+       |   "versionNumber": "$versionNumber",
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino": "$nino",
        |   "calculationId" : "$calculationId",
+       |   "request":{
+       |     "field1":"value1"
+       |   },
        |   "response": $auditResponseJsonWithErrors,
        |   "X-CorrelationId": "$xCorrId"
        |}

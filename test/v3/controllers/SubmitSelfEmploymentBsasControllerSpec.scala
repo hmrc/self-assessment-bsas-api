@@ -16,27 +16,27 @@
 
 package v3.controllers
 
+import domain.Nino
 import mocks.MockIdGenerator
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsJson, Result}
-import domain.Nino
+import play.api.mvc.{ AnyContentAsJson, Result }
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v3.mocks.services._
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
+import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData }
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubmitSelfEmploymentBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentRequestParser
@@ -52,15 +52,14 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   private val nino = "AA123456A"
 
-  private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
+  private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
-
-  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
-  private val request = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
+  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(mtdRequest))
+  private val request    = SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, submitSelfEmploymentBsasRequestBodyModel)
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId",
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId",
       method = GET,
       rel = "self"
     )
@@ -89,12 +88,13 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
-      auditType = "submitBusinessSourceAccountingAdjustments",
+      auditType = "SubmitSelfEmploymentAccountingAdjustments",
       transactionName = "submit-self-employment-accounting-adjustments",
       detail = GenericAuditDetail(
+        versionNumber = "3.0",
         userType = "Individual",
         agentReferenceNumber = None,
-        params = Map("nino" -> nino, "bsasId" -> bsasId),
+        params = Map("nino" -> nino, "calculationId" -> calculationId),
         requestBody = Some(Json.toJson(mtdRequest)),
         `X-CorrelationId` = correlationId,
         auditResponse = auditResponse
@@ -118,16 +118,16 @@ class SubmitSelfEmploymentBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, bsasId))
+          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(Json.toJson(mtdRequest)))
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(Json.toJson(mtdRequest)))
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, calculationId))))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
@@ -140,7 +140,7 @@ class SubmitSelfEmploymentBsasControllerSpec
             .parse(rawRequest)
             .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
+          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
@@ -156,8 +156,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (NinoFormatError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-        (FormatAdjustmentValueError, BAD_REQUEST),
-        (RuleAdjustmentRangeInvalid, BAD_REQUEST),
+        (ValueFormatError, BAD_REQUEST),
         (RuleBothExpensesError, BAD_REQUEST),
         (DownstreamError, INTERNAL_SERVER_ERROR)
       )
@@ -172,7 +171,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .parse(rawRequest)
           .returns(Left(error))
 
-        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
@@ -181,10 +180,11 @@ class SubmitSelfEmploymentBsasControllerSpec
         val auditResponse: AuditResponse =
           AuditResponse(
             httpStatus = BAD_REQUEST,
-            errors = Some(Seq(
-              AuditError(NinoFormatError.code),
-              AuditError(CalculationIdFormatError.code)
-            )),
+            errors = Some(
+              Seq(
+                AuditError(NinoFormatError.code),
+                AuditError(CalculationIdFormatError.code)
+              )),
             body = None
           )
 
@@ -197,8 +197,8 @@ class SubmitSelfEmploymentBsasControllerSpec
           BadRequestError,
           Some(
             Seq(
-              FormatAdjustmentValueError.copy(paths = Some(Seq("turnover"))),
-              RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("other")))
+              RuleBothExpensesError.copy(paths = Some(Seq("expenses"))),
+              ValueFormatError.copy(paths = Some(Seq("turnover")))
             )
           )
         )
@@ -207,20 +207,20 @@ class SubmitSelfEmploymentBsasControllerSpec
           .parse(rawRequest)
           .returns(Left(error))
 
-        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse =
-          AuditResponse(
-            httpStatus = BAD_REQUEST,
-            errors = Some(Seq(
-              AuditError(FormatAdjustmentValueError.code),
-              AuditError(RuleAdjustmentRangeInvalid.code)
-            )),
-            body = None)
+          AuditResponse(httpStatus = BAD_REQUEST,
+                        errors = Some(
+                          Seq(
+                            AuditError(RuleBothExpensesError.code),
+                            AuditError(ValueFormatError.code)
+                          )),
+                        body = None)
 
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
@@ -242,7 +242,7 @@ class SubmitSelfEmploymentBsasControllerSpec
             .submitSelfEmploymentBsas(request)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, bsasId)(fakePostRequest(mtdRequest))
+          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -256,6 +256,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
+        (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleSummaryStatusInvalid, FORBIDDEN),
@@ -263,11 +264,9 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleAlreadyAdjusted, FORBIDDEN),
         (RuleResultingValueNotPermitted, FORBIDDEN),
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RuleNotSelfEmployment, FORBIDDEN),
         (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
       )
       input.foreach(args => (serviceErrors _).tupled(args))
     }
   }
-
 }

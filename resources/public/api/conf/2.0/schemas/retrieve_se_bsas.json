@@ -54,7 +54,7 @@
             },
             "cisPaymentsToSubcontractors": {
               "type": "number",
-              "description": "Payments to subcontractors - Construction Industry Scheme (CIS). Expenses associated with the running of the business. The value must be between 0 and 99999999999.99.",
+              "description": "Construction industry – payments to subcontractors. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99.",
               "example": "1000.45"
             },
             "staffCosts": {

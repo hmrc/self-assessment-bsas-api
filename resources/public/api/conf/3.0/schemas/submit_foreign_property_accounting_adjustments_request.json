@@ -90,6 +90,9 @@
             "additionalProperties": false
           }
         },
+        "required": [
+          "countryCode"
+        ],
         "additionalProperties": false
       }
     },

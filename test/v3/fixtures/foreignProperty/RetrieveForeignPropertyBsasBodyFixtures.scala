@@ -16,7 +16,7 @@
 
 package v3.fixtures.foreignProperty
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
 
@@ -208,8 +208,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |   "additions": $additionsMtdJson,
       |   "totalDeductions": 0.12,
       |   "deductions": $deductionsMtdJson,
-      |    "taxableProfit": 1,
-      |    "adjustedIncomeTaxLoss": 1
+      |    "taxableProfit": 1.12,
+      |    "adjustedIncomeTaxLoss": 1.12
       |}""".stripMargin
   )
 
@@ -226,8 +226,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |   "additions": $additionsDesJson,
       |   "totalDeductions": 0.12,
       |   "deductions": $deductionsDesJson,
-      |    "taxableProfit": 1,
-      |    "adjustedIncomeTaxLoss": 1
+      |    "taxableProfit": 1.12,
+      |    "adjustedIncomeTaxLoss": 1.12
       |}""".stripMargin
   )
 
@@ -267,7 +267,35 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  val adjustmentsMtdNonFhlJson: JsValue = Json.parse(
+  val adjustableSCDesJsonIncomeAndExpenses = Json.parse(
+    s"""{
+       |		"totalIncome": 0.12,
+       |		"income": $incomeDesJson,
+       |		"totalExpenses": 0.12,
+       |		"expenses": $expensesDesJson,
+       |    "netProfit": 0.12,
+       |		"taxableProfit": 1
+       |}""".stripMargin
+  )
+
+  val adjustableSCDesJsonAdditionsAndDeductions = Json.parse(
+    s"""{
+       |    "netLoss": 0.12,
+       |		"totalAdditions": 0.12,
+       |		"additions": $additionsDesJson,
+       |		"totalDeductions": 0.12,
+       |		"deductions": $deductionsDesJson,
+       |   "adjustedIncomeTaxLoss": 1
+       |}""".stripMargin
+  )
+
+  val adjustableSCDesJsonCountryLevel = Json.parse(
+    s"""{
+       |		"countryLevelDetail": [$countryLevelDetailDesJson]
+       |}""".stripMargin
+  )
+
+  val adjustmentsMtdNonFhlJson = Json.parse(
     s"""{
       |	"countryLevelDetail": [{
       |		"countryCode": "CYM",
@@ -365,7 +393,15 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  val incomeModel: Income = Income(
+  val retrieveForeignPropertyBsasDesJsonFhlEeaNoAdjustmentsDone = Json.parse(
+    s"""{
+       |	"metadata": $metadataDesJson,
+       |	"inputs": $inputsDesJson,
+       |	"adjustableSummaryCalculation": $adjustableSCDesJson
+       |}""".stripMargin
+  )
+
+  val incomeModel = Income(
     Some(0.12),
     Some(0.12),
     Some(0.12)
@@ -401,7 +437,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   )
 
   val countryLevelDetailModel: CountryLevelDetail = CountryLevelDetail(
-    Some("CYM"),
+    "CYM",
     Some(0.12),
     Some(incomeModel),
     Some(0.12),
@@ -412,8 +448,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(additionsModel),
     Some(0.12),
     Some(deductionsModel),
-    Some(1),
-    Some(1)
+    Some(1.12),
+    Some(1.12)
   )
 
   val adjustableSummaryCalculationModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
@@ -431,14 +467,60 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     Some(1),
     Some(Seq(countryLevelDetailModel)))
 
-  val adjustmentsFhlEeaModel: Adjustments = Adjustments(
+  val adjustableSummaryCalculationModelIncomeAndExpenses = AdjustableSummaryCalculation(
+    Some(0.12),
+    Some(incomeModel),
+    Some(0.12),
+    Some(expensesModel),
+    Some(0.12),
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(1),
+    None,
+    None)
+
+  val adjustableSummaryCalculationModelAdditionsAndDeductions = AdjustableSummaryCalculation(
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(0.12),
+    Some(0.12),
+    Some(additionsModel),
+    Some(0.12),
+    Some(deductionsModel),
+    None,
+    Some(1),
+    None)
+
+  val adjustableSummaryCalculationModelCountryLevel = AdjustableSummaryCalculation(
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(Seq(countryLevelDetailModel)))
+
+
+  val adjustmentsFhlEeaModel = Adjustments(
     None,
     Some(incomeModel),
     Some(expensesModel))
 
   val adjustmentsNonFhlModel: Adjustments = Adjustments(
     Some(Seq(CountryLevelDetail(
-      Some("CYM"),
+      "CYM",
       None,
       Some(incomeModel),
       None,
@@ -469,6 +551,13 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     inputs = inputsModel.copy(typeOfBusiness = typeOfBusiness),
     adjustableSummaryCalculation = adjustableSummaryCalculationModel,
     adjustments = Some(adjustmentsNonFhlModel),
-    adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel)
+    adjustedSummaryCalculation = Some(adjustableSummaryCalculationModel))
+
+  val retrieveBsasResponseFhlEeaModelNoAdjustmentsDone = RetrieveForeignPropertyBsasResponse(
+    metadata = metaDataModel,
+    inputs = inputsModel,
+    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+    adjustments = None,
+    adjustedSummaryCalculation = None
   )
 }

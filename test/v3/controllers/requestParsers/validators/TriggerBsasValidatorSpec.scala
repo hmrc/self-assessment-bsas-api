@@ -16,8 +16,9 @@
 
 package v3.controllers.requestParsers.validators
 
-import java.time.LocalDate
+import mocks.MockAppConfig
 
+import java.time.LocalDate
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -26,7 +27,7 @@ import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRawData
 
 
-class TriggerBSASValidatorSpec extends UnitSpec {
+class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
 
   val nino = "AA123456A"
 
@@ -43,9 +44,11 @@ class TriggerBSASValidatorSpec extends UnitSpec {
   }
 
   class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
-    val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDateProvider)
+    val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDateProvider, appConfig = mockAppConfig)
 
     MockCurrentDateProvider.getCurrentDate().returns(date)
+    MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
+    MockedAppConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
   }
 
   "running validation" should {

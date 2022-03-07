@@ -17,9 +17,10 @@
 package config
 
 import com.typesafe.config.Config
-import javax.inject.{ Inject, Singleton }
-import play.api.{ ConfigLoader, Configuration }
+import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
   // MTD ID Lookup Config
@@ -44,32 +45,41 @@ trait AppConfig {
   def endpointsEnabled(version: String): Boolean
   def confidenceLevelConfig: ConfidenceLevelConfig
   def mtdNrsProxyBaseUrl: String
+
+  // V3 Trigger BSAS minimum dates
+  def v3TriggerForeignBsasMinimumTaxYear: String
+  def v3TriggerNonForeignBsasMinimumTaxYear: String
 }
 
 @Singleton
 class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configuration) extends AppConfig {
 
   // MTD ID Lookup Config
-  val mtdIdBaseUrl: String       = config.baseUrl("mtd-id-lookup")
+  val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
   // Downstream Config
-  val desBaseUrl: String         = config.baseUrl("des")
-  val desEnv: String             = config.getString("microservice.services.des.env")
-  val desToken: String           = config.getString("microservice.services.des.token")
-  val desEnvironmentHeaders      = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
-  val ifsBaseUrl: String         = config.baseUrl("ifs")
-  val ifsEnv: String             = config.getString("microservice.services.ifs.env")
-  val ifsToken: String           = config.getString("microservice.services.ifs.token")
-  val ifsEnabled: Boolean        = config.getBoolean("microservice.services.ifs.enabled")
-  val ifsEnvironmentHeaders      = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
+  val desBaseUrl: String = config.baseUrl("des")
+  val desEnv: String = config.getString("microservice.services.des.env")
+  val desToken: String = config.getString("microservice.services.des.token")
+  val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
+  val ifsBaseUrl: String = config.baseUrl("ifs")
+  val ifsEnv: String = config.getString("microservice.services.ifs.env")
+  val ifsToken: String = config.getString("microservice.services.ifs.token")
+  val ifsEnabled: Boolean = config.getBoolean("microservice.services.ifs.enabled")
+  val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
 
   // Api Config
-  val apiGatewayContext: String  = config.getString("api.gateway.context")
+  val apiGatewayContext: String = config.getString("api.gateway.context")
   val mtdNrsProxyBaseUrl: String = config.baseUrl("mtd-api-nrs-proxy")
+  val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
+
+  // V3 Trigger BSAS minimum dates
+  val v3TriggerForeignBsasMinimumTaxYear: String = config.getString("v3TriggerForeignBsasMinimumTaxYear")
+  val v3TriggerNonForeignBsasMinimumTaxYear: String = config.getString("v3TriggerNonForeignBsasMinimumTaxYear")
+
   def apiStatus(version: String): String = config.getString(s"api.$version.status")
   def featureSwitch: Option[Configuration] = configuration.getOptional[Configuration](s"feature-switch")
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
-  val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
 }
 
 trait FixedConfig {

@@ -16,34 +16,39 @@
 
 package v3.controllers.requestParsers.validators.validations
 
+import mocks.MockAppConfig
+import org.scalamock.handlers.CallHandler0
 import support.UnitSpec
 import v3.mocks.MockCurrentDateProvider
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors.RuleAccountingPeriodNotSupportedError
 import v3.models.utils.JsonErrorValidators
 
-class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider {
+class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider with MockAppConfig{
 
-  case class SetUp(endDate: String, typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`)
+  def setup(): CallHandler0[String] = {
+    MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
+    MockedAppConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
+  }
 
   "validate" should {
     "return no errors" when {
       List(
-        (TypeOfBusiness.`self-employment`, "2019-04-07"),
-        (TypeOfBusiness.`uk-property-fhl`, "2019-04-07"),
-        (TypeOfBusiness.`uk-property-non-fhl`, "2019-04-07"),
-        (TypeOfBusiness.`foreign-property-fhl-eea`, "2021-04-07"),
-        (TypeOfBusiness.`foreign-property`, "2021-04-07"),
+        (TypeOfBusiness.`self-employment`, "2019-04-06"),
+        (TypeOfBusiness.`uk-property-fhl`, "2019-04-06"),
+        (TypeOfBusiness.`uk-property-non-fhl`, "2019-04-06"),
+        (TypeOfBusiness.`foreign-property-fhl-eea`, "2021-04-06"),
+        (TypeOfBusiness.`foreign-property`, "2021-04-06"),
       ).foreach {
         case (typeOfBusiness, endDate) =>
           s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in {
-            AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, endDate) shouldBe Nil
+            setup()
+            AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, endDate, mockAppConfig) shouldBe Nil
           }
       }
     }
 
     "return errors" when {
-
       List(
         (TypeOfBusiness.`self-employment`, "2019-04-05"),
         (TypeOfBusiness.`uk-property-fhl`, "2019-04-05"),
@@ -53,7 +58,8 @@ class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonError
       ).foreach {
         case (typeOfBusiness, endDate) =>
           s"typeOfBusiness is $typeOfBusiness and the endDate is before the earliest allowed end date" in {
-            AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, endDate) shouldBe List(RuleAccountingPeriodNotSupportedError)
+            setup()
+            AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, endDate, mockAppConfig) shouldBe List(RuleAccountingPeriodNotSupportedError)
           }
       }
     }
