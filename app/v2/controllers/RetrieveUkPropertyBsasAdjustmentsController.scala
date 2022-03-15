@@ -111,14 +111,14 @@ class RetrieveUkPropertyBsasAdjustmentsController @Inject()(val authService: Enr
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | BsasIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case RuleNotUkProperty | RuleNoAdjustmentsMade             => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError                                         => NotFound(Json.toJson(errorWrapper))
       case DownstreamError                                       => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,

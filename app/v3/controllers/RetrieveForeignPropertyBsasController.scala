@@ -94,10 +94,6 @@ class RetrieveForeignPropertyBsasController @Inject()(
       case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
-      case _ =>
-        logger.error(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Unhandled error: $errorWrapper")
-        InternalServerError(Json.toJson(DownstreamError))
+      case _               => unhandledError(errorWrapper)
     }
 }
