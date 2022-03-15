@@ -20,39 +20,21 @@ import mocks.MockAppConfig
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.hateoas.HateoasFactory
-import v3.models.hateoas.Method.{ GET, POST }
-import v3.models.hateoas.{ HateoasWrapper, Link }
-import v3.models.utils.JsonErrorValidators
+import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.{HateoasWrapper, Link}
 
-class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators {
+class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {
 
-  "reads" should {
-    "return a valid retrieve BSAS model" when {
-      "a valid FhlEea json with all fields is supplied" in {
-        retrieveForeignPropertyBsasDesJsonFhlEea.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveBsasResponseFhlEeaModel
-      }
+  import RetrieveForeignPropertyBsasResponse._
 
-      "a valid NonFhl json with all fields is supplied" in {
-        retrieveForeignPropertyBsasDesJsonNonFhl.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveBsasResponseNonFhlModel
-      }
-
-      "a valid FhlEea json without adjustments is supplied" in {
-        retrieveForeignPropertyBsasDesJsonFhlEeaNoAdjustmentsDone.as[RetrieveForeignPropertyBsasResponse] shouldBe retrieveBsasResponseFhlEeaModelNoAdjustmentsDone
-      }
-    }
-  }
-
-  "writes" should {
-    "return a valid json" when {
-      "a valid fhlEea model is supplied" in {
-        retrieveBsasResponseFhlEeaModel.toJson shouldBe retrieveForeignPropertyBsasMtdJsonFhlEea
-      }
-
-      "a valid nonFhl model is supplied" in {
-        retrieveBsasResponseNonFhlModel.toJson shouldBe retrieveForeignPropertyBsasMtdJsonNonFhl
-      }
-    }
-  }
+  testRoundTrip("Retrieve Foreign Property Bsas Response FHL",
+    retrieveForeignPropertyBsasDesFhlJson,
+    retrieveForeignPropertyBsasResponseFhlModel,
+    retrieveForeignPropertyBsasMtdFhlJson)(reads)
+  testRoundTrip("Retrieve Foreign Property Bsas Response Non-FHL",
+    retrieveForeignPropertyBsasDesNonFhlJson,
+    retrieveForeignPropertyBsasResponseNonFhlModel,
+    retrieveForeignPropertyBsasMtdNonFhlJson)(reads)
 
   "HateoasFactory" should {
     class Test extends MockAppConfig {
@@ -63,7 +45,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
     }
 
     "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      val rawResponse: RetrieveForeignPropertyBsasResponse = retrieveBsasResponseFhlEeaModel
+      val rawResponse: RetrieveForeignPropertyBsasResponse = retrieveForeignPropertyBsasResponseFhlModel
 
       hateoasFactory.wrap(rawResponse, RetrieveForeignPropertyHateoasData(nino, calculationId)) shouldBe
         HateoasWrapper(

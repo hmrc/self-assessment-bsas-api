@@ -16,20 +16,31 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 import play.api.libs.functional.syntax._
 
-case class Adjustments(countryLevelDetail: Option[Seq[CountryLevelDetail]],
-                       income: Option[Income],
-                       expenses: Option[Expenses]
-                    )
+case class Adjustments(countryLevelDetail: Option[Seq[Adjustments]],
+                       countryCode: Option[String],
+                       income: Option[AdjustmentsIncome],
+                       expenses: Option[AdjustmentsExpenses])
 
 object Adjustments {
-  implicit val reads: Reads[Adjustments] = (
+
+  val readsFhl: Reads[Adjustments] = (
     Reads.pure(None) and
-      (JsPath \ "income").readNullable[Income] and
-      (JsPath \ "expenses").readNullable[Expenses]
-    ) (Adjustments.apply _)
+      Reads.pure(None) and
+      (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl)
+  )(Adjustments.apply _)
+
+  val readsNonFhl: Reads[Adjustments] = (
+    Reads.pure(None) and
+      (JsPath \ "countryCode").readNullable[String] and
+      (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsNonFhl) and
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsNonFhl)
+  )(Adjustments.apply _)
+
+  val readsNonFhlSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, readsNonFhl)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

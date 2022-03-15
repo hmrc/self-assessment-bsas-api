@@ -19,11 +19,16 @@ package v3.models.response.retrieveBsas.foreignProperty
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
-class AdjustmentsSpec extends UnitSpec with RoundTripTest {
+class SummaryCalculationSpec extends UnitSpec with RoundTripTest {
 
-  import Adjustments._
+  import SummaryCalculation._
 
-  testRoundTrip("Adjustments FHL", adjustmentsDesFhlJson, adjustmentsFhlModel, adjustmentsMtdFhlJson)(readsFhl)
-  testRoundTrip("Adjustments Non-FHL", adjustmentsDesNonFhlJson, adjustmentsNonFhlModel, adjustmentsCountryLevelDetailMtdNonFhlJson)(readsNonFhl)
-
+  testRoundTrip("Summary Calculation FHL",
+    summaryCalculationDesFhlJson,
+    summaryCalculationFhlModel,
+    summaryCalculationMtdFhlJson)(readsFhl)
+  testRoundTrip("Summary Calculation Non-FHL",
+    summaryCalculationDesNonFhlJson,
+    summaryCalculationNonFhlModel,
+    summaryCalculationMtdNonFhlJson)(readsNonFhl)
 }

@@ -19,7 +19,7 @@ package v3.models.response.retrieveBsas.foreignProperty
 import play.api.libs.json.{Json, OWrites, Reads}
 
 
-case class Expenses(consolidatedExpenses: Option[BigDecimal],
+case class SummaryCalculationExpenses(consolidatedExpenses: Option[BigDecimal],
                     premisesRunningCosts: Option[BigDecimal],
                     repairsAndMaintenance: Option[BigDecimal],
                     financialCosts: Option[BigDecimal],
@@ -31,8 +31,8 @@ case class Expenses(consolidatedExpenses: Option[BigDecimal],
                     travelCosts: Option[BigDecimal],
                    )
 
-object Expenses {
-  implicit val reads: Reads[Expenses] = Json.reads[Expenses]
+object SummaryCalculationExpenses {
+  implicit val reads: Reads[SummaryCalculationExpenses] = Json.reads[SummaryCalculationExpenses]
 
-  implicit val writes: OWrites[Expenses] = Json.writes[Expenses]
+  implicit val writes: OWrites[SummaryCalculationExpenses] = Json.writes[SummaryCalculationExpenses]
 }
