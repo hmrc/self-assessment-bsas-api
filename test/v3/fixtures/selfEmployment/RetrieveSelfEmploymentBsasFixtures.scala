@@ -401,7 +401,7 @@ object RetrieveSelfEmploymentBsasFixtures {
       |  "outstandingBusinessIncome": 5.16,
       |  "balancingChargeOther": 5.17,
       |  "balancingChargeBpra": 5.18,
-      |  "goodAndServicesOwnUse": 5.19
+      |  "goodsAndServicesOwnUse": 5.19
       |}
       |""".stripMargin
   )
@@ -630,7 +630,7 @@ object RetrieveSelfEmploymentBsasFixtures {
     outstandingBusinessIncome = Some(5.16),
     balancingChargeOther = Some(5.17),
     balancingChargeBpra = Some(5.18),
-    goodAndServicesOwnUse = Some(5.19)
+    goodsAndServicesOwnUse = Some(5.19)
   )
 
   val summaryCalculationDeductionsModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
