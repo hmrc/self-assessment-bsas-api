@@ -68,7 +68,7 @@
       "outstandingBusinessIncome": 0.12,
       "balancingChargeOther": 0.12,
       "balancingChargeBpra": 0.12,
-      "goodAndServicesOwnUse": 0.12
+      "goodsAndServicesOwnUse": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
@@ -168,7 +168,7 @@
       "outstandingBusinessIncome": 0.12,
       "balancingChargeOther": 0.12,
       "balancingChargeBpra": 0.12,
-      "goodAndServicesOwnUse": 0.12
+      "goodsAndServicesOwnUse": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
