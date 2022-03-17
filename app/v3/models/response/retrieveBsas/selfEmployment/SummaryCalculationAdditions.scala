@@ -38,7 +38,7 @@ case class SummaryCalculationAdditions(
     outstandingBusinessIncome: Option[BigDecimal],
     balancingChargeOther: Option[BigDecimal],
     balancingChargeBpra: Option[BigDecimal],
-    goodAndServicesOwnUse: Option[BigDecimal],
+    goodsAndServicesOwnUse: Option[BigDecimal],
 )
 
 object SummaryCalculationAdditions {
