@@ -18,24 +18,17 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.utils.JsonErrorValidators
 
-class DeductionsSpec extends UnitSpec with JsonErrorValidators{
+class SummaryCalculationDeductionsSpec extends UnitSpec with RoundTripTest {
 
-  "reads" should {
-    "return a valid deductions model" when {
-      "a valid json with all fields are supplied" in {
-        deductionsDesJson.as[Deductions] shouldBe deductionsModel
-      }
-    }
-  }
+  import SummaryCalculationDeductions._
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        deductionsModel.toJson shouldBe deductionsMtdJson
-      }
-    }
-  }
+  testRoundTrip("Summary Calculation Deductions FHL",
+                summaryCalculationDeductionsDesJson,
+                summaryCalculationDeductionsFhlModel,
+                summaryCalculationDeductionsMtdFhlJson)(readsFhl)
+  testRoundTrip("Adjustments Non-FHL",
+                summaryCalculationDeductionsDesJson,
+                summaryCalculationDeductionsNonFhlModel,
+                summaryCalculationDeductionsMtdNonFhlJson)(readsNonFhl)
 }
-

@@ -16,14 +16,12 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{ Json, OWrites, Reads }
 
-case class Additions(privateUseAdjustment: Option[BigDecimal],
-                     balancingCharge: Option[BigDecimal]
-                    )
+case class SummaryCalculationAdditions(privateUseAdjustment: Option[BigDecimal], balancingCharge: Option[BigDecimal])
 
-object Additions {
-  implicit val reads: Reads[Additions] = Json.reads[Additions]
+object SummaryCalculationAdditions {
+  implicit val reads: Reads[SummaryCalculationAdditions] = Json.reads[SummaryCalculationAdditions]
 
-  implicit val writes: OWrites[Additions] = Json.writes[Additions]
+  implicit val writes: OWrites[SummaryCalculationAdditions] = Json.writes[SummaryCalculationAdditions]
 }

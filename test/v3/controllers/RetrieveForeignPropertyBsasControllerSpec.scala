@@ -55,7 +55,7 @@ class RetrieveForeignPropertyBsasControllerSpec
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
 
-  private val hateoasResponse = retrieveForeignPropertyBsasMtdJsonNonFhl.as[JsObject] ++ Json.parse(
+  private val hateoasResponse = retrieveForeignPropertyBsasMtdNonFhlJson.as[JsObject] ++ Json.parse(
     """{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
@@ -85,11 +85,11 @@ class RetrieveForeignPropertyBsasControllerSpec
         MockRetrieveForeignPropertyRequestParser.parse(requestRawData) returns Right(request)
 
         MockRetrieveForeignPropertyBsasService.retrieveBsas(request) returns
-          Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel)))
+          Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel)))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calcId)) returns
-          HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks)
+          .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calcId)) returns
+          HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
 
         val result: Future[Result] = controller.retrieve(nino, calcId)(fakeGetRequest)
 

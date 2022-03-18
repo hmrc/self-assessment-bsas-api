@@ -16,27 +16,33 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-
+import play.api.libs.json.{JsValue, Json, Reads, Writes}
 import support.UnitSpec
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.utils.JsonErrorValidators
 
-class AdditionsSpec extends UnitSpec with JsonErrorValidators{
-
-  "reads" should {
-    "return a valid additions model" when {
-      "a valid json with all fields are supplied" in {
-        additionsDesJson.as[Additions] shouldBe additionsModel
+trait RoundTripTest extends UnitSpec with JsonErrorValidators {
+  private[foreignProperty] def testRoundTrip[A](
+      testName: String,
+      downstreamJson: JsValue,
+      model: A,
+      mtdJson: JsValue
+  )(reads: Reads[A])(implicit writes: Writes[A]): Unit = {
+    s"$testName model tests" when {
+      "reads" should {
+        "return a valid model" when {
+          "passed valid JSON" in {
+            downstreamJson.as[A](reads) shouldBe model
+          }
+        }
       }
-    }
-  }
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        additionsModel.toJson shouldBe additionsMtdJson
+      "writes" should {
+        "return valid JSON" when {
+          "passed a valid model" in {
+            Json.toJson(model) shouldBe mtdJson
+          }
+        }
       }
     }
   }
 }
-

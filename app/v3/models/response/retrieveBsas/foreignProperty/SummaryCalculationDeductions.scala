@@ -19,7 +19,7 @@ package v3.models.response.retrieveBsas.foreignProperty
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
 
-case class Deductions(annualInvestmentAllowance: Option[BigDecimal],
+case class SummaryCalculationDeductions(annualInvestmentAllowance: Option[BigDecimal],
                       costOfReplacingDomesticItems: Option[BigDecimal],
                       zeroEmissionGoods: Option[BigDecimal],
                       propertyAllowance: Option[BigDecimal],
@@ -30,8 +30,19 @@ case class Deductions(annualInvestmentAllowance: Option[BigDecimal],
                    )
 
 
-object Deductions {
-  implicit val reads: Reads[Deductions] = (
+object SummaryCalculationDeductions {
+  val readsFhl: Reads[SummaryCalculationDeductions] = (
+    (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      (JsPath \ "propertyAllowance").readNullable[BigDecimal] and
+      (JsPath \ "otherCapitalAllowance").readNullable[BigDecimal] and
+      (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
+      Reads.pure(None) and
+      (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
+    ) (SummaryCalculationDeductions.apply _)
+
+  val readsNonFhl: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
       (JsPath \ "costOfReplacingDomesticItems").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsGoodsVehicleAllowance").readNullable[BigDecimal] and
@@ -40,7 +51,7 @@ object Deductions {
       (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
       (JsPath \ "structuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-    ) (Deductions.apply _)
+    ) (SummaryCalculationDeductions.apply _)
 
-  implicit val writes: OWrites[Deductions] = Json.writes[Deductions]
+  implicit val writes: OWrites[SummaryCalculationDeductions] = Json.writes[SummaryCalculationDeductions]
 }

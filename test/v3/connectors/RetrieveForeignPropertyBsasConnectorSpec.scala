@@ -44,7 +44,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "retrieveForeignPropertyBsas" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))
+      val outcome = Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel))
 
       "a valid request with queryParams is supplied" in new Test {
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId)

@@ -16,21 +16,15 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import play.api.libs.functional.syntax._
+import support.UnitSpec
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
+class SummaryCalculationExpensesSpec extends UnitSpec with RoundTripTest {
 
-case class Income(totalRentsReceived: Option[BigDecimal],
-                  premiumsOfLeaseGrant: Option[BigDecimal],
-                  otherPropertyIncome: Option[BigDecimal])
+  import SummaryCalculationExpenses._
 
-
-object Income {
-  implicit val reads: Reads[Income] = (
-    (JsPath \ "rent").readNullable[BigDecimal] and
-    (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-    (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-  ) (Income.apply _)
-
-  implicit val writes: OWrites[Income] = Json.writes[Income]
+  testRoundTrip("Summary Calculation Expenses",
+                summaryCalculationExpensesDesJson,
+                summaryCalculationExpensesModel,
+                summaryCalculationExpensesMtdJson)(reads)
 }

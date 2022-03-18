@@ -17,8 +17,7 @@
 package v3.models.response.retrieveBsas.foreignProperty
 
 import config.AppConfig
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 import v3.hateoas.HateoasLinksFactory
 import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 import v3.models.hateoas.{HateoasData, Link}
@@ -26,32 +25,52 @@ import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
                                                inputs: Inputs,
-                                               adjustableSummaryCalculation: AdjustableSummaryCalculation,
+                                               adjustableSummaryCalculation: SummaryCalculation,
                                                adjustments: Option[Adjustments],
-                                               adjustedSummaryCalculation: Option[AdjustableSummaryCalculation])
-  extends HasTypeOfBusiness {
+                                               adjustedSummaryCalculation: Option[SummaryCalculation])
+    extends HasTypeOfBusiness {
   override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
 }
 
 object RetrieveForeignPropertyBsasResponse {
-  implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (
-    (JsPath \ "metadata").read[Metadata] and
-      (JsPath \ "inputs").read[Inputs] and
-      (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
-      (JsPath \ "adjustments")
-        .read[Seq[CountryLevelDetail]]
-        .map(s => Adjustments(Some(s), None, None))
-        .map(Option(_))
-        .orElse(
-          (JsPath \ "adjustments").readNullable[Adjustments]
-        ) and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustableSummaryCalculation]
-    ) (RetrieveForeignPropertyBsasResponse.apply _)
+  implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (json: JsValue) =>
+    for {
+      metadata <- (json \ "metadata").validate[Metadata]
+      inputs   <- (json \ "inputs").validate[Inputs]
+
+      isFhl = inputs.typeOfBusiness == TypeOfBusiness.`foreign-property-fhl-eea`
+
+      adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation](
+        if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.readsNonFhl
+      )
+
+      adjustments <- if (isFhl) fhlEeaAdjustmentsReads(json) else nonFhlAdjustmentsReads(json)
+
+      adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation](
+        if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.readsNonFhl
+      )
+    } yield
+      RetrieveForeignPropertyBsasResponse(
+        metadata = metadata,
+        inputs = inputs,
+        adjustableSummaryCalculation = adjustableSummaryCalculation,
+        adjustments = adjustments,
+        adjustedSummaryCalculation = adjustedSummaryCalculation
+    )
+
+  private def fhlEeaAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+    (json \ "adjustments").validateOpt[Adjustments](Adjustments.readsFhl)
+
+  private def nonFhlAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+    (json \ "adjustments")
+      .validateOpt[Seq[Adjustments]](Adjustments.readsNonFhlSeq)
+      .map(s => Some(Adjustments(s, None, None, None)))
+      .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
 
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+      extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
       import data._
 
@@ -62,6 +81,5 @@ object RetrieveForeignPropertyBsasResponse {
     }
   }
 }
-
 
 case class RetrieveForeignPropertyHateoasData(nino: String, calculationId: String) extends HateoasData

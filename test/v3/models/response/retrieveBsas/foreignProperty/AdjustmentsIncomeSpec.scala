@@ -18,24 +18,17 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.utils.JsonErrorValidators
 
-class ExpensesSpec extends UnitSpec with JsonErrorValidators{
+class AdjustmentsIncomeSpec extends UnitSpec with RoundTripTest {
 
-  "reads" should {
-    "return a valid expenses model" when {
-      "a valid json with all fields are supplied" in {
-        expensesDesJson.as[Expenses] shouldBe expensesModel
-      }
-    }
-  }
+  import AdjustmentsIncome._
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        expensesModel.toJson shouldBe expensesMtdJson
-      }
-    }
-  }
+  testRoundTrip("Adjustments Income FHL",
+    adjustmentsIncomeDesFhlJson,
+    adjustmentsIncomeFhlModel,
+    adjustmentsIncomeMtdFhlJson)(readsFhl)
+  testRoundTrip("Adjustments Income Non-FHL",
+    adjustmentsIncomeDesNonFhlJson,
+    adjustmentsIncomeNonFhlModel,
+    adjustmentsIncomeMtdNonFhlJson)(readsNonFhl)
 }
-

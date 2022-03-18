@@ -18,24 +18,17 @@ package v3.models.response.retrieveBsas.foreignProperty
 
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.utils.JsonErrorValidators
 
-class CountryLevelDetailSpec extends UnitSpec with JsonErrorValidators{
+class SummaryCalculationIncomeSpec extends UnitSpec with RoundTripTest {
 
-  "reads" should {
-    "return a valid countryLevelDetail model" when {
-      "a valid json with all fields are supplied" in {
-        countryLevelDetailDesJson.as[CountryLevelDetail] shouldBe countryLevelDetailModel
-      }
-    }
-  }
+  import SummaryCalculationIncome._
 
-  "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
-        countryLevelDetailModel.toJson shouldBe countryLevelDetailsMtdJson
-      }
-    }
-  }
+  testRoundTrip("Summary Calculation Income FHL",
+                summaryCalculationIncomeDesJson,
+                summaryCalculationIncomeFhlModel,
+                summaryCalculationIncomeMtdFhlJson)(readsFhl)
+  testRoundTrip("Summary Calculation Income Non-FHL",
+                summaryCalculationIncomeDesJson,
+                summaryCalculationIncomeNonFhlModel,
+                summaryCalculationIncomeMtdNonFhlJson)(readsNonFhl)
 }
-

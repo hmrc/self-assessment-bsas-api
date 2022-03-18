@@ -65,21 +65,21 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
       "valid request is made and Non-fhl is returned" in new Test {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJsonNonFhl)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
 
         val response: WSResponse = await(request.get)
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdJsonNonFhl, nino, calcId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calcId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
       "valid request is made and fhl is returned" in new Test {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJsonFhlEea)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson)
 
         val response: WSResponse = await(request.get)
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdJsonFhlEea, nino, calcId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson, nino, calcId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
       }

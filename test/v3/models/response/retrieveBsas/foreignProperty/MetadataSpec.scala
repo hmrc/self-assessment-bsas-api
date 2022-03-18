@@ -27,10 +27,6 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators{
       "a valid json with all fields are supplied" in {
         metadataDesJson.as[Metadata] shouldBe metaDataModel
       }
-
-      "a valid json with no adjustedSummary is supplied" in {
-        metadataDesJsonWithoutADT.as[Metadata] shouldBe metaDataModel.copy(adjustedDateTime = None)
-      }
     }
   }
 
