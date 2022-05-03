@@ -21,6 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
 import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub}
@@ -146,7 +147,10 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def errorBody(code: String): String =
@@ -363,16 +367,11 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody,
-            BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses,
-            BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode,
-            BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode,
-            BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode, BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode, BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -415,7 +414,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }

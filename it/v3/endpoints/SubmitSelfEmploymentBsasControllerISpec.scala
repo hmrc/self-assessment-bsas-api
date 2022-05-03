@@ -19,8 +19,9 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
 import v3.stubs._
@@ -51,7 +52,10 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def errorBody(code: String): String =
@@ -128,7 +132,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           ("AA1234A", BAD_REQUEST, NinoFormatError, requestBody),
           ("AA123456A", BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))), mtdRequestWithBothExpenses)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -171,7 +174,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }

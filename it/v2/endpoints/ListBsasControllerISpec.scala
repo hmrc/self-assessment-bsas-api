@@ -22,6 +22,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import utils.DownstreamTaxYear
 import v2.models.errors._
@@ -51,13 +52,16 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         .collect {
           case (k, Some(v)) => (k, v)
         }
+
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
   }
-
 
   "Calling the list Bsas endpoint" should {
 
@@ -147,7 +151,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
         ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -186,7 +189,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }

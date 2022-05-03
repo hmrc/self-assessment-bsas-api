@@ -22,6 +22,7 @@ import play.api.http.Status
 import play.api.http.Status.OK
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures.desResponse
 import v3.models.domain.TypeOfBusiness
@@ -49,7 +50,10 @@ class AuthISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
   }
 
@@ -117,7 +121,5 @@ class AuthISpec extends IntegrationBaseSpec {
         response.status shouldBe Status.FORBIDDEN
       }
     }
-
   }
-
 }

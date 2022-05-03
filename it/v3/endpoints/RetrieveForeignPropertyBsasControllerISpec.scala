@@ -20,6 +20,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
@@ -40,7 +41,10 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       buildRequest(s"/$nino/foreign-property/$calcId")
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def responseWithHateoas(response: JsValue, nino: String, calculationId: String): JsValue =
@@ -123,7 +127,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "bad_calc_id", BAD_REQUEST, CalculationIdFormatError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -155,7 +158,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }

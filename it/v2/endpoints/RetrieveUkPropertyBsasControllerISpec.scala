@@ -20,11 +20,12 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.models.errors._
-import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -46,10 +47,14 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         .collect {
           case (k, Some(v)) => (k, v)
         }
+
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
   }
 
@@ -124,7 +129,6 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("true"), BAD_REQUEST, BsasIdFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("test"), BAD_REQUEST, AdjustedStatusFormatError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -163,7 +167,6 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }

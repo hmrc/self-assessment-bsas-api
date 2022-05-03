@@ -21,6 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
 import v3.models.utils.JsonErrorValidators
@@ -52,7 +53,10 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def errorBody(code: String): String =
@@ -133,33 +137,11 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         val input = Seq(
           ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "041f7e4d87b9", requestBody, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            requestBody.replaceWithEmptyObject("/furnishedHolidayLet/income"),
-            BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))
-          ),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            requestBody.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
-            BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))
-          ),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            requestBody.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
-            BAD_REQUEST, RuleBothPropertiesSuppliedError
-          ),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            requestBody
-              .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
-              .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between -99999999999.99 and 99999999999.99",
-              paths = Some(Seq(
-                "/furnishedHolidayLet/expenses/travelCosts",
-                "/furnishedHolidayLet/expenses/other"
-              ))
-            )
-          )
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.replaceWithEmptyObject("/furnishedHolidayLet/income"), BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)), BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)), BAD_REQUEST, RuleBothPropertiesSuppliedError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523)).update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)), BAD_REQUEST, ValueFormatError.copy(message = "The value must be between -99999999999.99 and 99999999999.99", paths = Some(Seq("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -202,7 +184,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
