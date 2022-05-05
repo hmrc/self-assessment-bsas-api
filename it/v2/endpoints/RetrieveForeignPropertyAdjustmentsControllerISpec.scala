@@ -21,6 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
 import v2.models.errors._
@@ -87,10 +88,12 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
 
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
   }
-
 
   "Calling the retrieve Foreign Property Adjustments endpoint" should {
 
@@ -156,7 +159,6 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, BsasIdFormatError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -194,7 +196,6 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }

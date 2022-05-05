@@ -22,8 +22,8 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import utils.DownstreamTaxYear
 import v2.models.errors._
 import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
@@ -32,12 +32,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
   private trait Test {
     val nino = "AA123456B"
     val taxYear: Option[String] = Some("2019-20")
-    val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
-    val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String] = None
-    val correlationId = "X-123"
-    val desTaxYear: DownstreamTaxYear = DownstreamTaxYear("2019")
 
     def uri: String = s"/$nino"
 
@@ -51,13 +47,16 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         .collect {
           case (k, Some(v)) => (k, v)
         }
+
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
   }
-
 
   "Calling the list Bsas endpoint" should {
 
@@ -147,7 +146,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
         ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -186,7 +184,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
