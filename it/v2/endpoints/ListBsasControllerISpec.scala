@@ -24,7 +24,6 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import utils.DownstreamTaxYear
 import v2.models.errors._
 import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
@@ -33,12 +32,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
   private trait Test {
     val nino = "AA123456B"
     val taxYear: Option[String] = Some("2019-20")
-    val incomeSourceIdentifier: Option[String] = Some("incomeSourceType")
-    val identifierValue: Option[String] = Some("01")
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String] = None
-    val correlationId = "X-123"
-    val desTaxYear: DownstreamTaxYear = DownstreamTaxYear("2019")
 
     def uri: String = s"/$nino"
 

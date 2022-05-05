@@ -31,7 +31,6 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
   private trait Test {
     val nino = "AA123456B"
-    val correlationId = "X-123"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def uri: String = s"/$nino/self-employment/$bsasId/adjust"

@@ -32,8 +32,6 @@ class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino          = "AA123456A"
-    val data        = "someData"
-    val correlationId = "X-123"
 
     val requestJson: JsObject = Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),

@@ -31,9 +31,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino = "AA123456A"
-    val taxYear: Option[String] = Some("2019-20")
     val adjustedStatus: Option[String] = Some("true")
-    val correlationId = "X-123"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
     val desQueryParams = Map("return" -> "3")
 
