@@ -17,9 +17,11 @@
 package v3.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v3.connectors.DownstreamUri.DesUri
 import v3.models.request.ListBsasRequest
 import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
@@ -50,8 +52,8 @@ class ListBsasConnector @Inject()(val http: HttpClient,
 
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
-    get(
-      DownstreamUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
-    )
+    val url = s"income-tax/adjustable-summary-calculation/$nino"
+
+    get(uri = DesUri[ListBsasResponse[BsasSummary]](url), queryParams = mappedQueryParams.toSeq)
   }
 }

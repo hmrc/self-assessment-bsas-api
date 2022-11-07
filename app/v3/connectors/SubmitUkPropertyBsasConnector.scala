@@ -22,6 +22,7 @@ import play.api.http.Status
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v3.connectors.DownstreamUri.DesUri
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +43,7 @@ class SubmitUkPropertyBsasConnector @Inject()(
 
     put(
       body = request.body,
-      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
+      DesUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

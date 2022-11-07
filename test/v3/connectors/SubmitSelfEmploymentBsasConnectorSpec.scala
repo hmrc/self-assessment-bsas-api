@@ -63,7 +63,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
       MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-        config = dummyDesHeaderCarrierConfig,
+        config = dummyHeaderCarrierConfig,
         body = submitSelfEmploymentBsasRequestBodyModel,
         requiredHeaders = requiredHeadersPut,
         excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")

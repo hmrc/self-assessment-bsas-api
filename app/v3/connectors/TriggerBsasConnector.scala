@@ -17,9 +17,11 @@
 package v3.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v3.connectors.DownstreamUri.DesUri
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 
@@ -40,7 +42,7 @@ class TriggerBsasConnector @Inject()(val http: HttpClient,
 
     post(
       body = request.body,
-      DownstreamUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+      DesUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
     )
   }
 }

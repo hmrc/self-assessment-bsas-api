@@ -17,9 +17,11 @@
 package v3.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v3.connectors.DownstreamUri.DesUri
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
@@ -40,7 +42,7 @@ class RetrieveSelfEmploymentBsasConnector @Inject()
     val calculationId = request.calculationId
 
     get(
-      DownstreamUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      DesUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
     )
   }
 }

@@ -58,7 +58,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture{
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-          config = dummyDesHeaderCarrierConfig,
+          config = dummyHeaderCarrierConfig,
           queryParams.toSeq,
           requiredHeaders = desRequestHeaders,
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
