@@ -39,7 +39,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
 
     val queryParams = Map(
-      "taxYear" -> Some(request.taxYear.toString),
+      "taxYear" -> Some(request.taxYear.asDownstream),
       "incomeSourceId" -> request.incomeSourceId,
       "incomeSourceType" -> request.incomeSourceType
     )

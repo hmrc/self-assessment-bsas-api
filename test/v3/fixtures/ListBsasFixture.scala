@@ -17,7 +17,7 @@
 package v3.fixtures
 
 import play.api.libs.json.{JsArray, JsValue, Json}
-import v3.models.domain.{Status, TypeOfBusiness}
+import v3.models.domain.{Status, TaxYear, TypeOfBusiness}
 import v3.models.response.listBsas.{AccountingPeriod, BsasSummary, BusinessSourceSummary, ListBsasResponse}
 
 trait ListBsasFixture {
@@ -99,7 +99,7 @@ trait ListBsasFixture {
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     accountingPeriod = accountingPeriodModel,
-    taxYear = "2019-20",
+    taxYear = TaxYear.fromMtd("2019-20"),
     summaries = Seq(bsasSummaryModel)
   )
 
