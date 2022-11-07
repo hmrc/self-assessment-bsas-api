@@ -48,7 +48,7 @@ trait MockAppConfig extends MockFactory {
     def apiStatus2: CallHandler[String] = (mockAppConfig.apiStatus: String => String).expects("2.0")
     def apiStatus3: CallHandler[String] = (mockAppConfig.apiStatus: String => String).expects("3.0")
 
-    def featureSwitch: CallHandler[Option[Configuration]] = (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
+    def featureSwitch: CallHandler[Configuration] = (mockAppConfig.featureSwitches _: () => Configuration).expects()
     def endpointsEnabled: CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: String => Boolean).expects(*)
     def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] = (mockAppConfig.confidenceLevelConfig _: () => ConfidenceLevelConfig).expects()
     def mtdNrsProxyBaseUrl: CallHandler[String] = (mockAppConfig.mtdNrsProxyBaseUrl _).expects()
