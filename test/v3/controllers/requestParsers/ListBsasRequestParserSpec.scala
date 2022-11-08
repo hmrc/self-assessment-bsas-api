@@ -17,13 +17,11 @@
 package v3.controllers.requestParsers
 
 import java.time.LocalDate
-
 import support.UnitSpec
 import domain.Nino
-import utils.DownstreamTaxYear
 import v3.mocks.MockCurrentDateProvider
 import v3.mocks.validators.MockListBsasValidator
-import v3.models.domain.TypeOfBusiness
+import v3.models.domain.{TaxYear, TypeOfBusiness}
 import v3.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v3.models.request.{ListBsasRawData, ListBsasRequest}
 
@@ -62,13 +60,13 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputWithBusinessIdAndTypeOfBusiness).returns(Nil)
 
         parser.parseRequest(inputWithBusinessIdAndTypeOfBusiness) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), Some(businessId), Some("01")))
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), Some(businessId), Some("01")))
       }
       "return a valid object if no typeOfBusiness is provided" in new Test {
         MockValidator.validate(inputWithBusinessId).returns(Nil)
 
         parser.parseRequest(inputWithBusinessId) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), Some(businessId), None))
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), Some(businessId), None))
       }
     }
 
@@ -78,7 +76,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataTwo).returns(Nil)
 
         parser.parseRequest(inputDataTwo) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`self-employment`.toIdentifierValue)))
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`self-employment`.toIdentifierValue)))
       }
 
       "return a valid object with uk-property-non-fhl" in new Test {
@@ -86,7 +84,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataThree).returns(Nil)
 
         parser.parseRequest(inputDataThree) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)))
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue)))
       }
 
       "return a valid object with uk-property-fhl" in new Test {
@@ -94,7 +92,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataFour).returns(Nil)
 
         parser.parseRequest(inputDataFour) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)))
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), None, Some(TypeOfBusiness.`uk-property-fhl`.toIdentifierValue)))
       }
 
       "return a valid object with foreign-property-fhl-eea" in new Test {
@@ -102,7 +100,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataSix).returns(Nil)
 
         parser.parseRequest(inputDataSix) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear),
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear),
             None, Some(TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue)))
       }
 
@@ -111,7 +109,7 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataSeven).returns(Nil)
 
         parser.parseRequest(inputDataSeven) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear),
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear),
             None, Some(TypeOfBusiness.`foreign-property`.toIdentifierValue)))
       }
     }
@@ -122,13 +120,13 @@ class ListBsasRequestParserSpec extends UnitSpec{
         MockValidator.validate(inputDataFive).returns(Nil)
 
         parser.parseRequest(inputDataFive) shouldBe
-          Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), None, None))
+          Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), None, None))
       }
 
       "valid data is provided without tax year" in new Test {
         MockValidator.validate(inputDataFive.copy(taxYear = None)).returns(Nil)
 
-        parser.parseRequest(inputDataFive.copy(taxYear = None)) shouldBe Right(ListBsasRequest(Nino(nino), DownstreamTaxYear.fromMtd(taxYear), None, None))
+        parser.parseRequest(inputDataFive.copy(taxYear = None)) shouldBe Right(ListBsasRequest(Nino(nino), TaxYear.fromMtd(taxYear), None, None))
       }
     }
 

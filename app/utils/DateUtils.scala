@@ -16,6 +16,8 @@
 
 package utils
 
+import v3.models.domain.TaxYear
+
 import java.time.LocalDate
 
 object DateUtils {
@@ -27,5 +29,14 @@ object DateUtils {
 
       if(current.isAfter(fiscalYearStartDate)) DownstreamTaxYear((current.getYear + 1).toString)
       else DownstreamTaxYear(current.getYear.toString)
+  }
+
+  def getTaxYear(dateProvided: Any): TaxYear = dateProvided match {
+    case taxYear: String => TaxYear.fromMtd(taxYear)
+    case current: LocalDate =>
+      val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
+
+      if(current.isAfter(fiscalYearStartDate)) TaxYear((current.getYear + 1).toString)
+      else TaxYear(current.getYear.toString)
   }
 }

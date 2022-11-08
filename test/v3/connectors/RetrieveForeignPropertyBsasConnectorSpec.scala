@@ -16,10 +16,7 @@
 
 package v3.connectors
 
-import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
@@ -31,30 +28,20 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   val nino: Nino = Nino("AA123456A")
   val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test  {
+    _: ConnectorTest =>
     val connector: RetrieveForeignPropertyBsasConnector = new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    val ifsRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> "Bearer ifs-token")
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnv returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns true
   }
 
   "retrieveForeignPropertyBsas" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel))
 
-      "a valid request with queryParams is supplied" in new Test {
+      "a valid request with queryParams is supplied" in new DesTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId)
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
-        MockedHttpClient.get(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId",
-          config = dummyDesHeaderCarrierConfig,
-          requiredHeaders = ifsRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
+
+        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId"
+        willGet(url = expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
       }

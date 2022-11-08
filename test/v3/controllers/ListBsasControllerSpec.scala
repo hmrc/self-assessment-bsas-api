@@ -21,14 +21,13 @@ import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DownstreamTaxYear
 import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks
 import v3.mocks.MockCurrentDateProvider
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockListBsasRequestParser
 import v3.mocks.services.{MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
-import v3.models.domain.TypeOfBusiness
+import v3.models.domain.{TaxYear, TypeOfBusiness}
 import v3.models.errors._
 import v3.models.hateoas.HateoasWrapper
 import v3.models.outcomes.ResponseWrapper
@@ -67,7 +66,7 @@ class ListBsasControllerSpec
 
   private val requestData = ListBsasRequest(
     nino = Nino(nino),
-    taxYear = DownstreamTaxYear("2019"),
+    taxYear = TaxYear("2019"),
     incomeSourceId = Some("self-employment"),
     incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
   )
@@ -123,7 +122,7 @@ class ListBsasControllerSpec
                 businessId = "000000000000210",
                 typeOfBusiness = TypeOfBusiness.`self-employment`,
                 accountingPeriodModel,
-                taxYear = "2019-20",
+                taxYear = TaxYear.fromMtd("2019-20"),
                 Seq(HateoasWrapper(
                   bsasSummaryModel,
                   Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"))
@@ -133,7 +132,7 @@ class ListBsasControllerSpec
                 businessId = "000000000000210",
                 typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
                 accountingPeriodModel,
-                taxYear = "2019-20",
+                taxYear = TaxYear.fromMtd("2019-20"),
                 Seq(HateoasWrapper(
                   bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
                   Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"))
@@ -143,7 +142,7 @@ class ListBsasControllerSpec
                 businessId = "000000000000210",
                 typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
                 accountingPeriodModel,
-                taxYear = "2019-20",
+                taxYear = TaxYear.fromMtd("2019-20"),
                 Seq(HateoasWrapper(
                   bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
                   Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"))

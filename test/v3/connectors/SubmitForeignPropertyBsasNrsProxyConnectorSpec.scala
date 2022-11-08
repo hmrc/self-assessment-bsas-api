@@ -72,7 +72,7 @@ class SubmitForeignPropertyBsasNrsProxyConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .post(
             url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             body = request
           ).returns(Future.successful((): Unit))
 

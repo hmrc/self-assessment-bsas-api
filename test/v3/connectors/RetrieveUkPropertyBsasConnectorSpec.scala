@@ -16,11 +16,8 @@
 
 package v3.connectors
 
-import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 
@@ -30,30 +27,21 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test {
+    _: ConnectorTest =>
     val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    val ifsRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnv returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns true
   }
 
   "retrieve" should {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
-      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
-      "a valid request is supplied" in new Test {
+
+      "a valid request is supplied" in new DesTest with Test {
         val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId")
 
-        MockedHttpClient.get(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
-          config = dummyDesHeaderCarrierConfig,
-          requiredHeaders = ifsRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
+        val expectedUrl =  s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId"
+
+        willGet(url = expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieve(request)) shouldBe outcome
       }

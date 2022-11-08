@@ -17,12 +17,12 @@
 package v3.connectors
 
 import javax.inject.{Inject, Singleton}
-
 import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import play.api.http.Status
+import v3.connectors.DownstreamUri.DesUri
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +41,7 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
 
     put(
       body = request.body,
-      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
+      DesUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }
