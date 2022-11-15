@@ -54,7 +54,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ))
     )
 
-  private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
+  private val request = SubmitForeignPropertyBsasRequestData(nino, id, None, fhlEeaBody)
 
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {

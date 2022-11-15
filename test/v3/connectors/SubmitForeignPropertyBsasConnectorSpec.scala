@@ -27,30 +27,33 @@ import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino   = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPropertyBsasRequestBody = {
     SubmitForeignPropertyBsasRequestBody(
-      Some(Seq(ForeignProperty(
-        "FRA",
-        Some(ForeignPropertyIncome(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12)
-        )),
-        Some(ForeignPropertyExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          consolidatedExpenses = None
-        ))
-      ))),
+      Some(
+        Seq(ForeignProperty(
+          "FRA",
+          Some(
+            ForeignPropertyIncome(
+              Some(123.12),
+              Some(123.12),
+              Some(123.12)
+            )),
+          Some(
+            ForeignPropertyExpenses(
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              consolidatedExpenses = None
+            ))
+        ))),
       foreignFhlEea = None
     )
   }
@@ -58,8 +61,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-
-    val desRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
@@ -68,20 +70,22 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   }
 
   "submitBsas" must {
-    val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, submitForeignPropertyBsasRequestBodyModel)
+    val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, None, submitForeignPropertyBsasRequestBodyModel)
 
     "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome = Right(ResponseWrapper(correlationId, ()))
-      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      val outcome                                   = Right(ResponseWrapper(correlationId, ()))
+      implicit val hc: HeaderCarrier                = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
-      MockedHttpClient.put(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-        config = dummyHeaderCarrierConfig,
-        body = submitForeignPropertyBsasRequestBodyModel,
-        requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-      ).returns(Future.successful(outcome))
+      MockedHttpClient
+        .put(
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          config = dummyHeaderCarrierConfig,
+          body = submitForeignPropertyBsasRequestBodyModel,
+          requiredHeaders = requiredHeadersPut,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
+        )
+        .returns(Future.successful(outcome))
 
       await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
     }

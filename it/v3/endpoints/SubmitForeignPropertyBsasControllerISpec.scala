@@ -19,19 +19,20 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub}
+import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub }
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+    val nino: String            = "AA123456A"
+    val calculationId: String   = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+    val taxYear: Option[String] = None
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -43,8 +44,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          """.stripMargin
     )
 
-    val requestBodyForeignPropertyJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignPropertyJson: JsValue = Json.parse("""
          |{
          |  "nonFurnishedHolidayLet": [
          |    {
@@ -70,8 +70,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse("""
         |{
         |  "nonFurnishedHolidayLet": [
         |    {
@@ -91,8 +90,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val requestBodyForeignFhlEeaJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignFhlEeaJson: JsValue = Json.parse("""
          |{
          |    "foreignFhlEea": {
          |        "income": {
@@ -111,8 +109,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse("""
          |{
          |    "foreignFhlEea": {
          |        "income": {
@@ -125,8 +122,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    val responseBody: JsValue = Json.parse(
-      s"""
+    val responseBody: JsValue = Json.parse(s"""
          |{
          |  "links":[
          |    {
@@ -142,22 +138,23 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/$nino/foreign-property/$calculationId/adjust"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
+        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
       s"""
          |      {
          |        "code": "$code",
-         |        "reason": "des message"
+         |        "reason": "message"
          |      }
     """.stripMargin
   }
@@ -172,7 +169,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -187,7 +184,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
@@ -201,9 +198,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
-
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
         response.status shouldBe OK
@@ -215,7 +211,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyConsolidatedJson))
@@ -228,7 +224,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
@@ -240,8 +236,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestBody: JsValue = Json.parse(
-        s"""
+      val validRequestBody: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -254,16 +249,14 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyIncorrectBody: JsValue = Json.parse(
-        s"""
+      val requestBodyIncorrectBody: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |    }
            |}
            |""".stripMargin)
 
-      val requestBodyBothExpenses: JsValue = Json.parse(
-        """
+      val requestBodyBothExpenses: JsValue = Json.parse("""
           |{
           |  "nonFurnishedHolidayLet": [
           |    {
@@ -290,8 +283,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           |}
           |""".stripMargin)
 
-      val requestBodyInvalidCountryCode: JsValue = Json.parse(
-        s"""
+      val requestBodyInvalidCountryCode: JsValue = Json.parse(s"""
            |{
            |  "nonFurnishedHolidayLet": [
            |    {
@@ -317,8 +309,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyUnformattedCountryCode: JsValue = Json.parse(
-        s"""
+      val requestBodyUnformattedCountryCode: JsValue = Json.parse(s"""
            |{
            |  "nonFurnishedHolidayLet": [
            |    {
@@ -345,11 +336,17 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |""".stripMargin)
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestcalculationId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestCalculationId: String,
+                                requestTaxYear: Option[String],
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val calculationId: String = requestcalculationId
+            override val nino: String                            = requestNino
+            override val calculationId: String                   = requestCalculationId
+            override val taxYear: Option[String]                 = requestTaxYear
             override val requestBodyForeignPropertyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -365,25 +362,48 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode, BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode, BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, validRequestBody, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "BAD_CALC_ID", None, validRequestBody, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), validRequestBody, BAD_REQUEST, ???),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("BAD_TAX_YEAR"), validRequestBody, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-24"), validRequestBody, BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           None,
+           requestBodyIncorrectBody,
+           BAD_REQUEST,
+           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           None,
+           requestBodyBothExpenses,
+           BAD_REQUEST,
+           RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           None,
+           requestBodyInvalidCountryCode,
+           BAD_REQUEST,
+           RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           None,
+           requestBodyUnformattedCountryCode,
+           BAD_REQUEST,
+           CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, desUrl, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))

@@ -25,6 +25,7 @@ import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
 import v3.mocks.services._
 import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.domain.TaxYear
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{HateoasWrapper, Link}
@@ -50,6 +51,8 @@ class SubmitForeignPropertyBsasControllerSpec
   private val nino = "AA123456A"
   private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
+  private val rawTaxYear = "2023-24"
+  private val taxYear = TaxYear.fromMtd(rawTaxYear)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -121,8 +124,8 @@ class SubmitForeignPropertyBsasControllerSpec
   val requestBody: SubmitForeignPropertyBsasRequestBody =
     SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
 
-  private val rawData = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
-  private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, requestBody)
+  private val rawData = SubmitForeignPropertyRawData(nino, bsasId, Some(rawTaxYear), requestJson)
+  private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, Some(taxYear), requestBody)
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -172,7 +175,7 @@ class SubmitForeignPropertyBsasControllerSpec
           .wrap((), SubmitForeignPropertyBsasHateoasData(nino, bsasId))
           .returns(HateoasWrapper((), Seq(testHateoasLink)))
 
-        val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
+        val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
         status(result) shouldBe OK
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
@@ -190,7 +193,7 @@ class SubmitForeignPropertyBsasControllerSpec
               .parseRequest(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
+            val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -233,7 +236,7 @@ class SubmitForeignPropertyBsasControllerSpec
               .submitForeignPropertyBsas(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
+            val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

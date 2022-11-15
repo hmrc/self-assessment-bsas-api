@@ -50,7 +50,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitForeignPropertyBsasController", endpointName = "SubmitForeignPropertyBsas")
-  def handleRequest(nino: String, calculationId: String): Action[JsValue] =
+  def handleRequest(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
 
     authorisedAction(nino).async(parse.json) { implicit request =>
 
@@ -59,7 +59,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = SubmitForeignPropertyRawData(nino, calculationId, request.body)
+      val rawData = SubmitForeignPropertyRawData(nino, calculationId, taxYear, request.body)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))

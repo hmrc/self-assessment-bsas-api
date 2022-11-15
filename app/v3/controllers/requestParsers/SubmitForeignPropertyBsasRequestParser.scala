@@ -19,14 +19,19 @@ package v3.controllers.requestParsers
 import javax.inject.Inject
 import domain.Nino
 import v3.controllers.requestParsers.validators.SubmitForeignPropertyBsasValidator
-import v3.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData, SubmitForeignPropertyRawData}
+import v3.models.domain.TaxYear
+import v3.models.request.submitBsas.foreignProperty.{
+  SubmitForeignPropertyBsasRequestBody,
+  SubmitForeignPropertyBsasRequestData,
+  SubmitForeignPropertyRawData
+}
 
 class SubmitForeignPropertyBsasRequestParser @Inject()(val validator: SubmitForeignPropertyBsasValidator)
-  extends RequestParser[SubmitForeignPropertyRawData, SubmitForeignPropertyBsasRequestData] {
+    extends RequestParser[SubmitForeignPropertyRawData, SubmitForeignPropertyBsasRequestData] {
 
   override protected def requestFor(data: SubmitForeignPropertyRawData): SubmitForeignPropertyBsasRequestData = {
     val requestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
-    SubmitForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId, requestBody)
+    SubmitForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId, data.taxYear.map(TaxYear.fromMtd), requestBody)
   }
 }
