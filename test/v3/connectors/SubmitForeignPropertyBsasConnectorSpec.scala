@@ -16,10 +16,8 @@
 
 package v3.connectors
 
-import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.mocks.MockHttpClient
+import v3.models.domain.TaxYear
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
 
@@ -30,61 +28,41 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   val nino   = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPropertyBsasRequestBody = {
-    SubmitForeignPropertyBsasRequestBody(
-      Some(
-        Seq(ForeignProperty(
-          "FRA",
-          Some(
-            ForeignPropertyIncome(
-              Some(123.12),
-              Some(123.12),
-              Some(123.12)
-            )),
-          Some(
-            ForeignPropertyExpenses(
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              consolidatedExpenses = None
-            ))
-        ))),
-      foreignFhlEea = None
-    )
-  }
+  val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPropertyBsasRequestBody =
+    SubmitForeignPropertyBsasRequestBody(None, None)
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test { _: ConnectorTest =>
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnv returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns false
   }
 
   "submitBsas" must {
-    val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, None, submitForeignPropertyBsasRequestBodyModel)
 
-    "post a SubmitBsasRequest body and return the result" in new Test {
-      val outcome                                   = Right(ResponseWrapper(correlationId, ()))
-      implicit val hc: HeaderCarrier                = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-      val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
+    "post a SubmitBsasRequest body and return the result" in new DesTest with Test {
+      val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, None, submitForeignPropertyBsasRequestBodyModel)
+      val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      MockedHttpClient
-        .put(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-          config = dummyHeaderCarrierConfig,
-          body = submitForeignPropertyBsasRequestBodyModel,
-          requiredHeaders = requiredHeadersPut,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        )
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId", body = submitForeignPropertyBsasRequestBodyModel)
+        .returns(Future.successful(outcome))
+
+      await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
+    }
+
+    "post a SubmitBsasRequest body and return the result for a pre-TYS tax year" in new DesTest with Test {
+      val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, None, submitForeignPropertyBsasRequestBodyModel)
+      val outcome = Right(ResponseWrapper(correlationId, ()))
+
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId", body = submitForeignPropertyBsasRequestBodyModel)
+        .returns(Future.successful(outcome))
+
+      await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
+    }
+
+    "post a SubmitBsasRequest body and return the result for a post-TYS tax year request" in new TysIfsTest with Test {
+      val request = SubmitForeignPropertyBsasRequestData(nino, bsasId, Some(TaxYear.fromMtd("2023-24")), submitForeignPropertyBsasRequestBodyModel)
+      val outcome = Right(ResponseWrapper(correlationId, ()))
+
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$bsasId",
+              body = submitForeignPropertyBsasRequestBodyModel)
         .returns(Future.successful(outcome))
 
       await(connector.submitForeignPropertyBsas(request)) shouldBe outcome

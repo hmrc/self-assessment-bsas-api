@@ -18,30 +18,34 @@ package v3.connectors
 
 import config.AppConfig
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.DesUri
+import v3.connectors.DownstreamUri.{ DesUri, TaxYearSpecificIfsUri }
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v3.connectors.httpparsers.StandardDesHttpParser._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                   val appConfig: AppConfig) extends BaseDownstreamConnector {
+class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit hc: HeaderCarrier,
+                                                                               ec: ExecutionContext,
+                                                                               correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-    put(
-      body = request.body,
-      DesUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
-    )
+    import request._
+
+    val uri = taxYear match {
+      case Some(ty) if ty.useTaxYearSpecificApi =>
+        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/${nino.nino}/$calculationId")
+      case _ =>
+        DesUri[Unit](s"income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId")
+    }
+
+    put(body = request.body, uri)
   }
 }
