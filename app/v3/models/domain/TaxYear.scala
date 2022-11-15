@@ -59,6 +59,8 @@ final case class TaxYear private (private val value: String) {
 
 object TaxYear {
 
+  val tysTaxYear: Int = 2024
+
   /**
     * @param taxYear tax year in MTD format (e.g. 2017-18)
     */
