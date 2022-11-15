@@ -211,7 +211,7 @@ class SubmitForeignPropertyBsasControllerSpec
           (CalculationIdFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (???, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (RuleDuplicateCountryCodeError, BAD_REQUEST),

@@ -112,7 +112,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
       val extraTysErrors = Seq(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("NOT_FOUND", NotFoundError),
-        ("RULE_TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
 
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))

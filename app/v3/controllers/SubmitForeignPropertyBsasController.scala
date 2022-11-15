@@ -127,6 +127,8 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             CalculationIdFormatError,
             TaxYearFormatError,
             RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            InvalidTaxYearParameterError,
             ValueFormatError,
             RuleTypeOfBusinessIncorrectError,
             RuleIncorrectOrEmptyBodyError,

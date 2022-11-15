@@ -190,21 +190,21 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
     "return InvalidTaxYearParameterError error" when {
       "a tax year before TYS is suppled" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = validCalculationId, Some("2022-23"), body = fhlBody)) shouldBe
-          List(???)
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, Some("2022-23"), body = fhlBody)) shouldBe
+          List(InvalidTaxYearParameterError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "a badly formatted tax year is suppled" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = validCalculationId, Some("BAD_TAX_YEAR"), body = fhlBody)) shouldBe
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, Some("BAD_TAX_YEAR"), body = fhlBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
       "a tax year range of more than one year is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = validCalculationId, Some("2022-24"), body = fhlBody)) shouldBe
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, Some("2022-24"), body = fhlBody)) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
