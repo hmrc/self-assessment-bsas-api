@@ -40,7 +40,7 @@ class TaxYearValidationSpec extends UnitSpec {
     }
     "return an error" when {
       "a taxYear with an invalid format is supplied" in {
-        val validationResult = TaxYearValidation.validate( "2019/20")
+        val validationResult = TaxYearValidation.validate("2019/20")
 
         validationResult shouldBe List(TaxYearFormatError)
       }
