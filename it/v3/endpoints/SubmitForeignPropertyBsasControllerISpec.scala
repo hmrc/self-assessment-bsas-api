@@ -16,15 +16,14 @@
 
 package v3.endpoints
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
-import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub }
+import v3.stubs._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -32,7 +31,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     val nino: String            = "AA123456A"
     val calculationId: String   = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
-    val taxYear: Option[String] = None
+    def taxYear: Option[String] = None
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -134,15 +133,16 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = ()
 
-    def uri: String = s"/$nino/foreign-property/$calculationId/adjust"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String
 
     def request(): WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/$nino/foreign-property/$calculationId/adjust")
         .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
@@ -159,15 +159,24 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
   }
 
+
+  private trait NonTysTest extends Test {
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+  }
+
+  private trait TysIfsTest extends Test {
+    override def taxYear: Option[String] = Some("2023-24")
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+  }
+
+
   "Calling the submit foreign property bsas endpoint" should {
 
     "return a 200 status code" when {
 
-      "any valid foreignProperty request is made" in new Test {
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+      "any valid foreignProperty request is made" in new NonTysTest  {
+        override def setupStubs(): Unit = {
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
@@ -178,11 +187,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
-      "any valid foreignProperty request is made with a failed nrs call" in new Test {
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+      "any valid foreignProperty request is made despite a failed nrs call" in new NonTysTest {
+        override def setupStubs(): Unit = {
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
@@ -193,39 +199,39 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
-      "any valid foreignFhlEea request is made" in new Test {
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+      "any valid foreignFhlEea request is made" in new NonTysTest {
+        override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-        }
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
-      "any valid foreignProperty consolidated request is made" in new Test {
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+
+      "any valid foreignProperty consolidated request is made" in new NonTysTest {
+        override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-        }
 
         val response: WSResponse = await(request().post(requestBodyForeignPropertyConsolidatedJson))
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
-      "any valid foreignFhlEea consolidated request is made" in new Test {
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+
+      "any valid foreignFhlEea consolidated request is made" in new NonTysTest {
+        override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-        }
+
+        val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
+        response.status shouldBe OK
+        response.json shouldBe responseBody
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+      }
+
+      "a valid request is made for TYS" in new TysIfsTest {
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
 
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
         response.status shouldBe OK
@@ -342,18 +348,12 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
             override val nino: String                            = requestNino
             override val calculationId: String                   = requestCalculationId
             override val taxYear: Option[String]                 = requestTaxYear
             override val requestBodyForeignPropertyJson: JsValue = requestBody
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(requestNino)
-            }
 
             val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
             response.status shouldBe expectedStatus
@@ -397,14 +397,10 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
+            override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
-            }
 
             val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
             response.status shouldBe expectedStatus
