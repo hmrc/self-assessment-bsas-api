@@ -17,10 +17,7 @@
 package v3.connectors
 
 import domain.Nino
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
@@ -31,33 +28,19 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
   val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test {
+    _: ConnectorTest =>
     val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    val ifsRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnv returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns true
   }
 
   "submitBsas" must {
     val request = SubmitUkPropertyBsasRequestData(nino, bsasId, nonFHLBody)
 
-    "post a SubmitBsasRequest body and return the result" in new Test {
+    "post a SubmitBsasRequest body and return the result" in new DesTest with Test {
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-      val requiredHeadersPut: Seq[(String, String)] = ifsRequestHeaders ++ Seq("Content-Type" -> "application/json")
-
-      MockedHttpClient.put(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-        config = dummyDesHeaderCarrierConfig,
-        body = nonFHLBody,
-        requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-      ).returns(Future.successful(outcome))
+      val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId"
+      willPut(url = expectedUrl, nonFHLBody) returns Future.successful(outcome)
 
       await(connector.submitPropertyBsas(request)) shouldBe outcome
     }

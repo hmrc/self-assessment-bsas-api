@@ -17,10 +17,12 @@
 package v3.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v3.connectors.DownstreamUri.DesUri
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v3.connectors.httpparsers.StandardDesHttpParser._
 
@@ -39,7 +41,7 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient,
 
     put(
       body = request.body,
-      DownstreamUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
+      DesUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
     )
   }
 }

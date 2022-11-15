@@ -77,7 +77,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
       MockedHttpClient.put(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-        config = dummyDesHeaderCarrierConfig,
+        config = dummyHeaderCarrierConfig,
         body = submitForeignPropertyBsasRequestBodyModel,
         requiredHeaders = requiredHeadersPut,
         excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")

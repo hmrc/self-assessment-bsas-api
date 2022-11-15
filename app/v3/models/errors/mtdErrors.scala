@@ -80,7 +80,7 @@ object RuleAccountingPeriodNotSupportedError
   extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED", "The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value")
 
 object RuleTaxYearNotSupportedError
-  extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "Tax year not supported, because it precedes the earliest allowable tax year")
+  extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range")
 
 object RuleCountryCodeError
   extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")

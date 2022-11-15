@@ -53,7 +53,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
       MockedHttpClient.post(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-        config = dummyDesHeaderCarrierConfig,
+        config = dummyHeaderCarrierConfig,
         body = model,
         requiredHeaders = requiredHeadersPost,
         excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")

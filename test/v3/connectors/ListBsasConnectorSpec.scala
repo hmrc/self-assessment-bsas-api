@@ -19,9 +19,9 @@ package v3.connectors
 import mocks.MockAppConfig
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DownstreamTaxYear
 import v3.fixtures.ListBsasFixture
 import v3.mocks.MockHttpClient
+import v3.models.domain.TaxYear
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
 
@@ -50,14 +50,15 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture{
 
   "listBsas" when {
     "provided with a valid request" must {
-      val request = ListBsasRequest(nino, DownstreamTaxYear("2019"), Some("incomeSourceId"), Some("02"))
+      val request = ListBsasRequest(nino, TaxYear("2019"), Some("incomeSourceId"), Some("02"))
 
       "return a ListBsasResponse" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, listBsasResponseModel))
+
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.get(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-          config = dummyDesHeaderCarrierConfig,
+          config = dummyHeaderCarrierConfig,
           queryParams.toSeq,
           requiredHeaders = desRequestHeaders,
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
