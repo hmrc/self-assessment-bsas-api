@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package v3.models.request.submitBsas.ukProperty
+package v3.controllers.requestParsers.validators.validations
 
-import domain.Nino
-import play.api.libs.json.JsValue
-import v3.models.request.RawData
+import config.FixedConfig
+import v3.models.domain.TaxYear
+import v3.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 
-case class SubmitUkPropertyBsasRawData(nino: String, calculationId: String, body: JsValue) extends RawData
+object TaxYearNotSupportedValidation extends FixedConfig {
 
-case class SubmitUkPropertyBsasRequestData(nino: Nino, calculationId: String, body: SubmitUKPropertyBsasRequestBody)
+  // @param taxYear In format YYYY-YY
+  def validate(taxYear: String): List[MtdError] = {
 
+    val year = TaxYear.fromMtd(taxYear).year
+
+    if (year >= minimumTaxYear) NoValidationErrors else List(RuleTaxYearNotSupportedError)
+  }
+
+}

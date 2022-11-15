@@ -23,7 +23,7 @@ import v3.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty._
 
-class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
+class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
   val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
   val nino                           = "AA123456A"
@@ -45,7 +45,7 @@ class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
     SubmitUkPropertyBsasRawData(nino, calculationId, requestBodyJson)
 
   trait Test extends MockSubmitUkPropertyBsasValidator {
-    lazy val parser = new SubmitUkPropertyBsasDataParser(mockValidator)
+    lazy val parser = new SubmitUkPropertyBsasRequestParser(mockValidator)
   }
 
   "parser" should {

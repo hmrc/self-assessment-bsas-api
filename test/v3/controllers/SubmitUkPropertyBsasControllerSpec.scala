@@ -129,7 +129,7 @@ class SubmitUkPropertyBsasControllerSpec
           .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
+        val result: Future[Result] = controller.handleRequest(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
@@ -148,7 +148,7 @@ class SubmitUkPropertyBsasControllerSpec
             .parse(rawData)
             .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-          val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
+          val result: Future[Result] = controller.handleRequest(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
@@ -180,7 +180,7 @@ class SubmitUkPropertyBsasControllerSpec
           .parse(rawData)
           .returns(Left(error))
 
-        val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
+        val result: Future[Result] = controller.handleRequest(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
@@ -216,7 +216,7 @@ class SubmitUkPropertyBsasControllerSpec
             .submitPropertyBsas(requestData)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-          val result: Future[Result] = controller.submitUkPropertyBsas(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
+          val result: Future[Result] = controller.handleRequest(nino, calculationId)(fakePostRequest(validNonFHLInputJson))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
