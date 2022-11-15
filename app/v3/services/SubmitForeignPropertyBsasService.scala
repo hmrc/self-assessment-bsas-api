@@ -40,33 +40,43 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-    "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
-    "INVALID_CORRELATIONID"         -> DownstreamError,
-    "INVALID_PAYLOAD"               -> DownstreamError,
-    "BVR_FAILURE_C15320"            -> DownstreamError,
-    "BVR_FAILURE_C55508"            -> DownstreamError,
-    "BVR_FAILURE_C55509"            -> DownstreamError,
-    "BVR_FAILURE_C559107"           -> RulePropertyIncomeAllowanceClaimed,
-    "BVR_FAILURE_C559103"           -> RulePropertyIncomeAllowanceClaimed,
-    "BVR_FAILURE_C559099"           -> RuleOverConsolidatedExpensesThreshold,
-    "BVR_FAILURE_C55503"            -> DownstreamError,
-    "BVR_FAILURE_C55316"            -> DownstreamError,
-    "NO_DATA_FOUND"                 -> NotFoundError,
-    "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
-    "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
-    "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
-    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-    "SERVER_ERROR"                  -> DownstreamError,
-    "SERVICE_UNAVAILABLE"           -> DownstreamError,
-  )
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+      "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID"         -> DownstreamError,
+      "INVALID_PAYLOAD"               -> DownstreamError,
+      "BVR_FAILURE_C15320"            -> DownstreamError,
+      "BVR_FAILURE_C55508"            -> DownstreamError,
+      "BVR_FAILURE_C55509"            -> DownstreamError,
+      "BVR_FAILURE_C559107"           -> RulePropertyIncomeAllowanceClaimed,
+      "BVR_FAILURE_C559103"           -> RulePropertyIncomeAllowanceClaimed,
+      "BVR_FAILURE_C559099"           -> RuleOverConsolidatedExpensesThreshold,
+      "BVR_FAILURE_C55503"            -> DownstreamError,
+      "BVR_FAILURE_C55316"            -> DownstreamError,
+      "NO_DATA_FOUND"                 -> NotFoundError,
+      "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
+      "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
+      "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
+      "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
+      "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
+      "SERVER_ERROR"                  -> DownstreamError,
+      "SERVICE_UNAVAILABLE"           -> DownstreamError,
+    )
 
+    val extraTysErrors =
+      Map(
+        "INVALID_TAX_YEAR"            -> TaxYearFormatError,
+        "NOT_FOUND"                   -> NotFoundError,
+        "RULE_TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+      )
+
+    errors ++ extraTysErrors
+  }
 }

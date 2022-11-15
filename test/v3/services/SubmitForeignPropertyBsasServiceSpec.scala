@@ -56,7 +56,6 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, None, fhlEeaBody)
 
-
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitForeignPropertyBsas")
@@ -87,7 +86,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_CORRELATIONID", DownstreamError),
@@ -110,7 +109,13 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", DownstreamError),
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("RULE_TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 
