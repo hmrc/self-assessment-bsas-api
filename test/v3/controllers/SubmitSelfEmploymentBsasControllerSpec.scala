@@ -54,8 +54,8 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
-  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(mtdRequest))
-  private val request    = SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, submitSelfEmploymentBsasRequestBodyModel)
+  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequest))
+  private val request    = SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
@@ -66,6 +66,8 @@ class SubmitSelfEmploymentBsasControllerSpec
   )
 
   trait Test {
+    def taxYear: Option[String] = None
+
     val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new SubmitSelfEmploymentBsasController(
@@ -121,7 +123,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(Json.toJson(mtdRequest)))
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(Json.toJson(mtdRequest)))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
@@ -140,7 +142,7 @@ class SubmitSelfEmploymentBsasControllerSpec
             .parse(rawRequest)
             .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
+          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(mtdRequest))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(error)
@@ -171,7 +173,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .parse(rawRequest)
           .returns(Left(error))
 
-        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(mtdRequest))
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
@@ -207,7 +209,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .parse(rawRequest)
           .returns(Left(error))
 
-        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
+        val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(mtdRequest))
 
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.toJson(error)
@@ -242,7 +244,7 @@ class SubmitSelfEmploymentBsasControllerSpec
             .submitSelfEmploymentBsas(request)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId)(fakePostRequest(mtdRequest))
+          val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(mtdRequest))
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)

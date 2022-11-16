@@ -32,7 +32,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
+  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, None, submitSelfEmploymentBsasRequestBodyModel)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

@@ -21,7 +21,7 @@ import support.UnitSpec
 import domain.Nino
 import v3.mocks.validators.MockSubmitSelfEmploymentBsasValidator
 import v3.models.errors._
-import v3.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
+import v3.models.request.submitBsas.selfEmployment.{ Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData }
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
@@ -54,25 +54,27 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
     lazy val parser = new SubmitSelfEmploymentBsasDataParser(mockValidator)
   }
 
-  val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
-    AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(
-      submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue)))))
-
+  val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(
+    nino,
+    calculationId,
+    None,
+    AnyContentAsJson(
+      submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue))))
+  )
 
   "parser" should {
 
     "accept valid input" when {
       "full adjustments is passed" in new Test {
 
-        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId,
-          AnyContentAsJson(mtdRequest))
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequest))
 
         MockValidator
           .validate(inputData)
           .returns(Nil)
 
         private val result = parser.parseRequest(inputData)
-        result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, submitSelfEmploymentBsasRequestBodyModel))
+        result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, None, submitSelfEmploymentBsasRequestBodyModel))
       }
     }
 
