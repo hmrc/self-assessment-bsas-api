@@ -16,7 +16,7 @@
 
 package v3.models.errors
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{ Json, Writes }
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
 
@@ -35,57 +35,54 @@ object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is inv
 
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 
-object StartDateFormatError
-  extends MtdError("FORMAT_START_DATE","The provided Start date is invalid")
+object StartDateFormatError extends MtdError("FORMAT_START_DATE", "The provided Start date is invalid")
 
-object EndDateFormatError
-  extends MtdError("FORMAT_END_DATE","The provided End date is invalid")
+object EndDateFormatError extends MtdError("FORMAT_END_DATE", "The provided End date is invalid")
 
-object TypeOfBusinessFormatError
-  extends MtdError("FORMAT_TYPE_OF_BUSINESS","The provided type of business is invalid")
+object TypeOfBusinessFormatError extends MtdError("FORMAT_TYPE_OF_BUSINESS", "The provided type of business is invalid")
 
-object AdjustedStatusFormatError
-  extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
+object AdjustedStatusFormatError extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid")
 
-object CalculationIdFormatError
-  extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid")
+object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid")
 
 object BsasIdFormatError extends MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid")
-
 
 object BusinessIdFormatError extends MtdError("FORMAT_BUSINESS_ID", "The supplied business ID is invalid")
 
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided Country code is invalid")
 
-object ValueFormatError        extends MtdError("FORMAT_VALUE", "The value must be between 0 and 99999999999.99"){
-  def forPathAndRange(path : String, min: String, max: String): MtdError =
-    ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be between $min and $max" )
+object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be between 0 and 99999999999.99") {
+
+  def forPathAndRange(path: String, min: String, max: String): MtdError =
+    ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be between $min and $max")
 }
 // Rule Errors
 
 object RuleEndBeforeStartDateError
-  extends MtdError("RULE_END_DATE_BEFORE_START_DATE","The supplied accounting period end date is before the start date")
+    extends MtdError("RULE_END_DATE_BEFORE_START_DATE", "The supplied accounting period end date is before the start date")
 
 object RuleBothPropertiesSuppliedError
-  extends MtdError("RULE_BOTH_PROPERTIES_SUPPLIED", "Both FHL and Non-FHL properties cannot be present at the same time")
+    extends MtdError("RULE_BOTH_PROPERTIES_SUPPLIED", "Both FHL and Non-FHL properties cannot be present at the same time")
 
 object RuleBothExpensesError
-  extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both expenses and consolidated expenses cannot be present at the same time")
+    extends MtdError("RULE_BOTH_EXPENSES_SUPPLIED", "Both expenses and consolidated expenses cannot be present at the same time")
 
 object RuleSelfEmploymentAdjustedError
-  extends MtdError("RULE_SELF_EMPLOYMENT_ADJUSTED",
-    "A self-employment business type was adjusted. Re-trigger an adjustable summary for the self-employment to correct")
+    extends MtdError("RULE_SELF_EMPLOYMENT_ADJUSTED",
+                     "A self-employment business type was adjusted. Re-trigger an adjustable summary for the self-employment to correct")
 
 object RuleAccountingPeriodNotSupportedError
-  extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED", "The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value")
+    extends MtdError(
+      "RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED",
+      "The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value"
+    )
 
-object RuleTaxYearNotSupportedError
-  extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range")
+object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range")
 
-object RuleCountryCodeError
-  extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
+object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 
-object RuleDuplicateCountryCodeError    extends MtdError("RULE_DUPLICATE_COUNTRY_CODE", "The same countryCode cannot be supplied multiple times") {
+object RuleDuplicateCountryCodeError extends MtdError("RULE_DUPLICATE_COUNTRY_CODE", "The same countryCode cannot be supplied multiple times") {
+
   def forDuplicatedCodesAndPaths(code: String, paths: Seq[String]): MtdError =
     RuleDuplicateCountryCodeError.copy(message = s"The country code '$code' is supplied multiple times", paths = Some(paths))
 }
@@ -93,30 +90,32 @@ object RuleDuplicateCountryCodeError    extends MtdError("RULE_DUPLICATE_COUNTRY
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
 object RuleTaxYearRangeInvalidError
-  extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required")
+    extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required")
 
-object RuleAccountingPeriodNotEndedError extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED","The supplied accounting period has not ended")
+object RuleAccountingPeriodNotEndedError extends MtdError("RULE_ACCOUNTING_PERIOD_NOT_ENDED", "The supplied accounting period has not ended")
 
-object RulePeriodicDataIncompleteError extends MtdError("RULE_PERIODIC_DATA_INCOMPLETE","One or more periodic updates missing for this accounting period")
+object RulePeriodicDataIncompleteError
+    extends MtdError("RULE_PERIODIC_DATA_INCOMPLETE", "One or more periodic updates missing for this accounting period")
 
-object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD","The supplied accounting period does not exist")
+object RuleNoAccountingPeriodError extends MtdError("RULE_NO_ACCOUNTING_PERIOD", "The supplied accounting period does not exist")
 
-object RuleTypeOfBusinessIncorrectError extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT",  "The calculation ID supplied relates to a different type of business")
+object RuleTypeOfBusinessIncorrectError
+    extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT", "The calculation ID supplied relates to a different type of business")
 
-object RuleSummaryStatusInvalid extends MtdError( "RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary")
+object RuleSummaryStatusInvalid extends MtdError("RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary")
 
-object RuleSummaryStatusSuperseded extends MtdError( "RULE_SUMMARY_STATUS_SUPERSEDED", "A newer summary calculation exists for this accounting period")
+object RuleSummaryStatusSuperseded extends MtdError("RULE_SUMMARY_STATUS_SUPERSEDED", "A newer summary calculation exists for this accounting period")
 
 object RuleAlreadyAdjusted extends MtdError("RULE_ALREADY_ADJUSTED", "A summary may only be adjusted once. Request a new summary")
 
 object RuleOverConsolidatedExpensesThreshold
-  extends MtdError("RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD", "The cumulative turnover amount exceeds the consolidated expenses threshold")
+    extends MtdError("RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD", "The cumulative turnover amount exceeds the consolidated expenses threshold")
 
 object RuleTradingIncomeAllowanceClaimed
-  extends MtdError("RULE_TRADING_INCOME_ALLOWANCE_CLAIMED", "A claim for trading income allowance was made. Cannot also have expenses")
+    extends MtdError("RULE_TRADING_INCOME_ALLOWANCE_CLAIMED", "A claim for trading income allowance was made. Cannot also have expenses")
 
 object RulePropertyIncomeAllowanceClaimed
-  extends MtdError("RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED", "A claim for property income allowance was made. Cannot also have expenses")
+    extends MtdError("RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED", "A claim for property income allowance was made. Cannot also have expenses")
 
 object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An adjusted summary calculation does not exist")
 
@@ -124,14 +123,14 @@ object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An ad
 object RuleNotSelfEmployment extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business")
 
 object RuleResultingValueNotPermitted
-  extends MtdError("RULE_RESULTING_VALUE_NOT_PERMITTED","The adjustments provided would produce an unacceptable negative monetary value")
+    extends MtdError("RULE_RESULTING_VALUE_NOT_PERMITTED", "The adjustments provided would produce an unacceptable negative monetary value")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
 
 object InvalidTaxYearParameterError extends MtdError(code = "INVALID_TAX_YEAR_PARAMETER", message = "A tax year before 2023-24 was supplied")
 
-object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
+object InternalError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
 object BadRequestError extends MtdError("INVALID_REQUEST", "Invalid request")
 
@@ -145,8 +144,8 @@ object UnauthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The
 object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is missing or not authorized")
 
 // Accept header Errors
-object  InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
+object InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
 
-object  UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested resource could not be found")
+object UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested resource could not be found")
 
 object InvalidBodyTypeError extends MtdError("INVALID_BODY_TYPE", "Expecting text/json or application/json body")

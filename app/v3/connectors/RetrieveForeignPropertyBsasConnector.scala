@@ -26,7 +26,7 @@ import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsa
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
-import v3.connectors.httpparsers.StandardDesHttpParser._
+import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
 @Singleton
 class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,

@@ -36,7 +36,7 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
 
-    import v3.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
     val calculationId = request.calculationId

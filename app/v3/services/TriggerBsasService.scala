@@ -27,12 +27,12 @@ import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
-import v3.support.DesResponseMappingSupport
+import v3.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesResponseMappingSupport with Logging{
+class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DownstreamResponseMappingSupport with Logging{
 
   def triggerBsas(request: TriggerBsasRequest)
                        (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
@@ -40,7 +40,7 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesR
   Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.triggerBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.triggerBsas(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
     } yield desResponseWrapper.map(des => des)
 
     result.value
@@ -48,13 +48,13 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesR
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-    "INVALID_CORRELATIONID"         -> DownstreamError,
-    "INVALID_PAYLOAD"               -> DownstreamError,
+    "INVALID_CORRELATIONID"         -> InternalError,
+    "INVALID_PAYLOAD"               -> InternalError,
     "NO_DATA_FOUND"                 -> NotFoundError,
     "ACCOUNTING_PERIOD_NOT_ENDED"   -> RuleAccountingPeriodNotEndedError,
     "OBLIGATIONS_NOT_MET"           -> RulePeriodicDataIncompleteError,
     "NO_ACCOUNTING_PERIOD"          -> RuleNoAccountingPeriodError,
-    "SERVER_ERROR"                  -> DownstreamError,
-    "SERVICE_UNAVAILABLE"           -> DownstreamError
+    "SERVER_ERROR"                  -> InternalError,
+    "SERVICE_UNAVAILABLE"           -> InternalError
   )
 }

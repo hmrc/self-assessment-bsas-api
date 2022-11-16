@@ -26,12 +26,12 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.support.DesResponseMappingSupport
+import v3.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging {
+class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
       implicit hc: HeaderCarrier,
@@ -40,7 +40,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
     } yield desResponseWrapper
 
     result.value
@@ -49,7 +49,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
     "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
-    "INVALID_PAYLOAD"               -> DownstreamError,
+    "INVALID_PAYLOAD"               -> InternalError,
     "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
     "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
     "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
@@ -57,15 +57,15 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
     "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
     "BVR_FAILURE_C15320"            -> RuleTradingIncomeAllowanceClaimed,
-    "BVR_FAILURE_C55503"            -> DownstreamError,
-    "BVR_FAILURE_C55508"            -> DownstreamError,
-    "BVR_FAILURE_C55509"            -> DownstreamError,
-    "BVR_FAILURE_C559107"           -> DownstreamError,
-    "BVR_FAILURE_C559103"           -> DownstreamError,
-    "BVR_FAILURE_C559099"           -> DownstreamError,
+    "BVR_FAILURE_C55503"            -> InternalError,
+    "BVR_FAILURE_C55508"            -> InternalError,
+    "BVR_FAILURE_C55509"            -> InternalError,
+    "BVR_FAILURE_C559107"           -> InternalError,
+    "BVR_FAILURE_C559103"           -> InternalError,
+    "BVR_FAILURE_C559099"           -> InternalError,
     "NO_DATA_FOUND"                 -> NotFoundError,
-    "INVALID_CORRELATIONID"         -> DownstreamError,
-    "SERVER_ERROR"                  -> DownstreamError,
-    "SERVICE_UNAVAILABLE"           -> DownstreamError
+    "INVALID_CORRELATIONID"         -> InternalError,
+    "SERVER_ERROR"                  -> InternalError,
+    "SERVICE_UNAVAILABLE"           -> InternalError
   )
 }

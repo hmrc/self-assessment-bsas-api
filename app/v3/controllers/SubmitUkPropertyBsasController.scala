@@ -19,21 +19,21 @@ package v3.controllers
 import cats.data.EitherT
 import cats.implicits._
 
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, ControllerComponents}
+import javax.inject.{ Inject, Singleton }
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, ControllerComponents }
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.{ IdGenerator, Logging }
 import v3.controllers.requestParsers.SubmitUkPropertyBsasRequestParser
 import v3.hateoas.HateoasFactory
-import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v3.models.response.SubmitUkPropertyBsasHateoasData
-import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUKPropertyBsasNrsProxyService, SubmitUkPropertyBsasService}
+import v3.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUKPropertyBsasNrsProxyService, SubmitUkPropertyBsasService }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -45,19 +45,18 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
                                                auditService: AuditService,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "SubmitUkPropertyBsasController",
-      endpointName   = "submitUkPropertyBsas"
+      endpointName = "submitUkPropertyBsas"
     )
 
   def handleRequest(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -68,7 +67,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- {
+          response <- {
             //Submit asynchronously to NRS
             nrsService.submit(nino, parsedRequest.body)
             //Submit Return to ETMP
@@ -102,7 +101,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -123,32 +122,35 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
     errorWrapper.error match {
 
       case _
-        if errorWrapper.containsAnyOf(
-          BadRequestError,
-          NinoFormatError,
-          CalculationIdFormatError,
-          ValueFormatError,
-          RuleBothExpensesError,
-          RuleTypeOfBusinessIncorrectError,
-          RuleIncorrectOrEmptyBodyError,
-          RuleBothPropertiesSuppliedError
-        ) =>
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            CalculationIdFormatError,
+            ValueFormatError,
+            RuleBothExpensesError,
+            RuleTypeOfBusinessIncorrectError,
+            RuleIncorrectOrEmptyBodyError,
+            RuleBothPropertiesSuppliedError,
+            TaxYearFormatError,
+            InvalidTaxYearParameterError,
+            RuleTaxYearNotSupportedError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
 
       case _
-        if errorWrapper.containsAnyOf(
-          RuleSummaryStatusInvalid,
-          RuleSummaryStatusSuperseded,
-          RuleAlreadyAdjusted,
-          RuleResultingValueNotPermitted,
-          RuleOverConsolidatedExpensesThreshold,
-          RulePropertyIncomeAllowanceClaimed
-        ) =>
+          if errorWrapper.containsAnyOf(
+            RuleSummaryStatusInvalid,
+            RuleSummaryStatusSuperseded,
+            RuleAlreadyAdjusted,
+            RuleResultingValueNotPermitted,
+            RuleOverConsolidatedExpensesThreshold,
+            RulePropertyIncomeAllowanceClaimed
+          ) =>
         Forbidden(Json.toJson(errorWrapper))
 
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
