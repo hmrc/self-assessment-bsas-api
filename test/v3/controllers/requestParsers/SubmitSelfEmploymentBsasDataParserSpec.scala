@@ -23,6 +23,7 @@ import v3.mocks.validators.MockSubmitSelfEmploymentBsasValidator
 import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment.{ Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData }
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
+import v3.models.domain.TaxYear
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
@@ -75,6 +76,22 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
         private val result = parser.parseRequest(inputData)
         result shouldBe Right(SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, None, submitSelfEmploymentBsasRequestBodyModel))
+      }
+    }
+
+    "accept valid input" when {
+      "full adjustments is passed with a TYS tax year" in new Test {
+
+        val inputData: SubmitSelfEmploymentBsasRawData =
+          SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2023-24"), AnyContentAsJson(mtdRequest))
+
+        MockValidator
+          .validate(inputData)
+          .returns(Nil)
+
+        private val result = parser.parseRequest(inputData)
+        result shouldBe Right(
+          SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")), submitSelfEmploymentBsasRequestBodyModel))
       }
     }
 

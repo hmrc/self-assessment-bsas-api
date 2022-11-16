@@ -47,7 +47,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
       "a valid TYS tax year is supplied" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino,
                                                            calculationId,
-                                                           Some("2023-2024"),
+                                                           Some("2023-24"),
                                                            AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
       }
     }
@@ -247,16 +247,14 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
     "return multiple errors" when {
       "request supplied has multiple errors" in {
         validator.validate(
-          SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = "badCalcId", Some("2009-2010"), AnyContentAsJson(mtdRequest))) shouldBe
+          SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = "badCalcId", Some("2022-23"), AnyContentAsJson(mtdRequest))) shouldBe
           List(NinoFormatError, CalculationIdFormatError)
       }
     }
 
     "return InvalidTaxYearParameterError error" in {
-      validator.validate(SubmitSelfEmploymentBsasRawData(nino,
-                                                         calculationId,
-                                                         Some("2022-2023"),
-                                                         AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
+      validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2022-23"), AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(
+        InvalidTaxYearParameterError)
     }
   }
 
@@ -264,10 +262,6 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
     validator.validate(SubmitSelfEmploymentBsasRawData(nino,
                                                        calculationId,
                                                        Some("NO_MORE_TAXES"),
-                                                       AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
-  }
-
-  "return RuleTaxYearRangeInvalidError error" in {
-    validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2019-2022"), AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
+                                                       AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(TaxYearFormatError)
   }
 }

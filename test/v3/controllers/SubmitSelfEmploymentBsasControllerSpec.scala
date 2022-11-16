@@ -256,7 +256,8 @@ class SubmitSelfEmploymentBsasControllerSpec
       }
 
       val input = Seq(
-        (NinoFormatError, BAD_REQUEST),
+        (TaxYearFormatError, BAD_REQUEST),
+        (RuleTaxYearNotSupportedError, BAD_REQUEST),
         (CalculationIdFormatError, BAD_REQUEST),
         (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),

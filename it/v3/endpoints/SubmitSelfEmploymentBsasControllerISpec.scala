@@ -19,10 +19,11 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ Json, JsValue }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
+import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures.mtdRequest
 import v3.models.errors._
 import v3.stubs._
 
@@ -45,17 +46,17 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/self-employment/$calculationId/adjust"
+    def mtdUri: String
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(uri)
+      buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
@@ -67,6 +68,16 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
   }
 
+  private trait NonTysTest extends Test {
+    def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+  }
+
+  private trait TysIfsTest extends Test {
+    def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust?taxYear=2023-24"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+  }
+
   import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
   val requestBody: JsValue = mtdRequest
@@ -75,14 +86,14 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code" when {
 
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
         val result: WSResponse = await(request().post(requestBody))
@@ -91,14 +102,46 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "a valid request is made with a failed nrs call" in new Test {
+      "a valid request is made with a failed nrs call" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUrl, OK)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
+        }
+
+        val result: WSResponse = await(request().post(requestBody))
+        result.status shouldBe OK
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        result.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid TYS request is made" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
+        }
+
+        val result: WSResponse = await(request().post(requestBody))
+        result.status shouldBe OK
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        result.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "a valid TYS request is made with a failed nrs call" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
         val result: WSResponse = await(request().post(requestBody))
@@ -112,7 +155,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
       "validation error" when {
         def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError, requestBodyJson: JsValue): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String = requestNino
 
@@ -137,13 +180,13 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
       "des service error" when {
         def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+          s"des returns an $desCode error and status $desStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, desUrl, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().post(requestBody))
@@ -153,6 +196,9 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
           (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
