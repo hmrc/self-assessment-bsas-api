@@ -18,12 +18,13 @@ package v3.endpoints
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
 import v3.stubs._
+import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -32,6 +33,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val nino: String            = "AA123456A"
     val calculationId: String   = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
     def taxYear: Option[String] = None
+
+    // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
+    val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -42,84 +46,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          """.stripMargin
     )
-
-    val requestBodyForeignPropertyJson: JsValue = Json.parse("""
-         |{
-         |  "nonFurnishedHolidayLet": [
-         |    {
-         |      "countryCode": "FRA",
-         |      "income": {
-         |        "totalRentsReceived": 123.12,
-         |        "premiumsOfLeaseGrant": 123.12,
-         |        "foreignTaxTakenOff": 123.12,
-         |        "otherPropertyIncome": 123.12
-         |      },
-         |      "expenses": {
-         |        "premisesRunningCosts": 123.12,
-         |        "repairsAndMaintenance": 123.12,
-         |        "financialCosts": 123.12,
-         |        "professionalFees": 123.12,
-         |        "travelCosts": 123.12,
-         |        "costOfServices": 123.12,
-         |        "residentialFinancialCost": 123.12,
-         |        "other": 123.12
-         |      }
-         |    }
-         |  ]
-         |}
-         |""".stripMargin)
-
-    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse("""
-        |{
-        |  "nonFurnishedHolidayLet": [
-        |    {
-        |      "countryCode": "FRA",
-        |      "income": {
-        |        "totalRentsReceived": 123.12,
-        |        "premiumsOfLeaseGrant": 123.12,
-        |        "foreignTaxTakenOff": 123.12,
-        |        "otherPropertyIncome": 123.12
-        |      },
-        |      "expenses": {
-        |        "residentialFinancialCost": 123.12,
-        |        "consolidatedExpenses": 123.12
-        |      }
-        |    }
-        |  ]
-        |}
-        |""".stripMargin)
-
-    val requestBodyForeignFhlEeaJson: JsValue = Json.parse("""
-         |{
-         |    "foreignFhlEea": {
-         |        "income": {
-         |            "totalRentsReceived": 123.12
-         |        },
-         |        "expenses": {
-         |            "premisesRunningCosts": 123.12,
-         |            "repairsAndMaintenance": 123.12,
-         |            "financialCosts": 123.12,
-         |            "professionalFees": 123.12,
-         |            "costOfServices": 123.12,
-         |            "travelCosts": 123.12,
-         |            "other": 123.12
-         |        }
-         |    }
-         |}
-         |""".stripMargin)
-
-    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse("""
-         |{
-         |    "foreignFhlEea": {
-         |        "income": {
-         |            "totalRentsReceived": 123.12
-         |        },
-         |        "expenses": {
-         |            "consolidatedExpenses": 123.12
-         |        }
-         |    }
-         |}
-         |""".stripMargin)
 
     val responseBody: JsValue = Json.parse(s"""
          |{
@@ -136,6 +62,17 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     def setupStubs(): Unit = ()
 
     def downstreamUrl: String
+
+    def stubDownstreamSuccess(): Unit = {
+      DownstreamStub
+        .when(DownstreamStub.PUT, downstreamUrl)
+        .withRequestBody(downstreamRequestValid)
+        .thenReturn(OK, ignoredDownstreamResponse)
+    }
+
+    def stubNrsSuccess(): Unit = {
+      NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
+    }
 
     def request(): WSRequest = {
       AuditStub.audit()
@@ -159,7 +96,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
   }
 
-
   private trait NonTysTest extends Test {
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
@@ -170,171 +106,56 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
-
   "Calling the submit foreign property bsas endpoint" should {
 
     "return a 200 status code" when {
 
-      "any valid foreignProperty request is made" in new NonTysTest  {
+      "any valid foreignProperty request is made" in new NonTysTest {
         override def setupStubs(): Unit = {
-          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
+          stubNrsSuccess()
+          stubDownstreamSuccess()
         }
 
-        val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
+        val response: WSResponse = await(request().post(mtdRequestValid))
         response.status shouldBe OK
         response.json shouldBe responseBody
-        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("X-CorrelationId") should not be empty
+      }
+
+      "a valid request is made for TYS" in new TysIfsTest {
+        override def setupStubs(): Unit = {
+          stubNrsSuccess()
+          stubDownstreamSuccess()
+        }
+
+        val response: WSResponse = await(request().post(mtdRequestValid))
+        response.status shouldBe OK
+        response.json shouldBe responseBody
+        response.header("X-CorrelationId") should not be empty
       }
 
       "any valid foreignProperty request is made despite a failed nrs call" in new NonTysTest {
         override def setupStubs(): Unit = {
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
+          stubDownstreamSuccess()
         }
 
-        val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
+        val response: WSResponse = await(request().post(mtdRequestValid))
         response.status shouldBe OK
         response.json shouldBe responseBody
-        response.header("X-CorrelationId").nonEmpty shouldBe true
-      }
-
-      "any valid foreignFhlEea request is made" in new NonTysTest {
-        override def setupStubs(): Unit =
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-
-        val response: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
-        response.header("X-CorrelationId").nonEmpty shouldBe true
-      }
-
-      "any valid foreignProperty consolidated request is made" in new NonTysTest {
-        override def setupStubs(): Unit =
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-
-        val response: WSResponse = await(request().post(requestBodyForeignPropertyConsolidatedJson))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
-        response.header("X-CorrelationId").nonEmpty shouldBe true
-      }
-
-      "any valid foreignFhlEea consolidated request is made" in new NonTysTest {
-        override def setupStubs(): Unit =
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-
-        val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
-        response.header("X-CorrelationId").nonEmpty shouldBe true
-      }
-
-      "a valid request is made for TYS" in new TysIfsTest {
-        override def setupStubs(): Unit =
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-
-        val response: WSResponse = await(request().post(requestBodyForeignFhlEeaConsolidatedJson))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
-        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("X-CorrelationId") should not be empty
       }
     }
 
     "return error according to spec" when {
 
-      val validRequestBody: JsValue = Json.parse(s"""
-           |{
-           |    "foreignFhlEea": {
-           |        "income": {
-           |            "rentIncome": 123.12
-           |        },
-           |        "expenses": {
-           |            "consolidatedExpenses": 123.12
-           |        }
-           |    }
-           |}
-           |""".stripMargin)
-
-      val requestBodyIncorrectBody: JsValue = Json.parse(s"""
-           |{
-           |    "foreignFhlEea": {
-           |    }
-           |}
-           |""".stripMargin)
-
-      val requestBodyBothExpenses: JsValue = Json.parse("""
-          |{
-          |  "nonFurnishedHolidayLet": [
-          |    {
-          |      "countryCode": "FRA",
-          |      "income": {
-          |        "totalRentsReceived": 123.12,
-          |        "premiumsOfLeaseGrant": 123.12,
-          |        "foreignTaxTakenOff": 123.12,
-          |        "otherPropertyIncome": 123.12
-          |      },
-          |      "expenses": {
-          |        "premisesRunningCosts": 123.12,
-          |        "repairsAndMaintenance": 123.12,
-          |        "financialCosts": 123.12,
-          |        "professionalFees": 123.12,
-          |        "travelCosts": 123.12,
-          |        "costOfServices": 123.12,
-          |        "residentialFinancialCost": 123.12,
-          |        "other": 123.12,
-          |        "consolidatedExpenses": 123.12
-          |      }
-          |    }
-          |  ]
-          |}
-          |""".stripMargin)
-
-      val requestBodyInvalidCountryCode: JsValue = Json.parse(s"""
+      def requestBodyWithCountryCode(code: String): JsValue = Json.parse(s"""
            |{
            |  "nonFurnishedHolidayLet": [
            |    {
-           |      "countryCode": "FRE",
+           |      "countryCode": "$code",
            |      "income": {
-           |        "totalRentsReceived": 123.12,
-           |        "premiumsOfLeaseGrant": 123.12,
-           |        "foreignTaxTakenOff": 123.12,
-           |        "otherPropertyIncome": 123.12
-           |      },
-           |      "expenses": {
-           |        "premisesRunningCosts": 123.12,
-           |        "repairsAndMaintenance": 123.12,
-           |        "financialCosts": 123.12,
-           |        "professionalFees": 123.12,
-           |        "travelCosts": 123.12,
-           |        "costOfServices": 123.12,
-           |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12
-           |      }
-           |    }
-           |  ]
-           |}
-           |""".stripMargin)
-
-      val requestBodyUnformattedCountryCode: JsValue = Json.parse(s"""
-           |{
-           |  "nonFurnishedHolidayLet": [
-           |    {
-           |      "countryCode": "FRANCE",
-           |      "income": {
-           |        "totalRentsReceived": 123.12,
-           |        "premiumsOfLeaseGrant": 123.12,
-           |        "foreignTaxTakenOff": 123.12,
-           |        "otherPropertyIncome": 123.12
-           |      },
-           |      "expenses": {
-           |        "premisesRunningCosts": 123.12,
-           |        "repairsAndMaintenance": 123.12,
-           |        "financialCosts": 123.12,
-           |        "professionalFees": 123.12,
-           |        "travelCosts": 123.12,
-           |        "costOfServices": 123.12,
-           |        "residentialFinancialCost": 123.12,
-           |        "other": 123.12
+           |        "totalRentsReceived": 123.12
            |      }
            |    }
            |  ]
@@ -350,45 +171,39 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String                            = requestNino
-            override val calculationId: String                   = requestCalculationId
-            override val taxYear: Option[String]                 = requestTaxYear
-            override val requestBodyForeignPropertyJson: JsValue = requestBody
+            override val nino: String            = requestNino
+            override val calculationId: String   = requestCalculationId
+            override val taxYear: Option[String] = requestTaxYear
 
-            val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
+            val response: WSResponse = await(request().post(requestBody))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
         val input = Seq(
-          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, validRequestBody, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "BAD_CALC_ID", None, validRequestBody, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), validRequestBody, BAD_REQUEST, InvalidTaxYearParameterError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("BAD_TAX_YEAR"), validRequestBody, BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-24"), validRequestBody, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, mtdRequestValid, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "BAD_CALC_ID", None, mtdRequestValid, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), mtdRequestValid, BAD_REQUEST, InvalidTaxYearParameterError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("BAD_TAX_YEAR"), mtdRequestValid, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-24"), mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A",
            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
            None,
-           requestBodyIncorrectBody,
-           BAD_REQUEST,
-           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea")))),
-          ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           None,
-           requestBodyBothExpenses,
+           mtdRequestNonFhlFull,
            BAD_REQUEST,
            RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
           ("AA123456A",
            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
            None,
-           requestBodyInvalidCountryCode,
+           requestBodyWithCountryCode("XXX"),
            BAD_REQUEST,
            RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
           ("AA123456A",
            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
            None,
-           requestBodyUnformattedCountryCode,
+           requestBodyWithCountryCode("FRANCE"),
            BAD_REQUEST,
            CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
@@ -402,7 +217,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request().post(requestBodyForeignPropertyJson))
+            val response: WSResponse = await(request().post(mtdRequestValid))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
