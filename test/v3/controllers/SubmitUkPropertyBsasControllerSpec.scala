@@ -51,33 +51,21 @@ class SubmitUkPropertyBsasControllerSpec
   private val correlationId = "X-123"
   private val nino          = "AA123456A"
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
-  private val taxYear       = "2023-24"
+  private val rawTaxYear    = "2023-24"
+  private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
-  private val nonTysRawData = SubmitUkPropertyBsasRawData(
+  private val rawData = SubmitUkPropertyBsasRawData(
     nino = nino,
     calculationId = calculationId,
     body = submitBsasRawDataBodyNonFHL(income = nonFHLIncomeAllFields, expenses = nonFHLExpensesAllFields),
-    taxYear = None
+    taxYear = Some(rawTaxYear)
   )
-  private val nonTysRequestData = SubmitUkPropertyBsasRequestData(
+
+  private val requestData = SubmitUkPropertyBsasRequestData(
     nino = Nino(nino),
     calculationId = calculationId,
     body = nonFHLBody,
-    taxYear = None
-  )
-
-  private val tysRawData = SubmitUkPropertyBsasRawData(
-    nino = nino,
-    calculationId = calculationId,
-    body = submitBsasRawDataBodyNonFHL(income = nonFHLIncomeAllFields, expenses = nonFHLExpensesAllFields),
     taxYear = Some(taxYear)
-  )
-
-  private val tysRequestData = SubmitUkPropertyBsasRequestData(
-    nino = Nino(nino),
-    calculationId = calculationId,
-    body = nonFHLBody,
-    taxYear = Some(TaxYear.fromMtd(taxYear))
   )
 
   val testHateoasLinks: Seq[Link] = Seq(
@@ -132,49 +120,22 @@ class SubmitUkPropertyBsasControllerSpec
       "a valid request is supplied" in new Test {
 
         MockSubmitUkPropertyBsasDataParser
-          .parse(nonTysRawData)
-          .returns(Right(nonTysRequestData))
+          .parse(rawData)
+          .returns(Right(requestData))
 
         MockSubmitUKPropertyBsasNrsProxyService
           .submit(nino)
           .returns(Future.successful(Unit))
 
         MockSubmitUkPropertyBsasService
-          .submitPropertyBsas(nonTysRequestData)
+          .submitPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
           .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        val result: Future[Result] = controller.handleRequest(nino, calculationId, None)(fakePostRequest(validNonFHLInputJson))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-      }
-
-      "a valid TYS request is supplied" in new Test {
-
-        MockSubmitUkPropertyBsasDataParser
-          .parse(tysRawData)
-          .returns(Right(tysRequestData))
-
-        MockSubmitUKPropertyBsasNrsProxyService
-          .submit(nino)
-          .returns(Future.successful(Unit))
-
-        MockSubmitUkPropertyBsasService
-          .submitPropertyBsas(tysRequestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-
-        MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
-        val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(taxYear))(fakePostRequest(validNonFHLInputJson))
+        val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe Json.parse(hateoasResponse(nino, calculationId))
@@ -188,10 +149,10 @@ class SubmitUkPropertyBsasControllerSpec
           s"a ${error.code} error is returned from the parser" in new Test {
 
             MockSubmitUkPropertyBsasDataParser
-              .parse(nonTysRawData)
+              .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.handleRequest(nino, calculationId, None)(fakePostRequest(validNonFHLInputJson))
+            val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -220,10 +181,10 @@ class SubmitUkPropertyBsasControllerSpec
           val error: ErrorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError)))
 
           MockSubmitUkPropertyBsasDataParser
-            .parse(nonTysRawData)
+            .parse(rawData)
             .returns(Left(error))
 
-          val result: Future[Result] = controller.handleRequest(nino, calculationId, None)(fakePostRequest(validNonFHLInputJson))
+          val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
 
           status(result) shouldBe BAD_REQUEST
           contentAsJson(result) shouldBe Json.toJson(error)
@@ -249,18 +210,18 @@ class SubmitUkPropertyBsasControllerSpec
           s"a ${mtdError.code} error is returned from the service" in new Test {
 
             MockSubmitUkPropertyBsasDataParser
-              .parse(nonTysRawData)
-              .returns(Right(nonTysRequestData))
+              .parse(rawData)
+              .returns(Right(requestData))
 
             MockSubmitUKPropertyBsasNrsProxyService
               .submit(nino)
               .returns(Future.successful(Unit))
 
             MockSubmitUkPropertyBsasService
-              .submitPropertyBsas(nonTysRequestData)
+              .submitPropertyBsas(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.handleRequest(nino, calculationId, None)(fakePostRequest(validNonFHLInputJson))
+            val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
