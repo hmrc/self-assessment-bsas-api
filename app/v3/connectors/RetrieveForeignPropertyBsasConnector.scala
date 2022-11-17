@@ -40,6 +40,7 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val calcId = request.calculationId
 
+
     get(
       IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
     )

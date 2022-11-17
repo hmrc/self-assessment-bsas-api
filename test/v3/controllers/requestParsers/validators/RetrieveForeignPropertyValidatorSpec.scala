@@ -32,23 +32,23 @@ class RetrieveForeignPropertyValidatorSpec extends UnitSpec {
   "validator" should {
     "return no errors" when {
       "passed valid raw data with all fields" in {
-        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId)
+        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, taxYear=None)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveForeignPropertyBsasRawData(invalidNino, validCalculationId)
+        val input = RetrieveForeignPropertyBsasRawData(invalidNino, validCalculationId, taxYear=None)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed raw data with an invalid calculation id" in {
-        val input = RetrieveForeignPropertyBsasRawData(validNino, invalidCalculationId)
+        val input = RetrieveForeignPropertyBsasRawData(validNino, invalidCalculationId, taxYear=None)
         validator.validate(input) shouldBe List(CalculationIdFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveForeignPropertyBsasRawData(invalidNino, invalidCalculationId)
+        val input = RetrieveForeignPropertyBsasRawData(invalidNino, invalidCalculationId, taxYear=None)
         validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError)
       }
     }
