@@ -134,7 +134,8 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
         RuleTypeOfBusinessIncorrectError,
         InvalidTaxYearParameterError,
         TaxYearFormatError,
-        RuleTaxYearNotSupportedError
+        RuleTaxYearNotSupportedError,
+        RuleTaxYearRangeInvalidError
       ) => BadRequest(Json.toJson(errorWrapper))
     case _ 
       if errorWrapper.containsAnyOf(

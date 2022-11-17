@@ -67,7 +67,8 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
       "NO_DATA_FOUND"                 -> NotFoundError,
       "INVALID_CORRELATIONID"         -> DownstreamError,
       "SERVER_ERROR"                  -> DownstreamError,
-      "SERVICE_UNAVAILABLE"           -> DownstreamError
+      "SERVICE_UNAVAILABLE"           -> DownstreamError,
+      "RULE_TAX_YEAR_RANGE_INVALID"   -> RuleTaxYearRangeInvalidError
     )
 
     val extraTysErrors =

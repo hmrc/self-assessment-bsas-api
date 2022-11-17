@@ -264,4 +264,9 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
                                                        Some("NO_MORE_TAXES"),
                                                        AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(TaxYearFormatError)
   }
+
+  "return RuleTaxYearRangeInvalidError error" in {
+    validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2021-23"), AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(
+      RuleTaxYearRangeInvalidError)
+  }
 }
