@@ -44,6 +44,12 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       |""".stripMargin
   )
 
+  private val requestBody =
+    SubmitForeignPropertyBsasRequestBody(
+      nonFurnishedHolidayLet = Some(Seq(ForeignProperty("FRA", Some(ForeignPropertyIncome(Some(123.12), None, None)), None))),
+      foreignFhlEea = None
+    )
+
   def inputDataWith(taxYear: Option[String]): SubmitForeignPropertyRawData =
     SubmitForeignPropertyRawData(nino, calculationId, taxYear, requestBodyJson)
 
@@ -57,28 +63,16 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
         val inputData: SubmitForeignPropertyRawData = inputDataWith(None)
         MockValidator.validate(inputData).returns(Nil)
 
-        val body: SubmitForeignPropertyBsasRequestBody =
-          SubmitForeignPropertyBsasRequestBody(
-            nonFurnishedHolidayLet = Some(Seq(ForeignProperty("FRA", Some(ForeignPropertyIncome(Some(123.12), None, None)), None))),
-            foreignFhlEea = None
-          )
-
         parser.parseRequest(inputData) shouldBe
-          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, None, body))
+          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, None, requestBody))
       }
 
       "valid request data is supplied with a taxYear" in new Test {
         val inputData: SubmitForeignPropertyRawData = inputDataWith(Some("2023-24"))
         MockValidator.validate(inputData).returns(Nil)
 
-        val body: SubmitForeignPropertyBsasRequestBody =
-          SubmitForeignPropertyBsasRequestBody(
-            nonFurnishedHolidayLet = Some(Seq(ForeignProperty("FRA", Some(ForeignPropertyIncome(Some(123.12), None, None)), None))),
-            foreignFhlEea = None
-          )
-
         parser.parseRequest(inputData) shouldBe
-          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")), body))
+          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")), requestBody))
       }
     }
 

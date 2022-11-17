@@ -32,6 +32,7 @@ class SubmitForeignPropertyBsasRequestParser @Inject()(val validator: SubmitFore
   override protected def requestFor(data: SubmitForeignPropertyRawData): SubmitForeignPropertyBsasRequestData = {
     val requestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
-    SubmitForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId, data.taxYear.map(TaxYear.fromMtd), requestBody)
+    val taxYear = data.taxYear.map(TaxYear.fromMtd)
+    SubmitForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId, taxYear, requestBody)
   }
 }

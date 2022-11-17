@@ -16,9 +16,7 @@
 
 package v3.services
 
-import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v3.connectors.SubmitForeignPropertyBsasConnector
@@ -28,7 +26,8 @@ import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v3.support.DesResponseMappingSupport
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends DesResponseMappingSupport with Logging {
@@ -39,11 +38,7 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.submitForeignPropertyBsas(request)).leftMap(mapDesErrors(errorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector.submitForeignPropertyBsas(request).map(_.leftMap(mapDesErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {
@@ -72,8 +67,8 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
 
     val extraTysErrors =
       Map(
-        "INVALID_TAX_YEAR"            -> TaxYearFormatError,
-        "NOT_FOUND"                   -> NotFoundError,
+        "INVALID_TAX_YEAR"       -> TaxYearFormatError,
+        "NOT_FOUND"              -> NotFoundError,
         "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
       )
 
