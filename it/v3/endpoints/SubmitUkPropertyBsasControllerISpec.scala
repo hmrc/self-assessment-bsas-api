@@ -88,13 +88,15 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
         def validationErrorTest(requestNino: String,
                                 requestCalculationId: String,
+                                requestTaxYear: Option[String],
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
+          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String          = requestNino
-            override val calculationId: String = requestCalculationId
+            override val nino: String            = requestNino
+            override val calculationId: String   = requestCalculationId
+            override val taxYear: Option[String] = requestTaxYear
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -109,8 +111,11 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         }
 
         val input = Seq(
-          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBodyJson, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "041f7e4d87b9", requestBodyJson, BAD_REQUEST, CalculationIdFormatError),
+          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", None, requestBodyJson, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "041f7e4d87b9", None, requestBodyJson, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), requestBodyJson, BAD_REQUEST, InvalidTaxYearParameterError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("BAD_TAX_YEAR"), requestBodyJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-24"), requestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A",
            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
            requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
@@ -192,8 +197,9 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val calculationId: String = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val nino: String            = "AA123456A"
+    val calculationId: String   = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    def taxYear: Option[String] = None
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -229,9 +235,10 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
   private trait TysIfsTest extends Test {
 
-    def mtdUri: String            = s"/$nino/uk-property/$calculationId/adjust?taxYear=2023-24"
-    def downstreamTaxYear: String = "23-24"
-    def downstreamUri: String     = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino/$calculationId"
+    override def taxYear: Option[String] = Some("2023-24")
+
+    def mtdUri: String        = s"/$nino/uk-property/$calculationId/adjust?taxYear=2023-24"
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
   private trait NonTysTest extends Test {
