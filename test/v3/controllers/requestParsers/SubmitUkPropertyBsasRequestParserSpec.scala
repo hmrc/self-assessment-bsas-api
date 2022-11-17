@@ -28,7 +28,6 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
   val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
   val nino                           = "AA123456A"
-  val tysTaxYear: String             = "2023-24"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val requestBodyJson = Json.parse(
@@ -43,27 +42,18 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  val nonTysInputData: SubmitUkPropertyBsasRawData =
-    SubmitUkPropertyBsasRawData(
-      nino = nino,
-      calculationId = calculationId,
-      body = requestBodyJson,
-      taxYear = None
-    )
-
-  val tysInputData: SubmitUkPropertyBsasRawData =
-    SubmitUkPropertyBsasRawData(
-      nino = nino,
-      calculationId = calculationId,
-      body = requestBodyJson,
-      taxYear = Some(tysTaxYear)
-    )
-
   val requestBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(
       nonFurnishedHolidayLet = Some(NonFurnishedHolidayLet(Some(NonFHLIncome(Some(123.12), None, None, None)), None)),
       furnishedHolidayLet = None
     )
+
+  def inputDataWith(taxYear: Option[String]): SubmitUkPropertyBsasRawData = SubmitUkPropertyBsasRawData(
+    nino,
+    calculationId,
+    requestBodyJson,
+    taxYear
+  )
 
   trait Test extends MockSubmitUkPropertyBsasValidator {
     lazy val parser = new SubmitUkPropertyBsasRequestParser(mockValidator)
@@ -71,40 +61,42 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
   "parser" should {
     "return a request object" when {
-      "valid non-TYS request data is supplied" in new Test {
+      "valid request data is supplied without a tax year" in new Test {
 
-        MockValidator.validate(nonTysInputData).returns(Nil)
+        val inputData: SubmitUkPropertyBsasRawData = inputDataWith(None)
+        MockValidator.validate(inputData).returns(Nil)
 
-        parser.parseRequest(nonTysInputData) shouldBe
+        parser.parseRequest(inputData) shouldBe
           Right(SubmitUkPropertyBsasRequestData(Nino(nino), calculationId, requestBody, None))
       }
 
-      "valid TYS request data is supplied" in new Test {
+      "valid request data is supplied with a tax year" in new Test {
 
-        MockValidator.validate(tysInputData).returns(Nil)
+        val inputData: SubmitUkPropertyBsasRawData = inputDataWith(Some("2023-24"))
+        MockValidator.validate(inputData).returns(Nil)
 
-        parser.parseRequest(tysInputData) shouldBe
-          Right(SubmitUkPropertyBsasRequestData(Nino(nino), calculationId, requestBody, Some(TaxYear.fromMtd(tysTaxYear))))
+        parser.parseRequest(inputData) shouldBe
+          Right(SubmitUkPropertyBsasRequestData(Nino(nino), calculationId, requestBody, Some(TaxYear.fromMtd("2023-24"))))
 
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockValidator
-          .validate(nonTysInputData)
-          .returns(List(NinoFormatError))
 
-        parser.parseRequest(nonTysInputData) shouldBe
+        val inputData: SubmitUkPropertyBsasRawData = inputDataWith(None)
+        MockValidator.validate(inputData).returns(List(NinoFormatError))
+
+        parser.parseRequest(inputData) shouldBe
           Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test {
-        MockValidator
-          .validate(nonTysInputData)
-          .returns(List(NinoFormatError, BsasIdFormatError))
 
-        parser.parseRequest(nonTysInputData) shouldBe
+        val inputData: SubmitUkPropertyBsasRawData = inputDataWith(None)
+        MockValidator.validate(inputData).returns(List(NinoFormatError, BsasIdFormatError))
+
+        parser.parseRequest(inputData) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
       }
     }
