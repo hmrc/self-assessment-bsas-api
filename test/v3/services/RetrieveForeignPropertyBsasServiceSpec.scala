@@ -79,7 +79,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
           await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_RETURN", DownstreamError),
@@ -90,7 +90,13 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
         ("SERVICE_UNAVAILABLE", DownstreamError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 }

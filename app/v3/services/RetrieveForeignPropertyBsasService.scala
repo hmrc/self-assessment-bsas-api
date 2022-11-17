@@ -55,7 +55,9 @@ class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPro
     result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
+  private def mappingDesToMtdError: Map[String, MtdError] = errors ++ extraTysErrors
+
+    val errors = Map(
   "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
   "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
   "INVALID_RETURN"            -> DownstreamError,
@@ -65,4 +67,11 @@ class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPro
   "SERVER_ERROR"              -> DownstreamError,
   "SERVICE_UNAVAILABLE"       -> DownstreamError
   )
+
+  val extraTysErrors: Map[String, MtdError] = Map(
+    "INVALID_TAX_YEAR" -> TaxYearFormatError,
+    "NOT_FOUND" -> NotFoundError,
+    "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+  )
+
 }
