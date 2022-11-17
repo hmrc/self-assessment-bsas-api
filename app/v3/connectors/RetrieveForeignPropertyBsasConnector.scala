@@ -21,7 +21,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.DesUri
+import v3.connectors.DownstreamUri.IfsUri
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
@@ -41,7 +41,7 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
     val calcId = request.calculationId
 
     get(
-      DesUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
+      IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
     )
   }
 }
