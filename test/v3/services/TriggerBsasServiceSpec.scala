@@ -71,10 +71,10 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("OBLIGATIONS_NOT_MET", RulePeriodicDataIncompleteError),
         ("NO_ACCOUNTING_PERIOD", RuleNoAccountingPeriodError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("INVALID_PAYLOAD", DownstreamError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError),
-        ("INVALID_CORRELATIONID", DownstreamError)
+        ("INVALID_PAYLOAD", InternalError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError),
+        ("INVALID_CORRELATIONID", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

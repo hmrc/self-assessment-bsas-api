@@ -72,9 +72,9 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
         ("NO_DATA_FOUND", NotFoundError),
         ("INVALID_TAXYEAR", TaxYearFormatError),
         ("INVALID_INCOMESOURCEID", BusinessIdFormatError),
-        ("INVALID_INCOMESOURCE_TYPE", DownstreamError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("INVALID_INCOMESOURCE_TYPE", InternalError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

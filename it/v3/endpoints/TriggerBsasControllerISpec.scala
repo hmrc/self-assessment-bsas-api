@@ -209,10 +209,10 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", FORBIDDEN, RulePeriodicDataIncompleteError),
           (UNPROCESSABLE_ENTITY, "NO_ACCOUNTING_PERIOD", FORBIDDEN, RuleNoAccountingPeriodError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError)
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError)
         )
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

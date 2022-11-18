@@ -48,13 +48,13 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesR
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-    "INVALID_CORRELATIONID"         -> DownstreamError,
-    "INVALID_PAYLOAD"               -> DownstreamError,
+    "INVALID_CORRELATIONID"         -> InternalError,
+    "INVALID_PAYLOAD"               -> InternalError,
     "NO_DATA_FOUND"                 -> NotFoundError,
     "ACCOUNTING_PERIOD_NOT_ENDED"   -> RuleAccountingPeriodNotEndedError,
     "OBLIGATIONS_NOT_MET"           -> RulePeriodicDataIncompleteError,
     "NO_ACCOUNTING_PERIOD"          -> RuleNoAccountingPeriodError,
-    "SERVER_ERROR"                  -> DownstreamError,
-    "SERVICE_UNAVAILABLE"           -> DownstreamError
+    "SERVER_ERROR"                  -> InternalError,
+    "SERVICE_UNAVAILABLE"           -> InternalError
   )
 }

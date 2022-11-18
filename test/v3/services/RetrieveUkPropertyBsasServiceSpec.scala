@@ -82,12 +82,12 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
-        ("INVAlID_CORRELATIONID", DownstreamError),
-        ("INVALID_RETURN", DownstreamError),
-        ("UNPROCESSABLE_ENTITY", DownstreamError),
+        ("INVAlID_CORRELATIONID", InternalError),
+        ("INVALID_RETURN", InternalError),
+        ("UNPROCESSABLE_ENTITY", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

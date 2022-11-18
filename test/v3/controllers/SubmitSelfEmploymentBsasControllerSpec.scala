@@ -160,7 +160,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
         (ValueFormatError, BAD_REQUEST),
         (RuleBothExpensesError, BAD_REQUEST),
-        (DownstreamError, INTERNAL_SERVER_ERROR)
+        (InternalError, INTERNAL_SERVER_ERROR)
       )
 
       input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -259,7 +259,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (CalculationIdFormatError, BAD_REQUEST),
         (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
-        (DownstreamError, INTERNAL_SERVER_ERROR),
+        (InternalError, INTERNAL_SERVER_ERROR),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleAlreadyAdjusted, FORBIDDEN),

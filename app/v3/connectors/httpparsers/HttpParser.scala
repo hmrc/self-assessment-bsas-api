@@ -62,7 +62,7 @@ trait HttpParser {
     lazy val bvrErrors      = response.validateJson(bvrErrorReads).map(errs => OutboundError(BVRError, Some(errs.map(_.toMtd))))
     lazy val unableToParseJsonError = {
       logger.warn(s"unable to parse errors from response: ${response.body}")
-      OutboundError(DownstreamError)
+      OutboundError(InternalError)
     }
 
     singleError orElse multipleErrors orElse bvrErrors getOrElse unableToParseJsonError

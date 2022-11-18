@@ -131,7 +131,7 @@ object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching r
 
 object InvalidTaxYearParameterError extends MtdError(code = "INVALID_TAX_YEAR_PARAMETER", message = "A tax year before 2023-24 was supplied")
 
-object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
+object InternalError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
 object BadRequestError extends MtdError("INVALID_REQUEST", "Invalid request")
 

@@ -196,7 +196,7 @@ class TriggerBsasControllerSpec
           (TypeOfBusinessFormatError, BAD_REQUEST),
           (BusinessIdFormatError, BAD_REQUEST),
           (RuleEndBeforeStartDateError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -231,7 +231,7 @@ class TriggerBsasControllerSpec
           (RulePeriodicDataIncompleteError, FORBIDDEN),
           (RuleNoAccountingPeriodError, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -47,13 +47,13 @@ class ListBsasService @Inject()(connector: ListBsasConnector) extends DesRespons
   }
 
   private def mapDownstreamErrors: Map[String, MtdError] = Map(
-    "INVALID_CORRELATIONID" -> DownstreamError,
+    "INVALID_CORRELATIONID" -> InternalError,
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAXYEAR" -> TaxYearFormatError,
     "INVALID_INCOMESOURCEID" -> BusinessIdFormatError,
-    "INVALID_INCOMESOURCE_TYPE" -> DownstreamError,
+    "INVALID_INCOMESOURCE_TYPE" -> InternalError,
     "NO_DATA_FOUND" -> NotFoundError,
-    "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError
+    "SERVER_ERROR" -> InternalError,
+    "SERVICE_UNAVAILABLE" -> InternalError
   )
 }
