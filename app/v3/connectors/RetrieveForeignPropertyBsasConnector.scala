@@ -18,31 +18,44 @@ package v3.connectors
 
 import config.AppConfig
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.IfsUri
+import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import v3.connectors.httpparsers.StandardDesHttpParser._
+import v3.models.domain.TaxYear
 
 @Singleton
-class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
-    val nino = request.nino.nino
-    val calcId = request.calculationId
+    import request._
 
+    val taxYearVal = taxYear match {
+      case Some(value) => value
+      case None        => "2011-12"
+    }
 
-    get(
-      IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
-    )
+    val submittedTaxYear = TaxYear.fromMtd(taxYearVal)
+
+    if (submittedTaxYear.useTaxYearSpecificApi) {
+      get(
+        TaxYearSpecificIfsUri[RetrieveForeignPropertyBsasResponse](
+          s"income-tax/adjustable-summary-calculation/${submittedTaxYear.asTysDownstream}/${nino.nino}/${request.calculationId}")
+      )
+    } else {
+      get(
+        IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}/${request.calculationId}")
+      )
+    }
+
   }
 }

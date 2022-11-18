@@ -49,7 +49,7 @@ class RetrieveForeignPropertyBsasControllerSpec
   private val nino   = "AA123456A"
   private val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId)
+  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear=None)
   private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId, taxYear=None)
 
   private val testHateoasLinks =

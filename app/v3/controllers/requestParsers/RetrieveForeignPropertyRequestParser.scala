@@ -17,14 +17,16 @@
 package v3.controllers.requestParsers
 
 import domain.Nino
+
 import javax.inject.Inject
 import v3.controllers.requestParsers.validators.RetrieveForeignPropertyValidator
-import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyBsasRawData}
+import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
 
 class RetrieveForeignPropertyRequestParser @Inject()(val validator: RetrieveForeignPropertyValidator)
   extends RequestParser[RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData] {
 
   override protected def requestFor(data: RetrieveForeignPropertyBsasRawData): RetrieveForeignPropertyBsasRequestData = {
-    RetrieveForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId)
+      RetrieveForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId, data.taxYear)
+
   }
 }

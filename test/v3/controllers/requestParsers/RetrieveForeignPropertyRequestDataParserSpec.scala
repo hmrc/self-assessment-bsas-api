@@ -33,7 +33,7 @@ class RetrieveForeignPropertyRequestDataParserSpec extends UnitSpec {
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val inputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear=None)
-  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId)
+  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, taxYear=None)
 
   "parser" should {
     "return a valid request object" when {

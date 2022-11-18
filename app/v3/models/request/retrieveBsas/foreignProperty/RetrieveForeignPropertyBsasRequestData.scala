@@ -18,4 +18,4 @@ package v3.models.request.retrieveBsas.foreignProperty
 
 import domain.Nino
 
-case class RetrieveForeignPropertyBsasRequestData(nino: Nino, calculationId: String)
+case class RetrieveForeignPropertyBsasRequestData(nino: Nino, calculationId: String, taxYear:Option[String])
