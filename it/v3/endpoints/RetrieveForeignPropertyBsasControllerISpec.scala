@@ -148,7 +148,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           response.header("Content-Type") shouldBe Some("application/json")
         }
 
-      val input = Seq(
+      val errors = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
@@ -158,7 +158,14 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+
+      val extraTysErrors = Seq(
+        (BAD_REQUEST,"INVALID_TAX_YEAR",BAD_REQUEST, TaxYearFormatError),
+        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY,"TAX_YEAR_NOT_SUPPORTED",BAD_REQUEST, RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
 }
