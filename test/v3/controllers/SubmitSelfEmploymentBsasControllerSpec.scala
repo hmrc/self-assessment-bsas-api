@@ -255,12 +255,9 @@ class SubmitSelfEmploymentBsasControllerSpec
         }
       }
 
-      val input = Seq(
-        (TaxYearFormatError, BAD_REQUEST),
-        (RuleTaxYearNotSupportedError, BAD_REQUEST),
+      val errors = Seq(
         (CalculationIdFormatError, BAD_REQUEST),
         (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
-        (RuleTaxYearRangeInvalidError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR),
         (RuleSummaryStatusInvalid, FORBIDDEN),
@@ -270,7 +267,13 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
         (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
       )
-      input.foreach(args => (serviceErrors _).tupled(args))
+
+      val extraTysErrors = Seq(
+        (TaxYearFormatError, BAD_REQUEST),
+        (RuleTaxYearNotSupportedError, BAD_REQUEST),
+        (RuleTaxYearRangeInvalidError, BAD_REQUEST)
+      )
+      (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
     }
   }
 }

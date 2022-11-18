@@ -39,9 +39,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(errorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(errorMap))
 
     result.value
   }
