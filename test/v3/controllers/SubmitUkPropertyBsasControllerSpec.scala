@@ -168,6 +168,9 @@ class SubmitUkPropertyBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
           (ValueFormatError.copy(paths = paths), BAD_REQUEST),
           (RuleBothExpensesError.copy(paths = paths), BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError.copy(paths = paths), BAD_REQUEST),
@@ -247,8 +250,7 @@ class SubmitUkPropertyBsasControllerSpec
         )
         val extraTysErrors = Seq(
           (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (InvalidTaxYearParameterError, BAD_REQUEST)
+          (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
         (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }

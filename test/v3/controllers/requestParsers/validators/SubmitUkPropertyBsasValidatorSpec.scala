@@ -116,7 +116,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
           )) shouldBe Nil
       }
 
-      "a valid fhl TYS request is supplied" in {
+      "a valid TYS request is supplied" in {
         validator.validate(
           SubmitUkPropertyBsasRawData(
             nino = validNino,
@@ -133,16 +133,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
             calculationId = validCalculationId,
             body = nonFhlBodyJson,
             taxYear = None
-          )) shouldBe Nil
-      }
-
-      "a valid non-fhl TYS request is supplied" in {
-        validator.validate(
-          SubmitUkPropertyBsasRawData(
-            nino = validNino,
-            calculationId = validCalculationId,
-            body = nonFhlBodyJson,
-            taxYear = validTaxYear
           )) shouldBe Nil
       }
 
@@ -413,6 +403,18 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
               body = fhlBodyJson,
               taxYear = Some("202324")
             )) shouldBe List(TaxYearFormatError)
+      }
+    }
+
+    "return RuleTaxYearRangeInvalidError error" when {
+      "a tax year range of more than one year is supplied" in {
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            taxYear = Some("2022-24"),
+            body = fhlBodyJson
+          )) shouldBe List(RuleTaxYearRangeInvalidError)
       }
     }
 

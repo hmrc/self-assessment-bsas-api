@@ -132,6 +132,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             RuleIncorrectOrEmptyBodyError,
             RuleBothPropertiesSuppliedError,
             TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
             InvalidTaxYearParameterError,
             RuleTaxYearNotSupportedError
           ) =>
