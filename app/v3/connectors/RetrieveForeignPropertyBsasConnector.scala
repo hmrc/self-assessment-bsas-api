@@ -27,7 +27,6 @@ import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBs
 
 import scala.concurrent.{ ExecutionContext, Future }
 import v3.connectors.httpparsers.StandardDesHttpParser._
-import v3.models.domain.TaxYear
 
 @Singleton
 class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -39,23 +38,14 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient, val a
 
     import request._
 
-    val taxYearVal = taxYear match {
-      case Some(value) => value
-      case None        => "2011-12"
-    }
-
-    val submittedTaxYear = TaxYear.fromMtd(taxYearVal)
-
-    if (submittedTaxYear.useTaxYearSpecificApi) {
-      get(
+    val url = taxYear match {
+      case Some(ty) if ty.useTaxYearSpecificApi =>
         TaxYearSpecificIfsUri[RetrieveForeignPropertyBsasResponse](
-          s"income-tax/adjustable-summary-calculation/${submittedTaxYear.asTysDownstream}/${nino.nino}/${request.calculationId}")
-      )
-    } else {
-      get(
-        IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}/${request.calculationId}")
-      )
+          s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/${nino.nino}/${request.calculationId}")
+      case _ => IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}/${request.calculationId}")
     }
+
+    get(url)
 
   }
 }

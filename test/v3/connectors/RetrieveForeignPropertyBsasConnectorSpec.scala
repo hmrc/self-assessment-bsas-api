@@ -51,7 +51,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some(taxYear.asMtd))
+        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some(taxYear))
 
         willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/$calcId") returns Future.successful(
           outcome)
