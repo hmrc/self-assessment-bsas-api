@@ -257,7 +257,7 @@ class SubmitForeignPropertyBsasControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
           (RuleSummaryStatusInvalid, FORBIDDEN),
           (RuleSummaryStatusSuperseded, FORBIDDEN),

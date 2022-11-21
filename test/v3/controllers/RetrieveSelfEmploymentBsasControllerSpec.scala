@@ -151,7 +151,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (NotFoundError, NOT_FOUND),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST)
         )

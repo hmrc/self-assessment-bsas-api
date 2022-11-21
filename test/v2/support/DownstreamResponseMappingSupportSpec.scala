@@ -27,7 +27,7 @@ import v2.models.outcomes.ResponseWrapper
 import v2.models.response.retrieveBsas.AccountingPeriod
 import v2.models.response.{retrieveBsas, retrieveBsasAdjustments}
 
-class DesResponseMappingSupportSpec extends UnitSpec {
+class DownstreamResponseMappingSupportSpec extends UnitSpec {
 
   implicit val logContext: EndpointLogContext         = EndpointLogContext("ctrl", "ep")
   val mapping: DesResponseMappingSupport with Logging = new DesResponseMappingSupport with Logging {}

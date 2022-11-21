@@ -16,7 +16,7 @@
 
 package v3.fixtures.ukProperty
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{ JsObject, JsValue, Json }
 import v3.models.request.submitBsas.ukProperty._
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
@@ -186,7 +186,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val nonFHLIncomeAllFields: Option[JsObject] = Some(
     Json.obj(
-      "totalRentsReceived"           -> 1.45,
+      "totalRentsReceived"   -> 1.45,
       "premiumsOfLeaseGrant" -> 2.45,
       "reversePremiums"      -> 3.45,
       "otherPropertyIncome"  -> 4.45
@@ -237,17 +237,17 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
      |""".stripMargin)
 
   def submitBsasRawDataBodyFHL(income: Option[JsObject] = None, expenses: Option[JsObject] = None): JsValue = {
-      Json.obj(
-        "furnishedHolidayLet" ->
-          (income.fold(Json.obj())(income => Json.obj("income"        -> income)) ++
-            expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
+    Json.obj(
+      "furnishedHolidayLet" ->
+        (income.fold(Json.obj())(income => Json.obj("income"        -> income)) ++
+          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
   }
 
   def submitBsasRawDataBodyNonFHL(income: Option[JsObject] = None, expenses: Option[JsObject] = None): JsValue = {
-      Json.obj(
-        "nonFurnishedHolidayLet" ->
-          (income.fold(Json.obj())(income => Json.obj("income"        -> income)) ++
-            expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
+    Json.obj(
+      "nonFurnishedHolidayLet" ->
+        (income.fold(Json.obj())(income => Json.obj("income"        -> income)) ++
+          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
   }
 
   val hateoasResponse: (String, String) => String = (nino: String, calcId: String) => s"""

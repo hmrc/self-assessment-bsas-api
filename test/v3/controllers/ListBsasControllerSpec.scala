@@ -189,7 +189,7 @@ class ListBsasControllerSpec
           (TypeOfBusinessFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -220,7 +220,7 @@ class ListBsasControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (BusinessIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

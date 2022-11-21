@@ -81,7 +81,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
           MockSubmitForeignPropertyBsasConnector
             .submitForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(downstreamErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -89,24 +89,24 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
       val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("INVALID_PAYLOAD", DownstreamError),
-        ("BVR_FAILURE_C15320", DownstreamError),
-        ("BVR_FAILURE_C55508", DownstreamError),
-        ("BVR_FAILURE_C55509", DownstreamError),
+        ("INVALID_CORRELATIONID", InternalError),
+        ("INVALID_PAYLOAD", InternalError),
+        ("BVR_FAILURE_C15320", InternalError),
+        ("BVR_FAILURE_C55508", InternalError),
+        ("BVR_FAILURE_C55509", InternalError),
         ("BVR_FAILURE_C559107", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C559103", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C559099", RuleOverConsolidatedExpensesThreshold),
-        ("BVR_FAILURE_C55503", DownstreamError),
-        ("BVR_FAILURE_C55316", DownstreamError),
+        ("BVR_FAILURE_C55503", InternalError),
+        ("BVR_FAILURE_C55316", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleAlreadyAdjusted),
         ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError),
       )
 
       val extraTysErrors = Seq(
