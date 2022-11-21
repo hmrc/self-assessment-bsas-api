@@ -16,56 +16,108 @@
 
 package v3.connectors
 
-import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import org.scalamock.handlers.CallHandler
 import v3.fixtures.ListBsasFixture
-import v3.mocks.MockHttpClient
 import v3.models.domain.TaxYear
+import v3.models.errors.{ DownstreamErrorCode, DownstreamErrors }
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
+import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
 import scala.concurrent.Future
 
-class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture{
+class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: Nino               = Nino("AA123456A")
+  val incomeSourceId: String   = "XAIS12345678910"
+  val incomeSourceType: String = "02"
 
-  val queryParams: Map[String, String] = Map(
-    "taxYear" -> "2019",
-    "incomeSourceId" -> "incomeSourceId",
-    "incomeSourceType" -> "02"
+  private val preTysTaxYear = TaxYear.fromMtd("2018-19")
+  private val tysTaxYear    = TaxYear.fromMtd("2023-24")
+
+  val additionalQueryParams: Seq[(String, String)] = Seq(
+    ("taxYear", preTysTaxYear.asDownstream),
   )
 
-  class Test extends MockHttpClient with MockAppConfig {
-    val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+  val commonQueryParams: Seq[(String, String)] = Seq(
+    ("incomeSourceId", incomeSourceId),
+    ("incomeSourceType", incomeSourceType)
+  )
 
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnv returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns false
-  }
+  "listBsas" should {
+    "return a valid response" when {
+      "a valid request is supplied" in new DesTest with Test {
+        def taxYear: TaxYear                             = preTysTaxYear
+        def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
+        val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponseModel))
 
-  "listBsas" when {
-    "provided with a valid request" must {
-      val request = ListBsasRequest(nino, TaxYear("2019"), Some("incomeSourceId"), Some("02"))
-
-      "return a ListBsasResponse" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, listBsasResponseModel))
-
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
-        MockedHttpClient.get(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-          config = dummyHeaderCarrierConfig,
-          queryParams.toSeq,
-          requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
+        stubHttpResponse(outcome)
 
         await(connector.listBsas(request)) shouldBe outcome
       }
+    }
+  }
+
+  "a valid request with Tax Year Specific tax year is supplied" in new TysIfsTest with Test {
+    def taxYear: TaxYear                             = tysTaxYear
+    def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+    val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponseModel))
+
+    stubTysHttpResponse(outcome)
+
+    await(connector.listBsas(request)) shouldBe outcome
+  }
+
+  "response is an error" must {
+    val downstreamErrorResponse: DownstreamErrors =
+      DownstreamErrors.single(DownstreamErrorCode("SOME_ERROR"))
+    val outcome = Left(ResponseWrapper(correlationId, downstreamErrorResponse))
+
+    "return the error" in new DesTest with Test {
+      def taxYear: TaxYear                             = preTysTaxYear
+      def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
+
+      stubHttpResponse(outcome)
+
+      val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] =
+        await(connector.listBsas(request))
+      result shouldBe outcome
+    }
+
+    "return the error given a TYS tax year request" in new TysIfsTest with Test {
+      def taxYear: TaxYear                             = tysTaxYear
+      def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+
+      stubTysHttpResponse(outcome)
+
+      val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] =
+        await(connector.listBsas(request))
+      result shouldBe outcome
+    }
+  }
+
+  trait Test { _: ConnectorTest =>
+    def taxYear: TaxYear
+    def downstreamQueryParams: Seq[(String, String)]
+    val request: ListBsasRequest = ListBsasRequest(nino, taxYear, Some(incomeSourceId), Some(incomeSourceType))
+
+    val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+
+    protected def stubHttpResponse(
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+      willGet(
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
+        parameters = downstreamQueryParams
+      ).returns(Future.successful(outcome))
+    }
+
+    protected def stubTysHttpResponse(
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+      willGet(
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}",
+        parameters = downstreamQueryParams
+      ).returns(Future.successful(outcome))
     }
   }
 }
