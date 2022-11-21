@@ -17,5 +17,9 @@
 package v3.models.request.submitBsas.foreignProperty
 
 import domain.Nino
+import v3.models.domain.TaxYear
 
-case class SubmitForeignPropertyBsasRequestData(nino: Nino, calculationId: String, body: SubmitForeignPropertyBsasRequestBody)
+case class SubmitForeignPropertyBsasRequestData(nino: Nino,
+                                                calculationId: String,
+                                                taxYear: Option[TaxYear],
+                                                body: SubmitForeignPropertyBsasRequestBody)

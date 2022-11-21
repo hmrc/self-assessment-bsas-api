@@ -24,6 +24,7 @@ import v3.models.request.submitBsas.foreignProperty._
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet = List(
     parameterFormatValidation,
+    parameterValidation,
     validateOnePropertyOnly,
     bodyFormatValidation,
     bodyFieldValidation
@@ -32,7 +33,14 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
   private def parameterFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
     List(
       NinoValidation.validate(data.nino),
-      CalculationIdValidation.validate(data.calculationId)
+      CalculationIdValidation.validate(data.calculationId),
+      TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
+    List(
+      data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil)
     )
   }
 

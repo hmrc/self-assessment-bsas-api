@@ -110,20 +110,22 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
   "running a validation" should {
     "return no errors" when {
       "a valid fhl request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = fhlBody)) shouldBe Nil
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, None, body = fhlBody)) shouldBe Nil
       }
 
       "a valid non-fhl request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = nonFhlBody)) shouldBe Nil
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, None, body = nonFhlBody)) shouldBe Nil
       }
 
       "a valid fhl consolidated expenses request is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = fhlBodyConsolidated)) shouldBe Nil
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, None, body = fhlBodyConsolidated)) shouldBe Nil
       }
 
       "a valid non-fhl consolidated expenses request is supplied" in {
-        validator.validate(
-          SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino,
+                                                        calculationId = validCalculationId,
+                                                        None,
+                                                        body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
       }
 
       "a minimal fhl request is supplied" in {
@@ -131,6 +133,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           SubmitForeignPropertyRawData(
             nino = validNino,
             calculationId = validCalculationId,
+            None,
             body = Json.parse("""{
                                 |  "foreignFhlEea": {
                                 |    "income": {
@@ -147,6 +150,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           SubmitForeignPropertyRawData(
             nino = validNino,
             calculationId = validCalculationId,
+            None,
             body = Json.parse("""{
                                 |   "nonFurnishedHolidayLet":  [
                                 |       {
@@ -160,19 +164,48 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
                                 |""".stripMargin)
           )) shouldBe Nil
       }
+
+      "a valid request with a taxYear is supplied" in {
+        validator.validate(
+          SubmitForeignPropertyRawData(nino = validNino,
+                                       calculationId = validCalculationId,
+                                       Some("2023-24"),
+                                       body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
+      }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = validCalculationId, body = fhlBody)) shouldBe
+        validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = validCalculationId, None, body = fhlBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return CalculationIdFormatError error" when {
       "an invalid calculationId is supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = "12345", body = fhlBody)) shouldBe
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = "12345", None, body = fhlBody)) shouldBe
           List(CalculationIdFormatError)
+      }
+    }
+
+    "return InvalidTaxYearParameterError error" when {
+      "a tax year before TYS is suppled" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, Some("2022-23"), body = fhlBody)) shouldBe
+          List(InvalidTaxYearParameterError)
+      }
+    }
+
+    "return TaxYearFormatError error" when {
+      "a badly formatted tax year is suppled" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, Some("BAD_TAX_YEAR"), body = fhlBody)) shouldBe
+          List(TaxYearFormatError)
+      }
+    }
+
+    "return RuleTaxYearRangeInvalidError error" when {
+      "a tax year range of more than one year is supplied" in {
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, Some("2022-24"), body = fhlBody)) shouldBe
+          List(RuleTaxYearRangeInvalidError)
       }
     }
 
@@ -182,6 +215,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           SubmitForeignPropertyRawData(
             nino = validNino,
             calculationId = validCalculationId,
+            None,
             body = fhlBody.as[JsObject] ++ nonFhlBodyWith(entry).as[JsObject]
           )) shouldBe List(RuleBothPropertiesSuppliedError)
       }
@@ -192,6 +226,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           SubmitForeignPropertyRawData(
             nino = validNino,
             calculationId = validCalculationId,
+            None,
             body = Json.parse(
               s"""
              |{
@@ -206,7 +241,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
     "return RuleIncorrectOrEmptyBodyError" when {
       "an empty body is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, body = Json.parse("""{}"""))) shouldBe List(
+        validator.validate(SubmitForeignPropertyRawData(nino = validNino, calculationId = validCalculationId, None, body = Json.parse("""{}"""))) shouldBe List(
           RuleIncorrectOrEmptyBodyError)
       }
 
@@ -232,6 +267,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
               SubmitForeignPropertyRawData(
                 nino = validNino,
                 calculationId = validCalculationId,
+                None,
                 body
               )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(expectedPath))))
           }
@@ -248,6 +284,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           SubmitForeignPropertyRawData(
             nino = validNino,
             calculationId = validCalculationId,
+            None,
             body = json
           )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignFhlEea"))))
       }
@@ -309,6 +346,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = json
             )) shouldBe List(
             ValueFormatError.copy(paths = Some(Seq(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99"))
@@ -320,6 +358,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
               SubmitForeignPropertyRawData(
                 nino = validNino,
                 calculationId = validCalculationId,
+                None,
                 body = body(value)
               )) shouldBe List(ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99"))
 
@@ -335,6 +374,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = nonFhlBodyWith(entryWith(countryCode = "QQQ"))
             )) shouldBe List(RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         }
@@ -344,6 +384,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = nonFhlBodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
             )) shouldBe List(
             RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode"))))
@@ -356,6 +397,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = nonFhlBodyWith(entryWith(countryCode = "XXXX"))
             )) shouldBe List(CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         }
@@ -368,6 +410,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = nonFhlBodyWith(entryWith(code), entryWith(code))
             )) shouldBe List(
             RuleDuplicateCountryCodeError
@@ -381,6 +424,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = nonFhlBodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
             )) should contain theSameElementsAs List(
             RuleDuplicateCountryCodeError
@@ -399,6 +443,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             SubmitForeignPropertyRawData(
               nino = validNino,
               calculationId = validCalculationId,
+              None,
               body = fhlBody.update("foreignFhlEea/expenses/consolidatedExpenses", JsNumber(123.45))
             )) shouldBe
             List(RuleBothExpensesError.copy(paths = Some(Seq("/foreignFhlEea/expenses"))))
@@ -408,6 +453,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           validator.validate(SubmitForeignPropertyRawData(
             nino = validNino,
             calculationId = validCalculationId,
+            None,
             body = nonFhlBodyWith(
               entryWith(countryCode = "ZWE").update("expenses/consolidatedExpenses", JsNumber(123.45)),
               entryWith(countryCode = "AFG").update("expenses/consolidatedExpenses", JsNumber(123.45))
@@ -419,7 +465,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
       "return multiple errors" when {
         "request supplied has multiple errors" in {
-          validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = "badCalcId", body = fhlBody)) shouldBe
+          validator.validate(SubmitForeignPropertyRawData(nino = "A12344A", calculationId = "badCalcId", None, body = fhlBody)) shouldBe
             List(NinoFormatError, CalculationIdFormatError)
         }
       }

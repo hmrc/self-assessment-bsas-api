@@ -65,9 +65,10 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
       "SERVICE_UNAVAILABLE"           -> InternalError
     )
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
-      "NOT_FOUND"              -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+      "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+      "NOT_FOUND"                      -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError,
+      "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError
     )
 
     errors ++ extraTysErrors
