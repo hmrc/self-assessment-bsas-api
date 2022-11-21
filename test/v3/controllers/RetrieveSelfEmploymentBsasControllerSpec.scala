@@ -49,8 +49,8 @@ class RetrieveSelfEmploymentBsasControllerSpec
   private val nino          = "AA123456A"
   private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
-  private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
-  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
+  private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId, None)
+  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId, None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -122,7 +122,10 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (CalculationIdFormatError, BAD_REQUEST)
+          (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -151,9 +154,11 @@ class RetrieveSelfEmploymentBsasControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
           (InternalError, INTERNAL_SERVER_ERROR),
           (NotFoundError, NOT_FOUND),
-          (RuleTypeOfBusinessIncorrectError, BAD_REQUEST)
+          (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -35,7 +35,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
   private val nino = Nino("AA123456A")
   val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(nino, id)
+  val request: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(nino, id, None)
 
   trait Test extends MockRetrieveSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -69,16 +69,16 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
           })
       }
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
 
           MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_CORRELATIONID", InternalError),
@@ -89,7 +89,13 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 }

@@ -16,7 +16,6 @@
 
 package v3.endpoints
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -33,16 +32,19 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
   private trait Test {
     val nino          = "AA123456A"
     val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
+    def taxYear: Option[String] = None
 
     def uri: String = s"/$nino/self-employment/$calculationId"
 
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = ()
 
     def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
+        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -50,17 +52,37 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     }
   }
 
+  private trait NonTysTest extends Test {
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+
+  }
+
+  private trait TysIfsTest extends Test {
+    override def taxYear: Option[String] = Some("2023-24") // TODO
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/${nino}/$calculationId"
+  }
+
   "Calling the retrieve Self-assessment Bsas endpoint" should {
 
     "return a valid response with status OK" when {
 
-      "valid request is made" in new Test {
+      "valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJson)
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
+      }
+      "valid request is made for TYS" in new TysIfsTest {
+
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -73,13 +95,10 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error response with status FORBIDDEN" when {
 
-      "valid request is made but DES response has invalid type of business" in new Test {
+      "valid request is made but downstream response has invalid type of business" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
         }
 
         val response: WSResponse = await(request.get)
@@ -93,15 +112,12 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new Test {
+        s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
           override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
 
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
+          override def setupStubs(): Unit = {
           }
 
           val response: WSResponse = await(request.get)
@@ -118,22 +134,19 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
-    "des service error" when {
+    "service error" when {
 
       def errorBody(code: String): String =
         s"""{
            |  "code": "$code",
-           |  "reason": "des message"
+           |  "reason": "message"
            |}""".stripMargin
 
-      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"des returns an $desCode error and status $desStatus" in new Test {
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"downstream returns an $downstreamStatus error and status $downstreamCode" in new TysIfsTest {
 
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
+          override def setupStubs(): Unit = {
+            DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -146,9 +159,12 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
+        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", INTERNAL_SERVER_ERROR, RuleTaxYearNotSupportedError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
