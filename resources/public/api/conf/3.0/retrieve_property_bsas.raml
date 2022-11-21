@@ -1,11 +1,17 @@
 is:
   - headers.acceptJson
   - headers.testScenarioHeader
+  - queryParameters.taxYearTys
   - errors.formatNino
+  - errors.formatTaxYear
   - errors.formatCalculationId
   - errors.ruleTypeOfBusinessIncorrectUk
   - errors.clientOrAgentNotAuthorised
   - errors.summaryNotFound
+  - errors.ruleTaxYearNotSupported
+  - errors.invalidTaxYear
+  - errors.ruleTaxYearRangeInvalid
+
 displayName: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
 description: This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business Furnished Holiday Letting (FHL) or a Non FHL UK property. A National Insurance number and Calculation id must be provided.
 (annotations.sandboxData): !include scenarios/retrieve_property.md
