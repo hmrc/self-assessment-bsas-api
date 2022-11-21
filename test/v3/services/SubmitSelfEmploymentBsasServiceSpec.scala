@@ -87,7 +87,14 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INCOME_SOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (input ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 

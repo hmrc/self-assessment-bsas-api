@@ -219,6 +219,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         )
 
         val extraTysErrors = Seq(
+          (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "RULE_TAX_YEAR_RANGE_INVALID", BAD_REQUEST, RuleTaxYearRangeInvalidError),
