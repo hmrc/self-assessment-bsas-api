@@ -36,7 +36,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
 
-      "a valid request is supplied" in new DesTest with Test {
+      "a valid request is supplied" in new IfsTest with Test {
         val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId")
 
         val expectedUrl =  s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId"
