@@ -32,7 +32,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
+  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, None, submitSelfEmploymentBsasRequestBodyModel)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -87,7 +87,14 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INCOME_SOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (input ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 
