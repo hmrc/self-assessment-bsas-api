@@ -19,22 +19,22 @@ package v3.controllers
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.{ IdGenerator, Logging }
 import v3.controllers.requestParsers.TriggerBsasRequestParser
 import v3.hateoas.HateoasFactory
-import v3.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRawData
 import v3.models.response.TriggerBsasHateoasData
-import v3.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, TriggerBsasService}
+import v3.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, TriggerBsasService }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -44,9 +44,8 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
                                       hateoasFactory: HateoasFactory,
                                       auditService: AuditService,
                                       cc: ControllerComponents,
-                                      val idGenerator: IdGenerator
-                                     )(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -58,7 +57,6 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
 
   def triggerBsas(nino: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -68,11 +66,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
+          response      <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(response.responseData,
-                TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId))
+                    TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId))
               .asRight[ErrorWrapper])
         } yield {
           logger.info(
@@ -97,7 +95,7 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -118,18 +116,32 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError |
-           NinoFormatError |
-           RuleAccountingPeriodNotSupportedError |
-           StartDateFormatError |
-           EndDateFormatError |
-           TypeOfBusinessFormatError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           BusinessIdFormatError | RuleEndBeforeStartDateError => BadRequest(Json.toJson(errorWrapper))
-      case RuleAccountingPeriodNotEndedError | RulePeriodicDataIncompleteError | RuleNoAccountingPeriodError => Forbidden(Json.toJson(errorWrapper))
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            RuleAccountingPeriodNotSupportedError,
+            StartDateFormatError,
+            EndDateFormatError,
+            TypeOfBusinessFormatError,
+            RuleIncorrectOrEmptyBodyError,
+            BusinessIdFormatError,
+            RuleEndBeforeStartDateError,
+            RuleTaxYearNotSupportedError,
+            InvalidTaxYearParameterError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case _
+          if errorWrapper.containsAnyOf(
+            RuleAccountingPeriodNotEndedError,
+            RulePeriodicDataIncompleteError,
+            RuleNoAccountingPeriodError,
+            UnauthorisedError
+          ) =>
+        Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
