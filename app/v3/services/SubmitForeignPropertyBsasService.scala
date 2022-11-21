@@ -26,11 +26,13 @@ import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v3.support.DownstreamResponseMappingSupport
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends DownstreamResponseMappingSupport with Logging {
+class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(
       implicit hc: HeaderCarrier,
@@ -67,9 +69,10 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
 
     val extraTysErrors =
       Map(
-        "INVALID_TAX_YEAR"       -> TaxYearFormatError,
-        "NOT_FOUND"              -> NotFoundError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+        "NOT_FOUND"                      -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError,
+        "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError
       )
 
     errors ++ extraTysErrors
