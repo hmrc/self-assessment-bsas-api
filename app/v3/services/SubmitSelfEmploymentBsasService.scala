@@ -71,9 +71,10 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
 
     val extraTysErrors =
       Map(
-        "INVALID_TAX_YEAR"       -> TaxYearFormatError,
-        "NOT_FOUND"              -> NotFoundError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
+        "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+        "NOT_FOUND"                      -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError
       )
 
     errors ++ extraTysErrors
