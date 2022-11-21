@@ -33,7 +33,7 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appC
                                                                              ec: ExecutionContext,
                                                                              correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v3.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 

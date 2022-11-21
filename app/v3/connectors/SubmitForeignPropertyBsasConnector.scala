@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.connectors.DownstreamUri.DesUri
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
-import v3.connectors.httpparsers.StandardDesHttpParser._
+import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
 

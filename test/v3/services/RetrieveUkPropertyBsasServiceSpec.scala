@@ -74,7 +74,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
           MockRetrievePropertyBsasConnector
             .retrievePropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

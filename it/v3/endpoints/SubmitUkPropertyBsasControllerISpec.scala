@@ -16,117 +16,77 @@
 
 package v3.endpoints
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
 import v3.models.utils.JsonErrorValidators
-import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub}
+import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub }
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  private trait Test {
-
-    val nino: String = "AA123456A"
-    val calculationId: String = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
-
-    val nrsSuccess: JsValue = Json.parse(
-      s"""
-         |{
-         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
-         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
-         |  "timestamp":""
-         |}
-         """.stripMargin
-    )
-
-    def setupStubs(): StubMapping
-
-    def uri: String = s"/$nino/uk-property/$calculationId/adjust"
-
-    def ifsUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
-
-    def errorBody(code: String): String =
-      s"""
-         |{
-         |  "code": "$code",
-         |  "reason": "ifs message"
-         |}
-       """.stripMargin
-  }
-
-  import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-
-  val requestBody: JsValue = validfhlInputJson
+  val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
-
     "return a 200 status code" when {
+      "any valid request is made for a non-tys tax year" in new NonTysTest {
 
-      "any valid request is made" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUrl, OK)
+        override def setupStubs(): Unit = {
+          stubNrsSuccess()
+          stubDownstreamSuccess()
         }
 
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
-        result.header("Content-Type") shouldBe Some("application/json")
+        val response: WSResponse = await(request().post(requestBodyJson))
+        response.status shouldBe OK
+        response.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "a valid request is made with a failed nrs call" in new Test {
+      "any valid request is made for a TYS tax year" in new TysIfsTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUrl, OK)
+        override def setupStubs(): Unit = {
+          stubNrsSuccess()
+          stubDownstreamSuccess()
         }
 
-        val result: WSResponse = await(request().post(requestBody))
+        val response: WSResponse = await(request().post(requestBodyJson))
+        response.status shouldBe OK
+        response.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "a valid request is made with a failed nrs call" in new NonTysTest {
+
+        override def setupStubs(): Unit = {
+          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
+          stubDownstreamSuccess()
+        }
+
+        val result: WSResponse = await(request().post(requestBodyJson))
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
-    "return error according to spec" when {
-
+    "return validation error according to spec" when {
       "validation error" when {
+
         def validationErrorTest(requestNino: String,
                                 requestCalculationId: String,
+                                requestTaxYear: Option[String],
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String = requestNino
-            override val calculationId: String = requestCalculationId
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
+            override val nino: String            = requestNino
+            override val calculationId: String   = requestCalculationId
+            override val taxYear: Option[String] = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
             response.status shouldBe expectedStatus
@@ -135,34 +95,59 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         }
 
         val input = Seq(
-          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "041f7e4d87b9", requestBody, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.replaceWithEmptyObject("/furnishedHolidayLet/income"), BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)), BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)), BAD_REQUEST, RuleBothPropertiesSuppliedError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", requestBody.update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523)).update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)), BAD_REQUEST, ValueFormatError.copy(message = "The value must be between -99999999999.99 and 99999999999.99", paths = Some(Seq("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))))
+          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", None, requestBodyJson, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "041f7e4d87b9", None, requestBodyJson, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-23"), requestBodyJson, BAD_REQUEST, InvalidTaxYearParameterError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), requestBodyJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-24"), requestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A",
+           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+           None,
+           requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
+           BAD_REQUEST,
+           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))),
+          ("AA123456A",
+           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+           None,
+           requestBodyJson.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
+           BAD_REQUEST,
+           RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))),
+          ("AA123456A",
+           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+           None,
+           requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
+           BAD_REQUEST,
+           RuleBothPropertiesSuppliedError),
+          ("AA123456A",
+           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+           None,
+           requestBodyJson
+             .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
+             .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
+           BAD_REQUEST,
+           ValueFormatError.copy(
+             message = "The value must be between -99999999999.99 and 99999999999.99",
+             paths = Some(Seq("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))
+           ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUrl, ifsStatus, errorBody(ifsCode))
+            override def setupStubs(): Unit = {
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().post(requestBody))
+            val response: WSResponse = await(request().post(requestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
@@ -184,8 +169,79 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
+  private trait Test {
+
+    val nino: String            = "AA123456A"
+    val calculationId: String   = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    def taxYear: Option[String] = None
+
+    val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
+
+    val nrsSuccess: JsValue = Json.parse(
+      s"""
+         |{
+         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
+         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
+         |  "timestamp":""
+         |}
+         """.stripMargin
+    )
+
+    def setupStubs(): Unit = ()
+    def downstreamUri: String
+
+    def stubDownstreamSuccess(): Unit = {
+      DownstreamStub
+        .onSuccess(DownstreamStub.PUT, downstreamUri, OK)
+    }
+
+    def stubNrsSuccess(): Unit = {
+      NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
+    }
+
+    def request(): WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      setupStubs()
+      buildRequest(s"/$nino/uk-property/$calculationId/adjust")
+        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123")
+        )
+    }
+
+    def errorBody(code: String): String =
+      s"""
+         |{
+         |  "code": "$code",
+         |  "reason": "message"
+         |}
+       """.stripMargin
+  }
+
+  private trait TysIfsTest extends Test {
+
+    override def taxYear: Option[String] = Some("2023-24")
+
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+  }
+
+  private trait NonTysTest extends Test {
+
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+  }
+
 }

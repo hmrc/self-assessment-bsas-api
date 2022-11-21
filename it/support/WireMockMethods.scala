@@ -42,8 +42,13 @@ trait WireMockMethods {
 
       body match {
         case Some(extractedBody) => uriMappingWithHeaders.withRequestBody(equalTo(extractedBody))
-        case None => uriMappingWithHeaders
+        case None                => uriMappingWithHeaders
       }
+    }
+
+    def withRequestBody[T](body: T)(implicit writes: Writes[T]): Mapping = {
+      val stringBody = writes.writes(body).toString()
+      new Mapping(method, uri, queryParams, headers, Some(stringBody))
     }
 
     def thenReturn[T](status: Int, body: T)(implicit writes: Writes[T]): StubMapping = {
@@ -67,7 +72,7 @@ trait WireMockMethods {
         }
         body match {
           case Some(extractedBody) => responseWithHeaders.withBody(extractedBody)
-          case None => responseWithHeaders
+          case None                => responseWithHeaders
         }
       }
 

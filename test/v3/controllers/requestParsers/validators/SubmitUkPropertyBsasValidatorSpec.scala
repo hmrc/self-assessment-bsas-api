@@ -16,6 +16,7 @@
 
 package v3.controllers.requestParsers.validators
 
+import org.scalatest.Assertion
 import play.api.libs.json._
 import support.UnitSpec
 import v3.models.errors._
@@ -26,8 +27,9 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
 
   private val validNino          = "AA123456A"
   private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  private val validTaxYear       = Some("2023-24")
 
-  private val nonFhlBody = Json.parse(
+  private val nonFhlBodyJson = Json.parse(
     s"""{
        |   "nonFurnishedHolidayLet": {
        |      "income": {
@@ -51,7 +53,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
        |""".stripMargin
   )
 
-  private val nonFhlBodyConsolidated =
+  private val nonFhlBodyConsolidatedJson =
     Json.parse("""{
                  |   "nonFurnishedHolidayLet": {
                  |      "income": {
@@ -66,7 +68,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
                  |   }
                  |}""".stripMargin)
 
-  private val fhlBody = Json.parse(
+  private val fhlBodyJson = Json.parse(
     s"""{
        |   "furnishedHolidayLet": {
        |      "income": {
@@ -86,7 +88,7 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
        |""".stripMargin
   )
 
-  private val fhlBodyConsolidated = Json.parse(
+  private val fhlBodyConsolidatedJson = Json.parse(
     s"""{
        |   "furnishedHolidayLet": {
        |      "income": {
@@ -105,19 +107,53 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
   "running a validation" should {
     "return no errors" when {
       "a valid fhl request is supplied" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino, calculationId = validCalculationId, body = fhlBody)) shouldBe Nil
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = fhlBodyJson,
+            taxYear = None
+          )) shouldBe Nil
+      }
+
+      "a valid TYS request is supplied" in {
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = fhlBodyJson,
+            taxYear = validTaxYear
+          )) shouldBe Nil
       }
 
       "a valid non-fhl request is supplied" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino, calculationId = validCalculationId, body = nonFhlBody)) shouldBe Nil
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = nonFhlBodyJson,
+            taxYear = None
+          )) shouldBe Nil
       }
 
       "a valid fhl consolidated expenses request is supplied" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino, calculationId = validCalculationId, body = fhlBodyConsolidated)) shouldBe Nil
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = fhlBodyConsolidatedJson,
+            taxYear = None
+          )) shouldBe Nil
       }
 
       "a valid non-fhl consolidated expenses request is supplied" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino, calculationId = validCalculationId, body = nonFhlBodyConsolidated)) shouldBe Nil
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = nonFhlBodyConsolidatedJson,
+            taxYear = None
+          )) shouldBe Nil
       }
 
       "a minimal fhl request is supplied" in {
@@ -132,7 +168,8 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
                                 |      }
                                 |   }
                                 |}
-                                |""".stripMargin)
+                                |""".stripMargin),
+            taxYear = None
           )) shouldBe Nil
       }
 
@@ -148,22 +185,33 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
                                 |      }
                                 |   }
                                 |}
-                                |""".stripMargin)
+                                |""".stripMargin),
+            taxYear = None
           )) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = "A12344A", calculationId = validCalculationId, body = fhlBody)) shouldBe
-          List(NinoFormatError)
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = "A12344A",
+            calculationId = validCalculationId,
+            body = fhlBodyJson,
+            taxYear = None
+          )) shouldBe List(NinoFormatError)
       }
     }
 
     "return CalculationIdFormatError error" when {
       "an invalid calculationId is supplied" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino, calculationId = "12345", body = fhlBody)) shouldBe
-          List(CalculationIdFormatError)
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = "12345",
+            body = fhlBodyJson,
+            taxYear = None
+          )) shouldBe List(CalculationIdFormatError)
       }
     }
 
@@ -173,7 +221,8 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
           SubmitUkPropertyBsasRawData(
             nino = validNino,
             calculationId = validCalculationId,
-            body = fhlBody.as[JsObject] ++ nonFhlBody.as[JsObject]
+            body = fhlBodyJson.as[JsObject] ++ nonFhlBodyJson.as[JsObject],
+            taxYear = None
           )) shouldBe List(RuleBothPropertiesSuppliedError)
       }
 
@@ -190,15 +239,18 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
                  |  "nonFurnishedHolidayLet": {}
                  |}
                  |""".stripMargin
-            )
+            ),
+            taxYear = None
           )) shouldBe List(RuleBothPropertiesSuppliedError)
       }
     }
 
     "return RuleIncorrectOrEmptyBodyError" when {
       "an empty body is submitted" in {
-        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino, calculationId = validCalculationId, body = Json.parse("""{}"""))) shouldBe List(
-          RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitUkPropertyBsasRawData(nino = validNino,
+                                                       calculationId = validCalculationId,
+                                                       body = Json.parse("""{}"""),
+                                                       taxYear = None)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
       "an object/array is empty or mandatory field is missing" when {
@@ -207,13 +259,13 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
           "/furnishedHolidayLet",
           "/furnishedHolidayLet/income",
           "/furnishedHolidayLet/expenses",
-        ).foreach(path => testWith(fhlBody.replaceWithEmptyObject(path), path))
+        ).foreach(path => testWith(fhlBodyJson.replaceWithEmptyObject(path), path))
 
         Seq(
           "/nonFurnishedHolidayLet",
           "/nonFurnishedHolidayLet/income",
           "/nonFurnishedHolidayLet/expenses",
-        ).foreach(path => testWith(nonFhlBody.replaceWithEmptyObject(path), path))
+        ).foreach(path => testWith(nonFhlBodyJson.replaceWithEmptyObject(path), path))
 
         def testWith(body: JsValue, expectedPath: String): Unit =
           s"for $expectedPath" in {
@@ -221,124 +273,175 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
               SubmitUkPropertyBsasRawData(
                 nino = validNino,
                 calculationId = validCalculationId,
-                body
+                body = body,
+                taxYear = None
               )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(expectedPath))))
           }
       }
 
       "an object is empty except for a additional (non-schema) property" in {
         val json = Json.parse("""{
-                                |    "nonFurnishedHolidayLet": {
-                                |       "unknownField": 999.99
-                                |    }
-                                |}""".stripMargin)
+            |    "nonFurnishedHolidayLet": {
+            |       "unknownField": 999.99
+            |    }
+            |}""".stripMargin)
 
         validator.validate(
           SubmitUkPropertyBsasRawData(
             nino = validNino,
             calculationId = validCalculationId,
-            body = json
+            body = json,
+            taxYear = None
           )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/nonFurnishedHolidayLet"))))
       }
+    }
 
-      "return ValueFormatError" when {
-        "income or (non-consolidated) expenses is invalid" when {
-          Seq(
-            "/furnishedHolidayLet/income/totalRentsReceived",
-            "/furnishedHolidayLet/expenses/premisesRunningCosts",
-            "/furnishedHolidayLet/expenses/repairsAndMaintenance",
-            "/furnishedHolidayLet/expenses/financialCosts",
-            "/furnishedHolidayLet/expenses/professionalFees",
-            "/furnishedHolidayLet/expenses/costOfServices",
-            "/furnishedHolidayLet/expenses/other",
-            "/furnishedHolidayLet/expenses/travelCosts",
-          ).foreach(path => testWith(fhlBody.update(path, _), path))
+    "return ValueFormatError" when {
+      "income or (non-consolidated) expenses is invalid" when {
+        Seq(
+          "/furnishedHolidayLet/income/totalRentsReceived",
+          "/furnishedHolidayLet/expenses/premisesRunningCosts",
+          "/furnishedHolidayLet/expenses/repairsAndMaintenance",
+          "/furnishedHolidayLet/expenses/financialCosts",
+          "/furnishedHolidayLet/expenses/professionalFees",
+          "/furnishedHolidayLet/expenses/costOfServices",
+          "/furnishedHolidayLet/expenses/other",
+          "/furnishedHolidayLet/expenses/travelCosts",
+        ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
 
-          Seq(
-            "/nonFurnishedHolidayLet/income/totalRentsReceived",
-            "/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant",
-            "/nonFurnishedHolidayLet/income/reversePremiums",
-            "/nonFurnishedHolidayLet/income/otherPropertyIncome",
-            "/nonFurnishedHolidayLet/expenses/premisesRunningCosts",
-            "/nonFurnishedHolidayLet/expenses/repairsAndMaintenance",
-            "/nonFurnishedHolidayLet/expenses/financialCosts",
-            "/nonFurnishedHolidayLet/expenses/professionalFees",
-            "/nonFurnishedHolidayLet/expenses/costOfServices",
-            "/nonFurnishedHolidayLet/expenses/residentialFinancialCost",
-            "/nonFurnishedHolidayLet/expenses/other",
-            "/nonFurnishedHolidayLet/expenses/travelCosts",
-          ).foreach(path => testWith(nonFhlBody.update(path, _), path))
-        }
-
-        "consolidated expenses is invalid" when {
-          Seq(
-            "/furnishedHolidayLet/expenses/consolidatedExpenses",
-          ).foreach(path => testWith(fhlBodyConsolidated.update(path, _), path))
-
-          Seq(
-            "/nonFurnishedHolidayLet/expenses/consolidatedExpenses",
-          ).foreach(path => testWith(nonFhlBodyConsolidated.update(path, _), path))
-        }
-
-        "multiple fields are invalid" in {
-          val path1 = "/nonFurnishedHolidayLet/income/totalRentsReceived"
-          val path2 = "/nonFurnishedHolidayLet/expenses/premisesRunningCosts"
-
-          val json = nonFhlBody
-            .update(path1, JsNumber(0))
-            .update(path2, JsNumber(123.123))
-
-          validator.validate(
-            SubmitUkPropertyBsasRawData(
-              nino = validNino,
-              calculationId = validCalculationId,
-              body = json
-            )) shouldBe List(
-            ValueFormatError.copy(paths = Some(Seq(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99"))
-        }
-
-        def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
-          def doTest(value: JsNumber) =
-            validator.validate(
-              SubmitUkPropertyBsasRawData(
-                nino = validNino,
-                calculationId = validCalculationId,
-                body = body(value)
-              )) shouldBe List(ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99"))
-
-          "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
-
-          "value is zero" in doTest(JsNumber(0))
-        }
+        Seq(
+          "/nonFurnishedHolidayLet/income/totalRentsReceived",
+          "/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant",
+          "/nonFurnishedHolidayLet/income/reversePremiums",
+          "/nonFurnishedHolidayLet/income/otherPropertyIncome",
+          "/nonFurnishedHolidayLet/expenses/premisesRunningCosts",
+          "/nonFurnishedHolidayLet/expenses/repairsAndMaintenance",
+          "/nonFurnishedHolidayLet/expenses/financialCosts",
+          "/nonFurnishedHolidayLet/expenses/professionalFees",
+          "/nonFurnishedHolidayLet/expenses/costOfServices",
+          "/nonFurnishedHolidayLet/expenses/residentialFinancialCost",
+          "/nonFurnishedHolidayLet/expenses/other",
+          "/nonFurnishedHolidayLet/expenses/travelCosts",
+        ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path))
       }
 
-      "return RuleBothExpensesSuppliedError" when {
-        "consolidated and separate expenses provided for fhl" in {
-          validator.validate(
-            SubmitUkPropertyBsasRawData(
-              nino = validNino,
-              calculationId = validCalculationId,
-              body = fhlBody.update("furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(123.45))
-            )) shouldBe
-            List(RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses"))))
-        }
+      "consolidated expenses is invalid" when {
+        Seq(
+          "/furnishedHolidayLet/expenses/consolidatedExpenses",
+        ).foreach(path => testWith(fhlBodyConsolidatedJson.update(path, _), path))
 
-        "consolidated and separate expenses provided for non-fhl" in {
-          validator.validate(
-            SubmitUkPropertyBsasRawData(
-              nino = validNino,
-              calculationId = validCalculationId,
-              body = nonFhlBody.update("nonFurnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(123.45))
-            )) shouldBe
-            List(RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/expenses"))))
-        }
+        Seq(
+          "/nonFurnishedHolidayLet/expenses/consolidatedExpenses",
+        ).foreach(path => testWith(nonFhlBodyConsolidatedJson.update(path, _), path))
       }
 
-      "return multiple errors" when {
-        "request supplied has multiple errors" in {
-          validator.validate(SubmitUkPropertyBsasRawData(nino = "A12344A", calculationId = "badCalcId", body = fhlBody)) shouldBe
-            List(NinoFormatError, CalculationIdFormatError)
-        }
+      "multiple fields are invalid" in {
+        val path1 = "/nonFurnishedHolidayLet/income/totalRentsReceived"
+        val path2 = "/nonFurnishedHolidayLet/expenses/premisesRunningCosts"
+
+        val json = nonFhlBodyJson
+          .update(path1, JsNumber(0))
+          .update(path2, JsNumber(123.123))
+
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = json,
+            taxYear = None
+          )) shouldBe List(
+          ValueFormatError.copy(paths = Some(Seq(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99"))
+      }
+
+      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
+        def doTest(value: JsNumber): Assertion =
+          validator.validate(
+            SubmitUkPropertyBsasRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = body(value),
+              taxYear = None
+            )) shouldBe List(ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99"))
+
+        "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
+
+        "value is zero" in doTest(JsNumber(0))
+      }
+    }
+
+    "return RuleBothExpensesSuppliedError" when {
+      "consolidated and separate expenses provided for fhl" in {
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = fhlBodyJson.update("furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(123.45)),
+            taxYear = None
+          )) shouldBe
+          List(RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses"))))
+      }
+
+      "consolidated and separate expenses provided for non-fhl" in {
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            body = nonFhlBodyJson.update("nonFurnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(123.45)),
+            taxYear = None
+          )) shouldBe
+          List(RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/expenses"))))
+      }
+    }
+
+    "return TaxYearFormatError error" when {
+      "an invalid tax year format is supplied" in {
+        validator
+          .validate(
+            SubmitUkPropertyBsasRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = fhlBodyJson,
+              taxYear = Some("202324")
+            )) shouldBe List(TaxYearFormatError)
+      }
+    }
+
+    "return RuleTaxYearRangeInvalidError error" when {
+      "a tax year range of more than one year is supplied" in {
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = validNino,
+            calculationId = validCalculationId,
+            taxYear = Some("2022-24"),
+            body = fhlBodyJson
+          )) shouldBe List(RuleTaxYearRangeInvalidError)
+      }
+    }
+
+    "return InvalidTaxYearParameter" when {
+      "an invalid tax year is supplied" in {
+        validator
+          .validate(
+            SubmitUkPropertyBsasRawData(
+              nino = validNino,
+              calculationId = validCalculationId,
+              body = fhlBodyJson,
+              taxYear = Some("2022-23")
+            )) shouldBe List(InvalidTaxYearParameterError)
+
+      }
+    }
+
+    "return multiple errors" when {
+      "request supplied has multiple errors" in {
+        validator.validate(
+          SubmitUkPropertyBsasRawData(
+            nino = "A12344A",
+            calculationId = "badCalcId",
+            body = fhlBodyJson,
+            taxYear = None
+          )) shouldBe
+          List(NinoFormatError, CalculationIdFormatError)
       }
     }
   }

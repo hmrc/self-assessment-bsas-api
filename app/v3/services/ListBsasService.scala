@@ -27,12 +27,12 @@ import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
 import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
-import v3.support.DesResponseMappingSupport
+import v3.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasService @Inject()(connector: ListBsasConnector) extends DesResponseMappingSupport with Logging {
+class ListBsasService @Inject()(connector: ListBsasConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def listBsas(request: ListBsasRequest)
               (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
@@ -40,7 +40,7 @@ class ListBsasService @Inject()(connector: ListBsasConnector) extends DesRespons
   Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.listBsas(request)).leftMap(mapDesErrors(mapDownstreamErrors))
+      desResponseWrapper <- EitherT(connector.listBsas(request)).leftMap(mapDownstreamErrors(mapDownstreamErrors))
     } yield desResponseWrapper
 
     result.value

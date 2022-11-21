@@ -82,7 +82,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
           MockSubmitForeignPropertyBsasConnector
             .submitForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

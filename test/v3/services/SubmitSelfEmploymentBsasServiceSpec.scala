@@ -59,7 +59,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
           MockSubmitSelfEmploymentBsasConnector
             .submitSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

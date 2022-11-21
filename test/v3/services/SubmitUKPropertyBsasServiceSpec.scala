@@ -30,65 +30,77 @@ import scala.concurrent.Future
 class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request: SubmitUkPropertyBsasRequestData = SubmitUkPropertyBsasRequestData(nino, id, fhlBody)
+  val requestData: SubmitUkPropertyBsasRequestData = SubmitUkPropertyBsasRequestData(
+    nino = nino,
+    calculationId = id,
+    body = fhlBody,
+    taxYear = None
+  )
 
   trait Test extends MockSubmitUkPropertyBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitUKPropertyBsas")
 
-    val service = new SubmitUkPropertyBsasService(mockConnector)
+    val service = new SubmitUkPropertyBsasService(connector = mockConnector)
   }
 
   "submitUKPropertyBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
+        MockSubmitUKPropertyBsasConnector
+          .submitUKPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.submitPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
+        await(service.submitPropertyBsas(requestData)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 
     "return error response" when {
 
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+          MockSubmitUKPropertyBsasConnector
+            .submitUKPropertyBsas(requestData)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          MockSubmitUKPropertyBsasConnector.submitUKPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
-
-          await(service.submitPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+          await(service.submitPropertyBsas(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
-
-        ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("INVALID_CALCULATION_ID", CalculationIdFormatError),
-        ("INVALID_CORRELATIONID", InternalError),
-        ("INVALID_PAYLOAD", InternalError),
-        ("BVR_FAILURE_C55316", InternalError),
-        ("BVR_FAILURE_C15320", InternalError),
-        ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
-        ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
-        ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
-        ("BVR_FAILURE_C559107", InternalError),
-        ("BVR_FAILURE_C559103", InternalError),
-        ("BVR_FAILURE_C559099", InternalError),
-        ("NO_DATA_FOUND", NotFoundError),
-        ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
-        ("ASC_ALREADY_ADJUSTED", RuleAlreadyAdjusted),
-        ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
-        ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
-        ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
-        ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError)
+      val errors = Seq(
+        "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+        "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
+        "INVALID_CORRELATIONID"         -> InternalError,
+        "INVALID_PAYLOAD"               -> InternalError,
+        "BVR_FAILURE_C55316"            -> InternalError,
+        "BVR_FAILURE_C15320"            -> InternalError,
+        "BVR_FAILURE_C55508"            -> RulePropertyIncomeAllowanceClaimed,
+        "BVR_FAILURE_C55509"            -> RulePropertyIncomeAllowanceClaimed,
+        "BVR_FAILURE_C55503"            -> RuleOverConsolidatedExpensesThreshold,
+        "BVR_FAILURE_C559107"           -> InternalError,
+        "BVR_FAILURE_C559103"           -> InternalError,
+        "BVR_FAILURE_C559099"           -> InternalError,
+        "NO_DATA_FOUND"                 -> NotFoundError,
+        "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
+        "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
+        "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
+        "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
+        "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
+        "SERVER_ERROR"                  -> InternalError,
+        "SERVICE_UNAVAILABLE"           -> InternalError
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        "INVALID_TAX_YEAR"       -> TaxYearFormatError,
+        "NOT_FOUND"              -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
-    }
+  }
 
 }

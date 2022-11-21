@@ -74,7 +74,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
         s"a $desErrorCode error is returned from the service" in new Test {
 
           MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

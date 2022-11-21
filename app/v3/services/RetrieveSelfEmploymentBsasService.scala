@@ -29,14 +29,14 @@ import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
-import v3.support.DesResponseMappingSupport
+import v3.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector)
     extends BaseRetrieveBsasService
-    with DesResponseMappingSupport
+    with DownstreamResponseMappingSupport
     with Logging {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`self-employment`)
@@ -48,7 +48,7 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
     } yield mtdResponseWrapper
 

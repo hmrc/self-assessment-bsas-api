@@ -62,7 +62,7 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
         s"a $desErrorCode error is returned from the service" in new Test {
 
           MockListBsasConnector.listBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.listBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

@@ -126,7 +126,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     case _
       if errorWrapper.containsAnyOf(
         BadRequestError,
-        NinoFormatError, 
+        NinoFormatError,
         CalculationIdFormatError,
         RuleIncorrectOrEmptyBodyError,
         RuleBothExpensesError,
@@ -137,11 +137,11 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
         RuleTaxYearNotSupportedError,
         RuleTaxYearRangeInvalidError
       ) => BadRequest(Json.toJson(errorWrapper))
-    case _ 
+    case _
       if errorWrapper.containsAnyOf(
-        RuleSummaryStatusInvalid, 
+        RuleSummaryStatusInvalid,
         RuleSummaryStatusSuperseded,
-        RuleAlreadyAdjusted, 
+        RuleAlreadyAdjusted,
         RuleOverConsolidatedExpensesThreshold,
         RuleTradingIncomeAllowanceClaimed,
         RuleResultingValueNotPermitted

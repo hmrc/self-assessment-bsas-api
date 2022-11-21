@@ -36,7 +36,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
 
-    import v3.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
 

@@ -26,12 +26,12 @@ import v3.controllers.EndpointLogContext
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.support.DesResponseMappingSupport
+import v3.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging {
+class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
       implicit hc: HeaderCarrier,
@@ -39,7 +39,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(errorMap))
+    val result = EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }

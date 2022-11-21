@@ -73,7 +73,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
         s"a $desErrorCode error is returned from the service" in new Test {
 
           MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
