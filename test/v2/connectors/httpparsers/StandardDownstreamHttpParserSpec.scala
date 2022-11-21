@@ -31,7 +31,7 @@ object SomeModel {
   implicit val reads: Reads[SomeModel] = Json.reads
 }
 
-class StandardDesHttpParserSpec extends UnitSpec {
+class StandardDownstreamHttpParserSpec extends UnitSpec {
 
   val method = "POST"
   val url = "test-url"

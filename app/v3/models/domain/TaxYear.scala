@@ -25,6 +25,7 @@ import play.api.libs.json.Writes
   * @param value the tax year string (where 2018 represents 2017-18)
   */
 final case class TaxYear private (private val value: String) {
+
   /** The tax year as a number, e.g. for "2023-24" this will be 2024
     */
   val year: Int = value.toInt
@@ -32,7 +33,7 @@ final case class TaxYear private (private val value: String) {
   /** The tax year in MTD (vendor-facing) format, e.g. "2023-24"
     */
   val asMtd: String = {
-    val prefix = value.take(2)
+    val prefix  = value.take(2)
     val yearTwo = value.drop(2)
     val yearOne = (yearTwo.toInt - 1).toString
     prefix + yearOne + "-" + yearTwo
@@ -74,6 +75,5 @@ object TaxYear {
     new TaxYear(taxYear.toString)
 
   implicit val writes: Writes[TaxYear] = implicitly[Writes[String]].contramap(_.asMtd)
-
 
 }

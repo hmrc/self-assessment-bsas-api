@@ -24,7 +24,7 @@ import v2.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v2.models.errors._
 import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
-class SubmitUkPropertyBsasDataParserSpec extends UnitSpec {
+class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
   val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
   val nino = "AA123456A"

@@ -26,6 +26,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
   private val validationSet = List(
     parameterFormatValidator,
+    parameterRuleValidation,
     validateOnePropertyOnly,
     bodyFormatValidation,
     bodyFieldValidation)
@@ -33,7 +34,14 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
-      CalculationIdValidation.validate(data.calculationId)
+      CalculationIdValidation.validate(data.calculationId),
+      data.taxYear.map(TaxYearValidation.validate).getOrElse(Nil)
+    )
+  }
+
+  private def parameterRuleValidation: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
+    List(
+      data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil)
     )
   }
 

@@ -27,7 +27,7 @@ import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
-import v3.support.DesResponseMappingSupport
+import v3.support.DownstreamResponseMappingSupport
 
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
@@ -35,7 +35,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector)
     extends BaseRetrieveBsasService
-    with DesResponseMappingSupport
+    with DownstreamResponseMappingSupport
     with Logging {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`)
@@ -47,7 +47,7 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
 
     } yield mtdResponseWrapper
@@ -58,11 +58,11 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-    "INVALID_CORRELATIONID"     -> DownstreamError,
-    "INVALID_RETURN"            -> DownstreamError,
-    "UNPROCESSABLE_ENTITY"      -> DownstreamError,
+    "INVALID_CORRELATIONID"     -> InternalError,
+    "INVALID_RETURN"            -> InternalError,
+    "UNPROCESSABLE_ENTITY"      -> InternalError,
     "NO_DATA_FOUND"             -> NotFoundError,
-    "SERVER_ERROR"              -> DownstreamError,
-    "SERVICE_UNAVAILABLE"       -> DownstreamError
+    "SERVER_ERROR"              -> InternalError,
+    "SERVICE_UNAVAILABLE"       -> InternalError
   )
 }

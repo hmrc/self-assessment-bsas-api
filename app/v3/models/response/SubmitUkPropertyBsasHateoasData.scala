@@ -24,12 +24,12 @@ object SubmitUkPropertyBsasHateoasData extends HateoasLinks {
 
   implicit object SubmitPropertyAdjustmentHateoasFactory
     extends HateoasLinksFactory[Unit, SubmitUkPropertyBsasHateoasData] {
+
     override def links(appConfig: AppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {
+
       import data._
 
-      Seq(
-        getUkPropertyBsas(appConfig, nino, calculationId)
-      )
+      Seq(getUkPropertyBsas(appConfig, nino, calculationId))
     }
   }
 }

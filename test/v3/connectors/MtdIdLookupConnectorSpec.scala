@@ -18,7 +18,7 @@ package v3.connectors
 
 import mocks.MockAppConfig
 import v3.mocks.MockHttpClient
-import v3.models.errors.DownstreamError
+import v3.models.errors.InternalError
 
 import scala.concurrent.Future
 
@@ -49,10 +49,10 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
     "return a DownstreamError" when {
       "the http client returns a DownstreamError" in new Test {
         MockedHttpClient.get[MtdIdLookupOutcome](s"$baseUrl/mtd-identifier-lookup/nino/$nino", dummyHeaderCarrierConfig)
-          .returns(Future.successful(Left(DownstreamError)))
+          .returns(Future.successful(Left(InternalError)))
 
         val result: MtdIdLookupOutcome = await(connector.getMtdId(nino))
-        result shouldBe Left(DownstreamError)
+        result shouldBe Left(InternalError)
       }
     }
   }

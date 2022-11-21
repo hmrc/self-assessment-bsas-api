@@ -90,7 +90,7 @@ class RetrieveUkPropertyBsasController @Inject()(
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
+      case InternalError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
       case _               => unhandledError(errorWrapper)
     }
 }
