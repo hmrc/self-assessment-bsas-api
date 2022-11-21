@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v3.models.domain.TaxYear
+import domain.TaxYear
 import v3.models.errors.{InvalidTaxYearParameterError, MtdError}
 
 object TaxYearTYSParameterValidation {

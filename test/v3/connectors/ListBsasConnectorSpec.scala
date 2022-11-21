@@ -17,11 +17,10 @@
 package v3.connectors
 
 import mocks.MockAppConfig
-import domain.Nino
+import domain.{Nino, TaxYear}
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ListBsasFixture
 import v3.mocks.MockHttpClient
-import v3.models.domain.TaxYear
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
 

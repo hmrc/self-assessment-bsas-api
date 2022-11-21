@@ -17,9 +17,9 @@
 package v3.models.request.triggerBsas
 
 import play.api.mvc.AnyContentAsJson
-import domain.Nino
+import domain.{ Nino, TaxYear }
 import v3.models.request.RawData
 
 case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData
 
-case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody)
+case class TriggerBsasRequest(nino: Nino, body: TriggerBsasRequestBody, taxYear: TaxYear)

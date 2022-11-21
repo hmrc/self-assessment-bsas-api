@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.models.domain
+package domain
 
 import config.FeatureSwitches
 import play.api.libs.json.Writes

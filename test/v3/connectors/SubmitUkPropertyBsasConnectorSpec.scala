@@ -16,9 +16,8 @@
 
 package v3.connectors
 
-import domain.Nino
+import domain.{Nino, TaxYear}
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v3.models.domain.TaxYear
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 

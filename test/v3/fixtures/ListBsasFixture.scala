@@ -16,8 +16,9 @@
 
 package v3.fixtures
 
+import domain.TaxYear
 import play.api.libs.json.{JsArray, JsValue, Json}
-import v3.models.domain.{Status, TaxYear, TypeOfBusiness}
+import v3.models.domain.{Status, TypeOfBusiness}
 import v3.models.response.listBsas.{AccountingPeriod, BsasSummary, BusinessSourceSummary, ListBsasResponse}
 
 trait ListBsasFixture {

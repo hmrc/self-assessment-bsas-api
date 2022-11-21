@@ -16,11 +16,10 @@
 
 package v3.controllers.requestParsers
 
-import domain.Nino
+import domain.{Nino, TaxYear}
 import play.api.libs.json.Json
 import support.UnitSpec
 import v3.mocks.validators.MockSubmitUkPropertyBsasValidator
-import v3.models.domain.TaxYear
 import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty._
 

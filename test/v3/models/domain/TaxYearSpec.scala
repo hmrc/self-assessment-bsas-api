@@ -15,6 +15,7 @@
  */
 
 package v3.models.domain
+import domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
