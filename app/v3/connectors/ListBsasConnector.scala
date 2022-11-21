@@ -18,42 +18,49 @@ package v3.connectors
 
 import config.AppConfig
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.DesUri
+import v3.connectors.DownstreamUri.{ DesUri, TaxYearSpecificIfsUri }
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
+import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class ListBsasConnector @Inject()(val http: HttpClient,
-                                  val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listBsas(request: ListBsasRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
+  def listBsas(request: ListBsasRequest)(implicit hc: HeaderCarrier,
+                                         ec: ExecutionContext,
+                                         correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
 
     import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino = request.nino.nino
-
-    val queryParams = Map(
-      "taxYear" -> Some(request.taxYear.asDownstream),
-      "incomeSourceId" -> request.incomeSourceId,
-      "incomeSourceType" -> request.incomeSourceType
+    val commonQueryParams = Map(
+      "incomeSourceId"   -> incomeSourceId,
+      "incomeSourceType" -> incomeSourceType
     )
 
     def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {
       case (k: String, Some(v: String)) => (k, v)
     }
 
-    val mappedQueryParams: Map[String, String] = queryMap(queryParams)
+    if (taxYear.useTaxYearSpecificApi) {
+      val mappedQueryParams: Map[String, String] = queryMap(commonQueryParams)
+      get(
+        uri =
+          TaxYearSpecificIfsUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}"),
+        queryParams = mappedQueryParams.toSeq
+      )
+    } else {
+      val additionalQueryParams = Map(
+        "taxYear" -> Some(taxYear.asDownstream)
+      )
+      val mappedQueryParams: Map[String, String] = queryMap(commonQueryParams ++ additionalQueryParams)
+      get(uri = DesUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${nino.nino}"),
+          queryParams = mappedQueryParams.toSeq)
+    }
 
-    val url = s"income-tax/adjustable-summary-calculation/$nino"
-
-    get(uri = DesUri[ListBsasResponse[BsasSummary]](url), queryParams = mappedQueryParams.toSeq)
   }
 }
