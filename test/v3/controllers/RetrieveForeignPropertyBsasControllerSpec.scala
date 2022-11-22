@@ -141,8 +141,9 @@ class RetrieveForeignPropertyBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (DownstreamError, INTERNAL_SERVER_ERROR),
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
