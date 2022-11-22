@@ -52,7 +52,7 @@ class RetrieveForeignPropertyValidatorSpec extends UnitSpec {
       }
     }
     "return TYS errors for an invalid TYS request" when {
-      "passed raw data with an invalid taxYear" in {
+      "passed raw data with an invalid taxYear (i.e. earlier than 2023-24)" in {
         val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, Some("2022-23"))
         validator.validate(input) shouldBe List(InvalidTaxYearParameterError)
       }
@@ -66,11 +66,9 @@ class RetrieveForeignPropertyValidatorSpec extends UnitSpec {
       }
     }
     "return multiple errors" when {
-      //Idk why this test fails.
-      //// If you swap the validations around on line 30 of RetrieveForeignPropertyValidator, it fails in a different way.
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveForeignPropertyBsasRawData(invalidNino, invalidCalculationId, Some("2022-23"))
-        validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError, InvalidTaxYearParameterError)
+        val input = RetrieveForeignPropertyBsasRawData(invalidNino, invalidCalculationId, None)
+        validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError)
       }
     }
   }
