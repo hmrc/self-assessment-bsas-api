@@ -18,16 +18,17 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
 import v3.mocks.services._
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import v3.models.domain.TaxYear
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
@@ -36,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSubmitForeignPropertyBsasService
@@ -44,12 +45,13 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockSubmitForeignPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator
-{
+    with MockIdGenerator {
 
-  private val nino = "AA123456A"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = "AA123456A"
+  private val bsasId        = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val correlationId = "X-123"
+  private val rawTaxYear    = "2023-24"
+  private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -72,7 +74,8 @@ class SubmitForeignPropertyBsasControllerSpec
 
   }
 
-  private val testHateoasLink = Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
+  private val testHateoasLink =
+    Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
 
   private val requestJson = Json.parse(
     """|{
@@ -100,29 +103,31 @@ class SubmitForeignPropertyBsasControllerSpec
   private val foreignProperty: ForeignProperty =
     ForeignProperty(
       "FRA",
-      Some(ForeignPropertyIncome(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12)
-      )),
-      Some(ForeignPropertyExpenses(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        None
-      ))
+      Some(
+        ForeignPropertyIncome(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        )),
+      Some(
+        ForeignPropertyExpenses(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          None
+        ))
     )
 
   val requestBody: SubmitForeignPropertyBsasRequestBody =
     SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
 
-  private val rawData = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
-  private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, requestBody)
+  private val rawData     = SubmitForeignPropertyRawData(nino, bsasId, Some(rawTaxYear), requestJson)
+  private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, Some(taxYear), requestBody)
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -139,8 +144,7 @@ class SubmitForeignPropertyBsasControllerSpec
       )
     )
 
-  val responseBody: JsValue = Json.parse(
-    s"""
+  val responseBody: JsValue = Json.parse(s"""
        |{
        |  "links":[
        |    {
@@ -172,7 +176,7 @@ class SubmitForeignPropertyBsasControllerSpec
           .wrap((), SubmitForeignPropertyBsasHateoasData(nino, bsasId))
           .returns(HateoasWrapper((), Seq(testHateoasLink)))
 
-        val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
+        val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
         status(result) shouldBe OK
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
@@ -190,7 +194,7 @@ class SubmitForeignPropertyBsasControllerSpec
               .parseRequest(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
+            val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -205,6 +209,9 @@ class SubmitForeignPropertyBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (RuleDuplicateCountryCodeError, BAD_REQUEST),
@@ -233,7 +240,7 @@ class SubmitForeignPropertyBsasControllerSpec
               .submitForeignPropertyBsas(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
+            val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -245,17 +252,19 @@ class SubmitForeignPropertyBsasControllerSpec
         }
 
         val input = Seq(
-            (NinoFormatError, BAD_REQUEST),
-            (CalculationIdFormatError, BAD_REQUEST),
-            (NotFoundError, NOT_FOUND),
-            (DownstreamError, INTERNAL_SERVER_ERROR),
-            (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
-            (RuleSummaryStatusInvalid, FORBIDDEN),
-            (RuleSummaryStatusSuperseded, FORBIDDEN),
-            (RuleAlreadyAdjusted, FORBIDDEN),
-            (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-            (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
-            (RuleResultingValueNotPermitted, FORBIDDEN)
+          (NinoFormatError, BAD_REQUEST),
+          (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (NotFoundError, NOT_FOUND),
+          (InternalError, INTERNAL_SERVER_ERROR),
+          (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
+          (RuleSummaryStatusInvalid, FORBIDDEN),
+          (RuleSummaryStatusSuperseded, FORBIDDEN),
+          (RuleAlreadyAdjusted, FORBIDDEN),
+          (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+          (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
+          (RuleResultingValueNotPermitted, FORBIDDEN)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

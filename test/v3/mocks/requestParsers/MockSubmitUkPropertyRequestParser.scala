@@ -18,13 +18,13 @@ package v3.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.controllers.requestParsers.SubmitUkPropertyBsasDataParser
+import v3.controllers.requestParsers.SubmitUkPropertyBsasRequestParser
 import v3.models.errors.ErrorWrapper
 import v3.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 trait MockSubmitUkPropertyRequestParser extends MockFactory {
 
-  val mockRequestParser: SubmitUkPropertyBsasDataParser = mock[SubmitUkPropertyBsasDataParser]
+  val mockRequestParser: SubmitUkPropertyBsasRequestParser = mock[SubmitUkPropertyBsasRequestParser]
 
   object MockSubmitUkPropertyBsasDataParser {
     def parse(data: SubmitUkPropertyBsasRawData): CallHandler[Either[ErrorWrapper, SubmitUkPropertyBsasRequestData]] = {

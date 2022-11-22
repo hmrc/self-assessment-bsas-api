@@ -31,7 +31,7 @@ object SomeModel {
   implicit val reads: Reads[SomeModel] = Json.reads
 }
 
-class StandardDesHttpParserSpec extends UnitSpec {
+class StandardDownstreamHttpParserSpec extends UnitSpec {
 
   val method = "POST"
   val url = "test-url"
@@ -67,7 +67,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
       }
 
       handleErrorsCorrectly(httpReads)
-      handleInternalErrorsCorrectly(httpReads)
+      handleDownstreamErrorsCorrectly(httpReads)
       handleUnexpectedResponse(httpReads)
       handleBvrsCorrectly(httpReads)
     }
@@ -97,7 +97,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
       }
 
       handleErrorsCorrectly(httpReads)
-      handleInternalErrorsCorrectly(httpReads)
+      handleDownstreamErrorsCorrectly(httpReads)
       handleUnexpectedResponse(httpReads)
       handleBvrsCorrectly(httpReads)
     }
@@ -175,7 +175,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
         }
     )
 
-  private def handleInternalErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit =
+  private def handleDownstreamErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit =
     Seq(INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE).foreach(responseCode =>
       s"receiving a $responseCode response" should {
         "return an outbound error when the error returned matches the Error model" in {

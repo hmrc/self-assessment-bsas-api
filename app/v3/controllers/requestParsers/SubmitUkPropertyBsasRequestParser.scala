@@ -19,14 +19,17 @@ package v3.controllers.requestParsers
 import javax.inject.Inject
 import domain.Nino
 import v3.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
+import v3.models.domain.TaxYear
 import v3.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
-class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
+class SubmitUkPropertyBsasRequestParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
   extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
 
   override protected def requestFor(data: SubmitUkPropertyBsasRawData): SubmitUkPropertyBsasRequestData = {
+
+    val taxYear     = data.taxYear.map(TaxYear.fromMtd)
     val requestBody = data.body.as[SubmitUKPropertyBsasRequestBody]
 
-    SubmitUkPropertyBsasRequestData(Nino(data.nino), data.calculationId, requestBody)
+    SubmitUkPropertyBsasRequestData(Nino(data.nino), data.calculationId, requestBody, taxYear)
   }
 }

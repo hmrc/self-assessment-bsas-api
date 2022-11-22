@@ -18,31 +18,60 @@ package v3.connectors
 
 import domain.Nino
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v3.models.domain.TaxYear
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
 import scala.concurrent.Future
 
-class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
+class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
-  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val nino: String   = "AA123456A"
+  val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+  def makeRequest(taxYear: Option[String]): SubmitUkPropertyBsasRequestData = {
+    SubmitUkPropertyBsasRequestData(
+      nino = Nino(nino),
+      calculationId = bsasId,
+      body = nonFHLBody,
+      taxYear = taxYear.map(TaxYear.fromMtd)
+    )
+  }
+
+  val nonTysRequest = makeRequest(None)
+  val tysRequest    = makeRequest(Some("2023-24"))
 
   trait Test {
     _: ConnectorTest =>
-    val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+
+    protected val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
   }
 
-  "submitBsas" must {
-    val request = SubmitUkPropertyBsasRequestData(nino, bsasId, nonFHLBody)
+  "SubmitUKPropertyBsasConnector" when {
+    "SubmitUKPropertyBsas" must {
+      "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new IfsTest with Test {
 
-    "post a SubmitBsasRequest body and return the result" in new DesTest with Test {
-      val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
-      val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId"
-      willPut(url = expectedUrl, nonFHLBody) returns Future.successful(outcome)
+        willPut(url = url, body = nonFHLBody) returns Future.successful(outcome)
 
-      await(connector.submitPropertyBsas(request)) shouldBe outcome
+        await(connector.submitPropertyBsas(nonTysRequest)) shouldBe outcome
+      }
+
+      "post a SubmitBsasRequest body and return the result for the TYS scenario" in new TysIfsTest with Test {
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$bsasId"
+
+        willPut(url = url, body = nonFHLBody) returns Future.successful(outcome)
+
+        await(connector.submitPropertyBsas(tysRequest)) shouldBe outcome
+      }
+
     }
   }
 }

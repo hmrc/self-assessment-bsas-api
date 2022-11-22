@@ -17,14 +17,12 @@
 package v3.connectors
 
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.DesUri
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.connectors.DownstreamUri.IfsUri
 import v3.models.request.ListBsasRequest
 import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -36,7 +34,7 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
 
-    import v3.connectors.httpparsers.StandardDesHttpParser._
+    import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
 
@@ -54,6 +52,6 @@ class ListBsasConnector @Inject()(val http: HttpClient,
 
     val url = s"income-tax/adjustable-summary-calculation/$nino"
 
-    get(uri = DesUri[ListBsasResponse[BsasSummary]](url), queryParams = mappedQueryParams.toSeq)
+    get(uri = IfsUri[ListBsasResponse[BsasSummary]](url), queryParams = mappedQueryParams.toSeq)
   }
 }

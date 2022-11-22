@@ -32,7 +32,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, submitSelfEmploymentBsasRequestBodyModel)
+  val request: SubmitSelfEmploymentBsasRequestData = SubmitSelfEmploymentBsasRequestData(nino, id, None, submitSelfEmploymentBsasRequestBodyModel)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -59,7 +59,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
           MockSubmitSelfEmploymentBsasConnector
             .submitSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -67,7 +67,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
-        ("INVALID_PAYLOAD", DownstreamError),
+        ("INVALID_PAYLOAD", InternalError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleAlreadyAdjusted),
@@ -75,19 +75,26 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
         ("BVR_FAILURE_C55316", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C15320", RuleTradingIncomeAllowanceClaimed),
-        ("BVR_FAILURE_C55503", DownstreamError),
-        ("BVR_FAILURE_C55508", DownstreamError),
-        ("BVR_FAILURE_C55509", DownstreamError),
-        ("BVR_FAILURE_C559107", DownstreamError),
-        ("BVR_FAILURE_C559103", DownstreamError),
-        ("BVR_FAILURE_C559099", DownstreamError),
+        ("BVR_FAILURE_C55503", InternalError),
+        ("BVR_FAILURE_C55508", InternalError),
+        ("BVR_FAILURE_C55509", InternalError),
+        ("BVR_FAILURE_C559107", InternalError),
+        ("BVR_FAILURE_C559103", InternalError),
+        ("BVR_FAILURE_C559099", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("INVALID_CORRELATIONID", InternalError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INCOME_SOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (input ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 

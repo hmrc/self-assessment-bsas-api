@@ -74,7 +74,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
         s"a $desErrorCode error is returned from the service" in new Test {
 
           MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -82,12 +82,12 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
       val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
-        ("INVALID_RETURN", DownstreamError),
-        ("INVALID_CORRELATIONID", DownstreamError),
+        ("INVALID_RETURN", InternalError),
+        ("INVALID_CORRELATIONID", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("UNPROCESSABLE_ENTITY", DownstreamError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("UNPROCESSABLE_ENTITY", InternalError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       val extraTysErrors = Seq(

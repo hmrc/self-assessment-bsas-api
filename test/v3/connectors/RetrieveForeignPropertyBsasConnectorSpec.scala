@@ -42,6 +42,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, taxYear = None)
 
+
         val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
 

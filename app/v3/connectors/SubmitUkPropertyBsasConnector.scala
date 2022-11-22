@@ -17,33 +17,41 @@
 package v3.connectors
 
 import config.AppConfig
-import play.api.http.Status
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.DesUri
+import play.api.http.Status.OK
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUkPropertyBsasConnector @Inject()(
-                                    val http: HttpClient,
-                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
+class SubmitUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
-                          implicit hc: HeaderCarrier,
-                          ec: ExecutionContext,
-                          correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(implicit
+                                                                   hc: HeaderCarrier,
+                                                                   ec: ExecutionContext,
+                                                                   correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v3.connectors.httpparsers.StandardDesHttpParser._
+    val nino          = request.nino.nino
+    val calculationId = request.calculationId
+    val taxYear       = request.taxYear
 
-    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
+    implicit val successCode: SuccessCode = SuccessCode(OK)
+
+    val downstreamUri =
+      taxYear match {
+        case Some(taxYear) if taxYear.useTaxYearSpecificApi =>
+          TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+
+        case _ =>
+          IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      }
 
     put(
       body = request.body,
-      DesUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
+      uri = downstreamUri
     )
   }
 }
