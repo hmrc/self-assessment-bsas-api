@@ -237,7 +237,7 @@ class SubmitUkPropertyBsasControllerSpec
         val errors = Seq(
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR),
+        (InternalError, INTERNAL_SERVER_ERROR),
           (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
           (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
           (NotFoundError, NOT_FOUND),

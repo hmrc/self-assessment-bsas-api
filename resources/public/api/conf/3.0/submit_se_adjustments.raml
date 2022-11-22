@@ -16,6 +16,11 @@ is:
   - errors.ruleOverConsolidatedExpensesThreshold
   - errors.ruleTradingIncomeAllowanceExceeded
   - errors.adjustmentNotFound
+  - errors.formatTaxYear
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.invalidTaxYear
+  - queryParameters.taxYearTys
 displayName: Submit Self-Employment Accounting Adjustments
 description: This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The calculation ID quoted must be for a Self-Employment Business and it must not have been adjusted previously. A National Insurance number and calculation ID must be provided.
 (annotations.sandboxData): !include scenarios/submit_se_adjustments.md

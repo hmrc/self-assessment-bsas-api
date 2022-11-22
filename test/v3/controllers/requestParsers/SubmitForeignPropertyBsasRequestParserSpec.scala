@@ -20,6 +20,7 @@ import domain.Nino
 import play.api.libs.json.Json
 import support.UnitSpec
 import v3.mocks.validators.MockSubmitForeignPropertyBsasValidator
+import v3.models.domain.TaxYear
 import v3.models.errors.{ BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError }
 import v3.models.request.submitBsas.foreignProperty._
 
@@ -43,8 +44,14 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  val inputData: SubmitForeignPropertyRawData =
-    SubmitForeignPropertyRawData(nino, calculationId, requestBodyJson)
+  private val requestBody =
+    SubmitForeignPropertyBsasRequestBody(
+      nonFurnishedHolidayLet = Some(Seq(ForeignProperty("FRA", Some(ForeignPropertyIncome(Some(123.12), None, None)), None))),
+      foreignFhlEea = None
+    )
+
+  def inputDataWith(taxYear: Option[String]): SubmitForeignPropertyRawData =
+    SubmitForeignPropertyRawData(nino, calculationId, taxYear, requestBodyJson)
 
   trait Test extends MockSubmitForeignPropertyBsasValidator {
     lazy val parser = new SubmitForeignPropertyBsasRequestParser(mockValidator)
@@ -52,22 +59,26 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
 
   "parse" should {
     "return a request object" when {
-      "valid request data is supplied" in new Test {
+      "valid request data is supplied without a taxYear" in new Test {
+        val inputData: SubmitForeignPropertyRawData = inputDataWith(None)
         MockValidator.validate(inputData).returns(Nil)
 
-        val body: SubmitForeignPropertyBsasRequestBody =
-          SubmitForeignPropertyBsasRequestBody(
-            nonFurnishedHolidayLet = Some(Seq(ForeignProperty("FRA", Some(ForeignPropertyIncome(Some(123.12), None, None)), None))),
-            foreignFhlEea = None
-          )
+        parser.parseRequest(inputData) shouldBe
+          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, None, requestBody))
+      }
+
+      "valid request data is supplied with a taxYear" in new Test {
+        val inputData: SubmitForeignPropertyRawData = inputDataWith(Some("2023-24"))
+        MockValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, body))
+          Right(SubmitForeignPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")), requestBody))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
+        val inputData: SubmitForeignPropertyRawData = inputDataWith(None)
         MockValidator
           .validate(inputData)
           .returns(List(NinoFormatError))
@@ -77,6 +88,7 @@ class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur" in new Test {
+        val inputData: SubmitForeignPropertyRawData = inputDataWith(None)
         MockValidator
           .validate(inputData)
           .returns(List(NinoFormatError, BsasIdFormatError))

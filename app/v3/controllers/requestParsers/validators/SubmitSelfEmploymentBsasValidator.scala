@@ -24,6 +24,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
 
   private val validationSet = List(
     parameterFormatValidation,
+    parameterValidation,
     bodyFormatValidation,
     adjustmentFieldValidation,
     bothExpensesSuppliedValidation
@@ -32,7 +33,14 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private def parameterFormatValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
-      CalculationIdValidation.validate(data.calculationId)
+      CalculationIdValidation.validate(data.calculationId),
+      TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = data => {
+    List(
+      data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil)
     )
   }
 
@@ -63,7 +71,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
       NumberValidation.validateAdjustment(
         field = income.turnover,
         path = "/income/turnover",
-        ),
+      ),
       NumberValidation.validateAdjustment(
         field = income.other,
         path = "/income/other",
@@ -209,13 +217,14 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     val model = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
 
     model.expenses
-      .map(e =>
-        List(
-          BothExpensesValidation.bothExpensesValidation(
-            expenses = e,
-            additions = model.additions,
-            path = "/expenses",
-          )))
+      .map(
+        e =>
+          List(
+            BothExpensesValidation.bothExpensesValidation(
+              expenses = e,
+              additions = model.additions,
+              path = "/expenses",
+            )))
       .getOrElse(Nil)
   }
 

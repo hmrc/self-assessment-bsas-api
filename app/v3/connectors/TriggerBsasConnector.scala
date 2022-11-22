@@ -17,6 +17,7 @@
 package v3.connectors
 
 import config.AppConfig
+<<<<<<< HEAD
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v3.connectors.DownstreamUri.{ DesUri, TaxYearSpecificIfsUri }
 import v3.connectors.httpparsers.StandardDownstreamHttpParser._
@@ -25,6 +26,15 @@ import v3.models.response.TriggerBsasResponse
 
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
+=======
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.connectors.DownstreamUri.IfsUri
+import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.response.TriggerBsasResponse
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+>>>>>>> main
 
 @Singleton
 class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -44,7 +54,11 @@ class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppCon
 
     post(
       body = request.body,
+<<<<<<< HEAD
       uri = downstreamUri
+=======
+      IfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+>>>>>>> main
     )
   }
 }

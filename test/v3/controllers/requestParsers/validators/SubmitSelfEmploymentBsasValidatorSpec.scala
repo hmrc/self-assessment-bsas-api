@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators
 
-import play.api.libs.json.{JsNumber, _}
+import play.api.libs.json.{ JsNumber, _ }
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
@@ -26,35 +26,42 @@ import v3.models.utils.JsonErrorValidators
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
-  val validator = new SubmitSelfEmploymentBsasValidator()
+  val validator     = new SubmitSelfEmploymentBsasValidator()
   val calculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val nino          = "AA123456A"
 
   "validator" should {
     "return no errors" when {
       "valid parameters are provided" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(mtdRequest))) shouldBe List()
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequest))) shouldBe List()
       }
 
       "valid parameters are provided with only consolidated expenses" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(mtdRequestWithOnlyConsolidatedExpenses))) shouldBe List()
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequestWithOnlyConsolidatedExpenses))) shouldBe List()
       }
 
       "valid parameters are provided with only additions expenses" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
+      }
+
+      "a valid TYS tax year is supplied" in {
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino,
+                                                           calculationId,
+                                                           Some("2023-24"),
+                                                           AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = calculationId, AnyContentAsJson(mtdRequest))) shouldBe
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = calculationId, None, AnyContentAsJson(mtdRequest))) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return CalculationIdFormatError error" when {
       "an invalid calculationId is supplied" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino = nino, calculationId = "12345", AnyContentAsJson(mtdRequest))) shouldBe
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino = nino, calculationId = "12345", None, AnyContentAsJson(mtdRequest))) shouldBe
           List(CalculationIdFormatError)
       }
     }
@@ -65,9 +72,9 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
           SubmitSelfEmploymentBsasRawData(
             nino = nino,
             calculationId = calculationId,
+            None,
             AnyContentAsJson(Json.obj())
-          )) shouldBe List(
-          RuleIncorrectOrEmptyBodyError)
+          )) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
       "an object/array is empty or mandatory field is missing" when {
@@ -97,49 +104,40 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
               SubmitSelfEmploymentBsasRawData(
                 nino,
                 calculationId,
+                None,
                 body
               )) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(expectedPath))))
           }
       }
 
       "income object is empty" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(
-          nino,
-          calculationId,
-          AnyContentAsJson(Json.obj("income" -> JsObject.empty)))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(Json.obj("income" -> JsObject.empty)))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
       }
 
       "expenses object is empty" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(
-          nino,
-          calculationId,
-          AnyContentAsJson(Json.obj("expenses" -> JsObject.empty)))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/expenses"))))
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(Json.obj("expenses" -> JsObject.empty)))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/expenses"))))
       }
 
       "additions object is empty" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(
-          nino,
-          calculationId,
-          AnyContentAsJson(Json.obj("additions" -> JsObject.empty)))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/additions"))))
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(Json.obj("additions" -> JsObject.empty)))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/additions"))))
       }
 
       "fields are empty" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(
-          nino,
-          calculationId,
-          AnyContentAsJson(Json.obj("wagesAndStaffCostsDisallowable" -> JsObject.empty))
-        )) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(
+          SubmitSelfEmploymentBsasRawData(
+            nino,
+            calculationId,
+            None,
+            AnyContentAsJson(Json.obj("wagesAndStaffCostsDisallowable" -> JsObject.empty))
+          )) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
       "object is invalid" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(
-          nino,
-          calculationId,
-          AnyContentAsJson(Json.obj("income" -> "beans")))
-        ) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
       }
     }
 
@@ -212,7 +210,8 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
           SubmitSelfEmploymentBsasRawData(
             nino = nino,
             calculationId = calculationId,
-            AnyContentAsJson(json)
+            taxYear = None,
+            body = AnyContentAsJson(json),
           )) shouldBe List(
           ValueFormatError.copy(paths = Some(Seq(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99"))
       }
@@ -221,8 +220,9 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
         def doTest(value: JsNumber) =
           validator.validate(
             SubmitSelfEmploymentBsasRawData(
-              nino,
-              calculationId,
+              nino = nino,
+              calculationId = calculationId,
+              taxYear = None,
               body = AnyContentAsJson(body(value))
             )) shouldBe List(ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99"))
 
@@ -234,19 +234,39 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
 
     "return RuleBothExpensesSuppliedError" when {
       "consolidated and separate expenses provided" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(
-          nino,
-          calculationId,
-          AnyContentAsJson(mtdRequestWithBothExpenses)
-        )) shouldBe List(RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))))
+        validator.validate(
+          SubmitSelfEmploymentBsasRawData(
+            nino = nino,
+            calculationId = calculationId,
+            taxYear = None,
+            body = AnyContentAsJson(mtdRequestWithBothExpenses)
+          )) shouldBe List(RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))))
       }
     }
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = "badCalcId", AnyContentAsJson(mtdRequest))) shouldBe
+        validator.validate(
+          SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = "badCalcId", Some("2022-23"), AnyContentAsJson(mtdRequest))) shouldBe
           List(NinoFormatError, CalculationIdFormatError)
       }
     }
+
+    "return InvalidTaxYearParameterError error" in {
+      validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2022-23"), AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(
+        InvalidTaxYearParameterError)
+    }
+  }
+
+  "return TaxYearFormatError error" in {
+    validator.validate(SubmitSelfEmploymentBsasRawData(nino,
+                                                       calculationId,
+                                                       Some("NO_MORE_TAXES"),
+                                                       AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(TaxYearFormatError)
+  }
+
+  "return RuleTaxYearRangeInvalidError error" in {
+    validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2021-23"), AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(
+      RuleTaxYearRangeInvalidError)
   }
 }

@@ -56,14 +56,14 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
       endpointName = "submitSelfEmploymentBsas"
     )
 
-  def submitSelfEmploymentBsas(nino: String, calculationId: String): Action[JsValue] =
+  def submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, AnyContentAsJson(request.body))
+      val rawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, taxYear, AnyContentAsJson(request.body))
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
@@ -123,16 +123,32 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     // @formatter:off
 
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | CalculationIdFormatError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleBothExpensesError.code) |
-           CustomMtdError(ValueFormatError.code) | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
-      case RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded |
-           RuleAlreadyAdjusted | RuleOverConsolidatedExpensesThreshold |
-           RuleTradingIncomeAllowanceClaimed |
-           RuleResultingValueNotPermitted => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+    case _
+      if errorWrapper.containsAnyOf(
+        BadRequestError,
+        NinoFormatError,
+        CalculationIdFormatError,
+        RuleIncorrectOrEmptyBodyError,
+        RuleBothExpensesError,
+        ValueFormatError,
+        RuleTypeOfBusinessIncorrectError,
+        InvalidTaxYearParameterError,
+        TaxYearFormatError,
+        RuleTaxYearNotSupportedError,
+        RuleTaxYearRangeInvalidError
+      ) => BadRequest(Json.toJson(errorWrapper))
+    case _
+      if errorWrapper.containsAnyOf(
+        RuleSummaryStatusInvalid,
+        RuleSummaryStatusSuperseded,
+        RuleAlreadyAdjusted,
+        RuleOverConsolidatedExpensesThreshold,
+        RuleTradingIncomeAllowanceClaimed,
+        RuleResultingValueNotPermitted
+      ) => Forbidden(Json.toJson(errorWrapper))
+    case NotFoundError   => NotFound(Json.toJson(errorWrapper))
+    case InternalError => InternalServerError(Json.toJson(errorWrapper))
+    case _               => unhandledError(errorWrapper)
     }
 
     // @formatter:on

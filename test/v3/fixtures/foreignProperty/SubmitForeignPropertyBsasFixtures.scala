@@ -172,4 +172,43 @@ object SubmitForeignPropertyBsasFixtures {
       )
     )
   )
+
+  val mtdRequestValid: JsValue = Json.parse("""
+      |{
+      |   "foreignFhlEea": {
+      |      "income": {
+      |         "totalRentsReceived": 1.12
+      |      },
+      |      "expenses": {
+      |         "premisesRunningCosts": 3.12,
+      |         "repairsAndMaintenance": 4.12,
+      |         "financialCosts": 5.12,
+      |         "professionalFees": 6.12,
+      |         "costOfServices": 7.12,
+      |         "other": 8.12,
+      |         "travelCosts": 9.12
+      |      }
+      |   }
+      |}
+      |""".stripMargin)
+
+  val downstreamRequestValid: JsValue = Json.parse("""
+      |{
+      |   "incomeSourceType": "03",
+      |   "adjustments": {
+      |      "income": {
+      |         "rentAmount": 1.12
+      |      },
+      |      "expenses": {
+      |         "premisesRunningCosts": 3.12,
+      |         "repairsAndMaintenance": 4.12,
+      |         "financialCosts": 5.12,
+      |         "professionalFees": 6.12,
+      |         "costOfServices": 7.12,
+      |         "other": 8.12,
+      |         "travelCosts": 9.12
+      |      }
+      |   }
+      |}
+      |""".stripMargin)
 }

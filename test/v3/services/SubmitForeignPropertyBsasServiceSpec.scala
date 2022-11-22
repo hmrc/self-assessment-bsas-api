@@ -54,8 +54,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ))
     )
 
-  private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
-
+  private val request = SubmitForeignPropertyBsasRequestData(nino, id, None, fhlEeaBody)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -77,17 +76,17 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
 
           MockSubmitForeignPropertyBsasConnector
             .submitForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_CORRELATIONID", InternalError),
@@ -110,7 +109,14 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError),
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+        ("INCOME_SOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 

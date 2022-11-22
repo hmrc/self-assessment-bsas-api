@@ -22,26 +22,29 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import play.api.http.Status
-import v3.connectors.DownstreamUri.DesUri
+import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient,
-                                                  val appConfig: AppConfig) extends BaseDownstreamConnector {
+class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(implicit hc: HeaderCarrier,
+                                                                             ec: ExecutionContext,
+                                                                             correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-    put(
-      body = request.body,
-      DesUri[Unit](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.calculationId}")
-    )
+    import request._
+
+    val uri = taxYear match {
+      case Some(taxYearValue) if taxYearValue.useTaxYearSpecificApi =>
+        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/${nino.nino}/$calculationId")
+      case _ => IfsUri[Unit](s"income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId")
+    }
+
+    put(body = request.body, uri = uri)
   }
 }

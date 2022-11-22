@@ -17,16 +17,14 @@
 package v3.connectors
 
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.DesUri
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.connectors.DownstreamUri.IfsUri
+import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 
 @Singleton
 class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
@@ -41,7 +39,7 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
     val calcId = request.calculationId
 
     get(
-      DesUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
+      IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
     )
   }
 }
