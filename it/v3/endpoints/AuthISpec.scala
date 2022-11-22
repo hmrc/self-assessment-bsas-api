@@ -24,7 +24,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v3.fixtures.TriggerBsasRequestBodyFixtures.desResponse
+import v3.fixtures.TriggerBsasRequestBodyFixtures.ifsResponse
 import v3.models.domain.TypeOfBusiness
 import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
@@ -79,7 +79,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.POST, desUrl, OK, Json.parse(desResponse))
+          DownstreamStub.onSuccess(DownstreamStub.POST, desUrl, OK, Json.parse(ifsResponse))
         }
 
         val response: WSResponse = await(request().post(requestJson))

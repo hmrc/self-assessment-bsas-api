@@ -37,7 +37,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val desJson: JsValue = Json.parse(
+  val ifsJson: JsValue = Json.parse(
     """
       |{
       |   "incomeSourceType" : "01",
@@ -118,7 +118,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val desResponse: String =
+  val ifsResponse: String =
     """
       |{
       | "metadata": {

@@ -31,7 +31,7 @@ class TriggerBsasRequestBodySpec extends UnitSpec {
 
     "writes" should {
       "return the expected JSON" in {
-        Json.toJson(model) shouldBe desJson
+        Json.toJson(model) shouldBe ifsJson
       }
     }
   }

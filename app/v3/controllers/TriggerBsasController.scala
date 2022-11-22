@@ -127,8 +127,7 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
             RuleIncorrectOrEmptyBodyError,
             BusinessIdFormatError,
             RuleEndBeforeStartDateError,
-            RuleTaxYearNotSupportedError,
-            InvalidTaxYearParameterError
+            RuleTaxYearNotSupportedError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
       case _
