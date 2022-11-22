@@ -97,6 +97,7 @@ class RetrieveForeignPropertyBsasController @Inject()(
             NinoFormatError,
             TaxYearFormatError,
             RuleTaxYearRangeInvalidError,
+            InvalidTaxYearParameterError,
             RuleTaxYearNotSupportedError,
             RuleTypeOfBusinessIncorrectError,
             CalculationIdFormatError

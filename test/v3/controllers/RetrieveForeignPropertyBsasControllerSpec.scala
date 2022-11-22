@@ -116,7 +116,10 @@ class RetrieveForeignPropertyBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (CalculationIdFormatError, BAD_REQUEST)
+          (CalculationIdFormatError, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
