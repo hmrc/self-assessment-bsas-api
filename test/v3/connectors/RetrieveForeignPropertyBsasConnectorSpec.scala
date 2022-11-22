@@ -37,7 +37,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel))
 
-      "a valid request with queryParams is supplied" in new DesTest with Test {
+      "a valid request with queryParams is supplied" in new IfsTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId)
 
         val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId"

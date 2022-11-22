@@ -16,11 +16,8 @@
 
 package v3.connectors
 
-import mocks.MockAppConfig
 import domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
-import v3.mocks.MockHttpClient
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
@@ -29,34 +26,23 @@ import scala.concurrent.Future
 
 class TriggerBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: Nino    = Nino("AA123456A")
   val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test {
+    _: ConnectorTest =>
     val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnv returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    MockedAppConfig.ifsEnabled returns false
   }
 
   "triggerBsas" must {
     val request = TriggerBsasRequest(nino, model)
 
-    "post a TriggerBsasRequest body and return the result" in new Test {
+    "post a TriggerBsasRequest body and return the result" in new IfsTest with Test {
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
-      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-      val requiredHeadersPost: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
-      MockedHttpClient.post(
+      willPost(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-        config = dummyHeaderCarrierConfig,
-        body = model,
-        requiredHeaders = requiredHeadersPost,
-        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
+        body = model
       ).returns(Future.successful(outcome))
 
       await(connector.triggerBsas(request)) shouldBe outcome

@@ -17,16 +17,14 @@
 package v3.connectors
 
 import config.AppConfig
-
-import javax.inject.{ Inject, Singleton }
 import play.api.http.Status
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.{ DesUri, TaxYearSpecificIfsUri }
-import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -43,7 +41,7 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient, val app
       case Some(ty) if ty.useTaxYearSpecificApi =>
         TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/${nino.nino}/$calculationId")
       case _ =>
-        DesUri[Unit](s"income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId")
+        IfsUri[Unit](s"income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId")
     }
 
     put(body = request.body, uri)
