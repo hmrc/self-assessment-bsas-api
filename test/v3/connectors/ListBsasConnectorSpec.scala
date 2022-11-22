@@ -47,7 +47,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
 
   "listBsas" should {
     "return a valid response" when {
-      "a valid request is supplied" in new DesTest with Test {
+      "a valid request is supplied" in new IfsTest with Test {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
         val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponseModel))
@@ -74,7 +74,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
       DownstreamErrors.single(DownstreamErrorCode("SOME_ERROR"))
     val outcome = Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
-    "return the error" in new DesTest with Test {
+    "return the error" in new IfsTest with Test {
       def taxYear: TaxYear                             = preTysTaxYear
       def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 

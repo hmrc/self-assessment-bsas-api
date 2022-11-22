@@ -19,9 +19,8 @@ package v3.connectors
 import config.AppConfig
 
 import javax.inject.{ Inject, Singleton }
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v3.connectors.DownstreamUri.{ DesUri, TaxYearSpecificIfsUri }
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
+import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import v3.models.request.ListBsasRequest
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
@@ -58,7 +57,7 @@ class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig
         "taxYear" -> Some(taxYear.asDownstream)
       )
       val mappedQueryParams: Map[String, String] = queryMap(commonQueryParams ++ additionalQueryParams)
-      get(uri = DesUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${nino.nino}"),
+      get(uri = IfsUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${nino.nino}"),
           queryParams = mappedQueryParams.toSeq)
     }
 
