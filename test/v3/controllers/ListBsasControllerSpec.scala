@@ -16,7 +16,7 @@
 
 package v3.controllers
 
-import domain.{Nino, TaxYear}
+import domain.Nino
 import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -27,7 +27,7 @@ import v3.mocks.MockCurrentDateProvider
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockListBsasRequestParser
 import v3.mocks.services.{MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
-import v3.models.domain.TypeOfBusiness
+import v3.models.domain.{TaxYear, TypeOfBusiness}
 import v3.models.errors._
 import v3.models.hateoas.HateoasWrapper
 import v3.models.outcomes.ResponseWrapper

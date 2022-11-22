@@ -53,6 +53,12 @@ object TriggerBsasRequestBodyFixtures {
     "anId"
   )
 
+  val tysModel: TriggerBsasRequestBody = TriggerBsasRequestBody(
+    AccountingPeriod("2023-05-01", "2023-05-02"),
+    TypeOfBusiness.`self-employment`.toString,
+    "anId"
+  )
+
   val responseObj: TriggerBsasResponse = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
   val response: JsValue = Json.parse(

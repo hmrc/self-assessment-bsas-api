@@ -18,10 +18,10 @@ package v3.controllers.requestParsers
 
 import java.time.LocalDate
 import support.UnitSpec
-import domain.{Nino, TaxYear}
+import domain.Nino
 import v3.mocks.MockCurrentDateProvider
 import v3.mocks.validators.MockListBsasValidator
-import v3.models.domain.TypeOfBusiness
+import v3.models.domain.{TaxYear, TypeOfBusiness}
 import v3.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v3.models.request.{ListBsasRawData, ListBsasRequest}
 

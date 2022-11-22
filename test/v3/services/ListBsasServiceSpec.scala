@@ -16,11 +16,12 @@
 
 package v3.services
 
-import domain.{Nino, TaxYear}
+import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.controllers.EndpointLogContext
 import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector
+import v3.models.domain.TaxYear
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest

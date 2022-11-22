@@ -37,9 +37,9 @@ class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppCon
 
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {
-        TaxYearSpecificIfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
+        TaxYearSpecificIfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}")
       } else {
-        IfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+        IfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}")
       }
 
     post(

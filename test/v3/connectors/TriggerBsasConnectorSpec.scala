@@ -21,6 +21,7 @@ import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
+import v3.models.domain.TaxYear
 
 import scala.concurrent.Future
 
@@ -35,9 +36,9 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   }
 
   "triggerBsas" must {
-    val request = TriggerBsasRequest(nino, model)
 
     "post a TriggerBsasRequest body and return the result" in new IfsTest with Test {
+      val request = TriggerBsasRequest(nino, model)
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
 
       willPost(
@@ -47,5 +48,20 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
       await(connector.triggerBsas(request)) shouldBe outcome
     }
+
+    "post a TriggerBsasRequest body and return the result given a TYS tax year" in new TysIfsTest with Test {
+      val request = TriggerBsasRequest(nino, tysModel)
+      val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
+
+      val taxYear: TaxYear = TaxYear.fromIso("2023-05-02")
+
+      willPost(
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}",
+        body = tysModel
+      ).returns(Future.successful(outcome))
+
+      await(connector.triggerBsas(request)) shouldBe outcome
+    }
+
   }
 }

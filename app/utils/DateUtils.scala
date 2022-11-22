@@ -16,7 +16,7 @@
 
 package utils
 
-import domain.TaxYear
+import v3.models.domain.TaxYear
 import java.time.LocalDate
 
 object DateUtils {

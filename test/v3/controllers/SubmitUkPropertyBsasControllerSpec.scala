@@ -16,7 +16,7 @@
 
 package v3.controllers
 
-import domain.{Nino, TaxYear}
+import domain.Nino
 import mocks.MockIdGenerator
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -26,6 +26,7 @@ import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
 import v3.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import v3.models.domain.TaxYear
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{ HateoasWrapper, Link }

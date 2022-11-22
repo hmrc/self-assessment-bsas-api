@@ -16,10 +16,9 @@
 
 package v3.models.response.listBsas
 
-import domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v3.models.domain.{IncomeSourceType, TaxYear, TypeOfBusiness}
 
 case class BusinessSourceSummary[I](businessId: String,
                                     typeOfBusiness: TypeOfBusiness,
