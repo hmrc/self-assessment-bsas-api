@@ -17,15 +17,18 @@
 package v3.controllers.requestParsers.validators.validations
 
 import v3.models.domain.TaxYear
-import v3.models.errors.{InvalidTaxYearParameterError, MtdError}
+import v3.models.errors.{ InvalidTaxYearParameterError, MtdError }
 
 object TaxYearTYSParameterValidation {
 
   def validate(taxYear: String): List[MtdError] = {
 
-    val year = TaxYear.fromMtd(taxYear).year
+    if (taxYear.length < 4) { List(InvalidTaxYearParameterError) } else {
+      val year = TaxYear.fromMtd(taxYear).year
 
-    if (year >= TaxYear.tysTaxYear) NoValidationErrors else List(InvalidTaxYearParameterError)
+      if (year >= TaxYear.tysTaxYear) NoValidationErrors else List(InvalidTaxYearParameterError)
+    }
+
   }
 
 }

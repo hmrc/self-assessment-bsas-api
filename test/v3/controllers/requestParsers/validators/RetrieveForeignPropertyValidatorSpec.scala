@@ -17,39 +17,60 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v3.models.errors.{CalculationIdFormatError, NinoFormatError}
+import v3.models.errors.{ CalculationIdFormatError, InvalidTaxYearParameterError, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError }
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRawData
 
 class RetrieveForeignPropertyValidatorSpec extends UnitSpec {
 
-  val validNino = "AA123456A"
-  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val invalidNino = "WALRUS"
+  val validNino            = "AA123456A"
+  val validCalculationId   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val validTaxYear         = Some("2023-24")
+  val invalidNino          = "WALRUS"
   val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-walrus"
 
   val validator = new RetrieveForeignPropertyValidator()
 
   "validator" should {
     "return no errors" when {
-      "passed valid raw data with all fields" in {
-        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, taxYear=None)
+      "passed valid raw data for a non-tys request" in {
+        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, taxYear = None)
+        validator.validate(input) shouldBe List()
+      }
+      "passed valid raw data for a tys request" in {
+        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, validTaxYear)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveForeignPropertyBsasRawData(invalidNino, validCalculationId, taxYear=None)
+        val input = RetrieveForeignPropertyBsasRawData(invalidNino, validCalculationId, taxYear = None)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed raw data with an invalid calculation id" in {
-        val input = RetrieveForeignPropertyBsasRawData(validNino, invalidCalculationId, taxYear=None)
+        val input = RetrieveForeignPropertyBsasRawData(validNino, invalidCalculationId, taxYear = None)
         validator.validate(input) shouldBe List(CalculationIdFormatError)
       }
     }
+    "return TYS errors for an invalid TYS request" when {
+      "passed raw data with an invalid taxYear" in {
+        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, Some("2022-23"))
+        validator.validate(input) shouldBe List(InvalidTaxYearParameterError)
+      }
+      "passed raw data with a invalidly formatted taxYear" in {
+        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, Some("2023"))
+        validator.validate(input) shouldBe List(TaxYearFormatError)
+      }
+      "passed raw data with a invalid range of taxYears" in {
+        val input = RetrieveForeignPropertyBsasRawData(validNino, validCalculationId, Some("2023-27"))
+        validator.validate(input) shouldBe List(RuleTaxYearRangeInvalidError)
+      }
+    }
     "return multiple errors" when {
+      //Idk why this test fails.
+      //// If you swap the validations around on line 30 of RetrieveForeignPropertyValidator, it fails in a different way.
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveForeignPropertyBsasRawData(invalidNino, invalidCalculationId, taxYear=None)
-        validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError)
+        val input = RetrieveForeignPropertyBsasRawData(invalidNino, invalidCalculationId, Some("2022-23"))
+        validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError, InvalidTaxYearParameterError)
       }
     }
   }
