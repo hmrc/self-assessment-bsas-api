@@ -34,29 +34,25 @@ class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig
     import v3.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
 
-    val commonQueryParams = Map(
+    val queryParams = Map(
       "incomeSourceId"   -> incomeSourceId,
       "incomeSourceType" -> incomeSourceType
     )
 
-    def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {
+    val mappedQueryParams: Map[String, String] = queryParams.collect {
       case (k: String, Some(v: String)) => (k, v)
     }
 
     if (taxYear.useTaxYearSpecificApi) {
-      val mappedQueryParams: Map[String, String] = queryMap(commonQueryParams)
       get(
         uri =
           TaxYearSpecificIfsUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}"),
         queryParams = mappedQueryParams.toSeq
       )
     } else {
-      val additionalQueryParams = Map(
-        "taxYear" -> Some(taxYear.asDownstream)
-      )
-      val mappedQueryParams: Map[String, String] = queryMap(commonQueryParams ++ additionalQueryParams)
+      val mappedQueryParamsWithTaxYear: Map[String, String] = mappedQueryParams ++ Map("taxYear" -> taxYear.asDownstream)
       get(uri = IfsUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${nino.nino}"),
-          queryParams = mappedQueryParams.toSeq)
+          queryParams = mappedQueryParamsWithTaxYear.toSeq)
     }
 
   }
