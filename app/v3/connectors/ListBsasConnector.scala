@@ -17,13 +17,11 @@
 package v3.connectors
 
 import config.AppConfig
-
 import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import v3.models.request.ListBsasRequest
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
-
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton

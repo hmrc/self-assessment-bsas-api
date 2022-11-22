@@ -22,7 +22,7 @@ import v3.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v3.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v3.models.domain.TaxYear
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 
 import scala.concurrent.Future
 
@@ -44,7 +44,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   "submitBsas" must {
 
-    "post a SubmitBsasRequest body and return the result" in new DesTest with Test {
+    "post a SubmitBsasRequest body and return the result" in new IfsTest with Test {
       val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
       val request: SubmitSelfEmploymentBsasRequestData =
         SubmitSelfEmploymentBsasRequestData(nino, bsasId, None, submitSelfEmploymentBsasRequestBodyModel)

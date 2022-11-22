@@ -52,7 +52,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "SubmitUKPropertyBsasConnector" when {
     "SubmitUKPropertyBsas" must {
-      "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new DesTest with Test {
+      "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new IfsTest with Test {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
         val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId"

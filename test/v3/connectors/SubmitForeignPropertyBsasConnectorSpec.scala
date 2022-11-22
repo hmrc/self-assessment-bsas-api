@@ -40,7 +40,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "submitBsas" must {
 
-    "post a SubmitBsasRequest body and return the result for a request without a tax year" in new DesTest with Test {
+    "post a SubmitBsasRequest body and return the result for a request without a tax year" in new IfsTest with Test {
       val request = requestWith(taxYear = None)
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
@@ -50,7 +50,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
     }
 
-    "post a SubmitBsasRequest body and return the result for a pre-TYS tax year request" in new DesTest with Test {
+    "post a SubmitBsasRequest body and return the result for a pre-TYS tax year request" in new IfsTest with Test {
       val request = requestWith(Some(TaxYear.fromMtd("2022-23")))
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
