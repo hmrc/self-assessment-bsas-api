@@ -17,7 +17,6 @@
 package v3.connectors
 
 import config.AppConfig
-<<<<<<< HEAD
 
 import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
