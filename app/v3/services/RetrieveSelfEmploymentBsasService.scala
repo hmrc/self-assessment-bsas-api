@@ -48,7 +48,7 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {
-      responseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
+      responseWrapper    <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(responseWrapper))
     } yield mtdResponseWrapper
 
@@ -59,19 +59,19 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
 
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_RETURN" -> InternalError,
-      "UNPROCESSABLE_ENTITY" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_RETURN"            -> InternalError,
+      "UNPROCESSABLE_ENTITY"      -> InternalError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "NOT_FOUND" -> NotFoundError,
+      "NOT_FOUND"              -> NotFoundError,
     )
 
     errors ++ extraTysErrors

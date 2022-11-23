@@ -42,7 +42,7 @@ class RetrieveSelfEmploymentBsasConnector @Inject()
     val uri = request.taxYear match {
       case Some(taxYear) =>
         TaxYearSpecificIfsUri[RetrieveSelfEmploymentBsasResponse](
-          s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino}/$calculationId")
+          s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
       case None =>
         IfsUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
     }

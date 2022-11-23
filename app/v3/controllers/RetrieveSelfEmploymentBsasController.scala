@@ -51,7 +51,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, calculationId: String, taxYear: Option[String] = None): Action[AnyContent] =
+  def handleRequest(nino: String, calculationId: String, taxYear: Option[String] = None): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
@@ -89,17 +89,20 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case _ if errorWrapper.containsAnyOf(
-        BadRequestError,
-        NinoFormatError,
-        TaxYearFormatError,
-        RuleTaxYearRangeInvalidError,
-        InvalidTaxYearParameterError,
-        CalculationIdFormatError,
-        RuleTypeOfBusinessIncorrectError) => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                  => NotFound(Json.toJson(errorWrapper))
-      case RuleTaxYearNotSupportedError   => InternalServerError(Json.toJson(errorWrapper))
-      case InternalError                  => InternalServerError(Json.toJson(errorWrapper))
-      case _                              => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            InvalidTaxYearParameterError,
+            CalculationIdFormatError,
+            RuleTypeOfBusinessIncorrectError,
+            RuleTaxYearNotSupportedError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 }

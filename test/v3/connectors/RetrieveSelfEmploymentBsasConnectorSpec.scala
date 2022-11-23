@@ -26,22 +26,23 @@ import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: Nino            = Nino("AA123456A")
   val calculationId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   trait Test {
     _: ConnectorTest =>
 
     val connector: RetrieveSelfEmploymentBsasConnector = new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+
     def requestWith(taxYear: Option[TaxYear]): RetrieveSelfEmploymentBsasRequestData =
       RetrieveSelfEmploymentBsasRequestData(nino, calculationId, taxYear)
   }
 
   "RetrieveSelfEmploymentBsasConnectorSpec" when {
     "retrieveSelfEmploymentBsas is called" must {
-      "a valid request with queryParams is supplied" in {
+      "a valid request is supplied" in {
         new IfsTest with Test {
-          val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+          val outcome     = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
           val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
           await(connector.retrieveSelfEmploymentBsas(requestWith(None))) shouldBe outcome
@@ -50,10 +51,10 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     }
 
     "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year" must {
-      "a valid request with queryParams is supplied" in {
+      "a valid request is supplied" in {
         new TysIfsTest with Test {
-          val taxYear = TaxYear.fromMtd("2023-24")
-          val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+          val taxYear     = TaxYear.fromMtd("2023-24")
+          val outcome     = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
           val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/$calculationId"
 
           willGet(url = expectedUrl) returns Future.successful(outcome)

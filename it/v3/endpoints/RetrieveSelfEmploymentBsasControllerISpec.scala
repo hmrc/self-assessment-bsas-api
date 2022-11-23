@@ -19,19 +19,19 @@ package v3.endpoints
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.domain.IncomeSourceType
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino          = "AA123456A"
-    val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
+    val nino                    = "AA123456A"
+    val calculationId           = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
     def taxYear: Option[String] = None
 
     def uri: String = s"/$nino/self-employment/$calculationId"
@@ -48,7 +48,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
   }
 
@@ -58,7 +58,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait TysIfsTest extends Test {
-    override def taxYear: Option[String] = Some("2023-24") // TODO
+    override def taxYear: Option[String] = Some("2023-24")
 
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/${nino}/$calculationId"
   }
@@ -98,7 +98,10 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       "valid request is made but downstream response has invalid type of business" in new NonTysTest {
 
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
+          DownstreamStub.onSuccess(DownstreamStub.GET,
+                                   downstreamUrl,
+                                   OK,
+                                   downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
         }
 
         val response: WSResponse = await(request.get)
@@ -111,14 +114,18 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String,
+                              requestBsasId: String,
+                              taxYearString: Option[String],
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-          override val nino: String          = requestNino
-          override val calculationId: String = requestBsasId
+          override val nino: String            = requestNino
+          override val calculationId: String   = requestBsasId
+          override def taxYear: Option[String] = taxYearString
 
-          override def setupStubs(): Unit = {
-          }
+          override def setupStubs(): Unit = {}
 
           val response: WSResponse = await(request.get)
           response.status shouldBe expectedStatus
@@ -128,8 +135,10 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", BAD_REQUEST, CalculationIdFormatError)
+        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-24"), BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("2023-24"), BAD_REQUEST, CalculationIdFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-2024"), BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2019-20"), BAD_REQUEST, InvalidTaxYearParameterError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -156,7 +165,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         }
       }
 
-      val input = Seq(
+      val errors = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
@@ -164,11 +173,11 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
-        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", INTERNAL_SERVER_ERROR, RuleTaxYearNotSupportedError),
+        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+      errors.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
 }
