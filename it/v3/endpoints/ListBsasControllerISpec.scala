@@ -18,51 +18,80 @@ package v3.endpoints
 
 import play.api.http.HeaderNames.ACCEPT
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
+import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 
-class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
+class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
   private trait Test {
+    // common
     val nino = "AA123456B"
-    val taxYear: Option[String] = Some("2019-20")
+
+    // mtd
+    def mtdUri: String = s"/$nino"
+    def taxYear: Option[String]
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String] = None
+    val businessId: Option[String]     = Some("XAIS12345678910")
 
-    def uri: String = s"/$nino"
-    def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino"
-    def setupStubs(): StubMapping
-    def request: WSRequest = {
-
-      val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
+    def mtdQueryParams: Seq[(String, String)] =
+      Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
         .collect {
           case (k, Some(v)) => (k, v)
         }
+
+    // downstream
+    def downstreamUri: String
+    def downstreamTaxYear: Option[String]
+
+    def setupStubs(): StubMapping
+
+    def request: WSRequest = {
       setupStubs()
-      buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
+      buildRequest(mtdUri)
+        .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+    def errorBody(code: String): String =
+      s"""{
+         |  "code": "$code",
+         |  "reason": "error message"
+         |}""".stripMargin
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: Option[String]           = Some("2019-20")
+    def downstreamTaxYear: Option[String] = Some("2020")
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: Option[String]           = Some("2023-24")
+    def downstreamTaxYear: Option[String] = Some("23-24")
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
   }
 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "valid request is made" in new Test {
+      "valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get)
@@ -72,13 +101,29 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
         response.json shouldBe summariesJSONWithHateoas(nino)
       }
 
-      "valid request is made with foreign property" in new Test {
+      "valid request is made with a Tax Year Specific (TYS) tax year" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, listBsasResponseDownstreamJsonForeign)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJSONWithHateoas(nino)
+      }
+
+      "valid request is made with foreign property" in new NonTysTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
         }
 
         val response: WSResponse = await(request.get)
@@ -88,14 +133,30 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
         response.json shouldBe summariesJSONForeignWithHateoas(nino)
       }
 
-      "valid request is made without a tax year" in new Test {
+      "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJSONForeignWithHateoas(nino)
+      }
+
+      "valid request is made without a tax year" in new NonTysTest {
         override val taxYear: Option[String] = None
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, listBsasDownstreamJsonMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get)
@@ -108,15 +169,18 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestTaxYear: String,
-                              requestTypeOfBusiness: Option[String], requestBusinessId: Option[String],
-                              expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new Test {
+      def validationErrorTest(requestNino: String,
+                              requestTaxYear: String,
+                              requestTypeOfBusiness: Option[String],
+                              requestBusinessId: Option[String],
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
+        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
-          override val nino: String = requestNino
-          override val taxYear: Option[String] = Some(requestTaxYear)
+          override val nino: String                   = requestNino
+          override val taxYear: Option[String]        = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String] = requestBusinessId
+          override val businessId: Option[String]     = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -142,22 +206,16 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
-    "des service error" when {
+    "downstream service error" when {
 
-      def errorBody(code: String): String =
-        s"""{
-           |  "code": "$code",
-           |  "reason": "des message"
-           |}""".stripMargin
-
-      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"des returns an $desCode error and status $desStatus" in new Test {
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -167,7 +225,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
         }
       }
 
-      val input = Seq(
+      val errors = Seq(
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
         (BAD_REQUEST, "INVALID_INCOMESOURCEID", BAD_REQUEST, BusinessIdFormatError),
@@ -177,7 +236,16 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture{
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+
+      val extraTysErrors = Seq(
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+        (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", BAD_REQUEST, BusinessIdFormatError),
+        (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
 }

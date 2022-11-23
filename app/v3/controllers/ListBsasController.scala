@@ -20,17 +20,17 @@ import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import utils._
 import v3.controllers.requestParsers.ListBsasRequestParser
 import v3.hateoas.HateoasFactory
 import v3.models.errors._
 import v3.models.request.ListBsasRawData
 import v3.models.response.listBsas.ListBsasHateoasData
-import v3.services.{EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
+import v3.services.{ EnrolmentsAuthService, ListBsasService, MtdIdLookupService }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -39,9 +39,8 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    service: ListBsasService,
                                    hateoasFactory: HateoasFactory,
                                    cc: ControllerComponents,
-                                   val idGenerator: IdGenerator
-                                  )(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -53,7 +52,6 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -63,7 +61,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.listBsas(parsedRequest))
+          response      <- EitherT(service.listBsas(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrapList(response.responseData, ListBsasHateoasData(nino, response.responseData))
@@ -81,7 +79,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -92,16 +90,19 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError |
-           NinoFormatError |
-           TaxYearFormatError |
-           TypeOfBusinessFormatError |
-           RuleTaxYearRangeInvalidError |
-           RuleTaxYearNotSupportedError |
-           BusinessIdFormatError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            TypeOfBusinessFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            BusinessIdFormatError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case _             => unhandledError(errorWrapper)
     }
 }
