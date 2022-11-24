@@ -36,7 +36,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val ifsJson: JsValue = Json.parse("""
+  val downstreamJson: JsValue = Json.parse("""
       |{
       |   "incomeSourceType" : "01",
       |   "incomeSourceId" : "anId",

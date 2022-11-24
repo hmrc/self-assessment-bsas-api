@@ -38,6 +38,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   trait Test {
     _: ConnectorTest =>
     def taxYear: TaxYear
+    val request: TriggerBsasRequest = TriggerBsasRequest(nino, model)
     val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
@@ -61,7 +62,6 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   "triggerBsas" must {
 
     "post a TriggerBsasRequest body and return the result" in new IfsTest with Test {
-      val request = TriggerBsasRequest(nino, model)
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
 
       def taxYear: TaxYear = preTysTaxYear
@@ -72,7 +72,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     }
 
     "post a TriggerBsasRequest body and return the result given a TYS tax year" in new TysIfsTest with Test {
-      val request = TriggerBsasRequest(nino, tysModel)
+      override val request = TriggerBsasRequest(nino, tysModel)
       val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
 
       def taxYear: TaxYear = tysTaxYear
@@ -93,6 +93,17 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       def taxYear: TaxYear = preTysTaxYear
 
       stubHttpResponse(outcome)
+
+      val result: DownstreamOutcome[TriggerBsasResponse] =
+        await(connector.triggerBsas(request))
+      result shouldBe outcome
+    }
+
+    "return the error given a TYS tax year request" in new TysIfsTest with Test {
+      override val request = TriggerBsasRequest(nino, tysModel)
+      def taxYear: TaxYear = tysTaxYear
+
+      stubTysHttpResponse(outcome)
 
       val result: DownstreamOutcome[TriggerBsasResponse] =
         await(connector.triggerBsas(request))
