@@ -17,9 +17,9 @@
 package v3.connectors
 
 import mocks.MockAppConfig
-import v2.models.domain.DownstreamTaxYear
+import v3.models.domain.TaxYear
 import v3.mocks.MockHttpClient
-import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
+import v3.models.request.submitBsas.selfEmployment.{ Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody }
 
 import scala.concurrent.Future
 
@@ -27,23 +27,46 @@ class SubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 
-  val taxYear: DownstreamTaxYear = DownstreamTaxYear.fromMtd("2021-22")
+  val taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
-  val income: Income =  Income(Some(100.99), Some(100.99))
+  val income: Income = Income(Some(100.99), Some(100.99))
 
-  val additions: Additions = Additions(Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99))
+  val additions: Additions = Additions(
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99)
+  )
 
-  val expenses: Expenses = Expenses(Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99),
-    Some(100.99), Some(100.99), Some(100.99))
+  val expenses: Expenses = Expenses(
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99),
+    Some(100.99)
+  )
 
   val request: SubmitSelfEmploymentBsasRequestBody =
     SubmitSelfEmploymentBsasRequestBody(Some(income), Some(expenses), Some(additions))
@@ -62,13 +85,13 @@ class SubmitSelfEmploymentBsasNrsProxyConnectorSpec extends ConnectorSpec {
     "submit with valid data" should {
       "be successful" in new Test {
 
-
         MockedHttpClient
           .post(
             url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
             config = dummyHeaderCarrierConfig,
             body = request
-          ).returns(Future.successful((): Unit))
+          )
+          .returns(Future.successful((): Unit))
 
         await(connector.submit(nino, request)) shouldBe ((): Unit)
       }
