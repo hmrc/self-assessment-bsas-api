@@ -16,19 +16,33 @@
 
 package v3.controllers.requestParsers.validators
 
-import v3.controllers.requestParsers.validators.validations.{CalculationIdValidation, NinoValidation}
+import v3.controllers.requestParsers.validators.validations.{
+  CalculationIdValidation,
+  NinoValidation,
+  TaxYearTYSParameterValidation,
+  TaxYearValidation
+}
 import v3.models.errors.MtdError
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRawData
 
 class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignPropertyBsasRawData] {
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   private def parameterFormatValidation: RetrieveForeignPropertyBsasRawData => List[List[MtdError]] = (data: RetrieveForeignPropertyBsasRawData) => {
+
     List(
       NinoValidation.validate(data.nino),
-      CalculationIdValidation.validate(data.calculationId)
+      CalculationIdValidation.validate(data.calculationId),
+      data.taxYear.map(TaxYearValidation.validate).getOrElse(Nil)
     )
+
+  }
+
+  private def parameterRuleValidation: RetrieveForeignPropertyBsasRawData => List[List[MtdError]] = (data: RetrieveForeignPropertyBsasRawData) => {
+
+    List(data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil))
+
   }
 
   override def validate(data: RetrieveForeignPropertyBsasRawData): List[MtdError] = run(validationSet, data).distinct

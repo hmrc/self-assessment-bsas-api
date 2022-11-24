@@ -2,15 +2,31 @@ is:
   - headers.acceptJson
   - headers.testScenarioHeader
   - errors.formatNino
+  - errors.formatTaxYear
   - errors.formatCalculationId
   - errors.ruleTypeOfBusinessIncorrectForeign
   - errors.clientOrAgentNotAuthorised
   - errors.summaryNotFound
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.invalidTaxYear
 displayName: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
 description: This endpoint allows the user to request a specific Business Source Adjustable Summary for a Foreign property business EEA Furnished Holiday Letting (FHL) or a Non FHL Foreign property business. A National Insurance number and Calculation Id must be provided.
 (annotations.sandboxData): !include scenarios/retrieve_foreign_property_bsas.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+queryParameters:
+  taxYear:
+    description: |
+      The tax year to which the data applies in the format YYYY-YY.
+      The start year and end year must not span two tax years. The parameter value must be at least 2023-24.
+      No gaps are allowed, for example, 2023-25 is not valid.
+      
+      If no tax year parameter is supplied, all data up until 2022-23 will be returned.
+      For 2023-24 and onwards, data must be requested individually by tax year.
+    type: string
+    example: 2023-24
+    required: false
 responses:
   200:
     body:
