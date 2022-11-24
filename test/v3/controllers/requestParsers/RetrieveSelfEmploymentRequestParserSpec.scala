@@ -19,6 +19,7 @@ package v3.controllers.requestParsers
 import support.UnitSpec
 import domain.Nino
 import v3.mocks.validators.MockRetrieveSelfEmploymentValidator
+import v3.models.domain.TaxYear
 import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
@@ -32,26 +33,38 @@ class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
   val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputRawData: RetrieveSelfEmploymentBsasRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
-  val outputRequestData: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId)
+  def inputDataWith(taxYear: Option[String]): RetrieveSelfEmploymentBsasRawData =
+    RetrieveSelfEmploymentBsasRawData(nino, calculationId, taxYear)
 
-  "parser" should {
+    "parser" should {
     "return a valid request object" when {
       "passed a valid raw data object" in new Test {
-        MockValidator.validate(inputRawData).returns(List())
-        parser.parseRequest(inputRawData) shouldBe Right(outputRequestData)
+        val inputData: RetrieveSelfEmploymentBsasRawData = inputDataWith(None)
+
+        MockValidator.validate(inputData).returns(List())
+        parser.parseRequest(inputData) shouldBe Right(RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId, None))
+      }
+      "passed a valid raw data object with a taxYear" in new Test {
+        val inputData: RetrieveSelfEmploymentBsasRawData = inputDataWith(Some("2023-24"))
+
+        MockValidator.validate(inputData).returns(List())
+        parser.parseRequest(inputData) shouldBe Right(RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24"))))
       }
     }
     "return a single error" when {
       "a single error is thrown in the validation" in new Test {
-        MockValidator.validate(inputRawData).returns(List(NinoFormatError))
-        parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
+        val inputData: RetrieveSelfEmploymentBsasRawData = inputDataWith(None)
+
+        MockValidator.validate(inputData).returns(List(NinoFormatError))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
     }
     "return multiple errors" when {
       "a multiple errors are thrown in the validation" in new Test {
-        MockValidator.validate(inputRawData).returns(List(NinoFormatError, BsasIdFormatError))
-        parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
+        val inputData: RetrieveSelfEmploymentBsasRawData = inputDataWith(None)
+
+        MockValidator.validate(inputData).returns(List(NinoFormatError, BsasIdFormatError))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
       }
     }
   }

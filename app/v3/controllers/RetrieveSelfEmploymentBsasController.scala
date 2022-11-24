@@ -51,14 +51,14 @@ class RetrieveSelfEmploymentBsasController @Inject()(
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, calculationId: String): Action[AnyContent] =
+  def handleRequest(nino: String, calculationId: String, taxYear: Option[String] = None): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId)
+      val rawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId, taxYear)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
@@ -89,9 +89,20 @@ class RetrieveSelfEmploymentBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
-      case InternalError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            InvalidTaxYearParameterError,
+            CalculationIdFormatError,
+            RuleTypeOfBusinessIncorrectError,
+            RuleTaxYearNotSupportedError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 }

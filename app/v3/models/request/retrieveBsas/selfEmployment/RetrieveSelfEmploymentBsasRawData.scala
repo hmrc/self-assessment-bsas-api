@@ -18,4 +18,4 @@ package v3.models.request.retrieveBsas.selfEmployment
 
 import v3.models.request.RawData
 
-case class RetrieveSelfEmploymentBsasRawData(nino: String, calculationId: String) extends RawData
+case class RetrieveSelfEmploymentBsasRawData(nino: String, calculationId: String, taxYear: Option[String]) extends RawData
