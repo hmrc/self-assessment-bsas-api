@@ -20,10 +20,9 @@ import java.time.LocalDate
 
 import support.UnitSpec
 import domain.Nino
-import utils.DownstreamTaxYear
 import v2.mocks.MockCurrentDateProvider
 import v2.mocks.validators.MockListBsasValidator
-import v2.models.domain.TypeOfBusiness
+import v2.models.domain.{DownstreamTaxYear, TypeOfBusiness}
 import v2.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v2.models.request.{ListBsasRawData, ListBsasRequest}
 

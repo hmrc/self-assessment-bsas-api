@@ -18,10 +18,10 @@ package v2.services
 
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.DownstreamTaxYear
 import v2.controllers.EndpointLogContext
 import v2.fixtures.ListBsasFixtures._
 import v2.mocks.connectors.MockListBsasConnector
+import v2.models.domain.DownstreamTaxYear
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.ListBsasRequest

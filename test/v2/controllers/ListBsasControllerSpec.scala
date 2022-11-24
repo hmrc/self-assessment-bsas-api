@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{DateUtils, DownstreamTaxYear}
+import utils.DateUtils
 import v2.fixtures.ListBsasFixtures._
 import v2.hateoas.HateoasLinks
 import v2.mocks.MockCurrentDateProvider
@@ -31,7 +31,7 @@ import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockListBsasRequestParser
 import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
 import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.domain.{Status, TypeOfBusiness}
+import v2.models.domain.{DownstreamTaxYear, Status, TypeOfBusiness}
 import v2.models.errors._
 import v2.models.hateoas.HateoasWrapper
 import v2.models.outcomes.ResponseWrapper
