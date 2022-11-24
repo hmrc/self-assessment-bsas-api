@@ -31,13 +31,12 @@ import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockListBsasRequestParser
 import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService}
 import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v2.models.domain.{Status, TypeOfBusiness}
+import v2.models.domain.{DownstreamTaxYear, Status, TypeOfBusiness}
 import v2.models.errors._
 import v2.models.hateoas.HateoasWrapper
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
 import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
-import v3.models.domain.DownstreamTaxYear
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -21,9 +21,9 @@ import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ListBsasFixtures._
 import v2.mocks.MockHttpClient
+import v2.models.domain.DownstreamTaxYear
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.ListBsasRequest
-import v3.models.domain.DownstreamTaxYear
 
 import scala.concurrent.Future
 

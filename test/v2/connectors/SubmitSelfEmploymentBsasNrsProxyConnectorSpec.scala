@@ -18,8 +18,8 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import v2.mocks.MockHttpClient
+import v2.models.domain.DownstreamTaxYear
 import v2.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
-import v3.models.domain.DownstreamTaxYear
 
 import scala.concurrent.Future
 

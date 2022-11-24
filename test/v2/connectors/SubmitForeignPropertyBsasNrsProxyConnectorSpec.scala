@@ -18,8 +18,13 @@ package v2.connectors
 
 import mocks.MockAppConfig
 import v2.mocks.MockHttpClient
-import v2.models.request.submitBsas.foreignProperty.{ForeignProperty, ForeignPropertyExpenses, ForeignPropertyIncome, SubmitForeignPropertyBsasRequestBody}
-import v3.models.domain.DownstreamTaxYear
+import v2.models.domain.DownstreamTaxYear
+import v2.models.request.submitBsas.foreignProperty.{
+  ForeignProperty,
+  ForeignPropertyExpenses,
+  ForeignPropertyIncome,
+  SubmitForeignPropertyBsasRequestBody
+}
 
 import scala.concurrent.Future
 
@@ -31,25 +36,28 @@ class SubmitForeignPropertyBsasNrsProxyConnectorSpec extends ConnectorSpec {
 
   val request: SubmitForeignPropertyBsasRequestBody = {
     SubmitForeignPropertyBsasRequestBody(
-      Some(Seq(ForeignProperty(
-        "FRA",
-        Some(ForeignPropertyIncome(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12)
-        )),
-        Some(ForeignPropertyExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          consolidatedExpenses = None
-        ))
-      ))),
+      Some(
+        Seq(ForeignProperty(
+          "FRA",
+          Some(
+            ForeignPropertyIncome(
+              Some(123.12),
+              Some(123.12),
+              Some(123.12)
+            )),
+          Some(
+            ForeignPropertyExpenses(
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              consolidatedExpenses = None
+            ))
+        ))),
       foreignFhlEea = None
     )
   }
@@ -68,17 +76,16 @@ class SubmitForeignPropertyBsasNrsProxyConnectorSpec extends ConnectorSpec {
     "submit with valid data" should {
       "be successful" in new Test {
 
-
         MockedHttpClient
           .post(
             url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
             config = dummyDesHeaderCarrierConfig,
             body = request
-          ).returns(Future.successful((): Unit))
+          )
+          .returns(Future.successful((): Unit))
 
         await(connector.submit(nino, request)) shouldBe ((): Unit)
       }
     }
   }
 }
-

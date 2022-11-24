@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.models.domain
+package v2.models.domain
 
 /**
   * Represents a tax year for DES/IF

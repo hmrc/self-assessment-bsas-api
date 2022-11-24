@@ -18,9 +18,8 @@ package v2.models.response.retrieveBsasAdjustments.foreignProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v2.models.domain.{DownstreamTaxYear, IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
-import v3.models.domain.DownstreamTaxYear
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
                     businessId: String,

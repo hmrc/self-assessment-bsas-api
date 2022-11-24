@@ -16,7 +16,8 @@
 
 package utils
 
-import v3.models.domain.{DownstreamTaxYear, TaxYear}
+import v2.models.domain.DownstreamTaxYear
+import v3.models.domain.TaxYear
 
 import java.time.LocalDate
 

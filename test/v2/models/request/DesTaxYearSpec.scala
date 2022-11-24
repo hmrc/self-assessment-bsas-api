@@ -17,7 +17,7 @@
 package v2.models.request
 
 import support.UnitSpec
-import v3.models.domain.DownstreamTaxYear
+import v2.models.domain.DownstreamTaxYear
 
 class DesTaxYearSpec extends UnitSpec {
 
