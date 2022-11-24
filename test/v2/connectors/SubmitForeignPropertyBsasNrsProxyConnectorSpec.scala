@@ -17,9 +17,9 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import utils.DownstreamTaxYear
 import v2.mocks.MockHttpClient
 import v2.models.request.submitBsas.foreignProperty.{ForeignProperty, ForeignPropertyExpenses, ForeignPropertyIncome, SubmitForeignPropertyBsasRequestBody}
+import v3.models.domain.DownstreamTaxYear
 
 import scala.concurrent.Future
 

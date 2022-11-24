@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{DateUtils, DownstreamTaxYear}
+import utils.DateUtils
 import v2.fixtures.ListBsasFixtures._
 import v2.hateoas.HateoasLinks
 import v2.mocks.MockCurrentDateProvider
@@ -37,6 +37,7 @@ import v2.models.hateoas.HateoasWrapper
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
 import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
+import v3.models.domain.DownstreamTaxYear
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -17,8 +17,8 @@
 package v3.connectors
 
 import mocks.MockAppConfig
-import utils.DownstreamTaxYear
 import v3.mocks.MockHttpClient
+import v3.models.domain.DownstreamTaxYear
 import v3.models.request.submitBsas.ukProperty._
 
 import scala.concurrent.Future

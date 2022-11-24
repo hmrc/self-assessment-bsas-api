@@ -18,9 +18,9 @@ package v2.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.DownstreamTaxYear
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
+import v3.models.domain.DownstreamTaxYear
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,
                     businessId: Option[String], // Optional so we can error if not present with BVR 4
