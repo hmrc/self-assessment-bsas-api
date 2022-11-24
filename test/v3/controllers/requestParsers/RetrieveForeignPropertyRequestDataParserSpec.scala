@@ -20,7 +20,7 @@ import domain.Nino
 import support.UnitSpec
 import v3.mocks.validators.MockRetrieveForeignPropertyValidator
 import v3.models.domain.TaxYear
-import v3.models.errors.{BadRequestError, CalculationIdFormatError, ErrorWrapper, InvalidTaxYearParameterError, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import v3.models.errors.{BadRequestError, CalculationIdFormatError, ErrorWrapper, NinoFormatError}
 import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
 
 class RetrieveForeignPropertyRequestDataParserSpec extends UnitSpec {
@@ -55,36 +55,11 @@ class RetrieveForeignPropertyRequestDataParserSpec extends UnitSpec {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError))
         parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
-      "a single error is thrown in the validation for a TYS request" in new Test {
-        MockValidator.validate(TysInputRawData).returns(List(NinoFormatError))
-        parser.parseRequest(TysInputRawData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
-      }
     }
     "return multiple errors" when {
       "multiple errors are thrown in the validation" in new Test {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError, CalculationIdFormatError))
         parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError))))
-      }
-      "multiple errors are thrown in the validation for a TYS request" in new Test {
-        MockValidator.validate(TysInputRawData).returns(List(NinoFormatError,CalculationIdFormatError))
-        parser.parseRequest(TysInputRawData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError))))
-      }
-    }
-    "return the relevant taxYear error" when {
-      "passed an invalid tax year" in new Test {
-        val invalidTaxYear = RetrieveForeignPropertyBsasRawData(nino, calculationId, Some("2022-23"))
-        MockValidator.validate(invalidTaxYear).returns(List(InvalidTaxYearParameterError))
-        parser.parseRequest(invalidTaxYear) shouldBe Left(ErrorWrapper(correlationId, InvalidTaxYearParameterError))
-      }
-      "passed an incorrectly formatted tax year" in new Test {
-        val invalidFormatTaxYear = RetrieveForeignPropertyBsasRawData(nino, calculationId, Some("2022"))
-        MockValidator.validate(invalidFormatTaxYear).returns(List(TaxYearFormatError))
-        parser.parseRequest(invalidFormatTaxYear) shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
-      }
-      "passed an invalid range of tax years" in new Test {
-        val invalidRangeTaxYear = RetrieveForeignPropertyBsasRawData(nino, calculationId, Some("2023-26"))
-        MockValidator.validate(invalidRangeTaxYear).returns(List(RuleTaxYearRangeInvalidError))
-        parser.parseRequest(invalidRangeTaxYear) shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
     }
   }

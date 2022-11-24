@@ -54,7 +54,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some(taxYear))
 
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/$calcId") returns Future.successful(
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calcId") returns Future.successful(
           outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
