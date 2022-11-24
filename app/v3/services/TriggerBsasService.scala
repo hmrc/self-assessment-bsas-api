@@ -39,10 +39,7 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends Down
                                                logContext: EndpointLogContext,
                                                correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.triggerBsas(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper.map(des => des)
-
+    val result = EitherT(connector.triggerBsas(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
     result.value
   }
 

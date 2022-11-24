@@ -34,9 +34,10 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
     val nino = "AA123456A"
 
     def taxYear: String
+    def downstreamTaxYear: String
+
     def uri: String = s"/$nino/trigger"
     def downstreamUri: String
-    def downstreamTaxYear: String
 
     def setupStubs(): StubMapping
 
@@ -57,19 +58,23 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
          |      }
     """.stripMargin
 
-    def requestBody(typeOfBusiness: String): JsObject =
-      Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2022-10-31"),
-        "typeOfBusiness"   -> typeOfBusiness,
-        "businessId"       -> "XAIS12345678901"
-      )
+    def makeRequestBody(typeOfBusiness: String, tys: Boolean): JsObject = {
 
-    def tysRequestBody(typeOfBusiness: String): JsObject =
+      val startDate = tys match {
+        case true  => "2023-05-01"
+        case false => "2019-01-01"
+      }
+      val endDate = tys match {
+        case true  => "2023-05-02"
+        case false => "2022-10-31"
+      }
+
       Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> "2023-05-01", "endDate" -> "2023-05-02"),
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
         "typeOfBusiness"   -> typeOfBusiness,
         "businessId"       -> "XAIS12345678901"
       )
+    }
 
     def responseBody(hateoasLinkPath: String): String = s"""
       |{
@@ -114,10 +119,10 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(ifsResponse))
+              DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
             }
 
-            val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
+            val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, false)))
             result.status shouldBe OK
             result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
             result.header("Content-Type") shouldBe Some("application/json")
@@ -129,10 +134,10 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(ifsResponse))
+              DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
             }
 
-            val result: WSResponse = await(request().post(tysRequestBody(typeOfBusiness)))
+            val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, true)))
             result.status shouldBe OK
             result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
             result.header("Content-Type") shouldBe Some("application/json")
@@ -237,7 +242,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.POST, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().post(requestBody("self-employment")))
+            val response: WSResponse = await(request().post(makeRequestBody("self-employment", false)))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
