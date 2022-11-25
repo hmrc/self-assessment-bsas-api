@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package v2.models.request
+package v2.models.domain
 
 import support.UnitSpec
-import utils.DownstreamTaxYear
 
-class DesTaxYearSpec extends UnitSpec {
+class DownstreamTaxYearSpec extends UnitSpec {
 
   val mtdValue = "2018-19"
   val desValue = "2019"

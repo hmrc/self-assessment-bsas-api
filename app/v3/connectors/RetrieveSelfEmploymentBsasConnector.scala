@@ -18,7 +18,7 @@ package v3.connectors
 
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.connectors.DownstreamUri.IfsUri
+import v3.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
@@ -39,8 +39,13 @@ class RetrieveSelfEmploymentBsasConnector @Inject()
     val nino = request.nino.nino
     val calculationId = request.calculationId
 
-    get(
-      IfsUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
-    )
+    val uri = request.taxYear match {
+      case Some(taxYear) =>
+        TaxYearSpecificIfsUri[RetrieveSelfEmploymentBsasResponse](
+          s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+      case None =>
+        IfsUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+    }
+    get(uri)
   }
 }

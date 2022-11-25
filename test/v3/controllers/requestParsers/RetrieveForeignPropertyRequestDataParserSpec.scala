@@ -19,6 +19,7 @@ package v3.controllers.requestParsers
 import domain.Nino
 import support.UnitSpec
 import v3.mocks.validators.MockRetrieveForeignPropertyValidator
+import v3.models.domain.TaxYear
 import v3.models.errors.{BadRequestError, CalculationIdFormatError, ErrorWrapper, NinoFormatError}
 import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
 
@@ -32,14 +33,21 @@ class RetrieveForeignPropertyRequestDataParserSpec extends UnitSpec {
   val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId)
-  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId)
+  val inputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear=None)
+  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, taxYear=None)
+
+  val TysInputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, Some("2023-24"))
+  val TysOutputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")))
 
   "parser" should {
     "return a valid request object" when {
       "passed a valid raw data object" in new Test {
         MockValidator.validate(inputRawData).returns(List())
         parser.parseRequest(inputRawData) shouldBe Right(outputRequestData)
+      }
+      "passed a valid TYS raw data object" in new Test {
+        MockValidator.validate(TysInputRawData).returns(List())
+        parser.parseRequest(TysInputRawData) shouldBe Right(TysOutputRequestData)
       }
     }
     "return a single error" when {
@@ -49,7 +57,7 @@ class RetrieveForeignPropertyRequestDataParserSpec extends UnitSpec {
       }
     }
     "return multiple errors" when {
-      "a multiple errors are thrown in the validation" in new Test {
+      "multiple errors are thrown in the validation" in new Test {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError, CalculationIdFormatError))
         parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError))))
       }

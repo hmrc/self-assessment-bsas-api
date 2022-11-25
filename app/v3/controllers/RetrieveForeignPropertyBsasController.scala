@@ -51,7 +51,7 @@ class RetrieveForeignPropertyBsasController @Inject()(
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, calculationId: String): Action[AnyContent] =
+  def retrieve(nino: String, calculationId: String, taxYear: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
 
@@ -59,7 +59,7 @@ class RetrieveForeignPropertyBsasController @Inject()(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = RetrieveForeignPropertyBsasRawData(nino, calculationId)
+      val rawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear)
 
       val result =
         for {
@@ -91,9 +91,20 @@ class RetrieveForeignPropertyBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
-      case InternalError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            InvalidTaxYearParameterError,
+            RuleTaxYearNotSupportedError,
+            RuleTypeOfBusinessIncorrectError,
+            CalculationIdFormatError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
       case _               => unhandledError(errorWrapper)
     }
 }

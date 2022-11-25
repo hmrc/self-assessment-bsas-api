@@ -19,11 +19,14 @@ package v3.controllers.requestParsers
 import javax.inject.Inject
 import domain.Nino
 import v3.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
+import v3.models.domain.TaxYear
 import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 class RetrieveSelfEmploymentRequestParser @Inject()(val validator: RetrieveSelfEmploymentValidator)
   extends RequestParser[RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData] {
 
-  override protected def requestFor(data: RetrieveSelfEmploymentBsasRawData): RetrieveSelfEmploymentBsasRequestData =
-    RetrieveSelfEmploymentBsasRequestData(Nino(data.nino), data.calculationId)
+  override protected def requestFor(data: RetrieveSelfEmploymentBsasRawData): RetrieveSelfEmploymentBsasRequestData = {
+    val taxYear = data.taxYear.map(TaxYear.fromMtd)
+    RetrieveSelfEmploymentBsasRequestData(Nino(data.nino), data.calculationId, taxYear)
+  }
 }

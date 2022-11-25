@@ -20,15 +20,17 @@ import domain.Nino
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
+import v3.models.domain.TaxYear
+import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino: Nino = Nino("AA123456A")
-  val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val calcId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  trait Test  {
+  trait Test {
     _: ConnectorTest =>
     val connector: RetrieveForeignPropertyBsasConnector = new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
   }
@@ -37,14 +39,28 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel))
 
-      "a valid request with queryParams is supplied" in new IfsTest with Test {
-        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId)
+      "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
+        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, taxYear = None)
+
 
         val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
       }
+
+      "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some(taxYear))
+
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calcId") returns Future.successful(
+          outcome)
+
+        val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
+        result shouldBe outcome
+      }
     }
   }
+
 }

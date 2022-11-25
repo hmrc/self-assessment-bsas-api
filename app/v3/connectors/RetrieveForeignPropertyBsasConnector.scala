@@ -17,29 +17,36 @@
 package v3.connectors
 
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.connectors.DownstreamUri.IfsUri
-import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+
+import javax.inject.{ Inject, Singleton }
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpClient
+import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
+import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+
 
 @Singleton
-class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
-    val nino = request.nino.nino
-    val calcId = request.calculationId
+    import request._
 
-    get(
-      IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calcId")
-    )
+    val url = taxYear match {
+      case Some(ty) if ty.useTaxYearSpecificApi =>
+        TaxYearSpecificIfsUri[RetrieveForeignPropertyBsasResponse](
+          s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/${nino.nino}/${request.calculationId}")
+      case _ => IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}/${request.calculationId}")
+    }
+
+    get(url)
+
   }
 }

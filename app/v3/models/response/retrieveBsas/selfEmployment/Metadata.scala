@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.DownstreamTaxYear
+import v2.models.domain.DownstreamTaxYear
 import v3.models.domain.Status
 
 case class Metadata(

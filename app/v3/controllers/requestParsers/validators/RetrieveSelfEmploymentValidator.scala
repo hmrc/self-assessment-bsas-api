@@ -16,18 +16,25 @@
 
 package v3.controllers.requestParsers.validators
 
-import v3.controllers.requestParsers.validators.validations.{CalculationIdValidation, NinoValidation}
+import v3.controllers.requestParsers.validators.validations.{CalculationIdValidation, NinoValidation, TaxYearTYSParameterValidation, TaxYearValidation}
 import v3.models.errors.MtdError
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidator extends Validator[RetrieveSelfEmploymentBsasRawData] {
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterFormatValidation, parameterValidation)
 
   private def parameterFormatValidation: RetrieveSelfEmploymentBsasRawData => List[List[MtdError]] = (data: RetrieveSelfEmploymentBsasRawData) => {
     List(
       NinoValidation.validate(data.nino),
       CalculationIdValidation.validate(data.calculationId),
+      TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterValidation: RetrieveSelfEmploymentBsasRawData => List[List[MtdError]] = (data: RetrieveSelfEmploymentBsasRawData) => {
+    List(
+      data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil)
     )
   }
 

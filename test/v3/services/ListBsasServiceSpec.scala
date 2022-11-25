@@ -25,22 +25,22 @@ import v3.models.domain.TaxYear
 import v3.models.errors._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
+import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
 import scala.concurrent.Future
 
-class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
+class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture {
 
-  private val nino = Nino("AA123456A")
-  private val taxYear = TaxYear.fromMtd("2019-20")
+  private val nino                   = Nino("AA123456A")
+  private val taxYear                = TaxYear.fromMtd("2019-20")
   private val incomeSourceIdentifier = Some("IncomeSourceType")
-  private val identifierValue = Some("01")
+  private val identifierValue        = Some("01")
 
-  val request: ListBsasRequest = ListBsasRequest(nino, taxYear, incomeSourceIdentifier, identifierValue)
+  val request: ListBsasRequest                = ListBsasRequest(nino, taxYear, incomeSourceIdentifier, identifierValue)
   val response: ListBsasResponse[BsasSummary] = listBsasResponseModel
 
   trait Test extends MockListBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "listBsas")
 
     val service = new ListBsasService(mockConnector)
@@ -49,7 +49,8 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
   "ListBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockListBsasConnector.listBsas(request)
+        MockListBsasConnector
+          .listBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.listBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -61,13 +62,14 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockListBsasConnector.listBsas(request)
+          MockListBsasConnector
+            .listBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.listBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("NO_DATA_FOUND", NotFoundError),
         ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -77,7 +79,15 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture{
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INVALID_CORRELATION_ID", InternalError),
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("INVALID_INCOMESOURCE_ID", BusinessIdFormatError),
+        ("NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 }

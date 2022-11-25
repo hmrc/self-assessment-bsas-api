@@ -17,7 +17,7 @@
 package v3.connectors
 
 import mocks.MockAppConfig
-import utils.DownstreamTaxYear
+import v3.models.domain.TaxYear
 import v3.mocks.MockHttpClient
 import v3.models.request.submitBsas.foreignProperty.{ForeignProperty, ForeignPropertyExpenses, ForeignPropertyIncome, SubmitForeignPropertyBsasRequestBody}
 
@@ -27,7 +27,7 @@ class SubmitForeignPropertyBsasNrsProxyConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 
-  val taxYear: DownstreamTaxYear = DownstreamTaxYear.fromMtd("2021-22")
+  val taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
   val request: SubmitForeignPropertyBsasRequestBody = {
     SubmitForeignPropertyBsasRequestBody(

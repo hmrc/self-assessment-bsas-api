@@ -17,5 +17,6 @@
 package v3.models.request.retrieveBsas.selfEmployment
 
 import domain.Nino
+import v3.models.domain.TaxYear
 
-case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, calculationId: String)
+case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, calculationId: String, taxYear: Option[TaxYear])
