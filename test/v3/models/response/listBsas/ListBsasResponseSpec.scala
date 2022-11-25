@@ -17,24 +17,27 @@
 package v3.models.response.listBsas
 
 import mocks.MockAppConfig
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.Configuration
+import play.api.libs.json.{ JsError, JsObject, Json }
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
-import v3.models.domain.TypeOfBusiness
+import v3.models.domain.TypeOfBusiness._
+import v3.models.domain.{ TaxYear, TypeOfBusiness }
 import v3.models.hateoas.Link
-import v3.models.hateoas.Method.{GET, POST}
+import v3.models.hateoas.Method.{ GET, POST }
+import v3.models.response.listBsas.ListBsasResponse.LinksFactory._
 
 class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixture {
 
-  val selfEmploymentBsasModel: ListBsasResponse[BsasSummary] = listBsasResponseModel
+  def makeResponse(typeOfBusiness: TypeOfBusiness): ListBsasResponse[BsasSummary] = ListBsasResponse(
+    Seq(businessSourceSummaryModel.copy(typeOfBusiness = typeOfBusiness))
+  )
 
-  val ukPropertyBsasModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(
-    businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
-  ))
-
-  val foreignPropertyBsasModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(
-    businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`foreign-property`)
-  ))
+  val selfEmploymentBsasResponse: ListBsasResponse[BsasSummary]        = makeResponse(`self-employment`)
+  val ukPropertyFhlBsasResponse: ListBsasResponse[BsasSummary]         = makeResponse(`uk-property-fhl`)
+  val ukPropertyNonFhlBsasResponse: ListBsasResponse[BsasSummary]      = makeResponse(`uk-property-non-fhl`)
+  val foreignPropertyFhlEeaBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`foreign-property-fhl-eea`)
+  val foreignPropertyBsasResponse: ListBsasResponse[BsasSummary]       = makeResponse(`foreign-property`)
 
   "ListBsasResponse" when {
     "read from valid JSON" should {
@@ -57,70 +60,105 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
   }
 
   "Links Factory" should {
-    val nino = "someNino"
-    val selfEmployment = "self-employment"
-    val ukProperty = "uk-property"
-    val foreignProperty = "foreign-property"
-    val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+    class Test extends MockAppConfig {
+      val nino    = "someNino"
+      val bsasId  = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+      val context = "individuals/self-assessment/adjustable-summary"
+      val taxYear = Some(TaxYear.fromMtd("2023-24"))
 
-    "expose the correct top level links for a self employment list" in {
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+    }
 
-      ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasModel)) shouldBe
-        Seq(
-          Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
-          Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
+    class TysDisabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    }
+
+    class TysEnabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    }
+
+    "top level links" should {
+      "return the correct links without tax year" in new TysDisabledTest {
+        private val result = links(mockAppConfig, ListBsasHateoasData(nino, listBsasResponseModel, None))
+        private val expectedLinks = Seq(
+          Link(s"/$context/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
+          Link(s"/$context/$nino", GET, "self")
         )
-    }
 
-    "expose the correct top level links for a uk property list" in {
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        result shouldBe expectedLinks
+      }
 
-      ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, ukPropertyBsasModel)) shouldBe
-        Seq(
-          Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
-          Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
+      "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+        private val result = links(mockAppConfig, ListBsasHateoasData(nino, listBsasResponseModel, taxYear))
+        private val expectedLinks = Seq(
+          Link(s"/$context/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
+          Link(s"/$context/$nino?taxYear=2023-24", GET, "self")
         )
+
+        result shouldBe expectedLinks
+      }
     }
 
-    "expose the correct top level links for a foreign property list" in {
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+    "item level links" when {
+      "given self-employment business type" should {
+        "return correct links without tax year" in new TysDisabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasResponse, None), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/self-employment/$bsasId", GET, "self"))
+        }
 
-      ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasModel)) shouldBe
-        Seq(
-          Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
-          Link(s"/individuals/self-assessment/adjustable-summary/$nino", GET, "self")
-        )
-    }
+        "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasResponse, taxYear), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/self-employment/$bsasId?taxYear=2023-24", GET, "self"))
+        }
+      }
 
-    "expose the correct item level links for a self employment list" in {
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      "given uk-property-fhl business type" should {
+        "return correct links without tax year" in new TysDisabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, ukPropertyFhlBsasResponse, None), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId", GET, "self"))
+        }
 
-      ListBsasResponse.LinksFactory.itemLinks(
-        mockAppConfig,
-        ListBsasHateoasData(nino, selfEmploymentBsasModel),
-        selfEmploymentBsasModel.businessSources.head.summaries.head
-      ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$selfEmployment/$bsasId", GET, "self"))
-    }
+        "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, ukPropertyFhlBsasResponse, taxYear), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId?taxYear=2023-24", GET, "self"))
+        }
+      }
 
-    "expose the correct item level links for a uk property list" in {
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      "given uk-property-non-fhl business type" should {
+        "return correct links without tax year" in new TysDisabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, ukPropertyNonFhlBsasResponse, None), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId", GET, "self"))
+        }
 
-      ListBsasResponse.LinksFactory.itemLinks(
-        mockAppConfig,
-        ListBsasHateoasData(nino, ukPropertyBsasModel),
-        ukPropertyBsasModel.businessSources.head.summaries.head
-      ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$ukProperty/$bsasId", GET, "self"))
-    }
+        "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, ukPropertyNonFhlBsasResponse, taxYear), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId?taxYear=2023-24", GET, "self"))
+        }
+      }
 
-    "expose the correct item level links for a foreign property list" in {
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      "given foreign-property-fhl-eea business type" should {
+        "return correct links without tax year" in new TysDisabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyFhlEeaBsasResponse, None), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/foreign-property/$bsasId", GET, "self"))
+        }
 
-      ListBsasResponse.LinksFactory.itemLinks(
-        mockAppConfig,
-        ListBsasHateoasData(nino, foreignPropertyBsasModel),
-        foreignPropertyBsasModel.businessSources.head.summaries.head
-      ) shouldBe Seq(Link(s"/individuals/self-assessment/adjustable-summary/$nino/$foreignProperty/$bsasId", GET, "self"))
+        "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyFhlEeaBsasResponse, taxYear), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/foreign-property/$bsasId?taxYear=2023-24", GET, "self"))
+        }
+      }
+
+      "given foreign-property business type" should {
+        "return correct links without tax year" in new TysDisabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasResponse, None), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/foreign-property/$bsasId", GET, "self"))
+        }
+
+        "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+          private val result = itemLinks(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasResponse, taxYear), bsasSummaryModel)
+          result shouldBe Seq(Link(s"/$context/$nino/foreign-property/$bsasId?taxYear=2023-24", GET, "self"))
+        }
+      }
     }
   }
 }

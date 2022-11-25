@@ -17,46 +17,69 @@
 package v3.models.response.retrieveBsas.foreignProperty
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.hateoas.HateoasFactory
-import v3.models.hateoas.Method.{GET, POST}
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.domain.TaxYear
+import v3.models.hateoas.Method.{ GET, POST }
+import v3.models.hateoas.{ HateoasWrapper, Link }
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {
 
   import RetrieveForeignPropertyBsasResponse._
 
-  testRoundTrip("Retrieve Foreign Property Bsas Response FHL",
+  testRoundTrip(
+    "Retrieve Foreign Property Bsas Response FHL",
     retrieveForeignPropertyBsasDesFhlJson,
     retrieveForeignPropertyBsasResponseFhlModel,
-    retrieveForeignPropertyBsasMtdFhlJson)(reads)
-  testRoundTrip("Retrieve Foreign Property Bsas Response Non-FHL",
+    retrieveForeignPropertyBsasMtdFhlJson
+  )(reads)
+  testRoundTrip(
+    "Retrieve Foreign Property Bsas Response Non-FHL",
     retrieveForeignPropertyBsasDesNonFhlJson,
     retrieveForeignPropertyBsasResponseNonFhlModel,
-    retrieveForeignPropertyBsasMtdNonFhlJson)(reads)
+    retrieveForeignPropertyBsasMtdNonFhlJson
+  )(reads)
 
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val calculationId  = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      val context        = "individuals/self-assessment/adjustable-summary"
+      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
+      val rawResponse    = retrieveForeignPropertyBsasResponseFhlModel
+
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
     }
 
-    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      val rawResponse: RetrieveForeignPropertyBsasResponse = retrieveForeignPropertyBsasResponseFhlModel
+    class TysDisabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    }
 
-      hateoasFactory.wrap(rawResponse, RetrieveForeignPropertyHateoasData(nino, calculationId)) shouldBe
-        HateoasWrapper(
-          rawResponse,
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
-                 POST,
-                 "submit-foreign-property-accounting-adjustments")
-          )
-        )
+    class TysEnabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    }
+
+    "return the correct links without tax year" in new TysDisabledTest {
+      private val result = hateoasFactory.wrap(rawResponse, RetrieveForeignPropertyHateoasData(nino, calculationId, None))
+      private val expectedLinks = Seq(
+        Link(s"/$context/$nino/foreign-property/$calculationId", GET, "self"),
+        Link(s"/$context/$nino/foreign-property/$calculationId/adjust", POST, "submit-foreign-property-accounting-adjustments")
+      )
+
+      result shouldBe HateoasWrapper(rawResponse, expectedLinks)
+    }
+
+    "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+      private val result = hateoasFactory.wrap(rawResponse, RetrieveForeignPropertyHateoasData(nino, calculationId, taxYear))
+      private val expectedLinks = Seq(
+        Link(s"/$context/$nino/foreign-property/$calculationId?taxYear=2023-24", GET, "self"),
+        Link(s"/$context/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24", POST, "submit-foreign-property-accounting-adjustments")
+      )
+
+      result shouldBe HateoasWrapper(rawResponse, expectedLinks)
     }
   }
 }

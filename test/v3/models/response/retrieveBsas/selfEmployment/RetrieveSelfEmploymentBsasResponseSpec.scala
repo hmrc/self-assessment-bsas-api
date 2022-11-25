@@ -17,12 +17,18 @@
 package v3.models.response.retrieveBsas.selfEmployment
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
+  downstreamRetrieveBsasResponseJson,
+  mtdRetrieveBsasResponseJson,
+  retrieveBsasResponseModel
+}
 import v3.hateoas.HateoasFactory
+import v3.models.domain.TaxYear
 import v3.models.hateoas.Method._
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.utils.JsonErrorValidators
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
@@ -48,18 +54,38 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val calculationId  = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      val context        = "individuals/self-assessment/adjustable-summary"
+      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
+
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
     }
 
-    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId)) shouldBe
-        HateoasWrapper(
-          retrieveBsasResponseModel,
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust", POST, "submit-self-employment-accounting-adjustments")
-          )
-        )
+    class TysDisabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    }
+
+    class TysEnabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    }
+
+    "return the correct links without tax year" in new TysDisabledTest {
+      private val result = hateoasFactory.wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId, None))
+      private val expectedLinks = Seq(
+        Link(s"/$context/$nino/self-employment/$calculationId", GET, "self"),
+        Link(s"/$context/$nino/self-employment/$calculationId/adjust", POST, "submit-self-employment-accounting-adjustments")
+      )
+
+      result shouldBe HateoasWrapper(retrieveBsasResponseModel, expectedLinks)
+    }
+
+    "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+      private val result = hateoasFactory.wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId, taxYear))
+      private val expectedLinks = Seq(
+        Link(s"/$context/$nino/self-employment/$calculationId?taxYear=2023-24", GET, "self"),
+        Link(s"/$context/$nino/self-employment/$calculationId/adjust?taxYear=2023-24", POST, "submit-self-employment-accounting-adjustments")
+      )
+
+      result shouldBe HateoasWrapper(retrieveBsasResponseModel, expectedLinks)
     }
   }
 

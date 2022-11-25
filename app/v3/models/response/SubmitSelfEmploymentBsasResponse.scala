@@ -18,6 +18,7 @@ package v3.models.response
 
 import config.AppConfig
 import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
+import v3.models.domain.TaxYear
 import v3.models.hateoas.{ HateoasData, Link }
 
 object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
@@ -25,9 +26,9 @@ object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
   implicit object SubmitSelfEmploymentAdjustmentHateoasFactory extends HateoasLinksFactory[Unit, SubmitSelfEmploymentBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitSelfEmploymentBsasHateoasData): Seq[Link] = {
       import data._
-      Seq(getSelfEmploymentBsas(appConfig, nino, calculationId))
+      Seq(getSelfEmploymentBsas(appConfig, nino, calculationId, taxYear))
     }
   }
 }
 
-case class SubmitSelfEmploymentBsasHateoasData(nino: String, calculationId: String) extends HateoasData
+case class SubmitSelfEmploymentBsasHateoasData(nino: String, calculationId: String, taxYear: Option[TaxYear]) extends HateoasData

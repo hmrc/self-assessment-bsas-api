@@ -17,22 +17,21 @@
 package v3.models.response
 
 import config.AppConfig
-import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v3.models.hateoas.{HateoasData, Link}
-
+import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
+import v3.models.domain.TaxYear
+import v3.models.hateoas.{ HateoasData, Link }
 
 object SubmitForeignPropertyBsasResponse extends HateoasLinks {
 
-  implicit object SubmitForeignPropertyAdjustmentHateoasFactory
-    extends HateoasLinksFactory[Unit, SubmitForeignPropertyBsasHateoasData] {
+  implicit object SubmitForeignPropertyAdjustmentHateoasFactory extends HateoasLinksFactory[Unit, SubmitForeignPropertyBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitForeignPropertyBsasHateoasData): Seq[Link] = {
       import data._
 
       Seq(
-        getForeignPropertyBsas(appConfig, nino, bsasId)
+        getForeignPropertyBsas(appConfig, nino, bsasId, taxYear)
       )
     }
   }
 }
 
-case class SubmitForeignPropertyBsasHateoasData(nino: String, bsasId: String) extends HateoasData
+case class SubmitForeignPropertyBsasHateoasData(nino: String, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

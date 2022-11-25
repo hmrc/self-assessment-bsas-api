@@ -73,11 +73,9 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
             //Submit Return to ETMP
             EitherT(service.submitSelfEmploymentBsas(parsedRequest))
           }
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData, SubmitSelfEmploymentBsasHateoasData(nino, calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasResponse = hateoasFactory.wrap(response.responseData, SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None))
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}"

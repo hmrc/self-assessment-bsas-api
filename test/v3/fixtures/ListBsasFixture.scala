@@ -16,9 +16,9 @@
 
 package v3.fixtures
 
-import play.api.libs.json.{JsArray, JsValue, Json}
-import v3.models.domain.{Status, TaxYear, TypeOfBusiness}
-import v3.models.response.listBsas.{AccountingPeriod, BsasSummary, BusinessSourceSummary, ListBsasResponse}
+import play.api.libs.json.{ JsArray, JsValue, Json }
+import v3.models.domain.{ Status, TaxYear, TypeOfBusiness }
+import v3.models.response.listBsas.{ AccountingPeriod, BsasSummary, BusinessSourceSummary, ListBsasResponse }
 
 trait ListBsasFixture {
 
@@ -257,8 +257,9 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val summariesJSONWithHateoas: String => JsValue = nino => Json.parse(
-    s"""
+  val summariesJSONWithHateoas: String => JsValue = nino =>
+    Json.parse(
+      s"""
       |{
       |  "businessSources": [
       |    {
@@ -350,8 +351,9 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val summariesJSONForeignWithHateoas: String => JsValue = nino => Json.parse(
-    s"""
+  val summariesJSONForeignWithHateoas: String => JsValue = nino =>
+    Json.parse(
+      s"""
        |{
        |  "businessSources": [
        |    {
@@ -395,9 +397,10 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val listBsasDownstreamJsonMultiple: JsArray = JsArray(Seq(
-    listBsasResponseDownstreamJsonSE,
-    listBsasResponseDownstreamJsonUkFhl,
-    listBsasResponseDownstreamJsonUkNonFhl
-  ))
+  val listBsasDownstreamJsonMultiple: JsArray = JsArray(
+    Seq(
+      listBsasResponseDownstreamJsonSE,
+      listBsasResponseDownstreamJsonUkFhl,
+      listBsasResponseDownstreamJsonUkNonFhl
+    ))
 }

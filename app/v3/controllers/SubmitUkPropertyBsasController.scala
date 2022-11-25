@@ -73,14 +73,9 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             //Submit Return to ETMP
             EitherT(service.submitPropertyBsas(parsedRequest))
           }
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(
-                response.responseData,
-                SubmitUkPropertyBsasHateoasData(nino, calculationId)
-              )
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasResponse = hateoasFactory.wrap(response.responseData, SubmitUkPropertyBsasHateoasData(nino, calculationId, None))
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}"

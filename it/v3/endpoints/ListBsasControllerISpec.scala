@@ -176,7 +176,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new NonTysTest {
-
           override val nino: String                   = requestNino
           override val taxYear: Option[String]        = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness

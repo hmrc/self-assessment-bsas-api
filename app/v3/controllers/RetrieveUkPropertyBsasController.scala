@@ -63,11 +63,10 @@ class RetrieveUkPropertyBsasController @Inject()(
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieve(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData, RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasData     = RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.calculationId, None)
+          val hateoasResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
@@ -90,7 +89,7 @@ class RetrieveUkPropertyBsasController @Inject()(
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
-      case InternalError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case InternalError                                                                                   => InternalServerError(Json.toJson(errorWrapper))
+      case _                                                                                               => unhandledError(errorWrapper)
     }
 }

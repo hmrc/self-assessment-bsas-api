@@ -17,37 +17,70 @@
 package v3.models.response.retrieveBsas.ukProperty
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.hateoas.HateoasFactory
+import v3.models.domain.TaxYear
 import v3.models.hateoas.Method._
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.utils.JsonErrorValidators
 
 class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
   import RetrieveUkPropertyBsasResponse._
 
-  testRoundTrip("Retrieve UK Property FHL", downstreamRetrieveBsasFhlResponseJson, retrieveBsasResponseFhlModel, mtdRetrieveBsasResponseFhlJson)(reads)
-  testRoundTrip("Retrieve UK Property Non-FHL", downstreamRetrieveBsasNonFhlResponseJson, retrieveBsasResponseNonFhlModel, mtdRetrieveBsasResponseNonFhlJson)(reads)
+  testRoundTrip(
+    testName = "Retrieve UK Property FHL",
+    downstreamJson = downstreamRetrieveBsasFhlResponseJson,
+    model = retrieveBsasResponseFhlModel,
+    mtdJson = mtdRetrieveBsasResponseFhlJson
+  )(reads)
+
+  testRoundTrip(
+    testName = "Retrieve UK Property Non-FHL",
+    downstreamJson = downstreamRetrieveBsasNonFhlResponseJson,
+    model = retrieveBsasResponseNonFhlModel,
+    mtdJson = mtdRetrieveBsasResponseNonFhlJson
+  )(reads)
 
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val calculationId  = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      val context        = "individuals/self-assessment/adjustable-summary"
+      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
+
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
     }
 
-    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId)) shouldBe
-        HateoasWrapper(
-          retrieveBsasResponseFhlModel,
-          Seq(
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust", POST, "submit-uk-property-accounting-adjustments")
-          )
-        )
+    class TysDisabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    }
+
+    class TysEnabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    }
+
+    "return the correct links without tax year" in new TysDisabledTest {
+      private val result = hateoasFactory.wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
+      private val expectedLinks = Seq(
+        Link(s"/$context/$nino/uk-property/$calculationId", GET, "self"),
+        Link(s"/$context/$nino/uk-property/$calculationId/adjust", POST, "submit-uk-property-accounting-adjustments")
+      )
+
+      result shouldBe HateoasWrapper(retrieveBsasResponseFhlModel, expectedLinks)
+    }
+
+    "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+      private val result = hateoasFactory.wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, taxYear))
+      private val expectedLinks = Seq(
+        Link(s"/$context/$nino/uk-property/$calculationId?taxYear=2023-24", GET, "self"),
+        Link(s"/$context/$nino/uk-property/$calculationId/adjust?taxYear=2023-24", POST, "submit-uk-property-accounting-adjustments")
+      )
+
+      result shouldBe HateoasWrapper(retrieveBsasResponseFhlModel, expectedLinks)
     }
   }
 

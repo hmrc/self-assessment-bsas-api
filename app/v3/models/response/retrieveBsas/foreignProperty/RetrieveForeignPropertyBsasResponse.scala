@@ -19,8 +19,8 @@ package v3.models.response.retrieveBsas.foreignProperty
 import config.AppConfig
 import play.api.libs.json._
 import v3.hateoas.HateoasLinksFactory
-import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
-import v3.models.hateoas.{HateoasData, Link}
+import v3.models.domain.{ HasTypeOfBusiness, TaxYear, TypeOfBusiness }
+import v3.models.hateoas.{ HateoasData, Link }
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse._
 
 case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
@@ -75,11 +75,11 @@ object RetrieveForeignPropertyBsasResponse {
       import data._
 
       Seq(
-        getForeignPropertyBsas(appConfig, nino, calculationId),
-        adjustForeignPropertyBsas(appConfig, nino, calculationId)
+        getForeignPropertyBsas(appConfig, nino, calculationId, taxYear),
+        adjustForeignPropertyBsas(appConfig, nino, calculationId, taxYear)
       )
     }
   }
 }
 
-case class RetrieveForeignPropertyHateoasData(nino: String, calculationId: String) extends HateoasData
+case class RetrieveForeignPropertyHateoasData(nino: String, calculationId: String, taxYear: Option[TaxYear]) extends HateoasData

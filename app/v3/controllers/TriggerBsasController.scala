@@ -67,12 +67,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData,
-                    TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasData =
+            TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId, None)
+          val hateoasResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}"
