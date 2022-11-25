@@ -28,7 +28,8 @@ import v3.mocks.MockCurrentDateProvider
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockListBsasRequestParser
 import v3.mocks.services.{ MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService }
-import v3.models.domain.{ TaxYear, TypeOfBusiness }
+import v3.models.domain.TaxYear
+import v3.models.domain.TypeOfBusiness._
 import v3.models.errors._
 import v3.models.hateoas.HateoasWrapper
 import v3.models.outcomes.ResponseWrapper
@@ -69,7 +70,7 @@ class ListBsasControllerSpec
     nino = Nino(nino),
     taxYear = TaxYear("2019"),
     incomeSourceId = Some("self-employment"),
-    incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
+    incomeSourceType = Some(`self-employment`.toIdentifierValue)
   )
 
   trait Test {
@@ -96,14 +97,14 @@ class ListBsasControllerSpec
   val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
     Seq(
       businessSourceSummaryModel,
-      businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                                      summaries = Seq(
-                                        bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-                                      )),
-      businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                                      summaries = Seq(
-                                        bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-                                      ))
+      businessSourceSummaryModel.copy(
+        typeOfBusiness = `uk-property-fhl`,
+        summaries = Seq(bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"))
+      ),
+      businessSourceSummaryModel.copy(
+        typeOfBusiness = `uk-property-non-fhl`,
+        summaries = Seq(bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"))
+      )
     ))
 
   "list bsas" should {
@@ -125,7 +126,7 @@ class ListBsasControllerSpec
             Seq(
               BusinessSourceSummary(
                 businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`self-employment`,
+                typeOfBusiness = `self-employment`,
                 accountingPeriodModel,
                 taxYear = TaxYear.fromMtd("2019-20"),
                 Seq(
@@ -136,7 +137,7 @@ class ListBsasControllerSpec
               ),
               BusinessSourceSummary(
                 businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+                typeOfBusiness = `uk-property-fhl`,
                 accountingPeriodModel,
                 taxYear = TaxYear.fromMtd("2019-20"),
                 Seq(HateoasWrapper(
@@ -146,7 +147,7 @@ class ListBsasControllerSpec
               ),
               BusinessSourceSummary(
                 businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+                typeOfBusiness = `uk-property-non-fhl`,
                 accountingPeriodModel,
                 taxYear = TaxYear.fromMtd("2019-20"),
                 Seq(HateoasWrapper(
