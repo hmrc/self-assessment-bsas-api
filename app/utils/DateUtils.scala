@@ -18,7 +18,6 @@ package utils
 
 import v2.models.domain.DownstreamTaxYear
 import v3.models.domain.TaxYear
-
 import java.time.LocalDate
 
 object DateUtils {

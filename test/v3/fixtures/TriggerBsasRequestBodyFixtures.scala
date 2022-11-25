@@ -16,7 +16,7 @@
 
 package v3.fixtures
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.AnyContentAsJson
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.AccountingPeriod
@@ -25,8 +25,7 @@ import v3.models.response.TriggerBsasResponse
 
 object TriggerBsasRequestBodyFixtures {
 
-  val mtdJson: JsValue = Json.parse(
-    """
+  val mtdJson: JsValue = Json.parse("""
       |{
       |  "accountingPeriod" : {
       |     "startDate" : "2018-11-25",
@@ -37,8 +36,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val desJson: JsValue = Json.parse(
-    """
+  val downstreamJson: JsValue = Json.parse("""
       |{
       |   "incomeSourceType" : "01",
       |   "incomeSourceId" : "anId",
@@ -53,15 +51,19 @@ object TriggerBsasRequestBodyFixtures {
     "anId"
   )
 
+  val tysModel: TriggerBsasRequestBody = TriggerBsasRequestBody(
+    AccountingPeriod("2023-05-01", "2023-05-02"),
+    TypeOfBusiness.`self-employment`.toString,
+    "anId"
+  )
+
   val responseObj: TriggerBsasResponse = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
-  val response: JsValue = Json.parse(
-    """{
+  val response: JsValue = Json.parse("""{
       |"calculationId" : "c75f40a6-a3df-4429-a697-471eeec46435"
       |}""".stripMargin)
 
-  val hateoasResponseForSE: String => String = (nino: String) =>
-    s"""
+  val hateoasResponseForSE: String => String = (nino: String) => s"""
        |{
        |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
        |  "links":[
@@ -74,8 +76,7 @@ object TriggerBsasRequestBodyFixtures {
        |}
     """.stripMargin
 
-  val hateoasResponseForProperty: String => String = (nino: String) =>
-    s"""
+  val hateoasResponseForProperty: String => String = (nino: String) => s"""
        |{
        |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
        |  "links":[
@@ -88,8 +89,7 @@ object TriggerBsasRequestBodyFixtures {
        |}
     """.stripMargin
 
-  val requestBody: JsValue = Json.parse(
-    """
+  val requestBody: JsValue = Json.parse("""
       |{
       |  "accountingPeriod": {
       |    "startDate": "2019-05-05",
@@ -100,8 +100,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val requestBodyForProperty: JsValue = Json.parse(
-    """
+  val requestBodyForProperty: JsValue = Json.parse("""
       |{
       |  "accountingPeriod": {
       |    "startDate": "2019-05-05",
@@ -112,7 +111,7 @@ object TriggerBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val desResponse: String =
+  val downstreamResponse: String =
     """
       |{
       | "metadata": {
@@ -218,8 +217,8 @@ object TriggerBsasRequestBodyFixtures {
 
     AnyContentAsJson(
       Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness" -> typeOfBusiness,
-        "businessId" -> businessId)
+               "typeOfBusiness"   -> typeOfBusiness,
+               "businessId"       -> businessId)
     )
   }
 
