@@ -18,46 +18,47 @@ package v3.endpoints
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures
 import v3.models.errors._
-import v3.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 
 class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino   = "AA123456B"
-    val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val nino          = "AA123456B"
+    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def downstreamUrl: String
+    def retrieveHateoasLink: String
+    def submitHateoasLink: String
 
     def request: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
-      buildRequest(s"/$nino/foreign-property/$calcId")
+      buildRequest(s"/$nino/foreign-property/$calculationId")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def responseWithHateoas(response: JsValue, nino: String, calculationId: String): JsValue =
-      response.as[JsObject] ++ Json.parse(
-        s"""
+      response.as[JsObject] ++ Json.parse(s"""
            |{
            |  "links": [
            |    {
-           |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
+           |      "href": "$retrieveHateoasLink",
            |      "method": "GET",
            |      "rel": "self"
            |    }, {
-           |      "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
+           |      "href": "$submitHateoasLink",
            |      "method": "POST",
            |      "rel": "submit-foreign-property-accounting-adjustments"
            |    }
@@ -67,16 +68,22 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    override def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calcId"
+    override def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def retrieveHateoasLink: String    = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
+    def submitHateoasLink: String      = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust"
   }
   private trait TysTest extends Test {
-    override def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calcId"
+    override def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
+
+    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24"
 
     override def request: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
-      buildRequest(s"/$nino/foreign-property/$calcId")
+      buildRequest(s"/$nino/foreign-property/$calculationId")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -91,7 +98,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get)
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calcId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
       }
@@ -101,7 +108,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get)
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson, nino, calcId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson, nino, calculationId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
       }
@@ -129,14 +136,18 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-      def validationErrorTest(requestNino: String, requestBsasId: String, requestTaxYear: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit =
+      def validationErrorTest(requestNino: String,
+                              requestBsasId: String,
+                              requestTaxYear: Option[String],
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit =
         s"validation fails with ${expectedBody.code} error" in new TysTest {
-          override val nino: String   = requestNino
-          override val calcId: String = requestBsasId
+          override val nino: String          = requestNino
+          override val calculationId: String = requestBsasId
 
           val response: WSResponse = requestTaxYear match {
             case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get)
-            case _ => await(request.get)
+            case _          => await(request.get)
           }
 
           response.json shouldBe Json.toJson(expectedBody)
@@ -145,12 +156,11 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         }
 
       val input = Seq(
-        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",None, BAD_REQUEST, NinoFormatError),
+        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, BAD_REQUEST, NinoFormatError),
         ("AA123456A", "bad_calc_id", None, BAD_REQUEST, CalculationIdFormatError),
-        ("AA123456A","f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023"), BAD_REQUEST, TaxYearFormatError),
-        ("AA123456A","f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-25"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
-        ("AA123456A","f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), BAD_REQUEST, InvalidTaxYearParameterError)
-
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023"), BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-25"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), BAD_REQUEST, InvalidTaxYearParameterError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -185,9 +195,9 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       )
 
       val extraTysErrors = Seq(
-        (BAD_REQUEST,"INVALID_TAX_YEAR",BAD_REQUEST, TaxYearFormatError),
+        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
-        (UNPROCESSABLE_ENTITY,"TAX_YEAR_NOT_SUPPORTED",BAD_REQUEST, RuleTaxYearNotSupportedError)
+        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))

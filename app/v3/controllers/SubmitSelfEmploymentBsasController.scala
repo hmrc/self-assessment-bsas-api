@@ -74,7 +74,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
             EitherT(service.submitSelfEmploymentBsas(parsedRequest))
           }
         } yield {
-          val hateoasResponse = hateoasFactory.wrap(response.responseData, SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None))
+          val hateoasResponse = hateoasFactory.wrap(response.responseData, SubmitSelfEmploymentBsasHateoasData(nino, calculationId, parsedRequest.taxYear))
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

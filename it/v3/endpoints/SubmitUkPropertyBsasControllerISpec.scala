@@ -22,10 +22,10 @@ import play.api.libs.json._
 import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
+import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.models.errors._
 import v3.models.utils.JsonErrorValidators
-import v3.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub, NrsStub }
-import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
+import v3.stubs._
 
 class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
@@ -55,7 +55,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
         val response: WSResponse = await(request().post(requestBodyJson))
         response.status shouldBe OK
-        response.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        response.json shouldBe Json.parse(hateoasResponseWithTaxYearParam(nino, calculationId, "2023-24"))
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

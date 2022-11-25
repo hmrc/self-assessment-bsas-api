@@ -17,7 +17,7 @@
 package v3.controllers
 
 import domain.Nino
-import mocks.MockIdGenerator
+import mocks.{ MockAppConfig, MockIdGenerator }
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -26,7 +26,7 @@ import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockTriggerBsasRequestParser
 import v3.mocks.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService }
 import v3.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
-import v3.models.domain.TypeOfBusiness
+import v3.models.domain.{ TaxYear, TypeOfBusiness }
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
 import v3.models.hateoas.{ HateoasWrapper, Link }
@@ -45,7 +45,8 @@ class TriggerBsasControllerSpec
     with MockTriggerBsasService
     with MockHateoasFactory
     with MockIdGenerator
-    with MockAuditService {
+    with MockAuditService
+    with MockAppConfig {
 
   private val correlationId = "X-123"
   private val nino          = "AA123456A"
@@ -118,7 +119,6 @@ class TriggerBsasControllerSpec
   "triggerBsas" should {
     "return successful hateoas response for SE with status OK" when {
       "a valid request supplied for business type self-employment" in new Test {
-
         MockTriggerBsasRequestParser
           .parse(requestRawData)
           .returns(Right(request))
@@ -128,7 +128,8 @@ class TriggerBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, None))
+          .wrap(responseObj,
+                TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBody))
@@ -142,7 +143,6 @@ class TriggerBsasControllerSpec
       }
 
       "a valid request supplied for business type uk-property" in new Test {
-
         MockTriggerBsasRequestParser
           .parse(requestRawDataForProperty)
           .returns(Right(requestForProperty))
@@ -152,7 +152,8 @@ class TriggerBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, None))
+          .wrap(responseObj,
+                TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBodyForProperty))

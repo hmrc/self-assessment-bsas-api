@@ -244,11 +244,24 @@ object SubmitSelfEmploymentBsasFixtures {
                                 |   }
                                 |}""".stripMargin)
 
-  val hateoasResponse: (String, String) => String = (nino: String, calcId: String) => s"""
+  def hateoasResponse(nino: String, calcId: String): String = s"""
        |{
        |  "links":[
        |    {
        |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calcId",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+
+  def hateoasResponseWithTaxYear(nino: String, calcId: String, taxYear: String): String =
+    s"""
+       |{
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calcId?taxYear=$taxYear",
        |      "rel":"self",
        |      "method":"GET"
        |    }

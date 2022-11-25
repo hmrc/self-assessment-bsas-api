@@ -64,7 +64,7 @@ class RetrieveSelfEmploymentBsasController @Inject()(
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
         } yield {
-          val hateoasData     = RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.calculationId, None)
+          val hateoasData     = RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.calculationId, parsedRequest.taxYear)
           val hateoasResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(

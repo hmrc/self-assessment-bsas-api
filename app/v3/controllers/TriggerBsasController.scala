@@ -68,8 +68,13 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
         } yield {
-          val hateoasData =
-            TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId, None)
+          val hateoasData = TriggerBsasHateoasData(
+            nino = nino,
+            typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness),
+            bsasId = response.responseData.calculationId,
+            taxYear = Some(parsedRequest.taxYear)
+          )
+
           val hateoasResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(
