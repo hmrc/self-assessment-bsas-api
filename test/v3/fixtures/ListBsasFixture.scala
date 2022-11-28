@@ -258,7 +258,7 @@ trait ListBsasFixture {
   )
 
   def summariesJSONWithHateoas(nino: String, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")(ty => s"?taxYear=$ty")
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
     Json.parse(
       s"""
@@ -355,7 +355,7 @@ trait ListBsasFixture {
   }
 
   def summariesJSONForeignWithHateoas(nino: String, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")(ty => s"?taxYear=$ty")
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
     Json.parse(
       s"""
