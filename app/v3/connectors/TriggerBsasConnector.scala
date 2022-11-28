@@ -18,29 +18,34 @@ package v3.connectors
 
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.connectors.DownstreamUri.IfsUri
+import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
+import v3.connectors.httpparsers.StandardDownstreamHttpParser._
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class TriggerBsasConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def triggerBsas(request: TriggerBsasRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
+  def triggerBsas(request: TriggerBsasRequest)(implicit hc: HeaderCarrier,
+                                               ec: ExecutionContext,
+                                               correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
-    import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino = request.nino.nino
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}")
+      } else {
+        IfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}")
+      }
 
     post(
       body = request.body,
-      IfsUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+      uri = downstreamUri
     )
+
   }
 }

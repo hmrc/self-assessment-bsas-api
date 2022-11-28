@@ -2,7 +2,7 @@ GET         /:nino                                        v3.controllers.ListBsa
 
 POST        /:nino/trigger                                v3.controllers.TriggerBsasController.triggerBsas(nino: String)
 
-GET         /:nino/uk-property/:calculationId             v3.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String)
+GET         /:nino/uk-property/:calculationId             v3.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
 
 POST        /:nino/uk-property/:calculationId/adjust      v3.controllers.SubmitUkPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear: Option[String])
 
@@ -12,4 +12,4 @@ POST        /:nino/self-employment/:calculationId/adjust  v3.controllers.SubmitS
 
 POST        /:nino/foreign-property/:calculationId/adjust v3.controllers.SubmitForeignPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear:Option[String])
 
-GET         /:nino/foreign-property/:calculationId        v3.controllers.RetrieveForeignPropertyBsasController.retrieve(nino: String, calculationId: String)
+GET         /:nino/foreign-property/:calculationId        v3.controllers.RetrieveForeignPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])

@@ -19,6 +19,8 @@ package v3.models.domain
 import config.FeatureSwitches
 import play.api.libs.json.Writes
 
+import java.time.LocalDate
+
 /**
   * Represents a tax year for DES/IF
   *
@@ -62,11 +64,33 @@ object TaxYear {
 
   val tysTaxYear: Int = 2024
 
+  /** UK tax year starts on 6 April.
+    */
+  private val taxYearMonthStart = 4
+  private val taxYearDayStart   = 6
+
   /**
     * @param taxYear tax year in MTD format (e.g. 2017-18)
     */
   def fromMtd(taxYear: String): TaxYear =
     TaxYear(taxYear.take(2) + taxYear.drop(5))
+
+  /** @param date
+    * the date in extended ISO-8601 format (e.g. 2020-04-05)
+    */
+  def fromIso(date: String): TaxYear = {
+    val date1 = LocalDate.parse(date)
+    val year = (
+      if (isPreviousTaxYear(date1)) date1.getYear else date1.getYear + 1
+    ).toString
+
+    new TaxYear(year)
+  }
+
+  private def isPreviousTaxYear(date: LocalDate): Boolean = {
+    val taxYearStartDate = LocalDate.of(date.getYear, taxYearMonthStart, taxYearDayStart)
+    date.isBefore(taxYearStartDate)
+  }
 
   def fromDownstream(taxYear: String): TaxYear =
     new TaxYear(taxYear)

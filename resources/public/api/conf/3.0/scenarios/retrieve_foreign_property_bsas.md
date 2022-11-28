@@ -55,5 +55,9 @@
             <td><p>NOT_FOREIGN_PROPERTY</p></td>
             <td><p>Simulates the scenario where the calculationId is not a foreign property.</p></td>
         </tr>
+        <tr>
+            <td><p>TAX_YEAR_NOT_SUPPORTED</p></td>
+            <td><p>Simulates the scenario where the tax year is not supported.</p></td>
+        </tr>
     </tbody>
 </table>

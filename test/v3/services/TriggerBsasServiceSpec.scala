@@ -32,12 +32,12 @@ class TriggerBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val request: TriggerBsasRequest = TriggerBsasRequest(nino, model)
+  val calculationId                 = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val request: TriggerBsasRequest   = TriggerBsasRequest(nino, model)
   val response: TriggerBsasResponse = TriggerBsasResponse(calculationId)
 
   trait Test extends MockTriggerBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "triggerBsas")
 
     val service = new TriggerBsasService(mockConnector)
@@ -46,7 +46,8 @@ class TriggerBsasServiceSpec extends ServiceSpec {
   "triggerBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockTriggerBsasConnector.triggerBsas(request)
+        MockTriggerBsasConnector
+          .triggerBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.triggerBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -55,17 +56,17 @@ class TriggerBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-          MockTriggerBsasConnector.triggerBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+          MockTriggerBsasConnector
+            .triggerBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.triggerBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
-
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("ACCOUNTING_PERIOD_NOT_ENDED", RuleAccountingPeriodNotEndedError),
         ("OBLIGATIONS_NOT_MET", RulePeriodicDataIncompleteError),
@@ -77,7 +78,13 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("INVALID_CORRELATIONID", InternalError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val extraTysErrors = Seq(
+        "INVALID_CORRELATION_ID" -> InternalError,
+        "INVALID_TAX_YEAR"       -> InternalError,
+        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 }

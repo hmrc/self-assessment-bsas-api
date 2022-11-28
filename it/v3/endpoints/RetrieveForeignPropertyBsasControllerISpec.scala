@@ -34,7 +34,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val nino   = "AA123456B"
     val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calcId"
+    def downstreamUrl: String
 
     def request: WSRequest = {
       AuditStub.audit()
@@ -66,9 +66,27 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |""".stripMargin).as[JsObject]
   }
 
+  private trait NonTysTest extends Test {
+    override def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calcId"
+  }
+  private trait TysTest extends Test {
+    override def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calcId"
+
+    override def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      buildRequest(s"/$nino/foreign-property/$calcId")
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+  }
+
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "valid request is made and Non-fhl is returned" in new Test {
+      "valid request is made and Non-fhl is returned" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
 
         val response: WSResponse = await(request.get)
@@ -78,7 +96,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "valid request is made and fhl is returned" in new Test {
+      "valid request is made and fhl is returned" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson)
 
         val response: WSResponse = await(request.get)
@@ -99,7 +117,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       }
 
       def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =
-        new Test {
+        new NonTysTest {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponse)
 
           val response: WSResponse = await(request.get)
@@ -111,12 +129,15 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-      def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit =
-        s"validation fails with ${expectedBody.code} error" in new Test {
+      def validationErrorTest(requestNino: String, requestBsasId: String, requestTaxYear: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit =
+        s"validation fails with ${expectedBody.code} error" in new TysTest {
           override val nino: String   = requestNino
           override val calcId: String = requestBsasId
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = requestTaxYear match {
+            case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get)
+            case _ => await(request.get)
+          }
 
           response.json shouldBe Json.toJson(expectedBody)
           response.status shouldBe expectedStatus
@@ -124,8 +145,12 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         }
 
       val input = Seq(
-        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "bad_calc_id", BAD_REQUEST, CalculationIdFormatError)
+        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",None, BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "bad_calc_id", None, BAD_REQUEST, CalculationIdFormatError),
+        ("AA123456A","f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023"), BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A","f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-25"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
+        ("AA123456A","f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), BAD_REQUEST, InvalidTaxYearParameterError)
+
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -138,7 +163,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}""".stripMargin
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit =
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
           DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
           val response: WSResponse = await(request.get)
@@ -148,7 +173,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           response.header("Content-Type") shouldBe Some("application/json")
         }
 
-      val input = Seq(
+      val errors = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
@@ -158,7 +183,14 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+
+      val extraTysErrors = Seq(
+        (BAD_REQUEST,"INVALID_TAX_YEAR",BAD_REQUEST, TaxYearFormatError),
+        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY,"TAX_YEAR_NOT_SUPPORTED",BAD_REQUEST, RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
 }

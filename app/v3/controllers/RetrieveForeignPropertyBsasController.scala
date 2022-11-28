@@ -51,7 +51,7 @@ class RetrieveForeignPropertyBsasController @Inject()(
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, calculationId: String): Action[AnyContent] =
+  def retrieve(nino: String, calculationId: String, taxYear: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
 
@@ -59,23 +59,22 @@ class RetrieveForeignPropertyBsasController @Inject()(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = RetrieveForeignPropertyBsasRawData(nino, calculationId)
+      val rawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear)
 
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveForeignPropertyBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData, RetrieveForeignPropertyHateoasData(nino, calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasData    = RetrieveForeignPropertyHateoasData(nino, calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
         }
 
@@ -91,9 +90,20 @@ class RetrieveForeignPropertyBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
-      case InternalError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            InvalidTaxYearParameterError,
+            RuleTaxYearNotSupportedError,
+            RuleTypeOfBusinessIncorrectError,
+            CalculationIdFormatError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 }

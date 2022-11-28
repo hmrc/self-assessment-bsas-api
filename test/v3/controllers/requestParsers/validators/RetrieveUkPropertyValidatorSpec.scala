@@ -17,7 +17,7 @@
 package v3.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v3.models.errors.{ CalculationIdFormatError, NinoFormatError }
+import v3.models.errors.{ CalculationIdFormatError, InvalidTaxYearParameterError, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError }
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 
 class RetrieveUkPropertyValidatorSpec extends UnitSpec {
@@ -32,24 +32,48 @@ class RetrieveUkPropertyValidatorSpec extends UnitSpec {
   "validator" should {
     "return no errors" when {
       "passed valid raw data" in {
-        val input = RetrieveUkPropertyBsasRawData(validNino, validCalculationId)
+        val input = RetrieveUkPropertyBsasRawData(validNino, validCalculationId, taxYear = None)
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed raw data with an invalid nino" in {
-        val input = RetrieveUkPropertyBsasRawData(invalidNino, validCalculationId)
+        val input = RetrieveUkPropertyBsasRawData(invalidNino, validCalculationId, taxYear = None)
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed raw data with an invalid bsas id" in {
-        val input = RetrieveUkPropertyBsasRawData(validNino, invalidCalculationId)
+        val input = RetrieveUkPropertyBsasRawData(validNino, invalidCalculationId, taxYear = None)
         validator.validate(input) shouldBe List(CalculationIdFormatError)
       }
     }
     "return multiple errors" when {
       "passed raw data with multiple invalid fields" in {
-        val input = RetrieveUkPropertyBsasRawData(invalidNino, invalidCalculationId)
+        val input = RetrieveUkPropertyBsasRawData(invalidNino, invalidCalculationId, taxYear = None)
         validator.validate(input) shouldBe List(NinoFormatError, CalculationIdFormatError)
+      }
+    }
+    "return InvalidTaxYearParameterError error" when {
+      "a tax year before TYS is supplied" in {
+        val input = RetrieveUkPropertyBsasRawData(validNino, validCalculationId, Some("2022-23"))
+
+        validator.validate(input) shouldBe
+          List(InvalidTaxYearParameterError)
+      }
+    }
+    "return TaxYearFormatError error" when {
+      "a badly formatted tax year is supplied" in {
+        val input = RetrieveUkPropertyBsasRawData(validNino, validCalculationId, Some("BAD_TAX_YEAR"))
+
+        validator.validate(input) shouldBe
+          List(TaxYearFormatError)
+      }
+    }
+    "return RuleTaxYearRangeInvalidError error" when {
+      "a tax year range of more than one year is supplied" in {
+        val input = RetrieveUkPropertyBsasRawData(validNino, validCalculationId, Some("2022-24"))
+
+        validator.validate(input) shouldBe
+          List(RuleTaxYearRangeInvalidError)
       }
     }
   }

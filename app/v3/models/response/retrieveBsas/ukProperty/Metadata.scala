@@ -18,7 +18,7 @@ package v3.models.response.retrieveBsas.ukProperty
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.DownstreamTaxYear
+import v2.models.domain.DownstreamTaxYear
 import v3.models.domain.Status
 
 case class Metadata(

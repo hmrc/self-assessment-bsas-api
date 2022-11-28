@@ -17,7 +17,7 @@
 package v3.controllers.requestParsers.validators.validations
 
 import config.FixedConfig
-import utils.DownstreamTaxYear
+import v2.models.domain.DownstreamTaxYear
 import v3.models.errors.MtdError
 
 object MtdTaxYearValidation extends FixedConfig {
@@ -25,8 +25,8 @@ object MtdTaxYearValidation extends FixedConfig {
   // @param taxYear In format YYYY-YY
   def validate(taxYear: String, error: MtdError, minTaxYear: Int = minimumTaxYear): List[MtdError] = {
 
-    val desTaxYear = Integer.parseInt(DownstreamTaxYear.fromMtd(taxYear).value)
+    val downstreamTaxYear = Integer.parseInt(DownstreamTaxYear.fromMtd(taxYear).value)
 
-    if (desTaxYear >= minTaxYear) NoValidationErrors else List(error)
+    if (downstreamTaxYear >= minTaxYear) NoValidationErrors else List(error)
   }
 }

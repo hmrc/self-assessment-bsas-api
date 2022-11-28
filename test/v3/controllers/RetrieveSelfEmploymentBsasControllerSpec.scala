@@ -92,7 +92,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId))
+          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseModel, testHateoasLinks))
 
         val result: Future[Result] = controller.handleRequest(nino, calculationId)(fakeGetRequest)

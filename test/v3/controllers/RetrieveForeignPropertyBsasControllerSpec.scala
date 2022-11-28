@@ -18,18 +18,18 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockRetrieveForeignPropertyRequestParser
-import v3.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveForeignPropertyBsasService}
+import v3.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveForeignPropertyBsasService }
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
+import v3.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData }
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,14 +49,14 @@ class RetrieveForeignPropertyBsasControllerSpec
   private val nino   = "AA123456A"
   private val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId)
-  private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId)
+  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear=None)
+  private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId, taxYear=None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
 
-  private val hateoasResponse = retrieveForeignPropertyBsasMtdNonFhlJson.as[JsObject] ++ Json.parse(
-    """{
+  private val hateoasResponse = retrieveForeignPropertyBsasMtdNonFhlJson
+    .as[JsObject] ++ Json.parse("""{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
       |""".stripMargin).as[JsObject]
@@ -88,10 +88,10 @@ class RetrieveForeignPropertyBsasControllerSpec
           Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel)))
 
         MockHateoasFactory
-          .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calcId)) returns
+          .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calcId, None)) returns
           HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
 
-        val result: Future[Result] = controller.retrieve(nino, calcId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, calcId, taxYear=None)(fakeGetRequest)
 
         contentAsJson(result) shouldBe hateoasResponse
         status(result) shouldBe OK
@@ -105,7 +105,7 @@ class RetrieveForeignPropertyBsasControllerSpec
           s"a ${error.code} error is returned from the parser" in new Test {
             MockRetrieveForeignPropertyRequestParser.parse(requestRawData) returns Left(ErrorWrapper(correlationId, error, None))
 
-            val result: Future[Result] = controller.retrieve(nino, calcId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calcId, taxYear=None)(fakeGetRequest)
 
             contentAsJson(result) shouldBe Json.toJson(error)
             status(result) shouldBe expectedStatus
@@ -116,7 +116,10 @@ class RetrieveForeignPropertyBsasControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (CalculationIdFormatError, BAD_REQUEST)
+          (CalculationIdFormatError, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -129,7 +132,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
             MockRetrieveForeignPropertyBsasService.retrieveBsas(request) returns Future.successful(Left(ErrorWrapper(correlationId, mtdError)))
 
-            val result: Future[Result] = controller.retrieve(nino, calcId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calcId, taxYear=None)(fakeGetRequest)
 
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             status(result) shouldBe expectedStatus
@@ -141,6 +144,7 @@ class RetrieveForeignPropertyBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (InternalError, INTERNAL_SERVER_ERROR)
         )

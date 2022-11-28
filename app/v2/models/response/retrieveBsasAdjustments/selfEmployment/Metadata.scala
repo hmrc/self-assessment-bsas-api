@@ -18,8 +18,7 @@ package v2.models.response.retrieveBsasAdjustments.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.DownstreamTaxYear
-import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v2.models.domain.{DownstreamTaxYear, IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
 
 case class Metadata(typeOfBusiness: TypeOfBusiness,

@@ -17,23 +17,46 @@
 package v3.models.response
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
+import v3.models.domain.TaxYear
 import v3.models.hateoas.Link
-import v3.models.hateoas.Method
+import v3.models.hateoas.Method.GET
 
 class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
 
+  class Test extends MockAppConfig {
+    val nino          = "someNino"
+    val calculationId = "anId"
+    val taxYear       = Some(TaxYear.fromMtd("2023-24"))
+    val context       = "individuals/self-assessment/adjustable-summary"
+
+    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+  }
+
+  class TysDisabledTest extends Test {
+    MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+  }
+
+  class TysEnabledTest extends Test {
+    MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+  }
+
   "LinksFactory" should {
-    "produce the correct links" when {
-      "called" in {
-        val data: SubmitSelfEmploymentBsasHateoasData = SubmitSelfEmploymentBsasHateoasData("mynino", "mycalcid")
+    "return the correct links without tax year" in new TysDisabledTest {
+      private val data         = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None)
+      private val result       = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId", method = GET, rel = "self")
 
-        MockedAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes()
+      result shouldBe Seq(expectedLink)
+    }
 
-        SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data) shouldBe Seq(
-          Link(href = s"/my/context/${data.nino}/self-employment/${data.calculationId}", method = Method.GET, rel = "self")
-        )
-      }
+    "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+      private val data         = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, taxYear)
+      private val result       = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId?taxYear=2023-24", method = GET, rel = "self")
+
+      result shouldBe Seq(expectedLink)
     }
   }
 }
