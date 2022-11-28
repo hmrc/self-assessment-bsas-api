@@ -77,7 +77,8 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             EitherT(service.submitForeignPropertyBsas(parsedRequest))
           }
         } yield {
-          val vendorResponse = hateoasFactory.wrap(response.responseData, SubmitForeignPropertyBsasHateoasData(nino, calculationId, None))
+          val hateoasData    = SubmitForeignPropertyBsasHateoasData(nino, calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

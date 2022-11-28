@@ -63,15 +63,15 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.listBsas(parsedRequest))
         } yield {
-          val hateoasData     = ListBsasHateoasData(nino, response.responseData, None)
-          val hateoasResponse = hateoasFactory.wrapList(response.responseData, hateoasData)
+          val hateoasData    = ListBsasHateoasData(nino, response.responseData, None)
+          val vendorResponse = hateoasFactory.wrapList(response.responseData, hateoasData)
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }

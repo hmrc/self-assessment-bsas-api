@@ -74,7 +74,8 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
             EitherT(service.submitSelfEmploymentBsas(parsedRequest))
           }
         } yield {
-          val hateoasResponse = hateoasFactory.wrap(response.responseData, SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None))
+          val hateoasData    = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -87,11 +88,11 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
               params = Map("nino" -> nino, "calculationId" -> calculationId),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }

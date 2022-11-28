@@ -68,9 +68,9 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
         } yield {
-          val hateoasData =
-            TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId, None)
-          val hateoasResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+          val typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness)
+          val hateoasData    = TriggerBsasHateoasData(nino, typeOfBusiness, response.responseData.calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -83,11 +83,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
               params = Map("nino" -> nino),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }
