@@ -16,18 +16,30 @@
 
 package v3.controllers.requestParsers.validators
 
-import v3.controllers.requestParsers.validators.validations.{ CalculationIdValidation, NinoValidation }
+import v3.controllers.requestParsers.validators.validations.{
+  CalculationIdValidation,
+  NinoValidation,
+  TaxYearValidation,
+  TaxYearTYSParameterValidation
+}
 import v3.models.errors.MtdError
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRawData
 
 class RetrieveUkPropertyValidator extends Validator[RetrieveUkPropertyBsasRawData] {
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   private def parameterFormatValidation: RetrieveUkPropertyBsasRawData => List[List[MtdError]] = (data: RetrieveUkPropertyBsasRawData) => {
     List(
       NinoValidation.validate(data.nino),
       CalculationIdValidation.validate(data.calculationId),
+      TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: RetrieveUkPropertyBsasRawData => List[List[MtdError]] = (data: RetrieveUkPropertyBsasRawData) => {
+    List(
+      data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil)
     )
   }
 

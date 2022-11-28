@@ -49,8 +49,8 @@ class RetrieveUkPropertyBsasControllerSpec
   private val nino          = "AA123456A"
   private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
-  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
+  private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId, taxYear = None)
+  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId, taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -101,7 +101,7 @@ class RetrieveUkPropertyBsasControllerSpec
           .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseFhlModel, testHateoasLinks))
 
-        val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasFhlResponse
@@ -123,7 +123,7 @@ class RetrieveUkPropertyBsasControllerSpec
           .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks))
 
-        val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasNonFhlResponse
@@ -140,7 +140,7 @@ class RetrieveUkPropertyBsasControllerSpec
               .parse(requestRawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -152,6 +152,9 @@ class RetrieveUkPropertyBsasControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (InvalidTaxYearParameterError, BAD_REQUEST),
           (InternalError, INTERNAL_SERVER_ERROR)
         )
 
@@ -170,7 +173,7 @@ class RetrieveUkPropertyBsasControllerSpec
               .retrieveBsas(request)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.retrieve(nino, calculationId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -181,7 +184,9 @@ class RetrieveUkPropertyBsasControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (InternalError, INTERNAL_SERVER_ERROR)
         )

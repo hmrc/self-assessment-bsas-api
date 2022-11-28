@@ -18,9 +18,10 @@ package v3.controllers.requestParsers
 
 import support.UnitSpec
 import domain.Nino
+import v3.models.domain.TaxYear
 import v3.mocks.validators.MockRetrieveUkPropertyValidator
-import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
-import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.models.errors.{ BadRequestError, BsasIdFormatError, CalculationIdFormatError, ErrorWrapper, NinoFormatError }
+import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
 
 class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
 
@@ -28,12 +29,15 @@ class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
     lazy val parser = new RetrieveUkPropertyRequestParser(mockValidator)
   }
 
-  val nino = "AA123456A"
-  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val nino                           = "AA123456A"
+  val calculationId                  = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputRawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
-  val outputRequestData = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId)
+  val inputRawData      = RetrieveUkPropertyBsasRawData(nino, calculationId, taxYear = None)
+  val outputRequestData = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId, taxYear = None)
+
+  val inputTysRawData      = RetrieveUkPropertyBsasRawData(nino, calculationId, Some("2023-24"))
+  val outputTysRequestData = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")))
 
   "parser" should {
     "return a valid request object" when {
@@ -42,16 +46,29 @@ class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
         parser.parseRequest(inputRawData) shouldBe Right(outputRequestData)
       }
     }
+    "passed a valid TYS raw data object" in new Test {
+      MockValidator.validate(inputTysRawData).returns(List())
+      parser.parseRequest(inputTysRawData) shouldBe Right(outputTysRequestData)
+    }
     "return a single error" when {
       "a single error is thrown in the validation" in new Test {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError))
         parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
+      "a single error is thrown in the validation for a TYS request" in new Test {
+        MockValidator.validate(inputTysRawData).returns(List(NinoFormatError))
+        parser.parseRequest(inputTysRawData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
+      }
     }
     "return multiple errors" when {
-      "a multiple errors are thrown in the validation" in new Test {
+      "multiple errors are thrown in the validation" in new Test {
         MockValidator.validate(inputRawData).returns(List(NinoFormatError, BsasIdFormatError))
         parser.parseRequest(inputRawData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError))))
+      }
+      "multiple errors are thrown in the validation for a TYS request" in new Test {
+        MockValidator.validate(inputTysRawData).returns(List(NinoFormatError, CalculationIdFormatError))
+        parser.parseRequest(inputTysRawData) shouldBe Left(
+          ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, CalculationIdFormatError))))
       }
     }
   }
