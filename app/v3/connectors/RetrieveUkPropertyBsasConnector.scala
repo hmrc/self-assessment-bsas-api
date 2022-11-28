@@ -17,30 +17,32 @@
 package v3.connectors
 
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.connectors.DownstreamUri.IfsUri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
+import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
+  def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit hc: HeaderCarrier,
+                                                           ec: ExecutionContext,
+                                                           correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
 
     import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino = request.nino.nino
-    val calculationId = request.calculationId
+    val url = taxYear match {
+      case Some(taxYear) if taxYear.useTaxYearSpecificApi =>
+        TaxYearSpecificIfsUri[RetrieveUkPropertyBsasResponse](
+          s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/${request.calculationId}")
+      case _ => IfsUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${nino.nino}/${request.calculationId}")
+    }
 
-    get(
-      IfsUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
-    )
+    get(url)
+
   }
 }

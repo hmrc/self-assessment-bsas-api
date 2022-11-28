@@ -51,14 +51,14 @@ class RetrieveUkPropertyBsasController @Inject()(
       endpointName = "retrieve"
     )
 
-  def retrieve(nino: String, calculationId: String): Action[AnyContent] =
+  def retrieve(nino: String, calculationId: String, taxYear: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = RetrieveUkPropertyBsasRawData(nino, calculationId)
+      val rawData = RetrieveUkPropertyBsasRawData(nino, calculationId, taxYear)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
@@ -88,9 +88,20 @@ class RetrieveUkPropertyBsasController @Inject()(
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | CalculationIdFormatError | RuleTypeOfBusinessIncorrectError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                                                                   => NotFound(Json.toJson(errorWrapper))
-      case InternalError                                                                                 => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            CalculationIdFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            InvalidTaxYearParameterError,
+            RuleTypeOfBusinessIncorrectError,
+            RuleTaxYearNotSupportedError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 }

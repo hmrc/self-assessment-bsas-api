@@ -20,12 +20,15 @@ import domain.Nino
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
+import v3.models.domain.TaxYear
+import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino          = Nino("AA123456A")
+  val calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   trait Test {
     _: ConnectorTest =>
@@ -36,14 +39,26 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
     "return a valid response" when {
       val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
 
-      "a valid request is supplied" in new IfsTest with Test {
-        val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId")
+      "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
+        val request = RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear = None)
 
-        val expectedUrl =  s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId"
+        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId"
 
-        willGet(url = expectedUrl) returns Future.successful(outcome)
+        willGet(expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieve(request)) shouldBe outcome
+      }
+
+      "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val request = RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
+
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/$calculationId") returns Future
+          .successful(outcome)
+
+        val result: DownstreamOutcome[RetrieveUkPropertyBsasResponse] = await(connector.retrieve(request))
+        result shouldBe outcome
       }
     }
   }
