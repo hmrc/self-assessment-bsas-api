@@ -113,7 +113,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponseWithTaxYear(nino, calculationId, "2023-24"))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -145,7 +145,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponseWithTaxYear(nino, calculationId, "2023-24"))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
       }
     }

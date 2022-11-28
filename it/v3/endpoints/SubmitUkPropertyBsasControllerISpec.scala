@@ -55,7 +55,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
         val response: WSResponse = await(request().post(requestBodyJson))
         response.status shouldBe OK
-        response.json shouldBe Json.parse(hateoasResponseWithTaxYearParam(nino, calculationId, "2023-24"))
+        response.json shouldBe Json.parse(hateoasResponse(nino, calculationId, taxYear))
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
