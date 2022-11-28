@@ -65,17 +65,16 @@ class RetrieveForeignPropertyBsasController @Inject()(
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveForeignPropertyBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData, RetrieveForeignPropertyHateoasData(nino, calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasData    = RetrieveForeignPropertyHateoasData(nino, calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
         }
 
@@ -103,8 +102,8 @@ class RetrieveForeignPropertyBsasController @Inject()(
             CalculationIdFormatError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case _             => unhandledError(errorWrapper)
     }
 }

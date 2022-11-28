@@ -63,17 +63,16 @@ class RetrieveSelfEmploymentBsasController @Inject()(
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveSelfEmploymentBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData, RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val hateoasData    = RetrieveSelfAssessmentBsasHateoasData(nino, response.responseData.metadata.calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
         }
       result.leftMap { errorWrapper =>

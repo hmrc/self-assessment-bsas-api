@@ -18,27 +18,27 @@ package v3.controllers
 
 import domain.Nino
 import mocks.MockIdGenerator
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockTriggerBsasRequestParser
-import v3.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService}
-import v3.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v3.mocks.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockTriggerBsasService }
+import v3.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
 import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 import v3.models.outcomes.ResponseWrapper
-import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
+import v3.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequest }
 import v3.models.response.TriggerBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class TriggerBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockTriggerBsasRequestParser
@@ -128,7 +128,7 @@ class TriggerBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId))
+          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, None))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBody))
@@ -152,7 +152,7 @@ class TriggerBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId))
+          .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, None))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(requestBodyForProperty))

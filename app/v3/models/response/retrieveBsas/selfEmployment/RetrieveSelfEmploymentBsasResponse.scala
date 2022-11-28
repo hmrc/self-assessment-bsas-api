@@ -19,9 +19,9 @@ package v3.models.response.retrieveBsas.selfEmployment
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
-import v3.models.hateoas.{HateoasData, Link}
+import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
+import v3.models.domain.{ HasTypeOfBusiness, TaxYear, TypeOfBusiness }
+import v3.models.hateoas.{ HateoasData, Link }
 
 case class RetrieveSelfEmploymentBsasResponse(
     metadata: Metadata,
@@ -37,10 +37,10 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveSelfEmploymentBsasResponse] = (
     (JsPath \ "metadata").read[Metadata] and
-    (JsPath \ "inputs").read[Inputs] and
-    (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
-    (JsPath \ "adjustments").readNullable[Adjustments] and
-    (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustedSummaryCalculation]
+      (JsPath \ "inputs").read[Inputs] and
+      (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
+      (JsPath \ "adjustments").readNullable[Adjustments] and
+      (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustedSummaryCalculation]
   )(RetrieveSelfEmploymentBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
@@ -51,11 +51,11 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
       import data._
 
       Seq(
-        getSelfEmploymentBsas(appConfig, nino, bsasId),
-        adjustSelfEmploymentBsas(appConfig, nino, bsasId)
+        getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear),
+        adjustSelfEmploymentBsas(appConfig, nino, bsasId, taxYear)
       )
     }
   }
 }
 
-case class RetrieveSelfAssessmentBsasHateoasData(nino: String, bsasId: String) extends HateoasData
+case class RetrieveSelfAssessmentBsasHateoasData(nino: String, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

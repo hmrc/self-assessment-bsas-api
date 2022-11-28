@@ -67,12 +67,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(response.responseData,
-                    TriggerBsasHateoasData(nino, TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness), response.responseData.calculationId))
-              .asRight[ErrorWrapper])
         } yield {
+          val typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness)
+          val hateoasData    = TriggerBsasHateoasData(nino, typeOfBusiness, response.responseData.calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}"
@@ -84,11 +83,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
               params = Map("nino" -> nino),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
             .as(MimeTypes.JSON)
         }

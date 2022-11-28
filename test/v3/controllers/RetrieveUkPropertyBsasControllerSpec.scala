@@ -98,7 +98,7 @@ class RetrieveUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId))
+          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseFhlModel, testHateoasLinks))
 
         val result: Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
@@ -120,7 +120,7 @@ class RetrieveUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId))
+          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks))
 
         val result: Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)

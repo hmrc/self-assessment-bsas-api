@@ -132,7 +132,7 @@ class SubmitUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId))
+          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId, None))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
@@ -238,7 +238,7 @@ class SubmitUkPropertyBsasControllerSpec
         val errors = Seq(
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
-        (InternalError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
           (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
           (NotFoundError, NOT_FOUND),

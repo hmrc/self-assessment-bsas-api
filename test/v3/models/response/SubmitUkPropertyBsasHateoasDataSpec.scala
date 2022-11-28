@@ -17,10 +17,12 @@
 package v3.models.response
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
 import v3.hateoas.HateoasFactory
+import v3.models.domain.TaxYear
 import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{HateoasWrapper, Link}
+import v3.models.hateoas.{ HateoasWrapper, Link }
 
 class SubmitUkPropertyBsasHateoasDataSpec extends UnitSpec {
 
@@ -29,15 +31,32 @@ class SubmitUkPropertyBsasHateoasDataSpec extends UnitSpec {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val calcId         = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
+      val context        = "individuals/self-assessment/adjustable-summary"
+
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
     }
 
-    "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {
-      hateoasFactory.wrap((), SubmitUkPropertyBsasHateoasData(nino, calcId)) shouldBe
-        HateoasWrapper((),
-                       Seq(
-                         Link(s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calcId", GET, "self")
-                       ))
+    class TysDisabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    }
+
+    class TysEnabledTest extends Test {
+      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    }
+
+    "return the correct links without tax year" in new TysDisabledTest {
+      private val result       = hateoasFactory.wrap((), SubmitUkPropertyBsasHateoasData(nino, calcId, None))
+      private val expectedLink = Link(s"/$context/$nino/uk-property/$calcId", GET, "self")
+
+      result shouldBe HateoasWrapper((), Seq(expectedLink))
+    }
+
+    "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
+      private val result       = hateoasFactory.wrap((), SubmitUkPropertyBsasHateoasData(nino, calcId, taxYear))
+      private val expectedLink = Link(s"/$context/$nino/uk-property/$calcId?taxYear=2023-24", GET, "self")
+
+      result shouldBe HateoasWrapper((), Seq(expectedLink))
     }
   }
 
