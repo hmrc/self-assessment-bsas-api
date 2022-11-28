@@ -533,39 +533,25 @@ object RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String): JsValue =
+  def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
     mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(s"""
       |{
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId$taxYearParam",
       |      "method": "GET",
       |      "rel": "self"
       |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust$taxYearParam",
       |      "method": "POST",
       |      "rel": "submit-self-employment-accounting-adjustments"
       |    }
       |  ]
       |}
       |""".stripMargin).as[JsObject]
-
-  def mtdRetrieveBsasReponseJsonWithHateoasAndTaxYearParam(nino: String, calculationId: String, taxYear: String): JsValue =
-    mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(s"""
-       |{
-       |  "links": [
-       |    {
-       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId?taxYear=2023-24",
-       |      "method": "GET",
-       |      "rel": "self"
-       |    }, {
-       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust?taxYear=2023-24",
-       |      "method": "POST",
-       |      "rel": "submit-self-employment-accounting-adjustments"
-       |    }
-       |  ]
-       |}
-       |""".stripMargin).as[JsObject]
+  }
 
   val metadataModel: Metadata = Metadata(
     calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
