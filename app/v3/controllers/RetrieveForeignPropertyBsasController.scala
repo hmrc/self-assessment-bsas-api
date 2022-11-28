@@ -66,15 +66,15 @@ class RetrieveForeignPropertyBsasController @Inject()(
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieveForeignPropertyBsas(parsedRequest))
         } yield {
-          val hateoasResponse =
-            hateoasFactory.wrap(response.responseData, RetrieveForeignPropertyHateoasData(nino, calculationId, parsedRequest.taxYear))
+          val hateoasData    = RetrieveForeignPropertyHateoasData(nino, calculationId, parsedRequest.taxYear)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${response.correlationId}"
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
         }
 

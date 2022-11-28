@@ -74,8 +74,8 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             EitherT(service.submitPropertyBsas(parsedRequest))
           }
         } yield {
-          val hateoasResponse =
-            hateoasFactory.wrap(response.responseData, SubmitUkPropertyBsasHateoasData(nino, calculationId, parsedRequest.taxYear))
+          val hateoasData    = SubmitUkPropertyBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -87,11 +87,11 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
               params = Map("nino" -> nino, "calculationId" -> calculationId),
               requestBody = Some(request.body),
               `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(response.correlationId)
         }
 
