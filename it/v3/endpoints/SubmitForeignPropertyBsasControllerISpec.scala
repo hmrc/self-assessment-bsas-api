@@ -33,6 +33,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     val nino: String            = "AA123456A"
     val calculationId: String   = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
     def taxYear: Option[String] = None
+    def retrieveHateoasLink: String
 
     // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
@@ -51,7 +52,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |{
          |  "links":[
          |    {
-         |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId",
+         |      "href":"$retrieveHateoasLink",
          |      "rel":"self",
          |      "method":"GET"
          |    }
@@ -97,13 +98,15 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String       = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
   }
 
   private trait TysIfsTest extends Test {
     override def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUrl: String       = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
   }
 
   "Calling the submit foreign property bsas endpoint" should {

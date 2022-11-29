@@ -257,7 +257,9 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  def summariesJSONWithHateoas(nino: String, taxYear: String = "2019-20"): JsValue =
+  def summariesJSONWithHateoas(nino: String, taxYear: Option[String] = None): JsValue = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
     Json.parse(
       s"""
       |{
@@ -269,7 +271,7 @@ trait ListBsasFixture {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "$taxYear",
+      |      "taxYear": "2019-20",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -278,7 +280,7 @@ trait ListBsasFixture {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4$taxYearParam",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -293,7 +295,7 @@ trait ListBsasFixture {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "$taxYear",
+      |      "taxYear": "2019-20",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
@@ -302,7 +304,7 @@ trait ListBsasFixture {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5$taxYearParam",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -317,7 +319,7 @@ trait ListBsasFixture {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "$taxYear",
+      |      "taxYear": "2019-20",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
@@ -326,7 +328,7 @@ trait ListBsasFixture {
       |          "adjustedSummary": false,
       |          "links": [
       |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
+      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6$taxYearParam",
       |              "method": "GET",
       |              "rel": "self"
       |            }
@@ -342,7 +344,7 @@ trait ListBsasFixture {
       |      "rel": "trigger-business-source-adjustable-summary"
       |    },
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino$taxYearParam",
       |      "method": "GET",
       |      "rel": "self"
       |    }
@@ -350,8 +352,11 @@ trait ListBsasFixture {
       |}
     """.stripMargin
     )
+  }
 
-  val summariesJSONForeignWithHateoas: String => JsValue = nino =>
+  def summariesJSONForeignWithHateoas(nino: String, taxYear: Option[String] = None): JsValue = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
     Json.parse(
       s"""
        |{
@@ -372,7 +377,7 @@ trait ListBsasFixture {
        |          "adjustedSummary": false,
        |          "links": [
        |            {
-       |              "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       |              "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4$taxYearParam",
        |              "method": "GET",
        |              "rel": "self"
        |            }
@@ -388,14 +393,15 @@ trait ListBsasFixture {
        |      "rel": "trigger-business-source-adjustable-summary"
        |    },
        |    {
-       |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino$taxYearParam",
        |      "method": "GET",
        |      "rel": "self"
        |    }
        |  ]
        |}
     """.stripMargin
-  )
+    )
+  }
 
   val listBsasDownstreamJsonMultiple: JsArray = JsArray(
     Seq(

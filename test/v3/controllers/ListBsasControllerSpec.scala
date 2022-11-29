@@ -70,8 +70,8 @@ class ListBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(nino, response, None))
-          .returns(responseWithHateoas(request.taxYear))
+          .wrapList(response, ListBsasHateoasData(nino, response, Some(request.taxYear)))
+          .returns(responseWithHateoas)
 
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
@@ -92,16 +92,16 @@ class ListBsasControllerSpec
 
         MockListBsasService
           .listBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseNone))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
-          .wrapList(responseNone, ListBsasHateoasData(nino, responseNone, None))
-          .returns(responseWithHateoas(request.taxYear))
+          .wrapList(response, ListBsasHateoasData(nino, response, Some(request.taxYear)))
+          .returns(responseWithHateoas)
 
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe summariesJSONWithHateoas(nino, taxYearDefault)
+        contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -217,27 +217,14 @@ class ListBsasControllerSpec
 
     val taxYearDefault: String = TaxYear.now().asMtd
 
-    val responseNone: ListBsasResponse[BsasSummary] = ListBsasResponse(
-      Seq(
-        businessSourceSummaryModel(taxYearDefault),
-        businessSourceSummaryModel(taxYearDefault).copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                                                        summaries = Seq(
-                                                          bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-                                                        )),
-        businessSourceSummaryModel(taxYearDefault).copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                                                        summaries = Seq(
-                                                          bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-                                                        ))
-      ))
-
-    def responseWithHateoas(taxYear: TaxYear): HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
+    def responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
       ListBsasResponse(
         Seq(
           BusinessSourceSummary(
             businessId = "000000000000210",
             typeOfBusiness = TypeOfBusiness.`self-employment`,
             accountingPeriodModel,
-            taxYear = taxYear,
+            taxYear = TaxYear.fromMtd("2019-20"),
             Seq(
               HateoasWrapper(
                 bsasSummaryModel,
@@ -248,7 +235,7 @@ class ListBsasControllerSpec
             businessId = "000000000000210",
             typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
             accountingPeriodModel,
-            taxYear = taxYear,
+            taxYear = TaxYear.fromMtd("2019-20"),
             Seq(
               HateoasWrapper(
                 bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
@@ -259,7 +246,7 @@ class ListBsasControllerSpec
             businessId = "000000000000210",
             typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
             accountingPeriodModel,
-            taxYear = taxYear,
+            taxYear = TaxYear.fromMtd("2019-20"),
             Seq(
               HateoasWrapper(
                 bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),

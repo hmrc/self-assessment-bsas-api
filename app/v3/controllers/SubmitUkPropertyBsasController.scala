@@ -74,7 +74,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             EitherT(service.submitPropertyBsas(parsedRequest))
           }
         } yield {
-          val hateoasData    = SubmitUkPropertyBsasHateoasData(nino, calculationId, None)
+          val hateoasData    = SubmitUkPropertyBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
           val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(

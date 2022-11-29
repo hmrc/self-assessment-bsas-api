@@ -548,39 +548,45 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasReponseFhlJsonWithHateoas(nino: String, calculationId: String): JsValue =
+  def mtdRetrieveBsasReponseFhlJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
     mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json.parse(s"""
       |{
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId$taxYearParam",
       |      "method": "GET",
       |      "rel": "self"
       |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust$taxYearParam",
       |      "method": "POST",
       |      "rel": "submit-uk-property-accounting-adjustments"
       |    }
       |  ]
       |}
       |""".stripMargin).as[JsObject]
+  }
 
-  def mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino: String, calculationId: String): JsValue =
+  def mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
     mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json.parse(s"""
       |{
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId$taxYearParam",
       |      "method": "GET",
       |      "rel": "self"
       |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust$taxYearParam",
       |      "method": "POST",
       |      "rel": "submit-uk-property-accounting-adjustments"
       |    }
       |  ]
       |}
       |""".stripMargin).as[JsObject]
+  }
 
   val metadataModel: Metadata = Metadata(
     calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",

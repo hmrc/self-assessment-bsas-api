@@ -19,11 +19,10 @@ package v3.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ Json, JsValue }
+import play.api.libs.json.{ JsValue, Json }
 import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures.mtdRequest
 import v3.models.errors._
 import v3.stubs._
 
@@ -114,7 +113,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -146,7 +145,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
       }
     }

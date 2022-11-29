@@ -250,15 +250,19 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
           expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
   }
 
-  val hateoasResponse: (String, String) => String = (nino: String, calcId: String) => s"""
+  def hateoasResponse(nino: String, calcId: String, taxYear: Option[String] = None): String = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
+    s"""
        |{
        |  "links":[
        |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calcId",
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calcId$taxYearParam",
        |      "rel":"self",
        |      "method":"GET"
        |    }
        |  ]
        |}
     """.stripMargin
+  }
 }
