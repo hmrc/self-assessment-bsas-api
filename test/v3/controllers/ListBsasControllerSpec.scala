@@ -55,68 +55,6 @@ class ListBsasControllerSpec
   private val typeOfBusiness = Some("self-employment")
   private val businessId     = Some("XAIS12345678901")
 
-  trait Test {
-    def taxYear: Option[String] = Some("2019-20")
-
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new ListBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockListBsasRequestParser,
-      service = mockListBsasService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator,
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-    val rawData: ListBsasRawData = ListBsasRawData(
-      nino = nino,
-      taxYear = taxYear,
-      typeOfBusiness = typeOfBusiness,
-      businessId = businessId
-    )
-
-    val request: ListBsasRequest = ListBsasRequest(
-      nino = Nino(nino),
-      taxYear = rawData.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now()),
-      incomeSourceId = businessId,
-      incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
-    )
-
-    val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
-      Seq(
-        businessSourceSummaryModel(),
-        businessSourceSummaryModel().copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                                          summaries = Seq(
-                                            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-                                          )),
-        businessSourceSummaryModel().copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                                          summaries = Seq(
-                                            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-                                          ))
-      ))
-
-    val taxYearDefault: String = TaxYear.now().asMtd
-
-    val responseNone: ListBsasResponse[BsasSummary] = ListBsasResponse(
-      Seq(
-        businessSourceSummaryModel(taxYearDefault),
-        businessSourceSummaryModel(taxYearDefault).copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                                                        summaries = Seq(
-                                                          bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-                                                        )),
-        businessSourceSummaryModel(taxYearDefault).copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                                                        summaries = Seq(
-                                                          bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-                                                        ))
-      ))
-  }
-
   "list bsas" should {
     "return successful response with status OK" when {
       "valid request" in new Test {
@@ -131,48 +69,9 @@ class ListBsasControllerSpec
           .listBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        val responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
-          ListBsasResponse(
-            Seq(
-              BusinessSourceSummary(
-                businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`self-employment`,
-                accountingPeriodModel,
-                taxYear = request.taxYear,
-                Seq(
-                  HateoasWrapper(
-                    bsasSummaryModel,
-                    Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
-                  ))
-              ),
-              BusinessSourceSummary(
-                businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                accountingPeriodModel,
-                taxYear = request.taxYear,
-                Seq(HateoasWrapper(
-                  bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
-                ))
-              ),
-              BusinessSourceSummary(
-                businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                accountingPeriodModel,
-                taxYear = request.taxYear,
-                Seq(HateoasWrapper(
-                  bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
-                ))
-              )
-            )
-          ),
-          Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino, None))
-        )
-
         MockHateoasFactory
           .wrapList(response, ListBsasHateoasData(nino, response, None))
-          .returns(responseWithHateoas)
+          .returns(responseWithHateoas(request.taxYear))
 
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
@@ -195,48 +94,9 @@ class ListBsasControllerSpec
           .listBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseNone))))
 
-        val responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
-          ListBsasResponse(
-            Seq(
-              BusinessSourceSummary(
-                businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`self-employment`,
-                accountingPeriodModel,
-                taxYear = request.taxYear,
-                Seq(
-                  HateoasWrapper(
-                    bsasSummaryModel,
-                    Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
-                  ))
-              ),
-              BusinessSourceSummary(
-                businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                accountingPeriodModel,
-                taxYear = request.taxYear,
-                Seq(HateoasWrapper(
-                  bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
-                ))
-              ),
-              BusinessSourceSummary(
-                businessId = "000000000000210",
-                typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                accountingPeriodModel,
-                taxYear = request.taxYear,
-                Seq(HateoasWrapper(
-                  bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
-                ))
-              )
-            )
-          ),
-          Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino, None))
-        )
-
         MockHateoasFactory
           .wrapList(responseNone, ListBsasHateoasData(nino, responseNone, None))
-          .returns(responseWithHateoas)
+          .returns(responseWithHateoas(request.taxYear))
 
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
@@ -307,5 +167,108 @@ class ListBsasControllerSpec
         input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
+  }
+
+  trait Test {
+    def taxYear: Option[String] = Some("2019-20")
+
+    val hc: HeaderCarrier = HeaderCarrier()
+
+    val controller = new ListBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockListBsasRequestParser,
+      service = mockListBsasService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator,
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+
+    val rawData: ListBsasRawData = ListBsasRawData(
+      nino = nino,
+      taxYear = taxYear,
+      typeOfBusiness = typeOfBusiness,
+      businessId = businessId
+    )
+
+    val request: ListBsasRequest = ListBsasRequest(
+      nino = Nino(nino),
+      taxYear = rawData.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now()),
+      incomeSourceId = businessId,
+      incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
+    )
+
+    val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
+      Seq(
+        businessSourceSummaryModel(),
+        businessSourceSummaryModel().copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+                                          summaries = Seq(
+                                            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
+                                          )),
+        businessSourceSummaryModel().copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+                                          summaries = Seq(
+                                            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
+                                          ))
+      ))
+
+    val taxYearDefault: String = TaxYear.now().asMtd
+
+    val responseNone: ListBsasResponse[BsasSummary] = ListBsasResponse(
+      Seq(
+        businessSourceSummaryModel(taxYearDefault),
+        businessSourceSummaryModel(taxYearDefault).copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+                                                        summaries = Seq(
+                                                          bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
+                                                        )),
+        businessSourceSummaryModel(taxYearDefault).copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+                                                        summaries = Seq(
+                                                          bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
+                                                        ))
+      ))
+
+    def responseWithHateoas(taxYear: TaxYear): HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
+      ListBsasResponse(
+        Seq(
+          BusinessSourceSummary(
+            businessId = "000000000000210",
+            typeOfBusiness = TypeOfBusiness.`self-employment`,
+            accountingPeriodModel,
+            taxYear = taxYear,
+            Seq(
+              HateoasWrapper(
+                bsasSummaryModel,
+                Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
+              ))
+          ),
+          BusinessSourceSummary(
+            businessId = "000000000000210",
+            typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+            accountingPeriodModel,
+            taxYear = taxYear,
+            Seq(
+              HateoasWrapper(
+                bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
+                Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
+              ))
+          ),
+          BusinessSourceSummary(
+            businessId = "000000000000210",
+            typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+            accountingPeriodModel,
+            taxYear = taxYear,
+            Seq(
+              HateoasWrapper(
+                bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
+                Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
+              ))
+          )
+        )
+      ),
+      Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino, None))
+    )
   }
 }
