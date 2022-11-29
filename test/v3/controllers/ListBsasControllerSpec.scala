@@ -17,6 +17,7 @@
 package v3.controllers
 import domain.Nino
 import mocks.{ MockAppConfig, MockIdGenerator }
+import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -107,6 +108,7 @@ class ListBsasControllerSpec
     "return successful response with status OK" when {
       "valid request" in new Test {
         MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
+        MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false) anyNumberOfTimes ()
 
         MockListBsasRequestDataParser
           .parse(rawData)
@@ -127,7 +129,7 @@ class ListBsasControllerSpec
                 Seq(
                   HateoasWrapper(
                     bsasSummaryModel,
-                    Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"))
+                    Seq(getSelfEmploymentBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
                   ))
               ),
               BusinessSourceSummary(
@@ -137,7 +139,7 @@ class ListBsasControllerSpec
                 taxYear = request.taxYear,
                 Seq(HateoasWrapper(
                   bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"))
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
                 ))
               ),
               BusinessSourceSummary(
@@ -147,16 +149,16 @@ class ListBsasControllerSpec
                 taxYear = request.taxYear,
                 Seq(HateoasWrapper(
                   bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
-                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"))
+                  Seq(getUkPropertyBsas(mockAppConfig, nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
                 ))
               )
             )
           ),
-          Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino))
+          Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino, None))
         )
 
         MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(nino, response))
+          .wrapList(response, ListBsasHateoasData(nino, response, None))
           .returns(responseWithHateoas)
 
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)

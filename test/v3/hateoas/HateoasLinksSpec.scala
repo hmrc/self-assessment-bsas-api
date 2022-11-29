@@ -17,69 +17,126 @@
 package v3.hateoas
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
-import v3.models.hateoas.Link
-import v3.models.hateoas.Method.{GET, POST}
+import v3.models.domain.TaxYear
+import v3.models.hateoas.{ Link, Method }
+import v3.models.hateoas.Method.{ GET, POST }
 import v3.models.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
-  private val nino   = "AA111111A"
-  private val calcId = "1234567890"
+  private val nino        = "AA111111A"
+  private val calcId      = "1234567890"
+  private val taxYear2023 = TaxYear.fromMtd("2022-23")
+  private val taxYear2024 = TaxYear.fromMtd("2023-24")
 
   object Target extends HateoasLinks
 
   class Test {
-    val context = "context"
-    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+    MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes
+  }
+
+  class TysDisabledTest extends Test {
+    MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)
+  }
+
+  class TysEnabledTest extends Test {
+    MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> true)
   }
 
   "HateoasLinks" when {
 
-    "supplied config and valid nino" should {
-      "return the Trigger BSAS link" in new Test {
+    "triggerBsas" should {
+      "return the correct link" in new Test {
         val link: Link = Link(href = s"/context/$nino/trigger", method = POST, rel = TRIGGER)
-
         Target.triggerBsas(mockAppConfig, nino) shouldBe link
-      }
-
-      "return the List BSAS link" in new Test {
-        val link: Link = Link(href = s"/context/$nino", method = GET, rel = SELF)
-
-        Target.listBsas(mockAppConfig, nino) shouldBe link
       }
     }
 
-    "supplied config, a nino, and a calculation ID" should {
+    "listBsas" should {
+      assertCorrectLink(
+        makeLink = Target.listBsas(mockAppConfig, nino, _),
+        baseHref = s"/context/$nino",
+        method = GET,
+        rel = SELF
+      )
+    }
 
-      "return the Retrieve SE BSAS link" in new Test {
-        val link: Link = Link(href = s"/context/$nino/self-employment/$calcId", method = GET, rel = SELF)
-        Target.getSelfEmploymentBsas(mockAppConfig, nino, calcId) shouldBe link
+    "getSelfEmploymentBsas" should {
+      assertCorrectLink(
+        makeLink = Target.getSelfEmploymentBsas(mockAppConfig, nino, calcId, _),
+        baseHref = s"/context/$nino/self-employment/$calcId",
+        method = GET,
+        rel = SELF
+      )
+    }
+
+    "getUkPropertyBsas" should {
+      assertCorrectLink(
+        makeLink = Target.getUkPropertyBsas(mockAppConfig, nino, calcId, _),
+        baseHref = s"/context/$nino/uk-property/$calcId",
+        method = GET,
+        rel = SELF
+      )
+    }
+
+    "getForeignPropertyBsas" should {
+      assertCorrectLink(
+        makeLink = Target.getForeignPropertyBsas(mockAppConfig, nino, calcId, _),
+        baseHref = s"/context/$nino/foreign-property/$calcId",
+        method = GET,
+        rel = SELF
+      )
+    }
+
+    "adjustSelfEmploymentBsas" should {
+      assertCorrectLink(
+        makeLink = Target.adjustSelfEmploymentBsas(mockAppConfig, nino, calcId, _),
+        baseHref = s"/context/$nino/self-employment/$calcId/adjust",
+        method = POST,
+        rel = SUBMIT_SE_ADJUSTMENTS
+      )
+    }
+
+    "adjustUkPropertyBsas" should {
+      assertCorrectLink(
+        makeLink = Target.adjustUkPropertyBsas(mockAppConfig, nino, calcId, _),
+        baseHref = s"/context/$nino/uk-property/$calcId/adjust",
+        method = POST,
+        rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS
+      )
+    }
+
+    "adjustForeignPropertyBsas" should {
+      assertCorrectLink(
+        makeLink = Target.adjustForeignPropertyBsas(mockAppConfig, nino, calcId, _),
+        baseHref = s"/context/$nino/foreign-property/$calcId/adjust",
+        method = POST,
+        rel = SUBMIT_FOREIGN_PROPERTY_ADJUSTMENTS
+      )
+    }
+
+  }
+
+  def assertCorrectLink(makeLink: Option[TaxYear] => Link, baseHref: String, method: Method, rel: String): Unit = {
+    "return the correct link" in new TysDisabledTest {
+      makeLink(None) shouldBe Link(href = baseHref, method = method, rel = rel)
+    }
+
+    "TYS feature switch is disabled" should {
+      "not include tax year query parameter given a TYS tax year" in new TysDisabledTest {
+        makeLink(Some(taxYear2024)) shouldBe Link(href = baseHref, method = method, rel = rel)
+      }
+    }
+
+    "TYS feature switch is enabled" should {
+      "not include tax year query parameter given a non-TYS tax year" in new TysEnabledTest {
+        makeLink(Some(taxYear2023)) shouldBe Link(href = baseHref, method = method, rel = rel)
       }
 
-      "return the UK Retrieve Property BSAS link" in new Test {
-        val link: Link = Link(href = s"/context/$nino/uk-property/$calcId", method = GET, rel = SELF)
-        Target.getUkPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
-      }
-
-      "return the Retrieve Foreign Property BSAS link" in new Test {
-        val link: Link = Link(href = s"/context/$nino/foreign-property/$calcId", method = GET, rel = SELF)
-        Target.getForeignPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
-      }
-
-      "return the Submit SE BSAS Adjustments link" in new Test {
-        val link: Link = Link(href = s"/context/$nino/self-employment/$calcId/adjust", method = POST, rel = SUBMIT_SE_ADJUSTMENTS)
-        Target.adjustSelfEmploymentBsas(mockAppConfig, nino, calcId) shouldBe link
-      }
-
-      "return the Submit UK Property BSAS Adjustments link" in new Test {
-        val link: Link = Link(href = s"/context/$nino/uk-property/$calcId/adjust", method = POST, rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS)
-        Target.adjustUkPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
-      }
-
-      "return the Submit Foreign Property BSAS Adjustments link" in new Test {
-        val link: Link = Link(href = s"/context/$nino/foreign-property/$calcId/adjust", method = POST, rel = SUBMIT_FOREIGN_PROPERTY_ADJUSTMENTS)
-        Target.adjustForeignPropertyBsas(mockAppConfig, nino, calcId) shouldBe link
+      "include tax year query parameter given a TYS tax year" in new TysEnabledTest {
+        makeLink(Some(taxYear2024)) shouldBe Link(href = s"$baseHref?taxYear=2023-24", method = method, rel = rel)
       }
     }
   }

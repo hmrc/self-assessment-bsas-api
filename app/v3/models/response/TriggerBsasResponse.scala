@@ -18,9 +18,9 @@ package v3.models.response
 
 import config.AppConfig
 import play.api.libs.json._
-import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
-import v3.models.domain.TypeOfBusiness
-import v3.models.hateoas.{ HateoasData, Link }
+import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v3.models.domain.{TaxYear, TypeOfBusiness}
+import v3.models.hateoas.{HateoasData, Link}
 
 case class TriggerBsasResponse(calculationId: String)
 
@@ -37,12 +37,12 @@ object TriggerBsasResponse extends HateoasLinks {
       import data._
 
       data.typeOfBusiness match {
-        case `self-employment` => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId))
-        case `uk-property-fhl` | `uk-property-non-fhl` => Seq(getUkPropertyBsas(appConfig, nino, bsasId))
-        case `foreign-property` | `foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, nino, bsasId))
+        case `self-employment`                               => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))
+        case `uk-property-fhl` | `uk-property-non-fhl`       => Seq(getUkPropertyBsas(appConfig, nino, bsasId, taxYear))
+        case `foreign-property` | `foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, nino, bsasId, taxYear))
       }
     }
   }
 }
 
-case class TriggerBsasHateoasData(nino: String, typeOfBusiness: TypeOfBusiness, bsasId: String) extends HateoasData
+case class TriggerBsasHateoasData(nino: String, typeOfBusiness: TypeOfBusiness, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

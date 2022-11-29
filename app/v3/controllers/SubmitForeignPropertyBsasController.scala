@@ -76,9 +76,10 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             //Submit Return to ETMP
             EitherT(service.submitForeignPropertyBsas(parsedRequest))
           }
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData, SubmitForeignPropertyBsasHateoasData(nino, calculationId)).asRight[ErrorWrapper])
         } yield {
+          val hateoasData    = SubmitForeignPropertyBsasHateoasData(nino, calculationId, None)
+          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${response.correlationId}")
