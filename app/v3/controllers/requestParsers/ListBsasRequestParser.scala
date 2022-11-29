@@ -16,24 +16,23 @@
 
 package v3.controllers.requestParsers
 
-import javax.inject.Inject
 import domain.Nino
-import utils.{CurrentDateProvider, DateUtils}
 import v3.controllers.requestParsers.validators.ListBsasValidator
-import v3.models.domain.TypeOfBusiness
-import v3.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.models.domain.{ TaxYear, TypeOfBusiness }
+import v3.models.request.{ ListBsasRawData, ListBsasRequest }
 
-class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
-                                      val currentDateProvider: CurrentDateProvider)
-  extends RequestParser[ListBsasRawData, ListBsasRequest] {
+import javax.inject.Inject
+
+class ListBsasRequestParser @Inject()(val validator: ListBsasValidator) extends RequestParser[ListBsasRawData, ListBsasRequest] {
 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
 
     val incomeSourceType: Option[String] = data.typeOfBusiness.map(TypeOfBusiness.parser).map(_.toIdentifierValue)
+    val taxYear                          = data.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now())
 
     ListBsasRequest(
       nino = Nino(data.nino),
-      taxYear = data.taxYear.fold(DateUtils.getTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getTaxYear),
+      taxYear = taxYear,
       incomeSourceId = data.businessId,
       incomeSourceType = incomeSourceType
     )
