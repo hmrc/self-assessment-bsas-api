@@ -51,27 +51,38 @@ class ListBsasControllerSpec
     with ListBsasFixture {
 
   private val correlationId  = "X-123"
-  private val defaultNino    = "AA123456A"
-  private val defaultTaxYear = Some("2019-20")
+  private val nino           = "AA123456A"
   private val typeOfBusiness = Some("self-employment")
   private val businessId     = Some("XAIS12345678901")
 
+  def taxYear: Option[String] = Some("2019-20")
+
   private val rawData = ListBsasRawData(
-    nino = defaultNino,
-    taxYear = defaultTaxYear,
+    nino = nino,
+    taxYear = taxYear,
     typeOfBusiness = typeOfBusiness,
     businessId = businessId
   )
 
-  val nino: String            = rawData.nino
-  val taxYear: Option[String] = rawData.taxYear
-
   private val request = ListBsasRequest(
     nino = Nino(nino),
-    taxYear = taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now()),
+    taxYear = rawData.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now()),
     incomeSourceId = businessId,
     incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
   )
+
+  val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
+    Seq(
+      businessSourceSummaryModel,
+      businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+                                      summaries = Seq(
+                                        bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
+                                      )),
+      businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+                                      summaries = Seq(
+                                        bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
+                                      ))
+    ))
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -90,19 +101,6 @@ class ListBsasControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
-
-  val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
-    Seq(
-      businessSourceSummaryModel,
-      businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                                      summaries = Seq(
-                                        bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-                                      )),
-      businessSourceSummaryModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                                      summaries = Seq(
-                                        bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-                                      ))
-    ))
 
   "list bsas" should {
     "return successful response with status OK" when {
