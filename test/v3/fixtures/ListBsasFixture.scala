@@ -95,11 +95,11 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val businessSourceSummaryModel: BusinessSourceSummary[BsasSummary] = BusinessSourceSummary(
+  def businessSourceSummaryModel(taxYear: String = "2019-20"): BusinessSourceSummary[BsasSummary] = BusinessSourceSummary(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     accountingPeriod = accountingPeriodModel,
-    taxYear = TaxYear.fromMtd("2019-20"),
+    taxYear = TaxYear.fromMtd(taxYear),
     summaries = Seq(bsasSummaryModel)
   )
 
@@ -169,7 +169,7 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(businessSourceSummaryModel))
+  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(businessSourceSummaryModel()))
 
   val listBsasResponseJson: JsValue = Json.parse(
     """
@@ -257,7 +257,7 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val summariesJSONWithHateoas: String => JsValue = nino =>
+  def summariesJSONWithHateoas(nino: String, taxYear: String = "2019-20"): JsValue =
     Json.parse(
       s"""
       |{
@@ -269,7 +269,7 @@ trait ListBsasFixture {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "2019-20",
+      |      "taxYear": "$taxYear",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -293,7 +293,7 @@ trait ListBsasFixture {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "2019-20",
+      |      "taxYear": "$taxYear",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
@@ -317,7 +317,7 @@ trait ListBsasFixture {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "2019-20",
+      |      "taxYear": "$taxYear",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
@@ -349,7 +349,7 @@ trait ListBsasFixture {
       |  ]
       |}
     """.stripMargin
-  )
+    )
 
   val summariesJSONForeignWithHateoas: String => JsValue = nino =>
     Json.parse(
