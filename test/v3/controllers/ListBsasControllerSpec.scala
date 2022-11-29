@@ -161,7 +161,7 @@ class ListBsasControllerSpec
         )
 
         MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(nino, response, None))
+          .wrapList(response, ListBsasHateoasData(nino, response, Some(requestData.taxYear)))
           .returns(responseWithHateoas)
 
         val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)

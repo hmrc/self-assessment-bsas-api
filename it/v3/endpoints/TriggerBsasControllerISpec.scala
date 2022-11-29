@@ -33,13 +33,14 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
     val nino = "AA123456A"
 
-    def taxYear: String
+    def mtdTaxYear: String
     def downstreamTaxYear: String
 
     def uri: String = s"/$nino/trigger"
     def downstreamUri: String
 
     def setupStubs(): StubMapping
+    def triggerHateoasLink(hateoasLinkPath: String): String
 
     def request(): WSRequest = {
       setupStubs()
@@ -81,7 +82,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
       |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
       |  "links":[
       |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435",
+      |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
       |      "rel":"self",
       |      "method":"GET"
       |    }
@@ -91,15 +92,21 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: String                = "2019-20"
+    def mtdTaxYear: String             = "2019-20"
     def downstreamTaxYear: String      = "2020"
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+
+    def triggerHateoasLink(hateoasLinkPath: String): String =
+      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435"
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: String                = "2023-24"
+    def mtdTaxYear: String             = "2023-24"
     def downstreamTaxYear: String      = "23-24"
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
+
+    def triggerHateoasLink(hateoasLinkPath: String): String =
+      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435?taxYear=$mtdTaxYear"
   }
 
   "Calling the triggerBsas" should {

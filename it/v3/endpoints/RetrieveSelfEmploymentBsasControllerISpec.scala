@@ -89,7 +89,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
+        response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId, taxYear)
       }
     }
 

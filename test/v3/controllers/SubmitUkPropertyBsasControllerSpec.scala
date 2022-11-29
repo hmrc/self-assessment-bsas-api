@@ -132,7 +132,7 @@ class SubmitUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId, None))
+          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId, Some(taxYear)))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))

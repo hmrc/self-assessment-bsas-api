@@ -106,7 +106,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
+        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId, taxYear)
       }
 
       "any valid Tax Year Specific request is made and Non-FHL is returned" in new TysIfsTest {
@@ -119,7 +119,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
+        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId, taxYear)
       }
     }
 

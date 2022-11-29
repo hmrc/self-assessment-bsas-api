@@ -64,7 +64,7 @@ class RetrieveUkPropertyBsasController @Inject()(
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.retrieve(parsedRequest))
         } yield {
-          val hateoasData    = RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.calculationId, None)
+          val hateoasData    = RetrieveUkPropertyHateoasData(nino, response.responseData.metadata.calculationId, parsedRequest.taxYear)
           val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
           logger.info(

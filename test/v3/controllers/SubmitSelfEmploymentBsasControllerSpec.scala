@@ -120,7 +120,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None))
+          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId, request.taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(Json.toJson(mtdRequest)))
