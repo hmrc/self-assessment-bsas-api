@@ -24,12 +24,12 @@ import v3.models.request.ListBsasRawData
 
 class MockListBsasValidator extends MockFactory {
 
-  val mockValidator: ListBsasValidator = mock[ListBsasValidator]
+  val mockListBsasValidator: ListBsasValidator = mock[ListBsasValidator]
 
   object MockValidator {
 
     def validate(data: ListBsasRawData): CallHandler1[ListBsasRawData, List[MtdError]] = {
-      (mockValidator
+      (mockListBsasValidator
         .validate(_: ListBsasRawData))
         .expects(data)
     }

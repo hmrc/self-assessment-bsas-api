@@ -16,7 +16,7 @@
 
 package v3.models.response.listBsas
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{ JsError, JsObject, Json }
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
 
@@ -24,7 +24,7 @@ class BusinessSourceSummarySpec extends UnitSpec with ListBsasFixture {
   "BusinessSourceSummary" when {
     "read from valid JSON" should {
       "return the expected model" in {
-        businessSourceSummaryDownstreamJson.as[BusinessSourceSummary[BsasSummary]] shouldBe businessSourceSummaryModel
+        businessSourceSummaryDownstreamJson.as[BusinessSourceSummary[BsasSummary]] shouldBe businessSourceSummaryModel()
       }
     }
 
@@ -36,7 +36,7 @@ class BusinessSourceSummarySpec extends UnitSpec with ListBsasFixture {
 
     "written to JSON" should {
       "return the expected JSON" in {
-        Json.toJson(businessSourceSummaryModel) shouldBe businessSourceSummaryJson
+        Json.toJson(businessSourceSummaryModel()) shouldBe businessSourceSummaryJson
       }
     }
   }

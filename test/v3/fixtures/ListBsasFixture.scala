@@ -95,11 +95,11 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val businessSourceSummaryModel: BusinessSourceSummary[BsasSummary] = BusinessSourceSummary(
+  def businessSourceSummaryModel(taxYear: String = "2019-20"): BusinessSourceSummary[BsasSummary] = BusinessSourceSummary(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     accountingPeriod = accountingPeriodModel,
-    taxYear = TaxYear.fromMtd("2019-20"),
+    taxYear = TaxYear.fromMtd(taxYear),
     summaries = Seq(bsasSummaryModel)
   )
 
@@ -169,7 +169,7 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(businessSourceSummaryModel))
+  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(businessSourceSummaryModel()))
 
   val listBsasResponseJson: JsValue = Json.parse(
     """
