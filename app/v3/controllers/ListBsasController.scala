@@ -63,7 +63,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           response      <- EitherT(service.listBsas(parsedRequest))
         } yield {
-          val hateoasData    = ListBsasHateoasData(nino, response.responseData, None)
+          val hateoasData    = ListBsasHateoasData(nino, response.responseData, Some(parsedRequest.taxYear))
           val vendorResponse = hateoasFactory.wrapList(response.responseData, hateoasData)
 
           logger.info(

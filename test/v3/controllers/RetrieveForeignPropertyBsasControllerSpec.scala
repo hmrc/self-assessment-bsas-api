@@ -49,8 +49,8 @@ class RetrieveForeignPropertyBsasControllerSpec
   private val nino   = "AA123456A"
   private val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear=None)
-  private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId, taxYear=None)
+  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear = None)
+  private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId, taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -91,7 +91,7 @@ class RetrieveForeignPropertyBsasControllerSpec
           .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calcId, None)) returns
           HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
 
-        val result: Future[Result] = controller.retrieve(nino, calcId, taxYear=None)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieve(nino, calcId, taxYear = None)(fakeGetRequest)
 
         contentAsJson(result) shouldBe hateoasResponse
         status(result) shouldBe OK
@@ -105,7 +105,7 @@ class RetrieveForeignPropertyBsasControllerSpec
           s"a ${error.code} error is returned from the parser" in new Test {
             MockRetrieveForeignPropertyRequestParser.parse(requestRawData) returns Left(ErrorWrapper(correlationId, error, None))
 
-            val result: Future[Result] = controller.retrieve(nino, calcId, taxYear=None)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calcId, taxYear = None)(fakeGetRequest)
 
             contentAsJson(result) shouldBe Json.toJson(error)
             status(result) shouldBe expectedStatus
@@ -132,7 +132,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
             MockRetrieveForeignPropertyBsasService.retrieveBsas(request) returns Future.successful(Left(ErrorWrapper(correlationId, mtdError)))
 
-            val result: Future[Result] = controller.retrieve(nino, calcId, taxYear=None)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieve(nino, calcId, taxYear = None)(fakeGetRequest)
 
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             status(result) shouldBe expectedStatus

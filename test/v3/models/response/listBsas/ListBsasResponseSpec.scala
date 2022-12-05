@@ -30,7 +30,7 @@ import v3.models.response.listBsas.ListBsasResponse.LinksFactory._
 class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixture {
 
   def makeResponse(typeOfBusiness: TypeOfBusiness): ListBsasResponse[BsasSummary] = ListBsasResponse(
-    Seq(businessSourceSummaryModel.copy(typeOfBusiness = typeOfBusiness))
+    Seq(businessSourceSummaryModel().copy(typeOfBusiness = typeOfBusiness))
   )
 
   val selfEmploymentBsasResponse: ListBsasResponse[BsasSummary]        = makeResponse(`self-employment`)

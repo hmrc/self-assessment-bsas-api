@@ -20,15 +20,16 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.controllers.requestParsers.ListBsasRequestParser
 import v3.models.errors.ErrorWrapper
-import v3.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.models.request.{ ListBsasRawData, ListBsasRequest }
 
 trait MockListBsasRequestParser extends MockFactory {
 
-  val mockRequestParser = mock[ListBsasRequestParser]
+  val mockListBsasRequestParser = mock[ListBsasRequestParser]
 
   object MockListBsasRequestDataParser {
+
     def parse(data: ListBsasRawData): CallHandler[Either[ErrorWrapper, ListBsasRequest]] = {
-      (mockRequestParser.parseRequest(_: ListBsasRawData)(_: String)).expects(data, *)
+      (mockListBsasRequestParser.parseRequest(_: ListBsasRawData)(_: String)).expects(data, *)
     }
   }
 }

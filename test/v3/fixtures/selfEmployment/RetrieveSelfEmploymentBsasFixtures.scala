@@ -16,13 +16,13 @@
 
 package v3.fixtures.selfEmployment
 
-import play.api.libs.json.{JsObject, JsValue, Json}
-import v3.models.domain.{IncomeSourceType, Source, Status, TypeOfBusiness}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import v3.models.domain.{ IncomeSourceType, Source, Status, TypeOfBusiness }
 import v3.models.response.retrieveBsas.selfEmployment._
 
 object RetrieveSelfEmploymentBsasFixtures {
 
-  private val now = "2019-04-06"
+  private val now          = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
   val downstreamMetadataJson: JsValue = Json.parse(
@@ -277,8 +277,7 @@ object RetrieveSelfEmploymentBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamRetrieveBsasResponseJson: JsValue = Json.parse(
-    s"""
+  val downstreamRetrieveBsasResponseJson: JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
        |  "inputs": $downstreamInputsJson,
@@ -288,8 +287,7 @@ object RetrieveSelfEmploymentBsasFixtures {
        |}
        |""".stripMargin)
 
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(
-    s"""
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
        |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
@@ -535,22 +533,25 @@ object RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String): JsValue = mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
+    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+
+    mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(s"""
       |{
       |  "links": [
       |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId$taxYearParam",
       |      "method": "GET",
       |      "rel": "self"
       |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust",
+      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust$taxYearParam",
       |      "method": "POST",
       |      "rel": "submit-self-employment-accounting-adjustments"
       |    }
       |  ]
       |}
       |""".stripMargin).as[JsObject]
+  }
 
   val metadataModel: Metadata = Metadata(
     calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
@@ -560,7 +561,7 @@ object RetrieveSelfEmploymentBsasFixtures {
     taxYear = "2020-21",
     summaryStatus = Status.`valid`
   )
-  
+
   val submissionPeriodWithPeriodIdModel: SubmissionPeriod = SubmissionPeriod(
     periodId = Some("1234567890123456"),
     submissionId = None,
@@ -593,22 +594,22 @@ object RetrieveSelfEmploymentBsasFixtures {
   )
 
   val summaryCalculationExpensesModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
-      consolidatedExpenses = Some(2.01),
-      costOfGoodsAllowable = Some(2.02),
-      paymentsToSubcontractorsAllowable = Some(2.03),
-      wagesAndStaffCostsAllowable = Some(2.04),
-      carVanTravelExpensesAllowable = Some(2.05),
-      premisesRunningCostsAllowable = Some(2.06),
-      maintenanceCostsAllowable = Some(2.07),
-      adminCostsAllowable = Some(2.08),
-      interestOnBankOtherLoansAllowable = Some(2.09),
-      financeChargesAllowable = Some(2.10),
-      irrecoverableDebtsAllowable = Some(2.11),
-      professionalFeesAllowable = Some(2.12),
-      depreciationAllowable = Some(2.13),
-      otherExpensesAllowable = Some(2.14),
-      advertisingCostsAllowable = Some(2.15),
-      businessEntertainmentCostsAllowable = Some(2.16)
+    consolidatedExpenses = Some(2.01),
+    costOfGoodsAllowable = Some(2.02),
+    paymentsToSubcontractorsAllowable = Some(2.03),
+    wagesAndStaffCostsAllowable = Some(2.04),
+    carVanTravelExpensesAllowable = Some(2.05),
+    premisesRunningCostsAllowable = Some(2.06),
+    maintenanceCostsAllowable = Some(2.07),
+    adminCostsAllowable = Some(2.08),
+    interestOnBankOtherLoansAllowable = Some(2.09),
+    financeChargesAllowable = Some(2.10),
+    irrecoverableDebtsAllowable = Some(2.11),
+    professionalFeesAllowable = Some(2.12),
+    depreciationAllowable = Some(2.13),
+    otherExpensesAllowable = Some(2.14),
+    advertisingCostsAllowable = Some(2.15),
+    businessEntertainmentCostsAllowable = Some(2.16)
   )
 
   val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
@@ -651,10 +652,10 @@ object RetrieveSelfEmploymentBsasFixtures {
   )
 
   val summaryCalculationAccountingAdjustmentsModel: SummaryCalculationAccountingAdjustments = SummaryCalculationAccountingAdjustments(
-      basisAdjustment = Some(7.01),
-      overlapReliefUsed = Some(7.02),
-      accountingAdjustment = Some(7.03),
-      averagingAdjustment = Some(7.04)
+    basisAdjustment = Some(7.01),
+    overlapReliefUsed = Some(7.02),
+    accountingAdjustment = Some(7.03),
+    averagingAdjustment = Some(7.04)
   )
 
   val adjustableSummaryCalculationModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
@@ -680,40 +681,40 @@ object RetrieveSelfEmploymentBsasFixtures {
   )
 
   val adjustmentsExpensesModel: AdjustmentsExpenses = AdjustmentsExpenses(
-      consolidatedExpenses = Some(2.01),
-      costOfGoodsAllowable = Some(2.02),
-      paymentsToSubcontractorsAllowable = Some(2.03),
-      wagesAndStaffCostsAllowable = Some(2.04),
-      carVanTravelExpensesAllowable = Some(2.05),
-      premisesRunningCostsAllowable = Some(2.06),
-      maintenanceCostsAllowable = Some(2.07),
-      adminCostsAllowable = Some(2.08),
-      interestOnBankOtherLoansAllowable = Some(2.09),
-      financeChargesAllowable = Some(2.10),
-      irrecoverableDebtsAllowable = Some(2.11),
-      professionalFeesAllowable = Some(2.12),
-      depreciationAllowable = Some(2.13),
-      otherExpensesAllowable = Some(2.14),
-      advertisingCostsAllowable = Some(2.15),
-      businessEntertainmentCostsAllowable = Some(2.16)
+    consolidatedExpenses = Some(2.01),
+    costOfGoodsAllowable = Some(2.02),
+    paymentsToSubcontractorsAllowable = Some(2.03),
+    wagesAndStaffCostsAllowable = Some(2.04),
+    carVanTravelExpensesAllowable = Some(2.05),
+    premisesRunningCostsAllowable = Some(2.06),
+    maintenanceCostsAllowable = Some(2.07),
+    adminCostsAllowable = Some(2.08),
+    interestOnBankOtherLoansAllowable = Some(2.09),
+    financeChargesAllowable = Some(2.10),
+    irrecoverableDebtsAllowable = Some(2.11),
+    professionalFeesAllowable = Some(2.12),
+    depreciationAllowable = Some(2.13),
+    otherExpensesAllowable = Some(2.14),
+    advertisingCostsAllowable = Some(2.15),
+    businessEntertainmentCostsAllowable = Some(2.16)
   )
 
   val adjustmentsAdditionsModel: AdjustmentsAdditions = AdjustmentsAdditions(
-      costOfGoodsDisallowable = Some(3.01),
-      paymentsToSubcontractorsDisallowable = Some(3.02),
-      wagesAndStaffCostsDisallowable = Some(3.03),
-      carVanTravelExpensesDisallowable = Some(3.04),
-      premisesRunningCostsDisallowable = Some(3.05),
-      maintenanceCostsDisallowable = Some(3.06),
-      adminCostsDisallowable = Some(3.07),
-      interestOnBankOtherLoansDisallowable = Some(3.08),
-      financeChargesDisallowable = Some(3.09),
-      irrecoverableDebtsDisallowable = Some(3.10),
-      professionalFeesDisallowable = Some(3.11),
-      depreciationDisallowable = Some(3.12),
-      otherExpensesDisallowable = Some(3.13),
-      advertisingCostsDisallowable = Some(3.14),
-      businessEntertainmentCostsDisallowable = Some(3.15)
+    costOfGoodsDisallowable = Some(3.01),
+    paymentsToSubcontractorsDisallowable = Some(3.02),
+    wagesAndStaffCostsDisallowable = Some(3.03),
+    carVanTravelExpensesDisallowable = Some(3.04),
+    premisesRunningCostsDisallowable = Some(3.05),
+    maintenanceCostsDisallowable = Some(3.06),
+    adminCostsDisallowable = Some(3.07),
+    interestOnBankOtherLoansDisallowable = Some(3.08),
+    financeChargesDisallowable = Some(3.09),
+    irrecoverableDebtsDisallowable = Some(3.10),
+    professionalFeesDisallowable = Some(3.11),
+    depreciationDisallowable = Some(3.12),
+    otherExpensesDisallowable = Some(3.13),
+    advertisingCostsDisallowable = Some(3.14),
+    businessEntertainmentCostsDisallowable = Some(3.15)
   )
 
   val adjustmentsModel: Adjustments = Adjustments(
@@ -747,11 +748,12 @@ object RetrieveSelfEmploymentBsasFixtures {
     adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
   )
 
-  def retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness: TypeOfBusiness): RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataModel,
-    inputs = inputsModel.copy(typeOfBusiness = typeOfBusiness),
-    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
-    adjustments = Some(adjustmentsModel),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
-  )
+  def retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness: TypeOfBusiness): RetrieveSelfEmploymentBsasResponse =
+    RetrieveSelfEmploymentBsasResponse(
+      metadata = metadataModel,
+      inputs = inputsModel.copy(typeOfBusiness = typeOfBusiness),
+      adjustableSummaryCalculation = adjustableSummaryCalculationModel,
+      adjustments = Some(adjustmentsModel),
+      adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
+    )
 }

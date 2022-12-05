@@ -114,7 +114,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(nino)
+        response.json shouldBe summariesJSONWithHateoas(nino, Some("2023-24"))
       }
 
       "valid request is made with foreign property" in new NonTysTest {
@@ -146,7 +146,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONForeignWithHateoas(nino)
+        response.json shouldBe summariesJSONForeignWithHateoas(nino, Some("2023-24"))
       }
 
       "valid request is made without a tax year" in new NonTysTest {
