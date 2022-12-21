@@ -259,12 +259,12 @@ class SubmitForeignPropertyBsasControllerSpec
           (NotFoundError, NOT_FOUND),
           (InternalError, INTERNAL_SERVER_ERROR),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
-          (RuleSummaryStatusInvalid, FORBIDDEN),
-          (RuleSummaryStatusSuperseded, FORBIDDEN),
-          (RuleAlreadyAdjusted, FORBIDDEN),
-          (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-          (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
-          (RuleResultingValueNotPermitted, FORBIDDEN)
+          (RuleSummaryStatusInvalid, BAD_REQUEST),
+          (RuleSummaryStatusSuperseded, BAD_REQUEST),
+          (RuleAlreadyAdjusted, BAD_REQUEST),
+          (RuleOverConsolidatedExpensesThreshold, BAD_REQUEST),
+          (RulePropertyIncomeAllowanceClaimed, BAD_REQUEST),
+          (RuleResultingValueNotPermitted, BAD_REQUEST)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

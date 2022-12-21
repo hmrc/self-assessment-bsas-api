@@ -216,7 +216,7 @@ traits:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleTypeOfBusinessIncorrectForeign:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -238,7 +238,7 @@ traits:
                   code: RULE_TYPE_OF_BUSINESS_INCORRECT
   ruleSummaryStatusInvalid:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -249,7 +249,7 @@ traits:
                   code: RULE_SUMMARY_STATUS_INVALID
   ruleSummaryStatusSuperseded:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -260,7 +260,7 @@ traits:
                   code: RULE_SUMMARY_STATUS_SUPERSEDED
   rulePeriodicDataIncomplete:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -315,7 +315,7 @@ traits:
                   code: RULE_BOTH_PROPERTIES_SUPPLIED
   ruleAccountingPeriodNotEnded:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -326,7 +326,7 @@ traits:
                   code: RULE_ACCOUNTING_PERIOD_NOT_ENDED
   ruleAlreadyAdjusted:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -337,7 +337,7 @@ traits:
                   code: RULE_ALREADY_ADJUSTED
   ruleOverConsolidatedExpensesThreshold:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -348,7 +348,7 @@ traits:
                   code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
   ruleTradingIncomeAllowanceExceeded:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -359,7 +359,7 @@ traits:
                   code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
   rulePropertyIncomeAllowanceExceeded:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -370,7 +370,7 @@ traits:
                   code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
   ruleIncorrectPropertyAdjusted:
       responses:
-        403:
+        400:
           body:
             application/json:
               type: types.errorResponse
@@ -381,7 +381,7 @@ traits:
                     code: RULE_INCORRECT_PROPERTY_ADJUSTED
   ruleNoAccountingPeriod:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -392,7 +392,7 @@ traits:
                   code: RULE_NO_ACCOUNTING_PERIOD
   ruleNoAdjustmentsMade:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -414,7 +414,7 @@ traits:
                   code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
   ruleSelfEmploymentAdjusted:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -436,7 +436,7 @@ traits:
                   code: RULE_BOTH_EXPENSES_SUPPLIED
   ruleResultingValueNotPermitted:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -447,7 +447,7 @@ traits:
                   code: RULE_RESULTING_VALUE_NOT_PERMITTED
   rulePropertyIncomeAllowanceClaimed:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse

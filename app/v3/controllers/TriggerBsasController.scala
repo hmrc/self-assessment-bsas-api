@@ -120,6 +120,9 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
             BadRequestError,
             NinoFormatError,
             RuleAccountingPeriodNotSupportedError,
+            RuleAccountingPeriodNotEndedError,
+            RulePeriodicDataIncompleteError,
+            RuleNoAccountingPeriodError,
             StartDateFormatError,
             EndDateFormatError,
             TypeOfBusinessFormatError,
@@ -129,17 +132,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
             RuleTaxYearNotSupportedError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case _
-          if errorWrapper.containsAnyOf(
-            RuleAccountingPeriodNotEndedError,
-            RulePeriodicDataIncompleteError,
-            RuleNoAccountingPeriodError,
-            UnauthorisedError
-          ) =>
-        Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
+
+      case UnauthorisedError => Forbidden(Json.toJson(errorWrapper))
+      case NotFoundError     => NotFound(Json.toJson(errorWrapper))
+      case InternalError     => InternalServerError(Json.toJson(errorWrapper))
+      case _                 => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

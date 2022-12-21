@@ -18,8 +18,6 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{ Inject, Singleton }
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Action, ControllerComponents }
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,8 +29,9 @@ import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 import v3.models.response.SubmitUkPropertyBsasHateoasData
-import v3.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, SubmitUKPropertyBsasNrsProxyService, SubmitUkPropertyBsasService }
+import v3.services._
 
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
@@ -116,7 +115,6 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-
       case _
           if errorWrapper.containsAnyOf(
             BadRequestError,
@@ -130,12 +128,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             TaxYearFormatError,
             RuleTaxYearRangeInvalidError,
             InvalidTaxYearParameterError,
-            RuleTaxYearNotSupportedError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case _
-          if errorWrapper.containsAnyOf(
+            RuleTaxYearNotSupportedError,
             RuleSummaryStatusInvalid,
             RuleSummaryStatusSuperseded,
             RuleAlreadyAdjusted,
@@ -143,7 +136,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
             RuleOverConsolidatedExpensesThreshold,
             RulePropertyIncomeAllowanceClaimed
           ) =>
-        Forbidden(Json.toJson(errorWrapper))
+        BadRequest(Json.toJson(errorWrapper))
 
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case InternalError => InternalServerError(Json.toJson(errorWrapper))

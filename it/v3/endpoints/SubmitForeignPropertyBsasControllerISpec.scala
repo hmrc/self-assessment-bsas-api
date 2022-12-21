@@ -18,13 +18,13 @@ package v3.endpoints
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
+import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
 import v3.models.errors._
 import v3.stubs._
-import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
@@ -235,17 +235,17 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, InternalError),
           (FORBIDDEN, "BVR_FAILURE_C55508", INTERNAL_SERVER_ERROR, InternalError),
           (FORBIDDEN, "BVR_FAILURE_C55509", INTERNAL_SERVER_ERROR, InternalError),
-          (FORBIDDEN, "BVR_FAILURE_C559107", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
-          (FORBIDDEN, "BVR_FAILURE_C559103", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
-          (FORBIDDEN, "BVR_FAILURE_C559099", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
+          (FORBIDDEN, "BVR_FAILURE_C559107", BAD_REQUEST, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C559103", BAD_REQUEST, RulePropertyIncomeAllowanceClaimed),
+          (FORBIDDEN, "BVR_FAILURE_C559099", BAD_REQUEST, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C55503", INTERNAL_SERVER_ERROR, InternalError),
           (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, InternalError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
-          (CONFLICT, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
-          (CONFLICT, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleAlreadyAdjusted),
-          (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
-          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
+          (CONFLICT, "ASC_ALREADY_SUPERSEDED", BAD_REQUEST, RuleSummaryStatusSuperseded),
+          (CONFLICT, "ASC_ALREADY_ADJUSTED", BAD_REQUEST, RuleAlreadyAdjusted),
+          (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", BAD_REQUEST, RuleResultingValueNotPermitted),
+          (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", BAD_REQUEST, RuleSummaryStatusInvalid),
           (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 

@@ -29,10 +29,10 @@ import v3.hateoas.HateoasFactory
 import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody }
-
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
 import v3.services._
+
 import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -119,38 +119,33 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) =
-    // @formatter:off
-
     errorWrapper.error match {
-    case _
-      if errorWrapper.containsAnyOf(
-        BadRequestError,
-        NinoFormatError,
-        CalculationIdFormatError,
-        RuleIncorrectOrEmptyBodyError,
-        RuleBothExpensesError,
-        ValueFormatError,
-        RuleTypeOfBusinessIncorrectError,
-        InvalidTaxYearParameterError,
-        TaxYearFormatError,
-        RuleTaxYearNotSupportedError,
-        RuleTaxYearRangeInvalidError
-      ) => BadRequest(Json.toJson(errorWrapper))
-    case _
-      if errorWrapper.containsAnyOf(
-        RuleSummaryStatusInvalid,
-        RuleSummaryStatusSuperseded,
-        RuleAlreadyAdjusted,
-        RuleOverConsolidatedExpensesThreshold,
-        RuleTradingIncomeAllowanceClaimed,
-        RuleResultingValueNotPermitted
-      ) => Forbidden(Json.toJson(errorWrapper))
-    case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-    case InternalError => InternalServerError(Json.toJson(errorWrapper))
-    case _               => unhandledError(errorWrapper)
-    }
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            CalculationIdFormatError,
+            RuleIncorrectOrEmptyBodyError,
+            RuleBothExpensesError,
+            ValueFormatError,
+            RuleTypeOfBusinessIncorrectError,
+            InvalidTaxYearParameterError,
+            TaxYearFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleSummaryStatusInvalid,
+            RuleSummaryStatusSuperseded,
+            RuleAlreadyAdjusted,
+            RuleOverConsolidatedExpensesThreshold,
+            RuleTradingIncomeAllowanceClaimed,
+            RuleResultingValueNotPermitted
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
 
-    // @formatter:on
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
+    }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(

@@ -18,8 +18,6 @@ package v3.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{ Inject, Singleton }
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Action, ControllerComponents }
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,14 +30,9 @@ import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
 import v3.models.response.SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory
-import v3.services.{
-  AuditService,
-  EnrolmentsAuthService,
-  MtdIdLookupService,
-  SubmitForeignPropertyBsasNrsProxyService,
-  SubmitForeignPropertyBsasService
-}
+import v3.services._
 
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
@@ -130,6 +123,12 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             RuleTaxYearRangeInvalidError,
             RuleTaxYearNotSupportedError,
             InvalidTaxYearParameterError,
+            RuleSummaryStatusInvalid,
+            RuleSummaryStatusSuperseded,
+            RuleAlreadyAdjusted,
+            RuleResultingValueNotPermitted,
+            RuleOverConsolidatedExpensesThreshold,
+            RulePropertyIncomeAllowanceClaimed,
             ValueFormatError,
             RuleTypeOfBusinessIncorrectError,
             RuleIncorrectOrEmptyBodyError,
@@ -140,16 +139,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             RuleBothExpensesError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case _
-          if errorWrapper.containsAnyOf(
-            RuleSummaryStatusInvalid,
-            RuleSummaryStatusSuperseded,
-            RuleAlreadyAdjusted,
-            RuleResultingValueNotPermitted,
-            RuleOverConsolidatedExpensesThreshold,
-            RulePropertyIncomeAllowanceClaimed
-          ) =>
-        Forbidden(Json.toJson(errorWrapper))
+
       case InternalError => InternalServerError(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case _             => unhandledError(errorWrapper)
