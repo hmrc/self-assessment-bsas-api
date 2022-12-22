@@ -239,19 +239,21 @@ class SubmitUkPropertyBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (CalculationIdFormatError, BAD_REQUEST),
           (InternalError, INTERNAL_SERVER_ERROR),
-          (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
-          (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+          (RulePropertyIncomeAllowanceClaimed, BAD_REQUEST),
+          (RuleOverConsolidatedExpensesThreshold, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (RuleSummaryStatusSuperseded, FORBIDDEN),
-          (RuleAlreadyAdjusted, FORBIDDEN),
-          (RuleResultingValueNotPermitted, FORBIDDEN),
-          (RuleSummaryStatusInvalid, FORBIDDEN),
+          (RuleSummaryStatusSuperseded, BAD_REQUEST),
+          (RuleAlreadyAdjusted, BAD_REQUEST),
+          (RuleResultingValueNotPermitted, BAD_REQUEST),
+          (RuleSummaryStatusInvalid, BAD_REQUEST),
           (RuleTypeOfBusinessIncorrectError, BAD_REQUEST)
         )
+
         val extraTysErrors = Seq(
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
+
         (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }
     }

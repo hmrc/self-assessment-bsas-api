@@ -260,12 +260,12 @@ class SubmitSelfEmploymentBsasControllerSpec
         (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (InternalError, INTERNAL_SERVER_ERROR),
-        (RuleSummaryStatusInvalid, FORBIDDEN),
-        (RuleSummaryStatusSuperseded, FORBIDDEN),
-        (RuleAlreadyAdjusted, FORBIDDEN),
-        (RuleResultingValueNotPermitted, FORBIDDEN),
-        (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-        (RuleTradingIncomeAllowanceClaimed, FORBIDDEN)
+        (RuleSummaryStatusInvalid, BAD_REQUEST),
+        (RuleSummaryStatusSuperseded, BAD_REQUEST),
+        (RuleAlreadyAdjusted, BAD_REQUEST),
+        (RuleResultingValueNotPermitted, BAD_REQUEST),
+        (RuleOverConsolidatedExpensesThreshold, BAD_REQUEST),
+        (RuleTradingIncomeAllowanceClaimed, BAD_REQUEST)
       )
 
       val extraTysErrors = Seq(

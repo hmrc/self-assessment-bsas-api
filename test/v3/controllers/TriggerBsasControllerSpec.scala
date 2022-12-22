@@ -228,9 +228,9 @@ class TriggerBsasControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (RuleAccountingPeriodNotEndedError, FORBIDDEN),
-          (RulePeriodicDataIncompleteError, FORBIDDEN),
-          (RuleNoAccountingPeriodError, FORBIDDEN),
+          (RuleAccountingPeriodNotEndedError, BAD_REQUEST),
+          (RulePeriodicDataIncompleteError, BAD_REQUEST),
+          (RuleNoAccountingPeriodError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (InternalError, INTERNAL_SERVER_ERROR)
         )
