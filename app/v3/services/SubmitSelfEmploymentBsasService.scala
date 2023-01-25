@@ -18,7 +18,6 @@ package v3.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v3.connectors.SubmitSelfEmploymentBsasConnector
@@ -28,6 +27,7 @@ import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v3.support.DownstreamResponseMappingSupport
 
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
