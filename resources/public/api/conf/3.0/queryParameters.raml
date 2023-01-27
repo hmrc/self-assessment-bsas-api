@@ -7,16 +7,21 @@ traits:
   taxYearOptional:
     queryParameters:
       taxYear:
-        description: 'The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid. The minimum tax year is 2019-20. If no tax year is supplied, then it will default to the current tax year.'
+        description: |
+            The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
+            For example, 2023-25 is not valid.<br/><br/>
+            This is mandatory for tax years 2023-24 and onwards.<br/><br/>
+            The minimum tax year is 2019-20.<br/><br/>
+            Where no tax year is provided, it will default to the current tax year.
         example: "2019-20"
         required: false
   taxYearTys:
     queryParameters:
       taxYear:
         description: |
-          The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
-          For example, 2023-25 is not valid.<br/><br/>
-          This is mandatory for tax years 2023-24 and onwards and must not be provided for earlier tax years.
+            The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
+            For example, 2023-25 is not valid.<br/><br/>
+            This is mandatory for tax years 2023-24 and onwards and must not be provided for earlier tax years.
         example: "2023-24"
         required: false
   businessIdOptional:

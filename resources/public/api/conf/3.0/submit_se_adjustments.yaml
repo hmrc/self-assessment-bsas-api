@@ -1,0 +1,151 @@
+post:
+  summary: Submit Self-Employment Accounting Adjustments
+  description: |
+    This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting 
+    Summary quoting its unique identifier. The calculation ID quoted must be for a Self-Employment Business and it must 
+    not have been adjusted previously. A National Insurance number and calculation ID must be provided.
+    
+    Scenario simulations using `Gov-Test-Scenario` headers is only available in the sandbox environment.
+       <table>
+           <thead>
+               <tr>
+                   <th>Header Value (Gov-Test-Scenario)</th>
+                   <th>Scenario</th>
+               </tr>
+           </thead>
+           <tbody> 
+               <tr>
+                   <td><p>N/A - DEFAULT</p></td>
+                   <td><p>Simulates success response.</p></td>
+               </tr>
+               <tr>
+                   <td><p>TYPE_OF_BUSINESS_INCORRECT</p></td>
+                   <td><p>Simulates the scenario where the calculation ID supplied does not relate to a self-employment business.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>SUMMARY_STATUS_INVALID</p></td>
+                   <td><p>Simulates the scenario where the summary is invalid and cannot be adjusted.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>SUMMARY_STATUS_SUPERSEDED</p></td>
+                   <td><p>Simulates the scenario where the summary is superseded and cannot be adjusted.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>ALREADY_ADJUSTED</p></td>
+                   <td><p>Simulates the scenario where the summary has already been adjusted.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
+                   <td><p>Simulates the scenario where one or more adjustments would result in a negative value that is not permitted.</p></td>
+               </tr>
+               <tr>
+                   <td><p>SELF_EMPLOYMENT_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
+                   <td><p>Simulates the scenario where the cumulative turnover amount exceeds the consolidated expenses threshold.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>TRADING_INCOME_ALLOWANCE_CLAIMED</p></td>
+                   <td><p>Simulates the scenario where trading income allowance was claimed but the adjustment was made to expenses.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>NOT_FOUND</p></td>
+                   <td><p>Simulates the scenario where no data is found.</p></td>
+               </tr>    
+               <tr>
+                   <td><p>TAX_YEAR_NOT_SUPPORTED</p></td>
+                   <td><p>Simulates the scenario where the tax year is not supported.</p></td>
+               </tr>    
+           </tbody>
+       </table>
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
+    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: ./common/headers.yaml#/components/parameters/correlationId
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/submit_se_adjustments.json
+          examples:
+            adjustments_full:
+              description: Full Expenses
+              value:
+                $ref: ./examples/adjustments/submit_se_adjustments_full.json
+            adjustments_consolidated:
+              description: Consolidated Expenses
+              value:
+                $ref: ./examples/adjustments/submit_se_adjustments_consolidated.json
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            FORMAT_NINO:
+              $ref: ./common/errors.yaml#/components/examples/formatNino
+            FORMAT_CALCULATION_ID:
+              $ref: ./common/errors.yaml#/components/examples/formatCalculationId
+            FORMAT_VALUE:
+              $ref: ./common/errors.yaml#/components/examples/formatValue
+            RULE_BOTH_EXPENSES_SUPPLIED:
+              $ref: ./common/errors.yaml#/components/examples/ruleBothExpensesSupplied
+            RULE_TYPE_OF_BUSINESS_INCORRECT:
+              $ref: ./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectForeign
+            RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+              $ref: ./common/errors.yaml#/components/examples/incorrectOrEmptyBodySubmitted
+            RULE_SUMMARY_STATUS_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusInvalid
+            RULE_SUMMARY_STATUS_SUPERSEDED:
+              $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded
+            RULE_ALREADY_ADJUSTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleAlreadyAdjusted
+            RULE_RESULTING_VALUE_NOT_PERMITTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleResultingValueNotPermitted
+            RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
+              $ref: ./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold
+            RULE_TRADING_INCOME_ALLOWANCE_CLAIMED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceExceeded
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: ./common/errors.yaml#/components/examples/invalidTaxYear
+            FORMAT_TAX_YEAR:
+              $ref: ./common/errors.yaml#/components/examples/formatTaxYear
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: ./common/errors.yaml#/components/examples/adjustmentNotFound
+

@@ -1,0 +1,156 @@
+get:
+  summary: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
+  description: |
+    This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business 
+    Furnished Holiday Letting (FHL) or a Non FHL UK property. A National Insurance number and Calculation id must be 
+    provided.
+    
+    Scenario simulations using `Gov-Test-Scenario` headers is only available in the sandbox environment.
+           <table>
+               <thead>
+                   <tr>
+                       <th>Header Value (Gov-Test-Scenario)</th>
+                       <th>Scenario</th>
+                   </tr>
+               </thead>
+               <tbody> 
+                   <tr>
+                       <td><p>N/A - DEFAULT</p></td>
+                       <td><p>Simulates the scenario where no data is found.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_FHL_PROFIT</p></td>
+                       <td><p>Simulates success response with uk property FHL and profit.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_FHL_LOSS</p></td>
+                       <td><p>Simulates success response with uk property FHL and loss.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_NON_FHL_PROFIT</p></td>
+                       <td><p>Simulates success response with uk property Non FHL and profit.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_NON_FHL_LOSS</p></td>
+                       <td><p>Simulates success response with uk property Non FHL and loss.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_FHL_CONSOLIDATED</p></td>
+                       <td><p>Simulates success response with FHL adjusted summary and consolidated expenses.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_NON_FHL_CONSOLIDATED</p></td>
+                       <td><p>Simulates success response with non FHL adjusted summary and consolidated expenses.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_FHL_PROPERTY_ALLOWANCE</p></td>
+                       <td><p>Simulates success response with FHL adjusted summary and propertyAllowance.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_NON_FHL_PROPERTY_ALLOWANCE</p></td>
+                       <td><p>Simulates success response with non FHL adjusted summary and propertyAllowance.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_STATUS_INVALID</p></td>
+                       <td><p>Simulates success response with summary status invalid.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>UK_PROPERTY_STATUS_SUPERSEDED</p></td>
+                       <td><p>Simulates success response with summary status superseded.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>NOT_UK_PROPERTY</p></td>
+                       <td><p>Simulates the scenario where the calculationId is not a UK property.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>TAX_YEAR_NOT_SUPPORTED</p></td>
+                       <td><p>Simulates the scenario where the tax year is not supported.</p></td>
+                   </tr>
+                   <tr>
+                       <td><p>NOT_FOUND	</p></td>
+                       <td><p>Simulates the scenario where no matching resource is found.</p></td>
+                   </tr>
+                   </tr>
+               </tbody>
+           </table>
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
+    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: ./common/headers.yaml#/components/parameters/correlationId
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/retrieve_foreign_property.json
+          examples:
+            example-1:
+              description: UK FHL Response
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_uk_fhl_property.json
+            example-2:
+              description: UK Non-FHL Response
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_uk_non_fhl_property.json
+            example-3:
+              description: UK Non-FHL with Consolidated Expenses Response
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_uk_non_fhl_property_consolidated.json
+            example-4:
+              description: UK Non-FHL with Property Allowance Response
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_uk_non_fhl_property_property_allowance.json
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            FORMAT_NINO:
+              $ref: ./common/errors.yaml#/components/examples/formatNino
+            FORMAT_TAX_YEAR:
+              $ref: ./common/errors.yaml#/components/examples/formatTaxYear
+            FORMAT_CALCULATION_ID:
+              $ref: ./common/errors.yaml#/components/examples/formatCalculationId
+            RULE_TYPE_OF_BUSINESS_INCORRECT:
+              $ref: ./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectUk
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: ./common/errors.yaml#/components/examples/invalidTaxYear
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: ./common/errors.yaml#/components/examples/summaryNotFound
