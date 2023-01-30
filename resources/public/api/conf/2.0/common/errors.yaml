@@ -1,0 +1,313 @@
+components:
+  examples:
+
+  # 400
+
+  formatNino:
+    description: |
+      The format of the supplied NINO field is not valid.
+    value:
+      code: FORMAT_NINO
+      message: The provided NINO is invalid
+
+  formatTaxYear:
+    description: |
+      The format of the supplied taxYear value is not valid.
+    value:
+      code: FORMAT_TAX_YEAR
+      message: The provided tax year is invalid
+
+  formatSelfEmploymentId:
+    description: |
+      The format of the self-employment ID is not valid.
+    value:
+      code: FORMAT_SELF_EMPLOYMENT_ID
+      message: The provided self-employment ID is invalid
+
+  formatStartDate:
+    description: |
+      The format of the supplied accounting period start date is not valid.
+    value:
+      code: FORMAT_START_DATE
+      message: The provided Start date is invalid
+
+  formatEndDate:
+    description: |
+      The format of the supplied accounting period end date is invalid
+    value:
+      code: FORMAT_END_DATE
+      message: The provided End date is invalid
+
+  formatTypeOfBusiness:
+    description: |
+      The format of the supplied type of business is not valid.
+    value:
+      code: FORMAT_TYPE_OF_BUSINESS
+      message: The provided type of business is invalid
+
+  formatBsasId:
+    description: |
+      The format of the supplied Business Source Accounting Summary ID is invalid.
+    value:
+      code: FORMAT_BSAS_ID
+      message: The supplied BSAS ID format is invalid
+
+  formatBusinessId:
+    description: |
+      The format of the business ID is not valid.
+    value:
+      code: FORMAT_BUSINESS_ID
+      message: The supplied business ID is invalid
+
+  formatAdjustedStatus:
+    description: |
+      The format of the supplied adjusted status field is not valid.
+    value:
+      code: FORMAT_ADJUSTED_STATUS
+      message: The supplied adjusted status format is invalid
+
+  formatAdjustmentValue:
+    description: |
+      One or more values has been added with the incorrect format.
+    value:
+      code: FORMAT_ADJUSTMENT_VALUE
+      message: The format of the adjustment value is invalid
+
+  formatCountryCode:
+    description: |
+      The format of the supplied Country code field is not valid.
+    value:
+      code: FORMAT_COUNTRY_CODE
+      message: The provided Country code is invalid
+
+  ruleCountryCode:
+    description: |
+      Not a valid ISO 3166-1 alpha-3 country code.
+    value:
+      code: RULE_COUNTRY_CODE
+      message: The country code is not a valid ISO 3166-1 alpha-3 country code
+
+  ruleNotSelfEmployment:
+    description: |
+      The BSAS ID supplied does not relate to a self-employment business.
+    value:
+      code: RULE_NOT_SELF_EMPLOYMENT
+      message: The adjustments requested are not for a self employment business
+
+  ruleSelfEmploymentId:
+    description: |
+      A self-employment ID can only be supplied for a self-employment business type.
+    value:
+      code: RULE_SELF_EMPLOYMENT_ID
+      message: A self-employment ID can only be supplied for a self-employment business type
+
+  ruleTaxYearNotSupported:
+    description: |
+      The specified tax year is not supported - the tax year specified is before the minimum tax year value.
+    value:
+      code: RULE_TAX_YEAR_NOT_SUPPORTED
+      message: Tax year not supported, because it precedes the earliest allowable tax year
+
+  ruleTaxYearRangeInvalid:
+    description: |
+      Tax year range invalid. A tax year range of one year is required.
+    value:
+      code: RULE_TAX_YEAR_RANGE_INVALID
+      message: Tax year range invalid. A tax year range of one year is required
+
+  ruleRangeInvalid:
+    description: |
+      One or more values has been added that is outside the accepted value range.
+    value:
+      code: RULE_RANGE_INVALID
+      message: One or more values has been added that is outside the accepted value range
+
+  ruleEndDateBeforeStartDate:
+    description: |
+      The accounting period end date value is before the start date.
+    value:
+      code: RULE_END_DATE_BEFORE_START_DATE
+      message: The supplied accounting period end date is before the start date
+
+  ruleAccountingPeriodNotSupported:
+    description: |
+      The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
+    value:
+      code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
+      message: The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value
+
+  ruleIncorrectOrEmptyBodySubmitted:
+    description: |
+      An empty or non-matching body was submitted.
+    value:
+      code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+      message: An empty or non-matching body was submitted
+
+  ruleBothExpensesSupplied:
+    description: |
+      Consolidated expenses adjusted with other unexpected fields.
+    value:
+      code: RULE_BOTH_EXPENSES_SUPPLIED
+      message: Both expenses and consolidated expenses cannot be present at the same time
+
+
+    # 403
+
+  ruleNotUkProperty:
+    description: |
+      The BSAS ID supplied does not relate to a UK property business.
+    value:
+      code: RULE_NOT_UK_PROPERTY
+      message: The adjustments requested are not for a UK property business
+
+  ruleNotForeignProperty:
+    description: |
+      The BSAS ID supplied does not relate to a foreign property business.
+    value:
+      code: RULE_NOT_FOREIGN_PROPERTY
+      message: The adjustments requested are not for a foreign property business
+
+  ruleTypeOfBusinessIncorrect:
+    description: |
+      The BSAS ID relates to a different type of business.
+    value:
+      code: RULE_TYPE_OF_BUSINESS_INCORRECT
+      message: The submission is for a different type of business
+
+  ruleSummaryStatusInvalid:
+    description: |
+      The status of the summary with this BSAS ID is set to invalid.
+    value:
+      code: RULE_SUMMARY_STATUS_INVALID
+      message: Periodic data has changed. Request a new summary
+
+  ruleSummaryStatusSuperseded:
+    description: |
+      A newer BSAS exists for this accounting period.
+    value:
+      code: RULE_SUMMARY_STATUS_SUPERSEDED
+      message: A newer summary calculation exists for this accounting period
+
+  rulePeriodicDataIncomplete:
+    description: |
+      One or more Periodic updates are missing for this accounting period.
+    value:
+      code: RULE_PERIODIC_DATA_INCOMPLETE
+      message: One or more periodic updates are missing for this accounting period
+
+  ruleAccountingPeriodNotEnded:
+    description: |
+      The accounting period has not ended.
+    value:
+      code: RULE_ACCOUNTING_PERIOD_NOT_ENDED
+      message: The supplied accounting period has not ended
+
+  ruleBsasAlreadyAdjusted:
+    description: |
+      Adjustments previously submitted against the supplied BSAS ID.
+    value:
+      code: RULE_BSAS_ALREADY_ADJUSTED
+      message: A summary may only be adjusted once. Request a new summary
+
+  ruleOverConsolidatedExpensesThreshold:
+    description: |
+      Adjustment to turnover exceeds consolidated expenses threshold.
+    value:
+      code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
+      message: The cumulative turnover amount exceeds the consolidated expenses threshold
+
+  ruleTradingIncomeAllowanceExceeded:
+    description: |
+      Adjustment to expenses where Trading Income Allowance claimed.
+    value:
+      code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
+      message: A claim for trading income allowance was made. Cannot also have expenses
+
+  rulePropertyIncomeAllowanceExceeded:
+    description: |
+      Adjustment to expenses where Property Income Allowance claimed.
+    value:
+      code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
+      message: A claim for property income allowance was made. Cannot also have expenses
+
+  ruleIncorrectPropertyAdjusted:
+    description: |
+      An adjustment made to a BSAS ID that does not match the property type in the request.
+    value:
+      code: RULE_INCORRECT_PROPERTY_ADJUSTED
+      message: An adjustment made to a BSAS ID that does not match the property type in the request
+
+  ruleNoAccountingPeriod:
+    description: |
+      The supplied accounting period does not exist.
+    value:
+      code: RULE_NO_ACCOUNTING_PERIOD
+      message: The supplied accounting period does not exist
+
+  ruleNoAdjustmentsMade:
+    description: |
+      An adjusted calculation does not exist.
+    value:
+      code: RULE_NO_ADJUSTMENTS_MADE
+      message: An adjusted summary calculation does not exist
+
+  ruleSelfEmploymentAdjusted:
+    description: |
+      The BSAS ID used in the adjustment was for a self-employment business type, and an adjustment has been made.
+    value:
+      code: RULE_SELF_EMPLOYMENT_ADJUSTED
+      message: The BSAS ID used in the adjustment was for a self-employment business type, and an adjustment has been made
+
+  ruleResultingValueNotPermitted:
+    description: |
+      One or more adjustments would result in a negative value that is not permitted.
+    value:
+      code: RULE_RESULTING_VALUE_NOT_PERMITTED
+      message: The adjustments provided would produce an unacceptable negative monetary value
+
+  rulePropertyIncomeAllowanceClaimed:
+    description: |
+      Adjustment to expenses where Property Income Allowance claimed.
+    value:
+      code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
+      message: A claim for property income allowance was made. Cannot also have expenses
+
+  clientOrAgentNotAuthorised:
+    description: |
+      The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+    value:
+      code: CLIENT_OR_AGENT_NOT_AUTHORISED
+      message: |
+      The client and/or agent is not authorised
+
+  triggerClientOrAgentNotAuthorised:
+    description: |
+      The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+    value:
+      code: CLIENT_OR_AGENT_NOT_AUTHORISED
+      message: |
+        The client and/or agent is not authorised
+
+
+  # 404
+
+  triggerAndListNotFound:
+    description: |
+      The supplied income source could not be found.
+    value:
+      code: MATCHING_RESOURCE_NOT_FOUND
+      message: Matching resource not found
+
+  bsasNotFound:
+    description: |
+      A calculation with this BSAS ID cannot be found.
+    value:
+      code: MATCHING_RESOURCE_NOT_FOUND
+      message: Matching resource not found
+
+  notFound:
+    description: |
+      Matching resource not found.
+    value:
+      code: MATCHING_RESOURCE_NOT_FOUND
+      message: Matching resource not found
