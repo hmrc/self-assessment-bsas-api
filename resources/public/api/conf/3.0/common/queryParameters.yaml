@@ -30,35 +30,35 @@ components:
         example: 2023-24
       required: false
 
-  businessIdOptional:
-    name: businessId
-    in: query
-    description: |
-      An identifier for the business, unique to the customer.
+    businessIdOptional:
+      name: businessId
+      in: query
+      description: |
+        An identifier for the business, unique to the customer.
+    
+        Must conform to the regular expression:
+    
+        ^X[A-Z0-9]{1}IS[0-9]{11}$
+      schema:
+        type: string
+        example: XAIS12345678910
+      required: false
+
+    typeOfBusinessOptional:
+      name: typeOfBusiness
+      in: query
+      description: |
+        The type of business the summary calculation is for.
   
-      Must conform to the regular expression:
-  
-      ^X[A-Z0-9]{1}IS[0-9]{11}$
+        Limited to the following possible values:
+        \noident
+        
+        * self-employment 
+        * uk-property-fhl
+        * uk-property-non-fhl
+        * foreign-property-fhl-eea
+        * foreign-property
     schema:
-      type: string
-      example: XAIS12345678910
-    required: false
-
-  typeOfBusinessOptional:
-    name: typeOfBusiness
-    in: query
-    description: |
-      The type of business the summary calculation is for.
-
-      Limited to the following possible values:
-      \noident
-      
-      * self-employment 
-      * uk-property-fhl
-      * uk-property-non-fhl
-      * foreign-property-fhl-eea
-      * foreign-property
-  schema:
-      type: string
-      enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
-      example: foreign-property
+        type: string
+        enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
+        example: foreign-property
