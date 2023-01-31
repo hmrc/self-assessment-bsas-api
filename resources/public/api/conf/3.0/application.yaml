@@ -52,18 +52,18 @@ components:
 
 paths:
   /individuals/self-assessment/adjustable-summary/{nino}:
-    $ref: ./list.yaml
+    $ref: ./bsas_list.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/trigger:
-    $ref: ./trigger.yaml
+    $ref: ./bsas_trigger.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}:
-    $ref: ./retrieve_self_employment.yaml
+    $ref: ./self_employment_retrieve.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}/adjust:
-    $ref: ./submit_se_adjustments.yaml
+    $ref: ./self_employment_adjustments_submit.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}:
-    $ref: ./retrieve_property_bsas.yaml
+    $ref: ./uk_property_bsas_retrieve.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}/adjust:
-    $ref: ./submit_uk_property_accounting_adjustments.yaml
+    $ref: ./uk_property_accounting_adjustments_submit.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}:
-    $ref: ./retrieve_foreign_property.yaml
+    $ref: ./foreign_property_retrieve.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}/adjust:
-    $ref: ./submit_foreign_property_accounting_adjustments.yaml
+    $ref: ./foreign_property_accounting_adjustments_submit.yaml
