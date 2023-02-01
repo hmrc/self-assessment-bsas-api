@@ -1,0 +1,145 @@
+post:
+  summary: Submit an Adjustment to a Self-Employment Business Summary
+  description: |
+    This endpoint allows a developer to provide accounting adjustments against a specified Business Source Adjustable Summary (BSAS) using its unique identifier. The BSAS ID used must be for a self-employment business that has not been previously adjusted.
+
+    ### Test data
+    <p>Scenario simulations using Gov-Test-Scenario headers are only available in the sandbox environment.</p>
+    <table>
+    <thead>
+        <tr>
+            <th>Header Value (Gov-Test-Scenario)</th>
+            <th>Scenario</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><p>N/A - DEFAULT</p></td>
+            <td><p>Simulates a successful response for a self-employment.</p></td>
+        </tr>
+        <tr>
+            <td><p>NOT_SELF_EMPLOYMENT</p></td>
+            <td><p>Simulates the error response where the BSAS ID is for an incorrect type of business.</p></td>
+        </tr>
+        <tr>
+            <td><p>SUMMARY_STATUS_INVALID</p></td>
+            <td><p>Simulates the error response where the summary is invalid and cannot be adjusted.</p></td>
+        </tr>
+        <tr>
+            <td><p>SUMMARY_STATUS_SUPERSEDED</p></td>
+            <td><p>Simulates the error response where the summary is superseded and cannot be adjusted.</p></td>
+        </tr>
+        <tr>
+            <td><p>BSAS_ALREADY_ADJUSTED</p></td>
+            <td><p>Simulates the error response where the summary has already been adjusted.</p></td>
+        </tr>
+        <tr>
+            <td><p>SELF_EMPLOYMENT_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
+            <td><p>Simulates the error response where the cumulative turnover amount exceeds the consolidated expenses threshold.</p></td>
+        </tr>
+        <tr>
+            <td><p>RULE_TRADING_INCOME_ALLOWANCE_CLAIMED</p></td>
+            <td><p>Simulates the error response where a claim for trading income allowance was made - cannot also have expenses.</p></td>
+        </tr>
+        <tr>
+            <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
+            <td><p>Simulates the error response that may occur if one or more adjustments submitted would result in a negative value.</p></td>
+        </tr>
+        <tr>
+            <td><p>NOT_FOUND</p></td>
+            <td><p>Simulates the scenario where no data was found.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+parameters:
+    - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+    - $ref: './common/pathParameters.yaml#/components/parameters/calculationId'
+    - $ref: './common/headers.yaml#/components/parameters/acceptJson'
+    - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
+    - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/submit_se_adjustments.json'
+        examples:
+          example-1:
+            description: Full Expenses
+            value:
+              $ref: './examples/adjustments/submit_se_adjustments_full.json'
+          example-2:
+            description: Consolidated Expenses
+            value:
+              $ref: './examples/adjustments/submit_se_adjustments_consolidated.json'
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: './common/headers.yaml#/components/parameters/correlationId'
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/submit_adjustments_response.json'
+            examples:
+              example-1:
+                description: Submit Self-Employment Accounting Adjustments
+                value:
+                  $ref: './examples/adjustments/submit_se_adjustment_response.json'
+
+    "400":
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: './common/errors.yaml#/components/examples/formatNino'
+            FORMAT_BSAS_ID:
+              $ref: './common/errors.yaml#/components/examples/formatBsasId'
+            FORMAT_ADJUSTMENT_VALUE:
+              $ref: './common/errors.yaml#/components/examples/formatAdjustmentValue'
+            RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+              $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+            RULE_RANGE_INVALID:
+              $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
+            RULE_BOTH_EXPENSES_SUPPLIED:
+              $ref: './common/errors.yaml#/components/examples/ruleBothExpensesSupplied'
+            RULE_NOT_SELF_EMPLOYMENT:
+              $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
+
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            RULE_SUMMARY_STATUS_INVALID:
+              $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
+            RULE_BSAS_ALREADY_ADJUSTED:
+              $ref: './common/errors.yaml#/components/examples/ruleBsasAlreadyAdjusted'
+            RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
+              $ref: './common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold'
+            RULE_RESULTING_VALUE_NOT_PERMITTED:
+              $ref: './common/errors.yaml#/components/examples/ruleResultingValueNotPermitted'
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: './common/errors.yaml#/components/examples/bsasNotFound'

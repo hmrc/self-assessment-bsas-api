@@ -12,35 +12,35 @@ components:
         example: 2019-20
       required: false
 
-      businessIdOptional:
-        in: query
-        name: businessId
-        description: |
-          An identifier for the business, unique to the customer.
-        schema:
-          type: string
-          pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
-          example: X9IS98470026982
-        required: false
+    businessIdOptional:
+      in: query
+      name: businessId
+      description: |
+        An identifier for the business, unique to the customer.
+      schema:
+        type: string
+        pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
+        example: X9IS98470026982
+      required: false
 
-        typeOfBusinessOptional:
-          in: query
-          name: typeOfBusiness
-          description: |
-            The type of business the summary calculation is for.
-          schema:
-            type: string
-            enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
-            example: self-employment
-          required: false
+    typeOfBusinessOptional:
+      in: query
+      name: typeOfBusiness
+      description: |
+        The type of business the summary calculation is for.
+      schema:
+        type: string
+        enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
+        example: self-employment
+      required: false
 
-          adjustedStatusOptional:
-            in: query
-            name: adjustedStatus
-            description: |
-              To specify if the original (unadjusted) summary or adjusted summary is returned.
-              If not specified the adjusted summary will be returned where it exists, otherwise the original summary is returned.
-            schema:
-              type: boolean
-              example: true
-            required: false
+    adjustedStatusOptional:
+      in: query
+      name: adjustedStatus
+      description: |
+        To specify if the original (unadjusted) summary or adjusted summary is returned.
+        If not specified the adjusted summary will be returned where it exists, otherwise the original summary is returned.
+      schema:
+        type: boolean
+        example: true
+      required: false
