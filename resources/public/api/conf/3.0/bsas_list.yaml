@@ -44,6 +44,7 @@ get:
     - $ref: ./common/queryParameters.yaml#/components/parameters/typeOfBusinessOptional
     - $ref: ./common/queryParameters.yaml#/components/parameters/businessIdOptional
     - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
     - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
   security:

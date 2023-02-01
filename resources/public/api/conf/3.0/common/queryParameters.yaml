@@ -15,6 +15,7 @@ components:
       schema:
         type: string
         example: 2019-20
+        pattern: ^\d{4}-\d{2}$
       required: false
 
     taxYearTys:
@@ -28,37 +29,24 @@ components:
       schema:
         type: string
         example: 2023-24
+        pattern: ^\d{4}-\d{2}$
       required: false
 
     businessIdOptional:
       name: businessId
       in: query
-      description: |
-        An identifier for the business, unique to the customer.
-    
-        Must conform to the regular expression:
-    
-        ^X[A-Z0-9]{1}IS[0-9]{11}$
+      description: An identifier for the business, unique to the customer.
       schema:
         type: string
         example: XAIS12345678910
+        pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
       required: false
 
     typeOfBusinessOptional:
       name: typeOfBusiness
       in: query
-      description: |
-        The type of business the summary calculation is for.
-  
-        Limited to the following possible values:
-        \noident
-        
-        * self-employment 
-        * uk-property-fhl
-        * uk-property-non-fhl
-        * foreign-property-fhl-eea
-        * foreign-property
-    schema:
+      description: The type of business the summary calculation is for.
+      schema:
         type: string
         enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
         example: foreign-property

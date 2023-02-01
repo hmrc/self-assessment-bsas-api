@@ -64,11 +64,27 @@ post:
     - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
     - $ref: ./common/headers.yaml#/components/parameters/acceptJson
     - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader
     - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
   security:
     - User-Restricted:
         - write:self-assessment
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ./schemas/submit_se_adjustments.json
+        examples:
+          adjustments_full:
+            description: Full Expenses
+            value:
+              $ref: ./examples/adjustments/submit_se_adjustments_full.json
+          adjustments_consolidated:
+            description: Consolidated Expenses
+            value:
+              $ref: ./examples/adjustments/submit_se_adjustments_consolidated.json
 
   responses:
     200:
@@ -79,16 +95,12 @@ post:
       content:
         application/json:
           schema:
-            $ref: ./schemas/submit_se_adjustments.json
+            $ref: ./schemas/submit_adjustments_response.json
           examples:
-            adjustments_full:
-              description: Full Expenses
+            example:
+              description: Self Employment
               value:
-                $ref: ./examples/adjustments/submit_se_adjustments_full.json
-            adjustments_consolidated:
-              description: Consolidated Expenses
-              value:
-                $ref: ./examples/adjustments/submit_se_adjustments_consolidated.json
+                $ref: ./examples/adjustments/submit_se_adjustment_response.json
 
     400:
       description: Bad request
@@ -108,7 +120,7 @@ post:
             RULE_TYPE_OF_BUSINESS_INCORRECT:
               $ref: ./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectForeign
             RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
-              $ref: ./common/errors.yaml#/components/examples/incorrectOrEmptyBodySubmitted
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted
             RULE_SUMMARY_STATUS_INVALID:
               $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusInvalid
             RULE_SUMMARY_STATUS_SUPERSEDED:
@@ -120,7 +132,7 @@ post:
             RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
               $ref: ./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold
             RULE_TRADING_INCOME_ALLOWANCE_CLAIMED:
-              $ref: ./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceExceeded
+              $ref: ./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceClaimed
             RULE_TAX_YEAR_NOT_SUPPORTED:
               $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
             INVALID_TAX_YEAR_PARAMETER:

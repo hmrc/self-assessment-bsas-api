@@ -157,13 +157,13 @@ components:
         code: RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD
         message: The cumulative turnover amount exceeds the consolidated expenses threshold
 
-    ruleTradingIncomeAllowanceExceeded:
+    ruleTradingIncomeAllowanceClaimed:
       description: Adjustment to expenses where trading income allowance claimed.
       value:
         code: RULE_TRADING_INCOME_ALLOWANCE_CLAIMED
         message: A claim for trading income allowance was made. Cannot also have expenses
 
-    rulePropertyIncomeAllowanceExceeded:
+    rulePropertyIncomeAllowanceClaimed:
       description: Adjustment to expenses where property income allowance claimed.
       value:
         code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
@@ -175,7 +175,7 @@ components:
         code: RULE_NO_ACCOUNTING_PERIOD
         message: The supplied accounting period does not exist
 
-    incorrectOrEmptyBodySubmitted:
+    ruleIncorrectOrEmptyBodySubmitted:
       description: An empty or non-matching body was submitted.
       value:
         code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED

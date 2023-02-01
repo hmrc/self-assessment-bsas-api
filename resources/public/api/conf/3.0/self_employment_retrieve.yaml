@@ -62,6 +62,7 @@ get:
     - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
     - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
     - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
     - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
   security:
@@ -77,7 +78,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/retrieve_foreign_property.json
+            $ref: ./schemas/retrieve_self_employment.json
           examples:
             example-1:
               description: Full Expenses
