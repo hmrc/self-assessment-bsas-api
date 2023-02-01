@@ -99,7 +99,7 @@ parameters:
       content:
         application/json:
           schema:
-            $ref: './schemas/error-response.yaml'
+            $ref: './schemas/error_response.yaml'
           examples:
             FORMAT_NINO:
               $ref: './common/errors.yaml#/components/examples/formatNino'
@@ -121,7 +121,7 @@ parameters:
       content:
         application/json:
           schema:
-            $ref: './schemas/error-response.yaml'
+            $ref: './schemas/error_response.yaml'
           examples:
             RULE_SUMMARY_STATUS_INVALID:
               $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
@@ -139,7 +139,7 @@ parameters:
       content:
         application/json:
           schema:
-            $ref: './schemas/error-response.yaml'
+            $ref: './schemas/error_response.yaml'
           examples:
             MATCHING_RESOURCE_NOT_FOUND:
               $ref: './common/errors.yaml#/components/examples/bsasNotFound'

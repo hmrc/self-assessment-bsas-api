@@ -107,7 +107,7 @@ parameters:
       content:
         application/json:
           schema:
-            $ref: './schemas/error-response.yaml'
+            $ref: './schemas/error_response.yaml'
           examples:
             FORMAT_NINO:
               $ref: './common/errors.yaml#/components/examples/formatNino'
@@ -127,7 +127,7 @@ parameters:
       content:
         application/json:
           schema:
-            $ref: './schemas/error-response.yaml'
+            $ref: './schemas/error_response.yaml'
           examples:
             RULE_TYPE_OF_BUSINESS_INCORRECT:
               $ref: './common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrect'
@@ -153,7 +153,7 @@ parameters:
       content:
         application/json:
           schema:
-            $ref: './schemas/error-response.yaml'
+            $ref: './schemas/error_response.yaml'
           examples:
             MATCHING_RESOURCE_NOT_FOUND:
               $ref: './common/errors.yaml#/components/examples/bsasNotFound'
