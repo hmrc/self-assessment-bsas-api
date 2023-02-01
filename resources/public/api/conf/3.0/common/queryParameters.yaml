@@ -50,3 +50,5 @@ components:
         type: string
         enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
         example: foreign-property
+      required: false
+
