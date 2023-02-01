@@ -1,0 +1,13 @@
+get:
+  $ref: "retrieve_property_adjustments.yaml"
+  summary: Retrieve a Foreign Property Business' Summary Adjustments
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+post:
+  $ref: "submit_property_adjustments.yaml"
+  summary: Submit a Foreign Property Business' Accounting Adjustments
+  security:
+    - User-Restricted:
+        - write:self-assessment

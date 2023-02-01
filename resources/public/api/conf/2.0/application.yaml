@@ -51,26 +51,21 @@ paths:
     $ref: ".list.yaml"
     /individuals/self-assessment/adjustable-summary/{nino}/trigger:
     $ref: ".trigger.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}:
+    /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}:
     $ref: "retrieve_se_bsas.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}/adjust:
-    $ref: "submit_se_adjustments.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}:
+    /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}/adjust:
+    $ref: "se_adjustments_endpoints.yaml"
+    /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{bsasId}:
     $ref: "retrieve_property_bsas.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}/adjust:
-    $ref: "submit_property_adjustments.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}:
-    $ref: "retrieve_foreign_property_bsas.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}/adjust:
-    $ref: "submit_foreign_property_accounting_adjustments.raml"
-
-
-    //missing from developer hub
-
+    /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{bsasId}/adjust:
+    $ref: "property_adjustments_endpoints.yaml"
     /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}:
-    $ref: "retrieve_foreign_property_adjustments.yaml"
+    $ref: "retrieve_foreign_property_bsas.yaml"
     /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}/adjust:
-    $ref: "retrieve_property_adjustments.yaml"
-    $ref: "retrieve_se_adjustments.yaml"
+    $ref: "foreign_property_adjustments_endpoints.yaml"
+
+
+
+
 
 
