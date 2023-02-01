@@ -13,11 +13,15 @@ is:
   - errors.rulePeriodicDataIncomplete
   - errors.ruleNoAccountingPeriod
   - errors.ruleTaxYearNotSupported
+  - errors.invalidTaxYear
   - errors.incorrectOrEmptyBodySubmitted
-  - errors.triggerClientOrAgentNotAuthorised
+  - errors.clientOrAgentNotAuthorised
   - errors.triggerAndListNotFound
 displayName: Trigger a Business Source Adjustable Summary
-description: This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary of the income and expenditure for a specified business for a given accounting period. A Business Source Adjustable Summary must be generated before accounting adjustments are to be entered. A National Insurance number must be provided.
+description: |
+  This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary of the 
+  income and expenditure for a specified business for a given accounting period. A Business Source Adjustable Summary 
+  must be generated before accounting adjustments are to be entered. A National Insurance number must be provided.
 (annotations.sandboxData): !include scenarios/trigger.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

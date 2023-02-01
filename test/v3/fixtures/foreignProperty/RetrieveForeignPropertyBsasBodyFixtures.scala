@@ -36,7 +36,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   )
 
   lazy val submissionPeriodDesJson: JsValue = Json.parse(
-  """{
+    """{
       |      "periodId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
       |      "startDate": "2019-04-06",
       |      "endDate": "2020-04-05",
@@ -657,12 +657,13 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val adjustmentsNonFhlSeqModel: Adjustments = Adjustments(
     countryLevelDetail = Some(
-      Seq(Adjustments(
-        countryLevelDetail = None,
-        countryCode = adjustmentsNonFhlModel.countryCode,
-        income = adjustmentsNonFhlModel.income,
-        expenses = adjustmentsNonFhlModel.expenses
-      ))),
+      Seq(
+        Adjustments(
+          countryLevelDetail = None,
+          countryCode = adjustmentsNonFhlModel.countryCode,
+          income = adjustmentsNonFhlModel.income,
+          expenses = adjustmentsNonFhlModel.expenses
+        ))),
     countryCode = None,
     income = None,
     expenses = None

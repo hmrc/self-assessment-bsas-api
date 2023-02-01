@@ -27,17 +27,6 @@ traits:
                 description: The format of the supplied tax year is not valid.
                 value:
                   code: FORMAT_TAX_YEAR
-  formatSelfEmploymentId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatSelfEmploymentId:
-                description: The format of the self-employment ID is not valid.
-                value:
-                  code: FORMAT_SELF_EMPLOYMENT_ID
   formatStartDate:
     responses:
       400:
@@ -71,17 +60,6 @@ traits:
                 description: The format of the supplied type of business is not valid.
                 value:
                   code: FORMAT_TYPE_OF_BUSINESS
-  formatBsasId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatBsasId:
-                description: The format of the supplied BSAS ID is not valid.
-                value:
-                  code: FORMAT_BSAS_ID
   formatBusinessId:
     responses:
       400:
@@ -93,28 +71,6 @@ traits:
                 description: The format of the supplied business ID is not valid.
                 value:
                   code: FORMAT_BUSINESS_ID
-  formatAdjustedStatus:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatAdjustedStatus:
-                description: The format of the supplied adjusted status field is not valid.
-                value:
-                  code: FORMAT_ADJUSTED_STATUS
-  formatAdjustmentValue:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatAdjustmentValue:
-                description: One or more values has been added with the incorrect format.
-                value:
-                  code: FORMAT_ADJUSTMENT_VALUE
   formatValue:
     responses:
       400:
@@ -148,17 +104,6 @@ traits:
                 description: Not a valid ISO 3166-1 alpha-3 country code.
                 value:
                   code: RULE_COUNTRY_CODE
-  ruleSelfEmploymentId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleSelfEmploymentId:
-                description: A self-employment ID can only be supplied for a self-employment business type.
-                value:
-                  code: RULE_SELF_EMPLOYMENT_ID
   ruleTaxYearNotSupported:
     responses:
       400:
@@ -167,7 +112,9 @@ traits:
             type: types.errorResponse
             examples:
               ruleTaxYearNotSupported:
-                description: The specified tax year is not supported. Either the tax year specified is before the minimum tax year value, or it is after the maximum tax year value.
+                description: |
+                  The specified tax year is not supported. Either the tax year specified is before the minimum tax year 
+                  value, or it is after the maximum tax year value.
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearRangeInvalid:
@@ -181,17 +128,6 @@ traits:
                 description: Tax year range invalid. A tax year range of one year is required.
                 value:
                   code: RULE_TAX_YEAR_RANGE_INVALID
-  ruleRangeInvalid:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleRangeInvalid:
-                description:  One or more values has been added that is outside the accepted value range.
-                value:
-                  code: RULE_RANGE_INVALID
   formatCalculationId:
     responses:
       400:
@@ -288,7 +224,9 @@ traits:
             type: types.errorResponse
             examples:
               ruleAccountingPeriodNotSupported:
-                description: The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value.
+                description: |
+                  The specified accounting period is not supported, that is, the accounting period specified falls before
+                  the minimum tax year value.
                 value:
                   code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
   ruleDuplicateCountryCode:
@@ -368,17 +306,6 @@ traits:
                 description: Adjustment to expenses where property income allowance claimed.
                 value:
                   code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
-  ruleIncorrectPropertyAdjusted:
-      responses:
-        400:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                ruleIncorrectPropertyAdjusted:
-                  description: An adjustment made to a BSAS ID that does not match the property type in the request.
-                  value:
-                    code: RULE_INCORRECT_PROPERTY_ADJUSTED
   ruleNoAccountingPeriod:
     responses:
       400:
@@ -390,17 +317,6 @@ traits:
                 description: The supplied accounting period does not exist.
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
-  ruleNoAdjustmentsMade:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleNoAdjustmentsMade:
-                description: An adjusted calculation does not exist.
-                value:
-                  code: RULE_NO_ADJUSTMENTS_MADE
   incorrectOrEmptyBodySubmitted:
     responses:
       400:
@@ -412,17 +328,6 @@ traits:
                 description: An empty or non-matching body was submitted.
                 value:
                   code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
-  ruleSelfEmploymentAdjusted:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleSelfEmploymentAdjusted:
-                description: The BSAS ID used in the adjustment was for a self-employment business type, and an adjustment has been made.
-                value:
-                  code: RULE_SELF_EMPLOYMENT_ADJUSTED
   ruleBothExpensesSupplied:
     responses:
       400:
@@ -465,17 +370,6 @@ traits:
             examples:
               triggerAndListNotFound:
                 description: The supplied income source could not be found, or the type of business does not relate to the business ID.
-                value:
-                  code: MATCHING_RESOURCE_NOT_FOUND
-  bsasNotFound:
-    responses:
-      404:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              notFound:
-                description: A calculation with this BSAS ID cannot be found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   incomeSourceNotFound:
@@ -530,18 +424,10 @@ traits:
             type: types.errorResponse
             examples:
               clientOrAgentNotAuthorised:
-                description: The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
-                value:
-                  code: CLIENT_OR_AGENT_NOT_AUTHORISED
-  triggerClientOrAgentNotAuthorised:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              clientOrAgentNotAuthorised:
-                description: 'The client or agent is not authorised. This is because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.'
+                description: | 
+                  The client and/or agent is not authorised. This is normally because: the client is not subscribed to 
+                  MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act 
+                  on their behalf.
                 value:
                   code: CLIENT_OR_AGENT_NOT_AUTHORISED
   invalidTaxYear:
