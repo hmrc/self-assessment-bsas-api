@@ -4,7 +4,6 @@ get:
   security:
     - User-Restricted:
         - read:self-assessment
-
 post:
   $ref: "submit_se_adjustments.yaml"
   summary: Submit an Adjustment to a Self-Employment Business Summary

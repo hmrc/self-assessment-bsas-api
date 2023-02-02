@@ -2,7 +2,7 @@ get:
   summary: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
   description: |
     This endpoint allows a developer to request a specific Business Source Adjustable Summary (BSAS) using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted summary is returned.
-    
+
     ### Test data
     <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
     <table>
@@ -12,41 +12,41 @@ get:
             <th>Scenario</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates the scenario where no data was found.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_FHL_ADJUSTED</p></td>
-            <td><p>Simulates a response containing an adjusted FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_FHL_UNADJUSTED</p></td>
-            <td><p>Simulates a response containing an unadjusted FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_FHL_CONSOLIDATED</p></td>
-            <td><p>Simulates a response containing an adjusted FHL summary with consolidated expenses.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL_ADJUSTED</p></td>
-            <td><p>Simulates a response containing an adjusted non-FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL_UNADJUSTED</p></td>
-            <td><p>Simulates a response containing an unadjusted non-FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>UK_PROPERTY_NON_FHL_CONSOLIDATED</p></td>
-            <td><p>Simulates a response containing an adjusted non-FHL summary with consolidated expenses.</p></td>
-        </tr>
-        <tr>
-            <td><p>NOT_UK_PROPERTY</p></td>
-            <td><p>Simulates an unsuccessful response where a non-property BSAS ID was requested.</p></td>
-        </tr>
-    </tbody>
-  </table>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates the scenario where no data was found.</p></td>
+          </tr>
+          <tr>
+              <td><p>UK_PROPERTY_FHL_ADJUSTED</p></td>
+              <td><p>Simulates a response containing an adjusted FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>UK_PROPERTY_FHL_UNADJUSTED</p></td>
+              <td><p>Simulates a response containing an unadjusted FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>UK_PROPERTY_FHL_CONSOLIDATED</p></td>
+              <td><p>Simulates a response containing an adjusted FHL summary with consolidated expenses.</p></td>
+          </tr>
+          <tr>
+              <td><p>UK_PROPERTY_NON_FHL_ADJUSTED</p></td>
+              <td><p>Simulates a response containing an adjusted non-FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>UK_PROPERTY_NON_FHL_UNADJUSTED</p></td>
+              <td><p>Simulates a response containing an unadjusted non-FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>UK_PROPERTY_NON_FHL_CONSOLIDATED</p></td>
+              <td><p>Simulates a response containing an adjusted non-FHL summary with consolidated expenses.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_UK_PROPERTY</p></td>
+              <td><p>Simulates an unsuccessful response where a non-property BSAS ID was requested.</p></td>
+          </tr>
+      </tbody>
+    </table>
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
@@ -71,7 +71,7 @@ get:
             $ref: './schemas/retrieve_property_bsas.json'
           examples:
             example-1:
-              description: Retrieve a Self-Employment Business Source Adjustable Summary (BSAS)
+              description: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
               value:
                 $ref: './examples/retrieveBsas/retrieve_property_bsas.json'
 
@@ -90,8 +90,6 @@ get:
               $ref: './common/errors.yaml#/components/examples/formatAdjustedStatus'
             RULE_NOT_UK_PROPERTY:
               $ref: './common/errors.yaml#/components/examples/ruleNotUkProperty'
-            RULE_NO_ADJUSTMENTS_MADE:
-              $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "403":
       description: Forbidden
@@ -102,6 +100,8 @@ get:
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
               $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+            RULE_NO_ADJUSTMENTS_MADE:
+              $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "404":
       description: Not Found

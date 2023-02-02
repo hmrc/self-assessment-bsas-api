@@ -55,11 +55,11 @@ paths:
       $ref: "./retrieve_se_bsas.yaml"
     /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}/adjust:
       $ref: "./se_adjustments_endpoints.yaml"
-#    /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{bsasId}:
-#      $ref: "./retrieve_property_bsas.yaml"
+    /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{bsasId}:
+      $ref: "./retrieve_property_bsas.yaml"
     /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{bsasId}/adjust:
       $ref: "./property_adjustments_endpoints.yaml"
-#    /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}:
-#      $ref: "./retrieve_foreign_property_bsas.yaml"
+    /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}:
+      $ref: "./retrieve_foreign_property_bsas.yaml"
     /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}/adjust:
       $ref: "./foreign_property_adjustments_endpoints.yaml"

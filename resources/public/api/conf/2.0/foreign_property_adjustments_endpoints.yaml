@@ -4,7 +4,6 @@ get:
   security:
     - User-Restricted:
         - read:self-assessment
-
 post:
   $ref: "submit_foreign_property_accounting_adjustments.yaml"
   summary: Submit a Foreign Property Business' Accounting Adjustments

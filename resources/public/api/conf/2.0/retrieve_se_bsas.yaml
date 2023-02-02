@@ -78,8 +78,6 @@ get:
               $ref: './common/errors.yaml#/components/examples/formatAdjustedStatus'
             RULE_NOT_SELF_EMPLOYMENT:
               $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
-            RULE_NO_ADJUSTMENTS_MADE:
-              $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "403":
       description: Forbidden
@@ -90,6 +88,8 @@ get:
           examples:
              CLIENT_OR_AGENT_NOT_AUTHORISED:
                $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+             RULE_NO_ADJUSTMENTS_MADE:
+               $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "404":
       description: Not Found

@@ -1,11 +1,10 @@
-post:
-  summary: Submit a Foreign Property Business' Accounting Adjustments
-  description: |
-    This endpoint allows the developer to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a Foreign Property Business, and it must not have been adjusted, previously.  Only data for one property business (either foreign-property-fhl-eea or foreign-property) should be included in any submission.
-
-    ### Test data
-    <p>Scenario simulations using Gov-Test-Scenario headers are only available in the sandbox environment.</p>
-    <table>
+summary: Submit a Foreign Property Business' Accounting Adjustments
+description: |
+  This endpoint allows the developer to provide accounting adjustments against a specified Business Source Accounting Summary quoting its unique identifier. The BSAS ID quoted must be for a Foreign Property Business, and it must not have been adjusted, previously.  Only data for one property business (either foreign-property-fhl-eea or foreign-property) should be included in any submission.
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers are only available in the sandbox environment.</p>
+  <table>
     <thead>
         <tr>
             <th>Header Value (Gov-Test-Scenario)</th>
@@ -60,15 +59,15 @@ parameters:
   - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
   - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
-  security:
-    - User-Restricted:
-        - write:self-assessment
+security:
+  - User-Restricted:
+      - write:self-assessment
 
-  requestBody:
-    content:
-      application/json:
-        schema:
-          $ref: './schemas/foreign_property_accounting_adjustments_submit_request.json'
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/foreign_property_accounting_adjustments_submit_request.json'
         examples:
           example-1:
             description: Foreign Property Consolidated Request
@@ -87,76 +86,76 @@ parameters:
             value:
               $ref: './examples/adjustments/foreign_property_accounting_adjustments_submit_unconsolidated_foreignFhlEea_request.json'
 
-  responses:
-    "200":
-      description: Success
-      headers:
-        X-CorrelationId:
-          $ref: './common/headers.yaml#/components/parameters/correlationId'
-        content:
-          application/json:
-            schema:
-              $ref: './schemas/foreign_property_accounting_adjustments_submit_response.json'
-            examples:
-              example-1:
-                description: Submit Foreign Property Accounting Adjustments
-                value:
-                  $ref: './examples/adjustments/foreign_property_accounting_adjustments_submit_response.json'
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/foreign_property_accounting_adjustments_submit_response.json'
+        examples:
+          example-1:
+            description: Submit Foreign Property Accounting Adjustments
+            value:
+              $ref: './examples/adjustments/foreign_property_accounting_adjustments_submit_response.json'
 
-    "400":
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            $ref: './schemas/error_response.yaml'
-          examples:
-            FORMAT_NINO:
-              $ref: './common/errors.yaml#/components/examples/formatNino'
-            FORMAT_BSAS_ID:
-              $ref: './common/errors.yaml#/components/examples/formatBsasId'
-            FORMAT_ADJUSTMENT_VALUE:
-              $ref: './common/errors.yaml#/components/examples/formatAdjustmentValue'
-            FORMAT_COUNTRY_CODE:
-              $ref: './common/errors.yaml#/components/examples/formatCountryCode'
-            RULE_COUNTRY_CODE:
-              $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
-            RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
-              $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
-            RULE_RANGE_INVALID:
-              $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
-            RULE_BOTH_EXPENSES_SUPPLIED:
-              $ref: './common/errors.yaml#/components/examples/ruleBothExpensesSupplied'
+  "400":
+    description: Bad Request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_BSAS_ID:
+            $ref: './common/errors.yaml#/components/examples/formatBsasId'
+          FORMAT_ADJUSTMENT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatAdjustmentValue'
+          FORMAT_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/formatCountryCode'
+          RULE_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
+          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+          RULE_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
+          RULE_BOTH_EXPENSES_SUPPLIED:
+            $ref: './common/errors.yaml#/components/examples/ruleBothExpensesSupplied'
 
-    "403":
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: './schemas/error_response.yaml'
-          examples:
-            RULE_TYPE_OF_BUSINESS_INCORRECT:
-              $ref: './common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrect'
-            RULE_SUMMARY_STATUS_INVALID:
-              $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
-            RULE_SUMMARY_STATUS_SUPERSEDED:
-              $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded'
-            RULE_BSAS_ALREADY_ADJUSTED:
-              $ref: './common/errors.yaml#/components/examples/ruleBsasAlreadyAdjusted'
-            RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
-              $ref: './common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold'
-            RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED:
-              $ref: './common/errors.yaml#/components/examples/rulePropertyIncomeAllowanceExceeded'
-            RULE_RESULTING_VALUE_NOT_PERMITTED:
-              $ref: './common/errors.yaml#/components/examples/ruleResultingValueNotPermitted'
-            CLIENT_OR_AGENT_NOT_AUTHORISED:
-              $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          RULE_TYPE_OF_BUSINESS_INCORRECT:
+            $ref: './common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrect'
+          RULE_SUMMARY_STATUS_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
+          RULE_SUMMARY_STATUS_SUPERSEDED:
+            $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded'
+          RULE_BSAS_ALREADY_ADJUSTED:
+            $ref: './common/errors.yaml#/components/examples/ruleBsasAlreadyAdjusted'
+          RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
+            $ref: './common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold'
+          RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED:
+            $ref: './common/errors.yaml#/components/examples/rulePropertyIncomeAllowanceExceeded'
+          RULE_RESULTING_VALUE_NOT_PERMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleResultingValueNotPermitted'
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
 
-    "404":
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            $ref: './schemas/error_response.yaml'
-          examples:
-            MATCHING_RESOURCE_NOT_FOUND:
-              $ref: './common/errors.yaml#/components/examples/notFound'
+  "404":
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/notFound'

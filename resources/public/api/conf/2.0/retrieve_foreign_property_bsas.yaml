@@ -12,44 +12,44 @@ get:
             <th>Scenario</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates the scenario where no data was found.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_FHL_EEA_ADJUSTED</p></td>
-            <td><p>Simulates a response containing an adjusted FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_FHL_EEA_UNADJUSTED</p></td>
-            <td><p>Simulates a response containing an unadjusted FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_FHL_EEA_CONSOLIDATED</p></td>
-            <td><p>Simulates a response containing an adjusted FHL summary with consolidated expenses.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_ADJUSTED</p></td>
-            <td><p>Simulates a response containing an adjusted non-FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_UNADJUSTED</p></td>
-            <td><p>Simulates a response containing an unadjusted non-FHL summary.</p></td>
-        </tr>
-        <tr>
-            <td><p>FOREIGN_PROPERTY_CONSOLIDATED</p></td>
-            <td><p>Simulates a response containing an adjusted non-FHL summary with consolidated expenses.</p></td>
-        </tr>
-        <tr>
-            <td><p>NOT_FOREIGN_PROPERTY</p></td>
-            <td><p>Simulates an unsuccessful response where a non-property BSAS ID was requested.</p></td>
-        </tr>
-    </tbody>
-  </table>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates the scenario where no data was found.</p></td>
+          </tr>
+          <tr>
+              <td><p>FOREIGN_PROPERTY_FHL_EEA_ADJUSTED</p></td>
+              <td><p>Simulates a response containing an adjusted FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>FOREIGN_PROPERTY_FHL_EEA_UNADJUSTED</p></td>
+              <td><p>Simulates a response containing an unadjusted FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>FOREIGN_PROPERTY_FHL_EEA_CONSOLIDATED</p></td>
+              <td><p>Simulates a response containing an adjusted FHL summary with consolidated expenses.</p></td>
+          </tr>
+          <tr>
+              <td><p>FOREIGN_PROPERTY_ADJUSTED</p></td>
+              <td><p>Simulates a response containing an adjusted non-FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>FOREIGN_PROPERTY_UNADJUSTED</p></td>
+              <td><p>Simulates a response containing an unadjusted non-FHL summary.</p></td>
+          </tr>
+          <tr>
+              <td><p>FOREIGN_PROPERTY_CONSOLIDATED</p></td>
+              <td><p>Simulates a response containing an adjusted non-FHL summary with consolidated expenses.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_FOREIGN_PROPERTY</p></td>
+              <td><p>Simulates an unsuccessful response where a non-property BSAS ID was requested.</p></td>
+          </tr>
+      </tbody>
+    </table>
 
 
-parameters:
+  parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
     - $ref: ./common/pathParameters.yaml#/components/parameters/bsasId
     - $ref: ./common/queryParameters.yaml#/components/parameters/adjustedStatusOptional
@@ -99,8 +99,6 @@ parameters:
               $ref: './common/errors.yaml#/components/examples/formatAdjustedStatus'
             RULE_NOT_FOREIGN_PROPERTY:
               $ref: './common/errors.yaml#/components/examples/ruleNotForeignProperty'
-            RULE_NO_ADJUSTMENTS_MADE:
-              $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "403":
       description: Forbidden
@@ -111,6 +109,8 @@ parameters:
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
               $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+            RULE_NO_ADJUSTMENTS_MADE:
+              $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "404":
       description: Not Found
