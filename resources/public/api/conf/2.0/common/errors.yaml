@@ -24,26 +24,26 @@ components:
 #        code: FORMAT_SELF_EMPLOYMENT_ID
 #        message: The provided self-employment ID is invalid
 #
-#    formatStartDate:
-#      description: |
-#        The format of the supplied accounting period start date is not valid.
-#      value:
-#        code: FORMAT_START_DATE
-#        message: The provided Start date is invalid
-#
-#    formatEndDate:
-#      description: |
-#        The format of the supplied accounting period end date is invalid
-#      value:
-#        code: FORMAT_END_DATE
-#        message: The provided End date is invalid
-#
-#    formatTypeOfBusiness:
-#      description: |
-#        The format of the supplied type of business is not valid.
-#      value:
-#        code: FORMAT_TYPE_OF_BUSINESS
-#        message: The provided type of business is invalid
+    formatStartDate:
+      description: |
+        The format of the supplied accounting period start date is not valid.
+      value:
+        code: FORMAT_START_DATE
+        message: The provided Start date is invalid
+
+    formatEndDate:
+      description: |
+        The format of the supplied accounting period end date is invalid
+      value:
+        code: FORMAT_END_DATE
+        message: The provided End date is invalid
+
+    formatTypeOfBusiness:
+      description: |
+        The format of the supplied type of business is not valid.
+      value:
+        code: FORMAT_TYPE_OF_BUSINESS
+        message: The provided type of business is invalid
 #
 #    formatBsasId:
 #      description: |
@@ -101,19 +101,19 @@ components:
 #        code: RULE_SELF_EMPLOYMENT_ID
 #        message: A self-employment ID can only be supplied for a self-employment business type
 #
-#    ruleTaxYearNotSupported:
-#      description: |
-#        The specified tax year is not supported - the tax year specified is before the minimum tax year value.
-#      value:
-#        code: RULE_TAX_YEAR_NOT_SUPPORTED
-#        message: Tax year not supported, because it precedes the earliest allowable tax year
-#
-#    ruleTaxYearRangeInvalid:
-#      description: |
-#        Tax year range invalid. A tax year range of one year is required.
-#      value:
-#        code: RULE_TAX_YEAR_RANGE_INVALID
-#        message: Tax year range invalid. A tax year range of one year is required
+    ruleTaxYearNotSupported:
+      description: |
+        The specified tax year is not supported - the tax year specified is before the minimum tax year value.
+      value:
+        code: RULE_TAX_YEAR_NOT_SUPPORTED
+        message: Tax year not supported, because it precedes the earliest allowable tax year
+
+    ruleTaxYearRangeInvalid:
+      description: |
+        Tax year range invalid. A tax year range of one year is required.
+      value:
+        code: RULE_TAX_YEAR_RANGE_INVALID
+        message: Tax year range invalid. A tax year range of one year is required
 #
 #    ruleRangeInvalid:
 #      description: |
@@ -122,37 +122,37 @@ components:
 #        code: RULE_RANGE_INVALID
 #        message: One or more values has been added that is outside the accepted value range
 #
-#    ruleEndDateBeforeStartDate:
-#      description: |
-#        The accounting period end date value is before the start date.
-#      value:
-#        code: RULE_END_DATE_BEFORE_START_DATE
-#        message: The supplied accounting period end date is before the start date
-#
-#    ruleAccountingPeriodNotSupported:
-#      description: |
-#        The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
-#      value:
-#        code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
-#        message: The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value
-#
-#    ruleIncorrectOrEmptyBodySubmitted:
-#      description: |
-#        An empty or non-matching body was submitted.
-#      value:
-#        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
-#        message: An empty or non-matching body was submitted
-#
+    ruleEndDateBeforeStartDate:
+      description: |
+        The accounting period end date value is before the start date.
+      value:
+        code: RULE_END_DATE_BEFORE_START_DATE
+        message: The supplied accounting period end date is before the start date
+
+    ruleAccountingPeriodNotSupported:
+      description: |
+        The specified accounting period is not supported - the accounting period specified falls before the minimum tax year value.
+      value:
+        code: RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED
+        message: The specified accounting period is not supported, that is, the accounting period specified falls before the minimum tax year value
+
+    ruleIncorrectOrEmptyBodySubmitted:
+      description: |
+        An empty or non-matching body was submitted.
+      value:
+        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+        message: An empty or non-matching body was submitted
+
 #    ruleBothExpensesSupplied:
 #      description: |
 #        Consolidated expenses adjusted with other unexpected fields.
 #      value:
 #        code: RULE_BOTH_EXPENSES_SUPPLIED
 #        message: Both expenses and consolidated expenses cannot be present at the same time
-#
-#
-#    # 403
-#
+
+
+    # 403
+
 #    ruleNotUkProperty:
 #      description: |
 #        The BSAS ID supplied does not relate to a UK property business.
@@ -272,31 +272,29 @@ components:
 #        code: RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED
 #        message: A claim for property income allowance was made. Cannot also have expenses
 #
-#    clientOrAgentNotAuthorised:
-#      description: |
-#        The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
-#      value:
-#        code: CLIENT_OR_AGENT_NOT_AUTHORISED
-#        message: |
-#        The client and/or agent is not authorised
-#
-#    triggerClientOrAgentNotAuthorised:
-#      description: |
-#        The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
-#      value:
-#        code: CLIENT_OR_AGENT_NOT_AUTHORISED
-#        message: |
-#          The client and/or agent is not authorised
-#
-#
-#    # 404
-#
-#    triggerAndListNotFound:
-#      description: |
-#        The supplied income source could not be found.
-#      value:
-#        code: MATCHING_RESOURCE_NOT_FOUND
-#        message: Matching resource not found
+    clientOrAgentNotAuthorised:
+      description: |
+        The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+      value:
+        code: CLIENT_OR_AGENT_NOT_AUTHORISED
+        message: The client and/or agent is not authorised
+
+    triggerClientOrAgentNotAuthorised:
+      description: |
+        The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+      value:
+        code: CLIENT_OR_AGENT_NOT_AUTHORISED
+        message: The client and/or agent is not authorised
+
+
+    # 404
+
+    triggerAndListNotFound:
+      description: |
+        The supplied income source could not be found.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
 #
 #    bsasNotFound:
 #      description: |
