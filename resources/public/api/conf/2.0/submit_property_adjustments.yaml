@@ -114,8 +114,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/formatBsasId'
           FORMAT_ADJUSTMENT_VALUE:
             $ref: './common/errors.yaml#/components/examples/formatAdjustmentValue'
-          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
-            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+          INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/incorrectOrEmptyBodySubmitted'
           RULE_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
           RULE_BOTH_EXPENSES_SUPPLIED:

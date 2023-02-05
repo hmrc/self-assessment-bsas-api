@@ -106,8 +106,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/formatBsasId'
           FORMAT_ADJUSTMENT_VALUE:
             $ref: './common/errors.yaml#/components/examples/formatAdjustmentValue'
-          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
-            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+          INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/incorrectOrEmptyBodySubmitted'
           RULE_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
           RULE_BOTH_EXPENSES_SUPPLIED:
@@ -124,10 +124,14 @@ responses:
         examples:
           RULE_SUMMARY_STATUS_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
+          RULE_SUMMARY_STATUS_SUPERSEDED:
+            $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded'
           RULE_BSAS_ALREADY_ADJUSTED:
             $ref: './common/errors.yaml#/components/examples/ruleBsasAlreadyAdjusted'
           RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
             $ref: './common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold'
+          RULE_TRADING_INCOME_ALLOWANCE_CLAIMED:
+            $ref: './common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceExceeded'
           RULE_RESULTING_VALUE_NOT_PERMITTED:
             $ref: './common/errors.yaml#/components/examples/ruleResultingValueNotPermitted'
           CLIENT_OR_AGENT_NOT_AUTHORISED:
