@@ -1,0 +1,12 @@
+get:
+  $ref: "retrieve_se_adjustments.yaml"
+  summary: Retrieve a Self-Employment Business' Summary Adjustments
+  security:
+    - User-Restricted:
+        - read:self-assessment
+post:
+  $ref: "submit_se_adjustments.yaml"
+  summary: Submit an Adjustment to a Self-Employment Business Summary
+  security:
+    - User-Restricted:
+        - write:self-assessment

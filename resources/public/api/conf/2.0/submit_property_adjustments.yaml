@@ -1,0 +1,160 @@
+summary: Submit an Adjustment to a UK Property Business Summary
+description: |
+  This endpoint allows a developer to provide accounting adjustments against a specified Business Source Adjustable Summary (BSAS) quoting its unique identifier. The BSAS ID quoted must be for a UK property business which has not been previously adjusted. Only data for one property business (either FHL or non-FHL) should be included in any submission.
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers are only available in the sandbox environment.</p>
+  <table>
+    <thead>
+        <tr>
+            <th>Header Value (Gov-Test-Scenario)</th>
+            <th>Scenario</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><p>N/A - DEFAULT</p></td>
+            <td><p>Simulates a successful response for submitting a UK Property.</p></td>
+        </tr>
+        <tr>
+            <td><p>SUMMARY_STATUS_INVALID</p></td>
+            <td><p>Simulates the error response where the summary is invalid and cannot be adjusted.</p></td>
+        </tr>
+        <tr>
+            <td><p>SUMMARY_STATUS_SUPERSEDED</p></td>
+            <td><p>Simulates the error response where the summary is superseded and cannot be adjusted.</p></td>
+        </tr>
+        <tr>
+            <td><p>BSAS_ALREADY_ADJUSTED</p></td>
+            <td><p>Simulates the error response where the summary has already been adjusted.</p></td>
+        </tr>
+        <tr>
+            <td><p>PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
+            <td><p>Simulates the error response where the cumulative turnover exceeds the threshold for consolidated expenses.</p></td>
+        </tr>
+        <tr>
+            <td><p>PROPERTY_INCOME_ALLOWANCE_CLAIMED</p></td>
+            <td><p>Simulates the error response where property income allowance has been claimed and therefore no further expenses can be claimed.</p></td>
+        </tr>
+        <tr>
+            <td><p>PROPERTY_TYPE_OF_BUSINESS_INCORRECT</p></td>
+            <td><p>Simulates the error response where either the fields submitted or the BSAS ID are incorrect for the type of business.</p></td>
+        </tr>
+        <tr>
+            <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
+            <td><p>Simulates the error response that may occur if one of more adjustments submitted would result in a negative value.</p></td>
+        </tr>
+        <tr>
+            <td><p>NOT_FOUND</p></td>
+            <td><p>Simulates the scenario where no data was found.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+tags:
+  - UK property business
+   
+parameters:
+  - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+  - $ref: ./common/pathParameters.yaml#/components/parameters/bsasId
+  - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+  - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
+  - $ref: ./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader
+  - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+security:
+  - User-Restricted:
+      - write:self-assessment
+
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/submit_property_adjustments.json'
+      examples:
+        example-1:
+          description: Non-FHL Property with Full Expenses
+          value:
+            $ref: './examples/adjustments/submit_non_fhl_adjustments_full.json'
+        example-2:
+          description: Non-FHL Property with Consolidated Expenses
+          value:
+            $ref: './examples/adjustments/submit_non_fhl_adjustments_consolidated.json'
+        example-3:
+          description: FHL Property with Full Expenses
+          value:
+            $ref: './examples/adjustments/submit_fhl_adjustments_full.json'
+        example-4:
+          description: FHL Property with Consolidated Expenses
+          value:
+            $ref: './examples/adjustments/submit_fhl_adjustments_consolidated.json'
+
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/submit_adjustments_response.json'
+        examples:
+          example-1:
+            description: Submit UK Property Accounting Adjustments
+            value:
+              $ref: './examples/adjustments/submit_property_adjustment_response.json'
+
+  "400":
+    description: Bad Request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_BSAS_ID:
+            $ref: './common/errors.yaml#/components/examples/formatBsasId'
+          FORMAT_ADJUSTMENT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatAdjustmentValue'
+          INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/incorrectOrEmptyBodySubmitted'
+          RULE_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
+          RULE_BOTH_EXPENSES_SUPPLIED:
+            $ref: './common/errors.yaml#/components/examples/ruleBothExpensesSupplied'
+
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          RULE_TYPE_OF_BUSINESS_INCORRECT:
+            $ref: './common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrect'
+          RULE_SUMMARY_STATUS_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
+          RULE_SUMMARY_STATUS_SUPERSEDED:
+            $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded'
+          RULE_BSAS_ALREADY_ADJUSTED:
+            $ref: './common/errors.yaml#/components/examples/ruleBsasAlreadyAdjusted'
+          RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
+            $ref: './common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold'
+          RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED:
+            $ref: './common/errors.yaml#/components/examples/rulePropertyIncomeAllowanceExceeded'
+          RULE_RESULTING_VALUE_NOT_PERMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleResultingValueNotPermitted'
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "404":
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/bsasNotFound'

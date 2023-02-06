@@ -1,0 +1,110 @@
+get:
+  summary: Retrieve a Self-Employment Business Source Adjustable Summary (BSAS)
+  description: |
+    This endpoint allows a developer to request a specific Business Source Adjustable Summary (BSAS) using a unique identifier. By default, when it is available the adjusted summary is returned. A filter can be set to specify whether the original or the adjusted is returned.
+    
+    ### Test data
+    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Header Value (Gov-Test-Scenario)</th>
+                <th>Scenario</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><p>N/A - DEFAULT</p></td>
+                <td><p>Simulates the scenario where no data was found.</p></td>
+            </tr>
+            <tr>
+                <td><p>SELF_EMPLOYMENT_ADJUSTED</p></td>
+                <td><p>Simulates a response containing an adjusted self-employment summary.</p></td>
+            </tr>
+            <tr>
+                <td><p>SELF_EMPLOYMENT_UNADJUSTED</p></td>
+                <td><p>Simulates a response containing an unadjusted self-employment summary.</p></td>
+            </tr>
+            <tr>
+                <td><p>SELF_EMPLOYMENT_CONSOLIDATED</p></td>
+                <td><p>Simulates a response containing an adjusted self-employment summary with consolidated expenses.</p></td>
+            </tr>
+            <tr>
+                <td><p>NOT_SELF_EMPLOYMENT</p></td>
+                <td><p>Simulates an unsuccessful response where a property BSAS ID was requested.</p></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
+  tags:
+    - Self-employment business
+    
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/pathParameters.yaml#/components/parameters/bsasId
+    - $ref: ./common/queryParameters.yaml#/components/parameters/adjustedStatusOptional
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: './common/headers.yaml#/components/parameters/correlationId'
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/retrieve_se_bsas.json'
+          examples:
+            example-1:
+              description: Retrieve a Self-Employment Business Source Adjustable Summary (BSAS)
+              value:
+                $ref: './examples/retrieveBsas/retrieve_se_bsas.json'
+
+    "400":
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: './common/errors.yaml#/components/examples/formatNino'
+            FORMAT_BSAS_ID:
+              $ref: './common/errors.yaml#/components/examples/formatBsasId'
+            FORMAT_ADJUSTED_STATUS:
+              $ref: './common/errors.yaml#/components/examples/formatAdjustedStatus'
+
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+             CLIENT_OR_AGENT_NOT_AUTHORISED:
+               $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+             RULE_NOT_SELF_EMPLOYMENT:
+               $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
+             RULE_NO_ADJUSTMENTS_MADE:
+               $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
+
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: './common/errors.yaml#/components/examples/bsasNotFound'
