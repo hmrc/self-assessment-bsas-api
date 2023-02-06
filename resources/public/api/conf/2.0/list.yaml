@@ -63,6 +63,7 @@ get:
     - $ref: ./common/queryParameters.yaml#/components/parameters/typeOfBusinessOptional
     - $ref: ./common/headers.yaml#/components/parameters/acceptJson
     - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+    - $ref: ./common/headers.yaml#/components/parameters/authorization
 
   security:
     - User-Restricted:

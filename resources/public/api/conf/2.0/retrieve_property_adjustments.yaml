@@ -52,6 +52,7 @@ parameters:
   - $ref: ./common/pathParameters.yaml#/components/parameters/bsasId
   - $ref: ./common/headers.yaml#/components/parameters/acceptJson
   - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+  - $ref: ./common/headers.yaml#/components/parameters/authorization
 
 security:
   - User-Restricted:
