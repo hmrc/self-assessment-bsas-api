@@ -5,52 +5,45 @@ description: |
   ### Test data
   <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
   <table>
-  <thead>
-      <tr>
-          <th>Header Value (Gov-Test-Scenario)</th>
-          <th>Scenario</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><p>N/A - DEFAULT</p></td>
-          <td><p>Simulates the scenario where no data was found.</p></td>
-      </tr>
-      <tr>
-          <td><p>UK_PROPERTY_FHL_ADJUSTED</p></td>
-          <td><p>Simulates a response containing an adjusted FHL summary.</p></td>
-      </tr>
-      <tr>
-          <td><p>UK_PROPERTY_FHL_UNADJUSTED</p></td>
-          <td><p>Simulates a response containing an unadjusted FHL summary.</p></td>
-      </tr>
-      <tr>
-          <td><p>UK_PROPERTY_FHL_CONSOLIDATED</p></td>
-          <td><p>Simulates a response containing an adjusted FHL summary with consolidated expenses.</p></td>
-      </tr>
-      <tr>
-          <td><p>UK_PROPERTY_NON_FHL_ADJUSTED</p></td>
-          <td><p>Simulates a response containing an adjusted non-FHL summary.</p></td>
-      </tr>
-      <tr>
-          <td><p>UK_PROPERTY_NON_FHL_UNADJUSTED</p></td>
-          <td><p>Simulates a response containing an unadjusted non-FHL summary.</p></td>
-      </tr>
-      <tr>
-          <td><p>UK_PROPERTY_NON_FHL_CONSOLIDATED</p></td>
-          <td><p>Simulates a response containing an adjusted non-FHL summary with consolidated expenses.</p></td>
-      </tr>
-      <tr>
-          <td><p>NOT_UK_PROPERTY</p></td>
-          <td><p>Simulates an unsuccessful response where a non-property BSAS ID was requested.</p></td>
-      </tr>
-  </tbody>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates the scenario where no data was found.</p></td>
+          </tr>
+          <tr>
+              <td><p>SELF_EMPLOYMENT_ADJUSTED</p></td>
+              <td><p>Simulates a successful response where adjustments are present for a self-employment.</p></td>
+          </tr>        
+          <tr>
+              <td><p>SELF_EMPLOYMENT_CONSOLIDATED</p></td>
+              <td><p>Simulates a successful response where adjustments are present for a consolidated self-employment.</p></td>
+          </tr>
+          <tr>
+              <td><p>SELF_EMPLOYMENT_UNADJUSTED</p></td>
+              <td><p>Simulates an unsuccessful response where adjustments are not present for a self-employment.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_SELF_EMPLOYMENT</p></td>
+              <td><p>Simulates an unsuccessful response where returned adjustments do not belong to a self-employment.</p></td>
+          </tr>
+      </tbody>
   </table>
+
+tags:
+  - Self-employment business
+    
 
 parameters:
   - $ref: ./common/pathParameters.yaml#/components/parameters/nino
   - $ref: ./common/pathParameters.yaml#/components/parameters/bsasId
   - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+  - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
   - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
 security:
@@ -88,8 +81,6 @@ responses:
             $ref: './common/errors.yaml#/components/examples/formatNino'
           FORMAT_BSAS_ID:
             $ref: './common/errors.yaml#/components/examples/formatBsasId'
-          RULE_NOT_SELF_EMPLOYMENT:
-            $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
 
   "403":
     description: Forbidden
@@ -100,6 +91,8 @@ responses:
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+          RULE_NOT_SELF_EMPLOYMENT:
+            $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
           RULE_NO_ADJUSTMENTS_MADE:
             $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 

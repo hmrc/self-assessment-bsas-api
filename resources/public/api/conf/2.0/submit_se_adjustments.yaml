@@ -51,11 +51,15 @@ description: |
   </tbody>
   </table>
 
+tags:
+  - Self-employment business    
+
 parameters:
   - $ref: ./common/pathParameters.yaml#/components/parameters/nino
   - $ref: ./common/pathParameters.yaml#/components/parameters/bsasId
   - $ref: ./common/headers.yaml#/components/parameters/acceptJson
   - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
+  - $ref: ./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader
   - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
 security:
@@ -112,8 +116,6 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleRangeInvalid'
           RULE_BOTH_EXPENSES_SUPPLIED:
             $ref: './common/errors.yaml#/components/examples/ruleBothExpensesSupplied'
-          RULE_NOT_SELF_EMPLOYMENT:
-            $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
 
   "403":
     description: Forbidden
@@ -122,6 +124,8 @@ responses:
         schema:
           $ref: './schemas/error_response.yaml'
         examples:
+          RULE_NOT_SELF_EMPLOYMENT:
+            $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
           RULE_SUMMARY_STATUS_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleSummaryStatusInvalid'
           RULE_SUMMARY_STATUS_SUPERSEDED:
