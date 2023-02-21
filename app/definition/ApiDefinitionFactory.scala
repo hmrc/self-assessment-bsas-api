@@ -17,11 +17,10 @@
 package definition
 
 import config.AppConfig
-import routing.{Version, Version2, Version3}
-import uk.gov.hmrc.auth.core.ConfidenceLevel
+import routing.{ Version, Version2, Version3 }
 import utils.Logging
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 
 @Singleton
 class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
@@ -29,39 +28,32 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
   private val readScope  = "read:self-assessment"
   private val writeScope = "write:self-assessment"
 
-  def confidenceLevel: ConfidenceLevel = if (appConfig.confidenceLevelConfig.definitionEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
-
   lazy val definition: Definition =
     Definition(
-      scopes = List(
+      scopes = Seq(
         Scope(
           key = readScope,
           name = "View your Self Assessment information",
-          description = "Allow read access to self assessment data",
-          confidenceLevel = confidenceLevel
+          description = "Allow read access to self assessment data"
         ),
         Scope(
           key = writeScope,
           name = "Change your Self Assessment information",
-          description = "Allow write access to self assessment data",
-          confidenceLevel = confidenceLevel
+          description = "Allow write access to self assessment data"
         )
       ),
       api = APIDefinition(
-        name = "Individual Losses (MTD)",
-        description = "An API for providing individual losses data",
+        name = "Business Source Adjustable Summary (MTD)",
+        description = "An API for providing business source adjustable summary data",
         context = appConfig.apiGatewayContext,
-        versions = List(
+        categories = Seq("INCOME_TAX_MTD"),
+        versions = Seq(
           APIVersion(
             version = Version2,
             status = buildAPIStatus(Version2),
-            endpointsEnabled = appConfig.endpointsEnabled(version = Version2.configName)
+            endpointsEnabled = appConfig.endpointsEnabled(Version2.name)
           ),
-          APIVersion(
-            version = Version3,
-            status = buildAPIStatus(Version3),
-            endpointsEnabled = appConfig.endpointsEnabled(version = Version3.configName)
-          )
+          APIVersion(version = Version3, status = buildAPIStatus(Version3), endpointsEnabled = appConfig.endpointsEnabled(Version3.name))
         ),
         requiresTrust = None
       )

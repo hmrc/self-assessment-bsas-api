@@ -16,18 +16,9 @@
 
 package definition
 
-import play.api.libs.json.{Format, Json, OFormat}
+import play.api.libs.json.{ Format, Json, OFormat }
 import routing.Version
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.enums.Enums
-
-case class Parameter(name: String, required: Boolean = false)
-
-object Parameter {
-  implicit val formatParameter: OFormat[Parameter] = Json.format[Parameter]
-}
-
-case class PublishingException(message: String) extends Exception(message)
 
 sealed trait APIStatus
 
@@ -54,11 +45,17 @@ object APIVersion {
   implicit val formatAPIVersion: OFormat[APIVersion] = Json.format[APIVersion]
 }
 
-case class APIDefinition(name: String, description: String, context: String, versions: Seq[APIVersion], requiresTrust: Option[Boolean]) {
+case class APIDefinition(name: String,
+                         description: String,
+                         context: String,
+                         categories: Seq[String],
+                         versions: Seq[APIVersion],
+                         requiresTrust: Option[Boolean]) {
 
   require(name.nonEmpty, "name is required")
-  require(context.nonEmpty, "context is required")
   require(description.nonEmpty, "description is required")
+  require(context.nonEmpty, "context is required")
+  require(categories.nonEmpty, "at least one category is required")
   require(versions.nonEmpty, "at least one version is required")
   require(uniqueVersions, "version numbers must be unique")
 
@@ -69,16 +66,4 @@ case class APIDefinition(name: String, description: String, context: String, ver
 
 object APIDefinition {
   implicit val formatAPIDefinition: OFormat[APIDefinition] = Json.format[APIDefinition]
-}
-
-case class Scope(key: String, name: String, description: String, confidenceLevel: ConfidenceLevel)
-
-object Scope {
-  implicit val formatScope: OFormat[Scope] = Json.format[Scope]
-}
-
-case class Definition(scopes: Seq[Scope], api: APIDefinition)
-
-object Definition {
-  implicit val formatDefinition: OFormat[Definition] = Json.format[Definition]
 }

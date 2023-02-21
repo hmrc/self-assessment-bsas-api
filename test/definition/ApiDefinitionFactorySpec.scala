@@ -16,12 +16,10 @@
 
 package definition
 
-import config.{ConfidenceLevelConfig, MockAppConfig}
-import definition.APIStatus.{ALPHA, BETA}
-import play.api.Configuration
-import routing.{Version2, Version3}
+import config.MockAppConfig
+import definition.APIStatus.{ ALPHA, BETA }
+import routing.{ Version2, Version3 }
 import support.UnitSpec
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
@@ -29,40 +27,33 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
     val factory = new ApiDefinitionFactory(mockAppConfig)
   }
 
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
-
   "definition" when {
     "there is no appConfig.apiStatus" should {
       "default apiStatus to ALPHA" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("my/context")
-        MockedAppConfig.featureSwitches.returns(Configuration.empty).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("api.gateway.context")
         MockedAppConfig.apiStatus(Version2).returns("").anyNumberOfTimes()
         MockedAppConfig.apiStatus(Version3).returns("").anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(version = Version2.configName).returns(true).anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(version = Version3.configName).returns(true).anyNumberOfTimes()
-        MockedAppConfig.confidenceLevelCheckEnabled
-          .returns(ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true))
-          .anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version2.name).returns(true).anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version3.name).returns(true).anyNumberOfTimes()
 
         factory.definition shouldBe Definition(
           scopes = List(
             Scope(
               key = "read:self-assessment",
               name = "View your Self Assessment information",
-              description = "Allow read access to self assessment data",
-              confidenceLevel
+              description = "Allow read access to self assessment data"
             ),
             Scope(
               key = "write:self-assessment",
               name = "Change your Self Assessment information",
-              description = "Allow write access to self assessment data",
-              confidenceLevel
+              description = "Allow write access to self assessment data"
             )
           ),
           api = APIDefinition(
-            name = "Individual Losses (MTD)",
-            description = "An API for providing individual losses data",
-            context = "my/context",
+            name = "Business Source Adjustable Summary (MTD)",
+            description = "An API for providing business source adjustable summary data",
+            context = "api.gateway.context",
+            categories = Seq("INCOME_TAX_MTD"),
             versions = List(
               APIVersion(Version2, status = ALPHA, endpointsEnabled = true),
               APIVersion(Version3, status = ALPHA, endpointsEnabled = true)
@@ -71,22 +62,6 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
           )
         )
       }
-    }
-  }
-
-  "confidenceLevel" when {
-    Seq(
-      (true, ConfidenceLevel.L200),
-      (false, ConfidenceLevel.L50)
-    ).foreach {
-      case (definitionEnabled, cl) =>
-        s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
-          s"return $cl" in new Test {
-            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled,
-                                                                                      authValidationEnabled = true)
-            factory.confidenceLevel shouldBe cl
-          }
-        }
     }
   }
 
