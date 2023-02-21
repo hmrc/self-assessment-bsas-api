@@ -59,7 +59,7 @@ object RulePropertyIncomeAllowanceClaimed
     extends MtdError("RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED", "A claim for property income allowance was made. Cannot also have expenses", FORBIDDEN)
 
 object RuleNotSelfEmployment
-    extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business", FORBIDDEN)
+    extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The summary calculation requested is not for a self-employment business", FORBIDDEN)
 
 object RuleTaxYearRangeInvalidError
     extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required", BAD_REQUEST)

@@ -85,7 +85,7 @@ components:
         The BSAS ID supplied does not relate to a self-employment business.
       value:
         code: RULE_NOT_SELF_EMPLOYMENT
-        message: The adjustments requested are not for a self employment business
+        message: The adjustments requested are not for a self-employment business
 
     ruleTaxYearNotSupported:
       description: |

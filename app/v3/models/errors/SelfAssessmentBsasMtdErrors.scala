@@ -89,4 +89,4 @@ object RulePropertyIncomeAllowanceClaimed
 object RuleNoAdjustmentsMade extends MtdError("RULE_NO_ADJUSTMENTS_MADE", "An adjusted summary calculation does not exist", BAD_REQUEST)
 
 object RuleNotSelfEmployment
-    extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self employment business", BAD_REQUEST)
+    extends MtdError("RULE_NOT_SELF_EMPLOYMENT", "The adjustments requested are not for a self-employment business", BAD_REQUEST)
