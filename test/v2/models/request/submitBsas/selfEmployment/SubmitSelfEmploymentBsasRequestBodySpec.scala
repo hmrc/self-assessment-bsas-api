@@ -16,10 +16,10 @@
 
 package v2.models.request.submitBsas.selfEmployment
 
+import api.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-import v2.models.domain.EmptyJsonBody
 
 class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
 
@@ -39,7 +39,8 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome).as[SubmitSelfEmploymentBsasRequestBody] shouldBe
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome)
+          .as[SubmitSelfEmploymentBsasRequestBody] shouldBe
           submitSelfEmploymentBsasRequestBodyModelWithoutIncome
       }
 
@@ -47,7 +48,6 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
         Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToDes
       }
     }
-
 
     "no fields as supplied" should {
       "read to an empty SubmitSelfEmploymentBsasRequestBody object" in {
@@ -62,30 +62,34 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
 
     "isEmpty is called" should {
       "return true when all empty fields are supplied" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel).as[SubmitSelfEmploymentBsasRequestBody]
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel)
+          .as[SubmitSelfEmploymentBsasRequestBody]
           .isEmpty shouldBe true
       }
 
       "return false when non-empty fields is supplied" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome).as[SubmitSelfEmploymentBsasRequestBody]
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome)
+          .as[SubmitSelfEmploymentBsasRequestBody]
           .isEmpty shouldBe false
       }
     }
 
     "isIncorrectOrEmptyBodyError is called" should {
       "return true when all fields are empty is supplied" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel).as[SubmitSelfEmploymentBsasRequestBody]
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel)
+          .as[SubmitSelfEmploymentBsasRequestBody]
           .isIncorrectOrEmptyBodyError shouldBe true
       }
 
       "return true when empty income fields are supplied" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel.
-          copy(Some(Income(None, None)))).as[SubmitSelfEmploymentBsasRequestBody]
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel.copy(Some(Income(None, None))))
+          .as[SubmitSelfEmploymentBsasRequestBody]
           .isIncorrectOrEmptyBodyError shouldBe true
       }
 
       "return false when non-empty fields is supplied" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome).as[SubmitSelfEmploymentBsasRequestBody]
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome)
+          .as[SubmitSelfEmploymentBsasRequestBody]
           .isIncorrectOrEmptyBodyError shouldBe false
       }
     }

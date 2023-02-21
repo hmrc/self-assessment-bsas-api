@@ -16,12 +16,11 @@
 
 package v2.models.response.retrieveBsas.selfEmployment
 
-import mocks.MockAppConfig
-import v2.models.hateoas.Method._
+import api.hateoas.Method._
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import config.MockAppConfig
 import support.UnitSpec
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{desRetrieveBsasResponseJsonAdjustable, desRetrieveBsasResponseJsonAdjusted, mtdRetrieveBsasResponseJson, retrieveBsasResponseModelAdjustable, retrieveBsasResponseModelAdjusted}
-import v2.hateoas.HateoasFactory
-import v2.models.hateoas.{HateoasWrapper, Link}
+import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.models.utils.JsonErrorValidators
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
@@ -40,7 +39,7 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
   "writes" should {
     "return valid JSON" when {
       "passed a valid model with adjustedSummary = true" in {
-         retrieveBsasResponseModelAdjusted.toJson shouldBe mtdRetrieveBsasResponseJson(true)
+        retrieveBsasResponseModelAdjusted.toJson shouldBe mtdRetrieveBsasResponseJson(true)
       }
       "passed a valid model with adjustedSummary = false" in {
         retrieveBsasResponseModelAdjustable.toJson shouldBe mtdRetrieveBsasResponseJson(false)
@@ -49,11 +48,11 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
   }
 
   "HateoasFactory" should {
-    class Test extends MockAppConfig{
+    class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val bsasId = "anId"
-      val adjustment = "03"
+      val nino           = "someNino"
+      val bsasId         = "anId"
+      val adjustment     = "03"
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
     }
 

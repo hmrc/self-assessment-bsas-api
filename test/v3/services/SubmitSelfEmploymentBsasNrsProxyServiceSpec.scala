@@ -16,7 +16,8 @@
 
 package v3.services
 
-import domain.Nino
+import api.models.domain.Nino
+import api.services.ServiceSpec
 import v3.mocks.connectors.MockSubmitSelfEmploymentBsasNrsProxyConnector
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 

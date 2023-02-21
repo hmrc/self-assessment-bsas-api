@@ -16,13 +16,14 @@
 
 package v3.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.connectors.{DownstreamOutcome, SubmitSelfEmploymentBsasConnector}
+import v3.connectors.SubmitSelfEmploymentBsasConnector
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockSubmitSelfEmploymentBsasConnector extends MockFactory {
 

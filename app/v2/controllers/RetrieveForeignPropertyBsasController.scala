@@ -16,88 +16,49 @@
 
 package v2.controllers
 
-import cats.data.EitherT
-import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.Json
+import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.hateoas.HateoasFactory
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveForeignPropertyRequestParser
-import v2.hateoas.HateoasFactory
-import v2.models.errors._
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
-import v2.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveForeignPropertyBsasService}
+import v2.services.RetrieveForeignPropertyBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveForeignPropertyBsasController @Inject()(
-                                                       val authService: EnrolmentsAuthService,
-                                                       val lookupService: MtdIdLookupService,
-                                                       requestParser: RetrieveForeignPropertyRequestParser,
-                                                       service: RetrieveForeignPropertyBsasService,
-                                                       hateoasFactory: HateoasFactory,
-                                                       cc: ControllerComponents,
-                                                       val idGenerator: IdGenerator
-                                                     )(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
-    with BaseController
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    parser: RetrieveForeignPropertyRequestParser,
+    service: RetrieveForeignPropertyBsasService,
+    hateoasFactory: HateoasFactory,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator
+)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with V2Controller
     with Logging {
 
-
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(
-      controllerName = "RetrieveForeignPropertyBsasController",
-      endpointName = "retrieve"
-    )
+    EndpointLogContext(controllerName = "RetrieveForeignPropertyBsasController", endpointName = "retrieve")
 
   def retrieve(nino: String, bsasId: String, adjustedStatus: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedStatus)
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.retrieveForeignPropertyBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData,
-              RetrieveForeignPropertyHateoasData(nino, response.responseData.metadata.bsasId)).asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${response.correlationId}"
-          )
 
-          Ok(Json.toJson(hateoasResponse))
-            .withApiHeaders(response.correlationId)
-        }
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.retrieveForeignPropertyBsas)
+          .withHateoasResultFrom(hateoasFactory)((_, responseData) => RetrieveForeignPropertyHateoasData(nino, responseData.metadata.bsasId))
 
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case BadRequestError |
-           NinoFormatError |
-           BsasIdFormatError |
-           AdjustedStatusFormatError => BadRequest(Json.toJson(errorWrapper))
-      case RuleNotForeignProperty |
-           RuleNoAdjustmentsMade  => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
 }

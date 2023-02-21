@@ -16,10 +16,11 @@
 
 package v2.fixtures
 
-import play.api.libs.json.{JsArray, JsValue, Json}
-import v2.models.domain.{Status, TypeOfBusiness}
+import api.models.domain.Status
+import play.api.libs.json.{ JsArray, JsValue, Json }
+import v2.models.domain.TypeOfBusiness
 import v2.models.request.AccountingPeriod
-import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasResponse}
+import v2.models.response.listBsas.{ BsasEntries, BusinessSourceSummary, ListBsasResponse }
 
 object ListBsasFixtures {
 
@@ -32,17 +33,14 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val accountingFromDesJSON: JsValue = Json.parse (
-    """
+  val accountingFromDesJSON: JsValue = Json.parse("""
       |{
       | "accountingStartDate": "2018-10-11",
       | "accountingEndDate": "2019-10-10"
       | }
       |""".stripMargin)
 
-
-  val invalidAccountingJson: JsValue = Json.parse(
-    """
+  val invalidAccountingJson: JsValue = Json.parse("""
       |{
       |  "startDate" : 4,
       |  "endDate" : true
@@ -60,7 +58,7 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val bsasEntriesFromDesJSON: JsValue = Json.parse (
+  val bsasEntriesFromDesJSON: JsValue = Json.parse(
     """
       |{
       | "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -209,8 +207,9 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val summariesJSONWithHateoas: String => JsValue = nino => Json.parse(
-    s"""
+  val summariesJSONWithHateoas: String => JsValue = nino =>
+    Json.parse(
+      s"""
       |{
       |  "businessSourceSummaries": [
       |    {
@@ -297,8 +296,9 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val summariesJSONForeignWithHateoas: String => JsValue = nino => Json.parse(
-    s"""
+  val summariesJSONForeignWithHateoas: String => JsValue = nino =>
+    Json.parse(
+      s"""
        |{
        |  "businessSourceSummaries": [
        |    {
@@ -341,29 +341,30 @@ object ListBsasFixtures {
        |""".stripMargin
   )
 
-  val summariesFromDesJSONSingle: JsArray = JsArray(Seq(summaryFromDesJSONSE))
+  val summariesFromDesJSONSingle: JsArray   = JsArray(Seq(summaryFromDesJSONSE))
   val summariesFromDesJSONMultiple: JsArray = JsArray(Seq(summaryFromDesJSONSE, summaryFromDesJSONUkFhl, summaryFromDesJSONUkNonFhl))
-  val summariesFromDesJSONForeign: JsArray = JsArray(Seq(summaryFromDesJSONForeign))
-  val summariesFromDesJSONFhlEea: JsArray = JsArray(Seq(summaryFromDesJSONFhlEea))
+  val summariesFromDesJSONForeign: JsArray  = JsArray(Seq(summaryFromDesJSONForeign))
+  val summariesFromDesJSONFhlEea: JsArray   = JsArray(Seq(summaryFromDesJSONFhlEea))
 
   val summaryModel: ListBsasResponse[BsasEntries] =
     ListBsasResponse(
-      Seq(BusinessSourceSummary(
-        typeOfBusiness = TypeOfBusiness.`self-employment`,
-        businessId = Some("000000000000210"),
-        AccountingPeriod(
-          startDate = "2018-10-11",
-          endDate = "2019-10-10"
-        ),
-        Seq(
-          BsasEntries(
-            bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-            requestedDateTime = "2019-10-14T11:33:27Z",
-            summaryStatus = Status.`valid`,
-            adjustedSummary = false
+      Seq(
+        BusinessSourceSummary(
+          typeOfBusiness = TypeOfBusiness.`self-employment`,
+          businessId = Some("000000000000210"),
+          AccountingPeriod(
+            startDate = "2018-10-11",
+            endDate = "2019-10-10"
+          ),
+          Seq(
+            BsasEntries(
+              bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+              requestedDateTime = "2019-10-14T11:33:27Z",
+              summaryStatus = Status.`valid`,
+              adjustedSummary = false
+            )
           )
-        )
-      ))
+        ))
     )
 
 }

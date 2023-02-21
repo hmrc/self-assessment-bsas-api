@@ -16,16 +16,15 @@
 
 package v3.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
-import v3.models.errors.ErrorWrapper
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v3.services.SubmitSelfEmploymentBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockSubmitSelfEmploymentBsasService extends MockFactory {
 
@@ -33,11 +32,11 @@ trait MockSubmitSelfEmploymentBsasService extends MockFactory {
 
   object MockSubmitSelfEmploymentBsasService {
 
-    def submitSelfEmploymentBsas(requestData: SubmitSelfEmploymentBsasRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def submitSelfEmploymentBsas(
+        requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockService
-        .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 

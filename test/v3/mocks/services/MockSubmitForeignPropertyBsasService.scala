@@ -16,16 +16,15 @@
 
 package v3.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
-import v3.models.errors.ErrorWrapper
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v3.services.SubmitForeignPropertyBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockSubmitForeignPropertyBsasService extends MockFactory {
 
@@ -33,11 +32,11 @@ trait MockSubmitForeignPropertyBsasService extends MockFactory {
 
   object MockSubmitForeignPropertyBsasService {
 
-    def submitForeignPropertyBsas(requestData: SubmitForeignPropertyBsasRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def submitForeignPropertyBsas(
+        requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockService
-        .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 }

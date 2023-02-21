@@ -16,11 +16,11 @@
 
 package v3.hateoas
 
-import config.{ AppConfig, FeatureSwitches }
-import v3.models.domain.TaxYear
-import v3.models.hateoas.Link
-import v3.models.hateoas.Method._
-import v3.models.hateoas.RelType._
+import api.hateoas.Link
+import api.hateoas.Method._
+import api.models.domain.TaxYear
+import config.{AppConfig, FeatureSwitches}
+import v3.hateoas.RelType._
 
 trait HateoasLinks {
 

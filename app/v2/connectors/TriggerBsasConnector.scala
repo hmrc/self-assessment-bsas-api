@@ -16,31 +16,30 @@
 
 package v2.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def triggerBsas(request: TriggerBsasRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
+  def triggerBsas(request: TriggerBsasRequest)(implicit hc: HeaderCarrier,
+                                               ec: ExecutionContext,
+                                               correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
 
     post(
       body = request.body,
-      DownstreamUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
+      DesUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
     )
   }
 }

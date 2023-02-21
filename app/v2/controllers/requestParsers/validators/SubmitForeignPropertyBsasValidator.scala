@@ -16,17 +16,15 @@
 
 package v2.controllers.requestParsers.validators
 
-import v2.controllers.requestParsers.validators.validations.{CountryCodeValidation, NoValidationErrors, _}
-import v2.models.errors._
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors._
+import v2.controllers.requestParsers.validators.validations._
 import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
-  private val validationSet = List(
-    parameterFormatValidation,
-    bodyFormatValidation,
-    incorrectOrEmptyBodySubmittedValidation,
-    bodyFieldValidation,
-    otherBodyFieldsValidator)
+  private val validationSet =
+    List(parameterFormatValidation, bodyFormatValidation, incorrectOrEmptyBodySubmittedValidation, bodyFieldValidation, otherBodyFieldsValidator)
 
   private def parameterFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
     List(
@@ -36,9 +34,11 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
   }
 
   private def bodyFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
-    List(flattenErrors(List(
-      JsonFormatValidation.validate[SubmitForeignPropertyBsasRequestBody](data.body)
-    )))
+    List(
+      flattenErrors(
+        List(
+          JsonFormatValidation.validate[SubmitForeignPropertyBsasRequestBody](data.body)
+        )))
   }
 
   private def incorrectOrEmptyBodySubmittedValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
@@ -51,11 +51,11 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
   }
 
   private def bodyFieldValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
-
     val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
     def doValidationFor(fieldName: String, withValue: Option[BigDecimal]): List[MtdError] = {
-      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] = Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
+      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
+        Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
       validations.flatMap(validation => validation(withValue, fieldName)).toList
     }
 
@@ -91,29 +91,30 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
       )
     }
 
-    List(flattenErrors(
-      (model.foreignFhlEea, model.foreignProperty) match {
-        case (Some(foreignFhlEea), None) => validateForeignFhlEea(foreignFhlEea)
-        case (None, Some(foreignProperty)) => foreignProperty.zipWithIndex.toList.flatMap {
-          case (entry, i) => validateForeignProperty(entry, i)
+    List(
+      flattenErrors(
+        (model.foreignFhlEea, model.foreignProperty) match {
+          case (Some(foreignFhlEea), None) => validateForeignFhlEea(foreignFhlEea)
+          case (None, Some(foreignProperty)) =>
+            foreignProperty.zipWithIndex.toList.flatMap {
+              case (entry, i) => validateForeignProperty(entry, i)
+            }
+          case _ => List(List(RuleIncorrectOrEmptyBodyError))
         }
-        case _ => List(List(RuleIncorrectOrEmptyBodyError))
-      }
-    ))
+      ))
   }
 
-  private def otherBodyFieldsValidator: SubmitForeignPropertyRawData => List[List[MtdError]] = {
-    data =>
+  private def otherBodyFieldsValidator: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
+    val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
 
-      val model: SubmitForeignPropertyBsasRequestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]
-
-      List(
-        if (model.foreignProperty.isEmpty) NoValidationErrors
-        else model.foreignProperty.get.toList.flatMap {
-          case entity =>BothExpensesValidation.validate(entity.expenses.map(_.params))
+    List(
+      if (model.foreignProperty.isEmpty) NoValidationErrors
+      else
+        model.foreignProperty.get.toList.flatMap {
+          case entity => BothExpensesValidation.validate(entity.expenses.map(_.params))
         },
-        BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
-      )
+      BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
+    )
   }
 
   override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {

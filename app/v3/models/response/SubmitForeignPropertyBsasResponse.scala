@@ -16,10 +16,10 @@
 
 package v3.models.response
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.models.domain.TaxYear
 import config.AppConfig
-import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
-import v3.models.domain.TaxYear
-import v3.models.hateoas.{ HateoasData, Link }
+import v3.hateoas.HateoasLinks
 
 object SubmitForeignPropertyBsasResponse extends HateoasLinks {
 

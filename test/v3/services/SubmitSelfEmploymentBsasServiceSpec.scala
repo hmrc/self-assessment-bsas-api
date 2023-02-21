@@ -16,13 +16,15 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.connectors.MockSubmitSelfEmploymentBsasConnector
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 
 import scala.concurrent.Future
@@ -54,12 +56,12 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
           MockSubmitSelfEmploymentBsasConnector
             .submitSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

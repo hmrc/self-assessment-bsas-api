@@ -16,29 +16,28 @@
 
 package v2.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
-import v2.models.errors.ErrorWrapper
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 import v2.services.RetrieveUkPropertyBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-trait MockRetrieveUkPropertyBsasService extends MockFactory{
+trait MockRetrieveUkPropertyBsasService extends MockFactory {
 
   val mockService: RetrieveUkPropertyBsasService = mock[RetrieveUkPropertyBsasService]
 
-  object MockRetrieveUkPropertyBsasService{
+  object MockRetrieveUkPropertyBsasService {
 
-    def retrieveBsas(requestData: RetrieveUkPropertyBsasRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]]] = {
+    def retrieveBsas(requestData: RetrieveUkPropertyBsasRequestData)
+      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]]] = {
       (mockService
-        .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 }

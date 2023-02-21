@@ -16,7 +16,7 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{Json, OFormat}
 
 case class FhlEeaExpenses(premisesRunningCosts: Option[BigDecimal],
                           repairsAndMaintenance: Option[BigDecimal],

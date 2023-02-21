@@ -16,12 +16,13 @@
 
 package v3.controllers.requestParsers.validators
 
+import api.models.errors._
+import api.models.utils.JsonErrorValidators
 import org.scalatest.Assertion
 import play.api.libs.json._
 import support.UnitSpec
 import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
-import v3.models.utils.JsonErrorValidators
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 

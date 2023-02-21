@@ -16,31 +16,32 @@
 
 package v2.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyAdjustmentsConnector @Inject()(val http: HttpClient,
-                                                       val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUkPropertyAdjustmentsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveUkPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
-                                       implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext,
-                                       correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyAdjustmentsResponse]] = {
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyAdjustmentsResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino   = request.nino.nino
     val bsasId = request.bsasId
 
     get(
-      DownstreamUri[RetrieveUkPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), queryParams = Seq("return" -> "2")
+      DesUri[RetrieveUkPropertyAdjustmentsResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"),
+      queryParams = Seq("return" -> "2")
     )
   }
 }

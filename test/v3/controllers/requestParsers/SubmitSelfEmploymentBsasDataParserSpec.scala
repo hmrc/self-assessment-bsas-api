@@ -16,14 +16,13 @@
 
 package v3.controllers.requestParsers
 
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, CalculationIdFormatError, ErrorWrapper, NinoFormatError}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import domain.Nino
-import v3.mocks.validators.MockSubmitSelfEmploymentBsasValidator
-import v3.models.errors._
-import v3.models.request.submitBsas.selfEmployment.{ Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData }
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-import v3.models.domain.TaxYear
+import v3.mocks.validators.MockSubmitSelfEmploymentBsasValidator
+import v3.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
@@ -68,7 +67,7 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
     "accept valid input" when {
       "full adjustments is passed" in new Test {
 
-        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequest))
+        val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequestJson))
 
         MockValidator
           .validate(inputData)
@@ -83,7 +82,7 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
       "full adjustments is passed with a TYS tax year" in new Test {
 
         val inputData: SubmitSelfEmploymentBsasRawData =
-          SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2023-24"), AnyContentAsJson(mtdRequest))
+          SubmitSelfEmploymentBsasRawData(nino, calculationId, Some("2023-24"), AnyContentAsJson(mtdRequestJson))
 
         MockValidator
           .validate(inputData)

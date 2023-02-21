@@ -16,7 +16,8 @@
 
 package v3.services
 
-import domain.Nino
+import api.models.domain.Nino
+import api.services.ServiceSpec
 import v3.mocks.connectors.MockSubmitForeignPropertyBsasNrsProxyConnector
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 

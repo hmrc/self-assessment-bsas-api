@@ -16,9 +16,10 @@
 
 package v3.models.response.listBsas
 
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v3.models.domain.{IncomeSourceType, TaxYear, TypeOfBusiness}
+import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
 
 case class BusinessSourceSummary[I](businessId: String,
                                     typeOfBusiness: TypeOfBusiness,
@@ -27,13 +28,14 @@ case class BusinessSourceSummary[I](businessId: String,
                                     summaries: Seq[I])
 
 object BusinessSourceSummary {
-  implicit def reads[I: Reads]: Reads[BusinessSourceSummary[I]] = (
-    (JsPath \ "incomeSourceId").read[String] and
-      (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
-      JsPath.read[AccountingPeriod] and
-      (JsPath \ "taxYear").read[Int].map(TaxYear.fromDownstreamIntToString) and
-      (JsPath \ "ascCalculations").read[Seq[I]]
-    ) (BusinessSourceSummary(_, _, _, _, _))
+  implicit def reads[I: Reads]: Reads[BusinessSourceSummary[I]] =
+    (
+      (JsPath \ "incomeSourceId").read[String] and
+        (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
+        JsPath.read[AccountingPeriod] and
+        (JsPath \ "taxYear").read[Int].map(TaxYear.fromDownstreamIntToString) and
+        (JsPath \ "ascCalculations").read[Seq[I]]
+    )(BusinessSourceSummary(_, _, _, _, _))
 
   implicit def writes[I: Writes]: OWrites[BusinessSourceSummary[I]] = Json.writes[BusinessSourceSummary[I]]
 }

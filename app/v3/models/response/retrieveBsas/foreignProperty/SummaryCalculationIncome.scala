@@ -16,27 +16,26 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
-
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SummaryCalculationIncome(totalRentsReceived: Option[BigDecimal],
-                  premiumsOfLeaseGrant: Option[BigDecimal],
-                  otherPropertyIncome: Option[BigDecimal])
-
+                                    premiumsOfLeaseGrant: Option[BigDecimal],
+                                    otherPropertyIncome: Option[BigDecimal])
 
 object SummaryCalculationIncome {
+
   val readsFhl: Reads[SummaryCalculationIncome] = (
     (JsPath \ "rent").readNullable[BigDecimal] and
       Reads.pure(None) and
       Reads.pure(None)
-    ) (SummaryCalculationIncome.apply _)
+  )(SummaryCalculationIncome.apply _)
 
   val readsNonFhl: Reads[SummaryCalculationIncome] = (
-  (JsPath \ "rent").readNullable[BigDecimal] and
-  (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
-  (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-  ) (SummaryCalculationIncome.apply _)
+    (JsPath \ "rent").readNullable[BigDecimal] and
+      (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
+      (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
+  )(SummaryCalculationIncome.apply _)
 
   implicit val writes: OWrites[SummaryCalculationIncome] = Json.writes[SummaryCalculationIncome]
 }

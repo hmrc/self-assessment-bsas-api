@@ -16,10 +16,10 @@
 
 package v2.models.request.submitBsas.selfEmployment
 
+import api.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.selfEmployment.IncomeFixture._
-import v2.models.domain.EmptyJsonBody
 
 class ForeignPropertyIncomeSpec extends UnitSpec {
 

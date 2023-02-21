@@ -16,15 +16,12 @@
 
 package v3.controllers.requestParsers
 
-import javax.inject.Inject
-import domain.Nino
+import api.controllers.RequestParser
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
-import v3.models.domain.TaxYear
-import v3.models.request.submitBsas.selfEmployment.{
-  SubmitSelfEmploymentBsasRawData,
-  SubmitSelfEmploymentBsasRequestBody,
-  SubmitSelfEmploymentBsasRequestData
-}
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
+
+import javax.inject.Inject
 
 class SubmitSelfEmploymentBsasDataParser @Inject()(val validator: SubmitSelfEmploymentBsasValidator)
     extends RequestParser[SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData] {

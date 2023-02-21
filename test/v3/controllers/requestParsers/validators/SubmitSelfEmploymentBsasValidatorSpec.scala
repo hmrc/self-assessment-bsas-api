@@ -16,13 +16,14 @@
 
 package v3.controllers.requestParsers.validators
 
-import play.api.libs.json.{ JsNumber, _ }
+import api.models.errors._
+import api.models.utils.JsonErrorValidators
+import play.api.libs.json._
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment._
-import v3.models.utils.JsonErrorValidators
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
@@ -33,7 +34,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
   "validator" should {
     "return no errors" when {
       "valid parameters are provided" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequest))) shouldBe List()
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequestJson))) shouldBe List()
       }
 
       "valid parameters are provided with only consolidated expenses" in {
@@ -54,14 +55,14 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = calculationId, None, AnyContentAsJson(mtdRequest))) shouldBe
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = calculationId, None, AnyContentAsJson(mtdRequestJson))) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return CalculationIdFormatError error" when {
       "an invalid calculationId is supplied" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino = nino, calculationId = "12345", None, AnyContentAsJson(mtdRequest))) shouldBe
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino = nino, calculationId = "12345", None, AnyContentAsJson(mtdRequestJson))) shouldBe
           List(CalculationIdFormatError)
       }
     }
@@ -83,20 +84,20 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
           "/income",
           "/income/turnover",
           "/income/other"
-        ).foreach(path => testWith(AnyContentAsJson(mtdRequest.replaceWithEmptyObject(path)), path))
+        ).foreach(path => testWith(AnyContentAsJson(mtdRequestJson.replaceWithEmptyObject(path)), path))
 
         Seq(
           "/expenses",
           "/expenses/costOfGoodsAllowable",
           "/expenses/paymentsToSubcontractorsAllowable",
           "/expenses/wagesAndStaffCostsAllowable"
-        ).foreach(path => testWith(AnyContentAsJson(mtdRequest.replaceWithEmptyObject(path)), path))
+        ).foreach(path => testWith(AnyContentAsJson(mtdRequestJson.replaceWithEmptyObject(path)), path))
 
         Seq(
           "/additions",
           "/additions/costOfGoodsDisallowable",
           "/additions/paymentsToSubcontractorsDisallowable"
-        ).foreach(path => testWith(AnyContentAsJson(mtdRequest.replaceWithEmptyObject(path)), path))
+        ).foreach(path => testWith(AnyContentAsJson(mtdRequestJson.replaceWithEmptyObject(path)), path))
 
         def testWith(body: AnyContentAsJson, expectedPath: String): Unit =
           s"for $expectedPath" in {
@@ -177,7 +178,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
           "/additions/otherExpensesDisallowable",
           "/additions/advertisingCostsDisallowable",
           "/additions/businessEntertainmentCostsDisallowable"
-        ).foreach(path => testWith(mtdRequest.update(path, _), path))
+        ).foreach(path => testWith(mtdRequestJson.update(path, _), path))
       }
 
       "consolidated expenses is invalid" when {
@@ -247,7 +248,7 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
     "return multiple errors" when {
       "request supplied has multiple errors" in {
         validator.validate(
-          SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = "badCalcId", Some("2022-23"), AnyContentAsJson(mtdRequest))) shouldBe
+          SubmitSelfEmploymentBsasRawData(nino = "A12344A", calculationId = "badCalcId", Some("2022-23"), AnyContentAsJson(mtdRequestJson))) shouldBe
           List(NinoFormatError, CalculationIdFormatError)
       }
     }

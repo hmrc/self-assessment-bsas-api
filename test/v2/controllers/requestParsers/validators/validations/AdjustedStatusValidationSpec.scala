@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.AdjustedStatusFormatError
+import api.models.errors.AdjustedStatusFormatError
 
 class AdjustedStatusValidationSpec extends UnitSpec {
 

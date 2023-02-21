@@ -16,45 +16,55 @@
 
 package v2.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
-
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v2.connectors.RetrieveSelfEmploymentAdjustmentsConnector
-import v2.controllers.EndpointLogContext
+import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
+import v2.models.response.retrieveBsasAdjustments
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
-import v2.support.DesResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentAdjustmentsService @Inject()(connector: RetrieveSelfEmploymentAdjustmentsConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveSelfEmploymentAdjustmentsService @Inject()(connector: RetrieveSelfEmploymentAdjustmentsConnector) extends BaseService {
 
   def retrieveSelfEmploymentsAdjustments(request: RetrieveAdjustmentsRequestData)(
-                                        implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-                                        correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
+      implicit ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentAdjustments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentAdjustments(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveSelfEmploymentAdjustmentsSuccessResponse(desResponseWrapper))
     } yield mtdResponseWrapper
     result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_CALCULATION_ID" -> BsasIdFormatError,
-    "INVALID_RETURN" -> DownstreamError,
-    "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
-    "NO_DATA_FOUND" -> NotFoundError,
-    "SERVER_ERROR" -> DownstreamError,
-    "SERVICE_UNAVAILABLE" -> DownstreamError,
-    "INVALID_CORRELATION_ID" -> DownstreamError
-  )
+  private def validateRetrieveSelfEmploymentAdjustmentsSuccessResponse[T](
+      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case RetrieveSelfEmploymentAdjustmentsResponse(retrieveBsasAdjustments.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
+          if typeOfBusiness != TypeOfBusiness.`self-employment` =>
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
+      "INVALID_RETURN"            -> InternalError,
+      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError,
+      "INVALID_CORRELATION_ID"    -> InternalError
+    )
 }

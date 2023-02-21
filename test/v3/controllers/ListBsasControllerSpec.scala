@@ -15,30 +15,31 @@
  */
 
 package v3.controllers
-import domain.Nino
-import mocks.{ MockAppConfig, MockIdGenerator }
+
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.{HateoasWrapper, MockHateoasFactory}
+import api.mocks.{MockCurrentDate, MockIdGenerator}
+import api.models.ResponseWrapper
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks
-import v3.mocks.MockCurrentDateProvider
-import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockListBsasRequestParser
-import v3.mocks.services.{ MockEnrolmentsAuthService, MockListBsasService, MockMtdIdLookupService }
-import v3.models.domain.{ TaxYear, TypeOfBusiness }
-import v3.models.errors._
-import v3.models.hateoas.HateoasWrapper
-import v3.models.outcomes.ResponseWrapper
-import v3.models.request.{ ListBsasRawData, ListBsasRequest }
-import v3.models.response.listBsas.{ BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
+import v3.mocks.services.MockListBsasService
+import v3.models.domain.TypeOfBusiness
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.models.response.listBsas.{BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListBsasControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockListBsasRequestParser
@@ -46,18 +47,16 @@ class ListBsasControllerSpec
     with MockHateoasFactory
     with MockAppConfig
     with HateoasLinks
-    with MockCurrentDateProvider
+    with MockCurrentDate
     with MockIdGenerator
     with ListBsasFixture {
 
-  private val correlationId  = "X-123"
-  private val nino           = "AA123456A"
   private val typeOfBusiness = Some("self-employment")
   private val businessId     = Some("XAIS12345678901")
 
   "list bsas" should {
-    "return successful response with status OK" when {
-      "valid request" in new Test {
+    "return OK" when {
+      "the request is valid" in new Test {
         MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
         MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false) anyNumberOfTimes ()
 
@@ -73,11 +72,10 @@ class ListBsasControllerSpec
           .wrapList(response, ListBsasHateoasData(nino, response, Some(request.taxYear)))
           .returns(responseWithHateoas)
 
-        val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(nino))
+        )
       }
 
       "valid request with no taxYear path parameter" in new Test {
@@ -98,95 +96,49 @@ class ListBsasControllerSpec
           .wrapList(response, ListBsasHateoasData(nino, response, Some(request.taxYear)))
           .returns(responseWithHateoas)
 
-        val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe summariesJSONWithHateoas(nino)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(nino))
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockListBsasRequestDataParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
+      "the parser validation fails" in new Test {
+        MockListBsasRequestDataParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (BusinessIdFormatError, BAD_REQUEST),
-          (TypeOfBusinessFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(expectedError = NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockListBsasRequestDataParser
+          .parse(rawData)
+          .returns(Right(request))
 
-            MockListBsasRequestDataParser
-              .parse(rawData)
-              .returns(Right(request))
+        MockListBsasService
+          .listBsas(request)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, BusinessIdFormatError))))
 
-            MockListBsasService
-              .listBsas(request)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (BusinessIdFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(expectedError = BusinessIdFormatError)
       }
     }
   }
 
-  trait Test {
+  private trait Test extends ControllerTest {
     def taxYear: Option[String] = Some("2019-20")
-
-    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new ListBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockListBsasRequestParser,
+      parser = mockListBsasRequestParser,
       service = mockListBsasService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator,
     )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
 
     val rawData: ListBsasRawData = ListBsasRawData(
       nino = nino,
@@ -214,8 +166,6 @@ class ListBsasControllerSpec
                                             bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
                                           ))
       ))
-
-    val taxYearDefault: String = TaxYear.now().asMtd
 
     def responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
       ListBsasResponse(
@@ -257,5 +207,7 @@ class ListBsasControllerSpec
       ),
       Seq(triggerBsas(mockAppConfig, nino), listBsas(mockAppConfig, nino, None))
     )
+
+    protected def callController(): Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
   }
 }

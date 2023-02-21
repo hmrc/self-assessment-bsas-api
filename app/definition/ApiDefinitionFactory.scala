@@ -17,53 +17,59 @@
 package definition
 
 import config.AppConfig
-import definition.Versions._
+import routing.{Version, Version2, Version3}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
+import utils.Logging
+
 import javax.inject.{Inject, Singleton}
-import play.api.Logger
 
 @Singleton
-class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
+class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
 
-  private val readScope = "read:self-assessment"
+  private val readScope  = "read:self-assessment"
   private val writeScope = "write:self-assessment"
-  private val logger: Logger = Logger(this.getClass)
+
+  def confidenceLevel: ConfidenceLevel = if (appConfig.confidenceLevelConfig.definitionEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
 
   lazy val definition: Definition =
     Definition(
-      scopes = Seq(
+      scopes = List(
         Scope(
           key = readScope,
           name = "View your Self Assessment information",
-          description = "Allow read access to self assessment data"
+          description = "Allow read access to self assessment data",
+          confidenceLevel = confidenceLevel
         ),
         Scope(
           key = writeScope,
           name = "Change your Self Assessment information",
-          description = "Allow write access to self assessment data"
+          description = "Allow write access to self assessment data",
+          confidenceLevel = confidenceLevel
         )
       ),
       api = APIDefinition(
-        name = "Business Source Adjustable Summary (MTD)",
-        description = "An API for providing business source adjustable summary data",
+        name = "Individual Losses (MTD)",
+        description = "An API for providing individual losses data",
         context = appConfig.apiGatewayContext,
-        categories = Seq("INCOME_TAX_MTD"),
-        versions = Seq(
+        versions = List(
           APIVersion(
-            version = VERSION_2,
-            status = buildAPIStatus(VERSION_2),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_2)
+            version = Version2,
+            status = buildAPIStatus(Version2),
+            endpointsEnabled = appConfig.endpointsEnabled(version = Version2.configName)
           ),
           APIVersion(
-            version = VERSION_3,
-            status = buildAPIStatus(VERSION_3),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_3))
+            version = Version3,
+            status = buildAPIStatus(Version3),
+            endpointsEnabled = appConfig.endpointsEnabled(version = Version3.configName)
+          )
         ),
         requiresTrust = None
       )
     )
 
-  private[definition] def buildAPIStatus(version: String): APIStatus = {
-    APIStatus.parser.lift(appConfig.apiStatus(version))
+  private[definition] def buildAPIStatus(version: Version): APIStatus = {
+    APIStatus.parser
+      .lift(appConfig.apiStatus(version))
       .getOrElse {
         logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
         APIStatus.ALPHA

@@ -16,19 +16,21 @@
 
 package v2.controllers
 
-import mocks.MockIdGenerator
+import api.controllers.ControllerBaseSpec
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.mocks.MockIdGenerator
+import api.models.errors._
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
-import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockRetrieveForeignPropertyRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveForeignPropertyBsasService}
+import v2.mocks.services.MockRetrieveForeignPropertyBsasService
 import v2.models.errors._
-import v2.models.hateoas.Method.{GET, POST}
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData}
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
@@ -36,7 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveForeignPropertyRequestParser
@@ -53,7 +55,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     val controller = new RetrieveForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRequestParser,
+      parser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
@@ -66,19 +68,20 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   }
 
-  private val nino          = "AA123456A"
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino              = "AA123456A"
+  private val bsasId            = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val adjustedMtdStatus = Some("true")
   private val adjustedDesStatus = Some("03")
 
-  private val request = RetrieveForeignPropertyBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
+  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
   private val requestRawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedMtdStatus)
 
-  val testHateoasLinkPropertySelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
-    method = GET, rel = "self")
+  val testHateoasLinkPropertySelf =
+    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", method = GET, rel = "self")
 
   val testHateoasLinkPropertyAdjust = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
-    method = POST, rel = "submit-summary-adjustments")
+                                           method = POST,
+                                           rel = "submit-summary-adjustments")
 
   "retrieve" should {
     "return successful hateoas response for property with status OK" when {
@@ -155,7 +158,7 @@ class RetrieveForeignPropertyBsasControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RuleNotForeignProperty, FORBIDDEN)
         )
 

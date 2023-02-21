@@ -89,7 +89,7 @@ object SubmitSelfEmploymentBsasFixtures {
     json
   }
 
-  val mtdRequest: JsValue = Json.parse(
+  val mtdRequestJson: JsValue = Json.parse(
     """
    |{
    |   "income":{

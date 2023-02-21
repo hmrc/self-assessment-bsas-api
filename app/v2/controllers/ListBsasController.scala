@@ -16,132 +16,60 @@
 
 package v2.controllers
 
-import cats.data.EitherT
-import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import play.api.http.MimeTypes
-import play.api.libs.json.Json
+import api.controllers._
+import api.hateoas.HateoasFactory
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{CurrentDateProvider, DateUtils, IdGenerator, Logging}
+import utils.{CurrentDate, DateUtils, IdGenerator, Logging}
 import v2.controllers.requestParsers.ListBsasRequestParser
-import v2.hateoas.HateoasFactory
-import v2.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.domain.DownstreamTaxYear
-import v2.models.errors._
 import v2.models.request.ListBsasRawData
 import v2.models.response.listBsas.ListBsasHateoasData
-import v2.services.{AuditService, EnrolmentsAuthService, ListBsasService, MtdIdLookupService}
+import v2.services.ListBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    val lookupService: MtdIdLookupService,
-                                   requestParser: ListBsasRequestParser,
+                                   parser: ListBsasRequestParser,
                                    service: ListBsasService,
                                    hateoasFactory: HateoasFactory,
                                    auditService: AuditService,
                                    cc: ControllerComponents,
-                                   val currentDateProvider: CurrentDateProvider,
-                                   val idGenerator: IdGenerator
-                                  )(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
-    with BaseController
+                                   val currentDateProvider: CurrentDate,
+                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with V2Controller
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(
-      controllerName = "ListBsasController",
-      endpointName = "listBsas"
-    )
+    EndpointLogContext(controllerName = "ListBsasController", endpointName = "listBsas")
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       lazy val currentMtdTaxYear = DownstreamTaxYear.fromDownstream(DateUtils.getDownstreamTaxYear(currentDateProvider.getCurrentDate()).toString)
 
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response <- EitherT(service.listBsas(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrapList(response.responseData, ListBsasHateoasData(nino, response.responseData))
-              .asRight[ErrorWrapper]
-          )
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${response.correlationId}"
-          )
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
-              requestBody = None, `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
-            )
-          )
-
-          Ok(Json.toJson(hateoasResponse))
-            .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
-        }
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.listBsas)
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "listBusinessSourceAdjustableSummaries",
+            transactionName = "list-business-source-adjustable-summaries",
+            apiVersion = apiVersion,
             params = Map("nino" -> nino, "taxYear" -> taxYear.getOrElse(currentMtdTaxYear)),
             requestBody = None,
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-            )
-          )
+            includeResponse = true
+          ))
+          .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((_, responseData) => ListBsasHateoasData(nino, responseData)))
 
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case BadRequestError |
-           NinoFormatError |
-           TaxYearFormatError |
-           TypeOfBusinessFormatError |
-           RuleTaxYearRangeInvalidError |
-           RuleTaxYearNotSupportedError |
-           BusinessIdFormatError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
-
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "listBusinessSourceAdjustableSummaries",
-      transactionName = "list-business-source-adjustable-summaries",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 }

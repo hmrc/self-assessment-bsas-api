@@ -16,18 +16,18 @@
 
 package v3.controllers.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors._
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import domain.Nino
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.validators.MockTriggerBsasValidator
-import v3.models.errors._
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
 class TriggerBsasRequestParserSpec extends UnitSpec {
 
-  val nino = "AA123456A"
+  val nino                           = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockTriggerBsasValidator {

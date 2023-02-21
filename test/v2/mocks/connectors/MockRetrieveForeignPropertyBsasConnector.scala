@@ -16,22 +16,24 @@
 
 package v2.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, RetrieveForeignPropertyBsasConnector}
+import v2.connectors.RetrieveForeignPropertyBsasConnector
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockRetrieveForeignPropertyBsasConnector extends MockFactory {
 
   val mockConnector: RetrieveForeignPropertyBsasConnector = mock[RetrieveForeignPropertyBsasConnector]
 
   object MockRetrieveForeignPropertyBsasConnector {
-    def retrieveForeignPropertyBsas(requestData: RetrieveForeignPropertyBsasRequestData):
-    CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]]] = {
+
+    def retrieveForeignPropertyBsas(
+        requestData: RetrieveForeignPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]]] = {
       (mockConnector
         .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

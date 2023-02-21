@@ -16,12 +16,12 @@
 
 package v3.connectors
 
-import domain.Nino
+import api.connectors.ConnectorSpec
+import api.models.ResponseWrapper
+import api.models.domain.{Nino, TaxYear}
 import v3.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v3.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v3.fixtures.selfEmployment.IncomeFixture.incomeModel
-import v3.models.domain.TaxYear
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 
 import scala.concurrent.Future

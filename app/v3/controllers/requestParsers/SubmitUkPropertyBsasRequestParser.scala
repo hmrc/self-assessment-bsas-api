@@ -16,14 +16,15 @@
 
 package v3.controllers.requestParsers
 
-import javax.inject.Inject
-import domain.Nino
+import api.controllers.RequestParser
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
-import v3.models.domain.TaxYear
 import v3.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
+import javax.inject.Inject
+
 class SubmitUkPropertyBsasRequestParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
-  extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
+    extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
 
   override protected def requestFor(data: SubmitUkPropertyBsasRawData): SubmitUkPropertyBsasRequestData = {
 

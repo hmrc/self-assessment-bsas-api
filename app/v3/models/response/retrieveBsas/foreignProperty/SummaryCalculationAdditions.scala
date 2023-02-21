@@ -16,7 +16,7 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{ Json, OWrites, Reads }
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class SummaryCalculationAdditions(privateUseAdjustment: Option[BigDecimal], balancingCharge: Option[BigDecimal])
 

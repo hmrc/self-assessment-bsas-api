@@ -16,24 +16,25 @@
 
 package v2.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import support.IntegrationBaseSpec
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
+import support.IntegrationBaseSpec
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456A"
+    val nino                           = "AA123456A"
     val adjustedStatus: Option[String] = Some("true")
-    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams = Map("return" -> "3")
+    val bsasId                         = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val desQueryParams                 = Map("return" -> "3")
 
     def uri: String = s"/$nino/self-employment/$bsasId"
 
@@ -54,7 +55,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
   }
 
@@ -100,13 +101,15 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, requestBsasId: String,
+      def validationErrorTest(requestNino: String,
+                              requestBsasId: String,
                               requestAdjustedStatus: Option[String],
-                              expectedStatus: Int, expectedBody: MtdError): Unit = {
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
-          override val bsasId: String = requestBsasId
+          override val nino: String                   = requestNino
+          override val bsasId: String                 = requestBsasId
           override val adjustedStatus: Option[String] = requestAdjustedStatus
 
           override def setupStubs(): StubMapping = {
@@ -158,12 +161,12 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
-        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (FORBIDDEN, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }

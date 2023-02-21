@@ -16,11 +16,13 @@
 
 package v3.services
 
-import v3.models.domain.{ HasTypeOfBusiness, TypeOfBusiness }
-import v3.models.errors.{ ErrorWrapper, RuleTypeOfBusinessIncorrectError }
-import v3.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
+import api.services.BaseService
+import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
+import v3.models.errors._
 
-trait BaseRetrieveBsasService {
+trait BaseRetrieveBsasService extends BaseService {
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness]
 
   final protected def validateTypeOfBusiness[T <: HasTypeOfBusiness](responseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =

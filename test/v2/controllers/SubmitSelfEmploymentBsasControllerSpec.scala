@@ -16,20 +16,22 @@
 
 package v2.controllers
 
-import mocks.MockIdGenerator
+import api.controllers.ControllerBaseSpec
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.mocks.MockIdGenerator
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsJson, Result}
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v2.mocks.services._
-import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.hateoas.Method.GET
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData}
 import v2.models.response.{SubmitSelfEmploymentBsasHateoasData, SubmitSelfEmploymentBsasResponse}
 
@@ -37,7 +39,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubmitSelfEmploymentBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentRequestParser
@@ -55,7 +57,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     val controller = new SubmitSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRequestParser,
+      parser = mockRequestParser,
       service = mockService,
       nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
@@ -76,9 +78,8 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
-
   private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
-  private val request = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
+  private val request    = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
 
   val response = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
 
@@ -100,6 +101,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       auditType = "submitBusinessSourceAccountingAdjustments",
       transactionName = "submit-self-employment-accounting-adjustments",
       detail = GenericAuditDetail(
+        versionNumber = "2.0",
         userType = "Individual",
         agentReferenceNumber = None,
         params = Map("nino" -> nino, "bsasId" -> bsasId),
@@ -167,7 +169,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (FormatAdjustmentValueError, BAD_REQUEST),
         (RuleAdjustmentRangeInvalid, BAD_REQUEST),
         (RuleBothExpensesError, BAD_REQUEST),
-        (DownstreamError, INTERNAL_SERVER_ERROR)
+        (InternalError, INTERNAL_SERVER_ERROR)
       )
 
       input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -189,10 +191,11 @@ class SubmitSelfEmploymentBsasControllerSpec
         val auditResponse: AuditResponse =
           AuditResponse(
             httpStatus = BAD_REQUEST,
-            errors = Some(Seq(
-              AuditError(NinoFormatError.code),
-              AuditError(BsasIdFormatError.code)
-            )),
+            errors = Some(
+              Seq(
+                AuditError(NinoFormatError.code),
+                AuditError(BsasIdFormatError.code)
+              )),
             body = None
           )
 
@@ -222,13 +225,13 @@ class SubmitSelfEmploymentBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse =
-          AuditResponse(
-            httpStatus = BAD_REQUEST,
-            errors = Some(Seq(
-              AuditError(FormatAdjustmentValueError.code),
-              AuditError(RuleAdjustmentRangeInvalid.code)
-            )),
-            body = None)
+          AuditResponse(httpStatus = BAD_REQUEST,
+                        errors = Some(
+                          Seq(
+                            AuditError(FormatAdjustmentValueError.code),
+                            AuditError(RuleAdjustmentRangeInvalid.code)
+                          )),
+                        body = None)
 
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
@@ -265,7 +268,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
-        (DownstreamError, INTERNAL_SERVER_ERROR),
+        (InternalError, INTERNAL_SERVER_ERROR),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),
         (RuleBsasAlreadyAdjusted, FORBIDDEN),

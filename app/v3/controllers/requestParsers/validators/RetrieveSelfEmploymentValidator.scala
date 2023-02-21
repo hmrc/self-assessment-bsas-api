@@ -16,8 +16,10 @@
 
 package v3.controllers.requestParsers.validators
 
-import v3.controllers.requestParsers.validators.validations.{CalculationIdValidation, NinoValidation, TaxYearTYSParameterValidation, TaxYearValidation}
-import v3.models.errors.MtdError
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.{NinoValidation, TaxYearTYSParameterValidation, TaxYearValidation}
+import api.models.errors.MtdError
+import v3.controllers.requestParsers.validators.validations.CalculationIdValidation
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidator extends Validator[RetrieveSelfEmploymentBsasRawData] {

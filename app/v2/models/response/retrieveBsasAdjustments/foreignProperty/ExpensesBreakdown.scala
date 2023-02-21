@@ -27,8 +27,7 @@ case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal],
                              costOfServices: Option[BigDecimal],
                              residentialFinancialCost: Option[BigDecimal],
                              other: Option[BigDecimal],
-                             consolidatedExpenses: Option[BigDecimal]
-                            )
+                             consolidatedExpenses: Option[BigDecimal])
 
 object ExpensesBreakdown {
 
@@ -40,9 +39,9 @@ object ExpensesBreakdown {
       (JsPath \ "travelCosts").readNullable[BigDecimal] and
       (JsPath \ "costOfServices").readNullable[BigDecimal] and
       (JsPath \ "residentialFinancialCost").readNullable[BigDecimal] and
-      (JsPath \"other").readNullable[BigDecimal] and
+      (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-    ) (ExpensesBreakdown.apply _)
+  )(ExpensesBreakdown.apply _)
 
   val fhlReads: Reads[ExpensesBreakdown] = (
     (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
@@ -52,11 +51,9 @@ object ExpensesBreakdown {
       (JsPath \ "travelCosts").readNullable[BigDecimal] and
       (JsPath \ "costOfServices").readNullable[BigDecimal] and
       Reads.pure(None) and
-      (JsPath \"other").readNullable[BigDecimal] and
+      (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-    ) (ExpensesBreakdown.apply _)
-
-
+  )(ExpensesBreakdown.apply _)
 
   implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]
 }

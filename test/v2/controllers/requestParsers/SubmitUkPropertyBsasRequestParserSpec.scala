@@ -16,9 +16,10 @@
 
 package v2.controllers.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors._
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import domain.Nino
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.validators.MockSubmitUkPropertyBsasValidator
 import v2.models.errors._
@@ -26,8 +27,8 @@ import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, Sub
 
 class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
-  val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino = "AA123456A"
+  val bsasId                         = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino                           = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockSubmitUkPropertyBsasValidator {
@@ -78,7 +79,6 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
         val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeZeroValue, nonFHLExpensesAllFields))
 
-
         MockValidator
           .validate(inputData)
           .returns(List(FormatAdjustmentValueError.copy(paths = Some(Seq("otherPropertyIncome")))))
@@ -91,7 +91,6 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
         val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
 
-
         MockValidator
           .validate(inputData)
           .returns(List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("rentIncome")))))
@@ -102,8 +101,8 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
       "the bsas id format is incorrect" in new Test {
 
-        val inputData = SubmitUkPropertyBsasRawData(nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
-
+        val inputData =
+          SubmitUkPropertyBsasRawData(nino, invalidBsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeExceedRangeValue, nonFHLExpensesAllFields))
 
         MockValidator
           .validate(inputData)
@@ -117,8 +116,7 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
         val inputData = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlInvalidConsolidatedExpenses))
 
-
-          MockValidator
+        MockValidator
           .validate(inputData)
           .returns(List(RuleBothExpensesError))
 
@@ -132,11 +130,15 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
         MockValidator
           .validate(inputData)
-          .returns(List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
+          .returns(List(RuleAdjustmentRangeInvalid.copy(
+            paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
 
         private val result = parser.parseRequest(inputData)
         result shouldBe
-          Left(ErrorWrapper(correlationId, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
+          Left(
+            ErrorWrapper(correlationId,
+                         RuleAdjustmentRangeInvalid.copy(
+                           paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
       }
     }
   }

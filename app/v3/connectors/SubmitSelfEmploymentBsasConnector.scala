@@ -16,15 +16,15 @@
 
 package v3.connectors
 
-import javax.inject.{Inject, Singleton}
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import play.api.http.Status
-import v3.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -33,7 +33,7 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appC
                                                                              ec: ExecutionContext,
                                                                              correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v3.connectors.httpparsers.StandardDownstreamHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 

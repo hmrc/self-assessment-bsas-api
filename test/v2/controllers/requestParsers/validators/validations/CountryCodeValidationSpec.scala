@@ -16,12 +16,15 @@
 
 package v2.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors._
 import support.UnitSpec
-import v2.models.errors.{CountryCodeFormatError, RuleCountryCodeError}
+import v2.models.errors._
 
 class CountryCodeValidationSpec extends UnitSpec {
   "CountryCodeValidation" when {
     "validate" must {
+      // @formatter:off
       Seq("AFG", "ALB", "DZA", "ASM", "AND", "AGO", "AIA", "ATG", "ARG", "ARM", "ABW", "AUS", "AUT", "AZE", "BHS",
         "BHR", "BGD", "BRB", "BLR", "BEL", "BLZ", "BEN", "BMU", "BTN", "BOL", "BES", "BIH", "BWA", "BRA", "VGB",
         "BRN", "BGR", "BFA", "MMR", "BDI", "KHM", "CMR", "CAN", "CPV", "CYM", "CAF", "TCD", "CHL", "CHN", "CXR",
@@ -43,6 +46,7 @@ class CountryCodeValidationSpec extends UnitSpec {
             CountryCodeValidation.validate(code, "path") shouldBe NoValidationErrors
           }
       }
+      // @formatter:on
 
       "return a CountryCodeFormatError for an invalid country code" in {
         CountryCodeValidation.validate("notACountryCode", "path") shouldBe List(CountryCodeFormatError.copy(paths = Some(Seq("path"))))

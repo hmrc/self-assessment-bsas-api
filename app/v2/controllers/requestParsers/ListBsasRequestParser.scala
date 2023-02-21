@@ -16,24 +16,25 @@
 
 package v2.controllers.requestParsers
 
-import javax.inject.Inject
-import domain.Nino
-import utils.{CurrentDateProvider, DateUtils}
+import api.controllers.RequestParser
+import api.models.domain.Nino
+import utils.{CurrentDate, DateUtils}
 import v2.controllers.requestParsers.validators.ListBsasValidator
 import v2.models.domain.TypeOfBusiness
 import v2.models.request.{ListBsasRawData, ListBsasRequest}
 
-class ListBsasRequestParser @Inject()(val validator: ListBsasValidator,
-                                      val currentDateProvider: CurrentDateProvider)
-  extends RequestParser[ListBsasRawData, ListBsasRequest] {
+import javax.inject.Inject
+
+class ListBsasRequestParser @Inject()(val validator: ListBsasValidator, val currentDateProvider: CurrentDate)
+    extends RequestParser[ListBsasRawData, ListBsasRequest] {
 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
 
     val incomeSourceType: Option[String] = data.typeOfBusiness.map(TypeOfBusiness.parser).map {
-      case TypeOfBusiness.`self-employment` => TypeOfBusiness.`self-employment`.toIdentifierValue
-      case TypeOfBusiness.`uk-property-fhl` => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
-      case TypeOfBusiness.`uk-property-non-fhl` => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
-      case TypeOfBusiness.`foreign-property` => TypeOfBusiness.`foreign-property`.toIdentifierValue
+      case TypeOfBusiness.`self-employment`          => TypeOfBusiness.`self-employment`.toIdentifierValue
+      case TypeOfBusiness.`uk-property-fhl`          => TypeOfBusiness.`uk-property-fhl`.toIdentifierValue
+      case TypeOfBusiness.`uk-property-non-fhl`      => TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue
+      case TypeOfBusiness.`foreign-property`         => TypeOfBusiness.`foreign-property`.toIdentifierValue
       case TypeOfBusiness.`foreign-property-fhl-eea` => TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue
     }
 

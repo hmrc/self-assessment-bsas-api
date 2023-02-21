@@ -16,11 +16,11 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.models.domain.TaxYear
 import config.AppConfig
 import play.api.libs.json._
-import v3.hateoas.HateoasLinksFactory
-import v3.models.domain.{ HasTypeOfBusiness, TaxYear, TypeOfBusiness }
-import v3.models.hateoas.{ HateoasData, Link }
+import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse._
 
 case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,

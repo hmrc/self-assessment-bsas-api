@@ -16,13 +16,15 @@
 
 package v2.controllers.requestParsers
 
-import javax.inject.Inject
-import domain.Nino
+import api.controllers.RequestParser
+import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveForeignPropertyValidator
 import v2.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData}
 
+import javax.inject.Inject
+
 class RetrieveForeignPropertyRequestParser @Inject()(val validator: RetrieveForeignPropertyValidator)
-  extends RequestParser[RetrieveForeignPropertyRawData, RetrieveForeignPropertyBsasRequestData] {
+    extends RequestParser[RetrieveForeignPropertyRawData, RetrieveForeignPropertyBsasRequestData] {
 
   override protected def requestFor(data: RetrieveForeignPropertyRawData): RetrieveForeignPropertyBsasRequestData = {
     RetrieveForeignPropertyBsasRequestData(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))

@@ -38,10 +38,11 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
           filterNull(
             Json.obj(
               "incomeSourceType" -> "02",
-              "adjustments" -> filterNull(Json.obj(
-                "income" -> x.income,
-                "expenses" -> x.expenses
-              ))
+              "adjustments" -> filterNull(
+                Json.obj(
+                  "income"   -> x.income,
+                  "expenses" -> x.expenses
+                ))
             ))
         }
         .getOrElse(
@@ -52,7 +53,7 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
                   Json.obj(
                     "incomeSourceType" -> "04",
                     "adjustments" -> filterNull(Json.obj(
-                      "income" -> x.income,
+                      "income"   -> x.income,
                       "expenses" -> x.expenses
                     ))
                   )))

@@ -49,7 +49,7 @@ case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
 }
 
 object ForeignPropertyExpenses {
-  implicit val reads: Reads[ForeignPropertyExpenses]   = Json.reads[ForeignPropertyExpenses]
+  implicit val reads: Reads[ForeignPropertyExpenses] = Json.reads[ForeignPropertyExpenses]
 
   implicit val writes: OWrites[ForeignPropertyExpenses] = (
     (JsPath \ "premisesRunningCosts").writeNullable[BigDecimal] and
@@ -61,5 +61,5 @@ object ForeignPropertyExpenses {
       (JsPath \ "residentialFinancialCost").writeNullable[BigDecimal] and
       (JsPath \ "other").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpense").writeNullable[BigDecimal]
-    )(unlift(ForeignPropertyExpenses.unapply))
+  )(unlift(ForeignPropertyExpenses.unapply))
 }

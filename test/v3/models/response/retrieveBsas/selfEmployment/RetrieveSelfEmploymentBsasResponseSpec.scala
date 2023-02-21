@@ -16,20 +16,15 @@
 
 package v3.models.response.retrieveBsas.selfEmployment
 
-import mocks.MockAppConfig
+import api.hateoas.Method._
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.models.domain.TaxYear
+import api.models.utils.JsonErrorValidators
+import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
-  downstreamRetrieveBsasResponseJson,
-  mtdRetrieveBsasResponseJson,
-  retrieveBsasResponseModel
-}
-import v3.hateoas.HateoasFactory
-import v3.models.domain.TaxYear
-import v3.models.hateoas.Method._
-import v3.models.hateoas.{ HateoasWrapper, Link }
-import v3.models.utils.JsonErrorValidators
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 

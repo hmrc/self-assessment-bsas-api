@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.NestedJsonReads
 
-case class AdditionsBreakdown(costOfGoodsBoughtDisallowable : Option[BigDecimal],
+case class AdditionsBreakdown(costOfGoodsBoughtDisallowable: Option[BigDecimal],
                               cisPaymentsToSubcontractorsDisallowable: Option[BigDecimal],
                               staffCostsDisallowable: Option[BigDecimal],
                               travelCostsDisallowable: Option[BigDecimal],
@@ -35,7 +35,6 @@ case class AdditionsBreakdown(costOfGoodsBoughtDisallowable : Option[BigDecimal]
                               professionalFeesDisallowable: Option[BigDecimal],
                               depreciationDisallowable: Option[BigDecimal],
                               otherDisallowable: Option[BigDecimal])
-
 
 object AdditionsBreakdown extends NestedJsonReads {
 
@@ -55,7 +54,7 @@ object AdditionsBreakdown extends NestedJsonReads {
       (JsPath \ "professionalFeesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "depreciationDisallowable").readNullable[BigDecimal] and
       (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal]
-    )(AdditionsBreakdown.apply _)
+  )(AdditionsBreakdown.apply _)
 
   implicit val writes: OWrites[AdditionsBreakdown] = Json.writes[AdditionsBreakdown]
 

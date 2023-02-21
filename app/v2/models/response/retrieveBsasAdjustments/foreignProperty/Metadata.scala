@@ -41,7 +41,7 @@ object Metadata {
       (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and
       Reads.pure(true)
-    )(Metadata.apply _)
+  )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

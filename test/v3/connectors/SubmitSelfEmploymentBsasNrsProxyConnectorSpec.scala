@@ -16,10 +16,11 @@
 
 package v3.connectors
 
-import mocks.MockAppConfig
-import v3.models.domain.TaxYear
-import v3.mocks.MockHttpClient
-import v3.models.request.submitBsas.selfEmployment.{ Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody }
+import api.connectors.ConnectorSpec
+import api.mocks.MockHttpClient
+import api.models.domain.TaxYear
+import config.MockAppConfig
+import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
 
 import scala.concurrent.Future
 

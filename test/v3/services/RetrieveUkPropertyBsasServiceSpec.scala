@@ -16,14 +16,16 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.connectors.MockRetrieveUkPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
@@ -69,12 +71,12 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
         })
       }
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
           MockRetrievePropertyBsasConnector
             .retrievePropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

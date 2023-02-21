@@ -46,6 +46,6 @@ object TypeOfBusiness {
     override def toIdentifierValue: String = "15"
   }
 
-  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
+  implicit val format: Format[TypeOfBusiness]         = Enums.format[TypeOfBusiness]
   val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 }

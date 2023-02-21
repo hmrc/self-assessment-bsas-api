@@ -22,11 +22,11 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class AccountingPeriod(startDate: String, endDate: String)
 
 object AccountingPeriod {
-  implicit val reads: Reads[AccountingPeriod] = Json.reads[AccountingPeriod]
+  implicit val reads: Reads[AccountingPeriod]    = Json.reads[AccountingPeriod]
   implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
 
   val desReads: Reads[AccountingPeriod] = (
     (JsPath \ "accountingStartDate").read[String] and
       (JsPath \ "accountingEndDate").read[String]
-    )(AccountingPeriod.apply _)
+  )(AccountingPeriod.apply _)
 }

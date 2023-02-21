@@ -16,22 +16,23 @@
 
 package v2.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino             = "AA123456A"
+    val nino = "AA123456A"
 
     def setupStubs(): StubMapping
 
@@ -45,7 +46,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
@@ -56,12 +57,11 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
          |      }
     """.stripMargin
 
-
     def requestBody(typeOfBusiness: String): JsObject =
       Json.obj(
         "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2022-10-31"),
         "typeOfBusiness"   -> typeOfBusiness,
-        "businessId" -> "XAIS12345678901"
+        "businessId"       -> "XAIS12345678901"
       )
 
     def responseBody(hateoasLinkPath: String): String = s"""
@@ -105,7 +105,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
             result.header("Content-Type") shouldBe Some("application/json")
           }
       }
-      }
+    }
 
     "return error according to spec" when {
 
@@ -128,14 +128,54 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A",  Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"), "typeOfBusiness" -> "self-employment", "businessId" -> "XAIS12345678901"), BAD_REQUEST, NinoFormatError),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02")), BAD_REQUEST, RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/endDate", "/typeOfBusiness", "/businessId")))),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "20180202", "endDate" -> "2019-05-06"), "typeOfBusiness" -> "self-employment", "businessId" -> "XAIS12345678901"), BAD_REQUEST, StartDateFormatError),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "20190506"), "typeOfBusiness" -> "self-employment", "businessId" -> "XAIS12345678901"), BAD_REQUEST, EndDateFormatError),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"), "typeOfBusiness" -> "selfemployment", "businessId" -> "XAIS12345678901"), BAD_REQUEST, TypeOfBusinessFormatError),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"), "typeOfBusiness" -> "self-employment", "businessId" -> "XAIS12345678901234"), BAD_REQUEST, BusinessIdFormatError),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2020-02-02", "endDate" -> "2019-05-06"), "typeOfBusiness" -> "self-employment", "businessId" -> "XAIS12345678901"), BAD_REQUEST, RuleEndBeforeStartDateError),
-          ("AA123456A", Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2018-05-06"), "typeOfBusiness" -> "self-employment", "businessId" -> "XAIS12345678901"), BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
+          ("AA1123A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+                    "typeOfBusiness"   -> "self-employment",
+                    "businessId"       -> "XAIS12345678901"),
+           BAD_REQUEST,
+           NinoFormatError),
+          ("AA123456A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02")),
+           BAD_REQUEST,
+           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/endDate", "/typeOfBusiness", "/businessId")))),
+          ("AA123456A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "20180202", "endDate" -> "2019-05-06"),
+                    "typeOfBusiness"   -> "self-employment",
+                    "businessId"       -> "XAIS12345678901"),
+           BAD_REQUEST,
+           StartDateFormatError),
+          ("AA123456A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "20190506"),
+                    "typeOfBusiness"   -> "self-employment",
+                    "businessId"       -> "XAIS12345678901"),
+           BAD_REQUEST,
+           EndDateFormatError),
+          ("AA123456A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
+                    "typeOfBusiness"   -> "selfemployment",
+                    "businessId"       -> "XAIS12345678901"),
+           BAD_REQUEST,
+           TypeOfBusinessFormatError),
+          ("AA123456A",
+           Json.obj(
+             "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
+             "typeOfBusiness"   -> "self-employment",
+             "businessId"       -> "XAIS12345678901234"
+           ),
+           BAD_REQUEST,
+           BusinessIdFormatError),
+          ("AA123456A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2020-02-02", "endDate" -> "2019-05-06"),
+                    "typeOfBusiness"   -> "self-employment",
+                    "businessId"       -> "XAIS12345678901"),
+           BAD_REQUEST,
+           RuleEndBeforeStartDateError),
+          ("AA123456A",
+           Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2018-05-06"),
+                    "typeOfBusiness"   -> "self-employment",
+                    "businessId"       -> "XAIS12345678901"),
+           BAD_REQUEST,
+           RuleAccountingPeriodNotSupportedError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -163,11 +203,11 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", FORBIDDEN, RulePeriodicDataIncompleteError),
           (UNPROCESSABLE_ENTITY, "NO_ACCOUNTING_PERIOD", FORBIDDEN, RuleNoAccountingPeriodError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "INCOME_SOURCEID_NOT_PROVIDED", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError)
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (UNPROCESSABLE_ENTITY, "INCOME_SOURCEID_NOT_PROVIDED", INTERNAL_SERVER_ERROR, InternalError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError)
         )
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

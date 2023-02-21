@@ -16,24 +16,22 @@
 
 package v2.services
 
-import domain.Nino
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v2.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 
 import scala.concurrent.Future
 
-
 class RetrieveSelfEmploymentAdjustmentsServiceSpec extends ServiceSpec {
 
-
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val request = RetrieveAdjustmentsRequestData(nino, id)
 
@@ -42,7 +40,8 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends ServiceSpec {
   trait Test extends MockRetrieveSelfEmploymentAdjustmentsConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveSelfEmploymentAdjustmentsController", "RetrieveSelfEmploymentAdjustments")
+    implicit val logContext: EndpointLogContext =
+      EndpointLogContext("RetrieveSelfEmploymentAdjustmentsController", "RetrieveSelfEmploymentAdjustments")
 
     val service = new RetrieveSelfEmploymentAdjustmentsService(mockConnector)
   }
@@ -50,10 +49,11 @@ class RetrieveSelfEmploymentAdjustmentsServiceSpec extends ServiceSpec {
   "retrieveSelfEmploymentAdjustments" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrieveSelfEmploymentAdjustmentsConnector.retrieveSelfEmploymentAdjustments(request)
+        MockRetrieveSelfEmploymentAdjustmentsConnector
+          .retrieveSelfEmploymentAdjustments(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        await(service.retrieveSelfEmploymentsAdjustments(request) ) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.retrieveSelfEmploymentsAdjustments(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
   }

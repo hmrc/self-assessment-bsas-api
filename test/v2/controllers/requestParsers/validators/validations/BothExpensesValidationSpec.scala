@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.RuleBothExpensesError
+import v2.models.errors._
 import v2.models.utils.JsonErrorValidators
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -33,7 +33,7 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
   val validConsolidatedExpenses =
     Map(
-      "consolidatedExpenses" -> figure,
+      "consolidatedExpenses"     -> figure,
       "residentialFinancialCost" -> figure
     )
 

@@ -16,13 +16,15 @@
 
 package v2.services
 
-import domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.mocks.connectors.MockSubmitForeignPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
@@ -31,26 +33,29 @@ import scala.concurrent.Future
 class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  private val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val id   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(
       foreignProperty = None,
-      foreignFhlEea = Some(FhlEea(
-        Some(FhlIncome(
-          Some(123.12)
-        )),
-        Some(FhlEeaExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          consolidatedExpenses = None
+      foreignFhlEea = Some(
+        FhlEea(
+          Some(
+            FhlIncome(
+              Some(123.12)
+            )),
+          Some(
+            FhlEeaExpenses(
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              Some(123.12),
+              consolidatedExpenses = None
+            ))
         ))
-      ))
     )
 
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, fhlEeaBody)
@@ -58,7 +63,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property-fhl-eea`)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitForeignPropertyBsas")
 
     val service = new SubmitForeignPropertyBsasService(mockConnector)
@@ -67,7 +72,8 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   "submitForeignPropertyBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
+        MockSubmitForeignPropertyBsasConnector
+          .submitForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.submitForeignPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -76,34 +82,34 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
-          MockSubmitForeignPropertyBsasConnector.submitForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+          MockSubmitForeignPropertyBsasConnector
+            .submitForeignPropertyBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
-        ("INVALID_PAYLOAD", DownstreamError),
+        ("INVALID_PAYLOAD", InternalError),
         ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
         ("UNALLOWABLE_VALUE", RuleResultingValueNotPermitted),
-        ("BVR_FAILURE_C55316", DownstreamError),
-        ("BVR_FAILURE_C15320", DownstreamError),
+        ("BVR_FAILURE_C55316", InternalError),
+        ("BVR_FAILURE_C15320", InternalError),
         ("BVR_FAILURE_C55503", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C55508", RulePropertyIncomeAllowanceClaimed),
         ("BVR_FAILURE_C55509", RulePropertyIncomeAllowanceClaimed),
         ("NO_DATA_FOUND", NotFoundError),
-        ("SERVER_ERROR", DownstreamError),
-        ("INVALID_CORRELATION_ID", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", InternalError),
+        ("INVALID_CORRELATION_ID", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))
@@ -111,4 +117,3 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   }
 
 }
-

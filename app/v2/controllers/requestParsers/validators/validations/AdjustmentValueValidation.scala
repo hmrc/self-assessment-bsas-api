@@ -16,7 +16,8 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{FormatAdjustmentValueError, MtdError}
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{FormatAdjustmentValueError, MtdError}
 
 object AdjustmentValueValidation {
 
@@ -26,7 +27,7 @@ object AdjustmentValueValidation {
 
     field match {
       case Some(amount) if amount.scale > 2 | amount == 0 => List(error)
-      case _ => NoValidationErrors
+      case _                                              => NoValidationErrors
     }
   }
 }

@@ -16,12 +16,13 @@
 
 package v3.models.response.retrieveBsas.selfEmployment
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.models.domain.TaxYear
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v3.hateoas.{ HateoasLinks, HateoasLinksFactory }
-import v3.models.domain.{ HasTypeOfBusiness, TaxYear, TypeOfBusiness }
-import v3.models.hateoas.{ HateoasData, Link }
+import v3.hateoas.HateoasLinks
+import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 
 case class RetrieveSelfEmploymentBsasResponse(
     metadata: Metadata,

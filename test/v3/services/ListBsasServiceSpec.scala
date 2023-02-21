@@ -16,16 +16,16 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BusinessIdFormatError, DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector
-import v3.models.domain.TaxYear
-import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.Future
 
@@ -59,12 +59,12 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
           MockListBsasConnector
             .listBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.listBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

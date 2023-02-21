@@ -16,13 +16,14 @@
 
 package v2.connectors
 
-import mocks.MockAppConfig
-import domain.Nino
+import api.connectors.ConnectorSpec
+import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ListBsasFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.domain.DownstreamTaxYear
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.ListBsasRequest
 
 import scala.concurrent.Future
@@ -57,7 +58,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient.parameterGet(
           url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
-          config = dummyDesHeaderCarrierConfig,
+          config = dummyHeaderCarrierConfig,
           queryParams.toSeq,
           requiredHeaders = desRequestHeaders,
           excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")

@@ -17,7 +17,7 @@
 package v2.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 import v2.models.domain.{DownstreamTaxYear, IncomeSourceType, TypeOfBusiness}
 import v2.models.response.retrieveBsas.AccountingPeriod
 
@@ -37,11 +37,11 @@ object Metadata {
       (JsPath \ "metadata" \ "requestedDateTime").read[String] and
       (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "metadata" \ "status").read[String] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map{
+      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
         case Some(_) => true
-        case _ => false
+        case _       => false
       }
-    )(Metadata.apply _)
+  )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

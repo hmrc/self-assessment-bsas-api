@@ -16,27 +16,27 @@
 
 package v3.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
-import v3.models.errors.ErrorWrapper
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 import v3.services.TriggerBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockTriggerBsasService extends MockFactory {
 
   val mockService: TriggerBsasService = mock[TriggerBsasService]
 
   object MockTriggerBsasService {
+
     def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]]] = {
       (mockService
-        .triggerBsas(_: TriggerBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .triggerBsas(_: TriggerBsasRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 }

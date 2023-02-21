@@ -37,7 +37,7 @@ trait NestedJsonReads {
               case JsNull => JsSuccess(None)
               case js     => rds.reads(js).repath(jsPath).map(Some(_))
             }
-          )
+        )
       )
     }
 

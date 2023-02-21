@@ -18,6 +18,7 @@ package config
 
 import com.typesafe.config.Config
 import play.api.{ConfigLoader, Configuration}
+import routing.Version
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
@@ -53,7 +54,7 @@ trait AppConfig {
 
   // API Config
   def apiGatewayContext: String
-  def apiStatus(version: String): String
+  def apiStatus(version: Version): String
   def featureSwitches: Configuration
   def endpointsEnabled(version: String): Boolean
   def confidenceLevelConfig: ConfidenceLevelConfig
@@ -71,35 +72,36 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
   // Des Config
-  val desBaseUrl: String = config.baseUrl("des")
-  val desEnv: String = config.getString("microservice.services.des.env")
-  val desToken: String = config.getString("microservice.services.des.token")
+  val desBaseUrl: String                         = config.baseUrl("des")
+  val desEnv: String                             = config.getString("microservice.services.des.env")
+  val desToken: String                           = config.getString("microservice.services.des.token")
   val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
   // IFS Config
-  val ifsBaseUrl: String = config.baseUrl("ifs")
-  val ifsEnv: String = config.getString("microservice.services.ifs.env")
-  val ifsToken: String = config.getString("microservice.services.ifs.token")
-  val ifsEnabled: Boolean = config.getBoolean("microservice.services.ifs.enabled")
+  val ifsBaseUrl: String                         = config.baseUrl("ifs")
+  val ifsEnv: String                             = config.getString("microservice.services.ifs.env")
+  val ifsToken: String                           = config.getString("microservice.services.ifs.token")
+  val ifsEnabled: Boolean                        = config.getBoolean("microservice.services.ifs.enabled")
   val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
 
   // Tax Year Specific (TYS) IFS Config
-  val tysIfsBaseUrl: String = config.baseUrl("tys-ifs")
-  val tysIfsEnv: String = config.getString("microservice.services.tys-ifs.env")
-  val tysIfsToken: String = config.getString("microservice.services.tys-ifs.token")
+  val tysIfsBaseUrl: String                         = config.baseUrl("tys-ifs")
+  val tysIfsEnv: String                             = config.getString("microservice.services.tys-ifs.env")
+  val tysIfsToken: String                           = config.getString("microservice.services.tys-ifs.token")
   val tysIfsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.tys-ifs.environmentHeaders")
 
   // Api Config
-  val apiGatewayContext: String = config.getString("api.gateway.context")
-  val mtdNrsProxyBaseUrl: String = config.baseUrl("mtd-api-nrs-proxy")
+  val apiGatewayContext: String                    = config.getString("api.gateway.context")
+  val mtdNrsProxyBaseUrl: String                   = config.baseUrl("mtd-api-nrs-proxy")
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
 
   // V3 Trigger BSAS minimum dates
-  val v3TriggerForeignBsasMinimumTaxYear: String = config.getString("v3TriggerForeignBsasMinimumTaxYear")
+  val v3TriggerForeignBsasMinimumTaxYear: String    = config.getString("v3TriggerForeignBsasMinimumTaxYear")
   val v3TriggerNonForeignBsasMinimumTaxYear: String = config.getString("v3TriggerNonForeignBsasMinimumTaxYear")
 
-  def apiStatus(version: String): String = config.getString(s"api.$version.status")
-  def featureSwitches: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def apiStatus(version: Version): String = config.getString(s"api.${version.name}.status")
+  def featureSwitches: Configuration      = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 }
 

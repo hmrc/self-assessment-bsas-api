@@ -16,34 +16,37 @@
 
 package v2.controllers
 
-import mocks.MockIdGenerator
+import api.controllers.ControllerBaseSpec
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.mocks.MockIdGenerator
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
-import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkPropertyBsasAdjustmentsService}
-import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v2.mocks.services.MockRetrieveUkPropertyBsasAdjustmentsService
 import v2.models.errors._
-import v2.models.hateoas.Method.GET
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockRetrieveAdjustmentsRequestParser
-  with MockRetrieveUkPropertyBsasAdjustmentsService
-  with MockHateoasFactory
-  with MockAuditService
-  with MockIdGenerator {
+class RetrieveUkPropertyBsasAdjustmentsControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockRetrieveAdjustmentsRequestParser
+    with MockRetrieveUkPropertyBsasAdjustmentsService
+    with MockHateoasFactory
+    with MockAuditService
+    with MockIdGenerator {
 
   private val correlationId = "X-123"
 
@@ -53,7 +56,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
     val controller = new RetrieveUkPropertyBsasAdjustmentsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRequestParser,
+      parser = mockRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
@@ -67,23 +70,25 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
   }
 
-  private val nino = "AA123456A"
+  private val nino   = "AA123456A"
   private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
-  private val request = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
+  private val request        = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
   val testHateoasLinkRetrieve = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-    method = GET, rel = "retrieve-adjustable-summary")
+                                     method = GET,
+                                     rel = "retrieve-adjustable-summary")
 
-  val testHateoasLinkRetrieveAdjustments = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-    method = GET, rel = "self")
+  val testHateoasLinkRetrieveAdjustments =
+    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", method = GET, rel = "self")
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveBusinessSourceAccountingAdjustments",
       transactionName = "retrieve-a-uk-property-business-accounting-adjustments",
       detail = GenericAuditDetail(
+        versionNumber = "2.0",
         userType = "Individual",
         agentReferenceNumber = None,
         params = Map("nino" -> nino, "bsasId" -> bsasId),
@@ -107,8 +112,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrap(retrieveUkPropertyNonFhlAdjustmentsResponseModel, RetrieveUkPropertyAdjustmentsHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(retrieveUkPropertyNonFhlAdjustmentsResponseModel , Seq(testHateoasLinkRetrieve, testHateoasLinkRetrieveAdjustments))
-        )
+          .returns(HateoasWrapper(retrieveUkPropertyNonFhlAdjustmentsResponseModel, Seq(testHateoasLinkRetrieve, testHateoasLinkRetrieveAdjustments)))
 
         val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
@@ -132,8 +136,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrap(retrieveUkPropertyFhlAdjustmentsResponseModel, RetrieveUkPropertyAdjustmentsHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(retrieveUkPropertyFhlAdjustmentsResponseModel , Seq(testHateoasLinkRetrieve, testHateoasLinkRetrieveAdjustments))
-        )
+          .returns(HateoasWrapper(retrieveUkPropertyFhlAdjustmentsResponseModel, Seq(testHateoasLinkRetrieve, testHateoasLinkRetrieveAdjustments)))
 
         val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
@@ -200,7 +203,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec extends ControllerBaseSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (BsasIdFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RuleNoAdjustmentsMade, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
           (RuleNotUkProperty, FORBIDDEN)

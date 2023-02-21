@@ -16,9 +16,9 @@
 
 package v3.fixtures
 
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.AnyContentAsJson
 import v3.models.domain.TypeOfBusiness
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.AnyContentAsJson
 import v3.models.request.AccountingPeriod
 import v3.models.request.triggerBsas.TriggerBsasRequestBody
 import v3.models.response.TriggerBsasResponse

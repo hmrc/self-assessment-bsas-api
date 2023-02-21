@@ -19,14 +19,13 @@ package v2.models.response.retrieveBsas
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class Profit(net: Option[BigDecimal],
-                  taxable: Option[BigInt])
+case class Profit(net: Option[BigDecimal], taxable: Option[BigInt])
 
 object Profit {
   implicit val reads: Reads[Profit] = (
     (JsPath \ "netProfit").readNullable[BigDecimal] and
       (JsPath \ "taxableProfit").readNullable[BigInt]
-    )(Profit.apply _)
+  )(Profit.apply _)
 
   implicit val writes: OWrites[Profit] = Json.writes[Profit]
 }

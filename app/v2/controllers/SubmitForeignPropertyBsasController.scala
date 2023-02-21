@@ -16,20 +16,19 @@
 
 package v2.controllers
 
-import cats.data.EitherT
-import cats.implicits._
-import javax.inject.{ Inject, Singleton }
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, ControllerComponents }
-import utils.{ IdGenerator, Logging }
+import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.hateoas.HateoasFactory
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import play.api.libs.json.JsValue
+import play.api.mvc.{Action, ControllerComponents}
+import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.SubmitForeignPropertyBsasRequestParser
-import v2.hateoas.HateoasFactory
-import v2.models.errors._
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v2.models.response.SubmitForeignPropertyBsasHateoasData
-import v2.services.{ EnrolmentsAuthService, MtdIdLookupService, SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService }
+import v2.services.{SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
@@ -41,7 +40,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
                                                     cc: ControllerComponents,
                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
+    with V2Controller
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -49,53 +48,20 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
 
   def handleRequest(nino: String, bsasId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = SubmitForeignPropertyRawData(nino, bsasId, request.body)
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-          response <- {
-            //Submit asynchronously to NRS
-            nrsService.submit(nino, parsedRequest.body)
-            //Submit Return to ETMP
-            EitherT(service.submitForeignPropertyBsas(parsedRequest))
+
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService { parsedRequest =>
+            nrsService.submit(nino, parsedRequest.body) //Submit asynchronously to NRS
+            service.submitForeignPropertyBsas(parsedRequest)
           }
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(response.responseData, SubmitForeignPropertyBsasHateoasData(nino, bsasId)).asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${response.correlationId}")
+          .withHateoasResult(hateoasFactory)(SubmitForeignPropertyBsasHateoasData(nino, bsasId))
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(response.correlationId)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | BsasIdFormatError | CustomMtdError(FormatAdjustmentValueError.code) | CustomMtdError(
-            RuleAdjustmentRangeInvalid.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleCountryCodeError.code) |
-          CustomMtdError(CountryCodeFormatError.code) | RuleBothExpensesError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case RuleTypeOfBusinessError | RuleSummaryStatusInvalid | RuleSummaryStatusSuperseded | RuleBsasAlreadyAdjusted |
-          RuleResultingValueNotPermitted | RuleOverConsolidatedExpensesThreshold | RulePropertyIncomeAllowanceClaimed =>
-        Forbidden(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
 }

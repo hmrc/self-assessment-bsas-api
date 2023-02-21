@@ -16,38 +16,31 @@
 
 package v3.services
 
+import api.controllers.RequestContext
+import api.models
+import api.models.ResponseWrapper
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v3.connectors.RetrieveUkPropertyBsasConnector
-import v3.controllers.EndpointLogContext
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
-import v3.support.DownstreamResponseMappingSupport
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector)
-    extends BaseRetrieveBsasService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`)
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-      implicit hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
+      implicit ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(mapDownstreamErrors))
+      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
 
     } yield mtdResponseWrapper
@@ -55,17 +48,17 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
     result.value
   }
 
-  private def mapDownstreamErrors: Map[String, MtdError] = {
+  private val errorMap: Map[String, MtdError] = {
 
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_RETURN"            -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> InternalError,
+      "INVALID_CORRELATIONID"     -> models.errors.InternalError,
+      "INVALID_RETURN"            -> models.errors.InternalError,
+      "UNPROCESSABLE_ENTITY"      -> models.errors.InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "SERVER_ERROR"              -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE"       -> models.errors.InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(

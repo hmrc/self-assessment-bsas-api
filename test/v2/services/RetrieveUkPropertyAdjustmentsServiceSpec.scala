@@ -16,12 +16,13 @@
 
 package v2.services
 
-import domain.Nino
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.fixtures.ukProperty.RetrieveUkPropertyAdjustmentsFixtures._
 import v2.mocks.connectors.MockRetrieveUkPropertyAdjustmentsConnector
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
@@ -31,13 +32,13 @@ class RetrieveUkPropertyAdjustmentsServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val request = RetrieveAdjustmentsRequestData(nino, id)
+  val id       = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val request  = RetrieveAdjustmentsRequestData(nino, id)
   val response = RetrieveUkPropertyAdjustmentsResponse(metaDataModel, bsasDetailModel)
 
   trait Test extends MockRetrieveUkPropertyAdjustmentsConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveUkPropertyAdjustmentsController", "RetrieveUkPropertyAdjustments")
 
     val service = new RetrieveUkPropertyAdjustmentsService(mockConnector)
@@ -46,7 +47,8 @@ class RetrieveUkPropertyAdjustmentsServiceSpec extends ServiceSpec {
   "retrieveUkPropertyAdjustments" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrieveUkPropertyAdjustmentsConnector.retrieveUkPropertyAdjustments(request)
+        MockRetrieveUkPropertyAdjustmentsConnector
+          .retrieveUkPropertyAdjustments(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.retrieveUkPropertyAdjustments(request)) shouldBe Right(ResponseWrapper(correlationId, response))

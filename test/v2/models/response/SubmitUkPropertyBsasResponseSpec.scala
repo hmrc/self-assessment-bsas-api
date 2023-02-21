@@ -16,18 +16,16 @@
 
 package v2.models.response
 
-import mocks.MockAppConfig
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import config.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v2.hateoas.HateoasFactory
 import v2.models.domain.TypeOfBusiness
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.hateoas.Method.GET
 
-class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
+class SubmitUkPropertyBsasResponseSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse(
-    """
+  val desJson: JsValue = Json.parse("""
       |{
       |   "metadata" : {
       |       "calculationId" : "anId"
@@ -38,15 +36,13 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
       |}
   """.stripMargin)
 
-  val mtdJson: JsValue = Json.parse(
-    """
+  val mtdJson: JsValue = Json.parse("""
       |{
       |   "id" : "anId"
       |}
   """.stripMargin)
 
-  val invalidDesJson: JsValue = Json.parse(
-    """
+  val invalidDesJson: JsValue = Json.parse("""
       |{
       |   "id" : 3
       |}
@@ -77,8 +73,8 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec{
   "HateoasFactory" must {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val bsasId = "anId"
+      val nino           = "someNino"
+      val bsasId         = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
     }
 

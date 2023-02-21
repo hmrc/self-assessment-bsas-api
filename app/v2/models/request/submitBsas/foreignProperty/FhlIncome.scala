@@ -28,8 +28,9 @@ object FhlIncome {
   implicit val writes: OWrites[FhlIncome] = new OWrites[FhlIncome] {
     override def writes(o: FhlIncome): JsObject =
       if (o.isEmpty) JsObject.empty
-      else Json.obj(
-        "rentAmount" -> o.rentIncome
-      )
+      else
+        Json.obj(
+          "rentAmount" -> o.rentIncome
+        )
   }
 }

@@ -16,19 +16,20 @@
 
 package v2.connectors
 
-import mocks.MockAppConfig
+import api.connectors.ConnectorSpec
+import config.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.RetrieveAdjustmentsRequestData
 
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino   = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val queryParams: Map[String, String] = Map("return" -> "2")
@@ -72,8 +73,9 @@ class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
   )
 
   class Test extends MockHttpClient with MockAppConfig {
+
     val connector: RetrieveForeignPropertyAdjustmentsConnector =
-      new RetrieveForeignPropertyAdjustmentsConnector( http = mockHttpClient, appConfig = mockAppConfig)
+      new RetrieveForeignPropertyAdjustmentsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -85,18 +87,20 @@ class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
 
   "RetrieveForeignPropertyAdjustments" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, responseBody))
+      val outcome                    = Right(ResponseWrapper(correlationId, responseBody))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)
 
-        MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-          config = dummyDesHeaderCarrierConfig,
-          queryParams.toSeq,
-          requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
+        MockedHttpClient
+          .parameterGet(
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+            config = dummyHeaderCarrierConfig,
+            queryParams.toSeq,
+            requiredHeaders = desRequestHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveForeignPropertyAdjustments(request)) shouldBe outcome
       }

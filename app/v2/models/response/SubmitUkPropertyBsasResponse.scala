@@ -16,32 +16,31 @@
 
 package v2.models.response
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
-import play.api.libs.json._
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v2.models.hateoas.{HateoasData, Link}
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import v2.hateoas.HateoasLinks
+import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
 
 case class SubmitUkPropertyBsasResponse(id: String, typeOfBusiness: TypeOfBusiness)
 
 object SubmitUkPropertyBsasResponse extends HateoasLinks {
 
   implicit val writes: OWrites[SubmitUkPropertyBsasResponse] = new OWrites[SubmitUkPropertyBsasResponse] {
+
     def writes(response: SubmitUkPropertyBsasResponse): JsObject =
       Json.obj(
         "id" -> response.id
       )
   }
 
-
   implicit val reads: Reads[SubmitUkPropertyBsasResponse] = (
     (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
-    )(SubmitUkPropertyBsasResponse.apply _)
+  )(SubmitUkPropertyBsasResponse.apply _)
 
-  implicit object SubmitPropertyAdjustmentHateoasFactory
-    extends HateoasLinksFactory[SubmitUkPropertyBsasResponse, SubmitUkPropertyBsasHateoasData] {
+  implicit object SubmitPropertyAdjustmentHateoasFactory extends HateoasLinksFactory[SubmitUkPropertyBsasResponse, SubmitUkPropertyBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {
       import data._
 

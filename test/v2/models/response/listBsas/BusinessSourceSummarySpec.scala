@@ -16,10 +16,11 @@
 
 package v2.models.response.listBsas
 
-import play.api.libs.json.{JsSuccess, Json}
+import api.models.domain.Status
+import play.api.libs.json.{ JsSuccess, Json }
 import support.UnitSpec
 import v2.fixtures.ListBsasFixtures._
-import v2.models.domain.{Status, TypeOfBusiness}
+import v2.models.domain.TypeOfBusiness
 import v2.models.request.AccountingPeriod
 
 class BusinessSourceSummarySpec extends UnitSpec {

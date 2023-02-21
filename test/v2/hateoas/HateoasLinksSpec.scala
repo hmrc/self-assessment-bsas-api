@@ -16,11 +16,12 @@
 
 package v2.hateoas
 
-import mocks.MockAppConfig
+import api.hateoas.Link
+import api.hateoas.Method.{GET, POST}
+import config.MockAppConfig
 import support.UnitSpec
-import v2.models.hateoas.Link
-import v2.models.hateoas.Method.{GET, POST}
-import v2.models.hateoas.RelType._
+import v2.hateoas.RelType.{RETRIEVE_BSAS, SUBMIT_ADJUSTMENTS}
+import v3.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 

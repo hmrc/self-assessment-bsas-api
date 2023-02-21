@@ -16,46 +16,41 @@
 
 package v2.services
 
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v2.connectors.TriggerBsasConnector
-import v2.controllers.EndpointLogContext
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import v2.models.errors.{RuleAccountingPeriodNotEndedError, RuleNoAccountingPeriodError, RulePeriodicDataIncompleteError}
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
-import v2.support.DesResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends DesResponseMappingSupport with Logging{
+class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {
 
-  def triggerBsas(request: TriggerBsasRequest)
-                       (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-                        correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
+  def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext,
+                                               ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.triggerBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-    } yield desResponseWrapper.map(des => des)
-
-    result.value
+    connector
+      .triggerBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-    "ACCOUNTING_PERIOD_NOT_ENDED"   -> RuleAccountingPeriodNotEndedError,
-    "OBLIGATIONS_NOT_MET"           -> RulePeriodicDataIncompleteError,
-    "NO_ACCOUNTING_PERIOD"          -> RuleNoAccountingPeriodError,
-    "NO_DATA_FOUND"                 -> NotFoundError,
-    "INVALID_PAYLOAD"               -> DownstreamError,
-    "SERVER_ERROR"                  -> DownstreamError,
-    "SERVICE_UNAVAILABLE"           -> DownstreamError,
-    "INCOME_SOURCEID_NOT_PROVIDED"  -> DownstreamError,
-    "INVALID_CORRELATIONID"         -> DownstreamError
-  )
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
+      "ACCOUNTING_PERIOD_NOT_ENDED"  -> RuleAccountingPeriodNotEndedError,
+      "OBLIGATIONS_NOT_MET"          -> RulePeriodicDataIncompleteError,
+      "NO_ACCOUNTING_PERIOD"         -> RuleNoAccountingPeriodError,
+      "NO_DATA_FOUND"                -> NotFoundError,
+      "INVALID_PAYLOAD"              -> InternalError,
+      "SERVER_ERROR"                 -> InternalError,
+      "SERVICE_UNAVAILABLE"          -> InternalError,
+      "INCOME_SOURCEID_NOT_PROVIDED" -> InternalError,
+      "INVALID_CORRELATIONID"        -> InternalError
+    )
 }

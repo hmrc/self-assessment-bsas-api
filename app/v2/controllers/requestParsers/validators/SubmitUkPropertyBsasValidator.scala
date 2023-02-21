@@ -16,22 +16,19 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import config.FixedConfig
-import v2.controllers.requestParsers.validators.validations.{JsonFormatValidation, _}
-import v2.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v2.controllers.requestParsers.validators.validations._
 import v2.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawData] with FixedConfig {
 
-  private val validationSet = List(
-    parameterFormatValidator,
-    bodyFormatValidator,
-    incorrectOrEmptyBodyValidator,
-    adjustmentFieldValidator,
-    otherBodyFieldsValidator)
+  private val validationSet =
+    List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, adjustmentFieldValidator, otherBodyFieldsValidator)
 
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-
     List(
       NinoValidation.validate(data.nino),
       BsasIdValidation.validate(data.bsasId)
@@ -39,9 +36,11 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   }
 
   private def bodyFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-    List(flattenErrors(List(
-      JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json)
-    )))
+    List(
+      flattenErrors(
+        List(
+          JsonFormatValidation.validate[SubmitUKPropertyBsasRequestBody](data.body.json)
+        )))
   }
 
   private def incorrectOrEmptyBodyValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
@@ -59,12 +58,13 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
     def doValidationFor(fieldName: String, withValue: Option[BigDecimal]): List[MtdError] = {
-      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] = Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
+      val validations: Seq[(Option[BigDecimal], String) => List[MtdError]] =
+        Seq(AdjustmentValueValidation.validate, AdjustmentRangeValidation.validate)
       validations.flatMap(validation => validation(withValue, fieldName)).toList
     }
 
     def validateNonFHL(nonFurnishedHolidayLet: NonFurnishedHolidayLet): List[List[MtdError]] = {
-      val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
+      val income: Option[NonFHLIncome]     = nonFurnishedHolidayLet.income
       val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
       List(
         doValidationFor("/nonFurnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome)),
@@ -84,7 +84,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     }
 
     def validateFHL(furnishedHolidayLet: FurnishedHolidayLet): List[List[MtdError]] = {
-      val income: Option[FHLIncome] = furnishedHolidayLet.income
+      val income: Option[FHLIncome]     = furnishedHolidayLet.income
       val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
       List(
         doValidationFor("/furnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome)),
@@ -101,13 +101,12 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
     List(flattenErrors((model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
       case (None, Some(nonFurnishedHolidayLet)) => validateNonFHL(nonFurnishedHolidayLet)
-      case (Some(furnishedHolidayLet), None) =>validateFHL(furnishedHolidayLet)
-      case _ => List(List(RuleIncorrectOrEmptyBodyError))
+      case (Some(furnishedHolidayLet), None)    => validateFHL(furnishedHolidayLet)
+      case _                                    => List(List(RuleIncorrectOrEmptyBodyError))
     }))
   }
 
   private def otherBodyFieldsValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
-
     val model: SubmitUKPropertyBsasRequestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]
 
     List(

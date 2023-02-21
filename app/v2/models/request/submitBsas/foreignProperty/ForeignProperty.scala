@@ -18,14 +18,12 @@ package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 
-case class ForeignProperty(countryCode: String,
-                           income: Option[ForeignPropertyIncome],
-                           expenses: Option[ForeignPropertyExpenses]) {
+case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses]) {
 
   def isEmpty: Boolean =
     (income.isEmpty && expenses.isEmpty) ||
-      (income.isDefined && income.get.isEmpty) ||
-      (expenses.isDefined && expenses.get.isEmpty)
+    (income.isDefined && income.get.isEmpty) ||
+    (expenses.isDefined && expenses.get.isEmpty)
 }
 
 object ForeignProperty {
@@ -33,9 +31,6 @@ object ForeignProperty {
   implicit val writes: OWrites[ForeignProperty] = new OWrites[ForeignProperty] {
     override def writes(o: ForeignProperty): JsObject =
       if (o.isEmpty) JsObject.empty
-      else Json.obj(
-        "countryCode" -> o.countryCode,
-        "income" -> o.income,
-        "expenses" -> o.expenses)
+      else Json.obj("countryCode" -> o.countryCode, "income" -> o.income, "expenses" -> o.expenses)
   }
 }

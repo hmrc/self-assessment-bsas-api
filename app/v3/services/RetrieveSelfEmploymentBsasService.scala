@@ -16,36 +16,27 @@
 
 package v3.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{ Inject, Singleton }
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
-import v3.controllers.EndpointLogContext
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
-import v3.support.DownstreamResponseMappingSupport
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector)
-    extends BaseRetrieveBsasService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`self-employment`)
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-      implicit hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
+      implicit ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {
       responseWrapper    <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -55,7 +46,7 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
     result.value
   }
 
-  private def errorMap: Map[String, MtdError] = {
+  private val errorMap: Map[String, MtdError] = {
 
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,

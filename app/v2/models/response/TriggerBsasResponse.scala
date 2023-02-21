@@ -16,11 +16,11 @@
 
 package v2.models.response
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.json._
-import v2.hateoas.{ HateoasLinks, HateoasLinksFactory }
+import v2.hateoas.HateoasLinks
 import v2.models.domain.TypeOfBusiness
-import v2.models.hateoas.{ HateoasData, Link }
 
 case class TriggerBsasResponse(id: String)
 

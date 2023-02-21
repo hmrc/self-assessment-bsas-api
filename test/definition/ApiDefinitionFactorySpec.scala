@@ -16,50 +16,56 @@
 
 package definition
 
+import config.{ConfidenceLevelConfig, MockAppConfig}
 import definition.APIStatus.{ALPHA, BETA}
-import definition.Versions.{VERSION_2, VERSION_3}
-import mocks.MockAppConfig
+import play.api.Configuration
+import routing.{Version2, Version3}
 import support.UnitSpec
-import v2.mocks.MockHttpClient
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 
-class ApiDefinitionFactorySpec extends UnitSpec {
+class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
-  class Test extends MockHttpClient with MockAppConfig {
-    val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
-    MockedAppConfig.apiGatewayContext returns "api.gateway.context"
+  class Test {
+    val factory = new ApiDefinitionFactory(mockAppConfig)
   }
 
-  "definition" when {
-    "called" should {
-      "return a valid Definition case class" in new Test {
-        MockedAppConfig.apiStatus1 returns "1.0"
-        MockedAppConfig.apiStatus2 returns "2.0"
-        MockedAppConfig.apiStatus3 returns "3.0"
-        MockedAppConfig.endpointsEnabled returns true anyNumberOfTimes()
+  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
-        apiDefinitionFactory.definition shouldBe Definition(
-          scopes = Seq(
+  "definition" when {
+    "there is no appConfig.apiStatus" should {
+      "default apiStatus to ALPHA" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("my/context")
+        MockedAppConfig.featureSwitches.returns(Configuration.empty).anyNumberOfTimes()
+        MockedAppConfig.apiStatus(Version2).returns("").anyNumberOfTimes()
+        MockedAppConfig.apiStatus(Version3).returns("").anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version2.configName).returns(true).anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version3.configName).returns(true).anyNumberOfTimes()
+        MockedAppConfig.confidenceLevelCheckEnabled
+          .returns(ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true))
+          .anyNumberOfTimes()
+
+        factory.definition shouldBe Definition(
+          scopes = List(
             Scope(
               key = "read:self-assessment",
               name = "View your Self Assessment information",
-              description = "Allow read access to self assessment data"
+              description = "Allow read access to self assessment data",
+              confidenceLevel
             ),
             Scope(
               key = "write:self-assessment",
               name = "Change your Self Assessment information",
-              description = "Allow write access to self assessment data"
+              description = "Allow write access to self assessment data",
+              confidenceLevel
             )
           ),
           api = APIDefinition(
-            name = "Business Source Adjustable Summary (MTD)",
-            description = "An API for providing business source adjustable summary data",
-            context = "api.gateway.context",
-            categories = Seq("INCOME_TAX_MTD"),
-            versions = Seq(
-              APIVersion(
-                version = VERSION_2, access = None, status = APIStatus.ALPHA, endpointsEnabled = true),
-              APIVersion(
-                version = VERSION_3, access = None, status = APIStatus.ALPHA, endpointsEnabled = true)
+            name = "Individual Losses (MTD)",
+            description = "An API for providing individual losses data",
+            context = "my/context",
+            versions = List(
+              APIVersion(Version2, status = ALPHA, endpointsEnabled = true),
+              APIVersion(Version3, status = ALPHA, endpointsEnabled = true)
             ),
             requiresTrust = None
           )
@@ -68,18 +74,35 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
   }
 
+  "confidenceLevel" when {
+    Seq(
+      (true, ConfidenceLevel.L200),
+      (false, ConfidenceLevel.L50)
+    ).foreach {
+      case (definitionEnabled, cl) =>
+        s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
+          s"return $cl" in new Test {
+            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled,
+                                                                                      authValidationEnabled = true)
+            factory.confidenceLevel shouldBe cl
+          }
+        }
+    }
+  }
+
   "buildAPIStatus" when {
+    val anyVersion = Version3
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
-        MockedAppConfig.apiStatus1 returns "BETA"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
+        MockedAppConfig.apiStatus(version = anyVersion) returns "BETA"
+        factory.buildAPIStatus(version = anyVersion) shouldBe BETA
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
       "default to alpha" in new Test {
-        MockedAppConfig.apiStatus1 returns "ALPHO"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
+        MockedAppConfig.apiStatus(version = anyVersion) returns "ALPHO"
+        factory.buildAPIStatus(version = anyVersion) shouldBe ALPHA
       }
     }
   }

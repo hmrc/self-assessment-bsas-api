@@ -18,7 +18,7 @@ package v2.fixtures.audit
 
 import play.api.libs.json.{JsValue, Json}
 import v2.fixtures.audit.AuditResponseFixture._
-import v2.models.audit.GenericAuditDetail
+import api.models.audit.GenericAuditDetail
 
 object GenericAuditDetailFixture {
 
@@ -32,6 +32,7 @@ object GenericAuditDetailFixture {
 
   val genericAuditDetailModelSuccess: GenericAuditDetail =
     GenericAuditDetail(
+      versionNumber = "2.0",
       userType = userType,
       agentReferenceNumber = agentReferenceNumber,
       params = pathParams,
@@ -48,6 +49,7 @@ object GenericAuditDetailFixture {
   val genericAuditDetailJsonSuccess: JsValue = Json.parse(
     s"""
        |{
+       |   "versionNumber" : "2.0",
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino" : "$nino",
@@ -64,6 +66,7 @@ object GenericAuditDetailFixture {
   val genericAuditDetailJsonError: JsValue = Json.parse(
     s"""
        |{
+       |   "versionNumber" : "2.0",
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino": "$nino",

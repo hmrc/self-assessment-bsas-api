@@ -23,8 +23,7 @@ import v2.models.response.retrieveBsas.TotalBsas
 case class CountryLevelDetail(countryCode: String,
                               total: TotalBsas,
                               incomeBreakdown: Option[IncomeBreakdown],
-                              expensesBreakdown: Option[ExpensesBreakdown]
-                             )
+                              expensesBreakdown: Option[ExpensesBreakdown])
 
 object CountryLevelDetail {
 
@@ -33,13 +32,13 @@ object CountryLevelDetail {
       (JsPath \ "total").read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case income => income
+        case income                                  => income
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
-        case expenses => expenses
+        case expenses                                                                            => expenses
       }
-    ) (CountryLevelDetail.apply _)
+  )(CountryLevelDetail.apply _)
 
   val fhlReadsSeq: Reads[Seq[CountryLevelDetail]] = Reads.traversableReads[Seq, CountryLevelDetail](implicitly, fhlReads)
 
@@ -48,13 +47,13 @@ object CountryLevelDetail {
       (JsPath \ "total").read[TotalBsas] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case income => income
+        case income                                  => income
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
-        case expenses => expenses
+        case expenses                                                                            => expenses
       }
-    ) (CountryLevelDetail.apply _)
+  )(CountryLevelDetail.apply _)
 
   val nonFhlReadsSeq: Reads[Seq[CountryLevelDetail]] = Reads.traversableReads[Seq, CountryLevelDetail](implicitly, nonFhlReads)
 

@@ -16,10 +16,10 @@
 
 package v2.hateoas
 
+import api.hateoas.Link
+import api.hateoas.Method._
 import config.AppConfig
-import v2.models.hateoas.Link
-import v2.models.hateoas.Method._
-import v2.models.hateoas.RelType._
+import v2.hateoas.RelType._
 
 trait HateoasLinks {
 
@@ -62,7 +62,7 @@ trait HateoasLinks {
 
   //L2 with adjusted flag
   def getAdjustedSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
-    Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true" , method = GET, rel = RETRIEVE_BSAS)
+    Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId) + "?adjustedStatus=true", method = GET, rel = RETRIEVE_BSAS)
 
   //L3
   def getUkPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
@@ -111,7 +111,6 @@ trait HateoasLinks {
   //L9
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
-
 
   def getAdjustedForeignPropertyBsasNoStat(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = RETRIEVE_BSAS)

@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.{EndDateFormatError, MtdError, StartDateFormatError}
+import api.models.errors.{EndDateFormatError, MtdError, StartDateFormatError}
 import v2.models.utils.JsonErrorValidators
 
 class DateValidationSpec extends UnitSpec with JsonErrorValidators {

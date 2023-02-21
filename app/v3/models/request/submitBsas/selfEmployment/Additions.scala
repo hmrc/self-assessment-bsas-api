@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{Json, OFormat}
 
 case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
                      paymentsToSubcontractorsDisallowable: Option[BigDecimal],

@@ -16,12 +16,12 @@
 
 package v3.connectors
 
-import domain.Nino
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.ResponseWrapper
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import org.scalamock.handlers.CallHandler
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
-import v3.models.domain.TaxYear
-import v3.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 
@@ -33,12 +33,12 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   private val preTysTaxYear = TaxYear.fromIso("2019-05-05")
-  private val tysTaxYear = TaxYear.fromIso("2023-05-02")
+  private val tysTaxYear    = TaxYear.fromIso("2023-05-02")
 
   trait Test {
     _: ConnectorTest =>
     def taxYear: TaxYear
-    val request: TriggerBsasRequest = TriggerBsasRequest(nino, model)
+    val request: TriggerBsasRequest     = TriggerBsasRequest(nino, model)
     val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
@@ -73,7 +73,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
     "post a TriggerBsasRequest body and return the result given a TYS tax year" in new TysIfsTest with Test {
       override val request = TriggerBsasRequest(nino, tysModel)
-      val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
+      val outcome          = Right(ResponseWrapper(correlationId, TriggerBsasResponse(calculationId)))
 
       def taxYear: TaxYear = tysTaxYear
 

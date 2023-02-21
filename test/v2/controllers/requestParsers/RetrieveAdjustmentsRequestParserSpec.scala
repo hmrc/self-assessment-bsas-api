@@ -16,10 +16,10 @@
 
 package v2.controllers.requestParsers
 
+import api.models.domain.Nino
 import support.UnitSpec
-import domain.Nino
 import v2.mocks.validators.MockRetrieveAdjustmentsValidator
-import v2.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
+import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
 class RetrieveAdjustmentsRequestParserSpec extends UnitSpec {

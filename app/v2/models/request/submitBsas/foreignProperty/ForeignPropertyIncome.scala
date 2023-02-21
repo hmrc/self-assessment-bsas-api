@@ -18,9 +18,7 @@ package v2.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 
-case class ForeignPropertyIncome(rentIncome: Option[BigDecimal],
-                                 premiumsOfLeaseGrant: Option[BigDecimal],
-                                 otherPropertyIncome: Option[BigDecimal]) {
+case class ForeignPropertyIncome(rentIncome: Option[BigDecimal], premiumsOfLeaseGrant: Option[BigDecimal], otherPropertyIncome: Option[BigDecimal]) {
 
   def isEmpty: Boolean =
     ForeignPropertyIncome.unapply(this).forall {
@@ -34,9 +32,6 @@ object ForeignPropertyIncome {
   implicit val writes: OWrites[ForeignPropertyIncome] = new OWrites[ForeignPropertyIncome] {
     override def writes(o: ForeignPropertyIncome): JsObject =
       if (o.isEmpty) JsObject.empty
-      else Json.obj(
-        "rent" -> o.rentIncome,
-        "premiumsOfLeaseGrant" -> o.premiumsOfLeaseGrant,
-        "otherPropertyIncome" -> o.otherPropertyIncome)
+      else Json.obj("rent" -> o.rentIncome, "premiumsOfLeaseGrant" -> o.premiumsOfLeaseGrant, "otherPropertyIncome" -> o.otherPropertyIncome)
   }
 }

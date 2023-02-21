@@ -16,15 +16,18 @@
 
 package v3.controllers.requestParsers.validators
 
-import javax.inject.Inject
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.{BusinessIdValidation, DateValidation, JsonFormatValidation, NinoValidation}
+import api.models.errors.{EndDateFormatError, MtdError, StartDateFormatError}
 import config.AppConfig
-import utils.CurrentDateProvider
+import utils.CurrentDate
 import v3.controllers.requestParsers.validators.validations._
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors._
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
-class TriggerBsasValidator @Inject()(val currentDateProvider: CurrentDateProvider, appConfig: AppConfig) extends Validator[TriggerBsasRawData] {
+import javax.inject.Inject
+
+class TriggerBsasValidator @Inject()(val currentDateProvider: CurrentDate, appConfig: AppConfig) extends Validator[TriggerBsasRawData] {
 
   private val validationSet = List(parameterFormatValidation, incorrectOrEmptyBodyValidation, bodyFormatValidation, bodyRuleValidation)
 

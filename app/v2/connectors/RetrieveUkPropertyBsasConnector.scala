@@ -16,26 +16,26 @@
 
 package v2.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
+
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
-                                                val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
+  def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit hc: HeaderCarrier,
+                                                           ec: ExecutionContext,
+                                                           correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino   = request.nino.nino
     val bsasId = request.bsasId
 
     val queryParams = Map(
@@ -49,7 +49,8 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClient,
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DownstreamUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
+      DesUri[RetrieveUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"),
+      mappedQueryParams.toSeq
     )
   }
 }

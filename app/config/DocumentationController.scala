@@ -26,11 +26,8 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DocumentationController @Inject()(apiDefinition: ApiDefinitionFactory,
-                                        cc: ControllerComponents,
-                                        assets: Assets,
-                                        errorHandler: HttpErrorHandler)
-  extends BackendController(cc) {
+class DocumentationController @Inject()(apiDefinition: ApiDefinitionFactory, cc: ControllerComponents, assets: Assets, errorHandler: HttpErrorHandler)
+    extends BackendController(cc) {
 
   def definition(): Action[AnyContent] = Action {
     Ok(Json.toJson(apiDefinition.definition))

@@ -16,11 +16,11 @@
 
 package v2.controllers.requestParsers
 
+import api.models.domain.Nino
 import play.api.libs.json.Json
 import support.UnitSpec
-import domain.Nino
 import v2.mocks.validators.MockSubmitForeignPropertyBsasValidator
-import v2.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
+import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v2.models.request.submitBsas.foreignProperty._
 
 class SubmitForeignPropertyBsasRequestParserSpec extends UnitSpec {
