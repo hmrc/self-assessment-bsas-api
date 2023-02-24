@@ -16,14 +16,15 @@
 
 package v2.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, SubmitSelfEmploymentBsasConnector}
+import v2.connectors.SubmitSelfEmploymentBsasConnector
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockSubmitSelfEmploymentBsasConnector extends MockFactory {
 
@@ -31,7 +32,8 @@ trait MockSubmitSelfEmploymentBsasConnector extends MockFactory {
 
   object MockSubmitSelfEmploymentBsasConnector {
 
-    def submitSelfEmploymentBsas(requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]]] = {
+    def submitSelfEmploymentBsas(
+        requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]]] = {
       (mockConnector
         .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

@@ -17,16 +17,16 @@
 package definition
 
 import config.AppConfig
-import definition.Versions._
-import javax.inject.{Inject, Singleton}
-import play.api.Logger
+import routing.{ Version, Version2, Version3 }
+import utils.Logging
+
+import javax.inject.{ Inject, Singleton }
 
 @Singleton
-class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
+class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
 
-  private val readScope = "read:self-assessment"
+  private val readScope  = "read:self-assessment"
   private val writeScope = "write:self-assessment"
-  private val logger: Logger = Logger(this.getClass)
 
   lazy val definition: Definition =
     Definition(
@@ -49,21 +49,19 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         categories = Seq("INCOME_TAX_MTD"),
         versions = Seq(
           APIVersion(
-            version = VERSION_2,
-            status = buildAPIStatus(VERSION_2),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_2)
+            version = Version2,
+            status = buildAPIStatus(Version2),
+            endpointsEnabled = appConfig.endpointsEnabled(Version2.name)
           ),
-          APIVersion(
-            version = VERSION_3,
-            status = buildAPIStatus(VERSION_3),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_3))
+          APIVersion(version = Version3, status = buildAPIStatus(Version3), endpointsEnabled = appConfig.endpointsEnabled(Version3.name))
         ),
         requiresTrust = None
       )
     )
 
-  private[definition] def buildAPIStatus(version: String): APIStatus = {
-    APIStatus.parser.lift(appConfig.apiStatus(version))
+  private[definition] def buildAPIStatus(version: Version): APIStatus = {
+    APIStatus.parser
+      .lift(appConfig.apiStatus(version))
       .getOrElse {
         logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
         APIStatus.ALPHA

@@ -28,13 +28,12 @@ case class Metadata(calculationId: String,
                     summaryStatus: String)
 
 object Metadata {
-  implicit val reads: Reads[Metadata] = (
-    (JsPath \ "calculationId").read[String] and
-      (JsPath \ "requestedDateTime").read[String] and
-      (JsPath \ "adjustedDateTime").readNullable[String] and
-      (JsPath \ "taxableEntityId").read[String] and
-      (JsPath \ "taxYear").read[Int].map(DownstreamTaxYear.fromDownstreamIntToString) and
-      (JsPath \ "status").read[String]) (Metadata.apply _)
+  implicit val reads: Reads[Metadata] = ((JsPath \ "calculationId").read[String] and
+    (JsPath \ "requestedDateTime").read[String] and
+    (JsPath \ "adjustedDateTime").readNullable[String] and
+    (JsPath \ "taxableEntityId").read[String] and
+    (JsPath \ "taxYear").read[Int].map(DownstreamTaxYear.fromDownstreamIntToString) and
+    (JsPath \ "status").read[String])(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

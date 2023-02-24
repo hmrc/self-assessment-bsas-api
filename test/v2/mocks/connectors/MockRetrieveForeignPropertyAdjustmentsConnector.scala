@@ -16,26 +16,27 @@
 
 package v2.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, RetrieveForeignPropertyAdjustmentsConnector}
+import v2.connectors.RetrieveForeignPropertyAdjustmentsConnector
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockRetrieveForeignPropertyAdjustmentsConnector extends MockFactory {
 
   val mockConnector: RetrieveForeignPropertyAdjustmentsConnector = mock[RetrieveForeignPropertyAdjustmentsConnector]
 
   object MockRetrieveForeignPropertyAdjustmentsConnector {
-    def retrieveForeignPropertyAdjustments(requestData: RetrieveAdjustmentsRequestData):
-    CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
+
+    def retrieveForeignPropertyAdjustments(
+        requestData: RetrieveAdjustmentsRequestData): CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
       (mockConnector
         .retrieveForeignPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
   }
 }
-

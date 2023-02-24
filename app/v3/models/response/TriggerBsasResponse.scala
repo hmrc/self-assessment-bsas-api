@@ -16,11 +16,12 @@
 
 package v3.models.response
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.models.domain.TaxYear
 import config.AppConfig
 import play.api.libs.json._
-import v3.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v3.models.domain.{TaxYear, TypeOfBusiness}
-import v3.models.hateoas.{HateoasData, Link}
+import v3.hateoas.HateoasLinks
+import v3.models.domain.TypeOfBusiness
 
 case class TriggerBsasResponse(calculationId: String)
 
@@ -33,8 +34,8 @@ object TriggerBsasResponse extends HateoasLinks {
 
   implicit object TriggerHateoasFactory extends HateoasLinksFactory[TriggerBsasResponse, TriggerBsasHateoasData] {
     override def links(appConfig: AppConfig, data: TriggerBsasHateoasData): Seq[Link] = {
-      import TypeOfBusiness._
       import data._
+      import v3.models.domain.TypeOfBusiness._
 
       data.typeOfBusiness match {
         case `self-employment`                               => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))

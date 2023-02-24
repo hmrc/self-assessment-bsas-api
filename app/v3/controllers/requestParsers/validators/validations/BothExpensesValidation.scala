@@ -16,10 +16,12 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v3.models.errors.{ MtdError, RuleBothExpensesError }
-import v3.models.request.submitBsas.foreignProperty.{ FhlEeaExpenses, ForeignPropertyExpenses }
-import v3.models.request.submitBsas.selfEmployment.{ Additions, Expenses }
-import v3.models.request.submitBsas.ukProperty.{ FHLExpenses, NonFHLExpenses }
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.MtdError
+import v3.models.errors._
+import v3.models.request.submitBsas.foreignProperty.{FhlEeaExpenses, ForeignPropertyExpenses}
+import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses}
+import v3.models.request.submitBsas.ukProperty.{FHLExpenses, NonFHLExpenses}
 
 object BothExpensesValidation {
 
@@ -72,11 +74,11 @@ object BothExpensesValidation {
     def bothExpensesError = List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
 
     (expenses.consolidatedExpenses, additions) match {
-      case (None, _) => NoValidationErrors
-      case (Some(_), None) if expenses.hasOnlyConsolidatedExpenses => NoValidationErrors
-      case (Some(_), None) => bothExpensesError
+      case (None, _)                                                                       => NoValidationErrors
+      case (Some(_), None) if expenses.hasOnlyConsolidatedExpenses                         => NoValidationErrors
+      case (Some(_), None)                                                                 => bothExpensesError
       case (Some(_), Some(adds)) if !expenses.hasOnlyConsolidatedExpenses || adds.nonEmpty => bothExpensesError
-      case (Some(_), Some(_)) => NoValidationErrors
+      case (Some(_), Some(_))                                                              => NoValidationErrors
     }
   }
 }

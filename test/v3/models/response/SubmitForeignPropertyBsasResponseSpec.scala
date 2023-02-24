@@ -16,12 +16,12 @@
 
 package v3.models.response
 
-import mocks.MockAppConfig
+import api.hateoas.Link
+import api.hateoas.Method.GET
+import api.models.domain.TaxYear
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
-import v3.models.domain.TaxYear
-import v3.models.hateoas.Link
-import v3.models.hateoas.Method.GET
 
 class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig {
 

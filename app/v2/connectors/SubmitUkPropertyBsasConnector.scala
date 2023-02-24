@@ -16,30 +16,28 @@
 
 package v2.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUkPropertyBsasConnector @Inject()(
-                                    val http: HttpClient,
-                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
+class SubmitUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(
-                          implicit hc: HeaderCarrier,
-                          ec: ExecutionContext,
-                          correlationId: String): Future[DownstreamOutcome[SubmitUkPropertyBsasResponse]] = {
+  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(implicit hc: HeaderCarrier,
+                                                                   ec: ExecutionContext,
+                                                                   correlationId: String): Future[DownstreamOutcome[SubmitUkPropertyBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     put(
       body = request.body,
-      DownstreamUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      DesUri[SubmitUkPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
     )
   }
 }

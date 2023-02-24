@@ -16,20 +16,20 @@
 
 package v3.controllers
 
-import domain.Nino
-import mocks.MockIdGenerator
-import play.api.libs.json.{ JsValue, Json }
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.mocks.MockIdGenerator
+import api.models.ResponseWrapper
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.mocks.hateoas.MockHateoasFactory
 import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
 import v3.mocks.services._
-import v3.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
-import v3.models.domain.TaxYear
 import v3.models.errors._
-import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{ HateoasWrapper, Link }
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
 
@@ -38,6 +38,7 @@ import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSubmitForeignPropertyBsasService
@@ -47,32 +48,9 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockAuditService
     with MockIdGenerator {
 
-  private val nino          = "AA123456A"
-  private val bsasId        = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val correlationId = "X-123"
-  private val rawTaxYear    = "2023-24"
-  private val taxYear       = TaxYear.fromMtd(rawTaxYear)
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new SubmitForeignPropertyBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-  }
+  private val bsasId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val rawTaxYear = "2023-24"
+  private val taxYear    = TaxYear.fromMtd(rawTaxYear)
 
   private val testHateoasLink =
     Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
@@ -103,12 +81,7 @@ class SubmitForeignPropertyBsasControllerSpec
   private val foreignProperty: ForeignProperty =
     ForeignProperty(
       "FRA",
-      Some(
-        ForeignPropertyIncome(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12)
-        )),
+      Some(ForeignPropertyIncome(Some(123.12), Some(123.12), Some(123.12))),
       Some(
         ForeignPropertyExpenses(
           Some(123.12),
@@ -129,22 +102,7 @@ class SubmitForeignPropertyBsasControllerSpec
   private val rawData     = SubmitForeignPropertyRawData(nino, bsasId, Some(rawTaxYear), requestJson)
   private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, Some(taxYear), requestBody)
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "SubmitForeignPropertyAccountingAdjustments",
-      transactionName = "submit-foreign-property-accounting-adjustments",
-      detail = GenericAuditDetail(
-        versionNumber = "3.0",
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "calculationId" -> bsasId),
-        requestBody = Some(requestJson),
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
-
-  val responseBody: JsValue = Json.parse(s"""
+  val mtdResponseJson: JsValue = Json.parse(s"""
        |{
        |  "links":[
        |    {
@@ -157,9 +115,8 @@ class SubmitForeignPropertyBsasControllerSpec
        |""".stripMargin)
 
   "handleRequest" should {
-    "return Ok" when {
-      "the request received is valid" in new Test {
-
+    "return OK" when {
+      "the request is valid" in new Test {
         MockSubmitForeignPropertyBsasRequestParser
           .parseRequest(rawData)
           .returns(Right(requestData))
@@ -176,99 +133,72 @@ class SubmitForeignPropertyBsasControllerSpec
           .wrap((), SubmitForeignPropertyBsasHateoasData(nino, bsasId, requestData.taxYear))
           .returns(HateoasWrapper((), Seq(testHateoasLink)))
 
-        val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
-        status(result) shouldBe OK
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(responseBody))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeAuditRequestBody = Some(requestJson),
+          maybeAuditResponseBody = Some(mtdResponseJson)
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" should {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockSubmitForeignPropertyBsasRequestParser
+          .parseRequest(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            MockSubmitForeignPropertyBsasRequestParser
-              .parseRequest(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (CalculationIdFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (InvalidTaxYearParameterError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (CountryCodeFormatError, BAD_REQUEST),
-          (RuleDuplicateCountryCodeError, BAD_REQUEST),
-          (RuleCountryCodeError, BAD_REQUEST),
-          (RuleBothPropertiesSuppliedError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (RuleBothExpensesError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
       }
 
-      "service errors occur" should {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockSubmitForeignPropertyBsasRequestParser
+          .parseRequest(rawData)
+          .returns(Right(requestData))
 
-            MockSubmitForeignPropertyBsasRequestParser
-              .parseRequest(rawData)
-              .returns(Right(requestData))
+        MockSubmitForeignPropertyBsasNrsProxyService
+          .submit(nino)
+          .returns(Future.successful(Unit))
 
-            MockSubmitForeignPropertyBsasNrsProxyService
-              .submit(nino)
-              .returns(Future.successful(Unit))
+        MockSubmitForeignPropertyBsasService
+          .submitForeignPropertyBsas(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleSummaryStatusSuperseded))))
 
-            MockSubmitForeignPropertyBsasService
-              .submitForeignPropertyBsas(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (CalculationIdFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR),
-          (RuleTypeOfBusinessIncorrectError, BAD_REQUEST),
-          (RuleSummaryStatusInvalid, BAD_REQUEST),
-          (RuleSummaryStatusSuperseded, BAD_REQUEST),
-          (RuleAlreadyAdjusted, BAD_REQUEST),
-          (RuleOverConsolidatedExpensesThreshold, BAD_REQUEST),
-          (RulePropertyIncomeAllowanceClaimed, BAD_REQUEST),
-          (RuleResultingValueNotPermitted, BAD_REQUEST)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleSummaryStatusSuperseded, maybeAuditRequestBody = Some(requestJson))
       }
     }
+  }
+
+  private trait Test extends ControllerTest with AuditEventChecking {
+
+    val controller = new SubmitForeignPropertyBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    override protected def callController(): Future[Result] =
+      controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "SubmitForeignPropertyAccountingAdjustments",
+        transactionName = "submit-foreign-property-accounting-adjustments",
+        detail = GenericAuditDetail(
+          versionNumber = "3.0",
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "calculationId" -> bsasId),
+          requestBody = maybeRequestBody,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
   }
 }

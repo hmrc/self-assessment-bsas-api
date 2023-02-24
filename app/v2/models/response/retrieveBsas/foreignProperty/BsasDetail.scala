@@ -33,43 +33,43 @@ object BsasDetail {
     JsPath.read[TotalBsas] and
       JsPath.readNullable[Profit].map {
         case Some(Profit(None, None)) => None
-        case profit => profit
+        case profit                   => profit
       } and
       JsPath.readNullable[Loss].map {
         case Some(Loss(None, None)) => None
-        case loss => loss
+        case loss                   => loss
       } and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case income => income
+        case income                                  => income
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
-        case expenses => expenses
+        case expenses                                                                            => expenses
       } and
       (JsPath \ "countryLevelDetail").readNullable[Seq[CountryLevelDetail]](CountryLevelDetail.fhlReadsSeq)
-    )(BsasDetail.apply _)
+  )(BsasDetail.apply _)
 
   val nonFhlReads: Reads[BsasDetail] = (
     JsPath.read[TotalBsas] and
       JsPath.readNullable[Profit].map {
         case Some(Profit(None, None)) => None
-        case profit => profit
+        case profit                   => profit
       } and
       JsPath.readNullable[Loss].map {
         case Some(Loss(None, None)) => None
-        case loss => loss
+        case loss                   => loss
       } and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case income => income
+        case income                                  => income
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None)) => None
-        case expenses => expenses
+        case expenses                                                                            => expenses
       } and
       (JsPath \ "countryLevelDetail").readNullable[Seq[CountryLevelDetail]](CountryLevelDetail.nonFhlReadsSeq)
-    )(BsasDetail.apply _)
+  )(BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }

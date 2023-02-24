@@ -16,14 +16,16 @@
 
 package v2.services
 
-import domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v2.mocks.connectors.MockSubmitSelfEmploymentBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 
@@ -58,12 +60,12 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
           MockSubmitSelfEmploymentBsasConnector
             .submitSelfEmploymentBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -71,7 +73,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
-        ("INVALID_PAYLOAD", DownstreamError),
+        ("INVALID_PAYLOAD", InternalError),
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("ASC_ALREADY_SUPERSEDED", RuleSummaryStatusSuperseded),
         ("ASC_ALREADY_ADJUSTED", RuleBsasAlreadyAdjusted),
@@ -79,13 +81,13 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleNotSelfEmployment),
         ("BVR_FAILURE_C55316", RuleOverConsolidatedExpensesThreshold),
         ("BVR_FAILURE_C15320", RuleTradingIncomeAllowanceClaimed),
-        ("BVR_FAILURE_C55503", DownstreamError),
-        ("BVR_FAILURE_C55508", DownstreamError),
-        ("BVR_FAILURE_C55509", DownstreamError),
+        ("BVR_FAILURE_C55503", InternalError),
+        ("BVR_FAILURE_C55508", InternalError),
+        ("BVR_FAILURE_C55509", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("INVALID_CORRELATIONID", InternalError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

@@ -16,15 +16,16 @@
 
 package v3.models.response.listBsas
 
-import mocks.MockAppConfig
+import api.hateoas.Link
+import api.hateoas.Method.{GET, POST}
+import api.models.domain.TaxYear
+import config.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{ JsError, JsObject, Json }
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
+import v3.models.domain.TypeOfBusiness
 import v3.models.domain.TypeOfBusiness._
-import v3.models.domain.{ TaxYear, TypeOfBusiness }
-import v3.models.hateoas.Link
-import v3.models.hateoas.Method.{ GET, POST }
 import v3.models.response.listBsas.ListBsasResponse.LinksFactory._
 
 class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixture {

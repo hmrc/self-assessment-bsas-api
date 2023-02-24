@@ -16,7 +16,6 @@
 
 package v3.models.request.retrieveBsas.ukProperty
 
-import domain.Nino
-import v3.models.domain.TaxYear
+import api.models.domain.{Nino, TaxYear}
 
 case class RetrieveUkPropertyBsasRequestData(nino: Nino, calculationId: String, taxYear: Option[TaxYear])

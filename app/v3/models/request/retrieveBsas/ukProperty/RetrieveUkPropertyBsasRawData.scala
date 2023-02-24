@@ -16,6 +16,6 @@
 
 package v3.models.request.retrieveBsas.ukProperty
 
-import v3.models.request.RawData
+import api.models.RawData
 
 case class RetrieveUkPropertyBsasRawData(nino: String, calculationId: String, taxYear: Option[String]) extends RawData

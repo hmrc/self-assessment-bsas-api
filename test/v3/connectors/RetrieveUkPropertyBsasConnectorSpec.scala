@@ -16,11 +16,11 @@
 
 package v3.connectors
 
-import domain.Nino
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.ResponseWrapper
+import api.models.domain.{Nino, TaxYear}
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
-import v3.models.domain.TaxYear
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future

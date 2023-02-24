@@ -25,7 +25,7 @@ object AccountingPeriod {
   implicit val reads: Reads[AccountingPeriod] = (
     (JsPath \ "accountingStartDate").read[String] and
       (JsPath \ "accountingEndDate").read[String]
-    )(AccountingPeriod.apply _)
+  )(AccountingPeriod.apply _)
 
   implicit val writes: OWrites[AccountingPeriod] = Json.writes[AccountingPeriod]
 }

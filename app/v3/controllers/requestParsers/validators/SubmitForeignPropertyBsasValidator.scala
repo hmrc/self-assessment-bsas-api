@@ -16,9 +16,11 @@
 
 package v3.controllers.requestParsers.validators
 
-import v2.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
+import api.models.errors.MtdError
 import v3.controllers.requestParsers.validators.validations._
-import v3.models.errors.{ MtdError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError }
+import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty._
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {

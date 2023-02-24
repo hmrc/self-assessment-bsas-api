@@ -16,31 +16,31 @@
 
 package v2.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.ListBsasRequest
 import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasConnector @Inject()(val http: HttpClient,
-                                  val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listBsas(request: ListBsasRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]] = {
+  def listBsas(request: ListBsasRequest)(implicit
+                                         hc: HeaderCarrier,
+                                         ec: ExecutionContext,
+                                         correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
 
     val queryParams = Map(
-      "taxYear" -> Some(request.taxYear.toString),
-      "incomeSourceId" -> request.incomeSourceId,
+      "taxYear"          -> Some(request.taxYear.toString),
+      "incomeSourceId"   -> request.incomeSourceId,
       "incomeSourceType" -> request.incomeSourceType
     )
 
@@ -51,7 +51,8 @@ class ListBsasConnector @Inject()(val http: HttpClient,
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DownstreamUri[ListBsasResponse[BsasEntries]](s"income-tax/adjustable-summary-calculation/$nino"), mappedQueryParams.toSeq
+      DesUri[ListBsasResponse[BsasEntries]](s"income-tax/adjustable-summary-calculation/$nino"),
+      mappedQueryParams.toSeq
     )
   }
 }

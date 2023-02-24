@@ -16,29 +16,28 @@
 
 package v3.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
-import v3.models.errors.ErrorWrapper
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 import v3.services.RetrieveForeignPropertyBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-trait MockRetrieveForeignPropertyBsasService extends MockFactory{
+trait MockRetrieveForeignPropertyBsasService extends MockFactory {
 
   val mockService: RetrieveForeignPropertyBsasService = mock[RetrieveForeignPropertyBsasService]
 
-  object MockRetrieveForeignPropertyBsasService{
+  object MockRetrieveForeignPropertyBsasService {
 
-    def retrieveBsas(requestData: RetrieveForeignPropertyBsasRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]]] = {
+    def retrieveBsas(requestData: RetrieveForeignPropertyBsasRequestData)
+      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]]] = {
       (mockService
-        .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 }

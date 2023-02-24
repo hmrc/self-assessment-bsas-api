@@ -16,11 +16,11 @@
 
 package v2.services
 
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 import v2.connectors.SubmitSelfEmploymentBsasNrsProxyConnector
+import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

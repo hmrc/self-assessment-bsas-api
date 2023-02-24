@@ -16,18 +16,19 @@
 
 package v2.controllers.requestParsers.validators
 
-import play.api.libs.json.{Json, OWrites}
+import api.models.errors._
+import play.api.libs.json.{ Json, OWrites }
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v2.models.errors._
 import v2.models.request.submitBsas.selfEmployment._
-import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
   val validator = new SubmitSelfEmploymentBsasValidator()
 
-  val bsasId   = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino     = "AA123456A"
+  val bsasId           = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino             = "AA123456A"
   val seIncome: Income = Income(Some(100.49), Some(100.49))
 
   val seExpenses: Expenses = Expenses(
@@ -68,10 +69,10 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
   )
 
   def defaultBody(
-                   income: Option[Income] = Some(seIncome),
-                   expenses: Option[Expenses] = Some(seExpenses),
-                   additions: Option[Additions] = Some(seAdditions)
-                 ): SubmitSelfEmploymentBsasRequestBody = SubmitSelfEmploymentBsasRequestBody(income, additions, expenses)
+      income: Option[Income] = Some(seIncome),
+      expenses: Option[Expenses] = Some(seExpenses),
+      additions: Option[Additions] = Some(seAdditions)
+  ): SubmitSelfEmploymentBsasRequestBody = SubmitSelfEmploymentBsasRequestBody(income, additions, expenses)
 
   "validator" should {
     "return no errors" when {
@@ -89,27 +90,29 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
     }
     "return a single error" when {
       "passed an invalid nino" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData("beans", bsasId, AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(NinoFormatError)
+        validator.validate(SubmitSelfEmploymentBsasRawData("beans", bsasId, AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(
+          NinoFormatError)
       }
       "passed an invalid bsasId" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, "beans", AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(BsasIdFormatError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, "beans", AnyContentAsJson(Json.toJson(defaultBody())))) shouldBe List(
+          BsasIdFormatError)
       }
       "passed an empty body" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
       "passed an invalid body" in {
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(Json.toJson(defaultBody(income = Some(Income(None, None))))))) shouldBe List(RuleIncorrectOrEmptyBodyError)
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(mtdRequestWithBothExpenses))) shouldBe List(RuleBothExpensesError)
-        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId,
-          AnyContentAsJson(mtdRequestWithAdditionsAndExpenses))) shouldBe List(RuleBothExpensesError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj("income" -> "beans")))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj("income" -> "{}")))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/income"))))
+        validator.validate(
+          SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.toJson(defaultBody(income = Some(Income(None, None))))))) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(Json.obj()))) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequestWithBothExpenses))) shouldBe List(
+          RuleBothExpensesError)
+        validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequestWithAdditionsAndExpenses))) shouldBe List(
+          RuleBothExpensesError)
       }
 
       val inputs: Seq[(String, BigDecimal => SubmitSelfEmploymentBsasRequestBody)] = Seq(
@@ -132,14 +135,17 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
         ("/expenses/other", i => defaultBody(expenses = Some(seExpenses.copy(other = Some(i))))),
         ("/expenses/consolidatedExpenses", i => defaultBody(expenses = Some(seExpenses.copy(consolidatedExpenses = Some(i))))),
         ("/additions/costOfGoodsBoughtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(costOfGoodsBoughtDisallowable = Some(i))))),
-        ("/additions/cisPaymentsToSubcontractorsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(cisPaymentsToSubcontractorsDisallowable = Some(i))))),
+        ("/additions/cisPaymentsToSubcontractorsDisallowable",
+         i => defaultBody(additions = Some(seAdditions.copy(cisPaymentsToSubcontractorsDisallowable = Some(i))))),
         ("/additions/staffCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(staffCostsDisallowable = Some(i))))),
         ("/additions/travelCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(travelCostsDisallowable = Some(i))))),
-        ("/additions/premisesRunningCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(premisesRunningCostsDisallowable = Some(i))))),
+        ("/additions/premisesRunningCostsDisallowable",
+         i => defaultBody(additions = Some(seAdditions.copy(premisesRunningCostsDisallowable = Some(i))))),
         ("/additions/maintenanceCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(maintenanceCostsDisallowable = Some(i))))),
         ("/additions/adminCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(adminCostsDisallowable = Some(i))))),
         ("/additions/advertisingCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(advertisingCostsDisallowable = Some(i))))),
-        ("/additions/businessEntertainmentCostsDisallowable", i => defaultBody(additions = Some(seAdditions.copy(businessEntertainmentCostsDisallowable = Some(i))))),
+        ("/additions/businessEntertainmentCostsDisallowable",
+         i => defaultBody(additions = Some(seAdditions.copy(businessEntertainmentCostsDisallowable = Some(i))))),
         ("/additions/interestDisallowable", i => defaultBody(additions = Some(seAdditions.copy(interestDisallowable = Some(i))))),
         ("/additions/financialChargesDisallowable", i => defaultBody(additions = Some(seAdditions.copy(financialChargesDisallowable = Some(i))))),
         ("/additions/badDebtDisallowable", i => defaultBody(additions = Some(seAdditions.copy(badDebtDisallowable = Some(i))))),
@@ -160,12 +166,16 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec {
             case (fieldName, body) =>
               s"passed an $fieldName $test" in {
                 // need to overwrite default writes for models as default writes are for DES fields
-                implicit val incomeWrites: OWrites[Income] = Json.writes[Income]
-                implicit val expensesWrites: OWrites[Expenses] = Json.writes[Expenses]
+                implicit val incomeWrites: OWrites[Income]       = Json.writes[Income]
+                implicit val expensesWrites: OWrites[Expenses]   = Json.writes[Expenses]
                 implicit val additionsWrites: OWrites[Additions] = Json.writes[Additions]
 
-                validator.validate(SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(
-                  Json.toJson(body(fieldValue))(Json.writes[SubmitSelfEmploymentBsasRequestBody])))) shouldBe List(error(fieldName))
+                validator.validate(
+                  SubmitSelfEmploymentBsasRawData(
+                    nino,
+                    bsasId,
+                    AnyContentAsJson(Json.toJson(body(fieldValue))(Json.writes[SubmitSelfEmploymentBsasRequestBody])))) shouldBe List(
+                  error(fieldName))
               }
           }
       }

@@ -16,12 +16,12 @@
 
 package v2.models.response.listBsas
 
+import api.hateoas.{HateoasData, HateoasListLinksFactory, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
-import v2.hateoas.{HateoasLinks, HateoasListLinksFactory}
+import v2.hateoas.HateoasLinks
 import v2.models.domain.TypeOfBusiness
-import v2.models.hateoas.{HateoasData, Link}
 
 case class ListBsasResponse[I](businessSourceSummaries: Seq[BusinessSourceSummary[I]])
 
@@ -36,28 +36,31 @@ object ListBsasResponse extends HateoasLinks {
       Seq(triggerBsas(appConfig, data.nino), listBsas(appConfig, data.nino))
 
     override def itemLinks(appConfig: AppConfig, data: ListBsasHateoasData, item: BsasEntries): Seq[Link] = {
-      val filteredSummary: Seq[BusinessSourceSummary[BsasEntries]] = data.listBsasResponse.businessSourceSummaries.filter(_.bsasEntries.contains(item))
+      val filteredSummary: Seq[BusinessSourceSummary[BsasEntries]] =
+        data.listBsasResponse.businessSourceSummaries.filter(_.bsasEntries.contains(item))
 
-      filteredSummary.flatMap(summary =>
-        summary.bsasEntries.filter(_ == item).flatMap(_ =>
-          summary.typeOfBusiness match {
-            case TypeOfBusiness.`self-employment` => Seq(getSelfEmploymentBsas(appConfig, data.nino, item.bsasId))
-            case TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` => Seq(getUkPropertyBsas(appConfig, data.nino, item.bsasId))
-            case TypeOfBusiness.`foreign-property` | TypeOfBusiness.`foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, data.nino, item.bsasId))
-          }
-        )
-      )
+      filteredSummary.flatMap(
+        summary =>
+          summary.bsasEntries
+            .filter(_ == item)
+            .flatMap(_ =>
+              summary.typeOfBusiness match {
+                case TypeOfBusiness.`self-employment` => Seq(getSelfEmploymentBsas(appConfig, data.nino, item.bsasId))
+                case TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` =>
+                  Seq(getUkPropertyBsas(appConfig, data.nino, item.bsasId))
+                case TypeOfBusiness.`foreign-property` | TypeOfBusiness.`foreign-property-fhl-eea` =>
+                  Seq(getForeignPropertyBsas(appConfig, data.nino, item.bsasId))
+            }))
     }
   }
 
   implicit object ResponseFunctor extends Functor[ListBsasResponse] {
     override def map[A, B](fa: ListBsasResponse[A])(f: A => B): ListBsasResponse[B] =
-      ListBsasResponse(fa.businessSourceSummaries.map {
-        summary => summary.copy(bsasEntries = summary.bsasEntries.map(f))
+      ListBsasResponse(fa.businessSourceSummaries.map { summary =>
+        summary.copy(bsasEntries = summary.bsasEntries.map(f))
       })
   }
 
 }
 
 case class ListBsasHateoasData(nino: String, listBsasResponse: ListBsasResponse[BsasEntries]) extends HateoasData
-

@@ -16,22 +16,23 @@
 
 package v2.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub, NrsStub}
+import v2.stubs._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val nino   = "AA123456A"
+    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     val nrsSuccess: JsValue = Json.parse(
       s"""
@@ -43,8 +44,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          """.stripMargin
     )
 
-    val desResponse: String => String = (typeOfBusiness: String) =>
-      s"""
+    val desResponse: String => String = (typeOfBusiness: String) => s"""
         |{
         |    "metadata": {
         |        "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -256,8 +256,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin
 
-    val requestBodyForeignPropertyJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignPropertyJson: JsValue = Json.parse("""
          |{
          |  "foreignProperty": [
          |    {
@@ -283,8 +282,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse("""
         |{
         |  "foreignProperty": [
         |    {
@@ -304,8 +302,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val requestBodyForeignFhlEeaJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignFhlEeaJson: JsValue = Json.parse("""
          |{
          |    "foreignFhlEea": {
          |        "income": {
@@ -324,8 +321,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse("""
          |{
          |    "foreignFhlEea": {
          |        "income": {
@@ -338,8 +334,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    val responseBody: JsValue = Json.parse(
-      s"""
+    val responseBody: JsValue = Json.parse(s"""
          |{
          |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
@@ -369,7 +364,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
@@ -423,7 +418,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("03")))
         }
 
-
         val response: WSResponse = await(request().post(requestBodyForeignFhlEeaJson))
         response.status shouldBe OK
         response.json shouldBe responseBody
@@ -459,8 +453,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestBody: JsValue = Json.parse(
-        s"""
+      val validRequestBody: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -473,8 +466,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyAdjustmentValue: JsValue = Json.parse(
-        s"""
+      val requestBodyAdjustmentValue: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -487,8 +479,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyRangeInvalid: JsValue = Json.parse(
-        s"""
+      val requestBodyRangeInvalid: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -501,8 +492,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyIncorrectBody: JsValue = Json.parse(
-        s"""
+      val requestBodyIncorrectBody: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {},
@@ -511,8 +501,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyBothExpenses: JsValue = Json.parse(
-        s"""
+      val requestBodyBothExpenses: JsValue = Json.parse(s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -539,8 +528,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyInvalidCountryCode: JsValue = Json.parse(
-        s"""
+      val requestBodyInvalidCountryCode: JsValue = Json.parse(s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -567,8 +555,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyUnformattedCountryCode: JsValue = Json.parse(
-        s"""
+      val requestBodyUnformattedCountryCode: JsValue = Json.parse(s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -596,11 +583,15 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |""".stripMargin)
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestBsasId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestBsasId: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val bsasId: String = requestBsasId
+            override val nino: String                            = requestNino
+            override val bsasId: String                          = requestBsasId
             override val requestBodyForeignPropertyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -618,12 +609,28 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyAdjustmentValue, BAD_REQUEST, FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyRangeInvalid, BAD_REQUEST, RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           requestBodyAdjustmentValue,
+           BAD_REQUEST,
+           FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           requestBodyRangeInvalid,
+           BAD_REQUEST,
+           RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyInvalidCountryCode, BAD_REQUEST, RuleCountryCodeError.copy(paths = Some(Seq("/foreignProperty/0/countryCode")))),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyUnformattedCountryCode, BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(Seq("/foreignProperty/0/countryCode"))))
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           requestBodyInvalidCountryCode,
+           BAD_REQUEST,
+           RuleCountryCodeError.copy(paths = Some(Seq("/foreignProperty/0/countryCode")))),
+          ("AA123456A",
+           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+           requestBodyUnformattedCountryCode,
+           BAD_REQUEST,
+           CountryCodeFormatError.copy(paths = Some(Seq("/foreignProperty/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -648,20 +655,20 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INCOMESOURCE_TYPE_NOT_MATCHED", FORBIDDEN, RuleTypeOfBusinessError),
           (FORBIDDEN, "ASC_ID_INVALID", FORBIDDEN, RuleSummaryStatusInvalid),
           (FORBIDDEN, "ASC_ALREADY_SUPERSEDED", FORBIDDEN, RuleSummaryStatusSuperseded),
           (FORBIDDEN, "ASC_ALREADY_ADJUSTED", FORBIDDEN, RuleBsasAlreadyAdjusted),
           (FORBIDDEN, "UNALLOWABLE_VALUE", FORBIDDEN, RuleResultingValueNotPermitted),
-          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, DownstreamError),
-          (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "BVR_FAILURE_C55316", INTERNAL_SERVER_ERROR, InternalError),
+          (FORBIDDEN, "BVR_FAILURE_C15320", INTERNAL_SERVER_ERROR, InternalError),
           (FORBIDDEN, "BVR_FAILURE_C55503", FORBIDDEN, RuleOverConsolidatedExpensesThreshold),
           (FORBIDDEN, "BVR_FAILURE_C55508", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (FORBIDDEN, "BVR_FAILURE_C55509", FORBIDDEN, RulePropertyIncomeAllowanceClaimed),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

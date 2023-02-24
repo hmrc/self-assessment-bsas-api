@@ -16,46 +16,56 @@
 
 package v2.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v2.connectors.RetrieveForeignPropertyBsasConnector
-import v2.controllers.EndpointLogContext
+import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import v2.models.response.retrieveBsas
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
-import v2.support.DesResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPropertyBsasConnector) extends DesResponseMappingSupport with Logging{
+class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPropertyBsasConnector) extends BaseService {
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-  implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext,
-  correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]] = {
+      implicit ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]] = {
 
-  val result = for {
-  desResponseWrapper <-
-  EitherT(connector.retrieveForeignPropertyBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-  mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveForeignPropertyBsasSuccessResponse(desResponseWrapper))
-} yield mtdResponseWrapper
+    val result = for {
+      desResponseWrapper <- EitherT(connector.retrieveForeignPropertyBsas(request)).leftMap(mapDownstreamErrors(errorMap))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveForeignPropertyBsasSuccessResponse(desResponseWrapper))
+    } yield mtdResponseWrapper
 
-  result.value
-}
+    result.value
+  }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-  "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-  "INVALID_CORRELATION_ID" -> DownstreamError,
-  "INVALID_RETURN" -> AdjustedStatusFormatError,
-  "INVALID_CALCULATION_ID" -> BsasIdFormatError,
-  "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
-  "NO_DATA_FOUND" -> NotFoundError,
-  "SERVER_ERROR" -> DownstreamError,
-  "SERVICE_UNAVAILABLE" -> DownstreamError
-  )
+  private def validateRetrieveForeignPropertyBsasSuccessResponse[T](
+      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+    desResponseWrapper.responseData match {
+      case RetrieveForeignPropertyBsasResponse(retrieveBsas.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
+          if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
+        Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
+
+      case _ => Right(desResponseWrapper)
+    }
+
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CORRELATION_ID"    -> InternalError,
+      "INVALID_RETURN"            -> AdjustedStatusFormatError,
+      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
+      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
+    )
 }

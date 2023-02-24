@@ -16,12 +16,12 @@
 
 package v2.models.response.listBsas
 
-import play.api.libs.json.{JsSuccess, Json}
+import api.models.domain.Status
+import play.api.libs.json.{ JsSuccess, Json }
 import support.UnitSpec
 import v2.fixtures.ListBsasFixtures._
-import v2.models.domain.Status
 
-class BsasEntriesSpec extends UnitSpec{
+class BsasEntriesSpec extends UnitSpec {
 
   val model =
     BsasEntries(
@@ -29,7 +29,7 @@ class BsasEntriesSpec extends UnitSpec{
       requestedDateTime = "2019-10-14T11:33:27Z",
       summaryStatus = Status.`valid`,
       adjustedSummary = false
-      )
+    )
 
   "BSAS Entries" should {
 

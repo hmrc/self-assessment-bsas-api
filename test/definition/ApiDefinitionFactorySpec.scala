@@ -16,29 +16,28 @@
 
 package definition
 
-import definition.APIStatus.{ALPHA, BETA}
-import definition.Versions.{VERSION_2, VERSION_3}
-import mocks.MockAppConfig
+import config.MockAppConfig
+import definition.APIStatus.{ ALPHA, BETA }
+import routing.{ Version2, Version3 }
 import support.UnitSpec
-import v2.mocks.MockHttpClient
 
-class ApiDefinitionFactorySpec extends UnitSpec {
+class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
-  class Test extends MockHttpClient with MockAppConfig {
-    val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
-    MockedAppConfig.apiGatewayContext returns "api.gateway.context"
+  class Test {
+    val factory = new ApiDefinitionFactory(mockAppConfig)
   }
 
   "definition" when {
-    "called" should {
-      "return a valid Definition case class" in new Test {
-        MockedAppConfig.apiStatus1 returns "1.0"
-        MockedAppConfig.apiStatus2 returns "2.0"
-        MockedAppConfig.apiStatus3 returns "3.0"
-        MockedAppConfig.endpointsEnabled returns true anyNumberOfTimes()
+    "there is no appConfig.apiStatus" should {
+      "default apiStatus to ALPHA" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("api.gateway.context")
+        MockedAppConfig.apiStatus(Version2).returns("").anyNumberOfTimes()
+        MockedAppConfig.apiStatus(Version3).returns("").anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version2.name).returns(true).anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version3.name).returns(true).anyNumberOfTimes()
 
-        apiDefinitionFactory.definition shouldBe Definition(
-          scopes = Seq(
+        factory.definition shouldBe Definition(
+          scopes = List(
             Scope(
               key = "read:self-assessment",
               name = "View your Self Assessment information",
@@ -55,11 +54,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
             description = "An API for providing business source adjustable summary data",
             context = "api.gateway.context",
             categories = Seq("INCOME_TAX_MTD"),
-            versions = Seq(
-              APIVersion(
-                version = VERSION_2, access = None, status = APIStatus.ALPHA, endpointsEnabled = true),
-              APIVersion(
-                version = VERSION_3, access = None, status = APIStatus.ALPHA, endpointsEnabled = true)
+            versions = List(
+              APIVersion(Version2, status = ALPHA, endpointsEnabled = true),
+              APIVersion(Version3, status = ALPHA, endpointsEnabled = true)
             ),
             requiresTrust = None
           )
@@ -69,17 +66,18 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   }
 
   "buildAPIStatus" when {
+    val anyVersion = Version3
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
-        MockedAppConfig.apiStatus1 returns "BETA"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
+        MockedAppConfig.apiStatus(version = anyVersion) returns "BETA"
+        factory.buildAPIStatus(version = anyVersion) shouldBe BETA
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
       "default to alpha" in new Test {
-        MockedAppConfig.apiStatus1 returns "ALPHO"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
+        MockedAppConfig.apiStatus(version = anyVersion) returns "ALPHO"
+        factory.buildAPIStatus(version = anyVersion) shouldBe ALPHA
       }
     }
   }

@@ -16,8 +16,10 @@
 
 package v3.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
+import api.models.errors.MtdError
 import v3.controllers.requestParsers.validators.validations._
-import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment._
 
 class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] {

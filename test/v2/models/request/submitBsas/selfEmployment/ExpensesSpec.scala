@@ -16,10 +16,10 @@
 
 package v2.models.request.submitBsas.selfEmployment
 
+import api.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.selfEmployment.ExpensesFixture._
-import v2.models.domain.EmptyJsonBody
 
 class ExpensesSpec extends UnitSpec {
 
@@ -85,7 +85,6 @@ class ExpensesSpec extends UnitSpec {
         Json.toJson(expensesModelWithoutCosts) shouldBe expensesToDesJson(expensesModelWithoutCosts)
       }
     }
-
 
     "no fields as supplied" should {
       "read to an empty Expenses object" in {

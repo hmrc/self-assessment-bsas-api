@@ -16,19 +16,20 @@
 
 package v2.connectors
 
-import mocks.MockAppConfig
-import domain.Nino
+import api.connectors.ConnectorSpec
+import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
+import v2.mocks.MockHttpClient
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 
 import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino   = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val queryParams: Map[String, String] = Map("return" -> "01")
@@ -46,18 +47,20 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   "retrievePropertyBsas" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+      val outcome                    = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, Some("01"))
 
-        MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-          config = dummyDesHeaderCarrierConfig,
-          queryParams.toSeq,
-          requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
+        MockedHttpClient
+          .parameterGet(
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+            config = dummyHeaderCarrierConfig,
+            queryParams.toSeq,
+            requiredHeaders = desRequestHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveSelfEmploymentBsas(request)) shouldBe outcome
       }
@@ -65,13 +68,15 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       "a valid request without queryParams is supplied" in new Test {
         val request = RetrieveSelfEmploymentBsasRequestData(nino, bsasId, None)
 
-        MockedHttpClient.parameterGet(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-          config = dummyDesHeaderCarrierConfig,
-          Seq.empty,
-          requiredHeaders = desRequestHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-        ).returns(Future.successful(outcome))
+        MockedHttpClient
+          .parameterGet(
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+            config = dummyHeaderCarrierConfig,
+            Seq.empty,
+            requiredHeaders = desRequestHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveSelfEmploymentBsas(request)) shouldBe outcome
       }

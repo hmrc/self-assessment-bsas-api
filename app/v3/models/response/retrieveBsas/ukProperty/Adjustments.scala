@@ -25,6 +25,7 @@ case class Adjustments(
 )
 
 object Adjustments {
+
   val readsFhl: Reads[Adjustments] = (
     (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl)

@@ -16,11 +16,10 @@
 
 package v3.controllers.requestParsers
 
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import support.UnitSpec
-import domain.Nino
 import v3.mocks.validators.MockRetrieveSelfEmploymentValidator
-import v3.models.domain.TaxYear
-import v3.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {

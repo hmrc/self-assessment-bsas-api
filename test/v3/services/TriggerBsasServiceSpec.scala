@@ -16,13 +16,15 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.connectors.MockTriggerBsasConnector
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 

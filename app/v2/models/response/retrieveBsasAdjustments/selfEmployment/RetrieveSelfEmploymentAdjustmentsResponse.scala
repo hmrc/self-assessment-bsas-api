@@ -16,26 +16,25 @@
 
 package v2.models.response.retrieveBsasAdjustments.selfEmployment
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v2.models.hateoas.{HateoasData, Link}
+import v2.hateoas.HateoasLinks
 
-case class RetrieveSelfEmploymentAdjustmentsResponse(metadata: Metadata,
-                                                     adjustments: BsasDetail)
+case class RetrieveSelfEmploymentAdjustmentsResponse(metadata: Metadata, adjustments: BsasDetail)
 
 object RetrieveSelfEmploymentAdjustmentsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveSelfEmploymentAdjustmentsResponse] = (
     JsPath.read[Metadata] and
       JsPath.read[BsasDetail]
-    ) (RetrieveSelfEmploymentAdjustmentsResponse.apply _)
+  )(RetrieveSelfEmploymentAdjustmentsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSelfEmploymentAdjustmentsResponse] = Json.writes[RetrieveSelfEmploymentAdjustmentsResponse]
 
   implicit object RetrieveSelfEmploymentAdjustmentsHateoasFactory
-    extends HateoasLinksFactory[RetrieveSelfEmploymentAdjustmentsResponse, RetrieveSelfEmploymentAdjustmentsHateoasData] {
+      extends HateoasLinksFactory[RetrieveSelfEmploymentAdjustmentsResponse, RetrieveSelfEmploymentAdjustmentsHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveSelfEmploymentAdjustmentsHateoasData): Seq[Link] = {
       import data._
 

@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{ JsObject, Json, OWrites, Reads, Writes }
+import play.api.libs.json._
 import utils.JsonWritesUtil
 
 case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet])

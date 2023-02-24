@@ -16,11 +16,12 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v3.models.errors.{CalculationIdFormatError, MtdError}
+import api.models.errors.{CalculationIdFormatError, MtdError}
 
 object CalculationIdValidation {
 
   private val regex = """^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"""
+
   def validate(calculationId: String): List[MtdError] =
-    if(calculationId.matches(regex)) List() else List(CalculationIdFormatError)
+    if (calculationId.matches(regex)) List() else List(CalculationIdFormatError)
 }

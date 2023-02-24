@@ -16,14 +16,15 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{MtdError, TypeOfBusinessFormatError}
+import api.models.errors.{MtdError, TypeOfBusinessFormatError}
 
 object ListBSASTypeOfBusinessValidation {
 
-  val ukPropertyFHL = "uk-property-fhl"
+  val ukPropertyFHL    = "uk-property-fhl"
   val ukPropertyNonFHL = "uk-property-non-fhl"
-  val selfEmployment = "self-employment"
+  val selfEmployment   = "self-employment"
 
   def validate(typeOfBusiness: String): List[MtdError] =
-    if (typeOfBusiness == ukPropertyFHL || typeOfBusiness == ukPropertyNonFHL || typeOfBusiness == selfEmployment) List() else List(TypeOfBusinessFormatError)
+    if (typeOfBusiness == ukPropertyFHL || typeOfBusiness == ukPropertyNonFHL || typeOfBusiness == selfEmployment) List()
+    else List(TypeOfBusinessFormatError)
 }

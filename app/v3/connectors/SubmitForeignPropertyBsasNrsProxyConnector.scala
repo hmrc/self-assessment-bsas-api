@@ -17,19 +17,19 @@
 package v3.connectors
 
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestBody
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitForeignPropertyBsasNrsProxyConnector @Inject()(http: HttpClient,
-                                                          appConfig: AppConfig) {
+class SubmitForeignPropertyBsasNrsProxyConnector @Inject()(http: HttpClient, appConfig: AppConfig) {
 
   def submit[T](nino: String, requestBody: SubmitForeignPropertyBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()
 
-    http.POST[SubmitForeignPropertyBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", requestBody)
+    http.POST[SubmitForeignPropertyBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
+                                                          requestBody)
   }
 }

@@ -16,29 +16,32 @@
 
 package v2.controllers
 
-import mocks.MockIdGenerator
+import api.controllers.ControllerBaseSpec
+import api.hateoas
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.mocks.MockIdGenerator
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.hateoas.MockHateoasFactory
+import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v2.mocks.services._
-import v2.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.hateoas.Method.GET
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 import v2.models.response.{SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse}
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubmitUkPropertyBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSubmitUkPropertyRequestParser
@@ -56,7 +59,7 @@ class SubmitUkPropertyBsasControllerSpec
     val controller = new SubmitUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRequestParser,
+      parser = mockRequestParser,
       service = mockService,
       nrsService = mockSubmitUKPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
@@ -71,14 +74,15 @@ class SubmitUkPropertyBsasControllerSpec
 
   }
 
-  private val nino   = "AA123456A"
+  private val nino = "AA123456A"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
   private val fhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyFHL(fhlIncomeAllFields, fhlExpensesAllFields))
-  private val fhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, fhlBody)
+  private val fhlRequest    = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, fhlBody)
 
-  private val nonFhlRawRequest = SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
+  private val nonFhlRawRequest =
+    SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
   private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
 
   val response = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
@@ -101,6 +105,7 @@ class SubmitUkPropertyBsasControllerSpec
       auditType = "submitBusinessSourceAccountingAdjustments",
       transactionName = "submit-uk-property-accounting-adjustments",
       detail = GenericAuditDetail(
+        versionNumber = "2.0",
         userType = "Individual",
         agentReferenceNumber = None,
         params = Map("nino" -> nino, "bsasId" -> bsasId),
@@ -128,7 +133,7 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockHateoasFactory
           .wrap(response, SubmitUkPropertyBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(response, testHateoasLinks))
+          .returns(hateoas.HateoasWrapper(response, testHateoasLinks))
 
         val result: Future[Result] = controller.submitUkPropertyBsas(nino, bsasId)(fakePostRequest(Json.toJson(validfhlInputJson)))
 
@@ -137,7 +142,7 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson) )).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
 
       "a valid request is supplied for a non-FHL property" in new Test {
@@ -193,7 +198,7 @@ class SubmitUkPropertyBsasControllerSpec
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
         (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-        (DownstreamError, INTERNAL_SERVER_ERROR),
+        (InternalError, INTERNAL_SERVER_ERROR),
         (RuleBothExpensesError, BAD_REQUEST),
         (FormatAdjustmentValueError, BAD_REQUEST),
         (RuleAdjustmentRangeInvalid, BAD_REQUEST)
@@ -215,7 +220,8 @@ class SubmitUkPropertyBsasControllerSpec
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
+        val auditResponse: AuditResponse =
+          AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
         MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
 
@@ -241,10 +247,13 @@ class SubmitUkPropertyBsasControllerSpec
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(
-              AuditError(FormatAdjustmentValueError.code),
-              AuditError(RuleAdjustmentRangeInvalid.code)
-            )), None)
+        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST,
+                                                         Some(
+                                                           Seq(
+                                                             AuditError(FormatAdjustmentValueError.code),
+                                                             AuditError(RuleAdjustmentRangeInvalid.code)
+                                                           )),
+                                                         None)
 
         MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
       }
@@ -281,7 +290,7 @@ class SubmitUkPropertyBsasControllerSpec
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
-        (DownstreamError, INTERNAL_SERVER_ERROR),
+        (InternalError, INTERNAL_SERVER_ERROR),
         (RuleTypeOfBusinessError, FORBIDDEN),
         (RuleSummaryStatusInvalid, FORBIDDEN),
         (RuleSummaryStatusSuperseded, FORBIDDEN),

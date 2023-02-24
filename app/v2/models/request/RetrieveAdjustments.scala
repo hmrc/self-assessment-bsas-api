@@ -16,7 +16,8 @@
 
 package v2.models.request
 
-import domain.Nino
+import api.models.RawData
+import api.models.domain.Nino
 
 case class RetrieveAdjustmentsRawData(nino: String, bsasId: String) extends RawData
 case class RetrieveAdjustmentsRequestData(nino: Nino, bsasId: String)

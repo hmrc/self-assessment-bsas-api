@@ -16,53 +16,50 @@
 
 package v3.services
 
+import api.controllers.RequestContext
+import api.models
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v3.connectors.SubmitUkPropertyBsasConnector
-import v3.controllers.EndpointLogContext
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
-import v3.support.DownstreamResponseMappingSupport
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConnector) extends DownstreamResponseMappingSupport with Logging {
+class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConnector) extends BaseService {
 
-  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(implicit
-                                                                   hc: HeaderCarrier,
-                                                                   ec: ExecutionContext,
-                                                                   logContext: EndpointLogContext,
-                                                                   correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(implicit ctx: RequestContext,
+                                                                   ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] =
+    connector
+      .submitPropertyBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
 
-    connector.submitPropertyBsas(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
-  }
-
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val errorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
       "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID"         -> InternalError,
-      "INVALID_PAYLOAD"               -> InternalError,
-      "BVR_FAILURE_C55316"            -> InternalError,
-      "BVR_FAILURE_C15320"            -> InternalError,
+      "INVALID_CORRELATIONID"         -> models.errors.InternalError,
+      "INVALID_PAYLOAD"               -> models.errors.InternalError,
+      "BVR_FAILURE_C55316"            -> models.errors.InternalError,
+      "BVR_FAILURE_C15320"            -> models.errors.InternalError,
       "BVR_FAILURE_C55508"            -> RulePropertyIncomeAllowanceClaimed,
       "BVR_FAILURE_C55509"            -> RulePropertyIncomeAllowanceClaimed,
       "BVR_FAILURE_C55503"            -> RuleOverConsolidatedExpensesThreshold,
-      "BVR_FAILURE_C559107"           -> InternalError,
-      "BVR_FAILURE_C559103"           -> InternalError,
-      "BVR_FAILURE_C559099"           -> InternalError,
+      "BVR_FAILURE_C559107"           -> models.errors.InternalError,
+      "BVR_FAILURE_C559103"           -> models.errors.InternalError,
+      "BVR_FAILURE_C559099"           -> models.errors.InternalError,
       "NO_DATA_FOUND"                 -> NotFoundError,
       "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
       "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
       "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
       "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-      "SERVER_ERROR"                  -> InternalError,
-      "SERVICE_UNAVAILABLE"           -> InternalError
+      "SERVER_ERROR"                  -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE"           -> models.errors.InternalError
     )
     val extraTysErrors = Map(
       "INVALID_TAX_YEAR"               -> TaxYearFormatError,

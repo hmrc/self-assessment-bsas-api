@@ -16,28 +16,27 @@
 
 package v2.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
-import v2.models.errors.ErrorWrapper
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v2.models.response.listBsas.{ BsasEntries, ListBsasResponse }
 import v2.services.ListBsasService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-trait MockListBsasService extends MockFactory{
+trait MockListBsasService extends MockFactory {
 
   val mockService: ListBsasService = mock[ListBsasService]
 
-  object MockListBsasService{
+  object MockListBsasService {
 
     def listBsas(requestData: ListBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasEntries]]]]] = {
       (mockService
-        .listBsas(_: ListBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .listBsas(_: ListBsasRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 }

@@ -16,23 +16,25 @@
 
 package v2.services
 
-import domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.mocks.connectors.MockRetrieveUkPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
-class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
+class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
-  private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino   = Nino("AA123456A")
+  val id             = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   val adjustedStatus = Some("03")
 
   val request = RetrieveUkPropertyBsasRequestData(nino, id, adjustedStatus)
@@ -40,7 +42,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
   val response = RetrieveUkPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
 
   trait Test extends MockRetrieveUkPropertyBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveUkPropertyBsasConnector", "retrieve")
 
     val service = new RetrieveUkPropertyBsasService(mockConnector)
@@ -49,45 +51,44 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec{
   "retrieve" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+        MockRetrievePropertyBsasConnector
+          .retrievePropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
     }
 
-
     "return error response" when {
 
       "des return success response with invalid type of business" in new Test {
-        val response = RetrieveUkPropertyBsasResponse(metadataModel.copy(typeOfBusiness = TypeOfBusiness.`self-employment`),
-          Some(bsasDetailModel))
-        MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
+        val response = RetrieveUkPropertyBsasResponse(metadataModel.copy(typeOfBusiness = TypeOfBusiness.`self-employment`), Some(bsasDetailModel))
+        MockRetrievePropertyBsasConnector
+          .retrievePropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleNotUkProperty))
       }
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
-          MockRetrievePropertyBsasConnector.retrievePropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+          MockRetrievePropertyBsasConnector
+            .retrievePropertyBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
-
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", BsasIdFormatError),
-        ("INVAlID_CORRELATION_ID", DownstreamError),
-        ("INVALID_RETURN", DownstreamError),
+        ("INVAlID_CORRELATION_ID", InternalError),
+        ("INVALID_RETURN", InternalError),
         ("UNPROCESSABLE_ENTITY", RuleNoAdjustmentsMade),
         ("NO_DATA_FOUND", NotFoundError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

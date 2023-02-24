@@ -16,7 +16,8 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{MtdError, RuleAdjustmentRangeInvalid}
+import api.models.errors.MtdError
+import v2.models.errors.RuleAdjustmentRangeInvalid
 
 object AdjustmentRangeValidation {
 
@@ -28,7 +29,7 @@ object AdjustmentRangeValidation {
     val error = RuleAdjustmentRangeInvalid.copy(paths = Some(Seq(fieldName)))
 
     field match {
-      case Some(value) if value > maxValue || value < minValue  =>
+      case Some(value) if value > maxValue || value < minValue =>
         List(error)
       case _ => List()
     }

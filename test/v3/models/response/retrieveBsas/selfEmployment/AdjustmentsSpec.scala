@@ -16,10 +16,10 @@
 
 package v3.models.response.retrieveBsas.selfEmployment
 
+import api.models.utils.JsonErrorValidators
 import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{adjustmentsModel, downstreamAdjustmentsJson, mtdAdjustmentsJson}
-import v3.models.utils.JsonErrorValidators
 
 class AdjustmentsSpec extends UnitSpec with JsonErrorValidators {
 

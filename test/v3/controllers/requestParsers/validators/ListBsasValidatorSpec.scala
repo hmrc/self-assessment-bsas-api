@@ -16,22 +16,22 @@
 
 package v3.controllers.requestParsers.validators
 
+import api.models.errors._
 import support.UnitSpec
-import v3.models.errors._
 import v3.models.request.ListBsasRawData
 
 class ListBsasValidatorSpec extends UnitSpec {
 
-  val validator = new ListBsasValidator()
-  private val nino = "AA123456B"
-  private val taxYear = "2019-20"
-  private val typeOfBusiness = "uk-property-fhl"
-  private val businessId = "XAIS12345678901"
-  private val invalidNino = "not a nino"
-  private val invalidTaxYear = "2018-20"
-  private val tooEarlyTaxYear = "2018-19"
-  private val invalidTypeOfBusiness = "toothpicks-for-hamsters"
-  private val invalidBusinessId = "Not a businessId"
+  val validator                        = new ListBsasValidator()
+  private val nino                     = "AA123456B"
+  private val taxYear                  = "2019-20"
+  private val typeOfBusiness           = "uk-property-fhl"
+  private val businessId               = "XAIS12345678901"
+  private val invalidNino              = "not a nino"
+  private val invalidTaxYear           = "2018-20"
+  private val tooEarlyTaxYear          = "2018-19"
+  private val invalidTypeOfBusiness    = "toothpicks-for-hamsters"
+  private val invalidBusinessId        = "Not a businessId"
   private val rawData: ListBsasRawData = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusiness), Some(businessId))
 
   "running the validator" should {

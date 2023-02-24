@@ -16,12 +16,14 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.mocks.connectors.MockSubmitForeignPropertyBsasConnector
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
 
 import scala.concurrent.Future

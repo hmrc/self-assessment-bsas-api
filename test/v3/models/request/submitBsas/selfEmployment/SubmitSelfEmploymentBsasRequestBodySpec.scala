@@ -16,10 +16,10 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
+import api.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-import v3.models.domain.EmptyJsonBody
 
 class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
 

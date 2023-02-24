@@ -16,19 +16,21 @@
 
 package v2.controllers
 
-import mocks.MockIdGenerator
+import api.controllers.ControllerBaseSpec
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.mocks.MockIdGenerator
+import api.models.errors._
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
-import v2.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSubmitForeignPropertyBsasNrsProxyService, MockSubmitForeignPropertyBsasService}
+import v2.mocks.services._
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.hateoas.{HateoasWrapper, Link}
-import v2.models.hateoas.Method.GET
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.{SubmitForeignPropertyBsasHateoasData, SubmitForeignPropertyBsasResponse}
 
@@ -36,7 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSubmitForeignPropertyBsasService
@@ -44,8 +46,7 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockSubmitForeignPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator
-{
+    with MockIdGenerator {
 
   private val correlationId = "X-123"
 
@@ -69,10 +70,11 @@ class SubmitForeignPropertyBsasControllerSpec
 
   }
 
-  private val nino = "AA123456A"
+  private val nino   = "AA123456A"
   private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val testHateoasLink = Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
+  private val testHateoasLink =
+    Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
 
   private val requestJson = Json.parse(
     """|{
@@ -100,22 +102,24 @@ class SubmitForeignPropertyBsasControllerSpec
   private val foreignProperty: ForeignProperty =
     ForeignProperty(
       "FRA",
-      Some(ForeignPropertyIncome(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12)
-      )),
-      Some(ForeignPropertyExpenses(
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        Some(123.12),
-        None
-      ))
+      Some(
+        ForeignPropertyIncome(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12)
+        )),
+      Some(
+        ForeignPropertyExpenses(
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          Some(123.12),
+          None
+        ))
     )
 
   val requestBody: SubmitForeignPropertyBsasRequestBody =
@@ -123,7 +127,7 @@ class SubmitForeignPropertyBsasControllerSpec
 
   val responseBody = SubmitForeignPropertyBsasResponse("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", TypeOfBusiness.`foreign-property`)
 
-  private val rawData = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
+  private val rawData     = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
   private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, requestBody)
 
   "handleRequest" should {
@@ -206,17 +210,17 @@ class SubmitForeignPropertyBsasControllerSpec
         }
 
         val input = Seq(
-            (NinoFormatError, BAD_REQUEST),
-            (BsasIdFormatError, BAD_REQUEST),
-            (NotFoundError, NOT_FOUND),
-            (DownstreamError, INTERNAL_SERVER_ERROR),
-            (RuleTypeOfBusinessError, FORBIDDEN),
-            (RuleSummaryStatusInvalid, FORBIDDEN),
-            (RuleSummaryStatusSuperseded, FORBIDDEN),
-            (RuleBsasAlreadyAdjusted, FORBIDDEN),
-            (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
-            (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
-            (RuleResultingValueNotPermitted, FORBIDDEN)
+          (NinoFormatError, BAD_REQUEST),
+          (BsasIdFormatError, BAD_REQUEST),
+          (NotFoundError, NOT_FOUND),
+          (InternalError, INTERNAL_SERVER_ERROR),
+          (RuleTypeOfBusinessError, FORBIDDEN),
+          (RuleSummaryStatusInvalid, FORBIDDEN),
+          (RuleSummaryStatusSuperseded, FORBIDDEN),
+          (RuleBsasAlreadyAdjusted, FORBIDDEN),
+          (RuleOverConsolidatedExpensesThreshold, FORBIDDEN),
+          (RulePropertyIncomeAllowanceClaimed, FORBIDDEN),
+          (RuleResultingValueNotPermitted, FORBIDDEN)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

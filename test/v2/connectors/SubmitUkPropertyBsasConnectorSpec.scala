@@ -16,27 +16,28 @@
 
 package v2.connectors
 
-import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import mocks.MockAppConfig
-import domain.Nino
+import api.connectors.ConnectorSpec
+import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
 import scala.concurrent.Future
 
-class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
+class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino   = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String,String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnv returns "des-environment"
@@ -50,16 +51,18 @@ class SubmitUkPropertyBsasConnectorSpec  extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)))
 
-      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      implicit val hc: HeaderCarrier                = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
-      MockedHttpClient.put(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
-        config = dummyDesHeaderCarrierConfig,
-        body = nonFHLBody,
-        requiredHeaders = requiredHeadersPut,
-        excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
-      ).returns(Future.successful(outcome))
+      MockedHttpClient
+        .put(
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          config = dummyHeaderCarrierConfig,
+          body = nonFHLBody,
+          requiredHeaders = requiredHeadersPut,
+          excludedHeaders = Seq("AnotherHeader" -> s"HeaderValue")
+        )
+        .returns(Future.successful(outcome))
 
       await(connector.submitPropertyBsas(request)) shouldBe outcome
     }

@@ -23,17 +23,18 @@ import v2.models.request.AccountingPeriod
 
 case class BusinessSourceSummary[I](typeOfBusiness: TypeOfBusiness,
                                     businessId: Option[String],
-                                 accountingPeriod: AccountingPeriod,
-                                 bsasEntries: Seq[I])
+                                    accountingPeriod: AccountingPeriod,
+                                    bsasEntries: Seq[I])
 
 object BusinessSourceSummary {
 
-  implicit def reads[I: Reads]: Reads[BusinessSourceSummary[I]] = (
-    (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
-      (JsPath \ "incomeSourceId").readNullable[String] and
-      JsPath.read[AccountingPeriod](AccountingPeriod.desReads) and
-      (JsPath \ "ascCalculations").read[Seq[I]]
-    )(BusinessSourceSummary.apply(_,_,_,_))
+  implicit def reads[I: Reads]: Reads[BusinessSourceSummary[I]] =
+    (
+      (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
+        (JsPath \ "incomeSourceId").readNullable[String] and
+        JsPath.read[AccountingPeriod](AccountingPeriod.desReads) and
+        (JsPath \ "ascCalculations").read[Seq[I]]
+    )(BusinessSourceSummary.apply(_, _, _, _))
 
   implicit def writes[I: Writes]: OWrites[BusinessSourceSummary[I]] = Json.writes[BusinessSourceSummary[I]]
 }

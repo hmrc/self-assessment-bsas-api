@@ -16,54 +16,49 @@
 
 package v2.services
 
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v2.connectors.SubmitSelfEmploymentBsasConnector
-import v2.controllers.EndpointLogContext
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v2.models.response.SubmitSelfEmploymentBsasResponse
-import v2.support.DesResponseMappingSupport
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DesResponseMappingSupport with Logging {
+class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends BaseService {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
-      implicit hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]] = {
+      implicit ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[SubmitSelfEmploymentBsasResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-    } yield desResponseWrapper
-
-    result.value
+    connector
+      .submitSelfEmploymentBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-    "INVALID_CALCULATION_ID"        -> BsasIdFormatError,
-    "INVALID_PAYLOAD"               -> DownstreamError,
-    "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
-    "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
-    "ASC_ALREADY_ADJUSTED"          -> RuleBsasAlreadyAdjusted,
-    "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
-    "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleNotSelfEmployment,
-    "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
-    "BVR_FAILURE_C15320"            -> RuleTradingIncomeAllowanceClaimed,
-    "BVR_FAILURE_C55503"            -> DownstreamError,
-    "BVR_FAILURE_C55508"            -> DownstreamError,
-    "BVR_FAILURE_C55509"            -> DownstreamError,
-    "NO_DATA_FOUND"                 -> NotFoundError,
-    "INVALID_CORRELATIONID"         -> DownstreamError,
-    "SERVER_ERROR"                  -> DownstreamError,
-    "SERVICE_UNAVAILABLE"           -> DownstreamError
-  )
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+      "INVALID_CALCULATION_ID"        -> BsasIdFormatError,
+      "INVALID_PAYLOAD"               -> InternalError,
+      "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
+      "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
+      "ASC_ALREADY_ADJUSTED"          -> RuleBsasAlreadyAdjusted,
+      "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
+      "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleNotSelfEmployment,
+      "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
+      "BVR_FAILURE_C15320"            -> RuleTradingIncomeAllowanceClaimed,
+      "BVR_FAILURE_C55503"            -> InternalError,
+      "BVR_FAILURE_C55508"            -> InternalError,
+      "BVR_FAILURE_C55509"            -> InternalError,
+      "NO_DATA_FOUND"                 -> NotFoundError,
+      "INVALID_CORRELATIONID"         -> InternalError,
+      "SERVER_ERROR"                  -> InternalError,
+      "SERVICE_UNAVAILABLE"           -> InternalError
+    )
 }

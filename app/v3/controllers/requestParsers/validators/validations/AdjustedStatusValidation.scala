@@ -16,7 +16,7 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import v3.models.errors.{AdjustedStatusFormatError, MtdError}
+import api.models.errors.{AdjustedStatusFormatError, MtdError}
 
 import scala.util.{Failure, Success, Try}
 

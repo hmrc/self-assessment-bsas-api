@@ -16,15 +16,15 @@
 
 package v3.controllers.requestParsers.validators.validations
 
-import mocks.MockAppConfig
+import api.mocks.MockCurrentDate
+import api.models.utils.JsonErrorValidators
+import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
 import support.UnitSpec
-import v3.mocks.MockCurrentDateProvider
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors.RuleAccountingPeriodNotSupportedError
-import v3.models.utils.JsonErrorValidators
+import v3.models.errors._
 
-class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider with MockAppConfig{
+class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDate with MockAppConfig {
 
   def setup(): CallHandler0[String] = {
     MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
@@ -59,7 +59,8 @@ class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonError
         case (typeOfBusiness, endDate) =>
           s"typeOfBusiness is $typeOfBusiness and the endDate is before the earliest allowed end date" in {
             setup()
-            AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, endDate, mockAppConfig) shouldBe List(RuleAccountingPeriodNotSupportedError)
+            AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, endDate, mockAppConfig) shouldBe List(
+              RuleAccountingPeriodNotSupportedError)
           }
       }
     }

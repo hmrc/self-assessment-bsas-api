@@ -16,12 +16,14 @@
 
 package v3.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.MtdError
 import config.AppConfig
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import v3.models.domain.TypeOfBusiness
-import v3.models.errors.{MtdError, RuleAccountingPeriodNotSupportedError}
 
 object AccountingPeriodNotSupportedValidation {
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -43,12 +45,11 @@ object AccountingPeriodNotSupportedValidation {
         foreignPropertyEarliestEndDate
     }
 
-    val localDateEndDate   = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
+    val localDateEndDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE)
 
     if (localDateEndDate.isBefore(earliestDate)) {
       List(RuleAccountingPeriodNotSupportedError)
-    }
-    else {
+    } else {
       NoValidationErrors
     }
 

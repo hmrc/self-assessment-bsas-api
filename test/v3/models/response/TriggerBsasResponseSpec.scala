@@ -16,15 +16,14 @@
 
 package v3.models.response
 
-import mocks.MockAppConfig
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.models.domain.TaxYear
+import config.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{ JsError, JsValue, Json }
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v3.hateoas.HateoasFactory
 import v3.models.domain.TypeOfBusiness._
-import v3.models.domain._
-import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{ HateoasWrapper, Link }
 
 class TriggerBsasResponseSpec extends UnitSpec {
 

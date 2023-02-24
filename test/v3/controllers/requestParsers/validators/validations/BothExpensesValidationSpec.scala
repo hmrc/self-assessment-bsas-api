@@ -16,12 +16,14 @@
 
 package v3.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors._
+import api.models.utils.JsonErrorValidators
 import support.UnitSpec
-import v3.models.errors.{ MtdError, RuleBothExpensesError }
-import v3.models.request.submitBsas.foreignProperty.{ FhlEeaExpenses, ForeignPropertyExpenses }
-import v3.models.request.submitBsas.selfEmployment.{ Additions, Expenses }
-import v3.models.request.submitBsas.ukProperty.{ FHLExpenses, NonFHLExpenses }
-import v3.models.utils.JsonErrorValidators
+import v3.models.errors._
+import v3.models.request.submitBsas.foreignProperty.{FhlEeaExpenses, ForeignPropertyExpenses}
+import v3.models.request.submitBsas.selfEmployment.{Additions, Expenses}
+import v3.models.request.submitBsas.ukProperty.{FHLExpenses, NonFHLExpenses}
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 

@@ -16,16 +16,16 @@
 
 package v3.controllers.requestParsers.validators
 
-import mocks.MockAppConfig
-
-import java.time.LocalDate
+import api.mocks.MockCurrentDate
+import api.models.errors._
+import config.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v3.mocks.MockCurrentDateProvider
-import v3.models.errors._
+import v3.models.errors.RuleAccountingPeriodNotSupportedError
 import v3.models.request.triggerBsas.TriggerBsasRawData
 
+import java.time.LocalDate
 
 class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
 
@@ -38,15 +38,15 @@ class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
 
     AnyContentAsJson(
       Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness"   -> typeOfBusiness,
-        "businessId"       -> businessId)
+               "typeOfBusiness"   -> typeOfBusiness,
+               "businessId"       -> businessId)
     )
   }
 
-  class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDateProvider {
-    val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDateProvider, appConfig = mockAppConfig)
+  class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDate {
+    val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDate, appConfig = mockAppConfig)
 
-    MockCurrentDateProvider.getCurrentDate().returns(date)
+    MockCurrentDate.getCurrentDate().returns(date)
     MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
     MockedAppConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
   }
@@ -117,9 +117,9 @@ class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
       "mandatory fields are missing" in new SetUp() {
         val result: Seq[MtdError] = validator.validate(
           TriggerBsasRawData(nino,
-            AnyContentAsJson(
-              Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
-            )))
+                             AnyContentAsJson(
+                               Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
+                             )))
 
         result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/startDate", "/typeOfBusiness", "/businessId"))))
       }
@@ -135,7 +135,8 @@ class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
 
     "return a RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED error" when {
       "the accounting period is before the minimum tax year" in new SetUp() {
-        val result: Seq[MtdError] = validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2015-05-05", endDate = "2016-05-06")))
+        val result: Seq[MtdError] =
+          validator.validate(TriggerBsasRawData(nino, triggerBsasRawDataBody(startDate = "2015-05-05", endDate = "2016-05-06")))
 
         result shouldBe List(RuleAccountingPeriodNotSupportedError)
       }

@@ -16,15 +16,14 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import mocks.MockAppConfig
+import api.hateoas.Method._
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.models.domain.TaxYear
+import api.models.utils.JsonErrorValidators
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v3.hateoas.HateoasFactory
-import v3.models.domain.TaxYear
-import v3.models.hateoas.Method._
-import v3.models.hateoas.{ HateoasWrapper, Link }
-import v3.models.utils.JsonErrorValidators
 
 class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 

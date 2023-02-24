@@ -17,7 +17,7 @@
 package v2.models.request.submitBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     cisPaymentsToSubcontractors: Option[BigDecimal],
@@ -37,21 +37,22 @@ case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]) {
 
   //noinspection ScalaStyle
-  def isNonConsolidatedExpensesEmpty: Boolean =  costOfGoodsBought.isEmpty &&
-                        cisPaymentsToSubcontractors.isEmpty &&
-                        staffCosts.isEmpty &&
-                        travelCosts.isEmpty &&
-                        premisesRunningCosts.isEmpty &&
-                        maintenanceCosts.isEmpty &&
-                        adminCosts.isEmpty &&
-                        advertisingCosts.isEmpty &&
-                        businessEntertainmentCosts.isEmpty &&
-                        interest.isEmpty &&
-                        financialCharges.isEmpty &&
-                        badDebt.isEmpty &&
-                        professionalFees.isEmpty &&
-                        depreciation.isEmpty &&
-                        other.isEmpty
+  def isNonConsolidatedExpensesEmpty: Boolean =
+    costOfGoodsBought.isEmpty &&
+    cisPaymentsToSubcontractors.isEmpty &&
+    staffCosts.isEmpty &&
+    travelCosts.isEmpty &&
+    premisesRunningCosts.isEmpty &&
+    maintenanceCosts.isEmpty &&
+    adminCosts.isEmpty &&
+    advertisingCosts.isEmpty &&
+    businessEntertainmentCosts.isEmpty &&
+    interest.isEmpty &&
+    financialCharges.isEmpty &&
+    badDebt.isEmpty &&
+    professionalFees.isEmpty &&
+    depreciation.isEmpty &&
+    other.isEmpty
 
   def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
 

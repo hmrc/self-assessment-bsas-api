@@ -19,20 +19,20 @@ package v3.models.response.retrieveBsas.selfEmployment
 import play.api.libs.json._
 
 case class AdjustableSummaryCalculation(
-                                         totalIncome: Option[BigDecimal],
-                                         income: Option[SummaryCalculationIncome],
-                                         totalExpenses: Option[BigDecimal],
-                                         expenses: Option[SummaryCalculationExpenses],
-                                         netProfit: Option[BigDecimal],
-                                         netLoss: Option[BigDecimal],
-                                         totalAdditions: Option[BigDecimal],
-                                         additions: Option[SummaryCalculationAdditions],
-                                         totalDeductions: Option[BigDecimal],
-                                         deductions: Option[SummaryCalculationDeductions],
-                                         totalAccountingAdjustments: Option[BigDecimal],
-                                         accountingAdjustments: Option[SummaryCalculationAccountingAdjustments],
-                                         taxableProfit: Option[BigDecimal],
-                                         adjustedIncomeTaxLoss: Option[BigDecimal],
+    totalIncome: Option[BigDecimal],
+    income: Option[SummaryCalculationIncome],
+    totalExpenses: Option[BigDecimal],
+    expenses: Option[SummaryCalculationExpenses],
+    netProfit: Option[BigDecimal],
+    netLoss: Option[BigDecimal],
+    totalAdditions: Option[BigDecimal],
+    additions: Option[SummaryCalculationAdditions],
+    totalDeductions: Option[BigDecimal],
+    deductions: Option[SummaryCalculationDeductions],
+    totalAccountingAdjustments: Option[BigDecimal],
+    accountingAdjustments: Option[SummaryCalculationAccountingAdjustments],
+    taxableProfit: Option[BigDecimal],
+    adjustedIncomeTaxLoss: Option[BigDecimal],
 )
 
 object AdjustableSummaryCalculation {

@@ -16,8 +16,8 @@
 
 package v2.connectors
 
-
-import mocks.MockAppConfig
+import api.connectors.ConnectorSpec
+import config.MockAppConfig
 import v2.mocks.MockHttpClient
 import v2.models.domain.DownstreamTaxYear
 import v2.models.request.submitBsas.ukProperty._
@@ -32,28 +32,45 @@ class SubmitUKPropertyBsasNrsproxyConnectorSpec extends ConnectorSpec {
 
   val request: SubmitUKPropertyBsasRequestBody = {
     SubmitUKPropertyBsasRequestBody(
-      Some(NonFurnishedHolidayLet(
-        Some(NonFHLIncome(
-          Some(100.59), Some(100.59), Some(100.59), Some(100.59)
+      Some(
+        NonFurnishedHolidayLet(
+          Some(
+            NonFHLIncome(
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59)
+            )),
+          Some(
+            NonFHLExpenses(
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59)
+            ))
         )),
-        Some(NonFHLExpenses(
-          Some(100.59), Some(100.59), Some(100.59),
-          Some(100.59), Some(100.59), Some(100.59),
-          Some(100.59), Some(100.59), Some(100.59)
+      Some(
+        FurnishedHolidayLet(
+          Some(FHLIncome(Some(100.59))),
+          Some(
+            FHLExpenses(
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59),
+              Some(100.59)
+            ))
         ))
-      )
-    ),
-      Some(FurnishedHolidayLet(
-        Some(FHLIncome(Some(100.59))),
-        Some(FHLExpenses(
-          Some(100.59), Some(100.59), Some(100.59),
-          Some(100.59), Some(100.59), Some(100.59),
-          Some(100.59), Some(100.59)
-        ))
-      ))
     )
   }
-
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -69,13 +86,13 @@ class SubmitUKPropertyBsasNrsproxyConnectorSpec extends ConnectorSpec {
     "submit with valid data" should {
       "be successful" in new Test {
 
-
         MockedHttpClient
           .post(
             url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             body = request
-          ).returns(Future.successful((): Unit))
+          )
+          .returns(Future.successful((): Unit))
 
         await(connector.submit(nino, request)) shouldBe ((): Unit)
       }

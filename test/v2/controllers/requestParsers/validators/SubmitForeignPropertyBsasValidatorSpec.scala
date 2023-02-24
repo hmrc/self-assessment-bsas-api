@@ -16,17 +16,17 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.models.errors._
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.models.errors.{BsasIdFormatError, FormatAdjustmentValueError, NinoFormatError, RuleAdjustmentRangeInvalid, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v2.models.errors._
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
 
-  private val validNino = "AA123456A"
-  private val validBsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val requestBodyJsonForeignPropertyNoDecimals = Json.parse(
-    """
+  private val validNino                                = "AA123456A"
+  private val validBsasId                              = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  private val requestBodyJsonForeignPropertyNoDecimals = Json.parse("""
       |{
       |  "foreignProperty": [
       |    {
@@ -52,8 +52,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonForeignProperty = Json.parse(
-    """
+  private val requestBodyJsonForeignProperty = Json.parse("""
       |{
       |  "foreignProperty": [
       |    {
@@ -79,8 +78,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonForeignPropertyConsolidatedExpenses = Json.parse(
-    """
+  private val requestBodyJsonForeignPropertyConsolidatedExpenses = Json.parse("""
       |{
       |  "foreignProperty": [
       |    {
@@ -100,8 +98,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonForeignPropertyFhlEea = Json.parse(
-    """
+  private val requestBodyJsonForeignPropertyFhlEea = Json.parse("""
       |{
       |  "foreignFhlEea": {
       |    "income": {
@@ -120,8 +117,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonForeignPropertyFhlEeaConsolidatedExpenses = Json.parse(
-    """
+  private val requestBodyJsonForeignPropertyFhlEeaConsolidatedExpenses = Json.parse("""
       |{
       |  "foreignFhlEea": {
       |    "income": {
@@ -134,8 +130,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonNoForeignPropertyIncome = Json.parse(
-    """
+  private val requestBodyJsonNoForeignPropertyIncome = Json.parse("""
       |{
       |  "foreignProperty": [
       |    {
@@ -155,8 +150,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonNoForeignPropertyExpenses = Json.parse(
-    """
+  private val requestBodyJsonNoForeignPropertyExpenses = Json.parse("""
       |{
       |  "foreignProperty": [
       |    {
@@ -172,8 +166,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonNoFhlEeaIncome = Json.parse(
-    """
+  private val requestBodyJsonNoFhlEeaIncome = Json.parse("""
       |{
       |  "foreignFhlEea": {
       |    "expenses": {
@@ -189,8 +182,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val requestBodyJsonNoFhlEeaExpenses = Json.parse(
-    """
+  private val requestBodyJsonNoFhlEeaExpenses = Json.parse("""
       |{
       |  "foreignFhlEea": {
       |    "income": {
@@ -302,8 +294,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  private val requestBodyJsonEmptyForeignPropertyIncome = Json.parse(
-    """
+  private val requestBodyJsonEmptyForeignPropertyIncome = Json.parse("""
       |{
       |  "foreignProperty": [
       |    {
@@ -445,7 +436,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   private val emptyJson = Json.parse(
     """
       |{}
@@ -493,7 +483,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         validator.validate(SubmitForeignPropertyRawData(validNino, "Walrus", requestBodyJsonForeignProperty)) shouldBe List(BsasIdFormatError)
       }
       "both path parameters are invalid" in {
-        validator.validate(SubmitForeignPropertyRawData("A12344A", "Walrus", requestBodyJsonForeignProperty)) shouldBe List(NinoFormatError, BsasIdFormatError)
+        validator.validate(SubmitForeignPropertyRawData("A12344A", "Walrus", requestBodyJsonForeignProperty)) shouldBe List(NinoFormatError,
+                                                                                                                            BsasIdFormatError)
       }
     }
     "return RuleIncorrectOrEmptyBodyError error" when {
@@ -501,34 +492,41 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, emptyJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
       "both foreignProperty and foreignPropertyFhlEea are supplied" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonFPAndFHLEEA)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonFPAndFHLEEA)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty foreignProperty object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignProperty)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignProperty)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty foreignProperty.income object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyIncome)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyIncome)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty foreignProperty.expenses is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyExpenses)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyExpenses)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty fhlEea object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEea)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEea)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty fhlEea.income object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEeaIncome)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEeaIncome)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty fhlEea.expenses object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEeaExpenses)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyFhlEeaExpenses)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
       "an empty foreignProperty and fhlEea object is submitted" in {
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyAndFhlEea)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, requestBodyJsonEmptyForeignPropertyAndFhlEea)) shouldBe List(
+          RuleIncorrectOrEmptyBodyError)
       }
     }
     "return a FORMAT_ADJUSTMENT_VALUE error" when {
       "a value field has more than 2 decimal points" in {
-        val badJson = Json.parse(
-          """
+        val badJson = Json.parse("""
             |{
             |  "foreignProperty": [
             |    {
@@ -553,11 +551,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(
+          FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
       }
       "multiple fields have more than 2 decimal points" in {
-        val badjson = Json.parse(
-          """
+        val badjson = Json.parse("""
             |{
             |  "foreignFhlEea": {
             |    "income": {
@@ -581,8 +579,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a RULE_RANGE_INVALID error" when {
       "a value field is above 99999999999.99" in {
-        val badJson = Json.parse(
-          """
+        val badJson = Json.parse("""
             |{
             |  "foreignProperty": [
             |    {
@@ -607,11 +604,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
       }
       "a value field is below -99999999999.99" in {
-        val badJson = Json.parse(
-          """
+        val badJson = Json.parse("""
             |{
             |  "foreignProperty": [
             |    {
@@ -636,11 +633,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
+        validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(
+          RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
       }
       "multiple fields are above 99999999999.99" in {
-        val badjson = Json.parse(
-          """
+        val badjson = Json.parse("""
             |{
             |  "foreignFhlEea": {
             |    "income": {
@@ -662,8 +659,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
           RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
       "multiple fields are below -99999999999.99" in {
-        val badjson = Json.parse(
-          """
+        val badjson = Json.parse("""
             |{
             |  "foreignFhlEea": {
             |    "income": {
@@ -687,8 +683,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {
       "both expenses and consolidated expenses are supplied" in {
-        val badJson = Json.parse(
-          """
+        val badJson = Json.parse("""
             |{
             |  "foreignProperty": [
             |    {
@@ -719,8 +714,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
       "nothing but countryCode is supplied" in {
-        val badJson = Json.parse(
-          """
+        val badJson = Json.parse("""
             |{
             |  "foreignProperty": [
             |    {
@@ -732,8 +726,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
       "nothing but countryCode is supplied in only one of the submitted arrays" in {
-        val badJson = Json.parse(
-          """
+        val badJson = Json.parse("""
             |{
             |  "foreignProperty": [
             |    {
@@ -766,4 +759,3 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
   }
 }
-

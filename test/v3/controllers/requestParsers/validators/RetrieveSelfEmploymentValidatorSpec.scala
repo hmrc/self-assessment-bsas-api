@@ -16,15 +16,15 @@
 
 package v3.controllers.requestParsers.validators
 
+import api.models.errors._
 import support.UnitSpec
-import v3.models.errors.{CalculationIdFormatError, InvalidTaxYearParameterError, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidatorSpec extends UnitSpec {
 
-  val validNino = "AA123456A"
-  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val invalidNino = "BEANS"
+  val validNino            = "AA123456A"
+  val validCalculationId   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val invalidNino          = "BEANS"
   val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-beans"
 
   val validator = new RetrieveSelfEmploymentValidator()

@@ -21,34 +21,33 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class BsasDetail(countryCode: Option[String], incomes: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown])
 
-
 object BsasDetail {
 
   val fhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "countryCode").readNullable[String] and
-      (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
+    (JsPath \ "countryCode").readNullable[String] and
+      (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case incomeBreakdown => incomeBreakdown
+        case incomeBreakdown                         => incomeBreakdown
       } and
-      (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
-        case expensesBreakdown => expensesBreakdown
+        case expensesBreakdown                                                             => expensesBreakdown
       }
-    ) (BsasDetail.apply _)
+  )(BsasDetail.apply _)
 
   val fhlSeqReads: Reads[Seq[BsasDetail]] = Reads.seq(fhlReads)
 
   val nonFhlReads: Reads[BsasDetail] = (
-    (JsPath   \ "countryCode").readNullable[String] and
-      (JsPath   \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
+    (JsPath \ "countryCode").readNullable[String] and
+      (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case incomeBreakdown => incomeBreakdown
+        case incomeBreakdown                         => incomeBreakdown
       } and
-      (JsPath  \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
+      (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
-        case expensesBreakdown => expensesBreakdown
+        case expensesBreakdown                                                             => expensesBreakdown
       }
-    ) (BsasDetail.apply _)
+  )(BsasDetail.apply _)
 
   val nonFhlSeqReads: Reads[Seq[BsasDetail]] = Reads.traversableReads[Seq, BsasDetail](implicitly, nonFhlReads)
 

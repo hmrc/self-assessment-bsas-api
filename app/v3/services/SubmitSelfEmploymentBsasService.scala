@@ -16,39 +16,36 @@
 
 package v3.services
 
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v3.connectors.SubmitSelfEmploymentBsasConnector
-import v3.controllers.EndpointLogContext
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
-import v3.support.DownstreamResponseMappingSupport
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends DownstreamResponseMappingSupport with Logging {
+class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends BaseService {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(
-      implicit hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      implicit ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.submitSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+    connector
+      .submitSelfEmploymentBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {
     val errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
       "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
-      "INVALID_PAYLOAD"               -> InternalError,
+      "INVALID_PAYLOAD"               -> models.errors.InternalError,
       "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
       "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
       "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
@@ -56,16 +53,16 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
       "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
       "BVR_FAILURE_C15320"            -> RuleTradingIncomeAllowanceClaimed,
-      "BVR_FAILURE_C55503"            -> InternalError,
-      "BVR_FAILURE_C55508"            -> InternalError,
-      "BVR_FAILURE_C55509"            -> InternalError,
-      "BVR_FAILURE_C559107"           -> InternalError,
-      "BVR_FAILURE_C559103"           -> InternalError,
-      "BVR_FAILURE_C559099"           -> InternalError,
+      "BVR_FAILURE_C55503"            -> models.errors.InternalError,
+      "BVR_FAILURE_C55508"            -> models.errors.InternalError,
+      "BVR_FAILURE_C55509"            -> models.errors.InternalError,
+      "BVR_FAILURE_C559107"           -> models.errors.InternalError,
+      "BVR_FAILURE_C559103"           -> models.errors.InternalError,
+      "BVR_FAILURE_C559099"           -> models.errors.InternalError,
       "NO_DATA_FOUND"                 -> NotFoundError,
-      "INVALID_CORRELATIONID"         -> InternalError,
-      "SERVER_ERROR"                  -> InternalError,
-      "SERVICE_UNAVAILABLE"           -> InternalError,
+      "INVALID_CORRELATIONID"         -> models.errors.InternalError,
+      "SERVER_ERROR"                  -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE"           -> models.errors.InternalError,
       "RULE_TAX_YEAR_RANGE_INVALID"   -> RuleTaxYearRangeInvalidError
     )
 

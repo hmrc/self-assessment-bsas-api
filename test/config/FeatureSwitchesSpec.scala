@@ -16,23 +16,58 @@
 
 package config
 
+import com.typesafe.config.ConfigFactory
 import play.api.Configuration
+import routing.{ Version2, Version3 }
 import support.UnitSpec
 
 class FeatureSwitchesSpec extends UnitSpec {
 
-  "a feature switch" should {
+  private def createFeatureSwitch(config: String) =
+    FeatureSwitches(Configuration(ConfigFactory.parseString(config)))
+
+  "version enabled" when {
+    val anyVersion = Version3
+
+    "no config" must {
+      val featureSwitch = FeatureSwitches(Configuration.empty)
+
+      "return false" in {
+        featureSwitch.isVersionEnabled(anyVersion) shouldBe false
+      }
+    }
+
+    "no config value" must {
+      val featureSwitch = createFeatureSwitch("")
+
+      "return false" in {
+        featureSwitch.isVersionEnabled(anyVersion) shouldBe false
+      }
+    }
+
+    "config set" must {
+      val featureSwitch = createFeatureSwitch("""
+          |version-3.enabled = true
+        """.stripMargin)
+
+      "return true for enabled versions" in {
+        featureSwitch.isVersionEnabled(Version3) shouldBe true
+      }
+    }
+  }
+
+  "feature switch" should {
     "be true" when {
 
       "absent from the config" in {
-        val configuration = Configuration.empty
+        val configuration   = Configuration.empty
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
       }
 
       "enabled" in {
-        val configuration = Configuration("tys-api.enabled" -> true)
+        val configuration   = Configuration("tys-api.enabled" -> true)
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
@@ -42,7 +77,7 @@ class FeatureSwitchesSpec extends UnitSpec {
 
     "be false" when {
       "disabled" in {
-        val configuration = Configuration("tys-api.enabled" -> false)
+        val configuration   = Configuration("tys-api.enabled" -> false)
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
@@ -50,36 +85,38 @@ class FeatureSwitchesSpec extends UnitSpec {
     }
   }
 
-  "isVersionEnabled()" should {
-    val configuration = Configuration(
-      "version-1.enabled" -> true,
-      "version-2.enabled" -> false
-    )
-    val featureSwitches = FeatureSwitches(configuration)
+  "isVersionEnabled()" when {
 
-    "return false" when {
-      "the version is blank" in {
-        featureSwitches.isVersionEnabled("") shouldBe false
-      }
+    "the version isn't in the config" should {
+      "return false" in {
+        val configuration   = Configuration.empty
+        val featureSwitches = FeatureSwitches(configuration)
 
-      "the version is an invalid format" in {
-        featureSwitches.isVersionEnabled("ABCDE-1") shouldBe false
-        featureSwitches.isVersionEnabled("1.") shouldBe false
-        featureSwitches.isVersionEnabled("1.ABC") shouldBe false
-      }
-
-      "the version isn't in the config" in {
-        featureSwitches.isVersionEnabled("3.0") shouldBe false
-      }
-
-      "the version is disabled in the config" in {
-        featureSwitches.isVersionEnabled("2.0") shouldBe false
+        featureSwitches.isVersionEnabled(Version3) shouldBe false
       }
     }
 
-    "return true" when {
-      "the version is enabled in the config" in {
-        featureSwitches.isVersionEnabled("1.0") shouldBe true
+    "the version is disabled in the config" should {
+      "return false" in {
+        val configuration = Configuration(
+          "version-2.enabled" -> false,
+          "version-3.enabled" -> true
+        )
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isVersionEnabled(Version2) shouldBe false
+      }
+    }
+
+    "the version is enabled in the config" should {
+      "return true" in {
+        val configuration = Configuration(
+          "version-2.enabled" -> false,
+          "version-3.enabled" -> true
+        )
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isVersionEnabled(Version3) shouldBe true
       }
     }
   }

@@ -16,9 +16,9 @@
 
 package v3.models.response.listBsas
 
+import api.models.domain.Status
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v3.models.domain.Status
 
 case class BsasSummary(calculationId: String,
                        requestedDateTime: String,

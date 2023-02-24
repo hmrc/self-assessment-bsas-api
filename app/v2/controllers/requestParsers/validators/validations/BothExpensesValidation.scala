@@ -16,20 +16,22 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import v2.models.errors.{RuleBothExpensesError, MtdError}
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.MtdError
+import v2.models.errors._
 
 object BothExpensesValidation {
 
   def validate(expensesAdjustments: Option[Map[String, BigDecimal]]): List[MtdError] = {
 
     expensesAdjustments match {
-      case Some(expenses) => (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"),
-        expenses.size) match {
-        case (true, true, size) if size == 2 => NoValidationErrors
-        case (true, true, size) if size > 2 => List(RuleBothExpensesError)
-        case (true, _, size) if size > 1 => List(RuleBothExpensesError)
-        case (_, _, _) => NoValidationErrors
-      }
+      case Some(expenses) =>
+        (expenses.contains("consolidatedExpenses"), expenses.contains("residentialFinancialCost"), expenses.size) match {
+          case (true, true, size) if size == 2 => NoValidationErrors
+          case (true, true, size) if size > 2  => List(RuleBothExpensesError)
+          case (true, _, size) if size > 1     => List(RuleBothExpensesError)
+          case (_, _, _)                       => NoValidationErrors
+        }
       case None => NoValidationErrors
     }
   }

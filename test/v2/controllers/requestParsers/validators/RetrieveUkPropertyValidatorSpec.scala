@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v2.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, NinoFormatError}
+import api.models.errors.{AdjustedStatusFormatError, BsasIdFormatError, NinoFormatError}
 import v2.models.request.RetrieveUkPropertyBsasRawData
 
 class RetrieveUkPropertyValidatorSpec extends UnitSpec {

@@ -17,15 +17,14 @@
 package v2.connectors
 
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUKPropertyBsasNrsproxyConnector @Inject()(http: HttpClient,
-                                                      appConfig: AppConfig) {
+class SubmitUKPropertyBsasNrsproxyConnector @Inject()(http: HttpClient, appConfig: AppConfig) {
 
   def submit[T](nino: String, requestBody: SubmitUKPropertyBsasRequestBody)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()

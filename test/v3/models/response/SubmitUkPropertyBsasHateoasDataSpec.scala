@@ -16,13 +16,12 @@
 
 package v3.models.response
 
-import mocks.MockAppConfig
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.models.domain.TaxYear
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
-import v3.hateoas.HateoasFactory
-import v3.models.domain.TaxYear
-import v3.models.hateoas.Method.GET
-import v3.models.hateoas.{ HateoasWrapper, Link }
 
 class SubmitUkPropertyBsasHateoasDataSpec extends UnitSpec {
 

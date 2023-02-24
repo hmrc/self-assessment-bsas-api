@@ -19,27 +19,23 @@ package v2.models.response.retrieveBsasAdjustments.selfEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BsasDetail(income: Option[IncomeBreakdown],
-                      expenses: Option[ExpensesBreakdown],
-                      additions: Option[AdditionsBreakdown])
+case class BsasDetail(income: Option[IncomeBreakdown], expenses: Option[ExpensesBreakdown], additions: Option[AdditionsBreakdown])
 
 object BsasDetail {
   implicit val reads: Reads[BsasDetail] = (
     (JsPath \ "adjustments" \ "income").readNullable[IncomeBreakdown].map {
       case Some(IncomeBreakdown(None, None)) => None
-      case income => income
+      case income                            => income
     } and
-    (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
-      case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None,
-      None, None, None, None, None, None, None)) => None
-      case expenses => expenses
-    } and
+      (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
+        case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => None
+        case expenses                                                                                                                => expenses
+      } and
       (JsPath \ "adjustments" \ "additions").readNullable[AdditionsBreakdown].map {
-        case Some(AdditionsBreakdown(None, None, None, None, None, None, None, None, None,
-        None, None, None, None, None, None)) => None
-        case additions => additions
+        case Some(AdditionsBreakdown(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => None
+        case additions                                                                                                          => additions
       }
-    ) (BsasDetail.apply _)
+  )(BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }

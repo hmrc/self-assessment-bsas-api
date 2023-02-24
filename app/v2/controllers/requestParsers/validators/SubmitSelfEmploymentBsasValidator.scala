@@ -16,9 +16,12 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations._
-import v2.models.errors.{MtdError, RuleBothExpensesError, RuleIncorrectOrEmptyBodyError}
+import v2.models.errors._
 import v2.models.request.submitBsas.selfEmployment._
 
 class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] with FixedConfig {
@@ -121,9 +124,9 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     val model: SubmitSelfEmploymentBsasRequestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
 
     List(
-      if(model.expenses.exists(_.isBothSupplied)
-        || (!(model.additions.isEmpty || model.additions.exists(_.isEmpty))
-        && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))){
+      if (model.expenses.exists(_.isBothSupplied)
+          || (!(model.additions.isEmpty || model.additions.exists(_.isEmpty))
+          && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))) {
         List(RuleBothExpensesError)
       } else {
         NoValidationErrors

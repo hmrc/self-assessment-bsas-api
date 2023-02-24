@@ -16,13 +16,13 @@
 
 package v2.controllers.requestParsers.validators.validations
 
+import api.mocks.MockCurrentDate
 import support.UnitSpec
-import v2.mocks.MockCurrentDateProvider
 import v2.models.domain.TypeOfBusiness
-import v2.models.errors.RuleAccountingPeriodNotSupportedError
+import v2.models.errors._
 import v2.models.utils.JsonErrorValidators
 
-class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateProvider {
+class AccountingPeriodNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDate {
 
   case class SetUp(endDate: String, typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`)
 

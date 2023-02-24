@@ -16,11 +16,11 @@
 
 package v2.models.domain
 
+import api.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import support.UnitSpec
 
 class EmptyJsonBodySpec extends UnitSpec {
-
 
   "EmptyJsonBody.writes" should {
     "return an empty JSON body" when {

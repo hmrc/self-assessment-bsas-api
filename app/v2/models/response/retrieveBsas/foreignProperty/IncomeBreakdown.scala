@@ -19,22 +19,21 @@ package v2.models.response.retrieveBsas.foreignProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class IncomeBreakdown(rentIncome: Option[BigDecimal],
-                           premiumsOfLeaseGrant: Option[BigDecimal],
-                           otherPropertyIncome: Option[BigDecimal])
+case class IncomeBreakdown(rentIncome: Option[BigDecimal], premiumsOfLeaseGrant: Option[BigDecimal], otherPropertyIncome: Option[BigDecimal])
 
 object IncomeBreakdown {
+
   val nonFhlReads: Reads[IncomeBreakdown] = (
     (JsPath \ "rent").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-    ) (IncomeBreakdown.apply _)
+  )(IncomeBreakdown.apply _)
 
   val fhlReads: Reads[IncomeBreakdown] = (
     (JsPath \ "rent").readNullable[BigDecimal] and
       Reads.pure(None) and
       Reads.pure(None)
-    )(IncomeBreakdown.apply _)
+  )(IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }

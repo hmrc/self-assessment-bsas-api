@@ -16,25 +16,25 @@
 
 package v2.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
-import v2.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.models.errors.{ RuleNoAdjustmentsMade, RuleNotForeignProperty }
+import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
+    val nino   = "AA123456B"
     val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
-    val desResponse: String => String = (typeOfBusiness: String) =>
-      s"""
+    val desResponse: String => String = (typeOfBusiness: String) => s"""
          |{
          |    "metadata": {
          |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
@@ -91,7 +91,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
   }
 
@@ -134,12 +134,10 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
         response.json shouldBe Json.toJson(RuleNotForeignProperty)
       }
 
-
-      def validationErrorTest(requestNino: String, requestBsasId: String,
-                             expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
+          override val nino: String   = requestNino
           override val bsasId: String = requestBsasId
 
           override def setupStubs(): StubMapping = {
@@ -190,11 +188,11 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, BsasIdFormatError),
-        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", FORBIDDEN, RuleNoAdjustmentsMade),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }

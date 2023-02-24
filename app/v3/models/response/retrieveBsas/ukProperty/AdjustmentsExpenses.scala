@@ -32,6 +32,7 @@ case class AdjustmentsExpenses(
 )
 
 object AdjustmentsExpenses {
+
   val readsFhl: Reads[AdjustmentsExpenses] = (
     (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
       (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and

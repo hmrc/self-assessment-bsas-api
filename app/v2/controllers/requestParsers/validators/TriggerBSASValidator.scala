@@ -16,15 +16,17 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.models.errors._
 import config.FixedConfig
-import javax.inject.Inject
-import utils.CurrentDateProvider
+import utils.CurrentDate
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.domain.TypeOfBusiness
-import v2.models.errors._
 import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
 
-class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDateProvider) extends Validator[TriggerBsasRawData] with FixedConfig {
+import javax.inject.Inject
+
+class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDate) extends Validator[TriggerBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidation, incorrectOrEmptyBodyValidation, bodyFormatValidation, bodyRuleValidation)
 

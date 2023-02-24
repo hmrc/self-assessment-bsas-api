@@ -16,9 +16,9 @@
 
 package v2.models.response.listBsas
 
+import api.models.domain.Status
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v2.models.domain.Status
 
 case class BsasEntries(bsasId: String, requestedDateTime: String, summaryStatus: Status, adjustedSummary: Boolean)
 

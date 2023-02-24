@@ -16,9 +16,10 @@
 
 package v2.connectors
 
-import mocks.MockAppConfig
+import api.connectors.ConnectorSpec
+import api.models.domain.TaxYear
+import config.MockAppConfig
 import v2.mocks.MockHttpClient
-import v2.models.domain.DownstreamTaxYear
 import v2.models.request.submitBsas.foreignProperty.{
   ForeignProperty,
   ForeignPropertyExpenses,
@@ -32,7 +33,7 @@ class SubmitForeignPropertyBsasNrsProxyConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 
-  val taxYear: DownstreamTaxYear = DownstreamTaxYear.fromMtd("2021-22")
+  val taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
   val request: SubmitForeignPropertyBsasRequestBody = {
     SubmitForeignPropertyBsasRequestBody(
@@ -79,7 +80,7 @@ class SubmitForeignPropertyBsasNrsProxyConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .post(
             url = s"$baseUrl/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             body = request
           )
           .returns(Future.successful((): Unit))

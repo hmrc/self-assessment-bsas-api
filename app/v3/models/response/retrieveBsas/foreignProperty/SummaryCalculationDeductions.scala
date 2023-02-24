@@ -16,21 +16,20 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SummaryCalculationDeductions(annualInvestmentAllowance: Option[BigDecimal],
-                      costOfReplacingDomesticItems: Option[BigDecimal],
-                      zeroEmissionGoods: Option[BigDecimal],
-                      propertyAllowance: Option[BigDecimal],
-                      otherCapitalAllowance: Option[BigDecimal],
-                      electricChargePointAllowance: Option[BigDecimal],
-                      structuredBuildingAllowance: Option[BigDecimal],
-                      zeroEmissionsCarAllowance: Option[BigDecimal]
-                   )
-
+                                        costOfReplacingDomesticItems: Option[BigDecimal],
+                                        zeroEmissionGoods: Option[BigDecimal],
+                                        propertyAllowance: Option[BigDecimal],
+                                        otherCapitalAllowance: Option[BigDecimal],
+                                        electricChargePointAllowance: Option[BigDecimal],
+                                        structuredBuildingAllowance: Option[BigDecimal],
+                                        zeroEmissionsCarAllowance: Option[BigDecimal])
 
 object SummaryCalculationDeductions {
+
   val readsFhl: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
       Reads.pure(None) and
@@ -40,7 +39,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
       Reads.pure(None) and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-    ) (SummaryCalculationDeductions.apply _)
+  )(SummaryCalculationDeductions.apply _)
 
   val readsNonFhl: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
@@ -51,7 +50,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
       (JsPath \ "structuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-    ) (SummaryCalculationDeductions.apply _)
+  )(SummaryCalculationDeductions.apply _)
 
   implicit val writes: OWrites[SummaryCalculationDeductions] = Json.writes[SummaryCalculationDeductions]
 }

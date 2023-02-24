@@ -16,11 +16,11 @@
 
 package v3.connectors
 
-import domain.Nino
-import v3.models.outcomes.ResponseWrapper
-import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.ResponseWrapper
+import api.models.domain.{Nino, TaxYear}
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.domain.TaxYear
+import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
@@ -42,7 +42,6 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, taxYear = None)
 
-
         val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
 
@@ -54,8 +53,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
         val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some(taxYear))
 
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calcId") returns Future.successful(
-          outcome)
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calcId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome

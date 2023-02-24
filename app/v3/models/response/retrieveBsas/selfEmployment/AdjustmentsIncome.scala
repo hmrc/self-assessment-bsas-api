@@ -27,7 +27,7 @@ case class AdjustmentsIncome(
 object AdjustmentsIncome {
   implicit val reads: Reads[AdjustmentsIncome] = (
     (JsPath \ "turnover").readNullable[BigDecimal] and
-    (JsPath \ "other").readNullable[BigDecimal]
+      (JsPath \ "other").readNullable[BigDecimal]
   )(AdjustmentsIncome.apply _)
 
   implicit val writes: OWrites[AdjustmentsIncome] = Json.writes[AdjustmentsIncome]

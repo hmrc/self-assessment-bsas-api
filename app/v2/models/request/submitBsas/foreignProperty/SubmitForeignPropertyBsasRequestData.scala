@@ -16,6 +16,6 @@
 
 package v2.models.request.submitBsas.foreignProperty
 
-import domain.Nino
+import api.models.domain.Nino
 
 case class SubmitForeignPropertyBsasRequestData(nino: Nino, bsasId: String, body: SubmitForeignPropertyBsasRequestBody)

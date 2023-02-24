@@ -16,91 +16,47 @@
 
 package v3.controllers
 
-import cats.data.EitherT
-import cats.implicits._
-import play.api.http.MimeTypes
-import play.api.libs.json.Json
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import api.controllers._
+import api.hateoas.HateoasFactory
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils._
 import v3.controllers.requestParsers.ListBsasRequestParser
-import v3.hateoas.HateoasFactory
-import v3.models.errors._
 import v3.models.request.ListBsasRawData
 import v3.models.response.listBsas.ListBsasHateoasData
-import v3.services.{ EnrolmentsAuthService, ListBsasService, MtdIdLookupService }
+import v3.services.ListBsasService
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    val lookupService: MtdIdLookupService,
-                                   requestParser: ListBsasRequestParser,
+                                   parser: ListBsasRequestParser,
                                    service: ListBsasService,
                                    hateoasFactory: HateoasFactory,
                                    cc: ControllerComponents,
                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
+    with V3Controller
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(
-      controllerName = "ListBsasController",
-      endpointName = "listBsas"
-    )
+    EndpointLogContext(controllerName = "ListBsasController", endpointName = "listBsas")
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- EitherT(service.listBsas(parsedRequest))
-        } yield {
-          val hateoasData    = ListBsasHateoasData(nino, response.responseData, Some(parsedRequest.taxYear))
-          val vendorResponse = hateoasFactory.wrapList(response.responseData, hateoasData)
 
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${response.correlationId}"
-          )
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.listBsas)
+          .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, responseData) =>
+            ListBsasHateoasData(nino, responseData, Some(parsedRequest.taxYear))))
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
-        }
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        result
-      }.merge
-    }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            TypeOfBusinessFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError,
-            BusinessIdFormatError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
+      requestHandler.handleRequest(rawData)
     }
 }

@@ -16,13 +16,15 @@
 
 package v2.services
 
-import domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures.{foreignPropertyMetaDataModel, nonFhlBsasDetailModel}
 import v2.mocks.connectors.MockRetrieveForeignPropertyAdjustmentsConnector
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty._
 
@@ -32,14 +34,15 @@ class RetrieveForeignPropertyAdjustmentsServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val request = RetrieveAdjustmentsRequestData(nino, id)
+  val id       = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val request  = RetrieveAdjustmentsRequestData(nino, id)
   val response = RetrieveForeignPropertyAdjustmentsResponse(foreignPropertyMetaDataModel, Seq(nonFhlBsasDetailModel))
 
   trait Test extends MockRetrieveForeignPropertyAdjustmentsConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveForeignPropertyAdjustmentsController", "RetrieveForeignPropertyAdjustments")
+    implicit val logContext: EndpointLogContext =
+      EndpointLogContext("RetrieveForeignPropertyAdjustmentsController", "RetrieveForeignPropertyAdjustments")
 
     val service = new RetrieveForeignPropertyAdjustmentsService(mockConnector)
   }
@@ -47,7 +50,8 @@ class RetrieveForeignPropertyAdjustmentsServiceSpec extends ServiceSpec {
   "retrieveForeignPropertyAdjustments" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrieveForeignPropertyAdjustmentsConnector.retrieveForeignPropertyAdjustments(request)
+        MockRetrieveForeignPropertyAdjustmentsConnector
+          .retrieveForeignPropertyAdjustments(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.retrieveForeignPropertyAdjustments(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -58,24 +62,25 @@ class RetrieveForeignPropertyAdjustmentsServiceSpec extends ServiceSpec {
   "unsuccessful" should {
     "map errors according to spec" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
-          MockRetrieveForeignPropertyAdjustmentsConnector.retrieveForeignPropertyAdjustments(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+          MockRetrieveForeignPropertyAdjustmentsConnector
+            .retrieveForeignPropertyAdjustments(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.retrieveForeignPropertyAdjustments(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-        "INVALID_CALCULATION_ID" -> BsasIdFormatError,
-        "INVALID_CORRELATION_ID" -> DownstreamError,
-        "INVALID_RETURN" -> DownstreamError,
-        "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
-        "NO_DATA_FOUND" -> NotFoundError,
-        "SERVER_ERROR" -> DownstreamError,
-        "SERVICE_UNAVAILABLE" -> DownstreamError
+        "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
+        "INVALID_CORRELATION_ID"    -> InternalError,
+        "INVALID_RETURN"            -> InternalError,
+        "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
+        "NO_DATA_FOUND"             -> NotFoundError,
+        "SERVER_ERROR"              -> InternalError,
+        "SERVICE_UNAVAILABLE"       -> InternalError
       )
 
       input.foreach(args => (serviceError _).tupled(args))

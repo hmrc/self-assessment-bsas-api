@@ -16,41 +16,42 @@
 
 package v2.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasConnector @Inject()
-      (val http: HttpClient,
-       val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)
-                                (implicit hc: HeaderCarrier, ec: ExecutionContext,
-                                 correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
+  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
+      implicit hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
-    import v2.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino   = request.nino.nino
     val bsasId = request.bsasId
 
     val queryParams = Map(
       "return" -> request.adjustedStatus
     )
 
-    def queryMap[A](as: Map[String, A]):Map[String, String] = as.collect {
+    def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {
       case (k: String, Some(v: String)) => (k, v)
     }
 
     val mappedQueryParams: Map[String, String] = queryMap(queryParams)
 
     get(
-      DownstreamUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"), mappedQueryParams.toSeq
+      DesUri[RetrieveSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId"),
+      mappedQueryParams.toSeq
     )
   }
 }

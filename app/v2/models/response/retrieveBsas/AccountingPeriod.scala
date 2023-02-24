@@ -16,10 +16,10 @@
 
 package v2.models.response.retrieveBsas
 
-import java.time.LocalDate
-
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+
+import java.time.LocalDate
 
 case class AccountingPeriod(startDate: LocalDate, endDate: LocalDate)
 
@@ -30,5 +30,5 @@ object AccountingPeriod {
   implicit val reads: Reads[AccountingPeriod] = (
     (JsPath \ "inputs" \ "accountingPeriodStartDate").read[LocalDate] and
       (JsPath \ "inputs" \ "accountingPeriodEndDate").read[LocalDate]
-    )(AccountingPeriod.apply _)
+  )(AccountingPeriod.apply _)
 }

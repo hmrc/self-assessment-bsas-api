@@ -16,8 +16,8 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import play.api.libs.json.{ JsPath, Json, OWrites, Reads }
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class AdjustmentsExpenses(consolidatedExpenses: Option[BigDecimal],
                                premisesRunningCosts: Option[BigDecimal],
@@ -54,7 +54,7 @@ object AdjustmentsExpenses {
       (JsPath \ "residentialFinancialCost").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "travelCosts").readNullable[BigDecimal]
-    )(AdjustmentsExpenses.apply _)
+  )(AdjustmentsExpenses.apply _)
 
   implicit val writes: OWrites[AdjustmentsExpenses] = Json.writes[AdjustmentsExpenses]
 }

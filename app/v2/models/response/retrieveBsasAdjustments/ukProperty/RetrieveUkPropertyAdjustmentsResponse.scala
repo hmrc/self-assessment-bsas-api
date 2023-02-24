@@ -16,12 +16,12 @@
 
 package v2.models.response.retrieveBsasAdjustments.ukProperty
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v2.hateoas.HateoasLinks
 import v2.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v2.models.hateoas.{HateoasData, Link}
 
 case class RetrieveUkPropertyAdjustmentsResponse(metadata: Metadata, adjustments: BsasDetail)
 
@@ -30,16 +30,16 @@ object RetrieveUkPropertyAdjustmentsResponse extends HateoasLinks {
   implicit val reads: Reads[RetrieveUkPropertyAdjustmentsResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`uk-property-fhl` => BsasDetail.fhlReads
+        case TypeOfBusiness.`uk-property-fhl`     => BsasDetail.fhlReads
         case TypeOfBusiness.`uk-property-non-fhl` => BsasDetail.nonFhlReads
-        case _ => BsasDetail.fhlReads // Reading as normal property, we are handling the error in the service layer.
+        case _                                    => BsasDetail.fhlReads // Reading as normal property, we are handling the error in the service layer.
       }
-    )(RetrieveUkPropertyAdjustmentsResponse.apply _)
+  )(RetrieveUkPropertyAdjustmentsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveUkPropertyAdjustmentsResponse] = Json.writes[RetrieveUkPropertyAdjustmentsResponse]
 
   implicit object RetrieveUkPropertyBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveUkPropertyAdjustmentsResponse, RetrieveUkPropertyAdjustmentsHateoasData] {
+      extends HateoasLinksFactory[RetrieveUkPropertyAdjustmentsResponse, RetrieveUkPropertyAdjustmentsHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveUkPropertyAdjustmentsHateoasData): Seq[Link] = {
       import data._
 

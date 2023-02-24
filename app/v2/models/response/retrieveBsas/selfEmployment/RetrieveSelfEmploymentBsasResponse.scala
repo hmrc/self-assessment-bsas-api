@@ -16,29 +16,28 @@
 
 package v2.models.response.retrieveBsas.selfEmployment
 
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v2.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v2.models.hateoas.{HateoasData, Link}
+import v2.hateoas.HateoasLinks
 
-case class RetrieveSelfEmploymentBsasResponse (metadata: Metadata,
-                                               bsas: Option[BsasDetail])
+case class RetrieveSelfEmploymentBsasResponse(metadata: Metadata, bsas: Option[BsasDetail])
 
 object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveSelfEmploymentBsasResponse] = (
     JsPath.read[Metadata] and
-      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap{
+      (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap {
         case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
-        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
+        case _       => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
       }
-    )(RetrieveSelfEmploymentBsasResponse.apply _)
+  )(RetrieveSelfEmploymentBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
+      extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentBsasHateoasData): Seq[Link] = {
       import data._
 

@@ -16,17 +16,16 @@
 
 package v2.mocks.services
 
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
-import v2.models.errors.ErrorWrapper
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v2.services.RetrieveSelfEmploymentAdjustmentsService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
 
@@ -34,10 +33,11 @@ trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
 
   object MockRetrieveSelfEmploymentBsasService {
 
-    def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
-      (mockService.retrieveSelfEmploymentsAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+    def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData)
+      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
+      (mockService
+        .retrieveSelfEmploymentsAdjustments(_: RetrieveAdjustmentsRequestData)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
   }
 }

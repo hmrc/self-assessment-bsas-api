@@ -16,9 +16,9 @@
 
 package v2.models.request
 
-import domain.Nino
+import api.models.RawData
+import api.models.domain.Nino
 import v2.models.domain.DownstreamTaxYear
-
 
 case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]) extends RawData
 

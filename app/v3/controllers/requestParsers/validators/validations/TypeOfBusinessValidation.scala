@@ -16,8 +16,9 @@
 
 package v3.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{MtdError, TypeOfBusinessFormatError}
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors.{MtdError, TypeOfBusinessFormatError}
 
 import scala.util.{Failure, Success, Try}
 

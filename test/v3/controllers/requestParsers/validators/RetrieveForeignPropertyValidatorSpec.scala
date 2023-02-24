@@ -16,8 +16,8 @@
 
 package v3.controllers.requestParsers.validators
 
+import api.models.errors._
 import support.UnitSpec
-import v3.models.errors.{ CalculationIdFormatError, InvalidTaxYearParameterError, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError }
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRawData
 
 class RetrieveForeignPropertyValidatorSpec extends UnitSpec {

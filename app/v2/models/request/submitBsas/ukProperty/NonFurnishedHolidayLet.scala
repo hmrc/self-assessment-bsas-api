@@ -20,7 +20,9 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class NonFurnishedHolidayLet(income: Option[NonFHLIncome], expenses: Option[NonFHLExpenses]) {
-  def isEmpty: Boolean = (income.isEmpty && expenses.isEmpty) ||
+
+  def isEmpty: Boolean =
+    (income.isEmpty && expenses.isEmpty) ||
     (income.isDefined && income.get.isEmpty) ||
     (expenses.isDefined && expenses.get.isEmpty)
 }
@@ -32,5 +34,5 @@ object NonFurnishedHolidayLet {
       (JsPath \ "expenses").readNullable[NonFHLExpenses]
   )(NonFurnishedHolidayLet.apply _)
 
-  implicit  val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
+  implicit val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
 }

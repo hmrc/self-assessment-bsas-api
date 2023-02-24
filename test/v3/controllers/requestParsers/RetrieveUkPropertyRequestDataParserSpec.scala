@@ -16,12 +16,11 @@
 
 package v3.controllers.requestParsers
 
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, BsasIdFormatError, CalculationIdFormatError, ErrorWrapper, NinoFormatError}
 import support.UnitSpec
-import domain.Nino
-import v3.models.domain.TaxYear
 import v3.mocks.validators.MockRetrieveUkPropertyValidator
-import v3.models.errors.{ BadRequestError, BsasIdFormatError, CalculationIdFormatError, ErrorWrapper, NinoFormatError }
-import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 
 class RetrieveUkPropertyRequestDataParserSpec extends UnitSpec {
 

@@ -16,11 +16,12 @@
 
 package v3.controllers.requestParsers
 
-import javax.inject.Inject
-import domain.Nino
-import v3.models.domain.TaxYear
+import api.controllers.RequestParser
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+
+import javax.inject.Inject
 
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
     extends RequestParser[RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData] {

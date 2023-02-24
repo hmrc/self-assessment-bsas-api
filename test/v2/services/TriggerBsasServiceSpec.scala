@@ -16,13 +16,15 @@
 
 package v2.services
 
-import domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.connectors.MockTriggerBsasConnector
 import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import api.models.ResponseWrapper
+import api.models.domain.Nino
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
@@ -31,14 +33,14 @@ import scala.concurrent.Future
 class TriggerBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val request = TriggerBsasRequest(nino, model)
 
   val response = TriggerBsasResponse(id)
 
   trait Test extends MockTriggerBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "triggerBsas")
 
     val service = new TriggerBsasService(mockConnector)
@@ -47,7 +49,8 @@ class TriggerBsasServiceSpec extends ServiceSpec {
   "triggerBsas" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockTriggerBsasConnector.triggerBsas(request)
+        MockTriggerBsasConnector
+          .triggerBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.triggerBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -56,27 +59,27 @@ class TriggerBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
-          MockTriggerBsasConnector.triggerBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+          MockTriggerBsasConnector
+            .triggerBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.triggerBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
-
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("ACCOUNTING_PERIOD_NOT_ENDED", RuleAccountingPeriodNotEndedError),
         ("OBLIGATIONS_NOT_MET", RulePeriodicDataIncompleteError),
         ("NO_ACCOUNTING_PERIOD", RuleNoAccountingPeriodError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("INVALID_PAYLOAD", DownstreamError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError),
-        ("INCOME_SOURCEID_NOT_PROVIDED", DownstreamError),
-        ("INVALID_CORRELATIONID", DownstreamError)
+        ("INVALID_PAYLOAD", InternalError),
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError),
+        ("INCOME_SOURCEID_NOT_PROVIDED", InternalError),
+        ("INVALID_CORRELATIONID", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

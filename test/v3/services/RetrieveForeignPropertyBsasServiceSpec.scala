@@ -16,30 +16,32 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.connectors.MockRetrieveForeignPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 
-class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
+class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id, taxYear=None)
+  val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
 
   val response: RetrieveForeignPropertyBsasResponse = retrieveForeignPropertyBsasResponseNonFhlModel
 
   trait Test extends MockRetrieveForeignPropertyBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveForeignPropertyBSAS", "retrieve")
 
     val service = new RetrieveForeignPropertyBsasService(mockConnector)
@@ -48,7 +50,8 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
   "retrieve" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
+        MockRetrieveForeignPropertyBsasConnector
+          .retrieveForeignPropertyBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.retrieveForeignPropertyBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -67,14 +70,15 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec{
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
             await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
-          })
+        })
       }
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"$downstreamErrorCode is returned from the service" in new Test {
 
-          MockRetrieveForeignPropertyBsasConnector.retrieveForeignPropertyBsas(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+          MockRetrieveForeignPropertyBsasConnector
+            .retrieveForeignPropertyBsas(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

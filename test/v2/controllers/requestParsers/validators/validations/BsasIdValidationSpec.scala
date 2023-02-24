@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v2.models.errors.BsasIdFormatError
+import api.models.errors.BsasIdFormatError
 import v2.models.utils.JsonErrorValidators
 
 class BsasIdValidationSpec extends UnitSpec with JsonErrorValidators {

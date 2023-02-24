@@ -16,137 +16,61 @@
 
 package v3.controllers
 
-import cats.data.EitherT
-import cats.implicits._
-import play.api.http.MimeTypes
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
+import api.controllers._
+import api.hateoas.HateoasFactory
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import play.api.libs.json.JsValue
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import utils.{IdGenerator, Logging}
 import v3.controllers.requestParsers.TriggerBsasRequestParser
-import v3.hateoas.HateoasFactory
-import v3.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRawData
 import v3.models.response.TriggerBsasHateoasData
-import v3.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, TriggerBsasService }
+import v3.services.TriggerBsasService
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
                                       val lookupService: MtdIdLookupService,
-                                      requestParser: TriggerBsasRequestParser,
-                                      triggerBsasService: TriggerBsasService,
+                                      parser: TriggerBsasRequestParser,
+                                      service: TriggerBsasService,
                                       hateoasFactory: HateoasFactory,
                                       auditService: AuditService,
                                       cc: ControllerComponents,
                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
+    with V3Controller
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(
-      controllerName = "TriggerBsasController",
-      endpointName = "triggerBsas"
-    )
+    EndpointLogContext(controllerName = "TriggerBsasController", endpointName = "triggerBsas")
 
   def triggerBsas(nino: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = TriggerBsasRawData(nino, AnyContentAsJson(request.body))
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          response      <- EitherT(triggerBsasService.triggerBsas(parsedRequest))
-        } yield {
-          val typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness)
-          val hateoasData    = TriggerBsasHateoasData(nino, typeOfBusiness, response.responseData.calculationId, Some(parsedRequest.taxYear))
-          val vendorResponse = hateoasFactory.wrap(response.responseData, hateoasData)
 
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${response.correlationId}"
-          )
-
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino),
-              requestBody = Some(request.body),
-              `X-CorrelationId` = response.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
-            )
-          )
-
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(response.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.triggerBsas)
+          .withHateoasResultFrom(hateoasFactory) { (parsedRequest, responseData) =>
+            val typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness)
+            TriggerBsasHateoasData(nino, typeOfBusiness, responseData.calculationId, Some(parsedRequest.taxYear))
+          }
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "TriggerBusinessSourceAdjustableSummary",
+            transactionName = "trigger-business-source-adjustable-summary",
+            apiVersion = apiVersion,
             params = Map("nino" -> nino),
             requestBody = Some(request.body),
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
+            includeResponse = true
+          ))
 
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            RuleAccountingPeriodNotSupportedError,
-            RuleAccountingPeriodNotEndedError,
-            RulePeriodicDataIncompleteError,
-            RuleNoAccountingPeriodError,
-            StartDateFormatError,
-            EndDateFormatError,
-            TypeOfBusinessFormatError,
-            RuleIncorrectOrEmptyBodyError,
-            BusinessIdFormatError,
-            RuleEndBeforeStartDateError,
-            RuleTaxYearNotSupportedError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case UnauthorisedError => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError     => NotFound(Json.toJson(errorWrapper))
-      case InternalError     => InternalServerError(Json.toJson(errorWrapper))
-      case _                 => unhandledError(errorWrapper)
-    }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "TriggerBusinessSourceAdjustableSummary",
-      transactionName = "trigger-business-source-adjustable-summary",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 }

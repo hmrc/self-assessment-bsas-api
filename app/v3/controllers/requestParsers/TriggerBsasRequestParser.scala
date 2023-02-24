@@ -16,10 +16,12 @@
 
 package v3.controllers.requestParsers
 
-import javax.inject.Inject
-import domain.Nino
+import api.controllers.RequestParser
+import api.models.domain.Nino
 import v3.controllers.requestParsers.validators.TriggerBsasValidator
 import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
+
+import javax.inject.Inject
 
 class TriggerBsasRequestParser @Inject()(val validator: TriggerBsasValidator) extends RequestParser[TriggerBsasRawData, TriggerBsasRequest] {
 

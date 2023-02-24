@@ -16,13 +16,13 @@
 
 package v3.hateoas
 
-import mocks.MockAppConfig
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{Link, Method}
+import api.models.domain.TaxYear
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
-import v3.models.domain.TaxYear
-import v3.models.hateoas.{ Link, Method }
-import v3.models.hateoas.Method.{ GET, POST }
-import v3.models.hateoas.RelType._
+import v3.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 

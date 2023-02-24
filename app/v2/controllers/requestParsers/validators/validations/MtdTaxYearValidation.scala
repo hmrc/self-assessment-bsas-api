@@ -16,9 +16,10 @@
 
 package v2.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.MtdError
 import config.FixedConfig
 import v2.models.domain.DownstreamTaxYear
-import v2.models.errors.MtdError
 
 object MtdTaxYearValidation extends FixedConfig {
 

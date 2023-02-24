@@ -16,35 +16,30 @@
 
 package v3.services
 
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.ResponseWrapper
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v3.connectors.ListBsasConnector
-import v3.controllers.EndpointLogContext
-import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
-import v3.support.DownstreamResponseMappingSupport
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasService @Inject()(connector: ListBsasConnector) extends DownstreamResponseMappingSupport with Logging {
+class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseService {
 
-  def listBsas(request: ListBsasRequest)(implicit hc: HeaderCarrier,
-                                         ec: ExecutionContext,
-                                         logContext: EndpointLogContext,
-                                         correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]] = {
+  def listBsas(request: ListBsasRequest)(implicit ctx: RequestContext,
+                                         ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]] = {
 
-    val result = EitherT(connector.listBsas(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector
+      .listBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val errorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_CORRELATIONID"     -> InternalError,
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,

@@ -16,29 +16,30 @@
 
 package v3.services
 
-import domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.controllers.EndpointLogContext
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
-import v3.models.errors._
-import v3.models.outcomes.ResponseWrapper
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.retrieveBsasResponseModel
 import v3.models.domain.TypeOfBusiness
+import v3.models.errors._
+import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 
-class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
+class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val request: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(nino, id, None)
 
   trait Test extends MockRetrieveSelfEmploymentBsasConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveSelfEmploymentBsasConnector", "retrieveSelfEmploymentBsas")
 
     val service = new RetrieveSelfEmploymentBsasService(mockConnector)
@@ -46,8 +47,9 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
 
   "retrieveSelfEmploymentBsas" should {
     "return a valid response" when {
-      "a valid request is supplied" in new Test{
-        MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
+      "a valid request is supplied" in new Test {
+        MockRetrieveSelfEmploymentBsasConnector
+          .retrieveSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
         await(service.retrieveSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))
@@ -66,13 +68,14 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec{
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
             await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
-          })
+        })
       }
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveSelfEmploymentBsasConnector.retrieveSelfEmploymentBsas(request)
+          MockRetrieveSelfEmploymentBsasConnector
+            .retrieveSelfEmploymentBsas(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))

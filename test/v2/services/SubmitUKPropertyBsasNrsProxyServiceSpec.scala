@@ -16,7 +16,8 @@
 
 package v2.services
 
-import domain.Nino
+import api.models.domain.Nino
+import api.services.ServiceSpec
 import v2.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
 import v2.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 
@@ -33,14 +34,16 @@ class SubmitUKPropertyBsasNrsProxyServiceSpec extends ServiceSpec {
   "NrsProxyService" should {
     "call the Nrs Proxy connector" when {
       "the connector is valid" in new Test {
-        MockNrsProxyConnector.submit(nino.toString())
-        .returns(Future.successful((): Unit))
+        MockNrsProxyConnector
+          .submit(nino.toString())
+          .returns(Future.successful((): Unit))
 
         await(service.submit(nino.toString(), SubmitUKPropertyBsasRequestBody(None, None))) shouldBe (())
       }
       "the connector fails" in new Test {
-        MockNrsProxyConnector.submit(nino.toString())
-        .returns(Future.failed(new Exception()))
+        MockNrsProxyConnector
+          .submit(nino.toString())
+          .returns(Future.failed(new Exception()))
 
         assertThrows[Exception](
           await(service.submit(nino.toString(), SubmitUKPropertyBsasRequestBody(None, None)))

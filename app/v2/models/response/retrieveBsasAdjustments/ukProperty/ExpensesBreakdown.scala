@@ -19,25 +19,29 @@ package v2.models.response.retrieveBsasAdjustments.ukProperty
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal],
-                             financialCosts: Option[BigDecimal], professionalFees: Option[BigDecimal],
-                             travelCosts: Option[BigDecimal], costOfServices: Option[BigDecimal],
-                             residentialFinancialCost: Option[BigDecimal], other: Option[BigDecimal],
+case class ExpensesBreakdown(premisesRunningCosts: Option[BigDecimal],
+                             repairsAndMaintenance: Option[BigDecimal],
+                             financialCosts: Option[BigDecimal],
+                             professionalFees: Option[BigDecimal],
+                             travelCosts: Option[BigDecimal],
+                             costOfServices: Option[BigDecimal],
+                             residentialFinancialCost: Option[BigDecimal],
+                             other: Option[BigDecimal],
                              consolidatedExpenses: Option[BigDecimal])
 
 object ExpensesBreakdown {
 
-    implicit val reads: Reads[ExpensesBreakdown] = (
-      (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
-        (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and
-        (JsPath \ "financialCosts").readNullable[BigDecimal] and
-        (JsPath \ "professionalFees").readNullable[BigDecimal] and
-        (JsPath \ "travelCosts").readNullable[BigDecimal] and
-        (JsPath \ "costOfServices").readNullable[BigDecimal] and
-        (JsPath \ "residentialFinancialCost").readNullable[BigDecimal] and
-        (JsPath \"other").readNullable[BigDecimal] and
-        (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-      ) (ExpensesBreakdown.apply _)
+  implicit val reads: Reads[ExpensesBreakdown] = (
+    (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
+      (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and
+      (JsPath \ "financialCosts").readNullable[BigDecimal] and
+      (JsPath \ "professionalFees").readNullable[BigDecimal] and
+      (JsPath \ "travelCosts").readNullable[BigDecimal] and
+      (JsPath \ "costOfServices").readNullable[BigDecimal] and
+      (JsPath \ "residentialFinancialCost").readNullable[BigDecimal] and
+      (JsPath \ "other").readNullable[BigDecimal] and
+      (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
+  )(ExpensesBreakdown.apply _)
 
-    implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]
+  implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]
 }

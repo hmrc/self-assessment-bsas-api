@@ -25,19 +25,20 @@ case class IncomeBreakdown(rentIncome: Option[BigDecimal],
                            otherPropertyIncome: Option[BigDecimal])
 
 object IncomeBreakdown {
+
   val fhlReads: Reads[IncomeBreakdown] = (
     (JsPath \ "rentReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-    ) (IncomeBreakdown.apply _)
+  )(IncomeBreakdown.apply _)
 
   val nonFhlReads: Reads[IncomeBreakdown] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-    ) (IncomeBreakdown.apply _)
+  )(IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }

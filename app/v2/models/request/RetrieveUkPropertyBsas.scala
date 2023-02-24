@@ -16,9 +16,9 @@
 
 package v2.models.request
 
-import domain.Nino
+import api.models.RawData
+import api.models.domain.Nino
 
 case class RetrieveUkPropertyBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
 
 case class RetrieveUkPropertyBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])
-

@@ -22,12 +22,12 @@ case class FHLIncome(rentIncome: Option[BigDecimal]) {
 
   val params: Map[String, BigDecimal] = Map(
     "rentReceived" -> rentIncome
-  ).collect {case (k, Some(v)) => (k, v) }
+  ).collect { case (k, Some(v)) => (k, v) }
 
   def isEmpty: Boolean = rentIncome.isEmpty
 }
 
 object FHLIncome {
-  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
+  implicit val reads: Reads[FHLIncome]   = Json.reads[FHLIncome]
   implicit val writes: Writes[FHLIncome] = (o: FHLIncome) => Json.toJsObject(o.params)
 }

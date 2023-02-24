@@ -19,26 +19,30 @@ package v2.models.request.submitBsas.selfEmployment
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
-case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses]){
+case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], additions: Option[Additions], expenses: Option[Expenses]) {
 
   def isEmpty: Boolean = !(income.isDefined || additions.isDefined || expenses.isDefined)
 
-  def isIncorrectOrEmptyBodyError: Boolean = isEmpty || (income.isDefined && income.get.isEmpty) ||
+  def isIncorrectOrEmptyBodyError: Boolean =
+    isEmpty || (income.isDefined && income.get.isEmpty) ||
     (additions.isDefined && additions.get.isEmpty) ||
     (expenses.isDefined && expenses.get.isEmpty)
 }
 
-object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil{
+object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil {
 
   implicit val reads: Reads[SubmitSelfEmploymentBsasRequestBody] = Json.reads[SubmitSelfEmploymentBsasRequestBody]
   implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = (o: SubmitSelfEmploymentBsasRequestBody) =>
-    if(o.isEmpty) JsObject.empty
-    else filterNull(Json.obj(
-    "incomeSourceType" -> "01",
-      "adjustments" -> filterNull(Json.obj(
-        "income" -> o.income,
-        "expenses" -> o.expenses,
-        "additions" -> o.additions
-      ))
-  ))
+    if (o.isEmpty) JsObject.empty
+    else
+      filterNull(
+        Json.obj(
+          "incomeSourceType" -> "01",
+          "adjustments" -> filterNull(
+            Json.obj(
+              "income"    -> o.income,
+              "expenses"  -> o.expenses,
+              "additions" -> o.additions
+            ))
+        ))
 }

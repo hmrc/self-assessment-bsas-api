@@ -34,6 +34,7 @@ case class SummaryCalculationDeductions(
 )
 
 object SummaryCalculationDeductions {
+
   val readsFhl: Reads[SummaryCalculationDeductions] = (
     Reads.pure(None) and
       (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and

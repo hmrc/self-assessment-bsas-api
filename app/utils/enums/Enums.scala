@@ -17,7 +17,7 @@
 package utils.enums
 
 import cats.Show
-import play.api.libs.json.{Format, JsString, JsonValidationError, Reads, Writes}
+import play.api.libs.json._
 import utils.enums.Values.MkValues
 
 import scala.reflect.ClassTag
@@ -27,6 +27,7 @@ object Shows {
 }
 
 object Enums {
+
   def typeName[E: ClassTag]: String =
     implicitly[ClassTag[E]].runtimeClass.getSimpleName
 

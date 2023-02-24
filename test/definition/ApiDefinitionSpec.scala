@@ -16,23 +16,13 @@
 
 package definition
 
-import definition.APIStatus.ALPHA
+import routing._
 import support.UnitSpec
 
 class ApiDefinitionSpec extends UnitSpec {
 
-  val apiVersion: APIVersion = APIVersion("a", None, ALPHA, true)
-  val apiDefinition: APIDefinition = APIDefinition("b", "c", "d", Seq("e"), Seq(apiVersion), Some(false))
-
-  "APIVersion" when {
-    "the 'version' parameter is empty" should {
-      "throw an 'IllegalArgumentException'" in {
-        assertThrows[IllegalArgumentException](
-          apiVersion.copy(version = "")
-        )
-      }
-    }
-  }
+  private val apiVersion: APIVersion       = APIVersion(Version3, APIStatus.ALPHA, endpointsEnabled = true)
+  private val apiDefinition: APIDefinition = APIDefinition("b", "c", "d", Seq("category"), List(apiVersion), Some(false))
 
   "APIDefinition" when {
     "the 'name' parameter is empty" should {
@@ -60,10 +50,10 @@ class ApiDefinitionSpec extends UnitSpec {
     }
   }
 
-  "the 'categories' parameter is empty" should {
+  "the 'versions' parameter is not unique" should {
     "throw an 'IllegalArgumentException'" in {
       assertThrows[IllegalArgumentException](
-        apiDefinition.copy(categories = Seq())
+        apiDefinition.copy(versions = List(apiVersion, apiVersion))
       )
     }
   }
@@ -71,15 +61,7 @@ class ApiDefinitionSpec extends UnitSpec {
   "the 'versions' parameter is empty" should {
     "throw an 'IllegalArgumentException'" in {
       assertThrows[IllegalArgumentException](
-        apiDefinition.copy(versions = Seq(apiVersion, apiVersion))
-      )
-    }
-  }
-
-  "the 'versions' parameter is not unique" should {
-    "throw an 'IllegalArgumentException'" in {
-      assertThrows[IllegalArgumentException](
-        apiDefinition.copy(versions = Seq())
+        apiDefinition.copy(versions = Nil)
       )
     }
   }

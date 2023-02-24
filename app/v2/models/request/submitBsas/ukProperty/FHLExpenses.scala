@@ -18,29 +18,34 @@ package v2.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
-case class FHLExpenses(premisesRunningCosts: Option[BigDecimal], repairsAndMaintenance: Option[BigDecimal],
-                       financialCosts: Option[BigDecimal], professionalFees: Option[BigDecimal], costOfServices: Option[BigDecimal],
-                       travelCosts: Option[BigDecimal], other: Option[BigDecimal], consolidatedExpenses: Option[BigDecimal]){
+case class FHLExpenses(premisesRunningCosts: Option[BigDecimal],
+                       repairsAndMaintenance: Option[BigDecimal],
+                       financialCosts: Option[BigDecimal],
+                       professionalFees: Option[BigDecimal],
+                       costOfServices: Option[BigDecimal],
+                       travelCosts: Option[BigDecimal],
+                       other: Option[BigDecimal],
+                       consolidatedExpenses: Option[BigDecimal]) {
 
   val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts" -> premisesRunningCosts,
+    "premisesRunningCosts"  -> premisesRunningCosts,
     "repairsAndMaintenance" -> repairsAndMaintenance,
-    "financialCosts" -> financialCosts,
-    "professionalFees" -> professionalFees,
-    "costOfServices" -> costOfServices,
-    "travelCosts" -> travelCosts,
-    "other" -> other,
-    "consolidatedExpenses" -> consolidatedExpenses
-  ).collect {case (k, Some(v)) => (k, v) }
+    "financialCosts"        -> financialCosts,
+    "professionalFees"      -> professionalFees,
+    "costOfServices"        -> costOfServices,
+    "travelCosts"           -> travelCosts,
+    "other"                 -> other,
+    "consolidatedExpenses"  -> consolidatedExpenses
+  ).collect { case (k, Some(v)) => (k, v) }
 
   def isEmpty: Boolean =
     FHLExpenses.unapply(this).forall {
       case (None, None, None, None, None, None, None, None) => true
-      case _ => false
+      case _                                                => false
     }
 }
 
 object FHLExpenses {
-  implicit val reads: Reads[FHLExpenses] = Json.reads[FHLExpenses]
+  implicit val reads: Reads[FHLExpenses]    = Json.reads[FHLExpenses]
   implicit val writes: OWrites[FHLExpenses] = (o: FHLExpenses) => Json.toJsObject(o.params)
 }
