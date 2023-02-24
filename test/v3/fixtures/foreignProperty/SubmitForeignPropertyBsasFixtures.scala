@@ -67,7 +67,7 @@ object SubmitForeignPropertyBsasFixtures {
       |              "otherPropertyIncome": 3.12
       |          },
       |          "expenses": {
-      |              "consolidatedExpense": 4.12,
+      |              "consolidatedExpenses": 4.12,
       |              "premisesRunningCosts": 5.12,
       |              "repairsAndMaintenance": 6.12,
       |              "financialCosts": 7.12,
