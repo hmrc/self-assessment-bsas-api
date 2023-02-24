@@ -41,6 +41,6 @@ object ForeignPropertyExpenses {
       (JsPath \ "costOfServices").writeNullable[BigDecimal] and
       (JsPath \ "residentialFinancialCost").writeNullable[BigDecimal] and
       (JsPath \ "other").writeNullable[BigDecimal] and
-      (JsPath \ "consolidatedExpense").writeNullable[BigDecimal]
+      (JsPath \ "consolidatedExpenses").writeNullable[BigDecimal]
   )(unlift(ForeignPropertyExpenses.unapply))
 }

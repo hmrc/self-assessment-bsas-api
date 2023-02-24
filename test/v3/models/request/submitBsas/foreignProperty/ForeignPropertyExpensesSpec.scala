@@ -74,7 +74,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
             |  "costOfServices": 6.12,
             |  "residentialFinancialCost": 7.12,
             |  "other": 8.12,
-            |  "consolidatedExpense": 9.12
+            |  "consolidatedExpenses": 9.12
             |}
             |""".stripMargin)
       }
