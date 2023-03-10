@@ -75,6 +75,9 @@ get:
          </tbody>
      </table>
 
+  tags:
+    - UK property business
+
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
     - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
