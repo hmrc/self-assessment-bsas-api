@@ -12,6 +12,14 @@
 or
 `sbt run`
 
+## To view the OAS
+
+To view documentation locally ensure the Self Assessment BSAS Api is running, and run api-documentation-frontend:
+`./run_local_with_dependencies.sh`
+
+Then go to http://localhost:9680/api-documentation/docs/api/preview and use this port and version:
+`http://localhost:9787/api/conf/1.0/application.yaml`
+
 ## Changelog
 
 You can see our changelog [here](https://github.com/hmrc/income-tax-mtd-changelog/wiki)
@@ -19,6 +27,10 @@ You can see our changelog [here](https://github.com/hmrc/income-tax-mtd-changelo
 ## Support and Reporting Issues
 
 You can create a GitHub issue [here](https://github.com/hmrc/income-tax-mtd-changelog/issues)
+
+## API Reference / Documentation
+
+Available on the [HMRC Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api/3.0)
 
 # License
 
