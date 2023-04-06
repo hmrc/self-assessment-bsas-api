@@ -7,8 +7,6 @@ components:
         The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
         For example, 2023-25 is not valid.
   
-        This is mandatory for tax years 2023-24 and onwards.
-  
         The minimum tax year is 2019-20.
   
         Where no tax year is provided, it will default to the current tax year.

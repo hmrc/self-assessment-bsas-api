@@ -16,13 +16,23 @@
 
 package v3.endpoints
 
-import api.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, TypeOfBusinessFormatError}
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{
+  BusinessIdFormatError,
+  InternalError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  TypeOfBusinessFormatError
+}
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
@@ -149,7 +159,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         response.json shouldBe summariesJSONForeignWithHateoas(nino, Some("2023-24"))
       }
 
-      "valid request is made without a tax year" in new NonTysTest {
+      "valid request is made without a tax year" in new TysIfsTest {
         override val taxYear: Option[String] = None
 
         override def setupStubs(): StubMapping = {
@@ -163,7 +173,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(nino)
+        response.json shouldBe summariesJSONWithHateoas(nino, Some("2023-24"))
       }
     }
 
