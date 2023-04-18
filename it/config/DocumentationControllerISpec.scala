@@ -35,11 +35,13 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |    {
       |      "key": "read:self-assessment",
       |      "name": "View your Self Assessment information",
-      |      "description": "Allow read access to self assessment data"
+      |      "description": "Allow read access to self assessment data",
+      |      "confidenceLevel": $confidenceLevel
       |    }, {
       |      "key": "write:self-assessment",
       |      "name": "Change your Self Assessment information",
-      |      "description": "Allow write access to self assessment data"
+      |      "description": "Allow write access to self assessment data",
+      |      "confidenceLevel": $confidenceLevel
       |    }
       |  ],
       |  "api": {
