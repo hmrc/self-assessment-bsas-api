@@ -17,10 +17,10 @@
 package v3.controllers
 
 import api.controllers.AuthorisedController
-import routing.{Version, Version3}
+import routing.{ Version, Version3 }
 
 trait V3Controller { _: AuthorisedController =>
 
-  val apiVersion: Version = Version3
+  implicit val apiVersion: Version = Version3
 
 }

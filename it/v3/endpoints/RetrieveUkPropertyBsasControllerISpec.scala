@@ -17,11 +17,11 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
@@ -68,9 +68,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the retrieve UK Property Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made and FHL is returned" in new NonTysTest {
 
         override def setupStubs(): Unit = {
@@ -82,6 +80,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
+        response.header("Deprecation") shouldBe None
       }
 
       "valid request is made and Non-FHL is returned" in new NonTysTest {
@@ -95,10 +94,10 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
+        response.header("Deprecation") shouldBe None
       }
 
       "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
-
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
         }
@@ -108,10 +107,10 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId, taxYear)
+        response.header("Deprecation") shouldBe None
       }
 
       "any valid Tax Year Specific request is made and Non-FHL is returned" in new TysIfsTest {
-
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasNonFhlResponseJson)
         }
@@ -120,12 +119,12 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe None
         response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId, taxYear)
       }
     }
 
     "return error response with status BAD_REQUEST" when {
-
       "valid request is made but DES response has invalid type of business" in new NonTysTest {
 
         override def setupStubs(): Unit = {

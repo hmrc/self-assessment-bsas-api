@@ -377,9 +377,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the submit foreign property bsas endpoint" should {
-
     "return a 200 status code" when {
-
       "any valid foreignProperty request is made" in new Test {
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -393,6 +391,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
       }
 
       "any valid foreignProperty request is made with a failed nrs call" in new Test {
@@ -408,6 +407,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
       }
 
       "any valid foreignFhlEea request is made" in new Test {
@@ -422,7 +422,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
       }
+
       "any valid foreignProperty consolidated request is made" in new Test {
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -435,7 +437,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
       }
+
       "any valid foreignFhlEea consolidated request is made" in new Test {
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

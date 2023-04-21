@@ -18,23 +18,24 @@ package v2.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link}
+import api.hateoas.{ HateoasWrapper, Link }
 import api.mocks.MockIdGenerator
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.errors._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import api.hateoas.MockHateoasFactory
 import v2.mocks.requestParsers.MockTriggerBsasRequestParser
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import v2.mocks.services.MockTriggerBsasService
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
-import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
+import config.MockAppConfig
+import v2.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequest }
 import v2.models.response.TriggerBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -48,7 +49,8 @@ class TriggerBsasControllerSpec
     with MockTriggerBsasService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
 
   private val correlationId = "X-123"
 

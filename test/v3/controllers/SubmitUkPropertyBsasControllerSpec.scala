@@ -16,22 +16,23 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.ResponseWrapper
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.domain.{ Nino, TaxYear }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsValue, Json}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
 import v3.models.errors._
-import v3.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
+import v3.models.request.submitBsas.ukProperty.{ SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData }
 import v3.models.response.SubmitUkPropertyBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,7 +48,8 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockIdGenerator
-    with MockAuditService {
+    with MockAuditService
+    with MockAppConfig {
 
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
   private val rawTaxYear    = "2023-24"

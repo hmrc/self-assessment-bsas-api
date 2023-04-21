@@ -17,11 +17,11 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
@@ -96,6 +96,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe None
       }
 
       "valid request is made and fhl is returned" in new NonTysTest {
@@ -106,6 +107,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson, nino, calculationId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe None
       }
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
@@ -116,6 +118,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe None
       }
     }
 

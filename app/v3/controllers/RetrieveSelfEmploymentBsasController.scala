@@ -16,29 +16,28 @@
 
 package v3.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.controllers.{ AuthorisedController, EndpointLogContext, RequestContext, RequestHandler }
 import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
+import config.AppConfig
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import utils.{ IdGenerator, Logging }
 import v3.controllers.requestParsers.RetrieveSelfEmploymentRequestParser
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 import v3.services.RetrieveSelfEmploymentBsasService
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveSelfEmploymentBsasController @Inject()(
-    val authService: EnrolmentsAuthService,
-    val lookupService: MtdIdLookupService,
-    parser: RetrieveSelfEmploymentRequestParser,
-    service: RetrieveSelfEmploymentBsasService,
-    hateoasFactory: HateoasFactory,
-    cc: ControllerComponents,
-    val idGenerator: IdGenerator
-)(implicit ec: ExecutionContext)
+class RetrieveSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
+                                                     val lookupService: MtdIdLookupService,
+                                                     parser: RetrieveSelfEmploymentRequestParser,
+                                                     service: RetrieveSelfEmploymentBsasService,
+                                                     hateoasFactory: HateoasFactory,
+                                                     cc: ControllerComponents,
+                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with V3Controller
     with Logging {

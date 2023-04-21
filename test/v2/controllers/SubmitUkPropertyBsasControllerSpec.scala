@@ -19,12 +19,12 @@ package v2.controllers
 import api.controllers.ControllerBaseSpec
 import api.hateoas
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsValue, Json}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
@@ -34,8 +34,9 @@ import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
-import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
-import v2.models.response.{SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse}
+import config.MockAppConfig
+import v2.models.request.submitBsas.ukProperty.{ SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData }
+import v2.models.response.{ SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,7 +50,8 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
 
   private val correlationId = "X-123"
 

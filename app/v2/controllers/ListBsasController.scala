@@ -18,16 +18,17 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{CurrentDate, DateUtils, IdGenerator, Logging}
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import config.AppConfig
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import utils.{ CurrentDate, DateUtils, IdGenerator, Logging }
 import v2.controllers.requestParsers.ListBsasRequestParser
 import v2.models.domain.DownstreamTaxYear
 import v2.models.request.ListBsasRawData
 import v2.models.response.listBsas.ListBsasHateoasData
 import v2.services.ListBsasService
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -39,7 +40,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    auditService: AuditService,
                                    cc: ControllerComponents,
                                    val currentDateProvider: CurrentDate,
-                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with V2Controller
     with Logging {

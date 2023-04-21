@@ -18,27 +18,26 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
+import config.AppConfig
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import utils.{ IdGenerator, Logging }
 import v2.controllers.requestParsers.RetrieveAdjustmentsRequestParser
 import v2.models.request.RetrieveAdjustmentsRawData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
 import v2.services.RetrieveForeignPropertyAdjustmentsService
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveForeignPropertyAdjustmentsController @Inject()(
-    val authService: EnrolmentsAuthService,
-    val lookupService: MtdIdLookupService,
-    parser: RetrieveAdjustmentsRequestParser,
-    service: RetrieveForeignPropertyAdjustmentsService,
-    hateoasFactory: HateoasFactory,
-    cc: ControllerComponents,
-    val idGenerator: IdGenerator
-)(implicit ec: ExecutionContext)
+class RetrieveForeignPropertyAdjustmentsController @Inject()(val authService: EnrolmentsAuthService,
+                                                             val lookupService: MtdIdLookupService,
+                                                             parser: RetrieveAdjustmentsRequestParser,
+                                                             service: RetrieveForeignPropertyAdjustmentsService,
+                                                             hateoasFactory: HateoasFactory,
+                                                             cc: ControllerComponents,
+                                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with V2Controller
     with Logging {

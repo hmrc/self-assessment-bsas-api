@@ -55,9 +55,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
     val desQueryParams = Map("return" -> "2")
 
     "return a valid response with status OK" when {
-
       "a valid response is received from des" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -69,6 +67,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
         response.json shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
       }
 
@@ -85,6 +84,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
         response.json shouldBe Json.parse(hateoasResponseWithoutAdditionsSEAdjustments(nino, bsasId))
       }
     }

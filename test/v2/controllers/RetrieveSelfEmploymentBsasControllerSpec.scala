@@ -17,12 +17,12 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.Method.{ GET, POST }
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,8 @@ import v2.mocks.services.MockRetrieveSelfEmploymentBsasService
 import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
-import v2.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import config.MockAppConfig
+import v2.models.request.{ RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData }
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,7 +47,8 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockRetrieveSelfEmploymentBsasService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
 
   private val correlationId = "X-123"
 

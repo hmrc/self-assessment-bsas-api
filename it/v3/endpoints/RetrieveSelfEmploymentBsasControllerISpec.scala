@@ -17,11 +17,11 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
@@ -65,11 +65,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new NonTysTest {
-
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
         }
@@ -79,9 +76,9 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
+        response.header("Deprecation") shouldBe None
       }
       "valid request is made for TYS" in new TysIfsTest {
-
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
         }
@@ -91,13 +88,12 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId, taxYear)
+        response.header("Deprecation") shouldBe None
       }
     }
 
     "return error response with status FORBIDDEN" when {
-
       "valid request is made but downstream response has invalid type of business" in new NonTysTest {
-
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET,
                                    downstreamUrl,
@@ -114,7 +110,6 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-
       def validationErrorTest(requestNino: String,
                               requestBsasId: String,
                               taxYearString: Option[String],

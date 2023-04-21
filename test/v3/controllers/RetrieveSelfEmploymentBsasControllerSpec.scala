@@ -16,21 +16,22 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.ResponseWrapper
 import api.models.domain.Nino
 import api.models.errors._
-import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsObject, Json}
+import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
+import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v3.mocks.services.MockRetrieveSelfEmploymentBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v3.models.request.retrieveBsas.selfEmployment.{ RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData }
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +45,8 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockRetrieveSelfEmploymentRequestParser
     with MockRetrieveSelfEmploymentBsasService
     with MockHateoasFactory
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
 
   private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 

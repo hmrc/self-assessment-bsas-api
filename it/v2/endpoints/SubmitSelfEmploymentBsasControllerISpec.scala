@@ -73,9 +73,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
   val requestBody: JsValue = mtdRequest
 
   "Calling the Submit Adjustments endpoint for self-employment" should {
-
     "return a 200 status code" when {
-
       "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
@@ -86,10 +84,11 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse(bsasId, "01")))
         }
 
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
-        result.header("Content-Type") shouldBe Some("application/json")
+        val response: WSResponse = await(request().post(requestBody))
+        response.status shouldBe OK
+        response.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
       }
 
       "a valid request is made with a failed nrs call" in new Test {
@@ -102,15 +101,15 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse(bsasId, "01")))
         }
 
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
-        result.header("Content-Type") shouldBe Some("application/json")
+        val response: WSResponse = await(request().post(requestBody))
+        response.status shouldBe OK
+        response.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
       }
     }
 
     "return error according to spec" when {
-
       "validation error" when {
         def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError, requestBodyJson: JsValue): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {

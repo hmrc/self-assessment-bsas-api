@@ -31,10 +31,10 @@ import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino                           = "AA123456A"
-    val adjustedStatus: Option[String] = Some("true")
-    val bsasId                         = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams                 = Map("return" -> "3")
+    val nino                                = "AA123456A"
+    val adjustedStatus: Option[String]      = Some("true")
+    val bsasId                              = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val desQueryParams: Map[String, String] = Map("return" -> "3")
 
     def uri: String = s"/$nino/self-employment/$bsasId"
 
@@ -60,11 +60,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -76,14 +73,13 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
         response.json shouldBe Json.parse(hateoasResponseForSelfAssessment(nino, bsasId))
       }
     }
 
     "return error response with status FORBIDDEN" when {
-
       "valid request is made but DES response has invalid type of business" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -100,7 +96,6 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-
       def validationErrorTest(requestNino: String,
                               requestBsasId: String,
                               requestAdjustedStatus: Option[String],
@@ -134,7 +129,6 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "des service error" when {
-
       def errorBody(code: String): String =
         s"""{
            |  "code": "$code",

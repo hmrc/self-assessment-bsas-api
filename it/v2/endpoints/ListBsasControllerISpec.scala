@@ -19,21 +19,21 @@ package v2.endpoints
 import v2.fixtures.ListBsasFixtures._
 import play.api.http.HeaderNames.ACCEPT
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
+import play.api.http.Status.{ BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE }
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import api.models.errors._
-import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class ListBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
-    val taxYear: Option[String] = Some("2019-20")
+    val nino                           = "AA123456B"
+    val taxYear: Option[String]        = Some("2019-20")
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String] = None
+    val businessId: Option[String]     = None
 
     def uri: String = s"/$nino"
 
@@ -54,16 +54,13 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
   }
 
   "Calling the list Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -75,11 +72,11 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
         response.json shouldBe summariesJSONWithHateoas(nino)
       }
 
       "valid request is made with foreign property" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -91,11 +88,11 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
         response.json shouldBe summariesJSONForeignWithHateoas(nino)
       }
 
       "valid request is made without a tax year" in new Test {
-
         override val taxYear: Option[String] = None
 
         override def setupStubs(): StubMapping = {
@@ -109,21 +106,24 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
         response.json shouldBe summariesJSONWithHateoas(nino)
       }
     }
 
     "return error according to spec" when {
-
-      def validationErrorTest(requestNino: String, requestTaxYear: String,
-                              requestTypeOfBusiness: Option[String], requestBusinessId: Option[String],
-                              expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String,
+                              requestTaxYear: String,
+                              requestTypeOfBusiness: Option[String],
+                              requestBusinessId: Option[String],
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
-          override val taxYear: Option[String] = Some(requestTaxYear)
+          override val nino: String                   = requestNino
+          override val taxYear: Option[String]        = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String] = requestBusinessId
+          override val businessId: Option[String]     = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -150,7 +150,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     "des service error" when {
-
       def errorBody(code: String): String =
         s"""{
            |  "code": "$code",

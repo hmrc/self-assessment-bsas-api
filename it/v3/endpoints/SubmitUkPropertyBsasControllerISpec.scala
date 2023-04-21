@@ -22,7 +22,7 @@ import api.stubs._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
@@ -45,10 +45,10 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe None
       }
 
       "any valid request is made for a TYS tax year" in new TysIfsTest {
-
         override def setupStubs(): Unit = {
           stubNrsSuccess()
           stubDownstreamSuccess()
@@ -58,10 +58,10 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, calculationId, taxYear))
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe None
       }
 
       "a valid request is made with a failed nrs call" in new NonTysTest {
-
         override def setupStubs(): Unit = {
           NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
           stubDownstreamSuccess()
@@ -71,12 +71,13 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Deprecation") shouldBe None
+
       }
     }
 
     "return validation error according to spec" when {
       "validation error" when {
-
         def validationErrorTest(requestNino: String,
                                 requestCalculationId: String,
                                 requestTaxYear: Option[String],
@@ -235,7 +236,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
   }
 
   private trait TysIfsTest extends Test {
-
     override def taxYear: Option[String] = Some("2023-24")
 
     def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"

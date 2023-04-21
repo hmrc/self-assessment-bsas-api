@@ -109,6 +109,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe summariesJSONWithHateoas(nino)
+        response.header("Deprecation") shouldBe None
       }
 
       "valid request is made with a Tax Year Specific (TYS) tax year" in new TysIfsTest {
