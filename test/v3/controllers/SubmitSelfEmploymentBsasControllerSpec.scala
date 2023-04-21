@@ -28,6 +28,7 @@ import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLook
 import config.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ AnyContentAsJson, Result }
+import routing.Version3
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v3.mocks.services._
@@ -50,6 +51,8 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockAuditService
     with MockIdGenerator
     with MockAppConfig {
+
+  private val version = Version3
 
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -184,5 +187,6 @@ class SubmitSelfEmploymentBsasControllerSpec
         )
       )
 
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 }

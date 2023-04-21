@@ -27,6 +27,7 @@ import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import config.MockAppConfig
 import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
+import routing.Version3
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v3.mocks.services.MockRetrieveUkPropertyBsasService
@@ -47,6 +48,8 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockHateoasFactory
     with MockIdGenerator
     with MockAppConfig {
+
+  private val version = Version3
 
   private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
@@ -146,5 +149,7 @@ class RetrieveUkPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 }

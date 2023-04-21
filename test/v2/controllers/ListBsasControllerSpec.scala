@@ -17,12 +17,12 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.mocks.{MockCurrentDate, MockIdGenerator}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, Status}
+import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
+import api.mocks.{ MockCurrentDate, MockIdGenerator }
+import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.domain.{ Nino, Status }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import config.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -32,10 +32,11 @@ import v2.fixtures.ListBsasFixtures._
 import v2.hateoas.HateoasLinks
 import v2.mocks.requestParsers.MockListBsasRequestParser
 import v2.mocks.services.MockListBsasService
-import v2.models.domain.{DownstreamTaxYear, TypeOfBusiness}
+import v2.models.domain.{ DownstreamTaxYear, TypeOfBusiness }
 import api.models.ResponseWrapper
-import v2.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
-import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
+import routing.Version2
+import v2.models.request.{ AccountingPeriod, ListBsasRawData, ListBsasRequest }
+import v2.models.response.listBsas.{ BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -59,6 +60,7 @@ class ListBsasControllerSpec
   private val taxYear        = Some("2019-20")
   private val typeOfBusiness = Some("uk-property-fhl")
   private val businessId     = Some("XAIS12345678901")
+  private val version        = Version2
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -78,6 +80,7 @@ class ListBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
 
     val date: LocalDate = LocalDate.of(2019, 6, 18)
     MockCurrentDate.getCurrentDate().returns(date).anyNumberOfTimes()
@@ -158,6 +161,7 @@ class ListBsasControllerSpec
       "valid request" in new Test {
 
         MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
+//        MockedAppConfig.apiStatus(Version2) returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
 
         MockListBsasRequestDataParser
           .parse(rawData)

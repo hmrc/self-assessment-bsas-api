@@ -16,23 +16,24 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.mocks.{MockCurrentDate, MockIdGenerator}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
+import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
+import api.mocks.{ MockCurrentDate, MockIdGenerator }
 import api.models.ResponseWrapper
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{ Nino, TaxYear }
 import api.models.errors._
-import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
+import routing.Version3
 import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks
 import v3.mocks.requestParsers.MockListBsasRequestParser
 import v3.mocks.services.MockListBsasService
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.{ListBsasRawData, ListBsasRequest}
-import v3.models.response.listBsas.{BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
+import v3.models.request.{ ListBsasRawData, ListBsasRequest }
+import v3.models.response.listBsas.{ BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -53,6 +54,7 @@ class ListBsasControllerSpec
 
   private val typeOfBusiness = Some("self-employment")
   private val businessId     = Some("XAIS12345678901")
+  private val version        = Version3
 
   "list bsas" should {
     "return OK" when {
@@ -209,5 +211,8 @@ class ListBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
+
   }
 }

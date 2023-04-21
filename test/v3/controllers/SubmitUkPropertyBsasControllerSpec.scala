@@ -28,6 +28,7 @@ import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLook
 import config.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
+import routing.Version3
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
@@ -50,6 +51,8 @@ class SubmitUkPropertyBsasControllerSpec
     with MockIdGenerator
     with MockAuditService
     with MockAppConfig {
+
+  private val version = Version3
 
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
   private val rawTaxYear    = "2023-24"
@@ -180,5 +183,7 @@ class SubmitUkPropertyBsasControllerSpec
           auditResponse = auditResponse
         )
       )
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 }

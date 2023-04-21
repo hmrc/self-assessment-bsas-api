@@ -32,6 +32,7 @@ import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
 import config.MockAppConfig
+import routing.Version2
 import v2.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData }
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
@@ -50,6 +51,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockAppConfig {
 
   private val correlationId = "X-123"
+  private val version       = Version2
 
   trait Test {
     val hc = HeaderCarrier()
@@ -67,6 +69,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
 
   }
 

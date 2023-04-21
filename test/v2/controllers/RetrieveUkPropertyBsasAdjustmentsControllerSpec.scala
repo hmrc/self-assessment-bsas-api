@@ -33,6 +33,7 @@ import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
 import config.MockAppConfig
+import routing.Version2
 import v2.models.request.{ RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData }
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsHateoasData
 
@@ -51,6 +52,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec
     with MockAppConfig {
 
   private val correlationId = "X-123"
+  private val version       = Version2
 
   trait Test {
     val hc = HeaderCarrier()
@@ -69,6 +71,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
 
   }
 
