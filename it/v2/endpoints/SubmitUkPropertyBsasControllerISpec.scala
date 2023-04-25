@@ -87,7 +87,8 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
+        result.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/")
       }
 
       "a valid request is made with a failed nrs call" in new Test {
@@ -104,7 +105,8 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
+        result.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/")
       }
     }
 

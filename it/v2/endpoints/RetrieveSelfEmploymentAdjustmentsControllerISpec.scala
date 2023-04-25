@@ -67,7 +67,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/")
         response.json shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
       }
 
@@ -84,13 +85,13 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some("This endpoint will be deprecated soon")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/")
         response.json shouldBe Json.parse(hateoasResponseWithoutAdditionsSEAdjustments(nino, bsasId))
       }
     }
 
     "return error response with status BAD_REQUEST" when {
-
       "valid request is made but DES response has invalid type of business" in new Test {
 
         override def setupStubs(): StubMapping = {

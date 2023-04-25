@@ -130,7 +130,8 @@ object RequestHandler {
           implicit val isDeprecated: Boolean = versionStatus == "DEPRECATED"
 
           val deprecatedHeader = Seq(
-            "Deprecation" -> "This endpoint will be deprecated soon"
+            "Deprecation" ->
+              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/"
           )
 
           val newHeaders: Seq[(String, String)] = responseHeaders ++ Seq(
