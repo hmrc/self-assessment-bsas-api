@@ -131,7 +131,7 @@ object RequestHandler {
 
           val deprecatedHeader = Seq(
             "Deprecation" ->
-              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/"
+              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
           )
 
           val newHeaders: Seq[(String, String)] = responseHeaders ++ Seq(

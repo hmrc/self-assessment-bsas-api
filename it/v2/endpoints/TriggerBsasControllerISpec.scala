@@ -102,7 +102,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
             result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
             result.header("Content-Type") shouldBe Some("application/json")
             result.header("Deprecation") shouldBe Some(
-              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/")
+              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
           }
       }
     }
