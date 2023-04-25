@@ -16,21 +16,23 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.ResponseWrapper
 import api.models.domain.Nino
 import api.models.errors._
-import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsObject, Json}
+import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
+import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
+import routing.Version3
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.requestParsers.MockRetrieveForeignPropertyRequestParser
 import v3.mocks.services.MockRetrieveForeignPropertyBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
+import v3.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData }
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +46,10 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockRetrieveForeignPropertyRequestParser
     with MockRetrieveForeignPropertyBsasService
     with MockHateoasFactory
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
+
+  private val version = Version3
 
   private val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
@@ -109,5 +114,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.retrieve(nino, calcId, taxYear = None)(fakeGetRequest)
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 }

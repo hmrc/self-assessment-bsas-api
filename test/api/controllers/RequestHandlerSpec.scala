@@ -23,13 +23,13 @@ import api.models.errors.{ ErrorWrapper, NinoFormatError }
 import api.models.outcomes.ServiceOutcome
 import api.models.{ RawData, ResponseWrapper, UserDetails }
 import api.services.MockAuditService
-import config.AppConfig
+import config.{ AppConfig, MockAppConfig }
 import org.scalamock.handlers.CallHandler
 import play.api.http.{ HeaderNames, Status }
 import play.api.libs.json.{ JsString, Json, OWrites }
 import play.api.mvc.AnyContent
 import play.api.test.{ FakeRequest, ResultExtractors }
-import routing.Version3
+import routing.{ Version, Version3 }
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
@@ -45,7 +45,10 @@ class RequestHandlerSpec
     with Status
     with HeaderNames
     with ResultExtractors
-    with ControllerSpecHateoasSupport {
+    with ControllerSpecHateoasSupport
+    with MockAppConfig {
+
+  private implicit val version: Version = Version3
 
   private val successResponseJson = Json.obj("result" -> "SUCCESS!")
   private val successCode         = Status.ACCEPTED
@@ -94,6 +97,8 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withPlainJsonResult(successCode)
 
+        MockedAppConfig.apiStatus(version) returns "BETA"
+
         parseRequest returns Right(Input)
         service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
@@ -110,6 +115,8 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withNoContentResult()
 
+        MockedAppConfig.apiStatus(version) returns "BETA"
+
         parseRequest returns Right(Input)
         service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
@@ -125,6 +132,8 @@ class RequestHandlerSpec
           .withParser(mockParser)
           .withService(mockService.service)
           .withHateoasResult(mockHateoasFactory)(HData, successCode)
+
+        MockedAppConfig.apiStatus(version) returns "BETA"
 
         parseRequest returns Right(Input)
         service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -146,6 +155,8 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withPlainJsonResult(successCode)
 
+        MockedAppConfig.apiStatus(version) returns "BETA"
+
         parseRequest returns Left(ErrorWrapper(generatedCorrelationId, NinoFormatError))
 
         val result = requestHandler.handleRequest(InputRaw)
@@ -162,6 +173,8 @@ class RequestHandlerSpec
           .withParser(mockParser)
           .withService(mockService.service)
           .withPlainJsonResult(successCode)
+
+        MockedAppConfig.apiStatus(version) returns "BETA"
 
         parseRequest returns Right(Input)
         service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))
@@ -210,6 +223,8 @@ class RequestHandlerSpec
           "audit without the response" in {
             val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
+            MockedAppConfig.apiStatus(version) returns "BETA"
+
             parseRequest returns Right(Input)
             service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
@@ -226,6 +241,8 @@ class RequestHandlerSpec
         "the response is to be audited" must {
           "audit with the response" in {
             val requestHandler = basicRequestHandler.withAuditing(auditHandler(includeResponse = true))
+
+            MockedAppConfig.apiStatus(version) returns "BETA"
 
             parseRequest returns Right(Input)
             service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -245,6 +262,8 @@ class RequestHandlerSpec
         "audit the failure" in {
           val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
+          MockedAppConfig.apiStatus(version) returns "BETA"
+
           parseRequest returns Left(ErrorWrapper(generatedCorrelationId, NinoFormatError))
 
           val result = requestHandler.handleRequest(InputRaw)
@@ -260,6 +279,8 @@ class RequestHandlerSpec
       "a request fails with service errors" must {
         "audit the failure" in {
           val requestHandler = basicRequestHandler.withAuditing(auditHandler())
+
+          MockedAppConfig.apiStatus(version) returns "BETA"
 
           parseRequest returns Right(Input)
           service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))

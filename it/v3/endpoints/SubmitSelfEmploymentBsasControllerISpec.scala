@@ -21,8 +21,8 @@ import api.stubs._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.models.errors._
@@ -83,11 +83,8 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
   val requestBody: JsValue = mtdRequestJson
 
   "Calling the Submit Adjustments endpoint for self-employment" should {
-
     "return a 200 status code" when {
-
       "any valid request is made" in new NonTysTest {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -100,6 +97,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Deprecation") shouldBe None
       }
 
       "any valid TYS request is made" in new TysIfsTest {
@@ -116,6 +114,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Deprecation") shouldBe None
       }
 
       "a valid request is made with a failed nrs call" in new NonTysTest {
@@ -132,6 +131,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Deprecation") shouldBe None
       }
 
       "a valid TYS request is made with a failed nrs call" in new TysIfsTest {

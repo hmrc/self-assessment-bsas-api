@@ -20,8 +20,8 @@ import api.models.errors._
 import api.stubs._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
@@ -111,9 +111,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the submit foreign property bsas endpoint" should {
-
     "return a 200 status code" when {
-
       "any valid foreignProperty request is made" in new NonTysTest {
         override def setupStubs(): Unit = {
           stubNrsSuccess()
@@ -136,6 +134,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId") should not be empty
+        response.header("Deprecation") shouldBe None
       }
 
       "any valid foreignProperty request is made despite a failed nrs call" in new NonTysTest {
@@ -148,6 +147,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId") should not be empty
+        response.header("Deprecation") shouldBe None
       }
     }
 

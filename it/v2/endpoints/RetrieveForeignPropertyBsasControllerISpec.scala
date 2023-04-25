@@ -31,19 +31,17 @@ import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino                           = "AA123456B"
-    val adjustedStatus: Option[String] = Some("true")
-    val bsasId                         = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    val desQueryParams                 = Map("return" -> "3")
+    val nino                                = "AA123456B"
+    val adjustedStatus: Option[String]      = Some("true")
+    val bsasId                              = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val desQueryParams: Map[String, String] = Map("return" -> "3")
 
-    def uri: String = s"/$nino/foreign-property/$bsasId"
-
+    def uri: String    = s"/$nino/foreign-property/$bsasId"
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
-
       val queryParams = Seq("adjustedStatus" -> adjustedStatus)
         .collect {
           case (k, Some(v)) => (k, v)
@@ -60,11 +58,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -76,14 +71,14 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
         response.json shouldBe Json.parse(hateoasResponseForeignProperty(nino, bsasId))
       }
     }
 
     "return error response with status BAD_REQUEST" when {
-
       "valid request is made but DES response has invalid type of business" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -95,12 +90,13 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe FORBIDDEN
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
         response.json shouldBe Json.toJson(RuleNotForeignProperty)
       }
     }
 
     "return error according to spec" when {
-
       def validationErrorTest(requestNino: String,
                               requestBsasId: String,
                               requestAdjustedStatus: Option[String],

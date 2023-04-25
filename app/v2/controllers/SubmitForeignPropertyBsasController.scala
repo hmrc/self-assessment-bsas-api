@@ -16,18 +16,19 @@
 
 package v2.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.controllers.{ AuthorisedController, EndpointLogContext, RequestContext, RequestHandler }
 import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
+import config.AppConfig
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import play.api.mvc.{ Action, ControllerComponents }
+import utils.{ IdGenerator, Logging }
 import v2.controllers.requestParsers.SubmitForeignPropertyBsasRequestParser
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 import v2.models.response.SubmitForeignPropertyBsasHateoasData
-import v2.services.{SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService}
+import v2.services.{ SubmitForeignPropertyBsasNrsProxyService, SubmitForeignPropertyBsasService }
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -38,7 +39,7 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
                                                     service: SubmitForeignPropertyBsasService,
                                                     hateoasFactory: HateoasFactory,
                                                     cc: ControllerComponents,
-                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with V2Controller
     with Logging {

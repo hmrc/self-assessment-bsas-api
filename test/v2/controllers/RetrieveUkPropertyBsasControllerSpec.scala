@@ -17,12 +17,12 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.Method.{ GET, POST }
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,9 @@ import v2.mocks.services.MockRetrieveUkPropertyBsasService
 import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
-import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import config.MockAppConfig
+import routing.Version2
+import v2.models.request.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,9 +48,11 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockRetrieveUkPropertyBsasService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
 
   private val correlationId = "X-123"
+  private val version       = Version2
 
   trait Test {
     val hc = HeaderCarrier()
@@ -67,6 +71,7 @@ class RetrieveUkPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
 
   }
 

@@ -17,11 +17,11 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.Method.{ GET, POST }
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,7 +31,9 @@ import v2.mocks.services.MockRetrieveForeignPropertyBsasService
 import v2.models.errors._
 import api.models.ResponseWrapper
 import api.models.domain.Nino
-import v2.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData}
+import config.MockAppConfig
+import routing.Version2
+import v2.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData }
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -45,9 +47,11 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockRetrieveForeignPropertyBsasService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
 
   private val correlationId = "X-123"
+  private val version       = Version2
 
   trait Test {
     val hc = HeaderCarrier()
@@ -65,6 +69,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
 
   }
 

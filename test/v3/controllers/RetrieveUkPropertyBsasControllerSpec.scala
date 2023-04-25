@@ -16,21 +16,23 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.ResponseWrapper
 import api.models.domain.Nino
 import api.models.errors._
-import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsObject, Json}
+import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
+import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
+import routing.Version3
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v3.mocks.services.MockRetrieveUkPropertyBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +46,10 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockRetrieveUkPropertyRequestParser
     with MockRetrieveUkPropertyBsasService
     with MockHateoasFactory
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
+
+  private val version = Version3
 
   private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
@@ -144,5 +149,7 @@ class RetrieveUkPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 }

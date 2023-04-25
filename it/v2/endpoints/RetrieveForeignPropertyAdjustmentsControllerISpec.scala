@@ -100,9 +100,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
     val desQueryParams = Map("return" -> "2")
 
     "return a valid response with status OK" when {
-
       "a valid response is received from des" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -114,14 +112,14 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
         response.json shouldBe Json.parse(hateoasResponseForForeignPropertyAdjustments(nino, bsasId))
       }
     }
 
     "return error according to spec" when {
-
       "request made is for an invalid type of business" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -161,7 +159,6 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
     }
 
     "des service error" when {
-
       def errorBody(code: String): String =
         s"""{
            |  "code": "$code",

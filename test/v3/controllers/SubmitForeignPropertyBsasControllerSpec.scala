@@ -16,17 +16,19 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.ResponseWrapper
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.domain.{ Nino, TaxYear }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsValue, Json}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
+import routing.Version3
 import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
 import v3.mocks.services._
 import v3.models.errors._
@@ -46,7 +48,10 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockSubmitForeignPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAppConfig {
+
+  private val version = Version3
 
   private val bsasId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val rawTaxYear = "2023-24"
@@ -200,5 +205,7 @@ class SubmitForeignPropertyBsasControllerSpec
           auditResponse = auditResponse
         )
       )
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 }

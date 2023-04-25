@@ -56,7 +56,6 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
     val desQueryParams = Map("return" -> "2")
 
     "return a valid response with status OK" when {
-
       "a valid uk-property-fhl response is received from des" in new Test {
 
         override def setupStubs(): StubMapping = {
@@ -70,11 +69,12 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
         response.json shouldBe Json.parse(hateoasResponseForUkPropertyFhlAdjustments(nino, bsasId))
       }
 
       "a valid uk-property-non-fhl response is received from des" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -86,14 +86,14 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
         response.json shouldBe Json.parse(hateoasResponseForUkPropertyNonFhlAdjustments(nino, bsasId))
       }
     }
 
     "return error response with status FORBIDDEN" when {
-
       "valid request is made but DES response has invalid type of business" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -110,7 +110,6 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a validation error" when {
-
       def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
@@ -138,7 +137,6 @@ class RetrieveUkPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a des service error" when {
-
       def errorBody(code: String): String =
         s"""{
            |  "code": "$code",

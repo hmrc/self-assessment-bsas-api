@@ -73,11 +73,8 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
   val requestBody: JsValue = validfhlInputJson
 
   "Calling the Submit Adjustments to your UK Property Summary endpoint" should {
-
     "return a 200 status code" when {
-
       "any valid request is made" in new Test {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -90,6 +87,8 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
         result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
 
       "a valid request is made with a failed nrs call" in new Test {
@@ -106,11 +105,12 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
         result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
     }
 
     "return error according to spec" when {
-
       "validation error" when {
         def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {

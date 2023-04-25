@@ -79,7 +79,6 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the triggerBsas" should {
-
     "return a 201 status code" when {
 
       List(
@@ -91,7 +90,6 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
       ).foreach {
         case (typeOfBusiness, hateoasLinkPath) =>
           s"any valid request is made with typeOfBusiness: $typeOfBusiness" in new Test {
-
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
@@ -103,12 +101,13 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
             result.status shouldBe CREATED
             result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
             result.header("Content-Type") shouldBe Some("application/json")
+            result.header("Deprecation") shouldBe Some(
+              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
           }
       }
     }
 
     "return error according to spec" when {
-
       "validation error" when {
         def validationErrorTest(requestNino: String, json: JsObject, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {

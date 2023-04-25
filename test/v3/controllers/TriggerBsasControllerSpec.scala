@@ -16,24 +16,25 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
 import api.models.ResponseWrapper
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.domain.{ Nino, TaxYear }
 import api.models.errors._
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import config.MockAppConfig
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
+import routing.Version3
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.requestParsers.MockTriggerBsasRequestParser
 import v3.mocks.services.MockTriggerBsasService
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
-import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
+import v3.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequest }
 import v3.models.response.TriggerBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,6 +51,8 @@ class TriggerBsasControllerSpec
     with MockIdGenerator
     with MockAuditService
     with MockAppConfig {
+
+  private val version = Version3
 
   private val request = TriggerBsasRequest(
     Nino(nino),
@@ -191,6 +194,8 @@ class TriggerBsasControllerSpec
           auditResponse = auditResponse
         )
       )
+
+    MockedAppConfig.apiStatus(version) returns "BETA"
   }
 
 }
