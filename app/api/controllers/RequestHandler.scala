@@ -126,24 +126,25 @@ object RequestHandler {
 
         def withApiHeaders(correlationId: String, responseHeaders: (String, String)*)(implicit appConfig: AppConfig, apiVersion: Version): Result = {
 
-          val versionStatus                  = appConfig.apiStatus(apiVersion)
-          implicit val isDeprecated: Boolean = versionStatus == "DEPRECATED"
+          val versionStatus = appConfig.apiStatus(apiVersion)
+          val isDeprecated  = versionStatus == "DEPRECATED"
 
-          val deprecatedHeader = Seq(
-            "Deprecation" ->
-              "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
-          )
+          val maybeDeprecatedHeader =
+            if (isDeprecated)
+              List(
+                "Deprecation" -> "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+            else Nil
 
-          val newHeaders: Seq[(String, String)] = responseHeaders ++ Seq(
-            "X-CorrelationId"        -> correlationId,
-            "X-Content-Type-Options" -> "nosniff"
-          )
-
-          val headers = if (isDeprecated) newHeaders ++ deprecatedHeader else newHeaders
+          val headers =
+            responseHeaders ++
+              List(
+                "X-CorrelationId"        -> correlationId,
+                "X-Content-Type-Options" -> "nosniff"
+              ) ++
+              maybeDeprecatedHeader
 
           result.copy(header = result.header.copy(headers = result.header.headers ++ headers))
         }
-
       }
 
       def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext,
@@ -184,13 +185,9 @@ object RequestHandler {
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${ctx.correlationId}")
 
-        val resultWrapper = resultCreator
-          .createResult(rawData, parsedRequest, serviceResponse.responseData)
-
-        val result = resultWrapper.asResult.withApiHeaders(ctx.correlationId)
-
+        val resultWrapper = resultCreator.createResult(rawData, parsedRequest, serviceResponse.responseData)
+        val result        = resultWrapper.asResult.withApiHeaders(ctx.correlationId)
         auditIfRequired(result.header.status, Right(resultWrapper.body))
-
         result
       }
 
@@ -204,11 +201,8 @@ object RequestHandler {
             s"Error response received with CorrelationId: ${ctx.correlationId}")
 
         val errorResult = errorHandling.errorHandler.applyOrElse(errorWrapper, unhandledError)
-
-        val result = errorResult.withApiHeaders(ctx.correlationId)
-
+        val result      = errorResult.withApiHeaders(ctx.correlationId)
         auditIfRequired(result.header.status, Left(errorWrapper))
-
         result
       }
 
@@ -226,9 +220,6 @@ object RequestHandler {
         auditHandler.foreach { creator =>
           creator.performAudit(request.userDetails, httpStatus, response)
         }
-
     }
-
   }
-
 }
