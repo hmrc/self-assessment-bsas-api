@@ -124,6 +124,6 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
     protected def callController(): Future[Result] = controller.handleRequest(nino, calculationId)(fakeGetRequest)
 
-    MockedAppConfig.apiStatus(version) returns "BETA"
+    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

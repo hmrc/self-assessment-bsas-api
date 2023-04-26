@@ -125,12 +125,8 @@ object RequestHandler {
       implicit class Response(result: Result) {
 
         def withApiHeaders(correlationId: String, responseHeaders: (String, String)*)(implicit appConfig: AppConfig, apiVersion: Version): Result = {
-
-          val versionStatus = appConfig.apiStatus(apiVersion)
-          val isDeprecated  = versionStatus == "DEPRECATED"
-
           val maybeDeprecatedHeader =
-            if (isDeprecated)
+            if (appConfig.isApiDeprecated(apiVersion))
               List(
                 "Deprecation" -> "This endpoint is deprecated. See the service guide: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
             else Nil

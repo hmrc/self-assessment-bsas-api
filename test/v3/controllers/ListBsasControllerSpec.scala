@@ -212,7 +212,6 @@ class ListBsasControllerSpec
 
     protected def callController(): Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
 
-    MockedAppConfig.apiStatus(version) returns "BETA"
-
+    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

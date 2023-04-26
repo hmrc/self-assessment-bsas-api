@@ -97,7 +97,7 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withPlainJsonResult(successCode)
 
-        MockedAppConfig.apiStatus(version) returns "BETA"
+        MockedAppConfig.isApiDeprecated(version) returns false
 
         parseRequest returns Right(Input)
         service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -115,7 +115,7 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withNoContentResult()
 
-        MockedAppConfig.apiStatus(version) returns "BETA"
+        MockedAppConfig.isApiDeprecated(version) returns false
 
         parseRequest returns Right(Input)
         service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -133,7 +133,7 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withHateoasResult(mockHateoasFactory)(HData, successCode)
 
-        MockedAppConfig.apiStatus(version) returns "BETA"
+        MockedAppConfig.isApiDeprecated(version) returns false
 
         parseRequest returns Right(Input)
         service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -155,7 +155,7 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withPlainJsonResult(successCode)
 
-        MockedAppConfig.apiStatus(version) returns "BETA"
+        MockedAppConfig.isApiDeprecated(version) returns false
 
         parseRequest returns Left(ErrorWrapper(generatedCorrelationId, NinoFormatError))
 
@@ -174,7 +174,7 @@ class RequestHandlerSpec
           .withService(mockService.service)
           .withPlainJsonResult(successCode)
 
-        MockedAppConfig.apiStatus(version) returns "BETA"
+        MockedAppConfig.isApiDeprecated(version) returns false
 
         parseRequest returns Right(Input)
         service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))
@@ -223,7 +223,7 @@ class RequestHandlerSpec
           "audit without the response" in {
             val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
-            MockedAppConfig.apiStatus(version) returns "BETA"
+            MockedAppConfig.isApiDeprecated(version) returns false
 
             parseRequest returns Right(Input)
             service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -242,7 +242,7 @@ class RequestHandlerSpec
           "audit with the response" in {
             val requestHandler = basicRequestHandler.withAuditing(auditHandler(includeResponse = true))
 
-            MockedAppConfig.apiStatus(version) returns "BETA"
+            MockedAppConfig.isApiDeprecated(version) returns false
 
             parseRequest returns Right(Input)
             service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
@@ -262,7 +262,7 @@ class RequestHandlerSpec
         "audit the failure" in {
           val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
-          MockedAppConfig.apiStatus(version) returns "BETA"
+          MockedAppConfig.isApiDeprecated(version) returns false
 
           parseRequest returns Left(ErrorWrapper(generatedCorrelationId, NinoFormatError))
 
@@ -280,7 +280,7 @@ class RequestHandlerSpec
         "audit the failure" in {
           val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
-          MockedAppConfig.apiStatus(version) returns "BETA"
+          MockedAppConfig.isApiDeprecated(version) returns false
 
           parseRequest returns Right(Input)
           service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))

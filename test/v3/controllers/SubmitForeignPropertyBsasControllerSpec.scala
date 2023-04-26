@@ -206,6 +206,6 @@ class SubmitForeignPropertyBsasControllerSpec
         )
       )
 
-    MockedAppConfig.apiStatus(version) returns "BETA"
+    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

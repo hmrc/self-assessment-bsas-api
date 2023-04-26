@@ -68,8 +68,7 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful((Right("test-mtd-id"))))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
-
+    MockedAppConfig.isApiDeprecated(version) returns true
   }
 
   private val nino   = "AA123456A"
