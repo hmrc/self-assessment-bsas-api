@@ -21,21 +21,21 @@ import api.hateoas
 import api.hateoas.Method.GET
 import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
+import api.models.ResponseWrapper
 import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.domain.Nino
 import api.models.errors._
 import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
+import routing.Version2
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v2.mocks.services._
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import api.models.ResponseWrapper
-import api.models.domain.Nino
-import config.MockAppConfig
-import routing.Version2
 import v2.models.request.submitBsas.ukProperty.{ SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData }
 import v2.models.response.{ SubmitUkPropertyBsasHateoasData, SubmitUkPropertyBsasResponse }
 
@@ -75,8 +75,7 @@ class SubmitUkPropertyBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
-
+    MockedAppConfig.isApiDeprecated(version) returns true
   }
 
   private val nino = "AA123456A"

@@ -150,6 +150,6 @@ class RetrieveUkPropertyBsasControllerSpec
 
     protected def callController(): Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
 
-    MockedAppConfig.apiStatus(version) returns "BETA"
+    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

@@ -19,6 +19,7 @@ package v2.controllers
 import api.controllers.ControllerBaseSpec
 import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
 import api.mocks.{ MockCurrentDate, MockIdGenerator }
+import api.models.ResponseWrapper
 import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.domain.{ Nino, Status }
 import api.models.errors._
@@ -26,6 +27,7 @@ import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLook
 import config.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
+import routing.Version2
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.DateUtils
 import v2.fixtures.ListBsasFixtures._
@@ -33,8 +35,6 @@ import v2.hateoas.HateoasLinks
 import v2.mocks.requestParsers.MockListBsasRequestParser
 import v2.mocks.services.MockListBsasService
 import v2.models.domain.{ DownstreamTaxYear, TypeOfBusiness }
-import api.models.ResponseWrapper
-import routing.Version2
 import v2.models.request.{ AccountingPeriod, ListBsasRawData, ListBsasRequest }
 import v2.models.response.listBsas.{ BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
 
@@ -80,7 +80,7 @@ class ListBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
+    MockedAppConfig.isApiDeprecated(version) returns true
 
     val date: LocalDate = LocalDate.of(2019, 6, 18)
     MockCurrentDate.getCurrentDate().returns(date).anyNumberOfTimes()

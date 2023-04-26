@@ -20,20 +20,20 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.Method.GET
 import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
+import api.models.ResponseWrapper
 import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.domain.Nino
 import api.models.errors._
 import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import config.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.{ AnyContentAsJson, Result }
+import routing.Version2
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v2.mocks.services._
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import api.models.ResponseWrapper
-import api.models.domain.Nino
-import config.MockAppConfig
-import routing.Version2
 import v2.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData }
 import v2.models.response.{ SubmitSelfEmploymentBsasHateoasData, SubmitSelfEmploymentBsasResponse }
 
@@ -73,8 +73,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.apiStatus(version) returns "DEPRECATED"
-
+    MockedAppConfig.isApiDeprecated(version) returns true
   }
 
   import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
