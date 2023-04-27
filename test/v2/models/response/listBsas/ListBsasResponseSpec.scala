@@ -17,10 +17,10 @@
 package v2.models.response.listBsas
 
 import api.hateoas.Link
-import api.hateoas.Method.{GET, POST}
+import api.hateoas.Method.{ GET, POST }
 import api.models.domain.Status
-import config.MockAppConfig
-import play.api.libs.json.{JsSuccess, Json}
+import mocks.MockAppConfig
+import play.api.libs.json.{ JsSuccess, Json }
 import support.UnitSpec
 import v2.fixtures.ListBsasFixtures._
 import v2.models.domain.TypeOfBusiness

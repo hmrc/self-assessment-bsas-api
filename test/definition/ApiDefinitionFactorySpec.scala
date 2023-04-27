@@ -16,8 +16,9 @@
 
 package definition
 
-import config.{ ConfidenceLevelConfig, MockAppConfig }
+import config.ConfidenceLevelConfig
 import definition.APIStatus.{ ALPHA, BETA }
+import mocks.MockAppConfig
 import routing.{ Version2, Version3 }
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -78,16 +79,16 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
       (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
       (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
       (false, ConfidenceLevel.L200, ConfidenceLevel.L50)
-    ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
-      s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
-        s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
-            confidenceLevel = configCL,
-            definitionEnabled = definitionEnabled,
-            authValidationEnabled = true)
-          factory.confidenceLevel shouldBe expectedDefinitionCL
+    ).foreach {
+      case (definitionEnabled, configCL, expectedDefinitionCL) =>
+        s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
+          s"return confidence level $expectedDefinitionCL" in new Test {
+            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(confidenceLevel = configCL,
+                                                                                      definitionEnabled = definitionEnabled,
+                                                                                      authValidationEnabled = true)
+            factory.confidenceLevel shouldBe expectedDefinitionCL
+          }
         }
-      }
     }
   }
 

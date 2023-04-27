@@ -23,8 +23,8 @@ import api.controllers.EndpointLogContext
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.connectors.MockTriggerBsasConnector
 import v2.models.errors._
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 

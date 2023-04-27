@@ -17,8 +17,8 @@
 package v2.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
@@ -29,8 +29,8 @@ import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseService {

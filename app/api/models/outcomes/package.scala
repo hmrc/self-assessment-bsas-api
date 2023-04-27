@@ -16,11 +16,9 @@
 
 package api.models
 
-import api.models.errors.{ErrorWrapper, MtdError}
+import api.models.errors.MtdError
 
 package object outcomes {
-
-  type ServiceOutcome[I] = Either[ErrorWrapper, ResponseWrapper[I]]
 
   type AuthOutcome = Either[MtdError, UserDetails]
 

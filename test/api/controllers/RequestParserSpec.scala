@@ -16,10 +16,11 @@
 
 package api.controllers
 
+import api.controllers.requestParsers.RequestParser
 import api.controllers.requestParsers.validators.Validator
-import api.models.RawData
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
+import api.models.errors.{ BadRequestError, ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError }
+import api.models.request.RawData
 import support.UnitSpec
 
 class RequestParserSpec extends UnitSpec {
@@ -68,7 +69,8 @@ class RequestParserSpec extends UnitSpec {
           def validate(data: Raw) = List(NinoFormatError, RuleIncorrectOrEmptyBodyError)
         }
 
-        parser.parseRequest(Raw(nino)) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, RuleIncorrectOrEmptyBodyError))))
+        parser.parseRequest(Raw(nino)) shouldBe Left(
+          ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, RuleIncorrectOrEmptyBodyError))))
       }
     }
   }

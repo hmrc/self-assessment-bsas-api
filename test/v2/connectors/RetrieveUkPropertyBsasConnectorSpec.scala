@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.mocks.MockHttpClient
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 
 import scala.concurrent.Future
@@ -53,7 +53,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .parameterGet(
-            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/incomeSourceId",
             config = dummyHeaderCarrierConfig,
             queryParams.toSeq,
             requiredHeaders = desRequestHeaders,
@@ -69,7 +69,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .parameterGet(
-            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/incomeSourceId",
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/incomeSourceId",
             config = dummyHeaderCarrierConfig,
             Seq.empty,
             requiredHeaders = desRequestHeaders,

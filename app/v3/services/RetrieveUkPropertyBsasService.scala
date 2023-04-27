@@ -18,8 +18,8 @@ package v3.services
 
 import api.controllers.RequestContext
 import api.models
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveUkPropertyBsasConnector
@@ -27,17 +27,16 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`)
 
-  def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
+  def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit ctx: RequestContext,
+                                                           ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkPropertyBsasResponse]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))

@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.MockHttpClient
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
@@ -54,7 +54,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
       MockedHttpClient
         .post(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
           config = dummyHeaderCarrierConfig,
           body = model,
           requiredHeaders = requiredHeadersPost,

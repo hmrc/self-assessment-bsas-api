@@ -16,8 +16,8 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import api.models.RawData
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{ Nino, TaxYear }
+import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 
 case class SubmitSelfEmploymentBsasRawData(nino: String, calculationId: String, taxYear: Option[String], body: AnyContentAsJson) extends RawData

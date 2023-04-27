@@ -16,10 +16,14 @@
 
 package v2.controllers.requestParsers
 
-import api.controllers.RequestParser
+import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.SubmitForeignPropertyBsasValidator
-import v2.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData, SubmitForeignPropertyRawData}
+import v2.models.request.submitBsas.foreignProperty.{
+  SubmitForeignPropertyBsasRequestBody,
+  SubmitForeignPropertyBsasRequestData,
+  SubmitForeignPropertyRawData
+}
 
 import javax.inject.Inject
 

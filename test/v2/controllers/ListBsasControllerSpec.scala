@@ -18,13 +18,14 @@ package v2.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
+import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.mocks.{ MockCurrentDate, MockIdGenerator }
-import api.models.ResponseWrapper
 import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.domain.{ Nino, Status }
 import api.models.errors._
-import api.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
-import config.MockAppConfig
+import api.models.outcomes.ResponseWrapper
+import api.services.MockAuditService
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import routing.Version2

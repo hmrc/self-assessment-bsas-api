@@ -16,10 +16,10 @@
 
 package v2.controllers.requestParsers
 
-import api.controllers.RequestParser
+import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v2.models.request.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
 
 import javax.inject.Inject
 

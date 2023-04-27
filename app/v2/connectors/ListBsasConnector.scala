@@ -17,14 +17,15 @@
 package v2.connectors
 
 import api.connectors.DownstreamUri.DesUri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v2.models.response.listBsas.{ BsasEntries, ListBsasResponse }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -34,14 +35,12 @@ class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig
                                          ec: ExecutionContext,
                                          correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasEntries]]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
-    val nino = request.nino.nino
+    import request._
 
     val queryParams = Map(
-      "taxYear"          -> Some(request.taxYear.toString),
-      "incomeSourceId"   -> request.incomeSourceId,
-      "incomeSourceType" -> request.incomeSourceType
+      "taxYear"          -> Some(taxYear.toString),
+      "incomeSourceId"   -> incomeSourceId,
+      "incomeSourceType" -> incomeSourceType
     )
 
     def queryMap[A](as: Map[String, A]): Map[String, String] = as.collect {

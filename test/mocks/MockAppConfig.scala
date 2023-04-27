@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package config
+package mocks
 
+import config.{ AppConfig, ConfidenceLevelConfig }
 import org.scalamock.handlers.{ CallHandler, CallHandler0 }
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration

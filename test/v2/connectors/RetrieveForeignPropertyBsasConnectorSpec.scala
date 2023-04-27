@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasFixtures._
 import v2.mocks.MockHttpClient
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 
 import scala.concurrent.Future
@@ -54,7 +54,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient
           .parameterGet(
-            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
             config = dummyHeaderCarrierConfig,
             queryParams.toSeq,
             requiredHeaders = desRequestHeaders,
@@ -70,7 +70,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .parameterGet(
-            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
             dummyHeaderCarrierConfig,
             Seq.empty,
             requiredHeaders = desRequestHeaders,

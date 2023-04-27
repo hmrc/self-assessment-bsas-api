@@ -17,8 +17,8 @@
 package v2.models.response.retrieveBsas.selfEmployment
 
 import api.hateoas.Method._
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
-import config.MockAppConfig
+import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import mocks.MockAppConfig
 import support.UnitSpec
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.models.utils.JsonErrorValidators

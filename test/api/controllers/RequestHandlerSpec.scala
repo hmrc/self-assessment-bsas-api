@@ -16,14 +16,17 @@
 
 package api.controllers
 
+import api.controllers.requestParsers.RequestParser
 import api.hateoas._
 import api.mocks.MockIdGenerator
 import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
 import api.models.errors.{ ErrorWrapper, NinoFormatError }
-import api.models.outcomes.ServiceOutcome
-import api.models.{ RawData, ResponseWrapper, UserDetails }
-import api.services.MockAuditService
-import config.{ AppConfig, MockAppConfig }
+import api.models.outcomes.ResponseWrapper
+import api.models.request.RawData
+import api.models.UserDetails
+import api.services.{ MockAuditService, ServiceOutcome }
+import config.AppConfig
+import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
 import play.api.http.{ HeaderNames, Status }
 import play.api.libs.json.{ JsString, Json, OWrites }

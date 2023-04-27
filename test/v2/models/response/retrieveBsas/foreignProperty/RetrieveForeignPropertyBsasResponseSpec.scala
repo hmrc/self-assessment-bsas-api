@@ -16,9 +16,9 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
-import config.MockAppConfig
+import api.hateoas.Method.{ GET, POST }
+import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._

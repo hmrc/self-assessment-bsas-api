@@ -16,12 +16,12 @@
 
 package v2.controllers.requestParsers
 
-import api.controllers.RequestParser
+import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
-import utils.{CurrentDate, DateUtils}
+import utils.{ CurrentDate, DateUtils }
 import v2.controllers.requestParsers.validators.ListBsasValidator
 import v2.models.domain.TypeOfBusiness
-import v2.models.request.{ListBsasRawData, ListBsasRequest}
+import v2.models.request.{ ListBsasRawData, ListBsasRequest }
 
 import javax.inject.Inject
 

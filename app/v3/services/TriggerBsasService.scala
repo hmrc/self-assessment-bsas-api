@@ -18,23 +18,21 @@ package v3.services
 
 import api.controllers.RequestContext
 import api.models
-import api.models.ResponseWrapper
 import api.models.errors._
-import api.services.BaseService
+import api.services.{ BaseService, ServiceOutcome }
 import cats.implicits._
 import v3.connectors.TriggerBsasConnector
 import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {
 
-  def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext,
-                                               ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] =
+  def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[TriggerBsasResponse]] =
     connector
       .triggerBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))

@@ -16,10 +16,10 @@
 
 package v3.controllers.requestParsers
 
-import api.controllers.RequestParser
-import api.models.domain.{Nino, TaxYear}
+import api.controllers.requestParsers.RequestParser
+import api.models.domain.{ Nino, TaxYear }
 import v3.controllers.requestParsers.validators.RetrieveForeignPropertyValidator
-import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
+import v3.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData }
 
 import javax.inject.Inject
 

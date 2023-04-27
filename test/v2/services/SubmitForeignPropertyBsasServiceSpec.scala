@@ -23,8 +23,8 @@ import api.controllers.EndpointLogContext
 import v2.mocks.connectors.MockSubmitForeignPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
 import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
 

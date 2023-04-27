@@ -17,16 +17,16 @@
 package v2.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v2.connectors.ListBsasConnector
 import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
+import v2.models.response.listBsas.{ BsasEntries, ListBsasResponse }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseService {

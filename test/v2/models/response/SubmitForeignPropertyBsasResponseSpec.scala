@@ -18,8 +18,8 @@ package v2.models.response
 
 import api.hateoas.Link
 import api.hateoas.Method.GET
-import config.MockAppConfig
-import play.api.libs.json.{JsValue, Json}
+import mocks.MockAppConfig
+import play.api.libs.json.{ JsValue, Json }
 import support.UnitSpec
 import v2.models.domain.TypeOfBusiness
 

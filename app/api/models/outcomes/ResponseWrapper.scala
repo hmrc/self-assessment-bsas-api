@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package v3.models.request
+package api.models.outcomes
 
-import api.models.domain.{ Nino, TaxYear }
-import api.models.request.RawData
-
-case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]) extends RawData
-
-case class ListBsasRequest(nino: Nino, taxYear: TaxYear, incomeSourceId: Option[String], incomeSourceType: Option[String])
+case class ResponseWrapper[+A](correlationId: String, responseData: A) {
+  def map[B](f: A => B): ResponseWrapper[B] = ResponseWrapper(correlationId, f(responseData))
+}

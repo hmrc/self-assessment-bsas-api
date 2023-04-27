@@ -17,8 +17,8 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.ResponseWrapper
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{ Nino, TaxYear }
+import api.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 

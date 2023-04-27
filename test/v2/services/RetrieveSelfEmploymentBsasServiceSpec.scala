@@ -24,8 +24,8 @@ import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 

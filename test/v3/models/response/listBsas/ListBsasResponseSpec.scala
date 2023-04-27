@@ -17,11 +17,11 @@
 package v3.models.response.listBsas
 
 import api.hateoas.Link
-import api.hateoas.Method.{GET, POST}
+import api.hateoas.Method.{ GET, POST }
 import api.models.domain.TaxYear
-import config.MockAppConfig
+import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{ JsError, JsObject, Json }
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
 import v3.models.domain.TypeOfBusiness

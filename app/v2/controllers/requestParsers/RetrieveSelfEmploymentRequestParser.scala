@@ -16,10 +16,10 @@
 
 package v2.controllers.requestParsers
 
-import api.controllers.RequestParser
+import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
-import v2.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v2.models.request.{ RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData }
 
 import javax.inject.Inject
 

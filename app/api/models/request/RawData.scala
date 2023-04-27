@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package api.models
+package api.models.request
 
-case class ResponseWrapper[+A](correlationId: String, responseData: A) {
-  def map[B](f: A => B): ResponseWrapper[B] = ResponseWrapper(correlationId, f(responseData))
-}
+trait RawData

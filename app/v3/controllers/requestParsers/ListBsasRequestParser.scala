@@ -16,11 +16,11 @@
 
 package v3.controllers.requestParsers
 
-import api.controllers.RequestParser
-import api.models.domain.{Nino, TaxYear}
+import api.controllers.requestParsers.RequestParser
+import api.models.domain.{ Nino, TaxYear }
 import v3.controllers.requestParsers.validators.ListBsasValidator
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.models.request.{ ListBsasRawData, ListBsasRequest }
 
 import javax.inject.Inject
 

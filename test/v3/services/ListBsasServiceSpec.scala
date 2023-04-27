@@ -17,15 +17,26 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.ResponseWrapper
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{BusinessIdFormatError, DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.domain.{ Nino, TaxYear }
+import api.models.errors.{
+  BusinessIdFormatError,
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  InternalError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  TaxYearFormatError
+}
+import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
+import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
 import scala.concurrent.Future
 

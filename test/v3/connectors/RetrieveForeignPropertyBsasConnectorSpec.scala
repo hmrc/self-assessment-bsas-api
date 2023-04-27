@@ -16,9 +16,9 @@
 
 package v3.connectors
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.ResponseWrapper
-import api.models.domain.{Nino, TaxYear}
+import api.connectors.{ ConnectorSpec, DownstreamOutcome }
+import api.models.domain.{ Nino, TaxYear }
+import api.models.outcomes.ResponseWrapper
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
