@@ -18,7 +18,7 @@ package v3.controllers.requestParsers.validators
 
 import api.mocks.MockCurrentDate
 import api.models.errors._
-import config.MockAppConfig
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec

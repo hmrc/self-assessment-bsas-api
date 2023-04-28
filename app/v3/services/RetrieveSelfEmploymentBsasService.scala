@@ -17,8 +17,8 @@
 package v3.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
@@ -26,8 +26,8 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseRetrieveBsasService {
@@ -36,7 +36,7 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
       implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
     val result = for {
       responseWrapper    <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))

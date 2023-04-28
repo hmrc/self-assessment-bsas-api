@@ -17,22 +17,21 @@
 package v3.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
-import api.services.BaseService
+import api.services.{ BaseService, ServiceOutcome }
 import cats.implicits._
 import v3.connectors.ListBsasConnector
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
+import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseService {
 
   def listBsas(request: ListBsasRequest)(implicit ctx: RequestContext,
-                                         ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]] = {
+                                         ec: ExecutionContext): Future[ServiceOutcome[ListBsasResponse[BsasSummary]]] = {
 
     connector
       .listBsas(request)

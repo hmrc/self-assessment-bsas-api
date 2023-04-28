@@ -17,20 +17,20 @@
 package v2.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
-import api.models.errors.{BsasIdFormatError, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError}
+import api.models.errors.{ BsasIdFormatError, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError }
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
 import v2.connectors.RetrieveForeignPropertyAdjustmentsConnector
 import v2.models.domain.TypeOfBusiness
-import v2.models.errors.{RuleNoAdjustmentsMade, RuleNotForeignProperty}
+import v2.models.errors.{ RuleNoAdjustmentsMade, RuleNotForeignProperty }
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveForeignPropertyAdjustmentsService @Inject()(connector: RetrieveForeignPropertyAdjustmentsConnector) extends BaseService {

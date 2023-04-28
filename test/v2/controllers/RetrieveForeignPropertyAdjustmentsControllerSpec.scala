@@ -20,8 +20,8 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.Method.GET
 import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
+import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.models.errors._
-import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,9 +29,9 @@ import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
 import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
 import v2.mocks.services._
 import v2.models.errors._
-import api.models.ResponseWrapper
 import api.models.domain.Nino
-import config.MockAppConfig
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import routing.Version2
 import v2.models.request.{ RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData }
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData

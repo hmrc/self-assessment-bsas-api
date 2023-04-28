@@ -16,10 +16,10 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.hateoas.Method.{ GET, POST }
+import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
 import api.models.domain.TaxYear
-import config.MockAppConfig
+import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._

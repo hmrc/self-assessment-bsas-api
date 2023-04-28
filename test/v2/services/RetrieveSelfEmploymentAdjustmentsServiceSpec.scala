@@ -21,8 +21,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import api.controllers.EndpointLogContext
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v2.mocks.connectors.MockRetrieveSelfEmploymentAdjustmentsConnector
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 

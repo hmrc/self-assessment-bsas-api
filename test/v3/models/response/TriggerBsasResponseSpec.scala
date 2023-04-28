@@ -17,11 +17,11 @@
 package v3.models.response
 
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
 import api.models.domain.TaxYear
-import config.MockAppConfig
+import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{ JsError, JsValue, Json }
 import support.UnitSpec
 import v3.models.domain.TypeOfBusiness._
 

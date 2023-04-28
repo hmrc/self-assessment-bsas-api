@@ -17,14 +17,15 @@
 package v2.connectors
 
 import api.connectors.DownstreamUri.DesUri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -33,12 +34,10 @@ class TriggerBsasConnector @Inject()(val http: HttpClient, val appConfig: AppCon
                                                ec: ExecutionContext,
                                                correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
-    val nino = request.nino.nino
+    import request._
 
     post(
-      body = request.body,
+      body,
       DesUri[TriggerBsasResponse](s"income-tax/adjustable-summary-calculation/$nino")
     )
   }

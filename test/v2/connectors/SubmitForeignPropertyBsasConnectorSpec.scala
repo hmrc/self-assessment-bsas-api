@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
@@ -82,7 +82,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
       MockedHttpClient
         .put(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
           config = dummyHeaderCarrierConfig,
           body = submitForeignPropertyBsasRequestBodyModel,
           requiredHeaders = requiredHeadersPut,

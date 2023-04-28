@@ -18,7 +18,7 @@ package v3.controllers.requestParsers.validators.validations
 
 import api.mocks.MockCurrentDate
 import api.models.utils.JsonErrorValidators
-import config.MockAppConfig
+import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler0
 import support.UnitSpec
 import v3.models.domain.TypeOfBusiness

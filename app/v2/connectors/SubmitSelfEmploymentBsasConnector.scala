@@ -17,14 +17,15 @@
 package v2.connectors
 
 import api.connectors.DownstreamUri.DesUri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v2.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -34,11 +35,11 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appC
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[SubmitSelfEmploymentBsasResponse]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
     put(
-      body = request.body,
-      DesUri[SubmitSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/${request.nino.nino}/${request.bsasId}")
+      body,
+      DesUri[SubmitSelfEmploymentBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$bsasId")
     )
   }
 }

@@ -20,11 +20,11 @@ import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
 import api.hateoas.Method.GET
 import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
 import api.mocks.MockIdGenerator
-import api.models.ResponseWrapper
+import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.models.domain.Nino
 import api.models.errors._
-import api.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import config.MockAppConfig
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
 import routing.Version3

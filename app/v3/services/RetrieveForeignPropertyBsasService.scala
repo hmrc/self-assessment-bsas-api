@@ -17,8 +17,8 @@
 package v3.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveForeignPropertyBsasConnector
@@ -26,8 +26,8 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPropertyBsasConnector) extends BaseRetrieveBsasService {
@@ -36,7 +36,7 @@ class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPro
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
       implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveForeignPropertyBsas(request)).leftMap(mapDownstreamErrors(errorMap))

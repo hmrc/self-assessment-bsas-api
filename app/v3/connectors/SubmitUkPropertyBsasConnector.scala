@@ -16,16 +16,16 @@
 
 package v3.connectors
 
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
 import play.api.http.Status.OK
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -35,9 +35,7 @@ class SubmitUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfi
                                                                    ec: ExecutionContext,
                                                                    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    val nino          = request.nino.nino
-    val calculationId = request.calculationId
-    val taxYear       = request.taxYear
+    import request._
 
     implicit val successCode: SuccessCode = SuccessCode(OK)
 

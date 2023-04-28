@@ -16,8 +16,8 @@
 
 package v2.models.request.triggerBsas
 
-import api.models.RawData
 import api.models.domain.Nino
+import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 
 case class TriggerBsasRawData(nino: String, body: AnyContentAsJson) extends RawData

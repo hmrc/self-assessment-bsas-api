@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import config.MockAppConfig
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.mocks.MockHttpClient
-import api.models.ResponseWrapper
 import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import v2.models.request.RetrieveAdjustmentsRequestData
 
 import scala.concurrent.Future
@@ -94,7 +94,7 @@ class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .parameterGet(
-            url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+            url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
             config = dummyHeaderCarrierConfig,
             queryParams.toSeq,
             requiredHeaders = desRequestHeaders,

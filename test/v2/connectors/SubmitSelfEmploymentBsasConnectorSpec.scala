@@ -17,16 +17,16 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import config.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v2.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v2.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
-import api.models.ResponseWrapper
 import api.models.domain.Nino
-import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import v2.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
@@ -65,7 +65,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
       MockedHttpClient
         .put(
-          url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+          url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId",
           config = dummyHeaderCarrierConfig,
           body = submitSelfEmploymentBsasRequestBodyModel,
           requiredHeaders = requiredHeadersPut,

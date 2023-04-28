@@ -17,8 +17,8 @@
 package v2.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v2.connectors.SubmitForeignPropertyBsasConnector
@@ -26,8 +26,8 @@ import v2.models.errors._
 import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends BaseService {

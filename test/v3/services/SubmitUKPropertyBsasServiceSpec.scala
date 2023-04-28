@@ -17,9 +17,9 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.ResponseWrapper
 import api.models.domain.Nino
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._

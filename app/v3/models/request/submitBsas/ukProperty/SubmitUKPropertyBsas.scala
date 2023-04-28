@@ -16,8 +16,8 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import api.models.RawData
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{ Nino, TaxYear }
+import api.models.request.RawData
 import play.api.libs.json.JsValue
 
 case class SubmitUkPropertyBsasRawData(nino: String, calculationId: String, body: JsValue, taxYear: Option[String]) extends RawData

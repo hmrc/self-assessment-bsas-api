@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package api.services
+package api.mocks.services
 
 import api.models.UserDetails
 import api.models.outcomes.AuthOutcome
+import api.services.EnrolmentsAuthService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.auth.core.authorise.Predicate

@@ -17,8 +17,8 @@
 package v2.mocks.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData

@@ -16,10 +16,10 @@
 
 package v3.hateoas
 
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{Link, Method}
+import api.hateoas.Method.{ GET, POST }
+import api.hateoas.{ Link, Method }
 import api.models.domain.TaxYear
-import config.MockAppConfig
+import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
 import v3.hateoas.RelType._

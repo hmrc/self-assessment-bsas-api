@@ -17,17 +17,17 @@
 package v2.services
 
 import api.controllers.RequestContext
-import api.models.ResponseWrapper
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v2.connectors.TriggerBsasConnector
-import v2.models.errors.{RuleAccountingPeriodNotEndedError, RuleNoAccountingPeriodError, RulePeriodicDataIncompleteError}
+import v2.models.errors.{ RuleAccountingPeriodNotEndedError, RuleNoAccountingPeriodError, RulePeriodicDataIncompleteError }
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {

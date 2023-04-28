@@ -17,14 +17,15 @@
 package v2.connectors
 
 import api.connectors.DownstreamUri.DesUri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -34,10 +35,7 @@ class RetrieveSelfEmploymentBsasConnector @Inject()(val http: HttpClient, val ap
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
-    val nino   = request.nino.nino
-    val bsasId = request.bsasId
+    import request._
 
     val queryParams = Map(
       "return" -> request.adjustedStatus

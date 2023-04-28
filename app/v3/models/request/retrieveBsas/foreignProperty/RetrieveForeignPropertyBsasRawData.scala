@@ -16,6 +16,6 @@
 
 package v3.models.request.retrieveBsas.foreignProperty
 
-import api.models.RawData
+import api.models.request.RawData
 
 case class RetrieveForeignPropertyBsasRawData(nino: String, calculationId: String, taxYear: Option[String]) extends RawData
