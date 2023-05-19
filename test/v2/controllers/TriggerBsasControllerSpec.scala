@@ -129,7 +129,7 @@ class TriggerBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForSE(nino))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once()
       }
 
       "a valid request supplied for business type uk-property" in new Test {
@@ -153,7 +153,7 @@ class TriggerBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(CREATED, None, Some(Json.parse(hateoasResponseForProperty(nino))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBodyForProperty))).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBodyForProperty))).once()
       }
     }
 
@@ -173,7 +173,7 @@ class TriggerBsasControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once()
           }
         }
 
@@ -212,7 +212,7 @@ class TriggerBsasControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once()
           }
         }
 

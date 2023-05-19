@@ -69,7 +69,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -88,7 +88,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desRetrieveBsasResponseWithInvalidTypeOfBusiness)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe FORBIDDEN
         response.header("Content-Type") shouldBe Some("application/json")
@@ -114,7 +114,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -146,7 +146,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
             DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

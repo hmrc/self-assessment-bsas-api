@@ -53,7 +53,7 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
       val nino           = "someNino"
       val bsasId         = "anId"
       val adjustment     = "03"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
     }
 
     "expose the correct links for a response from Submit a Property Summary Adjustment" in new Test {

@@ -63,7 +63,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
           DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -81,7 +81,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
           DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desJsonWithoutAdditions)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -101,7 +101,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
           DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desJsonWithWrongTypeOfBusiness)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe FORBIDDEN
         response.header("Content-Type") shouldBe Some("application/json")
@@ -123,7 +123,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -155,7 +155,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
             DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
 import play.api.Logger
 import play.api.libs.json._
 
@@ -26,16 +26,19 @@ object JsonFormatValidation {
   private val logger: Logger = Logger(this.getClass)
 
   def validate[A: OFormat](data: JsValue): List[MtdError] = {
-    if (data == JsObject.empty) List(RuleIncorrectOrEmptyBodyError)
-    else
+    if (data == JsObject.empty) { List(RuleIncorrectOrEmptyBodyError) } else {
       data.validate[A] match {
-        case JsSuccess(_, _)                                          => NoValidationErrors
-        case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) => handleErrors(errors)
+        case JsSuccess(_, _) => NoValidationErrors
+        case JsError(errors) => {
+          val immutableErrors = errors.map { case (path, errors) => (path, errors.toList) }.toList
+          handleErrors(immutableErrors)
+        }
       }
+    }
   }
 
   private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): List[MtdError] = {
-    val failures = errors.map {
+    val failures: Seq[JsonFormatValidationFailure] = errors.map {
       case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing"))))                              => MissingMandatoryField(path)
       case (path: JsPath, Seq(JsonValidationError(Seq(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
       case (path: JsPath, _)                                                                                => OtherFailure(path)
@@ -50,7 +53,7 @@ object JsonFormatValidation {
       .drop(5)
 
     logger.warn(s"[JsonFormatValidation][validate] - Request body failed validation with errors - $logString")
-    List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath))))
+    List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath).sorted)))
   }
 
   private class JsonFormatValidationFailure(path: JsPath, failure: String) {

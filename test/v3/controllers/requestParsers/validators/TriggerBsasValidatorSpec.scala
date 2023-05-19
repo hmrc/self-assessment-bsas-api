@@ -121,7 +121,7 @@ class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
                                Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
                              )))
 
-        result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/startDate", "/typeOfBusiness", "/businessId"))))
+        result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/startDate", "/businessId", "/typeOfBusiness"))))
       }
     }
 

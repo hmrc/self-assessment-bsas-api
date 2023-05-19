@@ -136,7 +136,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           ("AA123456A",
            Json.obj("accountingPeriod" -> Json.obj("startDate" -> "2018-02-02")),
            BAD_REQUEST,
-           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/endDate", "/typeOfBusiness", "/businessId")))),
+           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/endDate", "/businessId", "/typeOfBusiness")))),
           ("AA123456A",
            Json.obj("accountingPeriod" -> Json.obj("startDate" -> "20180202", "endDate" -> "2019-05-06"),
                     "typeOfBusiness"   -> "self-employment",

@@ -108,7 +108,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
           DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, desJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -144,7 +144,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -175,7 +175,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
             DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

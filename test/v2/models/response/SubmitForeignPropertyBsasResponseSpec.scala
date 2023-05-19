@@ -62,7 +62,7 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig 
       val nino   = "mynino"
       val bsasId = "mybsasid"
 
-      MockedAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes()
       SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory
         .links(mockAppConfig, SubmitForeignPropertyBsasHateoasData(nino, bsasId)) shouldBe
         Seq(

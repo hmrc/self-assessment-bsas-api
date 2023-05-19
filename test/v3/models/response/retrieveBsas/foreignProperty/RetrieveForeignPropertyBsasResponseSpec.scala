@@ -50,7 +50,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
       val rawResponse    = retrieveForeignPropertyBsasResponseFhlModel
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {

@@ -30,11 +30,9 @@ object DownstreamTaxYear {
   /**
     * @param taxYear tax year in MTD format (e.g. 2017-18)
     */
-  def fromMtd(taxYear: String): DownstreamTaxYear =
-    DownstreamTaxYear(taxYear.take(2) + taxYear.drop(5))
+  def fromMtd(taxYear: String): DownstreamTaxYear = DownstreamTaxYear(taxYear.take(2) + taxYear.drop(5))
 
-  def fromDownstream(taxYear: String): String = (taxYear.toInt - 1) + "-" + taxYear.drop(2)
+  def fromDownstream(taxYear: String): String = s"${taxYear.toInt - 1}-${taxYear.drop(2)}"
 
-  def fromDownstreamIntToString(taxYear: Int): String =
-    (taxYear - 1) + "-" + taxYear.toString.drop(2)
+  def fromDownstreamIntToString(taxYear: Int): String = s"${taxYear - 1}-${taxYear.toString.drop(2)}"
 }

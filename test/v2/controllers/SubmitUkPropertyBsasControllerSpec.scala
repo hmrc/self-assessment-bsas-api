@@ -130,7 +130,7 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockSubmitUKPropertyBsasNrsProxyService
           .submit(nino)
-          .returns(Future.successful(Unit))
+          .returns(Future.successful(()))
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(fhlRequest)
@@ -147,7 +147,7 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
       }
 
       "a valid request is supplied for a non-FHL property" in new Test {
@@ -158,7 +158,7 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockSubmitUKPropertyBsasNrsProxyService
           .submit(nino)
-          .returns(Future.successful(Unit))
+          .returns(Future.successful(()))
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(nonFhlRequest)
@@ -175,7 +175,7 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validNonFHLInputJson))).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validNonFHLInputJson))).once()
       }
     }
 
@@ -194,7 +194,7 @@ class SubmitUkPropertyBsasControllerSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
+          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
         }
       }
 
@@ -227,7 +227,7 @@ class SubmitUkPropertyBsasControllerSpec
 
         val auditResponse: AuditResponse =
           AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
       }
 
       "multiple errors occur for the customised errors" in new Test {
@@ -260,7 +260,7 @@ class SubmitUkPropertyBsasControllerSpec
                                                            )),
                                                          None)
 
-        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
       }
     }
 
@@ -274,7 +274,7 @@ class SubmitUkPropertyBsasControllerSpec
 
           MockSubmitUKPropertyBsasNrsProxyService
             .submit(nino)
-            .returns(Future.successful(Unit))
+            .returns(Future.successful(()))
 
           MockSubmitUkPropertyBsasService
             .submitPropertyBsas(fhlRequest)
@@ -287,7 +287,7 @@ class SubmitUkPropertyBsasControllerSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once
+          MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
         }
       }
 

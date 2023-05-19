@@ -80,7 +80,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
         MockSubmitSelfEmploymentBsasNrsProxyService
           .submit(nino)
-          .returns(Future.successful(Unit))
+          .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(request)
@@ -146,7 +146,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
         MockSubmitSelfEmploymentBsasNrsProxyService
           .submit(nino)
-          .returns(Future.successful(Unit))
+          .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(request)

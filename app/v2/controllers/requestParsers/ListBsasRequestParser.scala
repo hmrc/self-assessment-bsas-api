@@ -20,7 +20,7 @@ import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import utils.{ CurrentDate, DateUtils }
 import v2.controllers.requestParsers.validators.ListBsasValidator
-import v2.models.domain.TypeOfBusiness
+import v2.models.domain.{ DownstreamTaxYear, TypeOfBusiness }
 import v2.models.request.{ ListBsasRawData, ListBsasRequest }
 
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator, val curr
 
     ListBsasRequest(
       nino = Nino(data.nino),
-      taxYear = data.taxYear.fold(DateUtils.getDownstreamTaxYear(currentDateProvider.getCurrentDate()))(DateUtils.getDownstreamTaxYear),
+      taxYear = data.taxYear.fold(DateUtils.getDownstreamTaxYear(currentDateProvider.getCurrentDate()))(DownstreamTaxYear.fromMtd),
       incomeSourceId = data.businessId,
       incomeSourceType = incomeSourceType
     )

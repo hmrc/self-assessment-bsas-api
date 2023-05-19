@@ -33,7 +33,7 @@ class SubmitUkPropertyBsasHateoasDataSpec extends UnitSpec {
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
       val context        = "individuals/self-assessment/adjustable-summary"
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {

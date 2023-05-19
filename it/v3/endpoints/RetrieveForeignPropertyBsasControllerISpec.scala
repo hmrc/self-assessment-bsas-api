@@ -91,7 +91,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       "valid request is made and Non-fhl is returned" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
         response.status shouldBe OK
@@ -102,7 +102,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       "valid request is made and fhl is returned" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson)
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson, nino, calculationId)
         response.status shouldBe OK
@@ -113,7 +113,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
         response.status shouldBe OK
@@ -135,7 +135,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         new NonTysTest {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponse)
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
 
           response.json shouldBe RuleTypeOfBusinessIncorrectError.asJson
           response.status shouldBe BAD_REQUEST
@@ -154,8 +154,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           override val calculationId: String = requestBsasId
 
           val response: WSResponse = requestTaxYear match {
-            case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get)
-            case _          => await(request.get)
+            case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get())
+            case _          => await(request.get())
           }
 
           response.json shouldBe Json.toJson(expectedBody)
@@ -184,7 +184,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
           DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
 
           response.json shouldBe Json.toJson(expectedBody)
           response.status shouldBe expectedStatus

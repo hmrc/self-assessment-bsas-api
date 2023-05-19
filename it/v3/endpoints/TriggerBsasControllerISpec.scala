@@ -188,8 +188,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           paths = Some(
             Seq(
               "/accountingPeriod/endDate",
+              "/businessId",
               "/typeOfBusiness",
-              "/businessId"
             )))
 
         val startDateErrorRequestJson: JsObject = Json.obj(

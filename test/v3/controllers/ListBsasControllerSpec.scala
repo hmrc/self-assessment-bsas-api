@@ -59,8 +59,8 @@ class ListBsasControllerSpec
   "list bsas" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
-        MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false) anyNumberOfTimes ()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         MockListBsasRequestDataParser
           .parse(rawData)
@@ -81,8 +81,8 @@ class ListBsasControllerSpec
       }
 
       "valid request with no taxYear path parameter" in new Test {
-        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
-        MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false) anyNumberOfTimes ()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         override def taxYear: Option[String] = None
 

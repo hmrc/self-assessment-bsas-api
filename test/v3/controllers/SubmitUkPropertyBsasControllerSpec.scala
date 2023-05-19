@@ -94,7 +94,7 @@ class SubmitUkPropertyBsasControllerSpec
 
         MockSubmitUKPropertyBsasNrsProxyService
           .submit(nino)
-          .returns(Future.successful(Unit))
+          .returns(Future.successful(()))
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(requestData)
@@ -143,7 +143,7 @@ class SubmitUkPropertyBsasControllerSpec
 
       MockSubmitUKPropertyBsasNrsProxyService
         .submit(nino)
-        .returns(Future.successful(Unit))
+        .returns(Future.successful(()))
 
       MockSubmitUkPropertyBsasService
         .submitPropertyBsas(requestData)
