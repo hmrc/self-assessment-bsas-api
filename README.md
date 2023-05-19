@@ -1,10 +1,10 @@
 # self-assessment-bsas-api
 
 ## Requirements
-- Scala 2.12.x
-- Java 8
+- Scala 2.13.x
+- Java 11
 - sbt 1.6.x
-- [Service Manager](https://github.com/hmrc/service-manager)
+- [Service Manager](https://github.com/hmrc/sm2)
 
 # To run locally
 
