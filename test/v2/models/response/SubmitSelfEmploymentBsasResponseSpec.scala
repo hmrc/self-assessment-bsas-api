@@ -79,7 +79,7 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val bsasId         = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
     }
 
     "expose the correct links for a response from Submit a Self Employment Summary Adjustment" in new Test {

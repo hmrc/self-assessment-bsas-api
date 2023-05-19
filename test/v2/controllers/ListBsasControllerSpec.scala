@@ -161,8 +161,7 @@ class ListBsasControllerSpec
     "return successful response with status OK" when {
       "valid request" in new Test {
 
-        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
-//        MockedAppConfig.apiStatus(Version2) returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
 
         MockListBsasRequestDataParser
           .parse(rawData)
@@ -242,7 +241,7 @@ class ListBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
       }
     }
 
@@ -262,7 +261,7 @@ class ListBsasControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
           }
         }
 
@@ -298,7 +297,7 @@ class ListBsasControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
           }
         }
 
@@ -320,7 +319,7 @@ class ListBsasControllerSpec
         val desTaxYear: DownstreamTaxYear = DateUtils.getDownstreamTaxYear(mockCurrentDate.getCurrentDate())
         val mtdTaxYear: String            = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
 
-        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary" anyNumberOfTimes ()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
 
         MockListBsasRequestDataParser
           .parse(rawData.copy(taxYear = None))
@@ -400,7 +399,7 @@ class ListBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(summariesJSONWithHateoas(nino)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once()
       }
 
       "the taxYear parameter is not provided (failure)" in new Test {
@@ -423,7 +422,7 @@ class ListBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code))), None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse, mtdTaxYear)).once()
       }
     }
 

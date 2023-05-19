@@ -32,7 +32,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
   class Test {
     val context = "context"
-    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
   }
 
   "HateoasLinks" when {

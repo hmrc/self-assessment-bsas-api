@@ -71,7 +71,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -83,7 +83,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -101,7 +101,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
                                    downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe BAD_REQUEST
         response.header("Content-Type") shouldBe Some("application/json")
@@ -123,7 +123,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
           override def setupStubs(): Unit = {}
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -154,7 +154,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

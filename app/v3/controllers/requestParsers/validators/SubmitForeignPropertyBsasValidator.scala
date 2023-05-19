@@ -23,6 +23,8 @@ import v3.controllers.requestParsers.validators.validations._
 import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty._
 
+import scala.annotation.nowarn
+
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet = List(
     parameterFormatValidation,
@@ -54,6 +56,7 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
     }
   }
 
+  @nowarn("cat=lint-byname-implicit")
   private def bodyFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
     JsonFormatValidation.validateAndCheckNonEmpty[SubmitForeignPropertyBsasRequestBody](data.body) match {
       case Nil          => NoValidationErrors

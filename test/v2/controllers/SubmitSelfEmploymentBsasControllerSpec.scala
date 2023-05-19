@@ -126,7 +126,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
         MockSubmitSelfEmploymentBsasNrsProxyService
           .submit(nino)
-          .returns(Future.successful(Unit))
+          .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(request)
@@ -143,7 +143,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.parse(hateoasResponse(nino, bsasId))))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
       }
     }
 
@@ -162,7 +162,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
         }
       }
 
@@ -204,7 +204,7 @@ class SubmitSelfEmploymentBsasControllerSpec
             body = None
           )
 
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
       }
 
       "multiple errors occur for the customised errors" in new Test {
@@ -238,7 +238,7 @@ class SubmitSelfEmploymentBsasControllerSpec
                           )),
                         body = None)
 
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
       }
     }
 
@@ -252,7 +252,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
           MockSubmitSelfEmploymentBsasNrsProxyService
             .submit(nino)
-            .returns(Future.successful(Unit))
+            .returns(Future.successful(()))
 
           MockSubmitSelfEmploymentBsasService
             .submitSelfEmploymentBsas(request)
@@ -265,7 +265,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
         }
       }
 

@@ -22,6 +22,8 @@ import api.models.errors.MtdError
 import v3.controllers.requestParsers.validators.validations._
 import v3.models.request.submitBsas.selfEmployment._
 
+import scala.annotation.nowarn
+
 class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBsasRawData] {
 
   private val validationSet = List(
@@ -46,6 +48,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     )
   }
 
+  @nowarn("cat=lint-byname-implicit")
   private def bodyFormatValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       flattenErrors(

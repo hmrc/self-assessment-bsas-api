@@ -51,7 +51,7 @@ class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidato
       val context        = "individuals/self-assessment/adjustable-summary"
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {

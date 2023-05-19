@@ -20,18 +20,18 @@ import java.time.LocalDate
 import support.UnitSpec
 import v2.models.domain.DownstreamTaxYear
 
-class DateUtilsSpec extends UnitSpec{
+class DateUtilsSpec extends UnitSpec {
 
-  "getDesTaxYear with tax year param" should {
-    "return a valid DesTaxYear" when {
-      "mtd formatted string tax year is supplied" in {
-        DateUtils.getDownstreamTaxYear("2018-19") shouldBe DownstreamTaxYear("2019")
+  "getDownstreamTaxYear" should {
+    "return a valid DownstreamTaxYear" when {
+      "a LocalDate is supplied" in {
+        DateUtils.getDownstreamTaxYear(LocalDate.parse(s"2019-04-05")) shouldBe DownstreamTaxYear("2019")
       }
     }
   }
 
-  "getDesTaxYear with date param" should {
-    "return a valid DesTaxYear" when {
+  "getTaxYear" should {
+    "return a valid TaxYear" when {
       "no tax year is supplied when the date is 5th April of the current year" in {
         DateUtils.getDownstreamTaxYear(LocalDate.parse(s"2019-04-05")) shouldBe DownstreamTaxYear("2019")
       }

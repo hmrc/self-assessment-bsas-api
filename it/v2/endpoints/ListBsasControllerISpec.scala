@@ -68,7 +68,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONMultiple)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -85,7 +85,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONForeign)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -104,7 +104,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.GET, desUrl, OK, summariesFromDesJSONMultiple)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -134,7 +134,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -169,7 +169,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
             DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

@@ -104,7 +104,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -121,7 +121,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -137,7 +137,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -153,7 +153,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -170,7 +170,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -199,7 +199,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -229,7 +229,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
             DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

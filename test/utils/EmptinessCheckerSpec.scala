@@ -20,6 +20,9 @@ import support.UnitSpec
 import utils.EmptinessChecker._
 import utils.EmptyPathsResult._
 
+import scala.annotation.nowarn
+
+@nowarn("cat=lint-byname-implicit")
 class EmptinessCheckerSpec extends UnitSpec {
 
   sealed trait SomeEnum
@@ -28,7 +31,7 @@ class EmptinessCheckerSpec extends UnitSpec {
     case object E1 extends SomeEnum
     case object E2 extends SomeEnum
 
-    implicit val ckr : EmptinessChecker[SomeEnum] = EmptinessChecker.primitive
+    implicit val ckr: EmptinessChecker[SomeEnum] = EmptinessChecker.primitive
   }
 
   case class Baz(a: Option[Int] = None, e: Option[SomeEnum] = None)

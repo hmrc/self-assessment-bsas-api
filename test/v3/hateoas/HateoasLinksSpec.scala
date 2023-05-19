@@ -34,7 +34,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
   object Target extends HateoasLinks
 
   class Test {
-    MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes
+    MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
   }
 
   class TysDisabledTest extends Test {

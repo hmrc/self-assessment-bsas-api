@@ -128,7 +128,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
       val bsasId          = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
       "expose the correct top level links for a self employment list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, selfEmploymentBsasModel)) shouldBe
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
@@ -137,7 +137,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
       }
 
       "expose the correct top level links for a uk property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, ukPropertyBsasModel)) shouldBe
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
@@ -146,7 +146,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
       }
 
       "expose the correct top level links for a foreign property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         ListBsasResponse.LinksFactory.links(mockAppConfig, ListBsasHateoasData(nino, foreignPropertyBsasModel)) shouldBe
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/trigger", POST, "trigger-business-source-adjustable-summary"),
@@ -155,7 +155,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
       }
 
       "expose the correct item level links for a self employment list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         ListBsasResponse.LinksFactory.itemLinks(
           mockAppConfig,
           ListBsasHateoasData(nino, selfEmploymentBsasModel),
@@ -170,7 +170,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
       }
 
       "expose the correct item level links for a uk property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         ListBsasResponse.LinksFactory.itemLinks(
           mockAppConfig,
           ListBsasHateoasData(nino, ukPropertyBsasModel),
@@ -185,7 +185,7 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
       }
 
       "expose the correct item level links for a foreign property list" in {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         ListBsasResponse.LinksFactory.itemLinks(
           mockAppConfig,
           ListBsasHateoasData(nino, foreignPropertyBsasModel),
