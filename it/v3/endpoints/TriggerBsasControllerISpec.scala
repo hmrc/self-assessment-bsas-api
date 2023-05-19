@@ -187,9 +187,9 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
         val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
           paths = Some(
             Seq(
+              "/accountingPeriod/endDate",
               "/businessId",
               "/typeOfBusiness",
-              "/accountingPeriod/endDate"
             )))
 
         val startDateErrorRequestJson: JsObject = Json.obj(

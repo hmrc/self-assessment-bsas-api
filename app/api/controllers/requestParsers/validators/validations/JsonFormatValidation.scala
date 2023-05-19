@@ -73,7 +73,7 @@ object JsonFormatValidation {
       .drop(5)
 
     logger.warn(s"[JsonFormatValidation][validate] - Request body failed validation with errors - $logString")
-    List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath))))
+    List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath).sorted)))
   }
 
   private class JsonFormatValidationFailure(path: JsPath, failure: String) {
