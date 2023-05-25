@@ -71,6 +71,9 @@ object InvalidHttpMethodError extends MtdError("INVALID_HTTP_METHOD", "Invalid H
 
 object InvalidBodyTypeError extends MtdError("INVALID_BODY_TYPE", "Expecting text/json or application/json body", UNSUPPORTED_MEDIA_TYPE)
 
+//Stub Errors
+object RuleIncorrectGovTestScenarioError extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The Gov-Test-Scenario was not found", BAD_REQUEST)
+
 //Authentication/Authorisation errors
 
 object ClientNotAuthenticatedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client or agent is not authorised", UNAUTHORIZED)
