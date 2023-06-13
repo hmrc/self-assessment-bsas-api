@@ -8,3 +8,6 @@ This API allows a developer to retrieve a Business Source Adjustable Summary (BS
 * request the adjustments made to a specific property BSAS
 
 For information on how to connect to this API [see the Income Tax MTD end-to-end service guide](https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/).
+
+> **Deprecation Notice:**
+>  v2 is now deprecated. Please migrate to v3 for expanded functionality and long-term support.
