@@ -62,3 +62,13 @@ components:
         type: string
         example: "-"
       required: false
+
+    deprecationHeader:
+      name: "Deprecation"
+      in: header
+      description: |
+        Specifies the deprecation status of an endpoint.
+      schema:
+        type: string
+        example: "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
+      required: false
