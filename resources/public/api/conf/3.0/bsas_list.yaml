@@ -35,6 +35,18 @@ get:
                   <td><p>NOT_FOUND</p></td>
                   <td><p>Simulates the scenario where no data is found.</p></td>
               </tr>
+              <tr>
+                  <td><p>DYNAMIC</p></td>
+                  <td><p>The following response values will change to correspond to the values submitted in the request:<ul>
+                      <li>businessID</li>
+                      <li>typeOfBusiness</li>
+                      <li>accountingPeriod.startdate</li>
+                      <li>accountingPeriod.enddate</li>
+                      <li>taxYear</li>
+                      <li>requestedDatetime</li>
+                      <li>adjustedDatetime</li>
+                  </ul></p></td>
+              </tr>
           </tbody>
       </table>
 
