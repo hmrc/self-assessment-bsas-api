@@ -62,14 +62,9 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
     def makeRequestBody(typeOfBusiness: String, tys: Boolean): JsObject = {
 
-      val startDate = tys match {
-        case true  => "2023-05-01"
-        case false => "2019-01-01"
-      }
-      val endDate = tys match {
-        case true  => "2023-05-02"
-        case false => "2022-10-31"
-      }
+      val startDate = if (tys) "2023-05-01" else "2019-01-01"
+
+      val endDate = if (tys) "2023-05-02" else "2022-10-31"
 
       Json.obj(
         "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
@@ -79,16 +74,16 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     def responseBody(hateoasLinkPath: String): String = s"""
-      |{
-      |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
-      |  "links":[
-      |    {
-      |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
-      |      "rel":"self",
-      |      "method":"GET"
-      |    }
-      |  ]
-      |}
+                                                           |{
+                                                           |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
+                                                           |  "links":[
+                                                           |    {
+                                                           |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
+                                                           |      "rel":"self",
+                                                           |      "method":"GET"
+                                                           |    }
+                                                           |  ]
+                                                           |}
     """.stripMargin
   }
 

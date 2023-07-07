@@ -37,8 +37,8 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
         MockedAppConfig.apiGatewayContext.returns("api.gateway.context")
         MockedAppConfig.apiStatus(Version2).returns("").anyNumberOfTimes()
         MockedAppConfig.apiStatus(Version3).returns("").anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(version = Version2.name).returns(true).anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(version = Version3.name).returns(true).anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version2).returns(true).anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version3).returns(true).anyNumberOfTimes()
         MockedAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()

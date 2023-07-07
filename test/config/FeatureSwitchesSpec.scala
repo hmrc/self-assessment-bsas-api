@@ -16,107 +16,26 @@
 
 package config
 
-import com.typesafe.config.ConfigFactory
 import play.api.Configuration
-import routing.{ Version2, Version3 }
 import support.UnitSpec
 
 class FeatureSwitchesSpec extends UnitSpec {
 
-  private def createFeatureSwitch(config: String) =
-    FeatureSwitches(Configuration(ConfigFactory.parseString(config)))
+  private val configuration = Configuration(
+    "feature-switch.enabled" -> true,
+  )
 
-  "version enabled" when {
-    val anyVersion = Version3
+  private val featureSwitches = FeatureSwitches(configuration)
 
-    "no config" must {
-      val featureSwitch = FeatureSwitches(Configuration.empty)
-
-      "return false" in {
-        featureSwitch.isVersionEnabled(anyVersion) shouldBe false
+  "FeatureSwitches" should {
+    "return true" when {
+      "the feature switch is set to true" in {
+        featureSwitches.featureSwitchConfig.getOptional[Boolean]("feature-switch.enabled") shouldBe Some(true)
       }
     }
-
-    "no config value" must {
-      val featureSwitch = createFeatureSwitch("")
-
-      "return false" in {
-        featureSwitch.isVersionEnabled(anyVersion) shouldBe false
-      }
-    }
-
-    "config set" must {
-      val featureSwitch = createFeatureSwitch("""
-          |version-3.enabled = true
-        """.stripMargin)
-
-      "return true for enabled versions" in {
-        featureSwitch.isVersionEnabled(Version3) shouldBe true
-      }
-    }
-  }
-
-  "feature switch" should {
-    "be true" when {
-
-      "absent from the config" in {
-        val configuration   = Configuration.empty
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
-      }
-
-      "enabled" in {
-        val configuration   = Configuration("tys-api.enabled" -> true)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
-
-      }
-    }
-
-    "be false" when {
-      "disabled" in {
-        val configuration   = Configuration("tys-api.enabled" -> false)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
-      }
-    }
-  }
-
-  "isVersionEnabled()" when {
-
-    "the version isn't in the config" should {
-      "return false" in {
-        val configuration   = Configuration.empty
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isVersionEnabled(Version3) shouldBe false
-      }
-    }
-
-    "the version is disabled in the config" should {
-      "return false" in {
-        val configuration = Configuration(
-          "version-2.enabled" -> false,
-          "version-3.enabled" -> true
-        )
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isVersionEnabled(Version2) shouldBe false
-      }
-    }
-
-    "the version is enabled in the config" should {
-      "return true" in {
-        val configuration = Configuration(
-          "version-2.enabled" -> false,
-          "version-3.enabled" -> true
-        )
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isVersionEnabled(Version3) shouldBe true
+    "return false" when {
+      "the feature switch is not present in the config" in {
+        featureSwitches.featureSwitchConfig.getOptional[Boolean]("invalid") shouldBe None
       }
     }
   }
