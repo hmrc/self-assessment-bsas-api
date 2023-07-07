@@ -54,11 +54,11 @@ trait MockAppConfig extends MockFactory {
     def mtdIdBaseUrl: CallHandler[String] = (() => mockAppConfig.mtdIdBaseUrl).expects()
 
     // API Config
-    def featureSwitches: CallHandler[Configuration]             = (() => mockAppConfig.featureSwitches).expects()
-    def apiGatewayContext: CallHandler[String]                  = (() => mockAppConfig.apiGatewayContext).expects()
-    def apiStatus(version: Version): CallHandler[String]        = (mockAppConfig.apiStatus: Version => String).expects(version)
-    def isApiDeprecated(version: Version): CallHandler[Boolean] = (mockAppConfig.isApiDeprecated: Version => Boolean).expects(version)
-    def endpointsEnabled(version: String): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: String => Boolean).expects(version)
+    def featureSwitches: CallHandler[Configuration]              = (() => mockAppConfig.featureSwitches).expects()
+    def apiGatewayContext: CallHandler[String]                   = (() => mockAppConfig.apiGatewayContext).expects()
+    def apiStatus(version: Version): CallHandler[String]         = (mockAppConfig.apiStatus: Version => String).expects(version)
+    def isApiDeprecated(version: Version): CallHandler[Boolean]  = (mockAppConfig.isApiDeprecated: Version => Boolean).expects(version)
+    def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: Version => Boolean).expects(version)
 
     def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] =
       (() => mockAppConfig.confidenceLevelConfig).expects()

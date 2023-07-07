@@ -20,7 +20,6 @@ import api.hateoas.Method.{ GET, POST }
 import api.hateoas.{ Link, Method }
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
-import play.api.Configuration
 import support.UnitSpec
 import v3.hateoas.RelType._
 
@@ -37,16 +36,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
     MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
   }
 
-  class TysDisabledTest extends Test {
-    MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)
-  }
-
-  class TysEnabledTest extends Test {
-    MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> true)
-  }
-
   "HateoasLinks" when {
-
     "triggerBsas" should {
       "return the correct link" in new Test {
         val link: Link = Link(href = s"/context/$nino/trigger", method = POST, rel = TRIGGER)
@@ -120,24 +110,16 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
   }
 
   def assertCorrectLink(makeLink: Option[TaxYear] => Link, baseHref: String, method: Method, rel: String): Unit = {
-    "return the correct link" in new TysDisabledTest {
+    "return the correct link" in new Test {
       makeLink(None) shouldBe Link(href = baseHref, method = method, rel = rel)
     }
 
-    "TYS feature switch is disabled" should {
-      "not include tax year query parameter given a TYS tax year" in new TysDisabledTest {
-        makeLink(Some(taxYear2024)) shouldBe Link(href = baseHref, method = method, rel = rel)
-      }
+    "not include tax year query parameter given a non-TYS tax year" in new Test {
+      makeLink(Some(taxYear2023)) shouldBe Link(href = baseHref, method = method, rel = rel)
     }
 
-    "TYS feature switch is enabled" should {
-      "not include tax year query parameter given a non-TYS tax year" in new TysEnabledTest {
-        makeLink(Some(taxYear2023)) shouldBe Link(href = baseHref, method = method, rel = rel)
-      }
-
-      "include tax year query parameter given a TYS tax year" in new TysEnabledTest {
-        makeLink(Some(taxYear2024)) shouldBe Link(href = s"$baseHref?taxYear=2023-24", method = method, rel = rel)
-      }
+    "include tax year query parameter given a TYS tax year" in new Test {
+      makeLink(Some(taxYear2024)) shouldBe Link(href = s"$baseHref?taxYear=2023-24", method = method, rel = rel)
     }
   }
 }

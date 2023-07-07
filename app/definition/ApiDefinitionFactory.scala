@@ -17,11 +17,11 @@
 package definition
 
 import config.AppConfig
-import routing.{Version, Version2, Version3}
+import routing.{ Version, Version2, Version3 }
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.Logging
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 
 @Singleton
 class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
@@ -60,9 +60,13 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
           APIVersion(
             version = Version2,
             status = buildAPIStatus(Version2),
-            endpointsEnabled = appConfig.endpointsEnabled(Version2.name)
+            endpointsEnabled = appConfig.endpointsEnabled(Version2)
           ),
-          APIVersion(version = Version3, status = buildAPIStatus(Version3), endpointsEnabled = appConfig.endpointsEnabled(Version3.name))
+          APIVersion(
+            version = Version3,
+            status = buildAPIStatus(Version3),
+            endpointsEnabled = appConfig.endpointsEnabled(Version3)
+          )
         ),
         requiresTrust = None
       )

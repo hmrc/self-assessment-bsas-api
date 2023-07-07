@@ -58,7 +58,7 @@ trait AppConfig {
   def apiStatus(version: Version): String
   def isApiDeprecated(version: Version): Boolean = apiStatus(version) == "DEPRECATED"
   def featureSwitches: Configuration
-  def endpointsEnabled(version: String): Boolean
+  def endpointsEnabled(version: Version): Boolean
   def confidenceLevelConfig: ConfidenceLevelConfig
   def mtdNrsProxyBaseUrl: String
 
@@ -104,7 +104,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   def apiStatus(version: Version): String = config.getString(s"api.${version.name}.status")
   def featureSwitches: Configuration      = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
-  def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.${version.name}.endpoints.enabled")
 }
 
 trait FixedConfig {
