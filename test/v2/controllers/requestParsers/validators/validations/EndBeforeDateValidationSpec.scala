@@ -16,13 +16,13 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.RuleEndBeforeStartDateError
+import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
 
 class EndBeforeDateValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  case class SetUp(startDate:String, endDate: String)
+  case class SetUp(startDate: String, endDate: String)
 
   "validate" should {
     "return no errors" when {

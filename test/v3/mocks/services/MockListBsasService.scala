@@ -22,10 +22,10 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 import v3.services.ListBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockListBsasService extends MockFactory {
 

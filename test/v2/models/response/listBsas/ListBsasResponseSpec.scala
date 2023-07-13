@@ -17,10 +17,10 @@
 package v2.models.response.listBsas
 
 import api.hateoas.Link
-import api.hateoas.Method.{ GET, POST }
+import api.hateoas.Method.{GET, POST}
 import api.models.domain.Status
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsSuccess, Json }
+import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v2.fixtures.ListBsasFixtures._
 import v2.models.domain.TypeOfBusiness
@@ -121,11 +121,11 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
     }
 
     "Links Factory" should {
-      val nino            = "someNino"
-      val selfEmployment  = "self-employment"
-      val ukProperty      = "property"
+      val nino = "someNino"
+      val selfEmployment = "self-employment"
+      val ukProperty = "property"
       val foreignProperty = "foreign-property"
-      val bsasId          = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+      val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
       "expose the correct top level links for a self employment list" in {
         MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
@@ -160,9 +160,9 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
           mockAppConfig,
           ListBsasHateoasData(nino, selfEmploymentBsasModel),
           BsasEntries(bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-                      requestedDateTime = "2019-10-14T11:33:27Z",
-                      summaryStatus = Status.`valid`,
-                      adjustedSummary = false)
+            requestedDateTime = "2019-10-14T11:33:27Z",
+            summaryStatus = Status.`valid`,
+            adjustedSummary = false)
         ) shouldBe
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/$selfEmployment/$bsasId", GET, "self")
@@ -175,9 +175,9 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
           mockAppConfig,
           ListBsasHateoasData(nino, ukPropertyBsasModel),
           BsasEntries(bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-                      requestedDateTime = "2019-10-14T11:33:27Z",
-                      summaryStatus = Status.`valid`,
-                      adjustedSummary = false)
+            requestedDateTime = "2019-10-14T11:33:27Z",
+            summaryStatus = Status.`valid`,
+            adjustedSummary = false)
         ) shouldBe
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/$ukProperty/$bsasId", GET, "self")
@@ -190,9 +190,9 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig {
           mockAppConfig,
           ListBsasHateoasData(nino, foreignPropertyBsasModel),
           BsasEntries(bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-                      requestedDateTime = "2019-10-14T11:33:27Z",
-                      summaryStatus = Status.`valid`,
-                      adjustedSummary = false)
+            requestedDateTime = "2019-10-14T11:33:27Z",
+            summaryStatus = Status.`valid`,
+            adjustedSummary = false)
         ) shouldBe
           Seq(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/$foreignProperty/$bsasId", GET, "self")

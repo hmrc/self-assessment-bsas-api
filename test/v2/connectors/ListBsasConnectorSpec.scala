@@ -17,13 +17,13 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ListBsasFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.domain.DownstreamTaxYear
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import v2.models.request.ListBsasRequest
 
 import scala.concurrent.Future
@@ -33,8 +33,8 @@ class ListBsasConnectorSpec extends ConnectorSpec {
   val nino: Nino = Nino("AA123456A")
 
   val queryParams: Map[String, String] = Map(
-    "taxYear"          -> "2019",
-    "incomeSourceId"   -> "incomeSourceId",
+    "taxYear" -> "2019",
+    "incomeSourceId" -> "incomeSourceId",
     "incomeSourceType" -> "02"
   )
 
@@ -54,7 +54,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
       val request = ListBsasRequest(nino, DownstreamTaxYear("2019"), Some("incomeSourceId"), Some("02"))
 
       "return a ListBsasResponse" in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, summaryModel))
+        val outcome = Right(ResponseWrapper(correlationId, summaryModel))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
         MockedHttpClient
           .parameterGet(

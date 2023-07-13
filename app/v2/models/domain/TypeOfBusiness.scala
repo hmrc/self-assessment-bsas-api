@@ -25,6 +25,7 @@ sealed trait TypeOfBusiness {
 
 //noinspection ScalaStyle
 object TypeOfBusiness {
+  val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 
   case object `self-employment` extends TypeOfBusiness {
     override def toIdentifierValue: String = "01"
@@ -42,10 +43,9 @@ object TypeOfBusiness {
     override def toIdentifierValue: String = "03"
   }
 
+  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
+
   case object `foreign-property` extends TypeOfBusiness {
     override def toIdentifierValue: String = "15"
   }
-
-  implicit val format: Format[TypeOfBusiness]         = Enums.format[TypeOfBusiness]
-  val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 }

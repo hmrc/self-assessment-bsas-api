@@ -17,18 +17,14 @@
 package v3.models.response.retrieveBsas.selfEmployment
 
 import api.hateoas.Method._
-import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import api.models.domain.TaxYear
 import api.models.utils.JsonErrorValidators
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.Json
 import support.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
-  downstreamRetrieveBsasResponseJson,
-  mtdRetrieveBsasResponseJson,
-  retrieveBsasResponseModel
-}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 
@@ -51,10 +47,10 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val calculationId  = "anId"
-      val context        = "individuals/self-assessment/adjustable-summary"
-      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
+      val nino = "someNino"
+      val calculationId = "anId"
+      val context = "individuals/self-assessment/adjustable-summary"
+      val taxYear = Some(TaxYear.fromMtd("2023-24"))
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }

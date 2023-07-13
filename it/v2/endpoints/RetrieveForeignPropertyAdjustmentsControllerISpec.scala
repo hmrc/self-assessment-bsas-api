@@ -21,20 +21,21 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
-import v2.models.errors.{ RuleNoAdjustmentsMade, RuleNotForeignProperty }
-import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v2.models.errors.{RuleNoAdjustmentsMade, RuleNotForeignProperty}
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino   = "AA123456B"
+    val nino = "AA123456B"
     val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
-    val desResponse: String => String = (typeOfBusiness: String) => s"""
+    val desResponse: String => String = (typeOfBusiness: String) =>
+      s"""
          |{
          |    "metadata": {
          |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
@@ -78,8 +79,6 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
          |}
          |""".stripMargin
 
-    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
-
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
     def setupStubs(): StubMapping
@@ -93,6 +92,8 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
   }
 
   "Calling the retrieve Foreign Property Adjustments endpoint" should {
@@ -135,7 +136,7 @@ class RetrieveForeignPropertyAdjustmentsControllerISpec extends IntegrationBaseS
       def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String   = requestNino
+          override val nino: String = requestNino
           override val bsasId: String = requestBsasId
 
           override def setupStubs(): StubMapping = {

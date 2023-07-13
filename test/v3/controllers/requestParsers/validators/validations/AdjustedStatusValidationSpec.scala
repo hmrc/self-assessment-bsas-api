@@ -43,9 +43,9 @@ class AdjustedStatusValidationSpec extends UnitSpec {
     "return an error" when {
       List(invalidAdjustedStatus1, invalidAdjustedStatusNonsense).foreach {
         status =>
-        s"passed the invalid adjusted status '$status'" in {
-          AdjustedStatusValidation.validate(status) shouldBe List(AdjustedStatusFormatError)
-        }
+          s"passed the invalid adjusted status '$status'" in {
+            AdjustedStatusValidation.validate(status) shouldBe List(AdjustedStatusFormatError)
+          }
       }
     }
   }

@@ -33,7 +33,7 @@ object BsasSummary {
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean] and
       (JsPath \ "adjustedDateTime").readNullable[String]
-  )(BsasSummary.apply _)
+    ) (BsasSummary.apply _)
 
   implicit val writes: OWrites[BsasSummary] = Json.writes[BsasSummary]
 }

@@ -29,24 +29,24 @@ case class NonFHLExpenses(premisesRunningCosts: Option[BigDecimal],
                           consolidatedExpenses: Option[BigDecimal]) {
 
   val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts"     -> premisesRunningCosts,
-    "repairsAndMaintenance"    -> repairsAndMaintenance,
-    "financialCosts"           -> financialCosts,
-    "professionalFees"         -> professionalFees,
-    "travelCosts"              -> travelCosts,
-    "costOfServices"           -> costOfServices,
+    "premisesRunningCosts" -> premisesRunningCosts,
+    "repairsAndMaintenance" -> repairsAndMaintenance,
+    "financialCosts" -> financialCosts,
+    "professionalFees" -> professionalFees,
+    "travelCosts" -> travelCosts,
+    "costOfServices" -> costOfServices,
     "residentialFinancialCost" -> residentialFinancialCost,
-    "other"                    -> other,
-    "consolidatedExpenses"     -> consolidatedExpenses
+    "other" -> other,
+    "consolidatedExpenses" -> consolidatedExpenses
   ).collect { case (k, Some(v)) => (k, v) }
 
   def isEmpty: Boolean = NonFHLExpenses.unapply(this).forall {
     case (None, None, None, None, None, None, None, None, None) => true
-    case _                                                      => false
+    case _ => false
   }
 }
 
 object NonFHLExpenses {
-  implicit val reads: Reads[NonFHLExpenses]    = Json.reads[NonFHLExpenses]
+  implicit val reads: Reads[NonFHLExpenses] = Json.reads[NonFHLExpenses]
   implicit val writes: OWrites[NonFHLExpenses] = (o: NonFHLExpenses) => Json.toJsObject(o.params)
 }

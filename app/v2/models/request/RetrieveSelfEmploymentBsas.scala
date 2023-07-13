@@ -20,4 +20,5 @@ import api.models.domain.Nino
 import api.models.request.RawData
 
 case class RetrieveSelfEmploymentBsasRawData(nino: String, bsasId: String, adjustedStatus: Option[String]) extends RawData
+
 case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, bsasId: String, adjustedStatus: Option[String])

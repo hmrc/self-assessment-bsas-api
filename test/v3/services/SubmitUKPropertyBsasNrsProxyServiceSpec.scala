@@ -25,23 +25,23 @@ import scala.concurrent.Future
 
 class SubmitUKPropertyBsasNrsProxyServiceSpec extends ServiceSpec {
 
+  private val nino = Nino("AA123456A")
+
   trait Test extends MockSubmitUKPropertyBsasNrsproxyConnector {
     lazy val service = new SubmitUKPropertyBsasNrsProxyService(mockNrsProxyConnector)
   }
-
-  private val nino = Nino("AA123456A")
 
   "NrsProxyService" should {
     "call the Nrs Proxy connector" when {
       "the connector is valid" in new Test {
         MockNrsProxyConnector.submit(nino.toString())
-        .returns(Future.successful((): Unit))
+          .returns(Future.successful((): Unit))
 
         await(service.submit(nino.toString(), SubmitUKPropertyBsasRequestBody(None, None))) shouldBe (())
       }
       "the connector fails" in new Test {
         MockNrsProxyConnector.submit(nino.toString())
-        .returns(Future.failed(new Exception()))
+          .returns(Future.failed(new Exception()))
 
         assertThrows[Exception](
           await(service.submit(nino.toString(), SubmitUKPropertyBsasRequestBody(None, None)))

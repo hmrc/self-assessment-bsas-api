@@ -25,6 +25,8 @@ class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignProperty
 
   private val validationSet = List(parameterFormatValidation)
 
+  override def validate(data: RetrieveForeignPropertyRawData): List[MtdError] = run(validationSet, data).distinct
+
   private def parameterFormatValidation: RetrieveForeignPropertyRawData => List[List[MtdError]] = (data: RetrieveForeignPropertyRawData) => {
     List(
       NinoValidation.validate(data.nino),
@@ -32,6 +34,4 @@ class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignProperty
       data.adjustedStatus.map(AdjustedStatusValidation.validate).getOrElse(Nil)
     )
   }
-
-  override def validate(data: RetrieveForeignPropertyRawData): List[MtdError] = run(validationSet, data).distinct
 }

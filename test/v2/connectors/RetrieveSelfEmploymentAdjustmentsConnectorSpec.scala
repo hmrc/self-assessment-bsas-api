@@ -17,19 +17,19 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
-import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
+import v2.mocks.MockHttpClient
 import v2.models.request.RetrieveAdjustmentsRequestData
 
 import scala.concurrent.Future
 
 class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
 
-  val nino   = Nino("AA123456A")
+  val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val queryParams: Map[String, String] = Map("return" -> "2")
@@ -49,7 +49,7 @@ class RetrieveSelfEmploymentAdjustmentsConnectorSpec extends ConnectorSpec {
 
   "retrieveSelfEmploymentAdjustments" should {
     "return a valid response" when {
-      val outcome                    = Right(ResponseWrapper(correlationId, mtdJson))
+      val outcome = Right(ResponseWrapper(correlationId, mtdJson))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)

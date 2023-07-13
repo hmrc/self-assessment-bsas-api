@@ -16,8 +16,8 @@
 
 package v3.connectors
 
-import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ Nino, TaxYear }
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino          = Nino("AA123456A")
+  val nino = Nino("AA123456A")
   val calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   trait Test {

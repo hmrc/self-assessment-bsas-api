@@ -52,8 +52,8 @@ class NonFHLIncomeSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  val modelWithNoneValues: NonFHLIncome = NonFHLIncome(None,Some(1000.45),Some(1000.45),Some(1000.45))
-  val model: NonFHLIncome = NonFHLIncome(Some(1000.45),Some(1000.45),Some(1000.45),Some(1000.45))
+  val modelWithNoneValues: NonFHLIncome = NonFHLIncome(None, Some(1000.45), Some(1000.45), Some(1000.45))
+  val model: NonFHLIncome = NonFHLIncome(Some(1000.45), Some(1000.45), Some(1000.45), Some(1000.45))
 
   "NonFHLIncome" when {
     "read from valid JSON" should {

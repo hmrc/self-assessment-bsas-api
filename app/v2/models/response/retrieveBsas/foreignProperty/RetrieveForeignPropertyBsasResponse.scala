@@ -31,25 +31,25 @@ object RetrieveForeignPropertyBsasResponse extends HateoasLinks {
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
         case TypeOfBusiness.`foreign-property-fhl-eea` => fhlBsasDetailReads
-        case TypeOfBusiness.`foreign-property`         => nonFhlBsasDetailReads
-        case _                                         => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
+        case TypeOfBusiness.`foreign-property` => nonFhlBsasDetailReads
+        case _ => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
       }
-  )(RetrieveForeignPropertyBsasResponse.apply _)
+    ) (RetrieveForeignPropertyBsasResponse.apply _)
 
   private val fhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap {
     case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
-    case _       => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
+    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
   }
 
   private val nonFhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap {
     case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
-    case _       => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
+    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
   }
 
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
 
   implicit object RetrieveForeignPropertyBsasHateoasFactory
-      extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
       Seq(
         getForeignPropertyBsas(appConfig, data.nino, data.bsasId),

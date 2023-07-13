@@ -17,7 +17,7 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
@@ -26,7 +26,7 @@ import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino            = Nino("AA123456A")
+  val nino: Nino = Nino("AA123456A")
   val calculationId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   trait Test {
@@ -42,7 +42,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "retrieveSelfEmploymentBsas is called" must {
       "a valid request is supplied" in {
         new IfsTest with Test {
-          val outcome     = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+          val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
           val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
           await(connector.retrieveSelfEmploymentBsas(requestWith(None))) shouldBe outcome
@@ -53,8 +53,8 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year" must {
       "a valid request is supplied" in {
         new TysIfsTest with Test {
-          val taxYear     = TaxYear.fromMtd("2023-24")
-          val outcome     = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+          val taxYear = TaxYear.fromMtd("2023-24")
+          val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
           val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/$calculationId"
 
           willGet(url = expectedUrl) returns Future.successful(outcome)

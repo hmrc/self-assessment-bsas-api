@@ -19,12 +19,12 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveSelfEmploymentValidator
-import v2.models.request.{ RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData }
+import v2.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 import javax.inject.Inject
 
 class RetrieveSelfEmploymentRequestParser @Inject()(val validator: RetrieveSelfEmploymentValidator)
-    extends RequestParser[RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData] {
+  extends RequestParser[RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData] {
 
   override protected def requestFor(data: RetrieveSelfEmploymentBsasRawData): RetrieveSelfEmploymentBsasRequestData =
     RetrieveSelfEmploymentBsasRequestData(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))

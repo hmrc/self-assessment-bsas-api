@@ -17,19 +17,19 @@
 package v3.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.RetrieveForeignPropertyValidator
-import v3.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData }
+import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
 
 import javax.inject.Inject
 
 class RetrieveForeignPropertyRequestParser @Inject()(val validator: RetrieveForeignPropertyValidator)
-    extends RequestParser[RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData] {
+  extends RequestParser[RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData] {
 
   override protected def requestFor(data: RetrieveForeignPropertyBsasRawData): RetrieveForeignPropertyBsasRequestData = {
     val requestedTaxYear = data.taxYear match {
       case Some(tyString) => Some(TaxYear.fromMtd(tyString))
-      case _              => None
+      case _ => None
     }
 
     RetrieveForeignPropertyBsasRequestData(Nino(data.nino), data.calculationId, requestedTaxYear)

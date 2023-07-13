@@ -29,15 +29,27 @@ import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkPropertyAdjustmentsConnector) extends BaseService {
 
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+      "INVALID_RETURN" -> InternalError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
   def retrieveUkPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]] = {
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveUkPropertyAdjustments(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -47,24 +59,12 @@ class RetrieveUkPropertyAdjustmentsService @Inject()(connector: RetrieveUkProper
   }
 
   private def validateRetrieveUkPropertyAdjustmentsSuccessResponse[T](
-      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+                                                                       desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case RetrieveUkPropertyAdjustmentsResponse(retrieveBsasAdjustments.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
+        if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
-      "INVALID_RETURN"            -> InternalError,
-      "INVALID_CORRELATION_ID"    -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 }

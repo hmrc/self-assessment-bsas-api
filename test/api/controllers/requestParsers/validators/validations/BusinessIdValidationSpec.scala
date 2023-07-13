@@ -20,7 +20,7 @@ import api.models.errors.BusinessIdFormatError
 import api.models.utils.JsonErrorValidators
 import support.UnitSpec
 
-class BusinessIdValidationSpec extends UnitSpec with JsonErrorValidators  {
+class BusinessIdValidationSpec extends UnitSpec with JsonErrorValidators {
 
   case class SetUp(BusinessId: String, typeOfBusiness: String = "self-employed")
 
@@ -33,7 +33,7 @@ class BusinessIdValidationSpec extends UnitSpec with JsonErrorValidators  {
     }
 
     "return an error" when {
-      "an invalid self employment id is provided" in new SetUp("XAXAIS65271982AD"){
+      "an invalid self employment id is provided" in new SetUp("XAXAIS65271982AD") {
 
         val validationResult = BusinessIdValidation.validate(BusinessId)
 

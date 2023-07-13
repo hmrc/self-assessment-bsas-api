@@ -24,7 +24,7 @@ trait JsonWritesUtil {
     case JsObject(fields) =>
       JsObject(fields.flatMap {
         case (_, JsNull) => None
-        case other       => Some(other)
+        case other => Some(other)
       })
     case other => other.as[JsObject]
   }

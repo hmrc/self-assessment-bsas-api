@@ -19,7 +19,7 @@ package v2.models.request.submitBsas.ukProperty
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import support.UnitSpec
 
-class NonFHLExpensesSpec extends UnitSpec{
+class NonFHLExpensesSpec extends UnitSpec {
 
   val inputJson: JsValue = Json.parse(
     """
@@ -98,16 +98,16 @@ class NonFHLExpensesSpec extends UnitSpec{
   )
 
   val model: NonFHLExpenses = NonFHLExpenses(Some(-1000.49), Some(1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            Some(1000.49), Some(-1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            Some(1000.49))
+    Some(1000.49), Some(1000.49),
+    Some(1000.49), Some(-1000.49),
+    Some(1000.49), Some(1000.49),
+    Some(1000.49))
 
   val modelWithNoneValues: NonFHLExpenses = NonFHLExpenses(None, Some(1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            None, Some(-1000.49),
-                                            Some(1000.49), Some(1000.49),
-                                            Some(1000.49))
+    Some(1000.49), Some(1000.49),
+    None, Some(-1000.49),
+    Some(1000.49), Some(1000.49),
+    Some(1000.49))
 
   "NonFHLExpenses" when {
     "read from valid JSON" should {

@@ -29,23 +29,23 @@ case class ForeignPropertyExpenses(premisesRunningCosts: Option[BigDecimal],
                                    other: Option[BigDecimal],
                                    consolidatedExpenses: Option[BigDecimal]) {
 
+  val params: Map[String, BigDecimal] = Map(
+    "premisesRunningCosts" -> premisesRunningCosts,
+    "repairsAndMaintenance" -> repairsAndMaintenance,
+    "financialCosts" -> financialCosts,
+    "professionalFees" -> professionalFees,
+    "costOfServices" -> costOfServices,
+    "travelCosts" -> travelCosts,
+    "other" -> other,
+    "residentialFinancialCost" -> residentialFinancialCost,
+    "consolidatedExpenses" -> consolidatedExpenses
+  ).collect { case (k, Some(v)) => (k, v) }
+
   def isEmpty: Boolean =
     ForeignPropertyExpenses.unapply(this).forall {
       case (None, None, None, None, None, None, None, None, None) => true
-      case _                                                      => false
+      case _ => false
     }
-
-  val params: Map[String, BigDecimal] = Map(
-    "premisesRunningCosts"     -> premisesRunningCosts,
-    "repairsAndMaintenance"    -> repairsAndMaintenance,
-    "financialCosts"           -> financialCosts,
-    "professionalFees"         -> professionalFees,
-    "costOfServices"           -> costOfServices,
-    "travelCosts"              -> travelCosts,
-    "other"                    -> other,
-    "residentialFinancialCost" -> residentialFinancialCost,
-    "consolidatedExpenses"     -> consolidatedExpenses
-  ).collect { case (k, Some(v)) => (k, v) }
 }
 
 object ForeignPropertyExpenses {
@@ -61,5 +61,5 @@ object ForeignPropertyExpenses {
       (JsPath \ "residentialFinancialCost").writeNullable[BigDecimal] and
       (JsPath \ "other").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpense").writeNullable[BigDecimal]
-  )(unlift(ForeignPropertyExpenses.unapply))
+    ) (unlift(ForeignPropertyExpenses.unapply))
 }

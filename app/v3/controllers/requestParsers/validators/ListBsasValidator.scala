@@ -17,7 +17,7 @@
 package v3.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{ BusinessIdValidation, NinoValidation, TaxYearValidation }
+import api.controllers.requestParsers.validators.validations.{BusinessIdValidation, NinoValidation, TaxYearValidation}
 import api.models.errors.MtdError
 import config.FixedConfig
 import v3.controllers.requestParsers.validators.validations._
@@ -27,6 +27,8 @@ class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidation)
 
+  override def validate(data: ListBsasRawData): List[MtdError] = run(validationSet, data).distinct
+
   private def parameterFormatValidation: ListBsasRawData => List[List[MtdError]] =
     (data: ListBsasRawData) =>
       List(
@@ -34,7 +36,5 @@ class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
         data.taxYear.map(TaxYearValidation.validate(listMinimumTaxYear, _)).getOrElse(Nil),
         data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
         data.businessId.map(BusinessIdValidation.validate).getOrElse(Nil)
-    )
-
-  override def validate(data: ListBsasRawData): List[MtdError] = run(validationSet, data).distinct
+      )
 }

@@ -25,7 +25,7 @@ class AdditionsSpec extends UnitSpec {
 
   val additionsModelWithoutCosts: Additions =
     Additions(
-      costOfGoodsDisallowable= None,
+      costOfGoodsDisallowable = None,
       paymentsToSubcontractorsDisallowable = Some(3000.2),
       wagesAndStaffCostsDisallowable = None,
       carVanTravelExpensesDisallowable = None,

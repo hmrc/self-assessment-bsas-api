@@ -16,20 +16,21 @@
 
 package v2.fixtures.ukProperty
 
-import java.time.LocalDate
 import play.api.libs.json.{JsValue, Json}
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.ukProperty._
 import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 
+import java.time.LocalDate
+
 object RetrieveUkPropertyBsasFixtures {
 
-  val totalBsasModel: TotalBsas = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
-  val profitModel: Profit = Profit(Some(100.49),Some(100))
-  val lossModel: Loss = Loss(Some(100.49),Some(100))
-  val incomeBreakdownModel: IncomeBreakdown = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
-  val expensesBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
-    Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
+  val totalBsasModel: TotalBsas = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val profitModel: Profit = Profit(Some(100.49), Some(100))
+  val lossModel: Loss = Loss(Some(100.49), Some(100))
+  val incomeBreakdownModel: IncomeBreakdown = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val expensesBreakdownModel: ExpensesBreakdown = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
+    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), None)
   val accountingPeriodModel: AccountingPeriod = AccountingPeriod(LocalDate.parse("2019-04-06"), LocalDate.parse("2020-04-05"))
 
   val bsasDetailModel: BsasDetail = BsasDetail(total = totalBsasModel,
@@ -402,67 +403,68 @@ object RetrieveUkPropertyBsasFixtures {
       | }
       |}""".stripMargin)
 
-  val hateoasResponseForProperty: (String, String) => String = (nino: String, bsasId: String) => s"""
-                                                        |{
-                                                        |   "metadata": {
-                                                        |      "typeOfBusiness": "uk-property-fhl",
-                                                        |      "businessId": "111111111111111",
-                                                        |      "accountingPeriod": {
-                                                        |         "startDate": "2019-04-06",
-                                                        |         "endDate": "2020-04-05"
-                                                        |      },
-                                                        |      "taxYear": "2019-20",
-                                                        |      "requestedDateTime": "2020-10-14T11:33:27.111Z",
-                                                        |      "bsasId": "$bsasId",
-                                                        |      "summaryStatus": "valid",
-                                                        |      "adjustedSummary": true
-                                                        |   },
-                                                        |   "bsas": {
-                                                        |      "total": {
-                                                        |         "income": 100.49,
-                                                        |         "expenses": 100.49,
-                                                        |         "additions": 100.49,
-                                                        |         "deductions": 100.49
-                                                        |      },
-                                                        |      "profit": {
-                                                        |         "net": 100.49,
-                                                        |         "taxable": 100
-                                                        |      },
-                                                        |      "loss": {
-                                                        |         "net": 100.49,
-                                                        |         "adjustedIncomeTax": 100
-                                                        |      },
-                                                        |      "incomeBreakdown": {
-                                                        |         "rentIncome": 100.49,
-                                                        |         "premiumsOfLeaseGrant": 100.49,
-                                                        |         "reversePremiums": 100.49,
-                                                        |         "otherPropertyIncome":100.49,
-                                                        |         "rarRentReceived":100.49
-                                                        |      },
-                                                        |      "expensesBreakdown": {
-                                                        |         "premisesRunningCosts": 100.49,
-                                                        |         "repairsAndMaintenance": 100.49,
-                                                        |         "financialCosts": 100.49,
-                                                        |         "professionalFees": 100.49,
-                                                        |         "travelCosts": 100.49,
-                                                        |         "costOfServices": 100.49,
-                                                        |         "residentialFinancialCost": 100.49,
-                                                        |         "broughtFwdResidentialFinancialCost": 100.49,
-                                                        |         "other": 100.49
-                                                        |      }
-                                                        |   },
-                                                        |   "links":[
-                                                        |    {
-                                                        |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId",
-                                                        |      "rel":"self",
-                                                        |      "method":"GET"
-                                                        |    },
-                                                        |    {
-                                                        |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-                                                        |      "rel":"submit-summary-adjustments",
-                                                        |      "method":"POST"
-                                                        |    }
-                                                        |  ]
-                                                        |}
+  val hateoasResponseForProperty: (String, String) => String = (nino: String, bsasId: String) =>
+    s"""
+       |{
+       |   "metadata": {
+       |      "typeOfBusiness": "uk-property-fhl",
+       |      "businessId": "111111111111111",
+       |      "accountingPeriod": {
+       |         "startDate": "2019-04-06",
+       |         "endDate": "2020-04-05"
+       |      },
+       |      "taxYear": "2019-20",
+       |      "requestedDateTime": "2020-10-14T11:33:27.111Z",
+       |      "bsasId": "$bsasId",
+       |      "summaryStatus": "valid",
+       |      "adjustedSummary": true
+       |   },
+       |   "bsas": {
+       |      "total": {
+       |         "income": 100.49,
+       |         "expenses": 100.49,
+       |         "additions": 100.49,
+       |         "deductions": 100.49
+       |      },
+       |      "profit": {
+       |         "net": 100.49,
+       |         "taxable": 100
+       |      },
+       |      "loss": {
+       |         "net": 100.49,
+       |         "adjustedIncomeTax": 100
+       |      },
+       |      "incomeBreakdown": {
+       |         "rentIncome": 100.49,
+       |         "premiumsOfLeaseGrant": 100.49,
+       |         "reversePremiums": 100.49,
+       |         "otherPropertyIncome":100.49,
+       |         "rarRentReceived":100.49
+       |      },
+       |      "expensesBreakdown": {
+       |         "premisesRunningCosts": 100.49,
+       |         "repairsAndMaintenance": 100.49,
+       |         "financialCosts": 100.49,
+       |         "professionalFees": 100.49,
+       |         "travelCosts": 100.49,
+       |         "costOfServices": 100.49,
+       |         "residentialFinancialCost": 100.49,
+       |         "broughtFwdResidentialFinancialCost": 100.49,
+       |         "other": 100.49
+       |      }
+       |   },
+       |   "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    },
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+       |      "rel":"submit-summary-adjustments",
+       |      "method":"POST"
+       |    }
+       |  ]
+       |}
     """.stripMargin
 }

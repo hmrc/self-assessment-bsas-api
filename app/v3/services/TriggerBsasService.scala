@@ -19,43 +19,43 @@ package v3.services
 import api.controllers.RequestContext
 import api.models
 import api.models.errors._
-import api.services.{ BaseService, ServiceOutcome }
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v3.connectors.TriggerBsasConnector
 import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRequest
 import v3.models.response.TriggerBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {
 
-  def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[TriggerBsasResponse]] =
-    connector
-      .triggerBsas(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-
   private val errorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
-      "INVALID_CORRELATIONID"       -> models.errors.InternalError,
-      "INVALID_PAYLOAD"             -> models.errors.InternalError,
-      "NO_DATA_FOUND"               -> NotFoundError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CORRELATIONID" -> models.errors.InternalError,
+      "INVALID_PAYLOAD" -> models.errors.InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
       "ACCOUNTING_PERIOD_NOT_ENDED" -> RuleAccountingPeriodNotEndedError,
-      "OBLIGATIONS_NOT_MET"         -> RulePeriodicDataIncompleteError,
-      "NO_ACCOUNTING_PERIOD"        -> RuleNoAccountingPeriodError,
-      "SERVER_ERROR"                -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE"         -> models.errors.InternalError
+      "OBLIGATIONS_NOT_MET" -> RulePeriodicDataIncompleteError,
+      "NO_ACCOUNTING_PERIOD" -> RuleNoAccountingPeriodError,
+      "SERVER_ERROR" -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE" -> models.errors.InternalError
     )
     val extraTysErrors =
       Map(
-        "INVALID_TAX_YEAR"       -> models.errors.InternalError,
+        "INVALID_TAX_YEAR" -> models.errors.InternalError,
         "INVALID_CORRELATION_ID" -> models.errors.InternalError,
         "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
       )
 
     errors ++ extraTysErrors
   }
+
+  def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[TriggerBsasResponse]] =
+    connector
+      .triggerBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
 }

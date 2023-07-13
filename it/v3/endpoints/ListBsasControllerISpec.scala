@@ -16,23 +16,13 @@
 
 package v3.endpoints
 
-import api.models.errors.{
-  BusinessIdFormatError,
-  InternalError,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError,
-  TypeOfBusinessFormatError
-}
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, TypeOfBusinessFormatError}
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
@@ -42,21 +32,14 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
   private trait Test {
     // common
     val nino = "AA123456B"
-
-    // mtd
-    def mtdUri: String = s"/$nino"
-    def taxYear: Option[String]
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String]     = Some("XAIS12345678910")
+    val businessId: Option[String] = Some("XAIS12345678910")
 
-    def mtdQueryParams: Seq[(String, String)] =
-      Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
-        .collect {
-          case (k, Some(v)) => (k, v)
-        }
+    def taxYear: Option[String]
 
     // downstream
     def downstreamUri: String
+
     def downstreamTaxYear: Option[String]
 
     def setupStubs(): StubMapping
@@ -71,6 +54,15 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         )
     }
 
+    // mtd
+    def mtdUri: String = s"/$nino"
+
+    def mtdQueryParams: Seq[(String, String)] =
+      Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
+        .collect {
+          case (k, Some(v)) => (k, v)
+        }
+
     def errorBody(code: String): String =
       s"""{
          |  "code": "$code",
@@ -80,14 +72,16 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: Option[String]           = Some("2019-20")
+    def taxYear: Option[String] = Some("2019-20")
+
     def downstreamTaxYear: Option[String] = Some("2020")
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: Option[String]           = Some("2023-24")
+    def taxYear: Option[String] = Some("2023-24")
+
     def downstreamTaxYear: Option[String] = Some("23-24")
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
@@ -188,10 +182,10 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
-          override val nino: String                   = requestNino
-          override val taxYear: Option[String]        = Some(requestTaxYear)
+          override val nino: String = requestNino
+          override val taxYear: Option[String] = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String]     = requestBusinessId
+          override val businessId: Option[String] = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()

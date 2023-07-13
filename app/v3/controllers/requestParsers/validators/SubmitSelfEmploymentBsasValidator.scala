@@ -34,6 +34,8 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     bothExpensesSuppliedValidation
   )
 
+  override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)
+
   private def parameterFormatValidation: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
@@ -232,7 +234,5 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
             )))
       .getOrElse(Nil)
   }
-
-  override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)
 
 }

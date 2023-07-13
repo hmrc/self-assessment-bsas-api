@@ -20,12 +20,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import v2.mocks.MockHttpClient
-import v2.models.request.submitBsas.foreignProperty.{
-  ForeignProperty,
-  ForeignPropertyExpenses,
-  ForeignPropertyIncome,
-  SubmitForeignPropertyBsasRequestBody
-}
+import v2.models.request.submitBsas.foreignProperty.{ForeignProperty, ForeignPropertyExpenses, ForeignPropertyIncome, SubmitForeignPropertyBsasRequestBody}
 
 import scala.concurrent.Future
 

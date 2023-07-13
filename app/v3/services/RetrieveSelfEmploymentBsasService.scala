@@ -26,45 +26,44 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`self-employment`)
-
-  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveSelfEmploymentBsasResponse]] = {
-
-    val result = for {
-      responseWrapper    <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(responseWrapper))
-    } yield mtdResponseWrapper
-
-    result.value
-  }
-
   private val errorMap: Map[String, MtdError] = {
 
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_RETURN"            -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_RETURN" -> InternalError,
+      "UNPROCESSABLE_ENTITY" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "NOT_FOUND"              -> NotFoundError,
+      "NOT_FOUND" -> NotFoundError,
     )
 
     errors ++ extraTysErrors
+  }
+
+  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[ServiceOutcome[RetrieveSelfEmploymentBsasResponse]] = {
+
+    val result = for {
+      responseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(responseWrapper))
+    } yield mtdResponseWrapper
+
+    result.value
   }
 }

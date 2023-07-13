@@ -19,7 +19,7 @@ package v2.models.request.submitBsas.ukProperty
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
-class FurnishedHolidayLetSpec extends UnitSpec{
+class FurnishedHolidayLetSpec extends UnitSpec {
 
   val inputJson: JsValue = Json.parse(
     """

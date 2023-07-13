@@ -23,20 +23,17 @@ import v3.mocks.validators.MockRetrieveForeignPropertyValidator
 import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
 
 class RetrieveForeignPropertyRequestDataParserSpec extends UnitSpec {
+  val nino = "AA123456A"
+  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val inputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear = None)
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, taxYear = None)
+  val TysInputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, Some("2023-24"))
+  val TysOutputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")))
 
   trait Test extends MockRetrieveForeignPropertyValidator {
     lazy val parser = new RetrieveForeignPropertyRequestParser(mockValidator)
   }
-
-  val nino = "AA123456A"
-  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  val inputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear=None)
-  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, taxYear=None)
-
-  val TysInputRawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, Some("2023-24"))
-  val TysOutputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), calculationId, Some(TaxYear.fromMtd("2023-24")))
 
   "parser" should {
     "return a valid request object" when {

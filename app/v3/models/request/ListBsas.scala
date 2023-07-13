@@ -16,7 +16,7 @@
 
 package v3.models.request
 
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import api.models.request.RawData
 
 case class ListBsasRawData(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]) extends RawData

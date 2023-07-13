@@ -17,12 +17,12 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
@@ -35,12 +35,13 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
     val nino = "AA123456A"
 
     def mtdTaxYear: String
+
     def downstreamTaxYear: String
 
-    def uri: String = s"/$nino/trigger"
     def downstreamUri: String
 
     def setupStubs(): StubMapping
+
     def triggerHateoasLink(hateoasLinkPath: String): String
 
     def request(): WSRequest = {
@@ -51,6 +52,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/trigger"
 
     def errorBody(code: String): String =
       s"""
@@ -68,28 +71,31 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
       Json.obj(
         "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness"   -> typeOfBusiness,
-        "businessId"       -> "XAIS12345678901"
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId" -> "XAIS12345678901"
       )
     }
 
-    def responseBody(hateoasLinkPath: String): String = s"""
-                                                           |{
-                                                           |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
-                                                           |  "links":[
-                                                           |    {
-                                                           |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
-                                                           |      "rel":"self",
-                                                           |      "method":"GET"
-                                                           |    }
-                                                           |  ]
-                                                           |}
+    def responseBody(hateoasLinkPath: String): String =
+      s"""
+         |{
+         |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
+         |  "links":[
+         |    {
+         |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
+         |      "rel":"self",
+         |      "method":"GET"
+         |    }
+         |  ]
+         |}
     """.stripMargin
   }
 
   private trait NonTysTest extends Test {
-    def mtdTaxYear: String             = "2019-20"
-    def downstreamTaxYear: String      = "2020"
+    def mtdTaxYear: String = "2019-20"
+
+    def downstreamTaxYear: String = "2020"
+
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
     def triggerHateoasLink(hateoasLinkPath: String): String =
@@ -97,12 +103,14 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait TysIfsTest extends Test {
-    def mtdTaxYear: String             = "2023-24"
-    def downstreamTaxYear: String      = "23-24"
+    def downstreamTaxYear: String = "23-24"
+
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
 
     def triggerHateoasLink(hateoasLinkPath: String): String =
       s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435?taxYear=$mtdTaxYear"
+
+    def mtdTaxYear: String = "2023-24"
   }
 
   "Calling the triggerBsas" should {
@@ -171,8 +179,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
         val validRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
-          "typeOfBusiness"   -> "self-employment",
-          "businessId"       -> "XAIS12345678901"
+          "typeOfBusiness" -> "self-employment",
+          "businessId" -> "XAIS12345678901"
         )
 
         val missingFieldsRequestJson: JsObject = Json.obj(
@@ -189,38 +197,38 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 
         val startDateErrorRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "20180202", "endDate" -> "2019-05-06"),
-          "typeOfBusiness"   -> "self-employment",
-          "businessId"       -> "XAIS12345678901"
+          "typeOfBusiness" -> "self-employment",
+          "businessId" -> "XAIS12345678901"
         )
 
         val endDateErrorRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "20190506"),
-          "typeOfBusiness"   -> "self-employment",
-          "businessId"       -> "XAIS12345678901"
+          "typeOfBusiness" -> "self-employment",
+          "businessId" -> "XAIS12345678901"
         )
 
         val typeOfBusinessErrorRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
-          "typeOfBusiness"   -> "selfemployment",
-          "businessId"       -> "XAIS12345678901"
+          "typeOfBusiness" -> "selfemployment",
+          "businessId" -> "XAIS12345678901"
         )
 
         val businessIdErrorRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
-          "typeOfBusiness"   -> "self-employment",
-          "businessId"       -> "XAIS12345678901234"
+          "typeOfBusiness" -> "self-employment",
+          "businessId" -> "XAIS12345678901234"
         )
 
         val DateOrderErrorRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "2020-02-02", "endDate" -> "2019-05-06"),
-          "typeOfBusiness"   -> "self-employment",
-          "businessId"       -> "XAIS12345678901"
+          "typeOfBusiness" -> "self-employment",
+          "businessId" -> "XAIS12345678901"
         )
 
         val accountingPeriodNotSupportRequestJson: JsObject = Json.obj(
           "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2018-05-06"),
-          "typeOfBusiness"   -> "self-employment",
-          "businessId"       -> "XAIS12345678901"
+          "typeOfBusiness" -> "self-employment",
+          "businessId" -> "XAIS12345678901"
         )
 
         val input = Seq(

@@ -36,29 +36,29 @@ case class Expenses(costOfGoodsBought: Option[BigDecimal],
                     other: Option[BigDecimal],
                     consolidatedExpenses: Option[BigDecimal]) {
 
-  //noinspection ScalaStyle
-  def isNonConsolidatedExpensesEmpty: Boolean =
-    costOfGoodsBought.isEmpty &&
-    cisPaymentsToSubcontractors.isEmpty &&
-    staffCosts.isEmpty &&
-    travelCosts.isEmpty &&
-    premisesRunningCosts.isEmpty &&
-    maintenanceCosts.isEmpty &&
-    adminCosts.isEmpty &&
-    advertisingCosts.isEmpty &&
-    businessEntertainmentCosts.isEmpty &&
-    interest.isEmpty &&
-    financialCharges.isEmpty &&
-    badDebt.isEmpty &&
-    professionalFees.isEmpty &&
-    depreciation.isEmpty &&
-    other.isEmpty
-
-  def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
-
   def isEmpty: Boolean = isNonConsolidatedExpensesEmpty && isConsolidatedExpensesEmpty
 
   def isBothSupplied: Boolean = !isNonConsolidatedExpensesEmpty && !isConsolidatedExpensesEmpty
+
+  //noinspection ScalaStyle
+  def isNonConsolidatedExpensesEmpty: Boolean =
+    costOfGoodsBought.isEmpty &&
+      cisPaymentsToSubcontractors.isEmpty &&
+      staffCosts.isEmpty &&
+      travelCosts.isEmpty &&
+      premisesRunningCosts.isEmpty &&
+      maintenanceCosts.isEmpty &&
+      adminCosts.isEmpty &&
+      advertisingCosts.isEmpty &&
+      businessEntertainmentCosts.isEmpty &&
+      interest.isEmpty &&
+      financialCharges.isEmpty &&
+      badDebt.isEmpty &&
+      professionalFees.isEmpty &&
+      depreciation.isEmpty &&
+      other.isEmpty
+
+  def isConsolidatedExpensesEmpty: Boolean = consolidatedExpenses.isEmpty
 }
 
 object Expenses {
@@ -80,5 +80,5 @@ object Expenses {
       (JsPath \ "depreciationAllowable").writeNullable[BigDecimal] and
       (JsPath \ "otherExpensesAllowable").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").writeNullable[BigDecimal]
-  )(unlift(Expenses.unapply))
+    ) (unlift(Expenses.unapply))
 }

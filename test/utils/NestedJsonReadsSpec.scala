@@ -23,15 +23,6 @@ import utils.NestedJsonReads._
 
 class NestedJsonReadsSpec extends UnitSpec {
 
-  case class Test(param: String, param3: Option[String])
-
-  object Test {
-    implicit val reads: Reads[Test] = (
-      (JsPath \ "a" \ "b" \ "c").read[String] and
-        (__ \ "a" \ "c" \ "e").readNestedNullable[String]
-      ) (Test.apply _)
-  }
-
   val firstOutput: JsValue = Json.parse(
     """{
       | "a" : {
@@ -40,6 +31,28 @@ class NestedJsonReadsSpec extends UnitSpec {
       |   },
       |   "i" : {
       |     "e" : "example"
+      |   }
+      |  }
+      |}""".stripMargin)
+  val secondOutput: JsValue = Json.parse(
+    """{
+      | "a" : {
+      |   "b" : {
+      |     "c" : "string"
+      |   },
+      |   "c" : {
+      |     "e" : "example"
+      |   }
+      |  }
+      |}""".stripMargin)
+  val thirdOutput: JsValue = Json.parse(
+    """{
+      | "a" : {
+      |   "b" : {
+      |     "c" : "string"
+      |   },
+      |   "c" : {
+      |     "e" : 2
       |   }
       |  }
       |}""".stripMargin)
@@ -58,16 +71,13 @@ class NestedJsonReadsSpec extends UnitSpec {
       firstOutput.as[Test] shouldBe Test("string", None)
     }
   }
-
-
-  val secondOutput: JsValue = Json.parse(
+  val fourthOutput: JsValue = Json.parse(
     """{
       | "a" : {
       |   "b" : {
       |     "c" : "string"
       |   },
       |   "c" : {
-      |     "e" : "example"
       |   }
       |  }
       |}""".stripMargin)
@@ -79,17 +89,7 @@ class NestedJsonReadsSpec extends UnitSpec {
     }
   }
 
-  val thirdOutput: JsValue = Json.parse(
-    """{
-      | "a" : {
-      |   "b" : {
-      |     "c" : "string"
-      |   },
-      |   "c" : {
-      |     "e" : 2
-      |   }
-      |  }
-      |}""".stripMargin)
+  case class Test(param: String, param3: Option[String])
 
   "Path with an invalid data type" should {
 
@@ -97,16 +97,13 @@ class NestedJsonReadsSpec extends UnitSpec {
       thirdOutput.validate[Test] shouldBe a[JsError]
     }
   }
-  val fourthOutput: JsValue = Json.parse(
-    """{
-      | "a" : {
-      |   "b" : {
-      |     "c" : "string"
-      |   },
-      |   "c" : {
-      |   }
-      |  }
-      |}""".stripMargin)
+
+  object Test {
+    implicit val reads: Reads[Test] = (
+      (JsPath \ "a" \ "b" \ "c").read[String] and
+        (__ \ "a" \ "c" \ "e").readNestedNullable[String]
+      ) (Test.apply _)
+  }
   "Empty path" should {
 
     "return a None " in {

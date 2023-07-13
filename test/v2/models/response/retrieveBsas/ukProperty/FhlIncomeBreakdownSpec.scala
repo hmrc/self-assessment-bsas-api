@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
 
-class FhlIncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
+class FhlIncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   val mtdJson = Json.parse(
     """{
@@ -40,7 +40,7 @@ class FhlIncomeBreakdownSpec extends UnitSpec with JsonErrorValidators{
       |  "rarRentReceived": 100.49
       |}""".stripMargin)
 
-  val model = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49),Some(100.49), Some(100.49))
+  val model = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
   "reads" should {
     "return a valid model" when {

@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers.validators.validations
 
 import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
+import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import play.api.Logger
 import play.api.libs.json._
 
@@ -26,7 +26,9 @@ object JsonFormatValidation {
   private val logger: Logger = Logger(this.getClass)
 
   def validate[A: OFormat](data: JsValue): List[MtdError] = {
-    if (data == JsObject.empty) { List(RuleIncorrectOrEmptyBodyError) } else {
+    if (data == JsObject.empty) {
+      List(RuleIncorrectOrEmptyBodyError)
+    } else {
       data.validate[A] match {
         case JsSuccess(_, _) => NoValidationErrors
         case JsError(errors) => {
@@ -39,9 +41,9 @@ object JsonFormatValidation {
 
   private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): List[MtdError] = {
     val failures: Seq[JsonFormatValidationFailure] = errors.map {
-      case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing"))))                              => MissingMandatoryField(path)
+      case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing")))) => MissingMandatoryField(path)
       case (path: JsPath, Seq(JsonValidationError(Seq(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
-      case (path: JsPath, _)                                                                                => OtherFailure(path)
+      case (path: JsPath, _) => OtherFailure(path)
     }
 
     val logString = failures
@@ -67,6 +69,8 @@ object JsonFormatValidation {
   }
 
   private case class MissingMandatoryField(path: JsPath) extends JsonFormatValidationFailure(path, "Missing mandatory field")
-  private case class WrongFieldType(path: JsPath)        extends JsonFormatValidationFailure(path, "Wrong field type")
-  private case class OtherFailure(path: JsPath)          extends JsonFormatValidationFailure(path, "Other failure")
+
+  private case class WrongFieldType(path: JsPath) extends JsonFormatValidationFailure(path, "Wrong field type")
+
+  private case class OtherFailure(path: JsPath) extends JsonFormatValidationFailure(path, "Other failure")
 }

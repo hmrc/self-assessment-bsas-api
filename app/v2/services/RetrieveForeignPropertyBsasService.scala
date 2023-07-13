@@ -29,15 +29,27 @@ import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsa
 import v2.models.response.retrieveBsas
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPropertyBsasConnector) extends BaseService {
 
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "INVALID_RETURN" -> AdjustedStatusFormatError,
+      "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+      "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]] = {
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveForeignPropertyBsas(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -48,24 +60,12 @@ class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPro
   }
 
   private def validateRetrieveForeignPropertyBsasSuccessResponse[T](
-      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+                                                                     desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case RetrieveForeignPropertyBsasResponse(retrieveBsas.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
+        if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CORRELATION_ID"    -> InternalError,
-      "INVALID_RETURN"            -> AdjustedStatusFormatError,
-      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
-      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 }

@@ -24,11 +24,11 @@ class SummaryCalculationDeductionsSpec extends UnitSpec with RoundTripTest {
   import SummaryCalculationDeductions._
 
   testRoundTrip("Summary Calculation Deductions FHL",
-                summaryCalculationDeductionsDesJson,
-                summaryCalculationDeductionsFhlModel,
-                summaryCalculationDeductionsMtdFhlJson)(readsFhl)
+    summaryCalculationDeductionsDesJson,
+    summaryCalculationDeductionsFhlModel,
+    summaryCalculationDeductionsMtdFhlJson)(readsFhl)
   testRoundTrip("Adjustments Non-FHL",
-                summaryCalculationDeductionsDesJson,
-                summaryCalculationDeductionsNonFhlModel,
-                summaryCalculationDeductionsMtdNonFhlJson)(readsNonFhl)
+    summaryCalculationDeductionsDesJson,
+    summaryCalculationDeductionsNonFhlModel,
+    summaryCalculationDeductionsMtdNonFhlJson)(readsNonFhl)
 }

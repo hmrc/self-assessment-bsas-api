@@ -30,6 +30,8 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDate) exten
 
   private val validationSet = List(parameterFormatValidation, incorrectOrEmptyBodyValidation, bodyFormatValidation, bodyRuleValidation)
 
+  override def validate(data: TriggerBsasRawData): List[MtdError] = run(validationSet, data)
+
   private def parameterFormatValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino)
@@ -54,13 +56,11 @@ class TriggerBSASValidator @Inject()(val currentDateProvider: CurrentDate) exten
   }
 
   private def bodyRuleValidation: TriggerBsasRawData => List[List[MtdError]] = { data =>
-    val req            = data.body.json.as[TriggerBsasRequestBody]
+    val req = data.body.json.as[TriggerBsasRequestBody]
     val typeOfBusiness = TypeOfBusiness.parser(req.typeOfBusiness)
     List(
       EndBeforeStartDateValidation.validate(req.accountingPeriod.startDate, req.accountingPeriod.endDate),
       AccountingPeriodNotSupportedValidation.validate(typeOfBusiness, req.accountingPeriod.endDate)
     )
   }
-
-  override def validate(data: TriggerBsasRawData): List[MtdError] = run(validationSet, data)
 }

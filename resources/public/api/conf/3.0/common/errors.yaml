@@ -57,7 +57,7 @@ components:
         message: The country code is not a valid ISO 3166-1 alpha-3 country code
 
     ruleTaxYearNotSupported:
-      description: The specified tax year is not supported. Either the tax year specified is before the minimum tax year value, or 
+      description: The specified tax year is not supported. Either the tax year specified is before the minimum tax year value, or
         it is after the maximum tax year value.
       value:
         code: RULE_TAX_YEAR_NOT_SUPPORTED

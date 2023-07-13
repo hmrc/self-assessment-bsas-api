@@ -20,8 +20,8 @@ import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.models.errors._
@@ -31,7 +31,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino   = "AA123456A"
+    val nino = "AA123456A"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     val nrsSuccess: JsValue = Json.parse(
@@ -44,245 +44,248 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          """.stripMargin
     )
 
-    val desResponse: String => String = (typeOfBusiness: String) => s"""
-        |{
-        |    "metadata": {
-        |        "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-        |        "requestedDateTime": "2000-01-01T10:10:10Z",
-        |        "taxableEntityId": "AA123456A",
-        |        "taxYear": 2020,
-        |        "status": "valid"
-        |    },
-        |    "inputs": {
-        |        "incomeSourceId": "111111111111111",
-        |        "incomeSourceType": "$typeOfBusiness",
-        |        "accountingPeriodStartDate": "2000-01-01",
-        |        "accountingPeriodEndDate": "2000-01-01",
-        |        "source": "MTD-SA",
-        |        "submissionPeriods": [
-        |            {
-        |                "periodId": "0000000000000000",
-        |                "startDate": "2000-01-01",
-        |                "endDate": "2000-01-01",
-        |                "receivedDateTime": "2000-01-01T10:10:10Z"
-        |            }
-        |        ]
-        |    },
-        |    "adjustableSummaryCalculation": {
-        |        "totalIncome": 0.02,
-        |        "income": {
-        |            "turnover": 0.02,
-        |            "other": 0.02
-        |        },
-        |        "totalExpenses": 0.02,
-        |        "expenses": {
-        |            "consolidatedExpenses": 0.02,
-        |            "costOfGoodsAllowable": 0.02,
-        |            "paymentsToSubcontractorsAllowable": 0.02,
-        |            "wagesAndStaffCostsAllowable": 0.02,
-        |            "carVanTravelExpensesAllowable": 0.02,
-        |            "premisesRunningCostsAllowable": 0.02,
-        |            "maintenanceCostsAllowable": 0.02,
-        |            "adminCostsAllowable": 0.02,
-        |            "interestOnBankOtherLoansAllowable": 0.02,
-        |            "financeChargesAllowable": 0.02,
-        |            "irrecoverableDebtsAllowable": 0.02,
-        |            "professionalFeesAllowable": 0.02,
-        |            "depreciationAllowable": 0.02,
-        |            "otherExpensesAllowable": 0.02,
-        |            "advertisingCostsAllowable": 0.02,
-        |            "businessEntertainmentCostsAllowable": 0.02
-        |        },
-        |        "netProfit": 0.02,
-        |        "netLoss": 0.02,
-        |        "totalAdditions": 0.02,
-        |        "additions": {
-        |            "costOfGoodsDisallowable": 0.02,
-        |            "paymentsToSubcontractorsDisallowable": 0.02,
-        |            "wagesAndStaffCostsDisallowable": 0.02,
-        |            "carVanTravelExpensesDisallowable": 0.02,
-        |            "premisesRunningCostsDisallowable": 0.02,
-        |            "maintenanceCostsDisallowable": 0.02,
-        |            "adminCostsDisallowable": 0.02,
-        |            "interestOnBankOtherLoansDisallowable": 0.02,
-        |            "financeChargesDisallowable": 0.02,
-        |            "irrecoverableDebtsDisallowable": 0.02,
-        |            "professionalFeesDisallowable": 0.02,
-        |            "depreciationDisallowable": 0.02,
-        |            "otherExpensesDisallowable": 0.02,
-        |            "advertisingCostsDisallowable": 0.02,
-        |            "businessEntertainmentCostsDisallowable": 0.02,
-        |            "outstandingBusinessIncome": 0.02,
-        |            "balancingChargeOther": 0.02,
-        |            "balancingChargeBpra": 0.02,
-        |            "goodAndServicesOwnUse": 0.02
-        |        },
-        |        "totalDeductions": 0.02,
-        |        "deductions": {
-        |            "tradingAllowance": 0.02,
-        |            "annualInvestmentAllowance": 0.02,
-        |            "capitalAllowanceMainPool": 0.02,
-        |            "capitalAllowanceSpecialRatePool": 0.02,
-        |            "zeroEmissionGoods": 0.02,
-        |            "businessPremisesRenovationAllowance": 0.02,
-        |            "enhancedCapitalAllowance": 0.02,
-        |            "allowanceOnSales": 0.02,
-        |            "capitalAllowanceSingleAssetPool": 0.02,
-        |            "includedNonTaxableProfits": 0.02
-        |        },
-        |        "accountingAdjustments": 0.02,
-        |        "selfEmploymentAccountingAdjustments": {
-        |            "basisAdjustment": 0.02,
-        |            "overlapReliefUsed": 0.02,
-        |            "accountingAdjustment": 0.02,
-        |            "averagingAdjustment": 0.02
-        |        },
-        |        "taxableProfit": 0.02,
-        |        "adjustedIncomeTaxLoss": 0.02
-        |    },
-        |    "adjustments": {
-        |        "income": {
-        |            "turnover": 0.02,
-        |            "other": 0.02
-        |        },
-        |        "expenses": {
-        |            "consolidatedExpenses": 0.02,
-        |            "costOfGoodsAllowable": 0.02,
-        |            "paymentsToSubcontractorsAllowable": 0.02,
-        |            "wagesAndStaffCostsAllowable": 0.02,
-        |            "carVanTravelExpensesAllowable": 0.02,
-        |            "premisesRunningCostsAllowable": 0.02,
-        |            "maintenanceCostsAllowable": 0.02,
-        |            "adminCostsAllowable": 0.02,
-        |            "interestOnBankOtherLoansAllowable": 0.02,
-        |            "financeChargesAllowable": 0.02,
-        |            "irrecoverableDebtsAllowable": 0.02,
-        |            "professionalFeesAllowable": 0.02,
-        |            "depreciationAllowable": 0.02,
-        |            "otherExpensesAllowable": 0.02,
-        |            "advertisingCostsAllowable": 0.02,
-        |            "businessEntertainmentCostsAllowable": 0.02
-        |        },
-        |        "additions": {
-        |            "costOfGoodsDisallowable": 0.02,
-        |            "paymentsToSubcontractorsDisallowable": 0.02,
-        |            "wagesAndStaffCostsDisallowable": 0.02,
-        |            "carVanTravelExpensesDisallowable": 0.02,
-        |            "premisesRunningCostsDisallowable": 0.02,
-        |            "maintenanceCostsDisallowable": 0.02,
-        |            "adminCostsDisallowable": 0.02,
-        |            "interestOnBankOtherLoansDisallowable": 0.02,
-        |            "financeChargesDisallowable": 0.02,
-        |            "irrecoverableDebtsDisallowable": 0.02,
-        |            "professionalFeesDisallowable": 0.02,
-        |            "depreciationDisallowable": 0.02,
-        |            "otherExpensesDisallowable": 0.02,
-        |            "advertisingCostsDisallowable": 0.02,
-        |            "businessEntertainmentCostsDisallowable": 0.02
-        |        }
-        |    },
-        |    "adjustedSummaryCalculation": {
-        |        "totalIncome": 0.02,
-        |        "income": {
-        |            "turnover": 0.02,
-        |            "other": 0.02
-        |        },
-        |        "totalExpenses": 0.02,
-        |        "expenses": {
-        |            "consolidatedExpenses": 0.02,
-        |            "costOfGoodsAllowable": 0.02,
-        |            "paymentsToSubcontractorsAllowable": 0.02,
-        |            "wagesAndStaffCostsAllowable": 0.02,
-        |            "carVanTravelExpensesAllowable": 0.02,
-        |            "premisesRunningCostsAllowable": 0.02,
-        |            "maintenanceCostsAllowable": 0.02,
-        |            "adminCostsAllowable": 0.02,
-        |            "interestOnBankOtherLoansAllowable": 0.02,
-        |            "financeChargesAllowable": 0.02,
-        |            "irrecoverableDebtsAllowable": 0.02,
-        |            "professionalFeesAllowable": 0.02,
-        |            "depreciationAllowable": 0.02,
-        |            "otherExpensesAllowable": 0.02,
-        |            "advertisingCostsAllowable": 0.02,
-        |            "businessEntertainmentCostsAllowable": 0.02
-        |        },
-        |        "netProfit": 0.02,
-        |        "netLoss": 0.02,
-        |        "totalAdditions": 0.02,
-        |        "additions": {
-        |            "costOfGoodsDisallowable": 0.02,
-        |            "paymentsToSubcontractorsDisallowable": 0.02,
-        |            "wagesAndStaffCostsDisallowable": 0.02,
-        |            "carVanTravelExpensesDisallowable": 0.02,
-        |            "premisesRunningCostsDisallowable": 0.02,
-        |            "maintenanceCostsDisallowable": 0.02,
-        |            "adminCostsDisallowable": 0.02,
-        |            "interestOnBankOtherLoansDisallowable": 0.02,
-        |            "financeChargesDisallowable": 0.02,
-        |            "irrecoverableDebtsDisallowable": 0.02,
-        |            "professionalFeesDisallowable": 0.02,
-        |            "depreciationDisallowable": 0.02,
-        |            "otherExpensesDisallowable": 0.02,
-        |            "advertisingCostsDisallowable": 0.02,
-        |            "businessEntertainmentCostsDisallowable": 0.02,
-        |            "outstandingBusinessIncome": 0.02,
-        |            "balancingChargeOther": 0.02,
-        |            "balancingChargeBpra": 0.02,
-        |            "goodAndServicesOwnUse": 0.02
-        |        },
-        |        "totalDeductions": 0.02,
-        |        "deductions": {
-        |            "tradingAllowance": 0.02,
-        |            "annualInvestmentAllowance": 0.02,
-        |            "capitalAllowanceMainPool": 0.02,
-        |            "capitalAllowanceSpecialRatePool": 0.02,
-        |            "zeroEmissionGoods": 0.02,
-        |            "businessPremisesRenovationAllowance": 0.02,
-        |            "enhancedCapitalAllowance": 0.02,
-        |            "allowanceOnSales": 0.02,
-        |            "capitalAllowanceSingleAssetPool": 0.02,
-        |            "includedNonTaxableProfits": 0.02
-        |        },
-        |        "accountingAdjustments": 0.02,
-        |        "selfEmploymentAccountingAdjustments": {
-        |            "basisAdjustment": 0.02,
-        |            "overlapReliefUsed": 0.02,
-        |            "accountingAdjustment": 0.02,
-        |            "averagingAdjustment": 0.02
-        |        },
-        |        "taxableProfit": 0.02,
-        |        "adjustedIncomeTaxLoss": 0.02
-        |    }
-        |}
-        |""".stripMargin
-
-    val requestBodyForeignPropertyJson: JsValue = Json.parse("""
+    val desResponse: String => String = (typeOfBusiness: String) =>
+      s"""
          |{
-         |  "foreignProperty": [
-         |    {
-         |      "countryCode": "FRA",
-         |      "income": {
-         |        "rentIncome": 123.12,
-         |        "premiumsOfLeaseGrant": 123.12,
-         |        "foreignTaxTakenOff": 123.12,
-         |        "otherPropertyIncome": 123.12
-         |      },
-         |      "expenses": {
-         |        "premisesRunningCosts": 123.12,
-         |        "repairsAndMaintenance": 123.12,
-         |        "financialCosts": 123.12,
-         |        "professionalFees": 123.12,
-         |        "travelCosts": 123.12,
-         |        "costOfServices": 123.12,
-         |        "residentialFinancialCost": 123.12,
-         |        "other": 123.12
-         |      }
+         |    "metadata": {
+         |        "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+         |        "requestedDateTime": "2000-01-01T10:10:10Z",
+         |        "taxableEntityId": "AA123456A",
+         |        "taxYear": 2020,
+         |        "status": "valid"
+         |    },
+         |    "inputs": {
+         |        "incomeSourceId": "111111111111111",
+         |        "incomeSourceType": "$typeOfBusiness",
+         |        "accountingPeriodStartDate": "2000-01-01",
+         |        "accountingPeriodEndDate": "2000-01-01",
+         |        "source": "MTD-SA",
+         |        "submissionPeriods": [
+         |            {
+         |                "periodId": "0000000000000000",
+         |                "startDate": "2000-01-01",
+         |                "endDate": "2000-01-01",
+         |                "receivedDateTime": "2000-01-01T10:10:10Z"
+         |            }
+         |        ]
+         |    },
+         |    "adjustableSummaryCalculation": {
+         |        "totalIncome": 0.02,
+         |        "income": {
+         |            "turnover": 0.02,
+         |            "other": 0.02
+         |        },
+         |        "totalExpenses": 0.02,
+         |        "expenses": {
+         |            "consolidatedExpenses": 0.02,
+         |            "costOfGoodsAllowable": 0.02,
+         |            "paymentsToSubcontractorsAllowable": 0.02,
+         |            "wagesAndStaffCostsAllowable": 0.02,
+         |            "carVanTravelExpensesAllowable": 0.02,
+         |            "premisesRunningCostsAllowable": 0.02,
+         |            "maintenanceCostsAllowable": 0.02,
+         |            "adminCostsAllowable": 0.02,
+         |            "interestOnBankOtherLoansAllowable": 0.02,
+         |            "financeChargesAllowable": 0.02,
+         |            "irrecoverableDebtsAllowable": 0.02,
+         |            "professionalFeesAllowable": 0.02,
+         |            "depreciationAllowable": 0.02,
+         |            "otherExpensesAllowable": 0.02,
+         |            "advertisingCostsAllowable": 0.02,
+         |            "businessEntertainmentCostsAllowable": 0.02
+         |        },
+         |        "netProfit": 0.02,
+         |        "netLoss": 0.02,
+         |        "totalAdditions": 0.02,
+         |        "additions": {
+         |            "costOfGoodsDisallowable": 0.02,
+         |            "paymentsToSubcontractorsDisallowable": 0.02,
+         |            "wagesAndStaffCostsDisallowable": 0.02,
+         |            "carVanTravelExpensesDisallowable": 0.02,
+         |            "premisesRunningCostsDisallowable": 0.02,
+         |            "maintenanceCostsDisallowable": 0.02,
+         |            "adminCostsDisallowable": 0.02,
+         |            "interestOnBankOtherLoansDisallowable": 0.02,
+         |            "financeChargesDisallowable": 0.02,
+         |            "irrecoverableDebtsDisallowable": 0.02,
+         |            "professionalFeesDisallowable": 0.02,
+         |            "depreciationDisallowable": 0.02,
+         |            "otherExpensesDisallowable": 0.02,
+         |            "advertisingCostsDisallowable": 0.02,
+         |            "businessEntertainmentCostsDisallowable": 0.02,
+         |            "outstandingBusinessIncome": 0.02,
+         |            "balancingChargeOther": 0.02,
+         |            "balancingChargeBpra": 0.02,
+         |            "goodAndServicesOwnUse": 0.02
+         |        },
+         |        "totalDeductions": 0.02,
+         |        "deductions": {
+         |            "tradingAllowance": 0.02,
+         |            "annualInvestmentAllowance": 0.02,
+         |            "capitalAllowanceMainPool": 0.02,
+         |            "capitalAllowanceSpecialRatePool": 0.02,
+         |            "zeroEmissionGoods": 0.02,
+         |            "businessPremisesRenovationAllowance": 0.02,
+         |            "enhancedCapitalAllowance": 0.02,
+         |            "allowanceOnSales": 0.02,
+         |            "capitalAllowanceSingleAssetPool": 0.02,
+         |            "includedNonTaxableProfits": 0.02
+         |        },
+         |        "accountingAdjustments": 0.02,
+         |        "selfEmploymentAccountingAdjustments": {
+         |            "basisAdjustment": 0.02,
+         |            "overlapReliefUsed": 0.02,
+         |            "accountingAdjustment": 0.02,
+         |            "averagingAdjustment": 0.02
+         |        },
+         |        "taxableProfit": 0.02,
+         |        "adjustedIncomeTaxLoss": 0.02
+         |    },
+         |    "adjustments": {
+         |        "income": {
+         |            "turnover": 0.02,
+         |            "other": 0.02
+         |        },
+         |        "expenses": {
+         |            "consolidatedExpenses": 0.02,
+         |            "costOfGoodsAllowable": 0.02,
+         |            "paymentsToSubcontractorsAllowable": 0.02,
+         |            "wagesAndStaffCostsAllowable": 0.02,
+         |            "carVanTravelExpensesAllowable": 0.02,
+         |            "premisesRunningCostsAllowable": 0.02,
+         |            "maintenanceCostsAllowable": 0.02,
+         |            "adminCostsAllowable": 0.02,
+         |            "interestOnBankOtherLoansAllowable": 0.02,
+         |            "financeChargesAllowable": 0.02,
+         |            "irrecoverableDebtsAllowable": 0.02,
+         |            "professionalFeesAllowable": 0.02,
+         |            "depreciationAllowable": 0.02,
+         |            "otherExpensesAllowable": 0.02,
+         |            "advertisingCostsAllowable": 0.02,
+         |            "businessEntertainmentCostsAllowable": 0.02
+         |        },
+         |        "additions": {
+         |            "costOfGoodsDisallowable": 0.02,
+         |            "paymentsToSubcontractorsDisallowable": 0.02,
+         |            "wagesAndStaffCostsDisallowable": 0.02,
+         |            "carVanTravelExpensesDisallowable": 0.02,
+         |            "premisesRunningCostsDisallowable": 0.02,
+         |            "maintenanceCostsDisallowable": 0.02,
+         |            "adminCostsDisallowable": 0.02,
+         |            "interestOnBankOtherLoansDisallowable": 0.02,
+         |            "financeChargesDisallowable": 0.02,
+         |            "irrecoverableDebtsDisallowable": 0.02,
+         |            "professionalFeesDisallowable": 0.02,
+         |            "depreciationDisallowable": 0.02,
+         |            "otherExpensesDisallowable": 0.02,
+         |            "advertisingCostsDisallowable": 0.02,
+         |            "businessEntertainmentCostsDisallowable": 0.02
+         |        }
+         |    },
+         |    "adjustedSummaryCalculation": {
+         |        "totalIncome": 0.02,
+         |        "income": {
+         |            "turnover": 0.02,
+         |            "other": 0.02
+         |        },
+         |        "totalExpenses": 0.02,
+         |        "expenses": {
+         |            "consolidatedExpenses": 0.02,
+         |            "costOfGoodsAllowable": 0.02,
+         |            "paymentsToSubcontractorsAllowable": 0.02,
+         |            "wagesAndStaffCostsAllowable": 0.02,
+         |            "carVanTravelExpensesAllowable": 0.02,
+         |            "premisesRunningCostsAllowable": 0.02,
+         |            "maintenanceCostsAllowable": 0.02,
+         |            "adminCostsAllowable": 0.02,
+         |            "interestOnBankOtherLoansAllowable": 0.02,
+         |            "financeChargesAllowable": 0.02,
+         |            "irrecoverableDebtsAllowable": 0.02,
+         |            "professionalFeesAllowable": 0.02,
+         |            "depreciationAllowable": 0.02,
+         |            "otherExpensesAllowable": 0.02,
+         |            "advertisingCostsAllowable": 0.02,
+         |            "businessEntertainmentCostsAllowable": 0.02
+         |        },
+         |        "netProfit": 0.02,
+         |        "netLoss": 0.02,
+         |        "totalAdditions": 0.02,
+         |        "additions": {
+         |            "costOfGoodsDisallowable": 0.02,
+         |            "paymentsToSubcontractorsDisallowable": 0.02,
+         |            "wagesAndStaffCostsDisallowable": 0.02,
+         |            "carVanTravelExpensesDisallowable": 0.02,
+         |            "premisesRunningCostsDisallowable": 0.02,
+         |            "maintenanceCostsDisallowable": 0.02,
+         |            "adminCostsDisallowable": 0.02,
+         |            "interestOnBankOtherLoansDisallowable": 0.02,
+         |            "financeChargesDisallowable": 0.02,
+         |            "irrecoverableDebtsDisallowable": 0.02,
+         |            "professionalFeesDisallowable": 0.02,
+         |            "depreciationDisallowable": 0.02,
+         |            "otherExpensesDisallowable": 0.02,
+         |            "advertisingCostsDisallowable": 0.02,
+         |            "businessEntertainmentCostsDisallowable": 0.02,
+         |            "outstandingBusinessIncome": 0.02,
+         |            "balancingChargeOther": 0.02,
+         |            "balancingChargeBpra": 0.02,
+         |            "goodAndServicesOwnUse": 0.02
+         |        },
+         |        "totalDeductions": 0.02,
+         |        "deductions": {
+         |            "tradingAllowance": 0.02,
+         |            "annualInvestmentAllowance": 0.02,
+         |            "capitalAllowanceMainPool": 0.02,
+         |            "capitalAllowanceSpecialRatePool": 0.02,
+         |            "zeroEmissionGoods": 0.02,
+         |            "businessPremisesRenovationAllowance": 0.02,
+         |            "enhancedCapitalAllowance": 0.02,
+         |            "allowanceOnSales": 0.02,
+         |            "capitalAllowanceSingleAssetPool": 0.02,
+         |            "includedNonTaxableProfits": 0.02
+         |        },
+         |        "accountingAdjustments": 0.02,
+         |        "selfEmploymentAccountingAdjustments": {
+         |            "basisAdjustment": 0.02,
+         |            "overlapReliefUsed": 0.02,
+         |            "accountingAdjustment": 0.02,
+         |            "averagingAdjustment": 0.02
+         |        },
+         |        "taxableProfit": 0.02,
+         |        "adjustedIncomeTaxLoss": 0.02
          |    }
-         |  ]
          |}
-         |""".stripMargin)
+         |""".stripMargin
 
-    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse("""
+    val requestBodyForeignPropertyJson: JsValue = Json.parse(
+      """
+        |{
+        |  "foreignProperty": [
+        |    {
+        |      "countryCode": "FRA",
+        |      "income": {
+        |        "rentIncome": 123.12,
+        |        "premiumsOfLeaseGrant": 123.12,
+        |        "foreignTaxTakenOff": 123.12,
+        |        "otherPropertyIncome": 123.12
+        |      },
+        |      "expenses": {
+        |        "premisesRunningCosts": 123.12,
+        |        "repairsAndMaintenance": 123.12,
+        |        "financialCosts": 123.12,
+        |        "professionalFees": 123.12,
+        |        "travelCosts": 123.12,
+        |        "costOfServices": 123.12,
+        |        "residentialFinancialCost": 123.12,
+        |        "other": 123.12
+        |      }
+        |    }
+        |  ]
+        |}
+        |""".stripMargin)
+
+    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse(
+      """
         |{
         |  "foreignProperty": [
         |    {
@@ -302,39 +305,42 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val requestBodyForeignFhlEeaJson: JsValue = Json.parse("""
-         |{
-         |    "foreignFhlEea": {
-         |        "income": {
-         |            "rentIncome": 123.12
-         |        },
-         |        "expenses": {
-         |            "premisesRunningCosts": 123.12,
-         |            "repairsAndMaintenance": 123.12,
-         |            "financialCosts": 123.12,
-         |            "professionalFees": 123.12,
-         |            "costOfServices": 123.12,
-         |            "travelCosts": 123.12,
-         |            "other": 123.12
-         |        }
-         |    }
-         |}
-         |""".stripMargin)
+    val requestBodyForeignFhlEeaJson: JsValue = Json.parse(
+      """
+        |{
+        |    "foreignFhlEea": {
+        |        "income": {
+        |            "rentIncome": 123.12
+        |        },
+        |        "expenses": {
+        |            "premisesRunningCosts": 123.12,
+        |            "repairsAndMaintenance": 123.12,
+        |            "financialCosts": 123.12,
+        |            "professionalFees": 123.12,
+        |            "costOfServices": 123.12,
+        |            "travelCosts": 123.12,
+        |            "other": 123.12
+        |        }
+        |    }
+        |}
+        |""".stripMargin)
 
-    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse("""
-         |{
-         |    "foreignFhlEea": {
-         |        "income": {
-         |            "rentIncome": 123.12
-         |        },
-         |        "expenses": {
-         |            "consolidatedExpenses": 123.12
-         |        }
-         |    }
-         |}
-         |""".stripMargin)
+    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse(
+      """
+        |{
+        |    "foreignFhlEea": {
+        |        "income": {
+        |            "rentIncome": 123.12
+        |        },
+        |        "expenses": {
+        |            "consolidatedExpenses": 123.12
+        |        }
+        |    }
+        |}
+        |""".stripMargin)
 
-    val responseBody: JsValue = Json.parse(s"""
+    val responseBody: JsValue = Json.parse(
+      s"""
          |{
          |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
@@ -354,8 +360,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
-
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
     def request(): WSRequest = {
@@ -366,6 +370,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/foreign-property/$bsasId/adjust"
 
     def errorBody(code: String): String =
       s"""
@@ -461,7 +467,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestBody: JsValue = Json.parse(s"""
+      val validRequestBody: JsValue = Json.parse(
+        s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -474,7 +481,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyAdjustmentValue: JsValue = Json.parse(s"""
+      val requestBodyAdjustmentValue: JsValue = Json.parse(
+        s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -487,7 +495,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyRangeInvalid: JsValue = Json.parse(s"""
+      val requestBodyRangeInvalid: JsValue = Json.parse(
+        s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -500,7 +509,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyIncorrectBody: JsValue = Json.parse(s"""
+      val requestBodyIncorrectBody: JsValue = Json.parse(
+        s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {},
@@ -509,7 +519,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyBothExpenses: JsValue = Json.parse(s"""
+      val requestBodyBothExpenses: JsValue = Json.parse(
+        s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -536,7 +547,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyInvalidCountryCode: JsValue = Json.parse(s"""
+      val requestBodyInvalidCountryCode: JsValue = Json.parse(
+        s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -563,7 +575,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyUnformattedCountryCode: JsValue = Json.parse(s"""
+      val requestBodyUnformattedCountryCode: JsValue = Json.parse(
+        s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -598,8 +611,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String                            = requestNino
-            override val bsasId: String                          = requestBsasId
+            override val nino: String = requestNino
+            override val bsasId: String = requestBsasId
             override val requestBodyForeignPropertyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -618,27 +631,27 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           requestBodyAdjustmentValue,
-           BAD_REQUEST,
-           FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            requestBodyAdjustmentValue,
+            BAD_REQUEST,
+            FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           requestBodyRangeInvalid,
-           BAD_REQUEST,
-           RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            requestBodyRangeInvalid,
+            BAD_REQUEST,
+            RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           requestBodyInvalidCountryCode,
-           BAD_REQUEST,
-           RuleCountryCodeError.copy(paths = Some(Seq("/foreignProperty/0/countryCode")))),
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            requestBodyInvalidCountryCode,
+            BAD_REQUEST,
+            RuleCountryCodeError.copy(paths = Some(Seq("/foreignProperty/0/countryCode")))),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           requestBodyUnformattedCountryCode,
-           BAD_REQUEST,
-           CountryCodeFormatError.copy(paths = Some(Seq("/foreignProperty/0/countryCode"))))
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            requestBodyUnformattedCountryCode,
+            BAD_REQUEST,
+            CountryCodeFormatError.copy(paths = Some(Seq("/foreignProperty/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

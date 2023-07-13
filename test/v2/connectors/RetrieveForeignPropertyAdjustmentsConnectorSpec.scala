@@ -17,19 +17,19 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import play.api.libs.json.{ JsValue, Json }
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.http.HeaderCarrier
+import v2.mocks.MockHttpClient
 import v2.models.request.RetrieveAdjustmentsRequestData
 
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
 
-  val nino   = Nino("AA123456A")
+  val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val queryParams: Map[String, String] = Map("return" -> "2")
@@ -87,7 +87,7 @@ class RetrieveForeignPropertyAdjustmentsConnectorSpec extends ConnectorSpec {
 
   "RetrieveForeignPropertyAdjustments" should {
     "return a valid response" when {
-      val outcome                    = Right(ResponseWrapper(correlationId, responseBody))
+      val outcome = Right(ResponseWrapper(correlationId, responseBody))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveAdjustmentsRequestData(nino, bsasId)

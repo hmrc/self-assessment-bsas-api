@@ -38,8 +38,8 @@ class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
 
     AnyContentAsJson(
       Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-               "typeOfBusiness"   -> typeOfBusiness,
-               "businessId"       -> businessId)
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId" -> businessId)
     )
   }
 
@@ -117,9 +117,9 @@ class TriggerBsasValidatorSpec extends UnitSpec with MockAppConfig {
       "mandatory fields are missing" in new SetUp() {
         val result: Seq[MtdError] = validator.validate(
           TriggerBsasRawData(nino,
-                             AnyContentAsJson(
-                               Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
-                             )))
+            AnyContentAsJson(
+              Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
+            )))
 
         result shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountingPeriod/startDate", "/businessId", "/typeOfBusiness"))))
       }

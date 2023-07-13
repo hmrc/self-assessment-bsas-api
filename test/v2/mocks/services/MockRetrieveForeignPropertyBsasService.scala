@@ -25,7 +25,7 @@ import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsa
 import v2.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 import v2.services.RetrieveForeignPropertyBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveForeignPropertyBsasService extends MockFactory {
 
@@ -34,7 +34,7 @@ trait MockRetrieveForeignPropertyBsasService extends MockFactory {
   object MockRetrieveForeignPropertyBsasService {
 
     def retrieveBsas(requestData: RetrieveForeignPropertyBsasRequestData)
-      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]]] = {
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]]] = {
       (mockService
         .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

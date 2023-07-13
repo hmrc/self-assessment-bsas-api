@@ -20,12 +20,12 @@ import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
 case class SubmitUKPropertyBsasRequestBody(nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet], furnishedHolidayLet: Option[FurnishedHolidayLet]) {
-  private def isEmpty: Boolean = nonFurnishedHolidayLet.isEmpty && furnishedHolidayLet.isEmpty
-
   def isIncorrectOrEmptyBody: Boolean =
     isEmpty ||
-    (nonFurnishedHolidayLet.isDefined && nonFurnishedHolidayLet.get.isEmpty) ||
-    (furnishedHolidayLet.isDefined && furnishedHolidayLet.get.isEmpty)
+      (nonFurnishedHolidayLet.isDefined && nonFurnishedHolidayLet.get.isEmpty) ||
+      (furnishedHolidayLet.isDefined && furnishedHolidayLet.get.isEmpty)
+
+  private def isEmpty: Boolean = nonFurnishedHolidayLet.isEmpty && furnishedHolidayLet.isEmpty
 }
 
 object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
@@ -40,7 +40,7 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
               "incomeSourceType" -> "02",
               "adjustments" -> filterNull(
                 Json.obj(
-                  "income"   -> x.income,
+                  "income" -> x.income,
                   "expenses" -> x.expenses
                 ))
             ))
@@ -53,7 +53,7 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
                   Json.obj(
                     "incomeSourceType" -> "04",
                     "adjustments" -> filterNull(Json.obj(
-                      "income"   -> x.income,
+                      "income" -> x.income,
                       "expenses" -> x.expenses
                     ))
                   )))

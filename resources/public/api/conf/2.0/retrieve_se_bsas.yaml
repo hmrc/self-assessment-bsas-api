@@ -41,7 +41,7 @@ get:
 
   tags:
     - Self-employment business
-    
+
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
@@ -94,12 +94,12 @@ get:
           schema:
             $ref: './schemas/error_response.yaml'
           examples:
-             CLIENT_OR_AGENT_NOT_AUTHORISED:
-               $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
-             RULE_NOT_SELF_EMPLOYMENT:
-               $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
-             RULE_NO_ADJUSTMENTS_MADE:
-               $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+            RULE_NOT_SELF_EMPLOYMENT:
+              $ref: './common/errors.yaml#/components/examples/ruleNotSelfEmployment'
+            RULE_NO_ADJUSTMENTS_MADE:
+              $ref: './common/errors.yaml#/components/examples/ruleNoAdjustmentsMade'
 
     "404":
       description: Not Found

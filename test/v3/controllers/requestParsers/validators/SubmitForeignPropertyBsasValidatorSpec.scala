@@ -25,53 +25,25 @@ import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino          = "AA123456A"
+  val validator = new SubmitForeignPropertyBsasValidator
+  private val validNino = "AA123456A"
   private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-
-  private def entryWith(countryCode: String) =
-    Json.parse(s"""{
-                  |  "countryCode": "$countryCode",
-                  |  "income": {
-                  |    "totalRentsReceived": 1000.45,
-                  |    "premiumsOfLeaseGrant": -99.99,
-                  |    "otherPropertyIncome": 1000.00
-                  |  },
-                  |  "expenses": {
-                  |    "premisesRunningCosts": 1000.45,
-                  |    "repairsAndMaintenance": -99999.99,
-                  |    "financialCosts": 5000.45,
-                  |    "professionalFees": 300.99,
-                  |    "costOfServices": 500.00,
-                  |    "residentialFinancialCost": 9000.00,
-                  |    "other": 1000.00,
-                  |    "travelCosts": 99.99
-                  |  }
-                  |}""".stripMargin)
-
   private val entry = entryWith(countryCode = "AFG")
 
   private val entryConsolidated =
-    Json.parse("""{
-                 |  "countryCode": "AFG",
-                 |  "income": {
-                 |    "totalRentsReceived": 1000.45,
-                 |    "premiumsOfLeaseGrant": -99.99,
-                 |    "otherPropertyIncome": 1000.00
-                 |  },
-                 |  "expenses": {
-                 |    "consolidatedExpenses": 332.78
-                 |  }
-                 |}""".stripMargin)
-
-  private def nonFhlBodyWith(nonFhlEntries: JsValue*) = Json.parse(
-    s"""{
-       |  "nonFurnishedHolidayLet": ${JsArray(nonFhlEntries)}
-       |}
-       |""".stripMargin
-  )
-
+    Json.parse(
+      """{
+        |  "countryCode": "AFG",
+        |  "income": {
+        |    "totalRentsReceived": 1000.45,
+        |    "premiumsOfLeaseGrant": -99.99,
+        |    "otherPropertyIncome": 1000.00
+        |  },
+        |  "expenses": {
+        |    "consolidatedExpenses": 332.78
+        |  }
+        |}""".stripMargin)
   private val nonFhlBody = nonFhlBodyWith(entry)
-
   private val fhlBody = Json.parse(
     s"""{
        |  "foreignFhlEea": {
@@ -91,7 +63,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |}
        |""".stripMargin
   )
-
   private val fhlBodyConsolidated = Json.parse(
     s"""{
        |  "foreignFhlEea": {
@@ -106,7 +77,33 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |""".stripMargin
   )
 
-  val validator = new SubmitForeignPropertyBsasValidator
+  private def entryWith(countryCode: String) =
+    Json.parse(
+      s"""{
+         |  "countryCode": "$countryCode",
+         |  "income": {
+         |    "totalRentsReceived": 1000.45,
+         |    "premiumsOfLeaseGrant": -99.99,
+         |    "otherPropertyIncome": 1000.00
+         |  },
+         |  "expenses": {
+         |    "premisesRunningCosts": 1000.45,
+         |    "repairsAndMaintenance": -99999.99,
+         |    "financialCosts": 5000.45,
+         |    "professionalFees": 300.99,
+         |    "costOfServices": 500.00,
+         |    "residentialFinancialCost": 9000.00,
+         |    "other": 1000.00,
+         |    "travelCosts": 99.99
+         |  }
+         |}""".stripMargin)
+
+  private def nonFhlBodyWith(nonFhlEntries: JsValue*) = Json.parse(
+    s"""{
+       |  "nonFurnishedHolidayLet": ${JsArray(nonFhlEntries)}
+       |}
+       |""".stripMargin
+  )
 
   "running a validation" should {
     "return no errors" when {
@@ -124,9 +121,9 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
       "a valid non-fhl consolidated expenses request is supplied" in {
         validator.validate(SubmitForeignPropertyRawData(nino = validNino,
-                                                        calculationId = validCalculationId,
-                                                        None,
-                                                        body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
+          calculationId = validCalculationId,
+          None,
+          body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
       }
 
       "a minimal fhl request is supplied" in {
@@ -135,14 +132,15 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             nino = validNino,
             calculationId = validCalculationId,
             None,
-            body = Json.parse("""{
-                                |  "foreignFhlEea": {
-                                |    "income": {
-                                |      "totalRentsReceived": 1000.45
-                                |    }
-                                |  }
-                                |}
-                                |""".stripMargin)
+            body = Json.parse(
+              """{
+                |  "foreignFhlEea": {
+                |    "income": {
+                |      "totalRentsReceived": 1000.45
+                |    }
+                |  }
+                |}
+                |""".stripMargin)
           )) shouldBe Nil
       }
 
@@ -152,26 +150,27 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             nino = validNino,
             calculationId = validCalculationId,
             None,
-            body = Json.parse("""{
-                                |   "nonFurnishedHolidayLet":  [
-                                |       {
-                                |          "countryCode": "FRA",
-                                |          "income": {
-                                |              "totalRentsReceived": 1000.45
-                                |          }
-                                |       }
-                                |    ]
-                                |}
-                                |""".stripMargin)
+            body = Json.parse(
+              """{
+                |   "nonFurnishedHolidayLet":  [
+                |       {
+                |          "countryCode": "FRA",
+                |          "income": {
+                |              "totalRentsReceived": 1000.45
+                |          }
+                |       }
+                |    ]
+                |}
+                |""".stripMargin)
           )) shouldBe Nil
       }
 
       "a valid request with a taxYear is supplied" in {
         validator.validate(
           SubmitForeignPropertyRawData(nino = validNino,
-                                       calculationId = validCalculationId,
-                                       Some("2023-24"),
-                                       body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
+            calculationId = validCalculationId,
+            Some("2023-24"),
+            body = nonFhlBodyWith(entryConsolidated))) shouldBe Nil
       }
     }
 
@@ -230,11 +229,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             None,
             body = Json.parse(
               s"""
-             |{
-             |  "foreignFhlEea": {},
-             |  "nonFurnishedHolidayLet": []
-             |}
-             |""".stripMargin
+                 |{
+                 |  "foreignFhlEea": {},
+                 |  "nonFurnishedHolidayLet": []
+                 |}
+                 |""".stripMargin
             )
           )) shouldBe List(RuleBothPropertiesSuppliedError)
       }
@@ -275,11 +274,12 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       }
 
       "an object is empty except for a additional (non-schema) property" in {
-        val json = Json.parse("""{
-                                |    "foreignFhlEea":{
-                                |       "unknownField": 999.99
-                                |    }
-                                |}""".stripMargin)
+        val json = Json.parse(
+          """{
+            |    "foreignFhlEea":{
+            |       "unknownField": 999.99
+            |    }
+            |}""".stripMargin)
 
         validator.validate(
           SubmitForeignPropertyRawData(
@@ -306,17 +306,17 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           Seq(
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/totalRentsReceived", v)), "/nonFurnishedHolidayLet/0/income/totalRentsReceived"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/premiumsOfLeaseGrant", v)),
-             "/nonFurnishedHolidayLet/0/income/premiumsOfLeaseGrant"),
+              "/nonFurnishedHolidayLet/0/income/premiumsOfLeaseGrant"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/otherPropertyIncome", v)), "/nonFurnishedHolidayLet/0/income/otherPropertyIncome"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/premisesRunningCosts", v)),
-             "/nonFurnishedHolidayLet/0/expenses/premisesRunningCosts"),
+              "/nonFurnishedHolidayLet/0/expenses/premisesRunningCosts"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/repairsAndMaintenance", v)),
-             "/nonFurnishedHolidayLet/0/expenses/repairsAndMaintenance"),
+              "/nonFurnishedHolidayLet/0/expenses/repairsAndMaintenance"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/financialCosts", v)), "/nonFurnishedHolidayLet/0/expenses/financialCosts"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/professionalFees", v)), "/nonFurnishedHolidayLet/0/expenses/professionalFees"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/costOfServices", v)), "/nonFurnishedHolidayLet/0/expenses/costOfServices"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-             "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
+              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/other", v)), "/nonFurnishedHolidayLet/0/expenses/other"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts"),
           ).foreach((testWith _).tupled)
@@ -329,7 +329,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
           Seq(
             ((v: JsNumber) => nonFhlBodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
-             "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
+              "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
           ).foreach(p => (testWith _).tupled(p))
         }
 
@@ -430,10 +430,10 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             )) should contain theSameElementsAs List(
             RuleDuplicateCountryCodeError
               .forDuplicatedCodesAndPaths(code = code1,
-                                          paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/2/countryCode")),
+                paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/2/countryCode")),
             RuleDuplicateCountryCodeError
               .forDuplicatedCodesAndPaths(code = code2,
-                                          paths = Seq("/nonFurnishedHolidayLet/1/countryCode", "/nonFurnishedHolidayLet/3/countryCode")),
+                paths = Seq("/nonFurnishedHolidayLet/1/countryCode", "/nonFurnishedHolidayLet/3/countryCode")),
           )
         }
       }

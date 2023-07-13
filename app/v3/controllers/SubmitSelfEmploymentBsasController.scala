@@ -18,18 +18,18 @@ package v3.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
-import utils.{ IdGenerator, Logging }
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import utils.{IdGenerator, Logging}
 import v3.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
 import v3.services._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -42,7 +42,7 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
+  extends AuthorisedController(cc)
     with V3Controller
     with Logging {
 

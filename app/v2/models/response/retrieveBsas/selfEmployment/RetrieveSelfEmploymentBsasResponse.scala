@@ -30,14 +30,14 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
     JsPath.read[Metadata] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap {
         case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail]
-        case _       => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
+        case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail]
       }
-  )(RetrieveSelfEmploymentBsasResponse.apply _)
+    ) (RetrieveSelfEmploymentBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-      extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
+    extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentBsasHateoasData): Seq[Link] = {
       import data._
 

@@ -26,6 +26,8 @@ class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
+  override def validate(data: ListBsasRawData): List[MtdError] = run(validationSet, data).distinct
+
   private def parameterFormatValidation: ListBsasRawData => List[List[MtdError]] =
     (data: ListBsasRawData) =>
       List(
@@ -33,13 +35,11 @@ class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
         data.taxYear.map(TaxYearValidation.validate).getOrElse(Nil),
         data.typeOfBusiness.map(TypeOfBusinessValidation.validate).getOrElse(Nil),
         data.businessId.map(BusinessIdValidation.validate).getOrElse(Nil)
-    )
+      )
 
   private def parameterRuleValidation: ListBsasRawData => List[List[MtdError]] =
     (data: ListBsasRawData) =>
       List(
         data.taxYear.map(MtdTaxYearValidation.validate(_, RuleTaxYearNotSupportedError, listMinimumTaxYear)).getOrElse(Nil)
-    )
-
-  override def validate(data: ListBsasRawData): List[MtdError] = run(validationSet, data).distinct
+      )
 }

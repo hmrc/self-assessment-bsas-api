@@ -17,17 +17,18 @@
 package v3.models.response
 
 import api.hateoas.Method.GET
-import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{ JsError, JsValue, Json }
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v3.models.domain.TypeOfBusiness._
 
 class TriggerBsasResponseSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse("""
+  val desJson: JsValue = Json.parse(
+    """
       |{
       |   "metadata" : {
       |       "calculationId" : "anId"
@@ -35,13 +36,15 @@ class TriggerBsasResponseSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val mtdJson: JsValue = Json.parse("""
+  val mtdJson: JsValue = Json.parse(
+    """
       |{
       |   "calculationId" : "anId"
       |}
   """.stripMargin)
 
-  val invalidDesJson: JsValue = Json.parse("""
+  val invalidDesJson: JsValue = Json.parse(
+    """
       |{
       |   "calculationId" : 3
       |}
@@ -72,10 +75,10 @@ class TriggerBsasResponseSpec extends UnitSpec {
   "HateoasFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val bsasId         = "anId"
-      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
-      val context        = "individuals/self-assessment/adjustable-summary"
+      val nino = "someNino"
+      val bsasId = "anId"
+      val taxYear = Some(TaxYear.fromMtd("2023-24"))
+      val context = "individuals/self-assessment/adjustable-summary"
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
@@ -90,14 +93,14 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "triggering a self employment BSAS" should {
       "return the correct links without tax year" in new TysDisabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `self-employment`, bsasId, None))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `self-employment`, bsasId, None))
         private val expectedLink = Link(s"/$context/$nino/self-employment/$bsasId", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
       }
 
       "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `self-employment`, bsasId, taxYear))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `self-employment`, bsasId, taxYear))
         private val expectedLink = Link(s"/$context/$nino/self-employment/$bsasId?taxYear=2023-24", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
@@ -106,14 +109,14 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "triggering an FHL property BSAS" should {
       "return the correct links without tax year" in new TysDisabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-fhl`, bsasId, None))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-fhl`, bsasId, None))
         private val expectedLink = Link(s"/$context/$nino/uk-property/$bsasId", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
       }
 
       "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-fhl`, bsasId, taxYear))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-fhl`, bsasId, taxYear))
         private val expectedLink = Link(s"/$context/$nino/uk-property/$bsasId?taxYear=2023-24", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
@@ -122,14 +125,14 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "triggering a non-FHL property BSAS" should {
       "return the correct links without tax year" in new TysDisabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-non-fhl`, bsasId, None))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-non-fhl`, bsasId, None))
         private val expectedLink = Link(s"/$context/$nino/uk-property/$bsasId", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
       }
 
       "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-non-fhl`, bsasId, taxYear))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `uk-property-non-fhl`, bsasId, taxYear))
         private val expectedLink = Link(s"/$context/$nino/uk-property/$bsasId?taxYear=2023-24", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
@@ -138,14 +141,14 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "triggering a foreign property BSAS" should {
       "return the correct links without tax year" in new TysDisabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property`, bsasId, None))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property`, bsasId, None))
         private val expectedLink = Link(s"/$context/$nino/foreign-property/$bsasId", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
       }
 
       "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property`, bsasId, taxYear))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property`, bsasId, taxYear))
         private val expectedLink = Link(s"/$context/$nino/foreign-property/$bsasId?taxYear=2023-24", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
@@ -154,14 +157,14 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "triggering a foreign property fhl eea BSAS" should {
       "return the correct links without tax year" in new TysDisabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property-fhl-eea`, bsasId, None))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property-fhl-eea`, bsasId, None))
         private val expectedLink = Link(s"/$context/$nino/foreign-property/$bsasId", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))
       }
 
       "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-        private val result       = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property-fhl-eea`, bsasId, taxYear))
+        private val result = hateoasFactory.wrap(triggerBsasResponse, TriggerBsasHateoasData(nino, `foreign-property-fhl-eea`, bsasId, taxYear))
         private val expectedLink = Link(s"/$context/$nino/foreign-property/$bsasId?taxYear=2023-24", GET, "self")
 
         result shouldBe HateoasWrapper(triggerBsasResponse, Seq(expectedLink))

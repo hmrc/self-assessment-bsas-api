@@ -79,7 +79,7 @@ class TaxYearSpec extends UnitSpec {
 
     "TaxYear.now()" should {
       "return the current tax year" in {
-        val now  = LocalDate.now(ZoneId.of("UTC"))
+        val now = LocalDate.now(ZoneId.of("UTC"))
         val year = now.getYear
 
         val expectedYear = {
@@ -106,7 +106,8 @@ class TaxYearSpec extends UnitSpec {
       }
     }
 
-    val requestJson: JsValue = Json.parse("""
+    val requestJson: JsValue = Json.parse(
+      """
                                          "2018-19"
                                           """.stripMargin)
 

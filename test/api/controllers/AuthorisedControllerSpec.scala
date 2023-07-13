@@ -16,12 +16,12 @@
 
 package api.controllers
 
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.errors._
-import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
-import play.api.mvc.{ Action, AnyContent }
-import routing.{ Version, Version3 }
+import play.api.mvc.{Action, AnyContent}
+import routing.{Version, Version3}
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,29 +31,27 @@ import scala.concurrent.Future
 
 class AuthorisedControllerSpec extends ControllerBaseSpec {
 
+  val nino = "AA123456A"
+  val mtdId = "X123567890"
+  val predicate: Predicate = Enrolment("HMRC-MTD-IT")
+    .withIdentifier("MTDITID", mtdId)
+    .withDelegatedAuthRule("mtd-it-auth")
+
   trait Test extends MockEnrolmentsAuthService with MockMtdIdLookupService {
+    lazy val target = new TestController()
     val hc: HeaderCarrier = HeaderCarrier()
 
     class TestController extends AuthorisedController(cc) {
-      val apiVersion: Version                         = Version3
       override val authService: EnrolmentsAuthService = mockEnrolmentsAuthService
-      override val lookupService: MtdIdLookupService  = mockMtdIdLookupService
+      override val lookupService: MtdIdLookupService = mockMtdIdLookupService
+      val apiVersion: Version = Version3
 
       def action(nino: String): Action[AnyContent] = authorisedAction(nino).async {
         Future.successful(Ok(Json.obj()))
       }
 
     }
-
-    lazy val target = new TestController()
   }
-
-  val nino  = "AA123456A"
-  val mtdId = "X123567890"
-
-  val predicate: Predicate = Enrolment("HMRC-MTD-IT")
-    .withIdentifier("MTDITID", mtdId)
-    .withDelegatedAuthRule("mtd-it-auth")
 
   "calling an action" when {
 

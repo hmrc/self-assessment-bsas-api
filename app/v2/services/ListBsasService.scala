@@ -23,28 +23,28 @@ import api.services.BaseService
 import cats.implicits._
 import v2.connectors.ListBsasConnector
 import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{ BsasEntries, ListBsasResponse }
+import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseService {
+
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "INVALID_TAXYEAR" -> InternalError,
+      "INVALID_INCOMESOURCEID" -> InternalError,
+      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
 
   def listBsas(request: ListBsasRequest)(implicit ctx: RequestContext,
                                          ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasEntries]]]] =
     connector
       .listBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "INVALID_TAXYEAR"           -> InternalError,
-      "INVALID_INCOMESOURCEID"    -> InternalError,
-      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 }

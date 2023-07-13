@@ -27,7 +27,7 @@ object TotalBsas {
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal]
-  )(TotalBsas.apply _)
+    ) (TotalBsas.apply _)
 
   implicit val writes: OWrites[TotalBsas] = Json.writes[TotalBsas]
 }

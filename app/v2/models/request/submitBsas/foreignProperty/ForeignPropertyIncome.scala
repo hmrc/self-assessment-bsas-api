@@ -23,7 +23,7 @@ case class ForeignPropertyIncome(rentIncome: Option[BigDecimal], premiumsOfLease
   def isEmpty: Boolean =
     ForeignPropertyIncome.unapply(this).forall {
       case (None, None, None) => true
-      case _                  => false
+      case _ => false
     }
 }
 

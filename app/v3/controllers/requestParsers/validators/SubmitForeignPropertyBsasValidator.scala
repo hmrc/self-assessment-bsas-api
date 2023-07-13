@@ -34,6 +34,10 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
     bodyFieldValidation
   )
 
+  override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
+
   private def parameterFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
     List(
       NinoValidation.validate(data.nino),
@@ -59,7 +63,7 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
   @nowarn("cat=lint-byname-implicit")
   private def bodyFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = { data =>
     JsonFormatValidation.validateAndCheckNonEmpty[SubmitForeignPropertyBsasRequestBody](data.body) match {
-      case Nil          => NoValidationErrors
+      case Nil => NoValidationErrors
       case schemaErrors => List(schemaErrors)
     }
   }
@@ -216,9 +220,5 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
           .toList
       }
       .getOrElse(Nil)
-  }
-
-  override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
-    run(validationSet, data).distinct
   }
 }

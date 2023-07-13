@@ -54,7 +54,7 @@ object AdditionsBreakdown extends NestedJsonReads {
       (JsPath \ "professionalFeesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "depreciationDisallowable").readNullable[BigDecimal] and
       (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal]
-  )(AdditionsBreakdown.apply _)
+    ) (AdditionsBreakdown.apply _)
 
   implicit val writes: OWrites[AdditionsBreakdown] = Json.writes[AdditionsBreakdown]
 

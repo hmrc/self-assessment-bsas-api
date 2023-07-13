@@ -17,12 +17,12 @@
 package v2.controllers.requestParsers
 
 import api.models.domain.Nino
+import api.models.errors._
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.validators.MockTriggerBSASValidator
-import api.models.errors._
 import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
 class TriggerBsasRequestParserSpec extends UnitSpec {

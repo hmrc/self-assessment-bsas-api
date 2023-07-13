@@ -23,42 +23,19 @@ import v2.hateoas.RelType._
 
 trait HateoasLinks {
 
-  //Domain URIs
-  private def bsasBasUri(appConfig: AppConfig, nino: String) =
-    s"/${appConfig.apiGatewayContext}/$nino"
-
-  private def listUri(appConfig: AppConfig, nino: String): String = bsasBasUri(appConfig, nino)
-
-  private def triggerUri(appConfig: AppConfig, nino: String): String =
-    bsasBasUri(appConfig, nino) + "/trigger"
-
-  private def selfEmploymentBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
-    bsasBasUri(appConfig, nino) + s"/self-employment/$bsasId"
-
-  private def ukPropertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
-    bsasBasUri(appConfig, nino) + s"/property/$bsasId"
-
-  private def foreignPropertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
-    bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId"
-
-  private def selfEmploymentAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
-    bsasBasUri(appConfig, nino) + s"/self-employment/$bsasId/adjust"
-
-  private def propertyAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
-    bsasBasUri(appConfig, nino) + s"/property/$bsasId/adjust"
-
-  private def foreignPropertyAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
-    bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId/adjust"
-
-  //API resource links
-
   //L1
   def triggerBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = triggerUri(appConfig, nino), method = POST, rel = TRIGGER)
 
+  private def triggerUri(appConfig: AppConfig, nino: String): String =
+    bsasBasUri(appConfig, nino) + "/trigger"
+
   //L2
   def getSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = selfEmploymentBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
+
+  private def selfEmploymentBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/self-employment/$bsasId"
 
   //L2 with adjusted flag
   def getAdjustedSelfEmploymentBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
@@ -67,6 +44,9 @@ trait HateoasLinks {
   //L3
   def getUkPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = ukPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
+
+  private def ukPropertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/property/$bsasId"
 
   //L3 with adjusted flag
   def getAdjustedPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
@@ -80,6 +60,11 @@ trait HateoasLinks {
       rel = SUBMIT_ADJUSTMENTS
     )
 
+  //API resource links
+
+  private def selfEmploymentAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/self-employment/$bsasId/adjust"
+
   //L5
   def adjustPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(
@@ -87,6 +72,9 @@ trait HateoasLinks {
       method = POST,
       rel = SUBMIT_ADJUSTMENTS
     )
+
+  private def propertyAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/property/$bsasId/adjust"
 
   //L6
   def getSelfEmploymentBsasAdjustments(appConfig: AppConfig, nino: String, bsasId: String): Link =
@@ -108,9 +96,18 @@ trait HateoasLinks {
   def listBsas(appConfig: AppConfig, nino: String): Link =
     Link(href = listUri(appConfig, nino), method = GET, rel = SELF)
 
+  private def listUri(appConfig: AppConfig, nino: String): String = bsasBasUri(appConfig, nino)
+
   //L9
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = SELF)
+
+  private def foreignPropertyBsasUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId"
+
+  //Domain URIs
+  private def bsasBasUri(appConfig: AppConfig, nino: String) =
+    s"/${appConfig.apiGatewayContext}/$nino"
 
   def getAdjustedForeignPropertyBsasNoStat(appConfig: AppConfig, nino: String, bsasId: String): Link =
     Link(href = foreignPropertyBsasUri(appConfig, nino, bsasId), method = GET, rel = RETRIEVE_BSAS)
@@ -130,5 +127,8 @@ trait HateoasLinks {
       method = GET,
       rel = SELF
     )
+
+  private def foreignPropertyAdjustmentUri(appConfig: AppConfig, nino: String, bsasId: String): String =
+    bsasBasUri(appConfig, nino) + s"/foreign-property/$bsasId/adjust"
 
 }

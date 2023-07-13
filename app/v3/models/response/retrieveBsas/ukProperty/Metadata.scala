@@ -22,13 +22,13 @@ import play.api.libs.json._
 import v2.models.domain.DownstreamTaxYear
 
 case class Metadata(
-    calculationId: String,
-    requestedDateTime: String,
-    adjustedDateTime: Option[String],
-    nino: String,
-    taxYear: String,
-    summaryStatus: Status
-)
+                     calculationId: String,
+                     requestedDateTime: String,
+                     adjustedDateTime: Option[String],
+                     nino: String,
+                     taxYear: String,
+                     summaryStatus: Status
+                   )
 
 object Metadata {
   implicit val reads: Reads[Metadata] = (
@@ -38,7 +38,7 @@ object Metadata {
       (JsPath \ "taxableEntityId").read[String] and
       (JsPath \ "taxYear").read[BigInt].map(taxYear => DownstreamTaxYear.fromDownstream(taxYear.toString())) and
       (JsPath \ "status").read[Status]
-  )(Metadata.apply _)
+    ) (Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

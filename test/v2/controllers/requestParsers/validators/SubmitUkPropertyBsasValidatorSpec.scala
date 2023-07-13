@@ -27,13 +27,12 @@ import v2.models.request.submitBsas.ukProperty._
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec {
 
   val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino   = "AA123456A"
+  val nino = "AA123456A"
+  val invalidBody: AnyContentAsJson = AnyContentAsJson(Json.obj("aproperty" -> "25"))
 
   class SetUp {
     val validator = new SubmitUkPropertyBsasValidator
   }
-
-  val invalidBody: AnyContentAsJson = AnyContentAsJson(Json.obj("aproperty" -> "25"))
 
   "running validation" should {
     "return no errors" when {

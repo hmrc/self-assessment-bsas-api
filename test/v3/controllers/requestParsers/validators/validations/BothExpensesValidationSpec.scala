@@ -27,7 +27,7 @@ import v3.models.request.submitBsas.ukProperty.{FHLExpenses, NonFHLExpenses}
 
 class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  val path            = "path"
+  val path = "path"
   val error: MtdError = RuleBothExpensesError.copy(paths = Some(Seq(path)))
 
   "validate" when {
@@ -306,8 +306,8 @@ class BothExpensesValidationSpec extends UnitSpec with JsonErrorValidators {
           }
           "a model with consolidatedExpenses and businessEntertainmentCostsDisallowable is supplied" in {
             BothExpensesValidation.bothExpensesValidation(model,
-                                                          Some(additionModel.copy(businessEntertainmentCostsDisallowable = Some(123.45))),
-                                                          path) shouldBe List(error)
+              Some(additionModel.copy(businessEntertainmentCostsDisallowable = Some(123.45))),
+              path) shouldBe List(error)
           }
         }
         // @formatter:on

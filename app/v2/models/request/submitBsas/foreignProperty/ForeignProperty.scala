@@ -22,8 +22,8 @@ case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIn
 
   def isEmpty: Boolean =
     (income.isEmpty && expenses.isEmpty) ||
-    (income.isDefined && income.get.isEmpty) ||
-    (expenses.isDefined && expenses.get.isEmpty)
+      (income.isDefined && income.get.isEmpty) ||
+      (expenses.isDefined && expenses.get.isEmpty)
 }
 
 object ForeignProperty {

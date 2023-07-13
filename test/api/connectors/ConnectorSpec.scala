@@ -19,23 +19,23 @@ package api.connectors
 import api.mocks.MockHttpClient
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
-import play.api.http.{ HeaderNames, MimeTypes, Status }
+import play.api.http.{HeaderNames, MimeTypes, Status}
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames {
 
-  lazy val baseUrl                   = "http://test-BaseUrl"
+  lazy val baseUrl = "http://test-BaseUrl"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val otherHeaders: Seq[(String, String)] = Seq(
     "Gov-Test-Scenario" -> "DEFAULT",
-    "AnotherHeader"     -> "HeaderValue"
+    "AnotherHeader" -> "HeaderValue"
   )
 
-  implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
+  implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
 
   val dummyHeaderCarrierConfig: HeaderCarrier.Config =
@@ -46,10 +46,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     )
 
   val requiredDesHeaders: Seq[(String, String)] = Seq(
-    "Authorization"     -> "Bearer des-token",
-    "Environment"       -> "des-environment",
-    "User-Agent"        -> "this-api",
-    "CorrelationId"     -> correlationId,
+    "Authorization" -> "Bearer des-token",
+    "Environment" -> "des-environment",
+    "User-Agent" -> "this-api",
+    "CorrelationId" -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
@@ -63,10 +63,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
   )
 
   val requiredIfsHeaders: Seq[(String, String)] = Seq(
-    "Authorization"     -> "Bearer ifs-token",
-    "Environment"       -> "ifs-environment",
-    "User-Agent"        -> "this-api",
-    "CorrelationId"     -> correlationId,
+    "Authorization" -> "Bearer ifs-token",
+    "Environment" -> "ifs-environment",
+    "User-Agent" -> "this-api",
+    "CorrelationId" -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
@@ -80,10 +80,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
   )
 
   val requiredTysIfsHeaders: Seq[(String, String)] = Seq(
-    "Authorization"     -> "Bearer TYS-IFS-token",
-    "Environment"       -> "TYS-IFS-environment",
-    "User-Agent"        -> "this-api",
-    "CorrelationId"     -> correlationId,
+    "Authorization" -> "Bearer TYS-IFS-token",
+    "Environment" -> "TYS-IFS-environment",
+    "User-Agent" -> "this-api",
+    "CorrelationId" -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
@@ -131,7 +131,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           config = dummyHeaderCarrierConfig,
           body = body,
           requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
-          excludedHeaders = Seq("AnotherHeader"                   -> "HeaderValue")
+          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
         )
     }
 
@@ -142,7 +142,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           config = dummyHeaderCarrierConfig,
           body = body,
           requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
-          excludedHeaders = Seq("AnotherHeader"                   -> "HeaderValue")
+          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
         )
     }
 

@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  private val id   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(
@@ -59,7 +59,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val request = SubmitForeignPropertyBsasRequestData(nino, id, None, fhlEeaBody)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitForeignPropertyBsas")
 
     val service = new SubmitForeignPropertyBsasService(mockConnector)

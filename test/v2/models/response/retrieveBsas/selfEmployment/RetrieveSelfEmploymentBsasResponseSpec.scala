@@ -17,7 +17,7 @@
 package v2.models.response.retrieveBsas.selfEmployment
 
 import api.hateoas.Method._
-import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
@@ -50,9 +50,9 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val bsasId         = "anId"
-      val adjustment     = "03"
+      val nino = "someNino"
+      val bsasId = "anId"
+      val adjustment = "03"
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
     }
 

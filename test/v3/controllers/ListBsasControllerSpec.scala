@@ -16,11 +16,11 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.mocks.{ MockCurrentDate, MockIdGenerator }
-import api.models.domain.{ Nino, TaxYear }
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.{HateoasWrapper, MockHateoasFactory}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.{MockCurrentDate, MockIdGenerator}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -32,14 +32,14 @@ import v3.hateoas.HateoasLinks
 import v3.mocks.requestParsers.MockListBsasRequestParser
 import v3.mocks.services.MockListBsasService
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.{ ListBsasRawData, ListBsasRequest }
-import v3.models.response.listBsas.{ BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
+import v3.models.response.listBsas.{BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListBsasControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -53,8 +53,8 @@ class ListBsasControllerSpec
     with ListBsasFixture {
 
   private val typeOfBusiness = Some("self-employment")
-  private val businessId     = Some("XAIS12345678901")
-  private val version        = Version3
+  private val businessId = Some("XAIS12345678901")
+  private val version = Version3
 
   "list bsas" should {
     "return OK" when {
@@ -130,8 +130,6 @@ class ListBsasControllerSpec
   }
 
   private trait Test extends ControllerTest {
-    def taxYear: Option[String] = Some("2019-20")
-
     val controller = new ListBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
@@ -141,32 +139,29 @@ class ListBsasControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator,
     )
-
     val rawData: ListBsasRawData = ListBsasRawData(
       nino = nino,
       taxYear = taxYear,
       typeOfBusiness = typeOfBusiness,
       businessId = businessId
     )
-
     val request: ListBsasRequest = ListBsasRequest(
       nino = Nino(nino),
       taxYear = rawData.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now()),
       incomeSourceId = businessId,
       incomeSourceType = Some(TypeOfBusiness.`self-employment`.toIdentifierValue)
     )
-
     val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
       Seq(
         businessSourceSummaryModel(),
         businessSourceSummaryModel().copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-                                          summaries = Seq(
-                                            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-                                          )),
+          summaries = Seq(
+            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
+          )),
         businessSourceSummaryModel().copy(typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-                                          summaries = Seq(
-                                            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-                                          ))
+          summaries = Seq(
+            bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
+          ))
       ))
 
     def responseWithHateoas: HateoasWrapper[ListBsasResponse[HateoasWrapper[BsasSummary]]] = HateoasWrapper(
@@ -211,6 +206,8 @@ class ListBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.listBsas(nino, taxYear, typeOfBusiness, businessId)(fakeGetRequest)
+
+    def taxYear: Option[String] = Some("2019-20")
 
     MockedAppConfig.isApiDeprecated(version) returns false
   }

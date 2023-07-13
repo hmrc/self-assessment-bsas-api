@@ -27,8 +27,8 @@ import v2.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmployment
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
-  val bsasId                         = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino                           = "AA123456A"
+  val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val invalidIncomeWithZeroValue: Income =
@@ -57,7 +57,7 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
   "parser" should {
 
-    val rangeError: MtdError  = MtdError("RULE_RANGE_INVALID", s"Adjustment value for 'other' falls outside the accepted range", BAD_REQUEST)
+    val rangeError: MtdError = MtdError("RULE_RANGE_INVALID", s"Adjustment value for 'other' falls outside the accepted range", BAD_REQUEST)
     val formatError: MtdError = MtdError("FORMAT_ADJUSTMENT_VALUE", s"The format of the 'turnover' value is invalid", BAD_REQUEST)
 
     "accept valid input" when {
@@ -113,8 +113,8 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
         val inputData =
           SubmitSelfEmploymentBsasRawData(nino,
-                                          invalidBsasId,
-                                          AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel)))
+            invalidBsasId,
+            AnyContentAsJson(submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel)))
 
         MockValidator
           .validate(inputData)

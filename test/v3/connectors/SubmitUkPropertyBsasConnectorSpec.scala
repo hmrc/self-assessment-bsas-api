@@ -17,7 +17,7 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
@@ -26,8 +26,10 @@ import scala.concurrent.Future
 
 class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: String   = "AA123456A"
+  val nino: String = "AA123456A"
   val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val nonTysRequest = makeRequest(None)
+  val tysRequest = makeRequest(Some("2023-24"))
 
   def makeRequest(taxYear: Option[String]): SubmitUkPropertyBsasRequestData = {
     SubmitUkPropertyBsasRequestData(
@@ -37,9 +39,6 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       taxYear = taxYear.map(TaxYear.fromMtd)
     )
   }
-
-  val nonTysRequest = makeRequest(None)
-  val tysRequest    = makeRequest(Some("2023-24"))
 
   trait Test {
     _: ConnectorTest =>
@@ -55,7 +54,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new IfsTest with Test {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
-        val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId"
+        val url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
         willPut(url = url, body = nonFHLBody) returns Future.successful(outcome)
 
@@ -65,7 +64,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the TYS scenario" in new TysIfsTest with Test {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
-        val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$bsasId"
+        val url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$bsasId"
 
         willPut(url = url, body = nonFHLBody) returns Future.successful(outcome)
 

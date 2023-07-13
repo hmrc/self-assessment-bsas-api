@@ -23,23 +23,25 @@ import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
   import AdjustableSummaryCalculation.{readsFhl => readsFhlAdjustable, readsNonFhl => readsNonFhlAdjustable, writes => writesAdjustable}
+
   testRoundTrip("Adjustable Summary Calculation FHL",
-                downstreamSummaryCalculationJson,
-                adjustableSummaryCalculationFhlModel,
-                mtdSummaryCalculationFhlJson)(readsFhlAdjustable)
+    downstreamSummaryCalculationJson,
+    adjustableSummaryCalculationFhlModel,
+    mtdSummaryCalculationFhlJson)(readsFhlAdjustable)
   testRoundTrip("Adjustable Summary Calculation Non-FHL",
-                downstreamSummaryCalculationJson,
-                adjustableSummaryCalculationNonFhlModel,
-                mtdSummaryCalculationNonFhlJson)(readsNonFhlAdjustable)
+    downstreamSummaryCalculationJson,
+    adjustableSummaryCalculationNonFhlModel,
+    mtdSummaryCalculationNonFhlJson)(readsNonFhlAdjustable)
 
   import AdjustedSummaryCalculation.{readsFhl => readsFhlAdjusted, readsNonFhl => readsNonFhlAdjusted, writes => writesAdjusted}
+
   testRoundTrip("Adjusted Summary Calculation FHL",
-                downstreamSummaryCalculationJson,
-                adjustedSummaryCalculationFhlModel,
-                mtdSummaryCalculationFhlJson)(readsFhlAdjusted)
+    downstreamSummaryCalculationJson,
+    adjustedSummaryCalculationFhlModel,
+    mtdSummaryCalculationFhlJson)(readsFhlAdjusted)
   testRoundTrip("Adjusted Summary Calculation Non-FHL",
-                downstreamSummaryCalculationJson,
-                adjustedSummaryCalculationNonFhlModel,
-                mtdSummaryCalculationNonFhlJson)(readsNonFhlAdjusted)
+    downstreamSummaryCalculationJson,
+    adjustedSummaryCalculationNonFhlModel,
+    mtdSummaryCalculationNonFhlJson)(readsNonFhlAdjusted)
 
 }

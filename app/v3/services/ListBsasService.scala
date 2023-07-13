@@ -18,17 +18,40 @@ package v3.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.{ BaseService, ServiceOutcome }
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v3.connectors.ListBsasConnector
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseService {
+
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAXYEAR" -> TaxYearFormatError,
+      "INVALID_INCOMESOURCEID" -> BusinessIdFormatError,
+      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_ID" -> BusinessIdFormatError,
+      "NOT_FOUND" -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
   def listBsas(request: ListBsasRequest)(implicit ctx: RequestContext,
                                          ec: ExecutionContext): Future[ServiceOutcome[ListBsasResponse[BsasSummary]]] = {
@@ -36,28 +59,5 @@ class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseServic
     connector
       .listBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
-
-  private val errorMap: Map[String, MtdError] = {
-    val errors = Map(
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAXYEAR"           -> TaxYearFormatError,
-      "INVALID_INCOMESOURCEID"    -> BusinessIdFormatError,
-      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
-
-    val extraTysErrors = Map(
-      "INVALID_CORRELATION_ID"  -> InternalError,
-      "INVALID_TAX_YEAR"        -> TaxYearFormatError,
-      "INVALID_INCOMESOURCE_ID" -> BusinessIdFormatError,
-      "NOT_FOUND"               -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
-    )
-
-    errors ++ extraTysErrors
   }
 }

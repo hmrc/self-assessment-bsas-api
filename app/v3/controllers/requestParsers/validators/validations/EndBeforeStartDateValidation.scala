@@ -28,7 +28,7 @@ object EndBeforeStartDateValidation {
   def validate(startDate: String, endDate: String): List[MtdError] = {
 
     val startDateEpochTime = LocalDate.parse(startDate, dateTimeFormatter).toEpochDay
-    val endDateEpochTime   = LocalDate.parse(endDate, dateTimeFormatter).toEpochDay
+    val endDateEpochTime = LocalDate.parse(endDate, dateTimeFormatter).toEpochDay
 
     if ((endDateEpochTime - startDateEpochTime) <= 0) List(RuleEndBeforeStartDateError) else List()
   }

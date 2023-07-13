@@ -16,13 +16,13 @@
 
 package v3.endpoints
 
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.http.Status.OK
-import play.api.libs.json.{ JsObject, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures.downstreamResponse
@@ -35,11 +35,9 @@ class AuthISpec extends IntegrationBaseSpec {
 
     val requestJson: JsObject = Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
-      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
-      "businessId"       -> "XAIS12345678901"
+      "typeOfBusiness" -> TypeOfBusiness.`self-employment`.toString,
+      "businessId" -> "XAIS12345678901"
     )
-
-    def uri: String = s"/$nino/trigger"
 
     def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
@@ -53,6 +51,8 @@ class AuthISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/trigger"
   }
 
   "Calling the sample endpoint" when {

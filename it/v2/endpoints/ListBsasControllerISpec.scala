@@ -16,26 +16,24 @@
 
 package v2.endpoints
 
-import v2.fixtures.ListBsasFixtures._
-import play.api.http.HeaderNames.ACCEPT
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status.{ BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE }
+import play.api.http.HeaderNames.ACCEPT
+import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import api.models.errors._
-import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v2.fixtures.ListBsasFixtures._
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class ListBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino                           = "AA123456B"
-    val taxYear: Option[String]        = Some("2019-20")
+    val nino = "AA123456B"
+    val taxYear: Option[String] = Some("2019-20")
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String]     = None
-
-    def uri: String = s"/$nino"
+    val businessId: Option[String] = None
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
@@ -56,6 +54,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino"
   }
 
   "Calling the list Bsas endpoint" should {
@@ -123,10 +123,10 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String                   = requestNino
-          override val taxYear: Option[String]        = Some(requestTaxYear)
+          override val nino: String = requestNino
+          override val taxYear: Option[String] = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String]     = requestBusinessId
+          override val businessId: Option[String] = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()

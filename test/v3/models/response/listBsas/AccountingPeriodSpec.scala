@@ -37,7 +37,7 @@ class AccountingPeriodSpec extends UnitSpec with ListBsasFixture {
 
     "written to JSON" should {
       "return the expected JSON" in {
-          Json.toJson(accountingPeriodModel) shouldBe accountingPeriodJson
+        Json.toJson(accountingPeriodModel) shouldBe accountingPeriodJson
       }
     }
   }

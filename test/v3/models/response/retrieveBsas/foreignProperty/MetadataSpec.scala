@@ -17,10 +17,10 @@
 package v3.models.response.retrieveBsas.foreignProperty
 
 import api.models.utils.JsonErrorValidators
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import support.UnitSpec
+import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators{
+class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid metadata model" when {

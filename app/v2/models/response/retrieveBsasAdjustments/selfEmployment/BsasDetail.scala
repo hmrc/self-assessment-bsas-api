@@ -25,17 +25,17 @@ object BsasDetail {
   implicit val reads: Reads[BsasDetail] = (
     (JsPath \ "adjustments" \ "income").readNullable[IncomeBreakdown].map {
       case Some(IncomeBreakdown(None, None)) => None
-      case income                            => income
+      case income => income
     } and
       (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => None
-        case expenses                                                                                                                => expenses
+        case expenses => expenses
       } and
       (JsPath \ "adjustments" \ "additions").readNullable[AdditionsBreakdown].map {
         case Some(AdditionsBreakdown(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)) => None
-        case additions                                                                                                          => additions
+        case additions => additions
       }
-  )(BsasDetail.apply _)
+    ) (BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }

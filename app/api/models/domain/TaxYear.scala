@@ -25,7 +25,7 @@ import java.time.LocalDate
   *
   * @param value the tax year string (where 2018 represents 2017-18)
   */
-final case class TaxYear private (private val value: String) {
+final case class TaxYear private(private val value: String) {
 
   /** The tax year as a number, e.g. for "2023-24" this will be 2024
     */
@@ -34,7 +34,7 @@ final case class TaxYear private (private val value: String) {
   /** The tax year in MTD (vendor-facing) format, e.g. "2023-24"
     */
   val asMtd: String = {
-    val prefix  = value.take(2)
+    val prefix = value.take(2)
     val yearTwo = value.drop(2)
     val yearOne = (yearTwo.toInt - 1).toString
     prefix + yearOne + "-" + yearTwo
@@ -66,13 +66,15 @@ object TaxYear {
   /** UK tax year starts on 6 April.
     */
   private val taxYearMonthStart = 4
-  private val taxYearDayStart   = 6
+  private val taxYearDayStart = 6
 
   /**
     * @param taxYear tax year in MTD format (e.g. 2017-18)
     */
   def fromMtd(taxYear: String): TaxYear =
     TaxYear(taxYear.take(2) + taxYear.drop(5))
+
+  def now(): TaxYear = TaxYear.fromIso(LocalDate.now().toString)
 
   /** @param date
     * the date in extended ISO-8601 format (e.g. 2020-04-05)
@@ -81,12 +83,10 @@ object TaxYear {
     val date1 = LocalDate.parse(date)
     val year = (
       if (isPreviousTaxYear(date1)) date1.getYear else date1.getYear + 1
-    ).toString
+      ).toString
 
     new TaxYear(year)
   }
-
-  def now(): TaxYear = TaxYear.fromIso(LocalDate.now().toString)
 
   private def isPreviousTaxYear(date: LocalDate): Boolean = {
     val taxYearStartDate = LocalDate.of(date.getYear, taxYearMonthStart, taxYearDayStart)

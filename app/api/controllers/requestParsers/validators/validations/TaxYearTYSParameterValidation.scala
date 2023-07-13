@@ -23,7 +23,9 @@ object TaxYearTYSParameterValidation {
 
   def validate(taxYear: String): List[MtdError] = {
 
-    if (taxYear.length < 4) { List(InvalidTaxYearParameterError) } else {
+    if (taxYear.length < 4) {
+      List(InvalidTaxYearParameterError)
+    } else {
       val year = TaxYear.fromMtd(taxYear).year
 
       if (year >= TaxYear.tysTaxYear) NoValidationErrors else List(InvalidTaxYearParameterError)

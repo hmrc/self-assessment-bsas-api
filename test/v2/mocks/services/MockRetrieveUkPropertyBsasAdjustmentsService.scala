@@ -25,7 +25,7 @@ import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 import v2.services.RetrieveUkPropertyAdjustmentsService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveUkPropertyBsasAdjustmentsService extends MockFactory {
   val mockService: RetrieveUkPropertyAdjustmentsService = mock[RetrieveUkPropertyAdjustmentsService]
@@ -33,7 +33,7 @@ trait MockRetrieveUkPropertyBsasAdjustmentsService extends MockFactory {
   object MockRetrieveUkPropertyBsasAdjustmentsService {
 
     def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData)
-      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]]] = {
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyAdjustmentsResponse]]]] = {
       (mockService
         .retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

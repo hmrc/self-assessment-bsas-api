@@ -16,15 +16,15 @@
 
 package v2.services
 
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import api.controllers.EndpointLogContext
 import v2.mocks.connectors.MockSubmitForeignPropertyBsasConnector
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
 import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.SubmitForeignPropertyBsasResponse
 
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  private val id   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   private val fhlEeaBody =
     SubmitForeignPropertyBsasRequestBody(
@@ -63,7 +63,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val response = SubmitForeignPropertyBsasResponse(id, TypeOfBusiness.`foreign-property-fhl-eea`)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "submitForeignPropertyBsas")
 
     val service = new SubmitForeignPropertyBsasService(mockConnector)

@@ -16,20 +16,21 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class NonFHLIncomeSpec extends UnitSpec {
 
   val json: JsValue = Json
-    .parse("""
-              |{
-              |   "totalRentsReceived": 1.12,
-              |   "premiumsOfLeaseGrant": 2.12,
-              |   "reversePremiums": 3.12,
-              |   "otherPropertyIncome": 4.12
-              |}
-              |""".stripMargin)
+    .parse(
+      """
+        |{
+        |   "totalRentsReceived": 1.12,
+        |   "premiumsOfLeaseGrant": 2.12,
+        |   "reversePremiums": 3.12,
+        |   "otherPropertyIncome": 4.12
+        |}
+        |""".stripMargin)
 
   val model: NonFHLIncome =
     NonFHLIncome(

@@ -22,9 +22,9 @@ import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasR
 
 class RetrieveSelfEmploymentValidatorSpec extends UnitSpec {
 
-  val validNino            = "AA123456A"
-  val validCalculationId   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val invalidNino          = "BEANS"
+  val validNino = "AA123456A"
+  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val invalidNino = "BEANS"
   val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-beans"
 
   val validator = new RetrieveSelfEmploymentValidator()

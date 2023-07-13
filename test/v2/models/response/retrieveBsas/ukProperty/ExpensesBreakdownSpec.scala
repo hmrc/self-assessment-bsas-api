@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
 
-class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators{
+class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators {
 
   val mtdJson = Json.parse(
     """{
@@ -50,8 +50,8 @@ class ExpensesBreakdownSpec extends UnitSpec with JsonErrorValidators{
       |  "consolidatedExpenses": 100.49
       |}""".stripMargin)
 
-  val model = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
-    Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),Some(100.49))
+  val model = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
+    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49))
 
   "reads" should {
     "return a valid model" when {

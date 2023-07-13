@@ -17,14 +17,14 @@
 package v3.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 
 import javax.inject.Inject
 
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
-    extends RequestParser[RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData] {
+  extends RequestParser[RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData] {
 
   override protected def requestFor(data: RetrieveUkPropertyBsasRawData): RetrieveUkPropertyBsasRequestData = {
     val taxYear = data.taxYear.map(TaxYear.fromMtd)

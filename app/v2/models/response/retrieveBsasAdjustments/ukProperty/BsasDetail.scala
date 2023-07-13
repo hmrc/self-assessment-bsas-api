@@ -26,24 +26,24 @@ object BsasDetail {
   val fhlReads: Reads[BsasDetail] = (
     (JsPath \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
       case Some(IncomeBreakdown(None, None, None, None)) => None
-      case incomeBreakdown                               => incomeBreakdown
+      case incomeBreakdown => incomeBreakdown
     } and
       (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
-        case expensesBreakdown                                                             => expensesBreakdown
+        case expensesBreakdown => expensesBreakdown
       }
-  )(BsasDetail.apply _)
+    ) (BsasDetail.apply _)
 
   val nonFhlReads: Reads[BsasDetail] = (
     (JsPath \ "adjustments" \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
       case Some(IncomeBreakdown(None, None, None, None)) => None
-      case incomeBreakdown                               => incomeBreakdown
+      case incomeBreakdown => incomeBreakdown
     } and
       (JsPath \ "adjustments" \ "expenses").readNullable[ExpensesBreakdown].map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
-        case expensesBreakdown                                                             => expensesBreakdown
+        case expensesBreakdown => expensesBreakdown
       }
-  )(BsasDetail.apply _)
+    ) (BsasDetail.apply _)
 
   implicit val writes: OWrites[BsasDetail] = Json.writes[BsasDetail]
 }

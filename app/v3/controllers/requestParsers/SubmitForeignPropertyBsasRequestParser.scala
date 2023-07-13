@@ -17,18 +17,14 @@
 package v3.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.SubmitForeignPropertyBsasValidator
-import v3.models.request.submitBsas.foreignProperty.{
-  SubmitForeignPropertyBsasRequestBody,
-  SubmitForeignPropertyBsasRequestData,
-  SubmitForeignPropertyRawData
-}
+import v3.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData, SubmitForeignPropertyRawData}
 
 import javax.inject.Inject
 
 class SubmitForeignPropertyBsasRequestParser @Inject()(val validator: SubmitForeignPropertyBsasValidator)
-    extends RequestParser[SubmitForeignPropertyRawData, SubmitForeignPropertyBsasRequestData] {
+  extends RequestParser[SubmitForeignPropertyRawData, SubmitForeignPropertyBsasRequestData] {
 
   override protected def requestFor(data: SubmitForeignPropertyRawData): SubmitForeignPropertyBsasRequestData = {
     val requestBody = data.body.as[SubmitForeignPropertyBsasRequestBody]

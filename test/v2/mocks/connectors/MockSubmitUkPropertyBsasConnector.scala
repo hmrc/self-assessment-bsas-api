@@ -24,7 +24,7 @@ import v2.connectors.SubmitUkPropertyBsasConnector
 import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitUkPropertyBsasConnector extends MockFactory {
 

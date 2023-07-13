@@ -17,10 +17,10 @@
 package v3.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import v3.controllers.requestParsers.validators.ListBsasValidator
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.{ ListBsasRawData, ListBsasRequest }
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
 
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class ListBsasRequestParser @Inject()(val validator: ListBsasValidator) extends 
   override protected def requestFor(data: ListBsasRawData): ListBsasRequest = {
 
     val incomeSourceType: Option[String] = data.typeOfBusiness.map(TypeOfBusiness.parser).map(_.toIdentifierValue)
-    val taxYear                          = data.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now())
+    val taxYear = data.taxYear.map(TaxYear.fromMtd).getOrElse(TaxYear.now())
 
     ListBsasRequest(
       nino = Nino(data.nino),

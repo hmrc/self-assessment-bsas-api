@@ -18,7 +18,7 @@ package v3.controllers
 
 package object requestParsers {
 
-  val ADJUSTED_SUMMARY   = "3"
+  val ADJUSTED_SUMMARY = "3"
   val ADJUSTABLE_SUMMARY = "1"
 
   def toDesAdjustedStatus(s: String): String = if (s.toBoolean) ADJUSTED_SUMMARY else ADJUSTABLE_SUMMARY

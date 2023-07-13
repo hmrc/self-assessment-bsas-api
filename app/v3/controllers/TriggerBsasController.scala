@@ -18,18 +18,18 @@ package v3.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
-import utils.{ IdGenerator, Logging }
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import utils.{IdGenerator, Logging}
 import v3.controllers.requestParsers.TriggerBsasRequestParser
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.triggerBsas.TriggerBsasRawData
 import v3.models.response.TriggerBsasHateoasData
 import v3.services.TriggerBsasService
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -41,7 +41,7 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
                                       auditService: AuditService,
                                       cc: ControllerComponents,
                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
+  extends AuthorisedController(cc)
     with V3Controller
     with Logging {
 

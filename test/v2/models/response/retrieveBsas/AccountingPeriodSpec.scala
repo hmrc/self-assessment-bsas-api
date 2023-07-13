@@ -22,7 +22,8 @@ import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class AccountingPeriodSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse("""
+  val desJson: JsValue = Json.parse(
+    """
       |{
       |  "inputs": {
       |  "incomeSourceId": "111111111111111",
@@ -42,7 +43,8 @@ class AccountingPeriodSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val invalidJson: JsValue = Json.parse("""
+  val invalidJson: JsValue = Json.parse(
+    """
       |{
       |  "startDate" : 4,
       |  "endDate" : true

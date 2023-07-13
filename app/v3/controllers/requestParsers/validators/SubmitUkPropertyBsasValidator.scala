@@ -31,6 +31,8 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   private val validationSet =
     List(parameterFormatValidator, parameterRuleValidation, validateOnePropertyOnly, bodyFormatValidation, bodyFieldValidation)
 
+  override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
+
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
@@ -56,7 +58,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
   @nowarn("cat=lint-byname-implicit")
   private def bodyFormatValidation: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     JsonFormatValidation.validateAndCheckNonEmpty[SubmitUKPropertyBsasRequestBody](data.body) match {
-      case Nil          => NoValidationErrors
+      case Nil => NoValidationErrors
       case schemaErrors => List(schemaErrors)
     }
   }
@@ -186,6 +188,4 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
       path = "/nonFurnishedHolidayLet/expenses"
     )
   }
-
-  override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
 }
