@@ -26,7 +26,7 @@ import v2.models.domain.DownstreamTaxYear
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{ BsasEntries, ListBsasResponse }
+import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
 import scala.concurrent.Future
 

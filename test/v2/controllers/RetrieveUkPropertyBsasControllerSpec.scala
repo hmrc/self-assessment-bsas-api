@@ -17,11 +17,11 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.{ GET, POST }
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -35,7 +35,7 @@ import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v2.mocks.services.MockRetrieveUkPropertyBsasService
 import v2.models.errors._
-import v2.models.request.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

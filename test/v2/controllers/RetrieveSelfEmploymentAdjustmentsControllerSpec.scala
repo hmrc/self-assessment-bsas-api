@@ -18,10 +18,10 @@ package v2.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -35,7 +35,7 @@ import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
 import v2.mocks.services.MockRetrieveSelfEmploymentAdjustmentsService
 import v2.models.errors._
-import v2.models.request.{ RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData }
+import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
