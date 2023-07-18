@@ -24,20 +24,20 @@ case class NonFHLIncome(rentIncome: Option[BigDecimal] = None,
                         otherPropertyIncome: Option[BigDecimal] = None) {
 
   val params: Map[String, BigDecimal] = Map(
-    "totalRentsReceived"   -> rentIncome,
+    "totalRentsReceived" -> rentIncome,
     "premiumsOfLeaseGrant" -> premiumsOfLeaseGrant,
-    "reversePremiums"      -> reversePremiums,
-    "otherPropertyIncome"  -> otherPropertyIncome
+    "reversePremiums" -> reversePremiums,
+    "otherPropertyIncome" -> otherPropertyIncome
   ).collect { case (k, Some(v)) => (k, v) }
 
   def isEmpty: Boolean =
     NonFHLIncome.unapply(this).forall {
       case (None, None, None, None) => true
-      case _                        => false
+      case _ => false
     }
 }
 
 object NonFHLIncome {
-  implicit val reads: Reads[NonFHLIncome]   = Json.reads[NonFHLIncome]
+  implicit val reads: Reads[NonFHLIncome] = Json.reads[NonFHLIncome]
   implicit val writes: Writes[NonFHLIncome] = (o: NonFHLIncome) => Json.toJsObject(o.params)
 }

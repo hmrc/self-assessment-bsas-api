@@ -38,7 +38,7 @@ case class Additions(costOfGoodsBoughtDisallowable: Option[BigDecimal],
   def isEmpty: Boolean =
     Additions.unapply(this).forall {
       case (None, None, None, None, None, None, None, None, None, None, None, None, None, None, None) => true
-      case _                                                                                          => false
+      case _ => false
     }
 }
 
@@ -60,5 +60,5 @@ object Additions {
       (JsPath \ "professionalFeesDisallowable").writeNullable[BigDecimal] and
       (JsPath \ "depreciationDisallowable").writeNullable[BigDecimal] and
       (JsPath \ "otherExpensesDisallowable").writeNullable[BigDecimal]
-  )(unlift(Additions.unapply))
+    ) (unlift(Additions.unapply))
 }

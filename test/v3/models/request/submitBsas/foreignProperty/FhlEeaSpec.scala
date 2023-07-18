@@ -16,13 +16,14 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class FhlEeaSpec extends UnitSpec {
 
   // Use simple case as formats for contents of income/expenses are tested elsewhere...
-  val json: JsValue = Json.parse("""
+  val json: JsValue = Json.parse(
+    """
       |{
       |  "income": {
       |  },

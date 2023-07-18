@@ -69,14 +69,14 @@
   },
   "links": [
     {
-      "href":"/individuals/self-assessment/adjustable-summary/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-      "rel":"self",
-      "method":"GET"
+      "href": "/individuals/self-assessment/adjustable-summary/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+      "rel": "self",
+      "method": "GET"
     },
     {
-      "href":"/individuals/self-assessment/adjustable-summary/self-employment/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
-      "rel":"submit-accounting-adjustments",
-      "method":"POST"
+      "href": "/individuals/self-assessment/adjustable-summary/self-employment/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
+      "rel": "submit-accounting-adjustments",
+      "method": "POST"
     }
   ]
 }

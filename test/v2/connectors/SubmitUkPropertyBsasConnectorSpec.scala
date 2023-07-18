@@ -17,13 +17,13 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import v2.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v2.models.response.SubmitUkPropertyBsasResponse
 
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 
 class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino   = Nino("AA123456A")
+  val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -51,7 +51,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)))
 
-      implicit val hc: HeaderCarrier                = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient

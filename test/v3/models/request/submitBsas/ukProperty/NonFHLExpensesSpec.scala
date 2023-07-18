@@ -21,19 +21,20 @@ import support.UnitSpec
 
 class NonFHLExpensesSpec extends UnitSpec {
 
-  val json: JsValue = Json.parse("""
-            |{
-            |  "premisesRunningCosts": 1.12,
-            |  "repairsAndMaintenance": 2.12,
-            |  "financialCosts": 3.12,
-            |  "professionalFees": 4.12,
-            |  "travelCosts": 5.12,
-            |  "costOfServices": 6.12,
-            |  "residentialFinancialCost": 7.12,
-            |  "other": 8.12,
-            |  "consolidatedExpenses": 9.12
-            |}
-            |""".stripMargin)
+  val json: JsValue = Json.parse(
+    """
+      |{
+      |  "premisesRunningCosts": 1.12,
+      |  "repairsAndMaintenance": 2.12,
+      |  "financialCosts": 3.12,
+      |  "professionalFees": 4.12,
+      |  "travelCosts": 5.12,
+      |  "costOfServices": 6.12,
+      |  "residentialFinancialCost": 7.12,
+      |  "other": 8.12,
+      |  "consolidatedExpenses": 9.12
+      |}
+      |""".stripMargin)
 
   val model: NonFHLExpenses = NonFHLExpenses(
     premisesRunningCosts = Some(1.12),

@@ -20,7 +20,7 @@ import api.connectors.ConnectorSpec
 import mocks.MockAppConfig
 import v2.mocks.MockHttpClient
 import v2.models.domain.DownstreamTaxYear
-import v2.models.request.submitBsas.selfEmployment.{ Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody }
+import v2.models.request.submitBsas.selfEmployment.{Additions, Expenses, Income, SubmitSelfEmploymentBsasRequestBody}
 
 import scala.concurrent.Future
 

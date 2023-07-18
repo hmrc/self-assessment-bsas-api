@@ -19,16 +19,13 @@ package api.controllers
 import api.controllers.requestParsers.RequestParser
 import api.controllers.requestParsers.validators.Validator
 import api.models.domain.Nino
-import api.models.errors.{ BadRequestError, ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError }
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
 import api.models.request.RawData
 import support.UnitSpec
 
 class RequestParserSpec extends UnitSpec {
 
   private val nino = "AA123456A"
-  case class Raw(nino: String) extends RawData
-  case class Request(nino: Nino)
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test {
     test =>
@@ -41,6 +38,12 @@ class RequestParserSpec extends UnitSpec {
       protected def requestFor(data: Raw) = Request(Nino(data.nino))
     }
   }
+
+  case class Raw(nino: String) extends RawData
+
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+
+  case class Request(nino: Nino)
 
   "parse" should {
     "return a Request" when {

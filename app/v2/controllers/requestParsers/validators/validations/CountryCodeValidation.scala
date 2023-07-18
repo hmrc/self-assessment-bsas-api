@@ -24,8 +24,8 @@ import v2.models.errors._
 object CountryCodeValidation {
 
   def validate(field: String, path: String): List[MtdError] = (CountryCode.getByAlpha3Code(field), field) match {
-    case (_: CountryCode, _)           => NoValidationErrors
+    case (_: CountryCode, _) => NoValidationErrors
     case (_, code) if code.length == 3 => List(RuleCountryCodeError.copy(paths = Some(List(path))))
-    case _                             => List(CountryCodeFormatError.copy(paths = Some(List(path))))
+    case _ => List(CountryCodeFormatError.copy(paths = Some(List(path))))
   }
 }

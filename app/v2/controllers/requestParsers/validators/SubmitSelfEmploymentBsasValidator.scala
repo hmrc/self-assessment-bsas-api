@@ -29,6 +29,8 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
   private val validationSet =
     List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, adjustmentFieldValidator, bothExpensesValidator)
 
+  override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)
+
   private def parameterFormatValidator: SubmitSelfEmploymentBsasRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
@@ -125,14 +127,12 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
 
     List(
       if (model.expenses.exists(_.isBothSupplied)
-          || (!(model.additions.isEmpty || model.additions.exists(_.isEmpty))
-          && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))) {
+        || (!(model.additions.isEmpty || model.additions.exists(_.isEmpty))
+        && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))) {
         List(RuleBothExpensesError)
       } else {
         NoValidationErrors
       }
     )
   }
-
-  override def validate(data: SubmitSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data)
 }

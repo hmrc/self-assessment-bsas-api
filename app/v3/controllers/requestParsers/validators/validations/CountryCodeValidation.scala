@@ -33,7 +33,7 @@ object CountryCodeValidation {
     } else {
       Option(CountryCode.getByAlpha3Code(field)) match {
         case Some(_) => NoValidationErrors
-        case None    => List(RuleCountryCodeError.copy(paths = Some(Seq(path))))
+        case None => List(RuleCountryCodeError.copy(paths = Some(Seq(path))))
       }
     }
   }

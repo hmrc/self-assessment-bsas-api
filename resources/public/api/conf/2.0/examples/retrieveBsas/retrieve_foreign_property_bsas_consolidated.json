@@ -34,7 +34,7 @@
     "expensesBreakdown": {
       "consolidatedExpenses": 123.12
     },
-    "countryLevelDetail":[
+    "countryLevelDetail": [
       {
         "countryCode": "CYM",
         "total": {
@@ -58,14 +58,14 @@
   },
   "links": [
     {
-      "href":"/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-      "rel":"self",
-      "method":"GET"
+      "href": "/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      "rel": "self",
+      "method": "GET"
     },
     {
-      "href":"/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c/adjust",
-      "rel":"submit-summary-adjustments",
-      "method":"POST"
+      "href": "/individuals/self-assessment/adjustable-summary/AA999999A/foreign-property/f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c/adjust",
+      "rel": "submit-summary-adjustments",
+      "method": "POST"
     }
   ]
 }

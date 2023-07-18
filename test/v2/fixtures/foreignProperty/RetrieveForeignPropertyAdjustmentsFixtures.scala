@@ -16,12 +16,12 @@
 
 package v2.fixtures.foreignProperty
 
-import java.time.LocalDate
-
 import play.api.libs.json.Json
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.AccountingPeriod
-import v2.models.response.retrieveBsasAdjustments.foreignProperty.{BsasDetail, ExpensesBreakdown, IncomeBreakdown, Metadata, RetrieveForeignPropertyAdjustmentsResponse}
+import v2.models.response.retrieveBsasAdjustments.foreignProperty._
+
+import java.time.LocalDate
 
 object RetrieveForeignPropertyAdjustmentsFixtures {
 

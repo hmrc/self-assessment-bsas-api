@@ -27,7 +27,7 @@ import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 
 class TriggerBsasRequestParserSpec extends UnitSpec {
 
-  val nino                           = "AA123456A"
+  val nino = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockTriggerBsasValidator {

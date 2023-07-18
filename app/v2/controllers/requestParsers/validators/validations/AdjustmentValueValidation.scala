@@ -27,7 +27,7 @@ object AdjustmentValueValidation {
 
     field match {
       case Some(amount) if amount.scale > 2 | amount == 0 => List(error)
-      case _                                              => NoValidationErrors
+      case _ => NoValidationErrors
     }
   }
 }

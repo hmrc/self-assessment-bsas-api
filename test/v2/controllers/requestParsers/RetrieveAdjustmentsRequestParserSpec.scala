@@ -17,24 +17,22 @@
 package v2.controllers.requestParsers
 
 import api.models.domain.Nino
+import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import support.UnitSpec
 import v2.mocks.validators.MockRetrieveAdjustmentsValidator
-import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
 class RetrieveAdjustmentsRequestParserSpec extends UnitSpec {
+  val nino = "AA123456A"
+  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val adjustedStatus = Some("true")
+  val inputRawData = RetrieveAdjustmentsRawData(nino, bsasId)
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val outputRequestData = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
 
   trait Test extends MockRetrieveAdjustmentsValidator {
     lazy val parser = new RetrieveAdjustmentsRequestParser(mockValidator)
   }
-
-  val nino = "AA123456A"
-  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus = Some("true")
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  val inputRawData = RetrieveAdjustmentsRawData(nino, bsasId)
-  val outputRequestData = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
 
   "parser" should {
     "return a valid request object" when {

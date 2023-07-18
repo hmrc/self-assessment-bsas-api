@@ -16,8 +16,8 @@
 
 package v3.fixtures.foreignProperty
 
-import v3.models.domain.TypeOfBusiness
 import play.api.libs.json.{JsValue, Json}
+import v3.models.domain.TypeOfBusiness
 import v3.models.response.retrieveBsas.foreignProperty._
 
 object RetrieveForeignPropertyBsasBodyFixtures {
@@ -46,26 +46,26 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val inputsDesFhlJson: JsValue = Json.parse(
     s"""{
-      |  "incomeSourceId": "000000000000210",
-      |  "incomeSourceType": "03",
-      |  "incomeSourceName": "Business Name",
-      |  "accountingPeriodStartDate": "2019-04-06",
-      |  "accountingPeriodEndDate": "2020-04-05",
-      |  "source": "MTD-SA",
-      |  "submissionPeriods": [$submissionPeriodDesJson]
-      |}""".stripMargin
+       |  "incomeSourceId": "000000000000210",
+       |  "incomeSourceType": "03",
+       |  "incomeSourceName": "Business Name",
+       |  "accountingPeriodStartDate": "2019-04-06",
+       |  "accountingPeriodEndDate": "2020-04-05",
+       |  "source": "MTD-SA",
+       |  "submissionPeriods": [$submissionPeriodDesJson]
+       |}""".stripMargin
   )
 
   lazy val inputsDesNonFhlJson: JsValue = Json.parse(
     s"""{
-      |  "incomeSourceId": "000000000000210",
-      |  "incomeSourceType": "15",
-      |  "incomeSourceName": "Business Name",
-      |  "accountingPeriodStartDate": "2019-04-06",
-      |  "accountingPeriodEndDate": "2020-04-05",
-      |  "source": "MTD-SA",
-      |  "submissionPeriods": [$submissionPeriodDesJson]
-      |}""".stripMargin
+       |  "incomeSourceId": "000000000000210",
+       |  "incomeSourceType": "15",
+       |  "incomeSourceName": "Business Name",
+       |  "accountingPeriodStartDate": "2019-04-06",
+       |  "accountingPeriodEndDate": "2020-04-05",
+       |  "source": "MTD-SA",
+       |  "submissionPeriods": [$submissionPeriodDesJson]
+       |}""".stripMargin
   )
 
   lazy val summaryCalculationIncomeDesJson: JsValue = Json.parse(
@@ -251,26 +251,26 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val inputsMtdFhlJson: JsValue = Json.parse(
     s"""{
-      |  "businessId": "000000000000210",
-      |  "typeOfBusiness": "foreign-property-fhl-eea",
-      |  "businessName": "Business Name",
-      |  "accountingPeriodStartDate": "2019-04-06",
-      |  "accountingPeriodEndDate": "2020-04-05",
-      |  "source": "MTD-SA",
-      |  "submissionPeriods": [$submissionPeriodMtdJson]
-      |}""".stripMargin
+       |  "businessId": "000000000000210",
+       |  "typeOfBusiness": "foreign-property-fhl-eea",
+       |  "businessName": "Business Name",
+       |  "accountingPeriodStartDate": "2019-04-06",
+       |  "accountingPeriodEndDate": "2020-04-05",
+       |  "source": "MTD-SA",
+       |  "submissionPeriods": [$submissionPeriodMtdJson]
+       |}""".stripMargin
   )
 
   lazy val inputsMtdNonFhlJson: JsValue = Json.parse(
     s"""{
-      |  "businessId": "000000000000210",
-      |  "typeOfBusiness": "foreign-property",
-      |  "businessName": "Business Name",
-      |  "accountingPeriodStartDate": "2019-04-06",
-      |  "accountingPeriodEndDate": "2020-04-05",
-      |  "source": "MTD-SA",
-      |  "submissionPeriods": [$submissionPeriodMtdJson]
-      |}""".stripMargin
+       |  "businessId": "000000000000210",
+       |  "typeOfBusiness": "foreign-property",
+       |  "businessName": "Business Name",
+       |  "accountingPeriodStartDate": "2019-04-06",
+       |  "accountingPeriodEndDate": "2020-04-05",
+       |  "source": "MTD-SA",
+       |  "submissionPeriods": [$submissionPeriodMtdJson]
+       |}""".stripMargin
   )
 
   lazy val summaryCalculationIncomeMtdFhlJson: JsValue = Json.parse(

@@ -17,11 +17,11 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.mocks.{ MockCurrentDate, MockIdGenerator }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ Nino, Status }
+import api.hateoas.{HateoasWrapper, MockHateoasFactory}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.{MockCurrentDate, MockIdGenerator}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{Nino, Status}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
@@ -35,16 +35,16 @@ import v2.fixtures.ListBsasFixtures._
 import v2.hateoas.HateoasLinks
 import v2.mocks.requestParsers.MockListBsasRequestParser
 import v2.mocks.services.MockListBsasService
-import v2.models.domain.{ DownstreamTaxYear, TypeOfBusiness }
-import v2.models.request.{ AccountingPeriod, ListBsasRawData, ListBsasRequest }
-import v2.models.response.listBsas.{ BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
+import v2.models.domain.{DownstreamTaxYear, TypeOfBusiness}
+import v2.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
+import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListBsasControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockListBsasRequestParser
@@ -55,37 +55,6 @@ class ListBsasControllerSpec
     with MockAuditService
     with MockCurrentDate
     with MockIdGenerator {
-
-  private val correlationId  = "X-123"
-  private val nino           = "AA123456A"
-  private val taxYear        = Some("2019-20")
-  private val typeOfBusiness = Some("uk-property-fhl")
-  private val businessId     = Some("XAIS12345678901")
-  private val version        = Version2
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new ListBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      auditService = mockAuditService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator,
-      currentDateProvider = mockCurrentDate
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-
-    val date: LocalDate = LocalDate.of(2019, 6, 18)
-    MockCurrentDate.getCurrentDate().returns(date).anyNumberOfTimes()
-  }
 
   val response: ListBsasResponse[BsasEntries] =
     ListBsasResponse(
@@ -137,7 +106,12 @@ class ListBsasControllerSpec
         )
       )
     )
-
+  private val correlationId = "X-123"
+  private val nino = "AA123456A"
+  private val taxYear = Some("2019-20")
+  private val typeOfBusiness = Some("uk-property-fhl")
+  private val businessId = Some("XAIS12345678901")
+  private val version = Version2
   private val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
   private val requestData =
     ListBsasRequest(Nino(nino), DownstreamTaxYear("2019"), Some("self-employment"), Some(TypeOfBusiness.`self-employment`.toIdentifierValue))
@@ -156,6 +130,30 @@ class ListBsasControllerSpec
         auditResponse = auditResponse
       )
     )
+
+  trait Test {
+    val hc: HeaderCarrier = HeaderCarrier()
+
+    val controller = new ListBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      auditService = mockAuditService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator,
+      currentDateProvider = mockCurrentDate
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+
+    val date: LocalDate = LocalDate.of(2019, 6, 18)
+    MockCurrentDate.getCurrentDate().returns(date).anyNumberOfTimes()
+  }
 
   "list bsas" should {
     "return successful response with status OK" when {
@@ -317,7 +315,7 @@ class ListBsasControllerSpec
       "the taxYear parameter is not provided (success)" in new Test {
 
         val desTaxYear: DownstreamTaxYear = DateUtils.getDownstreamTaxYear(mockCurrentDate.getCurrentDate())
-        val mtdTaxYear: String            = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
+        val mtdTaxYear: String = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
 
         MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
 
@@ -405,7 +403,7 @@ class ListBsasControllerSpec
       "the taxYear parameter is not provided (failure)" in new Test {
 
         val desTaxYear: DownstreamTaxYear = DateUtils.getDownstreamTaxYear(mockCurrentDate.getCurrentDate())
-        val mtdTaxYear: String            = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
+        val mtdTaxYear: String = DownstreamTaxYear.fromDownstream(desTaxYear.toString)
 
         MockListBsasRequestDataParser
           .parse(rawData.copy(taxYear = None))

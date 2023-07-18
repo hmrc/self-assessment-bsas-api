@@ -20,7 +20,7 @@ import api.models.errors._
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import api.controllers.EndpointLogContext
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures.{ foreignPropertyMetaDataModel, nonFhlBsasDetailModel }
+import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures.{foreignPropertyMetaDataModel, nonFhlBsasDetailModel}
 import v2.mocks.connectors.MockRetrieveForeignPropertyAdjustmentsConnector
 import v2.models.errors._
 import api.models.domain.Nino

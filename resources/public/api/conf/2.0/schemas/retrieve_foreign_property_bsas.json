@@ -4,7 +4,9 @@
   "description": "This endpoint allows the user to request the adjustments made to a specific UK Property Business Source Adjustable Summary by quoting it's identifier.",
   "type": "object",
   "properties": {
-    "metadata": {"$ref": "metadata_definitions.json#/definitions/foreignPropMetadata"},
+    "metadata": {
+      "$ref": "metadata_definitions.json#/definitions/foreignPropMetadata"
+    },
     "bsas": {
       "type": "object",
       "description": "Object holding the BSAS for either Foreign Property Furnished Holiday Let in the EEA business income source or for any other type Foreign Property.",
@@ -292,7 +294,8 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "submit-summary-adjustments"
+              "self",
+              "submit-summary-adjustments"
             ]
           },
           "method": {

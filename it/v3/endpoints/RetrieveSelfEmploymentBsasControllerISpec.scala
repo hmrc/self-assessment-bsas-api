@@ -17,11 +17,11 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
@@ -31,13 +31,8 @@ import v3.models.errors._
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino                    = "AA123456A"
-    val calculationId           = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
-    def taxYear: Option[String] = None
-
-    def uri: String = s"/$nino/self-employment/$calculationId"
-
-    def setupStubs(): Unit = ()
+    val nino = "AA123456A"
+    val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
     def request: WSRequest = {
       AuditStub.audit()
@@ -51,6 +46,12 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def taxYear: Option[String] = None
+
+    def uri: String = s"/$nino/self-employment/$calculationId"
+
+    def setupStubs(): Unit = ()
   }
 
   private trait NonTysTest extends Test {
@@ -96,9 +97,9 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       "valid request is made but downstream response has invalid type of business" in new NonTysTest {
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET,
-                                   downstreamUrl,
-                                   OK,
-                                   downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
+            downstreamUrl,
+            OK,
+            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
         }
 
         val response: WSResponse = await(request.get())
@@ -117,8 +118,9 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-          override val nino: String            = requestNino
-          override val calculationId: String   = requestBsasId
+          override val nino: String = requestNino
+          override val calculationId: String = requestBsasId
+
           override def taxYear: Option[String] = taxYearString
 
           override def setupStubs(): Unit = {}

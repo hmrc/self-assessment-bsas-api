@@ -25,6 +25,8 @@ class RetrieveAdjustmentsValidator extends Validator[RetrieveAdjustmentsRawData]
 
   private val validationSet = List(parameterFormatValidation)
 
+  override def validate(data: RetrieveAdjustmentsRawData): List[MtdError] = run(validationSet, data).distinct
+
   private def parameterFormatValidation: RetrieveAdjustmentsRawData => List[List[MtdError]] =
     (data: RetrieveAdjustmentsRawData) => {
       List(
@@ -32,6 +34,4 @@ class RetrieveAdjustmentsValidator extends Validator[RetrieveAdjustmentsRawData]
         BsasIdValidation.validate(data.bsasId)
       )
     }
-
-  override def validate(data: RetrieveAdjustmentsRawData): List[MtdError] = run(validationSet, data).distinct
 }

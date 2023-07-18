@@ -22,10 +22,10 @@ import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsa
 
 class RetrieveForeignPropertyValidatorSpec extends UnitSpec {
 
-  val validNino            = "AA123456A"
-  val validCalculationId   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val validTaxYear         = Some("2023-24")
-  val invalidNino          = "WALRUS"
+  val validNino = "AA123456A"
+  val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val validTaxYear = Some("2023-24")
+  val invalidNino = "WALRUS"
   val invalidCalculationId = "f2fb30e5-4ab6-4a29-b3c1-walrus"
 
   val validator = new RetrieveForeignPropertyValidator()

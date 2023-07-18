@@ -16,13 +16,14 @@
 
 package definition
 
-import play.api.libs.json.{ Format, Json, OFormat }
+import play.api.libs.json.{Format, Json, OFormat}
 import routing.Version
 import utils.enums.Enums
 
 sealed trait APIStatus
 
 object APIStatus {
+  val parser: PartialFunction[String, APIStatus] = Enums.parser[APIStatus]
 
   case object ALPHA extends APIStatus
 
@@ -32,11 +33,9 @@ object APIStatus {
 
   case object DEPRECATED extends APIStatus
 
-  case object RETIRED extends APIStatus
-
   implicit val formatAPIStatus: Format[APIStatus] = Enums.format[APIStatus]
 
-  val parser: PartialFunction[String, APIStatus] = Enums.parser[APIStatus]
+  case object RETIRED extends APIStatus
 }
 
 case class APIVersion(version: Version, status: APIStatus, endpointsEnabled: Boolean)

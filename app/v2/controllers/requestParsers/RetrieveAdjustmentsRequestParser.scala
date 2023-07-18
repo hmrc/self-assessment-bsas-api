@@ -19,12 +19,12 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveAdjustmentsValidator
-import v2.models.request.{ RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData }
+import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 
 import javax.inject.Inject
 
 class RetrieveAdjustmentsRequestParser @Inject()(val validator: RetrieveAdjustmentsValidator)
-    extends RequestParser[RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData] {
+  extends RequestParser[RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData] {
 
   override protected def requestFor(data: RetrieveAdjustmentsRawData): RetrieveAdjustmentsRequestData =
     RetrieveAdjustmentsRequestData(Nino(data.nino), data.bsasId)

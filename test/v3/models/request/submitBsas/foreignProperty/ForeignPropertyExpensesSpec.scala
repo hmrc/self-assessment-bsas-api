@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.json.{JsObject, Json}
 import support.UnitSpec
 
 class ForeignPropertyExpensesSpec extends UnitSpec {
@@ -38,7 +38,8 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "reads" when {
     "passed mtd json" should {
       "return the corresponding model" in {
-        Json.parse("""
+        Json.parse(
+          """
             |{
             |  "premisesRunningCosts": 1.12,
             |  "repairsAndMaintenance": 2.12,
@@ -64,7 +65,8 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "writes" when {
     "passed a model" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe Json.parse("""
+        Json.toJson(model) shouldBe Json.parse(
+          """
             |{
             |  "premisesRunningCosts": 1.12,
             |  "repairsAndMaintenance": 2.12,

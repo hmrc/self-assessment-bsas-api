@@ -16,35 +16,35 @@
 
 package v3.controllers.requestParsers
 
-import api.models.domain.{ Nino, TaxYear }
-import api.models.errors.{ BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError }
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import mocks.MockAppConfig
 import support.UnitSpec
 import v3.mocks.validators.MockListBsasValidator
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.{ ListBsasRawData, ListBsasRequest }
+import v3.models.request.{ListBsasRawData, ListBsasRequest}
 
 class ListBsasRequestParserSpec extends UnitSpec {
 
-  private val nino                  = "AA123456B"
-  private val taxYear               = "2019-20"
-  private val typeOfBusinessSE      = "self-employment"
-  private val typeOfBusinessNonFhl  = "uk-property-non-fhl"
-  private val typeOfBusinessFhl     = "uk-property-fhl"
-  private val typeOfBusinessFhlEea  = "foreign-property-fhl-eea"
+  private val nino = "AA123456B"
+  private val taxYear = "2019-20"
+  private val typeOfBusinessSE = "self-employment"
+  private val typeOfBusinessNonFhl = "uk-property-non-fhl"
+  private val typeOfBusinessFhl = "uk-property-fhl"
+  private val typeOfBusinessFhlEea = "foreign-property-fhl-eea"
   private val typeOfBusinessForeign = "foreign-property"
-  private val businessId            = "XAIS12345678901"
+  private val businessId = "XAIS12345678901"
 
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val inputWithBusinessIdAndTypeOfBusiness = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessSE), Some(businessId))
-  private val inputWithBusinessId                  = ListBsasRawData(nino, Some(taxYear), None, Some(businessId))
-  private val inputDataTwo                         = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessSE), None)
-  private val inputDataThree                       = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessNonFhl), None)
-  private val inputDataFour                        = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessFhl), None)
-  private val inputDataFive                        = ListBsasRawData(nino, Some(taxYear), None, None)
-  private val inputDataSix                         = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessFhlEea), None)
-  private val inputDataSeven                       = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessForeign), None)
+  private val inputWithBusinessId = ListBsasRawData(nino, Some(taxYear), None, Some(businessId))
+  private val inputDataTwo = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessSE), None)
+  private val inputDataThree = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessNonFhl), None)
+  private val inputDataFour = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessFhl), None)
+  private val inputDataFive = ListBsasRawData(nino, Some(taxYear), None, None)
+  private val inputDataSix = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessFhlEea), None)
+  private val inputDataSeven = ListBsasRawData(nino, Some(taxYear), Some(typeOfBusinessForeign), None)
 
   trait Test extends MockListBsasValidator with MockAppConfig {
     lazy val parser = new ListBsasRequestParser(mockListBsasValidator)

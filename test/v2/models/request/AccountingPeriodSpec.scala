@@ -21,21 +21,23 @@ import support.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
 
-  val requestJson: JsValue = Json.parse("""
+  val requestJson: JsValue = Json.parse(
+    """
       |{
       |  "startDate" : "2018-11-25",
       |  "endDate" : "2018-11-26"
       |}
   """.stripMargin)
 
-  val invalidJson: JsValue = Json.parse("""
+  val invalidJson: JsValue = Json.parse(
+    """
       |{
       |  "startDate" : 4,
       |  "endDate" : true
       |}
   """.stripMargin)
 
-  val model: AccountingPeriod = AccountingPeriod("2018-11-25","2018-11-26")
+  val model: AccountingPeriod = AccountingPeriod("2018-11-25", "2018-11-26")
 
   "AccountingPeriod" when {
     "read from valid JSON" should {

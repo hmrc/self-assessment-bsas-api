@@ -19,16 +19,16 @@ package api.controllers
 import api.hateoas._
 import api.models.request.RawData
 import cats.Functor
-import play.api.http.{ HttpEntity, Status }
-import play.api.libs.json.{ JsValue, Json, Writes }
-import play.api.mvc.{ ResponseHeader, Result, Results }
+import play.api.http.{HttpEntity, Status}
+import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.mvc.{ResponseHeader, Result, Results}
 
 case class ResultWrapper(httpStatus: Int, body: Option[JsValue]) {
 
   def asResult: Result = {
     body match {
       case Some(b) => Results.Status(httpStatus)(b)
-      case None    => Result(header = ResponseHeader(httpStatus), body = HttpEntity.NoEntity)
+      case None => Result(header = ResponseHeader(httpStatus), body = HttpEntity.NoEntity)
     }
   }
 
@@ -49,21 +49,21 @@ object ResultCreator {
     (_: InputRaw, input, output: Output) => ResultWrapper(successStatus, Some(Json.toJson(output)))
 
   def hateoasWrapping[InputRaw <: RawData, Input, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(
-      data: (Input, Output) => HData)(implicit
-                                      linksFactory: HateoasLinksFactory[Output, HData],
-                                      writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Input, Output] =
+    data: (Input, Output) => HData)(implicit
+                                    linksFactory: HateoasLinksFactory[Output, HData],
+                                    writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Input, Output] =
     (_: InputRaw, input: Input, output: Output) => {
       val wrapped = hateoasFactory.wrap(output, data(input, output))
 
       ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
     }
 
-  def hateoasListWrapping[InputRaw <: RawData, Input, Output[_]: Functor, I, HData <: HateoasData](
-      hateoasFactory: HateoasFactory,
-      successStatus: Int = Status.OK)(data: (Input, Output[I]) => HData)(
-      implicit
-      linksFactory: HateoasListLinksFactory[Output, I, HData],
-      writes: Writes[HateoasWrapper[Output[HateoasWrapper[I]]]]): ResultCreator[InputRaw, Input, Output[I]] =
+  def hateoasListWrapping[InputRaw <: RawData, Input, Output[_] : Functor, I, HData <: HateoasData](
+                                                                                                     hateoasFactory: HateoasFactory,
+                                                                                                     successStatus: Int = Status.OK)(data: (Input, Output[I]) => HData)(
+                                                                                                     implicit
+                                                                                                     linksFactory: HateoasListLinksFactory[Output, I, HData],
+                                                                                                     writes: Writes[HateoasWrapper[Output[HateoasWrapper[I]]]]): ResultCreator[InputRaw, Input, Output[I]] =
     (raw: InputRaw, input: Input, output: Output[I]) => {
       val wrapped = hateoasFactory.wrapList(output, data(input, output))
 

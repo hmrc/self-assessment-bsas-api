@@ -30,5 +30,5 @@ object AccountingPeriod {
   implicit val reads: Reads[AccountingPeriod] = (
     (JsPath \ "inputs" \ "accountingPeriodStartDate").read[LocalDate] and
       (JsPath \ "inputs" \ "accountingPeriodEndDate").read[LocalDate]
-  )(AccountingPeriod.apply _)
+    ) (AccountingPeriod.apply _)
 }

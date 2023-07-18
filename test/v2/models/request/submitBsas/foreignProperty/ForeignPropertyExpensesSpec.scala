@@ -64,8 +64,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
     Some(123.19),
     Some(123.20))
 
-  val emptyModel = ForeignPropertyExpenses(None,None,None,None,None,None,None,None,None)
-
+  val emptyModel = ForeignPropertyExpenses(None, None, None, None, None, None, None, None, None)
 
 
   "reads" when {
@@ -75,7 +74,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
       }
     }
   }
-  "reads from an empty JSON" when{
+  "reads from an empty JSON" when {
     "passed an empty JSON" should {
       "return an empty model" in {
         emptyJson.as[ForeignPropertyExpenses] shouldBe emptyModel

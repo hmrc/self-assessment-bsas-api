@@ -24,7 +24,7 @@ import v3.connectors.RetrieveUkPropertyBsasConnector
 import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveUkPropertyBsasConnector extends MockFactory {
 
@@ -33,7 +33,7 @@ trait MockRetrieveUkPropertyBsasConnector extends MockFactory {
   object MockRetrievePropertyBsasConnector {
 
     def retrievePropertyBsas(
-        requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
+                              requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
       (mockConnector
         .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

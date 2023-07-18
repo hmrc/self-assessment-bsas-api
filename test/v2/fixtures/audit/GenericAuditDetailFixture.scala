@@ -16,9 +16,9 @@
 
 package v2.fixtures.audit
 
+import api.models.audit.GenericAuditDetail
 import play.api.libs.json.{JsValue, Json}
 import v2.fixtures.audit.AuditResponseFixture._
-import api.models.audit.GenericAuditDetail
 
 object GenericAuditDetailFixture {
 

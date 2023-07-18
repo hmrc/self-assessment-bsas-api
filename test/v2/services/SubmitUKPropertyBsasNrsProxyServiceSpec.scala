@@ -25,11 +25,11 @@ import scala.concurrent.Future
 
 class SubmitUKPropertyBsasNrsProxyServiceSpec extends ServiceSpec {
 
+  private val nino = Nino("AA123456A")
+
   trait Test extends MockSubmitUKPropertyBsasNrsproxyConnector {
     lazy val service = new SubmitUKPropertyBsasNrsProxyService(mockNrsProxyConnector)
   }
-
-  private val nino = Nino("AA123456A")
 
   "NrsProxyService" should {
     "call the Nrs Proxy connector" when {

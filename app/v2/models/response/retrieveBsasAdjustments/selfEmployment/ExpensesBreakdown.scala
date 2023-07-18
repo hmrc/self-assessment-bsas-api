@@ -21,23 +21,23 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.NestedJsonReads
 
 case class ExpensesBreakdown(
-    costOfGoodsBought: Option[BigDecimal],
-    cisPaymentsToSubcontractors: Option[BigDecimal],
-    staffCosts: Option[BigDecimal],
-    travelCosts: Option[BigDecimal],
-    premisesRunningCosts: Option[BigDecimal],
-    maintenanceCosts: Option[BigDecimal],
-    adminCosts: Option[BigDecimal],
-    advertisingCosts: Option[BigDecimal],
-    businessEntertainmentCosts: Option[BigDecimal],
-    interest: Option[BigDecimal],
-    financialCharges: Option[BigDecimal],
-    badDebt: Option[BigDecimal],
-    professionalFees: Option[BigDecimal],
-    depreciation: Option[BigDecimal],
-    other: Option[BigDecimal],
-    consolidatedExpenses: Option[BigDecimal]
-)
+                              costOfGoodsBought: Option[BigDecimal],
+                              cisPaymentsToSubcontractors: Option[BigDecimal],
+                              staffCosts: Option[BigDecimal],
+                              travelCosts: Option[BigDecimal],
+                              premisesRunningCosts: Option[BigDecimal],
+                              maintenanceCosts: Option[BigDecimal],
+                              adminCosts: Option[BigDecimal],
+                              advertisingCosts: Option[BigDecimal],
+                              businessEntertainmentCosts: Option[BigDecimal],
+                              interest: Option[BigDecimal],
+                              financialCharges: Option[BigDecimal],
+                              badDebt: Option[BigDecimal],
+                              professionalFees: Option[BigDecimal],
+                              depreciation: Option[BigDecimal],
+                              other: Option[BigDecimal],
+                              consolidatedExpenses: Option[BigDecimal]
+                            )
 
 object ExpensesBreakdown extends NestedJsonReads {
 
@@ -58,7 +58,7 @@ object ExpensesBreakdown extends NestedJsonReads {
       (JsPath \ "depreciationAllowable").readNullable[BigDecimal] and
       (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-  )(ExpensesBreakdown.apply _)
+    ) (ExpensesBreakdown.apply _)
 
   implicit val writes: OWrites[ExpensesBreakdown] = Json.writes[ExpensesBreakdown]
 }

@@ -20,21 +20,21 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class SummaryCalculationDeductions(
-    tradingAllowance: Option[BigDecimal],
-    annualInvestmentAllowance: Option[BigDecimal],
-    capitalAllowanceMainPool: Option[BigDecimal],
-    capitalAllowanceSpecialRatePool: Option[BigDecimal],
-    zeroEmissionGoods: Option[BigDecimal],
-    businessPremisesRenovationAllowance: Option[BigDecimal],
-    enhancedCapitalAllowance: Option[BigDecimal],
-    allowanceOnSales: Option[BigDecimal],
-    capitalAllowanceSingleAssetPool: Option[BigDecimal],
-    includedNonTaxableProfits: Option[BigDecimal],
-    electricChargePointAllowance: Option[BigDecimal],
-    structuredBuildingAllowance: Option[BigDecimal],
-    enhancedStructuredBuildingAllowance: Option[BigDecimal],
-    zeroEmissionsCarAllowance: Option[BigDecimal],
-)
+                                         tradingAllowance: Option[BigDecimal],
+                                         annualInvestmentAllowance: Option[BigDecimal],
+                                         capitalAllowanceMainPool: Option[BigDecimal],
+                                         capitalAllowanceSpecialRatePool: Option[BigDecimal],
+                                         zeroEmissionGoods: Option[BigDecimal],
+                                         businessPremisesRenovationAllowance: Option[BigDecimal],
+                                         enhancedCapitalAllowance: Option[BigDecimal],
+                                         allowanceOnSales: Option[BigDecimal],
+                                         capitalAllowanceSingleAssetPool: Option[BigDecimal],
+                                         includedNonTaxableProfits: Option[BigDecimal],
+                                         electricChargePointAllowance: Option[BigDecimal],
+                                         structuredBuildingAllowance: Option[BigDecimal],
+                                         enhancedStructuredBuildingAllowance: Option[BigDecimal],
+                                         zeroEmissionsCarAllowance: Option[BigDecimal],
+                                       )
 
 object SummaryCalculationDeductions {
   implicit val reads: Reads[SummaryCalculationDeductions] = (
@@ -52,7 +52,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "structuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "enhancedStructuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-  )(SummaryCalculationDeductions.apply _)
+    ) (SummaryCalculationDeductions.apply _)
 
   implicit val writes: OWrites[SummaryCalculationDeductions] = Json.writes[SummaryCalculationDeductions]
 }

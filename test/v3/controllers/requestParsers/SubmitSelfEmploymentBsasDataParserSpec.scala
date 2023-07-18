@@ -26,8 +26,8 @@ import v3.models.request.submitBsas.selfEmployment.{Income, SubmitSelfEmployment
 
 class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
 
-  val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino                           = "AA123456A"
+  val calculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val invalidIncomeWithZeroValue: Income =
@@ -49,11 +49,6 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
     )
 
   val invalidCalculationId = "a54ba782-5ef4-/(0)*f4-ab72-4954066%%%%%%%%%%"
-
-  trait Test extends MockSubmitSelfEmploymentBsasValidator {
-    lazy val parser = new SubmitSelfEmploymentBsasDataParser(mockValidator)
-  }
-
   val inputData: SubmitSelfEmploymentBsasRawData = SubmitSelfEmploymentBsasRawData(
     nino,
     calculationId,
@@ -61,6 +56,10 @@ class SubmitSelfEmploymentBsasDataParserSpec extends UnitSpec {
     AnyContentAsJson(
       submitSelfEmploymentBsasRequestBodyMtdJson(submitSelfEmploymentBsasRequestBodyModel.copy(income = Some(invalidIncomeWithZeroValue))))
   )
+
+  trait Test extends MockSubmitSelfEmploymentBsasValidator {
+    lazy val parser = new SubmitSelfEmploymentBsasDataParser(mockValidator)
+  }
 
   "parser" should {
 

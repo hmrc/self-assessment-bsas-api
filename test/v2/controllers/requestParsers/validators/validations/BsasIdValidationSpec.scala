@@ -16,8 +16,8 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.BsasIdFormatError
+import support.UnitSpec
 import v2.models.utils.JsonErrorValidators
 
 class BsasIdValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -26,14 +26,14 @@ class BsasIdValidationSpec extends UnitSpec with JsonErrorValidators {
 
   "validate" should {
     "return no errors" when {
-      "a valid BSASId is supplied" in new SetUp("a54ba782-5ef4-47f4-ab72-495406665ca9"){
+      "a valid BSASId is supplied" in new SetUp("a54ba782-5ef4-47f4-ab72-495406665ca9") {
 
         BsasIdValidation.validate(bsasId).isEmpty shouldBe true
       }
     }
 
     "return an error" when {
-      "a invalid BSASId is supplied" in new SetUp("a54ba782-5ef4-47f4-ab72-zxasxawdsaw"){
+      "a invalid BSASId is supplied" in new SetUp("a54ba782-5ef4-47f4-ab72-zxasxawdsaw") {
 
         val validationResult = BsasIdValidation.validate(bsasId)
 

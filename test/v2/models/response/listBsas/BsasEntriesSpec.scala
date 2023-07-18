@@ -17,7 +17,7 @@
 package v2.models.response.listBsas
 
 import api.models.domain.Status
-import play.api.libs.json.{ JsSuccess, Json }
+import play.api.libs.json.{JsSuccess, Json}
 import support.UnitSpec
 import v2.fixtures.ListBsasFixtures._
 

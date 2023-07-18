@@ -16,8 +16,8 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.Method.{ GET, POST }
-import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
@@ -659,8 +659,8 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val bsasId         = "anId"
+      val nino = "someNino"
+      val bsasId = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
     }
 

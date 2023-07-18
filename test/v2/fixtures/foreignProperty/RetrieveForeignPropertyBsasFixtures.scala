@@ -16,17 +16,14 @@
 
 package v2.fixtures.foreignProperty
 
-import java.time.LocalDate
-
 import play.api.libs.json.{JsValue, Json}
 import v2.models.domain.TypeOfBusiness
-import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
 import v2.models.response.retrieveBsas.foreignProperty._
+import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
+
+import java.time.LocalDate
 
 object RetrieveForeignPropertyBsasFixtures {
-
-  private val now = "2020-04-06"
-  private val aYearFromNow = "2021-04-05"
 
   val mtdRetrieveBsasResponseJson: Boolean => JsValue = adjustedSummary =>
     Json.parse(
@@ -35,7 +32,6 @@ object RetrieveForeignPropertyBsasFixtures {
          |  "bsas": $mtdBsasDetailJson
          |}""".stripMargin
     )
-
   val mtdMetadataJson: Boolean => JsValue = adjustedSummary =>
     Json.parse(
       s"""{
@@ -51,7 +47,6 @@ object RetrieveForeignPropertyBsasFixtures {
          |  "adjustedSummary": $adjustedSummary
          |}""".stripMargin
     )
-
   val mtdBsasDetailJson: JsValue = Json.parse(
     s"""{
        |  "total": {
@@ -113,16 +108,14 @@ object RetrieveForeignPropertyBsasFixtures {
        |  ]
        |}""".stripMargin
   )
-
-  val totalBsasModel = TotalBsas(Some(100.49),Some(100.49),Some(100.49),Some(100.49))
-  val profitModel = Profit(Some(100.49),Some(100))
-  val lossModel = Loss(Some(100.49),Some(100))
-  val incomeBreakdownModel = IncomeBreakdown(Some(100.49),Some(100.49),Some(100.49))
-  val expensesBreakdownModel = ExpensesBreakdown(Some(100.49),Some(100.49),Some(100.49), Some(100.49),
-    Some(100.49),Some(100.49),Some(100.49), Some(100.49), Some(100.49),None)
+  val totalBsasModel = TotalBsas(Some(100.49), Some(100.49), Some(100.49), Some(100.49))
+  val profitModel = Profit(Some(100.49), Some(100))
+  val lossModel = Loss(Some(100.49), Some(100))
+  val incomeBreakdownModel = IncomeBreakdown(Some(100.49), Some(100.49), Some(100.49))
+  val expensesBreakdownModel = ExpensesBreakdown(Some(100.49), Some(100.49), Some(100.49), Some(100.49),
+    Some(100.49), Some(100.49), Some(100.49), Some(100.49), Some(100.49), None)
   val countryLevelDetail = CountryLevelDetail("FRA", totalBsasModel, Some(incomeBreakdownModel), Some(expensesBreakdownModel))
   val accountingPeriodModel = AccountingPeriod(LocalDate.parse("2020-04-06"), LocalDate.parse("2021-04-05"))
-
   val metadataModel = Metadata(typeOfBusiness = TypeOfBusiness.`foreign-property`,
     accountingPeriod = accountingPeriodModel,
     taxYear = "2020-21",
@@ -131,36 +124,32 @@ object RetrieveForeignPropertyBsasFixtures {
     summaryStatus = "valid",
     adjustedSummary = true
   )
-
   val bsasDetailModel = BsasDetail(total = totalBsasModel,
     profit = Some(profitModel),
     loss = Some(lossModel),
     incomeBreakdown = Some(incomeBreakdownModel),
     expensesBreakdown = Some(expensesBreakdownModel),
     countryLevelDetail = Some(Seq(countryLevelDetail)))
-
   val retrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(metadataModel, Some(bsasDetailModel))
-
   val hateoasResponseForeignProperty = (nino: String, bsasId: String) =>
     s"""
-      |{
-      |  "metadata": ${mtdMetadataJson(true)},
-      |  "bsas": $mtdBsasDetailJson,
-      |   "links":[
-      |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
-      |      "method":"GET",
-      |      "rel":"self"
-      |    },
-      |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
-      |      "method":"POST",
-      |      "rel":"submit-summary-adjustments"
-      |    }
-      |  ]
-      |}
+       |{
+       |  "metadata": ${mtdMetadataJson(true)},
+       |  "bsas": $mtdBsasDetailJson,
+       |   "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId",
+       |      "method":"GET",
+       |      "rel":"self"
+       |    },
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+       |      "method":"POST",
+       |      "rel":"submit-summary-adjustments"
+       |    }
+       |  ]
+       |}
     """.stripMargin
-
   val desRetrieveBsasResponse: JsValue = Json.parse(
     s"""{
        |    "inputs": {
@@ -259,7 +248,6 @@ object RetrieveForeignPropertyBsasFixtures {
        |     }
        |}""".stripMargin
   )
-
   val desRetrieveBsasResponseWithInvalidTypeOfBusiness: JsValue = Json.parse(
     s"""{
        |    "inputs": {
@@ -358,4 +346,6 @@ object RetrieveForeignPropertyBsasFixtures {
        |    }
        |}""".stripMargin
   )
+  private val now = "2020-04-06"
+  private val aYearFromNow = "2021-04-05"
 }

@@ -16,12 +16,13 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class FhlEeaExpensesSpec extends UnitSpec {
 
-  val json: JsValue = Json.parse("""
+  val json: JsValue = Json.parse(
+    """
       |{
       |  "premisesRunningCosts": 1.12,
       |  "repairsAndMaintenance": 2.12,

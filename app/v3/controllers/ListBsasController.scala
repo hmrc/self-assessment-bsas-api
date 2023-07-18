@@ -18,16 +18,16 @@ package v3.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils._
 import v3.controllers.requestParsers.ListBsasRequestParser
 import v3.models.request.ListBsasRawData
 import v3.models.response.listBsas.ListBsasHateoasData
 import v3.services.ListBsasService
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -38,7 +38,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    hateoasFactory: HateoasFactory,
                                    cc: ControllerComponents,
                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
+  extends AuthorisedController(cc)
     with V3Controller
     with Logging {
 

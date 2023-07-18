@@ -27,20 +27,23 @@ class EmptinessCheckerSpec extends UnitSpec {
 
   sealed trait SomeEnum
 
-  object SomeEnum {
-    case object E1 extends SomeEnum
-    case object E2 extends SomeEnum
-
-    implicit val ckr: EmptinessChecker[SomeEnum] = EmptinessChecker.primitive
-  }
-
   case class Baz(a: Option[Int] = None, e: Option[SomeEnum] = None)
+
   case class Bar(baz: Option[Baz] = None, arr: Option[List[Bar]] = None)
+
   case class Foo(bar: Option[Bar] = None,
                  arr1: Option[List[Bar]] = None,
                  arr2: Option[List[Bar]] = None,
                  arr3: Option[List[Bar]] = None,
                  bar2: Option[Bar] = None)
+
+  object SomeEnum {
+    case object E1 extends SomeEnum
+
+    case object E2 extends SomeEnum
+
+    implicit val ckr: EmptinessChecker[SomeEnum] = EmptinessChecker.primitive
+  }
 
   "EmptinessChecker" when {
     "empty object" must {
@@ -90,10 +93,10 @@ class EmptinessCheckerSpec extends UnitSpec {
     "has multiple empty objects" must {
       "return an error with the paths for all of them" in {
         EmptinessChecker.findEmptyPaths(Foo(bar = Some(Bar(Some(Baz()))),
-                                            arr1 = Some(Nil),
-                                            arr2 = Some(List(Bar())),
-                                            arr3 = Some(List(Bar(Some(Baz())))),
-                                            bar2 = Some(Bar()))) shouldBe
+          arr1 = Some(Nil),
+          arr2 = Some(List(Bar())),
+          arr3 = Some(List(Bar(Some(Baz())))),
+          bar2 = Some(Bar()))) shouldBe
           EmptyPaths(List("/bar/baz", "/arr1", "/arr2/0", "/arr3/0/baz", "/bar2"))
       }
     }

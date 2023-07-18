@@ -24,16 +24,6 @@ import v3.hateoas.RelType._
 
 trait HateoasLinks {
 
-  private def withTaxYearParameter(uri: String, maybeTaxYear: Option[TaxYear]): String = {
-    maybeTaxYear match {
-      case Some(taxYear) if taxYear.useTaxYearSpecificApi => s"$uri?taxYear=${taxYear.asMtd}"
-      case _                                              => uri
-    }
-  }
-
-  private def bsasBasUri(appConfig: AppConfig, nino: String) =
-    s"/${appConfig.apiGatewayContext}/$nino"
-
   //API resource links
   //L1
   def triggerBsas(appConfig: AppConfig, nino: String): Link =
@@ -50,6 +40,16 @@ trait HateoasLinks {
     val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/uk-property/$calcId", taxYear)
     Link(href = href, method = GET, rel = SELF)
   }
+
+  private def withTaxYearParameter(uri: String, maybeTaxYear: Option[TaxYear]): String = {
+    maybeTaxYear match {
+      case Some(taxYear) if taxYear.useTaxYearSpecificApi => s"$uri?taxYear=${taxYear.asMtd}"
+      case _ => uri
+    }
+  }
+
+  private def bsasBasUri(appConfig: AppConfig, nino: String) =
+    s"/${appConfig.apiGatewayContext}/$nino"
 
   //L4
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {

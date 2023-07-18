@@ -18,8 +18,8 @@ package v2.models.response.retrieveBsasAdjustments.foreignProperty
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.models.utils.JsonErrorValidators
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
+import v2.models.utils.JsonErrorValidators
 
 class IncomeBreakdownSpec extends UnitSpec with JsonErrorValidators {
 

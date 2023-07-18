@@ -30,16 +30,16 @@ object TriggerBsasRequestBody {
     val typeOfBusiness = TypeOfBusiness.parser(requestBody.typeOfBusiness)
     if (typeOfBusiness.toIdentifierValue == "04" || typeOfBusiness.toIdentifierValue == "02") {
       Json.obj(
-        "incomeSourceType"          -> typeOfBusiness.toIdentifierValue,
+        "incomeSourceType" -> typeOfBusiness.toIdentifierValue,
         "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
-        "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate
+        "accountingPeriodEndDate" -> requestBody.accountingPeriod.endDate
       )
     } else {
       Json.obj(
-        "incomeSourceType"          -> typeOfBusiness.toIdentifierValue,
-        "incomeSourceId"            -> requestBody.businessId,
+        "incomeSourceType" -> typeOfBusiness.toIdentifierValue,
+        "incomeSourceId" -> requestBody.businessId,
         "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
-        "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate
+        "accountingPeriodEndDate" -> requestBody.accountingPeriod.endDate
       )
     }
   }

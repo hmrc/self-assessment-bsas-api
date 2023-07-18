@@ -20,15 +20,15 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class SummaryCalculationIncome(
-    turnover: Option[BigDecimal],
-    other: Option[BigDecimal]
-)
+                                     turnover: Option[BigDecimal],
+                                     other: Option[BigDecimal]
+                                   )
 
 object SummaryCalculationIncome {
   implicit val reads: Reads[SummaryCalculationIncome] = (
     (JsPath \ "turnover").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal]
-  )(SummaryCalculationIncome.apply _)
+    ) (SummaryCalculationIncome.apply _)
 
   implicit val writes: OWrites[SummaryCalculationIncome] = Json.writes[SummaryCalculationIncome]
 }

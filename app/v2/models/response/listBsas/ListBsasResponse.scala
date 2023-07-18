@@ -50,7 +50,7 @@ object ListBsasResponse extends HateoasLinks {
                   Seq(getUkPropertyBsas(appConfig, data.nino, item.bsasId))
                 case TypeOfBusiness.`foreign-property` | TypeOfBusiness.`foreign-property-fhl-eea` =>
                   Seq(getForeignPropertyBsas(appConfig, data.nino, item.bsasId))
-            }))
+              }))
     }
   }
 

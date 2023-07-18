@@ -16,12 +16,12 @@
 
 package v2.fixtures.selfEmployment
 
-import java.time.LocalDate
-
 import play.api.libs.json.{JsValue, Json}
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.AccountingPeriod
 import v2.models.response.retrieveBsasAdjustments.selfEmployment._
+
+import java.time.LocalDate
 
 object RetrieveSelfEmploymentAdjustmentsFixtures {
 

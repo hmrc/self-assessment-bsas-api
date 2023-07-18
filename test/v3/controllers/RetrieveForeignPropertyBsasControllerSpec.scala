@@ -16,30 +16,30 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import routing.Version3
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.requestParsers.MockRetrieveForeignPropertyRequestParser
 import v3.mocks.services.MockRetrieveForeignPropertyBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData }
+import v3.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData}
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -53,14 +53,15 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   private val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear = None)
+  private val request = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear = None)
   private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId, taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
 
   private val hateoasResponse = retrieveForeignPropertyBsasMtdNonFhlJson
-    .as[JsObject] ++ Json.parse("""{
+    .as[JsObject] ++ Json.parse(
+    """{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
       |""".stripMargin).as[JsObject]

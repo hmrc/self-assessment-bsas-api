@@ -37,7 +37,7 @@ object Version {
       version.validate[String].flatMap {
         case Version2.name => JsSuccess(Version2)
         case Version3.name => JsSuccess(Version3)
-        case _             => JsError("Unrecognised version")
+        case _ => JsError("Unrecognised version")
       }
   }
 
@@ -53,12 +53,12 @@ sealed trait Version {
 }
 
 case object Version2 extends Version {
-  val name       = "2.0"
+  val name = "2.0"
   val configName = "2"
 }
 
 case object Version3 extends Version {
-  val name       = "3.0"
+  val name = "3.0"
   val configName = "3"
 }
 
@@ -89,5 +89,7 @@ object Versions {
 }
 
 sealed trait GetFromRequestError
-case object InvalidHeader   extends GetFromRequestError
+
+case object InvalidHeader extends GetFromRequestError
+
 case object VersionNotFound extends GetFromRequestError

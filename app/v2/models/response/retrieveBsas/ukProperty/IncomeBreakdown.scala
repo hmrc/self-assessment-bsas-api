@@ -33,7 +33,7 @@ object IncomeBreakdown {
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
-  )(IncomeBreakdown.apply _)
+    ) (IncomeBreakdown.apply _)
 
   val fhlReads: Reads[IncomeBreakdown] = (
     (JsPath \ "rentReceived").readNullable[BigDecimal] and
@@ -41,7 +41,7 @@ object IncomeBreakdown {
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal] and
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
-  )(IncomeBreakdown.apply _)
+    ) (IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }

@@ -20,17 +20,17 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class SummaryCalculationExpenses(
-    consolidatedExpenses: Option[BigDecimal],
-    premisesRunningCosts: Option[BigDecimal],
-    repairsAndMaintenance: Option[BigDecimal],
-    financialCosts: Option[BigDecimal],
-    professionalFees: Option[BigDecimal],
-    costOfServices: Option[BigDecimal],
-    residentialFinancialCost: Option[BigDecimal],
-    broughtFwdResidentialFinancialCost: Option[BigDecimal],
-    other: Option[BigDecimal],
-    travelCosts: Option[BigDecimal],
-)
+                                       consolidatedExpenses: Option[BigDecimal],
+                                       premisesRunningCosts: Option[BigDecimal],
+                                       repairsAndMaintenance: Option[BigDecimal],
+                                       financialCosts: Option[BigDecimal],
+                                       professionalFees: Option[BigDecimal],
+                                       costOfServices: Option[BigDecimal],
+                                       residentialFinancialCost: Option[BigDecimal],
+                                       broughtFwdResidentialFinancialCost: Option[BigDecimal],
+                                       other: Option[BigDecimal],
+                                       travelCosts: Option[BigDecimal],
+                                     )
 
 object SummaryCalculationExpenses {
 
@@ -45,7 +45,7 @@ object SummaryCalculationExpenses {
       Reads.pure(None) and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "travelCosts").readNullable[BigDecimal]
-  )(SummaryCalculationExpenses.apply _)
+    ) (SummaryCalculationExpenses.apply _)
 
   val readsNonFhl: Reads[SummaryCalculationExpenses] = (
     (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
@@ -58,7 +58,7 @@ object SummaryCalculationExpenses {
       (JsPath \ "broughtFwdResidentialFinancialCost").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "travelCosts").readNullable[BigDecimal]
-  )(SummaryCalculationExpenses.apply _)
+    ) (SummaryCalculationExpenses.apply _)
 
   implicit val writes: OWrites[SummaryCalculationExpenses] = Json.writes[SummaryCalculationExpenses]
 }

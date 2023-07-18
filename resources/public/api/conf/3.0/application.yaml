@@ -3,7 +3,7 @@ openapi: "3.0.3"
 info:
   version: "3.0"
   title: Business Source Adjustable Summary (MTD)
-  description: | 
+  description: |
     Retrieve an adjustable summary calculation for a specified self-employment or property business, for a given
     accounting period.
     

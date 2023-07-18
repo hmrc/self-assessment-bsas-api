@@ -23,19 +23,18 @@ import v3.mocks.validators.MockRetrieveSelfEmploymentValidator
 import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 
 class RetrieveSelfEmploymentRequestParserSpec extends UnitSpec {
+  val nino = "AA123456A"
+  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+  def inputDataWith(taxYear: Option[String]): RetrieveSelfEmploymentBsasRawData =
+    RetrieveSelfEmploymentBsasRawData(nino, calculationId, taxYear)
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockRetrieveSelfEmploymentValidator {
     lazy val parser = new RetrieveSelfEmploymentRequestParser(mockValidator)
   }
 
-  val nino = "AA123456A"
-  val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  def inputDataWith(taxYear: Option[String]): RetrieveSelfEmploymentBsasRawData =
-    RetrieveSelfEmploymentBsasRawData(nino, calculationId, taxYear)
-
-    "parser" should {
+  "parser" should {
     "return a valid request object" when {
       "passed a valid raw data object" in new Test {
         val inputData: RetrieveSelfEmploymentBsasRawData = inputDataWith(None)

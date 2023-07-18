@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import api.models.request.RawData
 import play.api.libs.json.JsValue
 

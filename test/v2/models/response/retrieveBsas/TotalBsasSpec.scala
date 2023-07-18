@@ -18,10 +18,10 @@ package v2.models.response.retrieveBsas
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.models.utils.JsonErrorValidators
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v2.models.utils.JsonErrorValidators
 
-class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
+class TotalBsasSpec extends UnitSpec with JsonErrorValidators {
 
   val mtdJson = Json.parse(
     """{
@@ -55,7 +55,7 @@ class TotalBsasSpec extends UnitSpec with JsonErrorValidators{
       |  "totalDeductions": 100.49
       |}""".stripMargin)
 
-  val totalBsasModelWithNegativeValues = TotalBsas(Some(100.49),Some(-100.49),Some(-100.49),Some(100.49))
+  val totalBsasModelWithNegativeValues = TotalBsas(Some(100.49), Some(-100.49), Some(-100.49), Some(100.49))
 
   "reads" should {
     "return a valid model" when {

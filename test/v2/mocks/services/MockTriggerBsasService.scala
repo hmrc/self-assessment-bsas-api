@@ -25,7 +25,7 @@ import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 import v2.services.TriggerBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockTriggerBsasService extends MockFactory {
 

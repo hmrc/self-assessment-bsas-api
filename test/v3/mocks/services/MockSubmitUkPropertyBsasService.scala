@@ -24,7 +24,7 @@ import org.scalamock.scalatest.MockFactory
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v3.services.SubmitUkPropertyBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitUkPropertyBsasService extends MockFactory {
 

@@ -26,7 +26,9 @@ object DateUtils {
   def getDownstreamTaxYear(current: LocalDate): DownstreamTaxYear = {
     val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
 
-    if (current.isAfter(fiscalYearStartDate)) { DownstreamTaxYear((current.getYear + 1).toString) } else {
+    if (current.isAfter(fiscalYearStartDate)) {
+      DownstreamTaxYear((current.getYear + 1).toString)
+    } else {
       DownstreamTaxYear(current.getYear.toString)
     }
   }
@@ -34,6 +36,10 @@ object DateUtils {
   def getTaxYear(current: LocalDate): TaxYear = {
     val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
 
-    if (current.isAfter(fiscalYearStartDate)) { TaxYear((current.getYear + 1).toString) } else { TaxYear(current.getYear.toString) }
+    if (current.isAfter(fiscalYearStartDate)) {
+      TaxYear((current.getYear + 1).toString)
+    } else {
+      TaxYear(current.getYear.toString)
+    }
   }
 }

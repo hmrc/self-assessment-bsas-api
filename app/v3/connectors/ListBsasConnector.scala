@@ -16,16 +16,16 @@
 
 package v3.connectors
 
-import api.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
-import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
-import config.AppConfig
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
-import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.models.request.ListBsasRequest
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -37,7 +37,7 @@ class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig
     import request._
 
     val queryParams = Map(
-      "incomeSourceId"   -> incomeSourceId,
+      "incomeSourceId" -> incomeSourceId,
       "incomeSourceType" -> incomeSourceType
     )
 

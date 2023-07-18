@@ -22,7 +22,7 @@ import api.stubs._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
@@ -86,8 +86,8 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String            = requestNino
-            override val calculationId: String   = requestCalculationId
+            override val nino: String = requestNino
+            override val calculationId: String = requestCalculationId
             override val taxYear: Option[String] = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
@@ -103,34 +103,34 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
           ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), requestBodyJson, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-24"), requestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A",
-           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-           None,
-           requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
-           BAD_REQUEST,
-           RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))),
+            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            None,
+            requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
+            BAD_REQUEST,
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))),
           ("AA123456A",
-           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-           None,
-           requestBodyJson.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
-           BAD_REQUEST,
-           RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))),
+            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            None,
+            requestBodyJson.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
+            BAD_REQUEST,
+            RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))),
           ("AA123456A",
-           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-           None,
-           requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
-           BAD_REQUEST,
-           RuleBothPropertiesSuppliedError),
+            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            None,
+            requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
+            BAD_REQUEST,
+            RuleBothPropertiesSuppliedError),
           ("AA123456A",
-           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-           None,
-           requestBodyJson
-             .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
-             .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
-           BAD_REQUEST,
-           ValueFormatError.copy(
-             message = "The value must be between -99999999999.99 and 99999999999.99",
-             paths = Some(Seq("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))
-           ))
+            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            None,
+            requestBodyJson
+              .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
+              .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
+            BAD_REQUEST,
+            ValueFormatError.copy(
+              message = "The value must be between -99999999999.99 and 99999999999.99",
+              paths = Some(Seq("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))
+            ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -185,12 +185,9 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
   private trait Test {
 
-    val nino: String            = "AA123456A"
-    val calculationId: String   = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
-    def taxYear: Option[String] = None
-
+    val nino: String = "AA123456A"
+    val calculationId: String = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
-
     val nrsSuccess: JsValue = Json.parse(
       s"""
          |{
@@ -201,7 +198,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
          """.stripMargin
     )
 
-    def setupStubs(): Unit = ()
     def downstreamUri: String
 
     def stubDownstreamSuccess(): Unit = {
@@ -225,6 +221,10 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
           (AUTHORIZATION, "Bearer 123")
         )
     }
+
+    def taxYear: Option[String] = None
+
+    def setupStubs(): Unit = ()
 
     def errorBody(code: String): String =
       s"""

@@ -24,7 +24,7 @@ import v2.connectors.RetrieveForeignPropertyAdjustmentsConnector
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveForeignPropertyAdjustmentsConnector extends MockFactory {
 
@@ -33,7 +33,7 @@ trait MockRetrieveForeignPropertyAdjustmentsConnector extends MockFactory {
   object MockRetrieveForeignPropertyAdjustmentsConnector {
 
     def retrieveForeignPropertyAdjustments(
-        requestData: RetrieveAdjustmentsRequestData): CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
+                                            requestData: RetrieveAdjustmentsRequestData): CallHandler[Future[DownstreamOutcome[RetrieveForeignPropertyAdjustmentsResponse]]] = {
       (mockConnector
         .retrieveForeignPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

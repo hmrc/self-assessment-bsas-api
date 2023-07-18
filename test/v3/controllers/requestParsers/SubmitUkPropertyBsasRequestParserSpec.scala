@@ -25,14 +25,18 @@ import v3.models.request.submitBsas.ukProperty._
 
 class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
-  val calculationId                  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino                           = "AA123456A"
+  val calculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
+  val requestBody: SubmitUKPropertyBsasRequestBody =
+    SubmitUKPropertyBsasRequestBody(
+      nonFurnishedHolidayLet = Some(NonFurnishedHolidayLet(Some(NonFHLIncome(Some(123.12), None, None, None)), None)),
+      furnishedHolidayLet = None
+    )
   private val requestBodyJson = Json.parse(
     """
       |{
-      |  "nonFurnishedHolidayLet": {    
+      |  "nonFurnishedHolidayLet": {
       |    "income": {
       |      "totalRentsReceived": 123.12
       |    }
@@ -40,12 +44,6 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
-  val requestBody: SubmitUKPropertyBsasRequestBody =
-    SubmitUKPropertyBsasRequestBody(
-      nonFurnishedHolidayLet = Some(NonFurnishedHolidayLet(Some(NonFHLIncome(Some(123.12), None, None, None)), None)),
-      furnishedHolidayLet = None
-    )
 
   def inputDataWith(taxYear: Option[String]): SubmitUkPropertyBsasRawData = SubmitUkPropertyBsasRawData(
     nino,

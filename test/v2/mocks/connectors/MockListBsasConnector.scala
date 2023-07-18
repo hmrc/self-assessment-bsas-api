@@ -22,9 +22,9 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.ListBsasConnector
 import v2.models.request.ListBsasRequest
-import v2.models.response.listBsas.{ BsasEntries, ListBsasResponse }
+import v2.models.response.listBsas.{BsasEntries, ListBsasResponse}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockListBsasConnector extends MockFactory {
 

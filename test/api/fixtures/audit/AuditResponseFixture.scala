@@ -16,14 +16,14 @@
 
 package api.fixtures.audit
 
-import api.models.audit.{ AuditError, AuditResponse }
-import play.api.http.Status.{ BAD_REQUEST, OK }
-import play.api.libs.json.{ JsValue, Json }
+import api.models.audit.{AuditError, AuditResponse}
+import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.libs.json.{JsValue, Json}
 
 object AuditResponseFixture {
 
   val auditErrors: Seq[AuditError] = Seq(AuditError(errorCode = "FORMAT_NINO"), AuditError(errorCode = "FORMAT_TAX_YEAR"))
-  val body: JsValue                = Json.parse("""{ "aField" : "aValue" }""")
+  val body: JsValue = Json.parse("""{ "aField" : "aValue" }""")
 
   val auditResponseModelWithBody: AuditResponse =
     AuditResponse(

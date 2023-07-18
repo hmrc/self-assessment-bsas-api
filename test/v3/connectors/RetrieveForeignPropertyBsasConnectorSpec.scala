@@ -16,8 +16,8 @@
 
 package v3.connectors
 
-import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ Nino, TaxYear }
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino: Nino = Nino("AA123456A")
-  val calcId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   trait Test {
     _: ConnectorTest =>

@@ -20,11 +20,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class SummaryCalculationAccountingAdjustments(
-    basisAdjustment: Option[BigDecimal],
-    overlapReliefUsed: Option[BigDecimal],
-    accountingAdjustment: Option[BigDecimal],
-    averagingAdjustment: Option[BigDecimal],
-)
+                                                    basisAdjustment: Option[BigDecimal],
+                                                    overlapReliefUsed: Option[BigDecimal],
+                                                    accountingAdjustment: Option[BigDecimal],
+                                                    averagingAdjustment: Option[BigDecimal],
+                                                  )
 
 object SummaryCalculationAccountingAdjustments {
   implicit val reads: Reads[SummaryCalculationAccountingAdjustments] = (
@@ -32,7 +32,7 @@ object SummaryCalculationAccountingAdjustments {
       (JsPath \ "overlapReliefUsed").readNullable[BigDecimal] and
       (JsPath \ "accountingAdjustment").readNullable[BigDecimal] and
       (JsPath \ "averagingAdjustment").readNullable[BigDecimal]
-  )(SummaryCalculationAccountingAdjustments.apply _)
+    ) (SummaryCalculationAccountingAdjustments.apply _)
 
   implicit val writes: OWrites[SummaryCalculationAccountingAdjustments] = Json.writes[SummaryCalculationAccountingAdjustments]
 }

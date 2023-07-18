@@ -38,7 +38,7 @@ object SubmitUkPropertyBsasResponse extends HateoasLinks {
   implicit val reads: Reads[SubmitUkPropertyBsasResponse] = (
     (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
-  )(SubmitUkPropertyBsasResponse.apply _)
+    ) (SubmitUkPropertyBsasResponse.apply _)
 
   implicit object SubmitPropertyAdjustmentHateoasFactory extends HateoasLinksFactory[SubmitUkPropertyBsasResponse, SubmitUkPropertyBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {

@@ -29,15 +29,27 @@ import v2.models.request.RetrieveUkPropertyBsasRequestData
 import v2.models.response.retrieveBsas
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends BaseService {
 
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "INVALID_RETURN" -> InternalError,
+      "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -51,21 +63,9 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
   private def validateRetrieveUkPropertyBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case RetrieveUkPropertyBsasResponse(retrieveBsas.ukProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
+        if !List(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotUkProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
-      "INVALID_CORRELATION_ID"    -> InternalError,
-      "INVALID_RETURN"            -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 }

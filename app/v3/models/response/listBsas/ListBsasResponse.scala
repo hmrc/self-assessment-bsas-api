@@ -28,7 +28,8 @@ case class ListBsasResponse[I](businessSources: Seq[BusinessSourceSummary[I]])
 
 object ListBsasResponse extends HateoasLinks {
 
-  implicit def reads[I: Reads]: Reads[ListBsasResponse[I]]     = implicitly[Reads[Seq[BusinessSourceSummary[I]]]].map(ListBsasResponse(_))
+  implicit def reads[I: Reads]: Reads[ListBsasResponse[I]] = implicitly[Reads[Seq[BusinessSourceSummary[I]]]].map(ListBsasResponse(_))
+
   implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] = Json.writes[ListBsasResponse[I]]
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListBsasResponse, BsasSummary, ListBsasHateoasData] {
@@ -46,10 +47,10 @@ object ListBsasResponse extends HateoasLinks {
             .filter(_ == item)
             .map(_ =>
               summary.typeOfBusiness match {
-                case `self-employment`                               => getSelfEmploymentBsas(appConfig, data.nino, item.calculationId, data.taxYear)
-                case `uk-property-fhl` | `uk-property-non-fhl`       => getUkPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
+                case `self-employment` => getSelfEmploymentBsas(appConfig, data.nino, item.calculationId, data.taxYear)
+                case `uk-property-fhl` | `uk-property-non-fhl` => getUkPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
                 case `foreign-property` | `foreign-property-fhl-eea` => getForeignPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
-            }))
+              }))
     }
   }
 

@@ -16,14 +16,14 @@
 
 package v3.connectors
 
-import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ Nino, TaxYear }
-import api.models.errors.{ DownstreamErrorCode, DownstreamErrors }
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v3.fixtures.ListBsasFixture
 import v3.models.request.ListBsasRequest
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.Future
 

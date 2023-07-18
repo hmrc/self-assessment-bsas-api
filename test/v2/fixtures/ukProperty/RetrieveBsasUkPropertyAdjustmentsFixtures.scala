@@ -16,16 +16,17 @@
 
 package v2.fixtures.ukProperty
 
-import java.time.LocalDate
-
 import play.api.libs.json.Json
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.AccountingPeriod
 import v2.models.response.retrieveBsasAdjustments.ukProperty._
 
+import java.time.LocalDate
+
 object RetrieveBsasUkPropertyAdjustmentsFixtures {
 
-  val desJsonNonFhl = Json.parse("""{
+  val desJsonNonFhl = Json.parse(
+    """{
       |  "inputs": {
       |    "incomeSourceType" : "02",
       |    "incomeSourceId": "000000000000210",
@@ -59,7 +60,8 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
       |}
     """.stripMargin)
 
-  val desJsonFhl = Json.parse("""{
+  val desJsonFhl = Json.parse(
+    """{
       |  "inputs": {
       |    "incomeSourceType" : "04",
       |    "incomeSourceId": "000000000000210",
@@ -89,7 +91,8 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
       |}
     """.stripMargin)
 
-  val desJsonWithWrongTypeOfBusiness = Json.parse("""{
+  val desJsonWithWrongTypeOfBusiness = Json.parse(
+    """{
       |  "inputs": {
       |    "incomeSourceType" : "01",
       |    "incomeSourceId": "000000000000210",
@@ -159,96 +162,98 @@ object RetrieveBsasUkPropertyAdjustmentsFixtures {
   val retrieveUkPropertyFhlAdjustmentsResponseModel: RetrieveUkPropertyAdjustmentsResponse =
     RetrieveUkPropertyAdjustmentsResponse(metaDataModel.copy(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`), bsasDetailModelFhl)
 
-  val hateoasResponseForUkPropertyNonFhlAdjustments: (String, String) => String = (nino, bsasId) => s"""
-      |{
-      |  "metadata": {
-      |     "typeOfBusiness": "uk-property-non-fhl",
-      |     "businessId": "000000000000210",
-      |     "accountingPeriod": {
-      |       "startDate": "2018-10-11",
-      |       "endDate": "2019-10-10"
-      |     },
-      |     "taxYear": "2019-20",
-      |     "requestedDateTime": "2019-10-14T11:33:27Z",
-      |     "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |     "summaryStatus": "valid",
-      |     "adjustedSummary": true
-      |  },
-      |  "adjustments": {
-      |    "incomes": {
-      |      "rentIncome": 100.49,
-      |      "premiumsOfLeaseGrant": 100.49,
-      |      "reversePremiums": 100.49,
-      |      "otherPropertyIncome": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "residentialFinancialCost": 100.49,
-      |      "other": 100.49
-      |    }
-      |  },
-      |  "links": [
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-      |      "rel": "retrieve-adjustable-summary",
-      |      "method": "GET"
-      |    },
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-      |      "rel": "self",
-      |      "method": "GET"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin
+  val hateoasResponseForUkPropertyNonFhlAdjustments: (String, String) => String = (nino, bsasId) =>
+    s"""
+       |{
+       |  "metadata": {
+       |     "typeOfBusiness": "uk-property-non-fhl",
+       |     "businessId": "000000000000210",
+       |     "accountingPeriod": {
+       |       "startDate": "2018-10-11",
+       |       "endDate": "2019-10-10"
+       |     },
+       |     "taxYear": "2019-20",
+       |     "requestedDateTime": "2019-10-14T11:33:27Z",
+       |     "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       |     "summaryStatus": "valid",
+       |     "adjustedSummary": true
+       |  },
+       |  "adjustments": {
+       |    "incomes": {
+       |      "rentIncome": 100.49,
+       |      "premiumsOfLeaseGrant": 100.49,
+       |      "reversePremiums": 100.49,
+       |      "otherPropertyIncome": 100.49
+       |    },
+       |    "expenses": {
+       |      "premisesRunningCosts": 100.49,
+       |      "repairsAndMaintenance": 100.49,
+       |      "financialCosts": 100.49,
+       |      "professionalFees": 100.49,
+       |      "travelCosts": 100.49,
+       |      "costOfServices": 100.49,
+       |      "residentialFinancialCost": 100.49,
+       |      "other": 100.49
+       |    }
+       |  },
+       |  "links": [
+       |    {
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
+       |      "rel": "retrieve-adjustable-summary",
+       |      "method": "GET"
+       |    },
+       |    {
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+       |      "rel": "self",
+       |      "method": "GET"
+       |    }
+       |  ]
+       |}
+       |""".stripMargin
 
-  val hateoasResponseForUkPropertyFhlAdjustments: (String, String) => String = (nino, bsasId) => s"""
-      |{
-      |  "metadata": {
-      |     "typeOfBusiness": "uk-property-fhl",
-      |     "businessId": "000000000000210",
-      |     "accountingPeriod": {
-      |       "startDate": "2018-10-11",
-      |       "endDate": "2019-10-10"
-      |     },
-      |     "taxYear": "2019-20",
-      |     "requestedDateTime": "2019-10-14T11:33:27Z",
-      |     "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |     "summaryStatus": "valid",
-      |     "adjustedSummary": true
-      |  },
-      |  "adjustments": {
-      |    "incomes": {
-      |      "rentIncome": 100.49
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 100.49,
-      |      "repairsAndMaintenance": 100.49,
-      |      "financialCosts": 100.49,
-      |      "professionalFees": 100.49,
-      |      "travelCosts": 100.49,
-      |      "costOfServices": 100.49,
-      |      "other": 100.49
-      |    }
-      |  },
-      |  "links": [
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-      |      "rel": "retrieve-adjustable-summary",
-      |      "method": "GET"
-      |    },
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
-      |      "rel": "self",
-      |      "method": "GET"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin
+  val hateoasResponseForUkPropertyFhlAdjustments: (String, String) => String = (nino, bsasId) =>
+    s"""
+       |{
+       |  "metadata": {
+       |     "typeOfBusiness": "uk-property-fhl",
+       |     "businessId": "000000000000210",
+       |     "accountingPeriod": {
+       |       "startDate": "2018-10-11",
+       |       "endDate": "2019-10-10"
+       |     },
+       |     "taxYear": "2019-20",
+       |     "requestedDateTime": "2019-10-14T11:33:27Z",
+       |     "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       |     "summaryStatus": "valid",
+       |     "adjustedSummary": true
+       |  },
+       |  "adjustments": {
+       |    "incomes": {
+       |      "rentIncome": 100.49
+       |    },
+       |    "expenses": {
+       |      "premisesRunningCosts": 100.49,
+       |      "repairsAndMaintenance": 100.49,
+       |      "financialCosts": 100.49,
+       |      "professionalFees": 100.49,
+       |      "travelCosts": 100.49,
+       |      "costOfServices": 100.49,
+       |      "other": 100.49
+       |    }
+       |  },
+       |  "links": [
+       |    {
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
+       |      "rel": "retrieve-adjustable-summary",
+       |      "method": "GET"
+       |    },
+       |    {
+       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
+       |      "rel": "self",
+       |      "method": "GET"
+       |    }
+       |  ]
+       |}
+       |""".stripMargin
 
 }

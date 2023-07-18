@@ -28,7 +28,7 @@ trait MockSubmitForeignPropertyBsasNrsProxyConnector extends MockFactory {
 
   val mockNrsProxyConnector: SubmitForeignPropertyBsasNrsProxyConnector = mock[SubmitForeignPropertyBsasNrsProxyConnector]
 
-  object MockNrsProxyConnector{
+  object MockNrsProxyConnector {
     def submit(nino: String): CallHandler[Future[Unit]] = {
       (mockNrsProxyConnector.submit(_: String, _: SubmitForeignPropertyBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
         .expects(nino, *, *, *)

@@ -17,9 +17,10 @@
 package v2.controllers
 
 import api.controllers.AuthorisedController
-import routing.{ Version, Version2 }
+import routing.{Version, Version2}
 
-trait V2Controller { _: AuthorisedController =>
+trait V2Controller {
+  _: AuthorisedController =>
 
   implicit val apiVersion: Version = Version2
 

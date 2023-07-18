@@ -24,9 +24,11 @@ import v2.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
 
 class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
 
-  private val validNino                                = "AA123456A"
-  private val validBsasId                              = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val requestBodyJsonForeignPropertyNoDecimals = Json.parse("""
+  val validator = new SubmitForeignPropertyBsasValidator
+  private val validNino = "AA123456A"
+  private val validBsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  private val requestBodyJsonForeignPropertyNoDecimals = Json.parse(
+    """
       |{
       |  "foreignProperty": [
       |    {
@@ -51,8 +53,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ]
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonForeignProperty = Json.parse("""
+  private val requestBodyJsonForeignProperty = Json.parse(
+    """
       |{
       |  "foreignProperty": [
       |    {
@@ -77,8 +79,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ]
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonForeignPropertyConsolidatedExpenses = Json.parse("""
+  private val requestBodyJsonForeignPropertyConsolidatedExpenses = Json.parse(
+    """
       |{
       |  "foreignProperty": [
       |    {
@@ -97,8 +99,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ]
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonForeignPropertyFhlEea = Json.parse("""
+  private val requestBodyJsonForeignPropertyFhlEea = Json.parse(
+    """
       |{
       |  "foreignFhlEea": {
       |    "income": {
@@ -116,8 +118,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  }
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonForeignPropertyFhlEeaConsolidatedExpenses = Json.parse("""
+  private val requestBodyJsonForeignPropertyFhlEeaConsolidatedExpenses = Json.parse(
+    """
       |{
       |  "foreignFhlEea": {
       |    "income": {
@@ -129,8 +131,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  }
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonNoForeignPropertyIncome = Json.parse("""
+  private val requestBodyJsonNoForeignPropertyIncome = Json.parse(
+    """
       |{
       |  "foreignProperty": [
       |    {
@@ -149,8 +151,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ]
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonNoForeignPropertyExpenses = Json.parse("""
+  private val requestBodyJsonNoForeignPropertyExpenses = Json.parse(
+    """
       |{
       |  "foreignProperty": [
       |    {
@@ -165,8 +167,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  ]
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonNoFhlEeaIncome = Json.parse("""
+  private val requestBodyJsonNoFhlEeaIncome = Json.parse(
+    """
       |{
       |  "foreignFhlEea": {
       |    "expenses": {
@@ -181,8 +183,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  }
       |}
       |""".stripMargin)
-
-  private val requestBodyJsonNoFhlEeaExpenses = Json.parse("""
+  private val requestBodyJsonNoFhlEeaExpenses = Json.parse(
+    """
       |{
       |  "foreignFhlEea": {
       |    "income": {
@@ -191,7 +193,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  }
       |}
       |""".stripMargin)
-
   private val requestBodyJsonFPAndFHLEEA = Json.parse(
     """
       |{
@@ -233,7 +234,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
   private val requestBodyJsonEmptyForeignProperty = Json.parse(
     """
       |{
@@ -255,7 +255,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
   private val requestBodyJsonEmptyFhlEea = Json.parse(
     """
       |{
@@ -284,7 +283,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
   private val requestBodyJsonEmptyForeignPropertyAndFhlEea = Json.parse(
     """
       |{
@@ -293,8 +291,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
-  private val requestBodyJsonEmptyForeignPropertyIncome = Json.parse("""
+  private val requestBodyJsonEmptyForeignPropertyIncome = Json.parse(
+    """
       |{
       |  "foreignProperty": [
       |    {
@@ -328,7 +326,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |  }
       |}
       |""".stripMargin)
-
   private val requestBodyJsonEmptyForeignPropertyExpenses = Json.parse(
     """
       |{
@@ -361,7 +358,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
   private val requestBodyJsonEmptyFhlEeaIncome = Json.parse(
     """
       |{
@@ -401,7 +397,6 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
   private val requestBodyJsonEmptyFhlEeaExpenses = Json.parse(
     """
       |{
@@ -435,14 +430,11 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       |}
       |""".stripMargin
   )
-
   private val emptyJson = Json.parse(
     """
       |{}
       |""".stripMargin
   )
-
-  val validator = new SubmitForeignPropertyBsasValidator
 
   "running a validation" should {
     "return no errors" when {
@@ -484,7 +476,7 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
       }
       "both path parameters are invalid" in {
         validator.validate(SubmitForeignPropertyRawData("A12344A", "Walrus", requestBodyJsonForeignProperty)) shouldBe List(NinoFormatError,
-                                                                                                                            BsasIdFormatError)
+          BsasIdFormatError)
       }
     }
     "return RuleIncorrectOrEmptyBodyError error" when {
@@ -526,7 +518,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a FORMAT_ADJUSTMENT_VALUE error" when {
       "a value field has more than 2 decimal points" in {
-        val badJson = Json.parse("""
+        val badJson = Json.parse(
+          """
             |{
             |  "foreignProperty": [
             |    {
@@ -555,7 +548,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
           FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
       }
       "multiple fields have more than 2 decimal points" in {
-        val badjson = Json.parse("""
+        val badjson = Json.parse(
+          """
             |{
             |  "foreignFhlEea": {
             |    "income": {
@@ -579,7 +573,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a RULE_RANGE_INVALID error" when {
       "a value field is above 99999999999.99" in {
-        val badJson = Json.parse("""
+        val badJson = Json.parse(
+          """
             |{
             |  "foreignProperty": [
             |    {
@@ -608,7 +603,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
           RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
       }
       "a value field is below -99999999999.99" in {
-        val badJson = Json.parse("""
+        val badJson = Json.parse(
+          """
             |{
             |  "foreignProperty": [
             |    {
@@ -637,7 +633,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
           RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignProperty/0/income/rentIncome"))))
       }
       "multiple fields are above 99999999999.99" in {
-        val badjson = Json.parse("""
+        val badjson = Json.parse(
+          """
             |{
             |  "foreignFhlEea": {
             |    "income": {
@@ -659,7 +656,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
           RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/income/rentIncome", "/foreignFhlEea/expenses/premisesRunningCosts"))))
       }
       "multiple fields are below -99999999999.99" in {
-        val badjson = Json.parse("""
+        val badjson = Json.parse(
+          """
             |{
             |  "foreignFhlEea": {
             |    "income": {
@@ -683,7 +681,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a RULE_BOTH_EXPENSES_SUPPLIED error" when {
       "both expenses and consolidated expenses are supplied" in {
-        val badJson = Json.parse("""
+        val badJson = Json.parse(
+          """
             |{
             |  "foreignProperty": [
             |    {
@@ -714,7 +713,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
     }
     "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
       "nothing but countryCode is supplied" in {
-        val badJson = Json.parse("""
+        val badJson = Json.parse(
+          """
             |{
             |  "foreignProperty": [
             |    {
@@ -726,7 +726,8 @@ class SubmitForeignPropertyBsasValidatorSpec extends UnitSpec {
         validator.validate(SubmitForeignPropertyRawData(validNino, validBsasId, badJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
       "nothing but countryCode is supplied in only one of the submitted arrays" in {
-        val badJson = Json.parse("""
+        val badJson = Json.parse(
+          """
             |{
             |  "foreignProperty": [
             |    {

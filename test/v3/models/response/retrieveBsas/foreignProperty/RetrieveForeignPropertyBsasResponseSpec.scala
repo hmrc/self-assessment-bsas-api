@@ -16,8 +16,8 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.Method.{ GET, POST }
-import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import play.api.Configuration
@@ -44,11 +44,11 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val calculationId  = "anId"
-      val context        = "individuals/self-assessment/adjustable-summary"
-      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
-      val rawResponse    = retrieveForeignPropertyBsasResponseFhlModel
+      val nino = "someNino"
+      val calculationId = "anId"
+      val context = "individuals/self-assessment/adjustable-summary"
+      val taxYear = Some(TaxYear.fromMtd("2023-24"))
+      val rawResponse = retrieveForeignPropertyBsasResponseFhlModel
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }

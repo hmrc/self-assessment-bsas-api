@@ -19,12 +19,12 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveUkPropertyValidator
-import v2.models.request.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v2.models.request.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
 
 import javax.inject.Inject
 
 class RetrieveUkPropertyRequestParser @Inject()(val validator: RetrieveUkPropertyValidator)
-    extends RequestParser[RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData] {
+  extends RequestParser[RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData] {
 
   override protected def requestFor(data: RetrieveUkPropertyBsasRawData): RetrieveUkPropertyBsasRequestData = {
     RetrieveUkPropertyBsasRequestData(Nino(data.nino), data.bsasId, data.adjustedStatus.map(toDesAdjustedStatus))

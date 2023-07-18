@@ -22,7 +22,7 @@ import support.UnitSpec
 
 class EndBeforeDateValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  case class SetUp(startDate:String, endDate: String)
+  case class SetUp(startDate: String, endDate: String)
 
   "validate" should {
     "return no errors" when {

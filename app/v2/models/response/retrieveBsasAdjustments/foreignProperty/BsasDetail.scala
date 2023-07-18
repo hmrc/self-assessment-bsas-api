@@ -27,13 +27,13 @@ object BsasDetail {
     (JsPath \ "countryCode").readNullable[String] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.fhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case incomeBreakdown                         => incomeBreakdown
+        case incomeBreakdown => incomeBreakdown
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.fhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
-        case expensesBreakdown                                                             => expensesBreakdown
+        case expensesBreakdown => expensesBreakdown
       }
-  )(BsasDetail.apply _)
+    ) (BsasDetail.apply _)
 
   val fhlSeqReads: Reads[Seq[BsasDetail]] = Reads.seq(fhlReads)
 
@@ -41,13 +41,13 @@ object BsasDetail {
     (JsPath \ "countryCode").readNullable[String] and
       (JsPath \ "income").readNullable[IncomeBreakdown](IncomeBreakdown.nonFhlReads).map {
         case Some(IncomeBreakdown(None, None, None)) => None
-        case incomeBreakdown                         => incomeBreakdown
+        case incomeBreakdown => incomeBreakdown
       } and
       (JsPath \ "expenses").readNullable[ExpensesBreakdown](ExpensesBreakdown.nonFhlReads).map {
         case Some(ExpensesBreakdown(None, None, None, None, None, None, None, None, None)) => None
-        case expensesBreakdown                                                             => expensesBreakdown
+        case expensesBreakdown => expensesBreakdown
       }
-  )(BsasDetail.apply _)
+    ) (BsasDetail.apply _)
 
   val nonFhlSeqReads: Reads[Seq[BsasDetail]] = Reads.traversableReads[Seq, BsasDetail](implicitly, nonFhlReads)
 

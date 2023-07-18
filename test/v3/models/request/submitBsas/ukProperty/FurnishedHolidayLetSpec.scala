@@ -22,14 +22,15 @@ import support.UnitSpec
 class FurnishedHolidayLetSpec extends UnitSpec {
 
   // Use simple case as formats for contents of income/expenses are tested elsewhere...
-  val json: JsValue = Json.parse("""
-                                   |{
-                                   |  "income": {
-                                   |  },
-                                   |  "expenses": {
-                                   |  }
-                                   |}
-                                   |""".stripMargin)
+  val json: JsValue = Json.parse(
+    """
+      |{
+      |  "income": {
+      |  },
+      |  "expenses": {
+      |  }
+      |}
+      |""".stripMargin)
 
   val model: FurnishedHolidayLet = FurnishedHolidayLet(
     Some(FHLIncome(None)),

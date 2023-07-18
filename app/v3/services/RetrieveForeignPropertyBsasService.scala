@@ -26,17 +26,37 @@ import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPropertyBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`)
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
+      "INVALID_RETURN" -> InternalError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "UNPROCESSABLE_ENTITY" -> InternalError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
+    val extraTysErrors: Map[String, MtdError] = Map(
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "NOT_FOUND" -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveForeignPropertyBsasResponse]] = {
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[ServiceOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveForeignPropertyBsas(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -44,26 +64,5 @@ class RetrieveForeignPropertyBsasService @Inject()(connector: RetrieveForeignPro
     } yield mtdResponseWrapper
 
     result.value
-  }
-
-  private val errorMap: Map[String, MtdError] = {
-    val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-      "INVALID_RETURN"            -> InternalError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "UNPROCESSABLE_ENTITY"      -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
-
-    val extraTysErrors: Map[String, MtdError] = Map(
-      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
-      "NOT_FOUND"              -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
-    )
-
-    errors ++ extraTysErrors
   }
 }

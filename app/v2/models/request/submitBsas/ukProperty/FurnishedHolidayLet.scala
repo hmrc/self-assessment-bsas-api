@@ -23,8 +23,8 @@ case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLEx
 
   def isEmpty: Boolean =
     (income.isEmpty && expenses.isEmpty) ||
-    (income.isDefined && income.get.isEmpty) ||
-    (expenses.isDefined && expenses.get.isEmpty)
+      (income.isDefined && income.get.isEmpty) ||
+      (expenses.isDefined && expenses.get.isEmpty)
 }
 
 object FurnishedHolidayLet {
@@ -32,7 +32,7 @@ object FurnishedHolidayLet {
   implicit val reads: Reads[FurnishedHolidayLet] = (
     (JsPath \ "income").readNullable[FHLIncome] and
       (JsPath \ "expenses").readNullable[FHLExpenses]
-  )(FurnishedHolidayLet.apply _)
+    ) (FurnishedHolidayLet.apply _)
 
   implicit val writes: OWrites[FurnishedHolidayLet] = Json.writes[FurnishedHolidayLet]
 }

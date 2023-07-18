@@ -23,19 +23,19 @@ import play.api.libs.json._
 package object selfEmployment {
 
   private type SummaryCalculationReads = FunctionalBuilder[Reads]#CanBuild14[Option[BigDecimal],
-                                                                             Option[SummaryCalculationIncome],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationExpenses],
-                                                                             Option[BigDecimal],
-                                                                             Option[BigDecimal],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationAdditions],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationDeductions],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationAccountingAdjustments],
-                                                                             Option[BigDecimal],
-                                                                             Option[BigDecimal]]
+    Option[SummaryCalculationIncome],
+    Option[BigDecimal],
+    Option[SummaryCalculationExpenses],
+    Option[BigDecimal],
+    Option[BigDecimal],
+    Option[BigDecimal],
+    Option[SummaryCalculationAdditions],
+    Option[BigDecimal],
+    Option[SummaryCalculationDeductions],
+    Option[BigDecimal],
+    Option[SummaryCalculationAccountingAdjustments],
+    Option[BigDecimal],
+    Option[BigDecimal]]
 
   val summaryCalculationReads: SummaryCalculationReads =
     (JsPath \ "totalIncome").readNullable[BigDecimal] and

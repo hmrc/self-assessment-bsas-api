@@ -31,7 +31,7 @@ object BothExpensesValidation {
       case Some(_) =>
         expenses match {
           case ForeignPropertyExpenses(None, None, None, None, None, None, _, None, Some(_)) => NoValidationErrors
-          case _                                                                             => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
     }
   }
@@ -42,7 +42,7 @@ object BothExpensesValidation {
       case Some(_) =>
         expenses match {
           case FhlEeaExpenses(None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
-          case _                                                                 => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
     }
   }
@@ -53,7 +53,7 @@ object BothExpensesValidation {
       case Some(_) =>
         expenses match {
           case FHLExpenses(None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
-          case _                                                              => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
     }
   }
@@ -64,7 +64,7 @@ object BothExpensesValidation {
       case Some(_) =>
         expenses match {
           case NonFHLExpenses(None, None, None, None, None, None, None, None, Some(_)) => NoValidationErrors
-          case _                                                                       => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
+          case _ => List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
         }
     }
   }
@@ -74,11 +74,11 @@ object BothExpensesValidation {
     def bothExpensesError = List(RuleBothExpensesError.copy(paths = Some(Seq(path))))
 
     (expenses.consolidatedExpenses, additions) match {
-      case (None, _)                                                                       => NoValidationErrors
-      case (Some(_), None) if expenses.hasOnlyConsolidatedExpenses                         => NoValidationErrors
-      case (Some(_), None)                                                                 => bothExpensesError
+      case (None, _) => NoValidationErrors
+      case (Some(_), None) if expenses.hasOnlyConsolidatedExpenses => NoValidationErrors
+      case (Some(_), None) => bothExpensesError
       case (Some(_), Some(adds)) if !expenses.hasOnlyConsolidatedExpenses || adds.nonEmpty => bothExpensesError
-      case (Some(_), Some(_))                                                              => NoValidationErrors
+      case (Some(_), Some(_)) => NoValidationErrors
     }
   }
 }

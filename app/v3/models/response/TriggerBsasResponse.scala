@@ -38,8 +38,8 @@ object TriggerBsasResponse extends HateoasLinks {
       import v3.models.domain.TypeOfBusiness._
 
       data.typeOfBusiness match {
-        case `self-employment`                               => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))
-        case `uk-property-fhl` | `uk-property-non-fhl`       => Seq(getUkPropertyBsas(appConfig, nino, bsasId, taxYear))
+        case `self-employment` => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))
+        case `uk-property-fhl` | `uk-property-non-fhl` => Seq(getUkPropertyBsas(appConfig, nino, bsasId, taxYear))
         case `foreign-property` | `foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, nino, bsasId, taxYear))
       }
     }

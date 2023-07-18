@@ -16,18 +16,18 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ Nino, TaxYear }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version3
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
@@ -35,14 +35,14 @@ import v3.mocks.requestParsers.MockTriggerBsasRequestParser
 import v3.mocks.services.MockTriggerBsasService
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
-import v3.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequest }
+import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 import v3.models.response.TriggerBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class TriggerBsasControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -53,18 +53,25 @@ class TriggerBsasControllerSpec
     with MockAuditService
     with MockAppConfig {
 
+  val testHateoasLinkSE: Link = Link(
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+    method = GET,
+    rel = "self"
+  )
+  val testHateoasLinkProperty: Link = Link(
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
+    method = GET,
+    rel = "self"
+  )
   private val version = Version3
-
   private val request = TriggerBsasRequest(
     Nino(nino),
     triggerBsasRequestDataBody()
   )
-
   private val requestRawData = TriggerBsasRawData(
     nino,
     triggerBsasRawDataBody()
   )
-
   private val requestForProperty = TriggerBsasRequest(
     Nino(nino),
     triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
@@ -72,18 +79,6 @@ class TriggerBsasControllerSpec
   private val requestRawDataForProperty = TriggerBsasRawData(
     nino,
     triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString)
-  )
-
-  val testHateoasLinkSE: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-    method = GET,
-    rel = "self"
-  )
-
-  val testHateoasLinkProperty: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
-    method = GET,
-    rel = "self"
   )
 
   "triggerBsas" should {
@@ -101,7 +96,7 @@ class TriggerBsasControllerSpec
 
         MockHateoasFactory
           .wrap(responseObj,
-                TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
+            TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         runOkTestWithAudit(
@@ -127,7 +122,7 @@ class TriggerBsasControllerSpec
 
         MockHateoasFactory
           .wrap(responseObj,
-                TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
+            TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         runOkTestWithAudit(

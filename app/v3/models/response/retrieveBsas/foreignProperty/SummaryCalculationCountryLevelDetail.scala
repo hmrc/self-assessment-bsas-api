@@ -48,7 +48,7 @@ object SummaryCalculationCountryLevelDetail {
       (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsNonFhl) and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
-  )(SummaryCalculationCountryLevelDetail.apply _)
+    ) (SummaryCalculationCountryLevelDetail.apply _)
 
   implicit val writes: OWrites[SummaryCalculationCountryLevelDetail] = Json.writes[SummaryCalculationCountryLevelDetail]
 }

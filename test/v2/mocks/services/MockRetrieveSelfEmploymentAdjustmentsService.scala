@@ -25,7 +25,7 @@ import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.selfEmployment.RetrieveSelfEmploymentAdjustmentsResponse
 import v2.services.RetrieveSelfEmploymentAdjustmentsService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
 
@@ -34,7 +34,7 @@ trait MockRetrieveSelfEmploymentAdjustmentsService extends MockFactory {
   object MockRetrieveSelfEmploymentBsasService {
 
     def retrieveAdjustments(requestData: RetrieveAdjustmentsRequestData)
-      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentAdjustmentsResponse]]]] = {
       (mockService
         .retrieveSelfEmploymentsAdjustments(_: RetrieveAdjustmentsRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

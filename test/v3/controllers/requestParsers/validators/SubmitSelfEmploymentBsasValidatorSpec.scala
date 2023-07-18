@@ -27,9 +27,9 @@ import v3.models.request.submitBsas.selfEmployment._
 
 class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
-  val validator     = new SubmitSelfEmploymentBsasValidator()
+  val validator = new SubmitSelfEmploymentBsasValidator()
   val calculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino          = "AA123456A"
+  val nino = "AA123456A"
 
   "validator" should {
     "return no errors" when {
@@ -47,9 +47,9 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
 
       "a valid TYS tax year is supplied" in {
         validator.validate(SubmitSelfEmploymentBsasRawData(nino,
-                                                           calculationId,
-                                                           Some("2023-24"),
-                                                           AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
+          calculationId,
+          Some("2023-24"),
+          AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List()
       }
     }
 
@@ -261,9 +261,9 @@ class SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValid
 
   "return TaxYearFormatError error" in {
     validator.validate(SubmitSelfEmploymentBsasRawData(nino,
-                                                       calculationId,
-                                                       Some("NO_MORE_TAXES"),
-                                                       AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(TaxYearFormatError)
+      calculationId,
+      Some("NO_MORE_TAXES"),
+      AnyContentAsJson(mtdRequestWithOnlyAdditionsExpenses))) shouldBe List(TaxYearFormatError)
   }
 
   "return RuleTaxYearRangeInvalidError error" in {

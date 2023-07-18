@@ -26,10 +26,10 @@ import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRawData
 
 class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino          = "AA123456A"
+  val validator = new SubmitUkPropertyBsasValidator
+  private val validNino = "AA123456A"
   private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val validTaxYear       = Some("2023-24")
-
+  private val validTaxYear = Some("2023-24")
   private val nonFhlBodyJson = Json.parse(
     s"""{
        |   "nonFurnishedHolidayLet": {
@@ -53,22 +53,21 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
        |}
        |""".stripMargin
   )
-
   private val nonFhlBodyConsolidatedJson =
-    Json.parse("""{
-                 |   "nonFurnishedHolidayLet": {
-                 |      "income": {
-                 |         "totalRentsReceived": 1000.45,
-                 |         "premiumsOfLeaseGrant": 1000.45,
-                 |         "reversePremiums": 1000.45,
-                 |         "otherPropertyIncome": 1000.45
-                 |      },
-                 |      "expenses": {
-                 |         "consolidatedExpenses": 1000.45
-                 |      }
-                 |   }
-                 |}""".stripMargin)
-
+    Json.parse(
+      """{
+        |   "nonFurnishedHolidayLet": {
+        |      "income": {
+        |         "totalRentsReceived": 1000.45,
+        |         "premiumsOfLeaseGrant": 1000.45,
+        |         "reversePremiums": 1000.45,
+        |         "otherPropertyIncome": 1000.45
+        |      },
+        |      "expenses": {
+        |         "consolidatedExpenses": 1000.45
+        |      }
+        |   }
+        |}""".stripMargin)
   private val fhlBodyJson = Json.parse(
     s"""{
        |   "furnishedHolidayLet": {
@@ -88,7 +87,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
        |}
        |""".stripMargin
   )
-
   private val fhlBodyConsolidatedJson = Json.parse(
     s"""{
        |   "furnishedHolidayLet": {
@@ -102,8 +100,6 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
        |}
        |""".stripMargin
   )
-
-  val validator = new SubmitUkPropertyBsasValidator
 
   "running a validation" should {
     "return no errors" when {
@@ -162,14 +158,15 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
           SubmitUkPropertyBsasRawData(
             nino = validNino,
             calculationId = validCalculationId,
-            body = Json.parse("""{
-                                |   "furnishedHolidayLet": {
-                                |      "income": {
-                                |         "totalRentsReceived": 1000.45
-                                |      }
-                                |   }
-                                |}
-                                |""".stripMargin),
+            body = Json.parse(
+              """{
+                |   "furnishedHolidayLet": {
+                |      "income": {
+                |         "totalRentsReceived": 1000.45
+                |      }
+                |   }
+                |}
+                |""".stripMargin),
             taxYear = None
           )) shouldBe Nil
       }
@@ -179,14 +176,15 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
           SubmitUkPropertyBsasRawData(
             nino = validNino,
             calculationId = validCalculationId,
-            body = Json.parse("""{
-                                |   "nonFurnishedHolidayLet": {
-                                |      "income": {
-                                |         "totalRentsReceived": 1000.45
-                                |      }
-                                |   }
-                                |}
-                                |""".stripMargin),
+            body = Json.parse(
+              """{
+                |   "nonFurnishedHolidayLet": {
+                |      "income": {
+                |         "totalRentsReceived": 1000.45
+                |      }
+                |   }
+                |}
+                |""".stripMargin),
             taxYear = None
           )) shouldBe Nil
       }
@@ -249,9 +247,9 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
     "return RuleIncorrectOrEmptyBodyError" when {
       "an empty body is submitted" in {
         validator.validate(SubmitUkPropertyBsasRawData(nino = validNino,
-                                                       calculationId = validCalculationId,
-                                                       body = Json.parse("""{}"""),
-                                                       taxYear = None)) shouldBe List(RuleIncorrectOrEmptyBodyError)
+          calculationId = validCalculationId,
+          body = Json.parse("""{}"""),
+          taxYear = None)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
       "an object/array is empty or mandatory field is missing" when {
@@ -281,7 +279,8 @@ class SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidator
       }
 
       "an object is empty except for a additional (non-schema) property" in {
-        val json = Json.parse("""{
+        val json = Json.parse(
+          """{
             |    "nonFurnishedHolidayLet": {
             |       "unknownField": 999.99
             |    }

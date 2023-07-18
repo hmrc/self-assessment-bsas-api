@@ -50,7 +50,7 @@ get:
 
   tags:
     - UK property business
-    
+
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino

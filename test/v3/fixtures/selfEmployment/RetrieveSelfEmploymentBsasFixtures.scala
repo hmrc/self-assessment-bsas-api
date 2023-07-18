@@ -16,9 +16,9 @@
 
 package v3.fixtures.selfEmployment
 
-import api.models.domain.{ Source, Status }
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import v3.models.domain.{ IncomeSourceType, TypeOfBusiness }
+import api.models.domain.{Source, Status}
+import play.api.libs.json.{JsObject, JsValue, Json}
+import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v3.models.response.retrieveBsas.selfEmployment._
 
 object RetrieveSelfEmploymentBsasFixtures {

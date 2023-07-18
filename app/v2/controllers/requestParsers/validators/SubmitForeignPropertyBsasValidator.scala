@@ -26,6 +26,10 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
   private val validationSet =
     List(parameterFormatValidation, bodyFormatValidation, incorrectOrEmptyBodySubmittedValidation, bodyFieldValidation, otherBodyFieldsValidator)
 
+  override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
+
   private def parameterFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
     List(
       NinoValidation.validate(data.nino),
@@ -115,9 +119,5 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
         },
       BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
     )
-  }
-
-  override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
-    run(validationSet, data).distinct
   }
 }

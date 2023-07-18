@@ -16,7 +16,7 @@
 
 package v3.models.request.triggerBsas
 
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{Nino, TaxYear}
 import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 

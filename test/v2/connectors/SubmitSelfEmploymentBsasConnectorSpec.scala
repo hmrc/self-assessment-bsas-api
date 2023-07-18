@@ -17,16 +17,16 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v2.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v2.fixtures.selfEmployment.IncomeFixture.incomeModel
 import v2.mocks.MockHttpClient
 import v2.models.domain.TypeOfBusiness
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import v2.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
+import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 import v2.models.response.SubmitSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
@@ -40,7 +40,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       expenses = Some(expensesModel)
     )
 
-  val nino   = Nino("AA123456A")
+  val nino = Nino("AA123456A")
   val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -60,7 +60,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)))
 
-      implicit val hc: HeaderCarrier                = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPut: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient

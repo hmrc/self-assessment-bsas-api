@@ -26,6 +26,8 @@ class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignProperty
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
+  override def validate(data: RetrieveForeignPropertyBsasRawData): List[MtdError] = run(validationSet, data).distinct
+
   private def parameterFormatValidation: RetrieveForeignPropertyBsasRawData => List[List[MtdError]] = (data: RetrieveForeignPropertyBsasRawData) => {
 
     List(
@@ -41,6 +43,4 @@ class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignProperty
     List(data.taxYear.map(TaxYearTYSParameterValidation.validate).getOrElse(Nil))
 
   }
-
-  override def validate(data: RetrieveForeignPropertyBsasRawData): List[MtdError] = run(validationSet, data).distinct
 }

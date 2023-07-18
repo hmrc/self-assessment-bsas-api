@@ -24,7 +24,7 @@ import v2.connectors.RetrieveUkPropertyAdjustmentsConnector
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments.ukProperty.RetrieveUkPropertyAdjustmentsResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveUkPropertyAdjustmentsConnector extends MockFactory {
 
@@ -33,7 +33,7 @@ trait MockRetrieveUkPropertyAdjustmentsConnector extends MockFactory {
   object MockRetrieveUkPropertyAdjustmentsConnector {
 
     def retrieveUkPropertyAdjustments(
-        requestData: RetrieveAdjustmentsRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyAdjustmentsResponse]]] = {
+                                       requestData: RetrieveAdjustmentsRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyAdjustmentsResponse]]] = {
       (mockConnector
         .retrieveUkPropertyAdjustments(_: RetrieveAdjustmentsRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

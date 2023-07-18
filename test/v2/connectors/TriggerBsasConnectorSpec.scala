@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.TriggerBsasRequestBodyFixtures._
-import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.TriggerBsasRequestBodyFixtures._
+import v2.mocks.MockHttpClient
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class TriggerBsasConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-  val id   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val id = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
@@ -48,8 +48,8 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     val request = TriggerBsasRequest(nino, model)
 
     "post a TriggerBsasRequest body and return the result" in new Test {
-      val outcome                                    = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
-      implicit val hc: HeaderCarrier                 = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      val outcome = Right(ResponseWrapper(correlationId, TriggerBsasResponse(id)))
+      implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
       val requiredHeadersPost: Seq[(String, String)] = desRequestHeaders ++ Seq("Content-Type" -> "application/json")
 
       MockedHttpClient

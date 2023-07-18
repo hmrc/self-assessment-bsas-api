@@ -21,7 +21,7 @@ import support.UnitSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.models.utils.JsonErrorValidators
 
-class BsasDetailSpec extends UnitSpec with JsonErrorValidators{
+class BsasDetailSpec extends UnitSpec with JsonErrorValidators {
 
   val desNonFhlJson = Json.parse(
     """{

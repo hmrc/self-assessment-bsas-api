@@ -19,16 +19,12 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.SubmitSelfEmploymentBsasValidator
-import v2.models.request.submitBsas.selfEmployment.{
-  SubmitSelfEmploymentBsasRawData,
-  SubmitSelfEmploymentBsasRequestBody,
-  SubmitSelfEmploymentBsasRequestData
-}
+import v2.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 
 import javax.inject.Inject
 
 class SubmitSelfEmploymentBsasDataParser @Inject()(val validator: SubmitSelfEmploymentBsasValidator)
-    extends RequestParser[SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData] {
+  extends RequestParser[SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData] {
 
   override protected def requestFor(data: SubmitSelfEmploymentBsasRawData): SubmitSelfEmploymentBsasRequestData = {
     val requestBody = data.body.json.as[SubmitSelfEmploymentBsasRequestBody]
