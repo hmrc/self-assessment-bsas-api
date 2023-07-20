@@ -3,37 +3,15 @@ description: |
   This endpoint allows a developer to request the adjustments made to a specific self-employment Business Source Adjustable Summary (BSAS) by using its identifier. The BSAS ID quoted must be for a self-employment business that has been previously adjusted.
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates the scenario where no data was found.</p></td>
-          </tr>
-          <tr>
-              <td><p>SELF_EMPLOYMENT_ADJUSTED</p></td>
-              <td><p>Simulates a successful response where adjustments are present for a self-employment.</p></td>
-          </tr>        
-          <tr>
-              <td><p>SELF_EMPLOYMENT_CONSOLIDATED</p></td>
-              <td><p>Simulates a successful response where adjustments are present for a consolidated self-employment.</p></td>
-          </tr>
-          <tr>
-              <td><p>SELF_EMPLOYMENT_UNADJUSTED</p></td>
-              <td><p>Simulates an unsuccessful response where adjustments are not present for a self-employment.</p></td>
-          </tr>
-          <tr>
-              <td><p>NOT_SELF_EMPLOYMENT</p></td>
-              <td><p>Simulates an unsuccessful response where returned adjustments do not belong to a self-employment.</p></td>
-          </tr>
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+  
+  | Header Value (Gov-Test-Scenario)   | Scenario                                                                                          |
+  |------------------------------------|---------------------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                      | Simulates the scenario where no data was found.                                                   |
+  | SELF_EMPLOYMENT_ADJUSTED           | Simulates a successful response where adjustments are present for a self-employment.              |
+  | SELF_EMPLOYMENT_CONSOLIDATED       | Simulates a successful response where adjustments are present for a consolidated self-employment. |
+  | SELF_EMPLOYMENT_UNADJUSTED         | Simulates an unsuccessful response where adjustments are not present for a self-employment.       |
+  | NOT_SELF_EMPLOYMENT                | Simulates an unsuccessful response where returned adjustments do not belong to a self-employment. |
 
 tags:
   - Self-employment business

@@ -6,49 +6,16 @@ get:
     be provided.
     
     ### Test data
-    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-      <table>
-          <thead>
-              <tr>
-                  <th>Header Value (Gov-Test-Scenario)</th>
-                  <th>Scenario</th>
-              </tr>
-          </thead>
-          <tbody> 
-              <tr>
-                  <td><p>N/A - DEFAULT</p></td>
-                  <td><p>Simulate a successful response containing multiple business types.</p></td>
-              </tr>
-              <tr>
-                  <td><p>SELF_EMPLOYMENT</p></td>
-                  <td><p>Simulate a successful response containing a self-employment business.</p></td>
-              </tr>
-              <tr>
-                  <td><p>UK_PROPERTY</p></td>
-                  <td><p>Simulate a successful response containing UK FHL and non-FHL property businesses.</p></td>
-              </tr>
-              <tr>
-                  <td><p>FOREIGN_PROPERTY</p></td>
-                  <td><p>Simulate a successful response containing EEA FHL and foreign property businesses.</p></td>
-              </tr>
-              <tr>
-                  <td><p>NOT_FOUND</p></td>
-                  <td><p>Simulates the scenario where no data is found.</p></td>
-              </tr>
-              <tr>
-                  <td><p>DYNAMIC</p></td>
-                  <td><p>The following response values will change to correspond to the values submitted in the request:<ul>
-                      <li>businessID</li>
-                      <li>typeOfBusiness</li>
-                      <li>accountingPeriod.startdate</li>
-                      <li>accountingPeriod.enddate</li>
-                      <li>taxYear</li>
-                      <li>requestedDatetime</li>
-                      <li>adjustedDatetime</li>
-                  </ul></p></td>
-              </tr>
-          </tbody>
-      </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                              |
+    |---------------------------------|----------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                   | Simulate a successful response containing multiple business types.                     |
+    | SELF_EMPLOYMENT                 | Simulate a successful response containing a self-employment business.                  |
+    | UK_PROPERTY                     | Simulate a successful response containing UK FHL and non-FHL property businesses.      |
+    | FOREIGN_PROPERTY                | Simulate a successful response containing EEA FHL and foreign property businesses.     |
+    | NOT_FOUND                       | Simulates the scenario where no data is found.                                         |
+    | DYNAMIC                         | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime. |
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
