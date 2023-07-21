@@ -4,33 +4,14 @@ post:
     This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary (BSAS) of the income and expenditure for a specified business for a given accounting period. A BSAS must be generated before accounting adjustments are to be entered. A National Insurance number is required.
 
     ### Test data
-    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulates a successful response.</p></td>
-            </tr>
-            <tr>
-                <td><p>NOT_FOUND</p></td>
-                <td><p>Simulates a scenario where no data can be found.</p></td>
-            </tr>
-            <tr>
-                <td><p>NO_ACCOUNTING_PERIOD</p></td>
-                <td><p>Simulates a scenario where the supplied accounting period does not exist.</p></td>
-            </tr>
-            <tr>
-                <td><p>PERIODIC_DATA_INCOMPLETE</p></td>
-                <td><p>Simulates a scenario where one or more periodic updates are missing for this accounting period.</p></td>
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                         |
+    |----------------------------------|--------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response.                 |
+    | NOT_FOUND                        | Simulates a scenario where no data can be found. |
+    | NO_ACCOUNTING_PERIOD             | Simulates a scenario where the supplied accounting period does not exist. |
+    | PERIODIC_DATA_INCOMPLETE         | Simulates a scenario where one or more periodic updates are missing for this accounting period. |
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
