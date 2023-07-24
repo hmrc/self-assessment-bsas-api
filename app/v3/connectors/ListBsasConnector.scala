@@ -20,7 +20,7 @@ import api.connectors.DownstreamUri.{ IfsUri, TaxYearSpecificIfsUri }
 import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
@@ -30,9 +30,9 @@ import scala.concurrent.{ ExecutionContext, Future }
 @Singleton
 class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listBsas(request: ListBsasRequest)(implicit hc: HeaderCarrier,
-                                         ec: ExecutionContext,
-                                         correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
+  def listBsas(request: ListBsasRequestData)(implicit hc: HeaderCarrier,
+                                             ec: ExecutionContext,
+                                             correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
 
     import request._
 

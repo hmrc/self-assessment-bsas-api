@@ -17,18 +17,18 @@
 package v3.connectors
 
 import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
-  val calcId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = Nino("AA123456A")
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   trait Test {
     _: ConnectorTest =>
@@ -40,9 +40,10 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel))
 
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
-        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, taxYear = None)
+        val request: RetrieveForeignPropertyBsasRequestData =
+          RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear = None)
 
-        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calcId"
+        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
@@ -51,9 +52,10 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, calcId, Some(taxYear))
+        val request: RetrieveForeignPropertyBsasRequestData =
+          RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), Some(taxYear))
 
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calcId") returns Future.successful(outcome)
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calculationId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome

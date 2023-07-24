@@ -16,7 +16,8 @@
 
 package v2.models.response.retrieveBsasAdjustments.foreignProperty
 
-import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.hateoas.HateoasLinksFactory
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}

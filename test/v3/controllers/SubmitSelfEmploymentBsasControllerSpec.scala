@@ -17,24 +17,25 @@
 package v3.controllers
 
 import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
 import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.Nino
+import api.models.domain.{ CalculationId, Nino }
 import api.models.errors._
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ AnyContentAsJson, Result }
+import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockSubmitSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-import v3.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v3.mocks.services._
 import v3.models.errors._
-import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRawData, SubmitSelfEmploymentBsasRequestData }
+import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -45,7 +46,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockSubmitSelfEmploymentRequestParser
+    with MockSubmitSelfEmploymentBsasValidatorFactory
     with MockSubmitSelfEmploymentBsasService
     with MockSubmitSelfEmploymentBsasNrsProxyService
     with MockHateoasFactory
@@ -57,8 +58,8 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
-  private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, calculationId, None, AnyContentAsJson(mtdRequestJson))
-  private val request    = SubmitSelfEmploymentBsasRequestData(Nino(nino), calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
+  private val requestData =
+    SubmitSelfEmploymentBsasRequestData(Nino(nino), CalculationId(calculationId), None, submitSelfEmploymentBsasRequestBodyModel)
 
   private val mtdResponseJson = Json.parse(hateoasResponse(nino, calculationId))
 
@@ -73,21 +74,18 @@ class SubmitSelfEmploymentBsasControllerSpec
   "submitSelfEmploymentBsas" should {
     "return OK" when {
       "the request is valid" in new Test {
-
-        MockSubmitSelfEmploymentBsasDataParser
-          .parse(rawRequest)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasNrsProxyService
           .submit(nino)
           .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
-          .submitSelfEmploymentBsas(request)
+          .submitSelfEmploymentBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId, request.taxYear))
+          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId, requestData.taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(
@@ -102,22 +100,14 @@ class SubmitSelfEmploymentBsasControllerSpec
     "return the error as per spec" when {
 
       "the parser validation fails" in new Test {
-        MockSubmitSelfEmploymentBsasDataParser
-          .parse(rawRequest)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(mtdRequestJson))
       }
 
       "multiple parser errors occur" in new Test {
-
-        private val error = ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, CalculationIdFormatError)))
-
-        MockSubmitSelfEmploymentBsasDataParser
-          .parse(rawRequest)
-          .returns(Left(error))
-
-        runMultipleErrorsTestWithAudit(List(NinoFormatError, CalculationIdFormatError), maybeAuditRequestBody = Some(mtdRequestJson))
+        private val errors = List(NinoFormatError, CalculationIdFormatError)
+        willUseValidator(returningErrors(errors))
+        runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(mtdRequestJson))
       }
 
       "multiple errors occur for the customised errors" in new Test {
@@ -126,30 +116,19 @@ class SubmitSelfEmploymentBsasControllerSpec
           ValueFormatError.copy(paths = Some(List("turnover")))
         )
 
-        val error: ErrorWrapper = ErrorWrapper(
-          correlationId,
-          BadRequestError,
-          Some(errors)
-        )
-
-        MockSubmitSelfEmploymentBsasDataParser
-          .parse(rawRequest)
-          .returns(Left(error))
-
+        willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(mtdRequestJson))
       }
 
       "the service returns an error" in new Test {
-        MockSubmitSelfEmploymentBsasDataParser
-          .parse(rawRequest)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasNrsProxyService
           .submit(nino)
           .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
-          .submitSelfEmploymentBsas(request)
+          .submitSelfEmploymentBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))))
 
         runErrorTestWithAudit(RuleTypeOfBusinessIncorrectError, maybeAuditRequestBody = Some(mtdRequestJson))
@@ -162,7 +141,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     val controller = new SubmitSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockSubmitSelfEmploymentBsasValidatorFactory,
       service = mockService,
       nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,

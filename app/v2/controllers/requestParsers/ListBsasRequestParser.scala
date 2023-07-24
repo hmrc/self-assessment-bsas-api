@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers
 
-import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import utils.{ CurrentDate, DateUtils }
 import v2.controllers.requestParsers.validators.ListBsasValidator

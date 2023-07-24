@@ -16,10 +16,10 @@
 
 package api.models.domain
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import support.UnitSpec
 
-import java.time.{LocalDate, ZoneId}
+import java.time.{ LocalDate, ZoneId }
 
 class TaxYearSpec extends UnitSpec {
 
@@ -77,21 +77,6 @@ class TaxYearSpec extends UnitSpec {
       }
     }
 
-    "TaxYear.now()" should {
-      "return the current tax year" in {
-        val now  = LocalDate.now(ZoneId.of("UTC"))
-        val year = now.getYear
-
-        val expectedYear = {
-          val taxYearStartDate = LocalDate.of(year, 4, 6)
-          if (now.isBefore(taxYearStartDate)) year else year + 1
-        }
-
-        val result = TaxYear.now()
-        result.year shouldBe expectedYear
-      }
-    }
-
     "constructed directly" should {
       "not compile" in {
         """new TaxYear("2021-22")""" shouldNot compile
@@ -118,4 +103,20 @@ class TaxYearSpec extends UnitSpec {
       }
     }
   }
+
+  "TaxYear.currentTaxYear()" should {
+    "return the current tax year" in {
+      val today = LocalDate.now(ZoneId.of("UTC"))
+      val year  = today.getYear
+
+      val expectedYear = {
+        val taxYearStartDate = LocalDate.of(year, 4, 6)
+        if (today.isBefore(taxYearStartDate)) year else year + 1
+      }
+
+      val result = TaxYear.currentTaxYear()
+      result.year shouldBe expectedYear
+    }
+  }
+
 }

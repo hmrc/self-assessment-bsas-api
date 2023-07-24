@@ -17,22 +17,23 @@
 package v3.controllers
 
 import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
 import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.domain.Nino
+import api.models.domain.{ CalculationId, Nino }
 import api.models.errors._
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockRetrieveUkPropertyBsasValidatorFactory
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v3.mocks.services.MockRetrieveUkPropertyBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.ukProperty.{ RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData }
+import v3.models.request.retrieveBsas
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,7 +44,7 @@ class RetrieveUkPropertyBsasControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveUkPropertyRequestParser
+    with MockRetrieveUkPropertyBsasValidatorFactory
     with MockRetrieveUkPropertyBsasService
     with MockHateoasFactory
     with MockIdGenerator
@@ -53,8 +54,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
   private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId, taxYear = None)
-  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId, taxYear = None)
+  private val requestData = retrieveBsas.RetrieveUkPropertyBsasRequestData(Nino(nino), CalculationId(calculationId), taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -74,12 +74,10 @@ class RetrieveUkPropertyBsasControllerSpec
   "retrieve" should {
     "return successful hateoas response for fhl with status OK" when {
       "the request is valid" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
 
         MockHateoasFactory
@@ -94,12 +92,10 @@ class RetrieveUkPropertyBsasControllerSpec
     }
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))))
 
         MockHateoasFactory
@@ -115,20 +111,15 @@ class RetrieveUkPropertyBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))))
 
         runErrorTest(expectedError = RuleTypeOfBusinessIncorrectError)
@@ -141,7 +132,7 @@ class RetrieveUkPropertyBsasControllerSpec
     val controller = new RetrieveUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockRetrieveUkPropertyBsasValidatorFactory,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

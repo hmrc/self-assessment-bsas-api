@@ -16,8 +16,8 @@
 
 package v3.hateoas
 
-import api.hateoas.Method.{ GET, POST }
-import api.hateoas.{ Link, Method }
+import api.models.hateoas.Method.{ GET, POST }
+import api.models.hateoas.{ Link, Method }
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import support.UnitSpec

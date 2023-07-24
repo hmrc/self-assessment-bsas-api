@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 import v3.services.ListBsasService
 
@@ -33,9 +33,9 @@ trait MockListBsasService extends MockFactory {
 
   object MockListBsasService {
 
-    def listBsas(requestData: ListBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]]] = {
+    def listBsas(requestData: ListBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListBsasResponse[BsasSummary]]]]] = {
       (mockListBsasService
-        .listBsas(_: ListBsasRequest)(_: RequestContext, _: ExecutionContext))
+        .listBsas(_: ListBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
   }

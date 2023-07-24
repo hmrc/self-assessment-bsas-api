@@ -21,11 +21,11 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 import v3.services.RetrieveForeignPropertyBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveForeignPropertyBsasService extends MockFactory {
 

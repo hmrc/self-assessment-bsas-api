@@ -16,8 +16,8 @@
 
 package v2.hateoas
 
-import api.hateoas.Link
-import api.hateoas.Method.{ GET, POST }
+import api.models.hateoas.Link
+import api.models.hateoas.Method.{ GET, POST }
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.hateoas.RelType.{ RETRIEVE_BSAS, SUBMIT_ADJUSTMENTS }

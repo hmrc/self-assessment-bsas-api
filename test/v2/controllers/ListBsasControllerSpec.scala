@@ -17,11 +17,12 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.{ HateoasWrapper, MockHateoasFactory }
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.mocks.{ MockCurrentDate, MockIdGenerator }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ Nino, Status }
+import api.hateoas.MockHateoasFactory
+import api.models.hateoas.HateoasWrapper
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.{MockCurrentDate, MockIdGenerator}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{Nino, Status}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
@@ -35,9 +36,9 @@ import v2.fixtures.ListBsasFixtures._
 import v2.hateoas.HateoasLinks
 import v2.mocks.requestParsers.MockListBsasRequestParser
 import v2.mocks.services.MockListBsasService
-import v2.models.domain.{ DownstreamTaxYear, TypeOfBusiness }
-import v2.models.request.{ AccountingPeriod, ListBsasRawData, ListBsasRequest }
-import v2.models.response.listBsas.{ BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse }
+import v2.models.domain.{DownstreamTaxYear, TypeOfBusiness}
+import v2.models.request.{AccountingPeriod, ListBsasRawData, ListBsasRequest}
+import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global

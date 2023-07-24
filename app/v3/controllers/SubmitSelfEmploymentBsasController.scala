@@ -19,12 +19,10 @@ package v3.controllers
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
-import config.AppConfig
 import play.api.libs.json.JsValue
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.mvc.{ Action, ControllerComponents }
 import utils.{ IdGenerator, Logging }
-import v3.controllers.requestParsers.SubmitSelfEmploymentBsasDataParser
-import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRawData
+import v3.controllers.validators.SubmitSelfEmploymentBsasValidatorFactory
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
 import v3.services._
@@ -35,13 +33,13 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
-                                                   parser: SubmitSelfEmploymentBsasDataParser,
+                                                   validatorFactory: SubmitSelfEmploymentBsasValidatorFactory,
                                                    service: SubmitSelfEmploymentBsasService,
                                                    nrsService: SubmitSelfEmploymentBsasNrsProxyService,
                                                    hateoasFactory: HateoasFactory,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
-                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with V3Controller
     with Logging {
@@ -56,11 +54,11 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = SubmitSelfEmploymentBsasRawData(nino, calculationId, taxYear, AnyContentAsJson(request.body))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService { parsedRequest =>
             nrsService.submit(nino, parsedRequest.body) //Submit asynchronously to NRS
             service.submitSelfEmploymentBsas(parsedRequest)
@@ -78,6 +76,6 @@ class SubmitSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAu
             includeResponse = true
           ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 }

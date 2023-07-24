@@ -17,20 +17,21 @@
 package v3.controllers
 
 import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
 import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.errors._
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
 import routing.Version3
-import v3.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
+import v3.controllers.validators.MockSubmitForeignPropertyBsasValidatorFactory
 import v3.mocks.services._
 import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty._
@@ -44,8 +45,8 @@ class SubmitForeignPropertyBsasControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
+    with MockSubmitForeignPropertyBsasValidatorFactory
     with MockSubmitForeignPropertyBsasService
-    with MockSubmitForeignPropertyBsasRequestParser
     with MockSubmitForeignPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
@@ -54,12 +55,12 @@ class SubmitForeignPropertyBsasControllerSpec
 
   private val version = Version3
 
-  private val bsasId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val calculationId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val rawTaxYear = "2023-24"
   private val taxYear    = TaxYear.fromMtd(rawTaxYear)
 
   private val testHateoasLink =
-    Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
+    Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust", method = GET, rel = "self")
 
   private val requestJson = Json.parse(
     """|{
@@ -103,16 +104,20 @@ class SubmitForeignPropertyBsasControllerSpec
     )
 
   val requestBody: SubmitForeignPropertyBsasRequestBody =
-    SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
+    SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)), None)
 
-  private val rawData     = SubmitForeignPropertyRawData(nino, bsasId, Some(rawTaxYear), requestJson)
-  private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, Some(taxYear), requestBody)
+  private val requestData = SubmitForeignPropertyBsasRequestData(
+    Nino(nino),
+    CalculationId(calculationId),
+    Some(taxYear),
+    requestBody
+  )
 
   val mtdResponseJson: JsValue = Json.parse(s"""
        |{
        |  "links":[
        |    {
-       |      "href":"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust",
+       |      "href":"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
        |      "rel":"self",
        |      "method":"GET"
        |    }
@@ -123,9 +128,7 @@ class SubmitForeignPropertyBsasControllerSpec
   "handleRequest" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockSubmitForeignPropertyBsasRequestParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockSubmitForeignPropertyBsasNrsProxyService
           .submit(nino)
@@ -136,8 +139,8 @@ class SubmitForeignPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitForeignPropertyBsasHateoasData(nino, bsasId, requestData.taxYear))
-          .returns(HateoasWrapper((), Seq(testHateoasLink)))
+          .wrap((), SubmitForeignPropertyBsasHateoasData(nino, calculationId, requestData.taxYear))
+          .returns(HateoasWrapper((), List(testHateoasLink)))
 
         runOkTestWithAudit(
           expectedStatus = OK,
@@ -150,17 +153,12 @@ class SubmitForeignPropertyBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockSubmitForeignPropertyBsasRequestParser
-          .parseRequest(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
       }
 
       "the service returns an error" in new Test {
-        MockSubmitForeignPropertyBsasRequestParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockSubmitForeignPropertyBsasNrsProxyService
           .submit(nino)
@@ -180,7 +178,7 @@ class SubmitForeignPropertyBsasControllerSpec
     val controller = new SubmitForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockSubmitForeignPropertyBsasValidatorFactory,
       service = mockService,
       nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
@@ -190,7 +188,7 @@ class SubmitForeignPropertyBsasControllerSpec
     )
 
     override protected def callController(): Future[Result] =
-      controller.handleRequest(nino, bsasId, Some(rawTaxYear))(fakePostRequest(requestJson))
+      controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -200,7 +198,7 @@ class SubmitForeignPropertyBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino, "calculationId" -> bsasId),
+          params = Map("nino" -> nino, "calculationId" -> calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

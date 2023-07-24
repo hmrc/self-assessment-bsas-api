@@ -21,11 +21,11 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v3.services.RetrieveSelfEmploymentBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSelfEmploymentBsasService extends MockFactory {
 

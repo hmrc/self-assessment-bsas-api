@@ -16,8 +16,8 @@
 
 package v3.models.response
 
-import api.hateoas.Link
-import api.hateoas.Method.GET
+import api.models.hateoas.Link
+import api.models.hateoas.Method.GET
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import play.api.Configuration

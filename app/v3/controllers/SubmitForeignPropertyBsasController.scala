@@ -19,12 +19,10 @@ package v3.controllers
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
-import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{ Action, ControllerComponents }
 import utils.{ IdGenerator, Logging }
-import v3.controllers.requestParsers.SubmitForeignPropertyBsasRequestParser
-import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyRawData
+import v3.controllers.validators.SubmitForeignPropertyBsasValidatorFactory
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
 import v3.models.response.SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory
 import v3.services._
@@ -36,12 +34,12 @@ import scala.concurrent.ExecutionContext
 class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                     val lookupService: MtdIdLookupService,
                                                     nrsService: SubmitForeignPropertyBsasNrsProxyService,
-                                                    parser: SubmitForeignPropertyBsasRequestParser,
+                                                    validatorFactory: SubmitForeignPropertyBsasValidatorFactory,
                                                     service: SubmitForeignPropertyBsasService,
                                                     hateoasFactory: HateoasFactory,
                                                     auditService: AuditService,
                                                     cc: ControllerComponents,
-                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with V3Controller
     with Logging {
@@ -53,11 +51,11 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = SubmitForeignPropertyRawData(nino, calculationId, taxYear, request.body)
+      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService { parsedRequest =>
             nrsService.submit(nino, parsedRequest.body) //Submit asynchronously to NRS
             service.submitForeignPropertyBsas(parsedRequest)
@@ -75,6 +73,6 @@ class SubmitForeignPropertyBsasController @Inject()(val authService: EnrolmentsA
             includeResponse = true
           ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 }

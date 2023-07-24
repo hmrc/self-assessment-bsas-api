@@ -17,22 +17,23 @@
 package v3.controllers
 
 import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
 import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.domain.Nino
+import api.models.domain.{ CalculationId, Nino }
 import api.models.errors._
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockRetrieveForeignPropertyBsasValidatorFactory
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
-import v3.mocks.requestParsers.MockRetrieveForeignPropertyRequestParser
 import v3.mocks.services.MockRetrieveForeignPropertyBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.foreignProperty.{ RetrieveForeignPropertyBsasRawData, RetrieveForeignPropertyBsasRequestData }
+import v3.models.request.retrieveBsas
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,7 +44,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveForeignPropertyRequestParser
+    with MockRetrieveForeignPropertyBsasValidatorFactory
     with MockRetrieveForeignPropertyBsasService
     with MockHateoasFactory
     with MockIdGenerator
@@ -51,10 +52,9 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   private val version = Version3
 
-  private val calcId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-  private val request        = RetrieveForeignPropertyBsasRequestData(Nino(nino), calcId, taxYear = None)
-  private val requestRawData = RetrieveForeignPropertyBsasRawData(nino, calcId, taxYear = None)
+  private val requestData = retrieveBsas.RetrieveForeignPropertyBsasRequestData(Nino(nino), CalculationId(calculationId), taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -68,13 +68,13 @@ class RetrieveForeignPropertyBsasControllerSpec
   "retrieve" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveForeignPropertyRequestParser.parse(requestRawData) returns Right(request)
+        willUseValidator(returningSuccess(requestData))
 
-        MockRetrieveForeignPropertyBsasService.retrieveBsas(request) returns
+        MockRetrieveForeignPropertyBsasService.retrieveBsas(requestData) returns
           Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel)))
 
         MockHateoasFactory
-          .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calcId, None)) returns
+          .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calculationId, None)) returns
           HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
 
         runOkTest(
@@ -86,14 +86,14 @@ class RetrieveForeignPropertyBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveForeignPropertyRequestParser.parse(requestRawData) returns Left(ErrorWrapper(correlationId, NinoFormatError, None))
+        willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveForeignPropertyRequestParser.parse(requestRawData) returns Right(request)
+        willUseValidator(returningSuccess(requestData))
 
-        MockRetrieveForeignPropertyBsasService.retrieveBsas(request) returns Future.successful(
+        MockRetrieveForeignPropertyBsasService.retrieveBsas(requestData) returns Future.successful(
           Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError)))
 
         runErrorTest(expectedError = RuleTypeOfBusinessIncorrectError)
@@ -106,14 +106,14 @@ class RetrieveForeignPropertyBsasControllerSpec
     val controller = new RetrieveForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockRetrieveForeignPropertyBsasValidatorFactory,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieve(nino, calcId, taxYear = None)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
 
     MockedAppConfig.isApiDeprecated(version) returns false
   }

@@ -16,7 +16,8 @@
 
 package v3.models.response
 
-import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.hateoas.HateoasLinksFactory
+import api.models.hateoas.{HateoasData, Link}
 import api.models.domain.TaxYear
 import config.AppConfig
 import play.api.libs.json._

@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
 import play.api.Logger
 import play.api.libs.json._

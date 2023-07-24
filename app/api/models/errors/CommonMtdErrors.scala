@@ -30,6 +30,7 @@ object FromDateFormatError      extends MtdError(code = "FORMAT_FROM_DATE", mess
 object BusinessIdFormatError    extends MtdError("FORMAT_BUSINESS_ID", "The provided Business ID is invalid", BAD_REQUEST)
 object PaymentIdFormatError     extends MtdError(code = "FORMAT_PAYMENT_ID", message = "The provided payment ID is invalid", BAD_REQUEST)
 object TransactionIdFormatError extends MtdError(code = "FORMAT_TRANSACTION_ID", message = "The provided transaction ID is invalid", BAD_REQUEST)
+object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid", BAD_REQUEST)
 
 object IdFormatError extends MtdError(code = "FORMAT_ID", message = "The provided ID is invalid", BAD_REQUEST)
 
@@ -41,16 +42,13 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
 }
 
 object StartDateFormatError extends MtdError("FORMAT_START_DATE", "The provided Start date is invalid", BAD_REQUEST)
-
-object EndDateFormatError extends MtdError("FORMAT_END_DATE", "The provided End date is invalid", BAD_REQUEST)
+object EndDateFormatError   extends MtdError("FORMAT_END_DATE", "The provided End date is invalid", BAD_REQUEST)
 
 object TypeOfBusinessFormatError extends MtdError("FORMAT_TYPE_OF_BUSINESS", "The provided type of business is invalid", BAD_REQUEST)
 
 object AdjustedStatusFormatError extends MtdError("FORMAT_ADJUSTED_STATUS", "The supplied adjusted status format is invalid", BAD_REQUEST)
 
 object FormatAdjustmentValueError extends MtdError("FORMAT_ADJUSTMENT_VALUE", "The format of the adjustment value is invalid", BAD_REQUEST)
-
-object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid", BAD_REQUEST)
 
 object BsasIdFormatError extends MtdError("FORMAT_BSAS_ID", "The format of the BSAS ID is invalid", BAD_REQUEST)
 
@@ -91,6 +89,9 @@ object UnsupportedVersionError  extends MtdError("NOT_FOUND", "The requested res
 // Common rule errors
 object RuleTaxYearNotSupportedError
     extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range", BAD_REQUEST)
+
+object RuleTaxYearRangeInvalid
+    extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required", BAD_REQUEST)
 
 object RuleIncorrectOrEmptyBodyError
     extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted", BAD_REQUEST)

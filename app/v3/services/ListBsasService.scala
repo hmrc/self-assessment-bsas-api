@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{ BaseService, ServiceOutcome }
 import cats.implicits._
 import v3.connectors.ListBsasConnector
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
 import javax.inject.{ Inject, Singleton }
@@ -30,8 +30,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 @Singleton
 class ListBsasService @Inject()(connector: ListBsasConnector) extends BaseService {
 
-  def listBsas(request: ListBsasRequest)(implicit ctx: RequestContext,
-                                         ec: ExecutionContext): Future[ServiceOutcome[ListBsasResponse[BsasSummary]]] = {
+  def listBsas(request: ListBsasRequestData)(implicit ctx: RequestContext,
+                                             ec: ExecutionContext): Future[ServiceOutcome[ListBsasResponse[BsasSummary]]] = {
 
     connector
       .listBsas(request)

@@ -21,7 +21,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.TriggerBsasConnector
-import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -32,9 +32,9 @@ trait MockTriggerBsasConnector extends MockFactory {
 
   object MockTriggerBsasConnector {
 
-    def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[DownstreamOutcome[TriggerBsasResponse]]] = {
+    def triggerBsas(requestData: TriggerBsasRequestData): CallHandler[Future[DownstreamOutcome[TriggerBsasResponse]]] = {
       (mockConnector
-        .triggerBsas(_: TriggerBsasRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .triggerBsas(_: TriggerBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
   }

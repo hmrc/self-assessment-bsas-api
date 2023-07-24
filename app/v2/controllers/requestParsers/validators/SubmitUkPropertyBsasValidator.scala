@@ -16,9 +16,7 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.request.submitBsas.ukProperty._

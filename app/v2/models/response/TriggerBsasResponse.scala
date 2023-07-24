@@ -16,7 +16,8 @@
 
 package v2.models.response
 
-import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import api.hateoas.HateoasLinksFactory
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json._
 import v2.hateoas.HateoasLinks

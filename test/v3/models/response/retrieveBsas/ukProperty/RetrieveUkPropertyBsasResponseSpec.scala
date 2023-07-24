@@ -16,8 +16,9 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import api.hateoas.Method._
-import api.hateoas.{ HateoasFactory, HateoasWrapper, Link }
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method._
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.domain.TaxYear
 import api.models.utils.JsonErrorValidators
 import mocks.MockAppConfig

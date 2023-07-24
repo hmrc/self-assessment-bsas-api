@@ -17,17 +17,17 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
 import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino            = Nino("AA123456A")
-  val calculationId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = Nino("AA123456A")
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   trait Test {
     _: ConnectorTest =>
@@ -35,7 +35,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     val connector: RetrieveSelfEmploymentBsasConnector = new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def requestWith(taxYear: Option[TaxYear]): RetrieveSelfEmploymentBsasRequestData =
-      RetrieveSelfEmploymentBsasRequestData(nino, calculationId, taxYear)
+      RetrieveSelfEmploymentBsasRequestData(nino, CalculationId(calculationId), taxYear)
   }
 
   "RetrieveSelfEmploymentBsasConnectorSpec" when {

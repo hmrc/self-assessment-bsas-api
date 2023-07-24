@@ -17,17 +17,18 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,7 +37,7 @@ import v2.mocks.requestParsers.MockTriggerBsasRequestParser
 import v2.mocks.services.MockTriggerBsasService
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import v2.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequest }
+import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
 import v2.models.response.TriggerBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

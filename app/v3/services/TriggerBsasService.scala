@@ -23,7 +23,7 @@ import api.services.{ BaseService, ServiceOutcome }
 import cats.implicits._
 import v3.connectors.TriggerBsasConnector
 import v3.models.errors._
-import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 
 import javax.inject.{ Inject, Singleton }
@@ -32,7 +32,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 @Singleton
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {
 
-  def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[TriggerBsasResponse]] =
+  def triggerBsas(request: TriggerBsasRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[TriggerBsasResponse]] =
     connector
       .triggerBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))

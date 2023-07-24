@@ -24,11 +24,11 @@ import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveUkPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.retrieveBsas.ukProperty.RetrieveUkPropertyBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {

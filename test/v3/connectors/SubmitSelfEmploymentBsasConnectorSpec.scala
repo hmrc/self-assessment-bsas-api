@@ -17,7 +17,7 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v3.fixtures.selfEmployment.ExpensesFixture.expensesModel
@@ -35,8 +35,8 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       expenses = Some(expensesModel)
     )
 
-  val nino: Nino = Nino("AA123456A")
-  val bsasId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = Nino("AA123456A")
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   trait Test { _: ConnectorTest =>
     val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
@@ -47,10 +47,10 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result" in new IfsTest with Test {
       val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
       val request: SubmitSelfEmploymentBsasRequestData =
-        SubmitSelfEmploymentBsasRequestData(nino, bsasId, None, submitSelfEmploymentBsasRequestBodyModel)
+        SubmitSelfEmploymentBsasRequestData(nino, CalculationId(calculationId), None, submitSelfEmploymentBsasRequestBodyModel)
 
       willPut(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId",
         body = submitSelfEmploymentBsasRequestBodyModel
       ).returns(Future.successful(outcome))
 
@@ -60,10 +60,13 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "post a SubmitBsasRequest body and return the result for a TYS tax year" in new TysIfsTest with Test {
       val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
       val request: SubmitSelfEmploymentBsasRequestData =
-        SubmitSelfEmploymentBsasRequestData(nino, bsasId, Some(TaxYear.fromMtd("2023-24")), submitSelfEmploymentBsasRequestBodyModel)
+        SubmitSelfEmploymentBsasRequestData(nino,
+                                            CalculationId(calculationId),
+                                            Some(TaxYear.fromMtd("2023-24")),
+                                            submitSelfEmploymentBsasRequestBodyModel)
 
       willPut(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$bsasId",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calculationId",
         body = submitSelfEmploymentBsasRequestBodyModel
       ).returns(Future.successful(outcome))
 

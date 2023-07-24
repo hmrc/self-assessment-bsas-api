@@ -16,8 +16,8 @@
 
 package v3.hateoas
 
-import api.hateoas.Link
-import api.hateoas.Method._
+import api.models.hateoas.Link
+import api.models.hateoas.Method._
 import api.models.domain.TaxYear
 import config.AppConfig
 import v3.hateoas.RelType._

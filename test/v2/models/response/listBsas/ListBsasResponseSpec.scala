@@ -16,8 +16,8 @@
 
 package v2.models.response.listBsas
 
-import api.hateoas.Link
-import api.hateoas.Method.{ GET, POST }
+import api.models.hateoas.Link
+import api.models.hateoas.Method.{ GET, POST }
 import api.models.domain.Status
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsSuccess, Json }

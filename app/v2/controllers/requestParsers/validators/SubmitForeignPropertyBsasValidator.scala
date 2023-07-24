@@ -16,11 +16,9 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors._
 import v2.controllers.requestParsers.validators.validations._
-import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
+import v2.models.request.submitBsas.foreignProperty.{ FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData }
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet =

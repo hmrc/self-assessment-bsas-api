@@ -16,9 +16,8 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import api.models.errors.MtdError
-import v2.controllers.requestParsers.validators.validations.{BsasIdValidation, NinoValidation}
+import v2.controllers.requestParsers.validators.validations.{ BsasIdValidation, NinoValidation }
 import v2.models.request.RetrieveAdjustmentsRawData
 
 class RetrieveAdjustmentsValidator extends Validator[RetrieveAdjustmentsRawData] {

@@ -17,7 +17,7 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.outcomes.ResponseWrapper
 import v3.models.request.submitBsas.foreignProperty._
 
@@ -25,8 +25,8 @@ import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
-  private val nino   = Nino("AA123456A")
-  private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = Nino("AA123456A")
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
   val submitForeignPropertyBsasRequestBodyModel: SubmitForeignPropertyBsasRequestBody =
     SubmitForeignPropertyBsasRequestBody(None, None)
@@ -35,7 +35,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def requestWith(taxYear: Option[TaxYear]): SubmitForeignPropertyBsasRequestData =
-      SubmitForeignPropertyBsasRequestData(nino, bsasId, taxYear, submitForeignPropertyBsasRequestBodyModel)
+      SubmitForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear, submitForeignPropertyBsasRequestBodyModel)
   }
 
   "submitBsas" must {
@@ -44,7 +44,8 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       val request = requestWith(taxYear = None)
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId", body = submitForeignPropertyBsasRequestBodyModel)
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId",
+              body = submitForeignPropertyBsasRequestBodyModel)
         .returns(Future.successful(outcome))
 
       await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
@@ -54,7 +55,8 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       val request = requestWith(Some(TaxYear.fromMtd("2022-23")))
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$bsasId", body = submitForeignPropertyBsasRequestBodyModel)
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId",
+              body = submitForeignPropertyBsasRequestBodyModel)
         .returns(Future.successful(outcome))
 
       await(connector.submitForeignPropertyBsas(request)) shouldBe outcome
@@ -64,7 +66,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       val request = requestWith(Some(TaxYear.fromMtd("2023-24")))
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$bsasId",
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calculationId",
               body = submitForeignPropertyBsasRequestBodyModel)
         .returns(Future.successful(outcome))
 

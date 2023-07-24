@@ -16,13 +16,12 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import api.models.errors._
 import config.FixedConfig
 import utils.CurrentDate
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.domain.TypeOfBusiness
-import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequestBody}
+import v2.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequestBody }
 
 import javax.inject.Inject
 

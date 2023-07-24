@@ -17,10 +17,11 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.errors._
 import api.services.MockAuditService
 import play.api.libs.json.Json
@@ -35,7 +36,7 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import routing.Version2
 import v2.models.request.submitBsas.foreignProperty._
-import v2.models.response.{ SubmitForeignPropertyBsasHateoasData, SubmitForeignPropertyBsasResponse }
+import v2.models.response.{SubmitForeignPropertyBsasHateoasData, SubmitForeignPropertyBsasResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers.{ AuthorisedController, EndpointLogContext, RequestContext, RequestHandler }
+import api.controllers.{ AuthorisedController, EndpointLogContext, RequestContext }
 import api.hateoas.HateoasFactory
 import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
 import config.AppConfig

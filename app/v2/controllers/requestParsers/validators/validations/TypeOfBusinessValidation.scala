@@ -16,11 +16,10 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{MtdError, TypeOfBusinessFormatError}
+import api.models.errors.{ MtdError, TypeOfBusinessFormatError }
 import v2.models.domain.TypeOfBusiness
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 object TypeOfBusinessValidation {
 

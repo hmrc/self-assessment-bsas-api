@@ -23,11 +23,11 @@ import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseRetrieveBsasService {

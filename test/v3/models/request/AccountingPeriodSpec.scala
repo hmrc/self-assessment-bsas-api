@@ -16,26 +16,26 @@
 
 package v3.models.request
 
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{ JsError, JsSuccess, Json }
 import support.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
 
-  val requestJson: JsValue = Json.parse("""
+  private val requestJson = Json.parse("""
       |{
       |  "startDate" : "2018-11-25",
       |  "endDate" : "2018-11-26"
       |}
   """.stripMargin)
 
-  val invalidJson: JsValue = Json.parse("""
+  private val invalidJson = Json.parse("""
       |{
       |  "startDate" : 4,
       |  "endDate" : true
       |}
   """.stripMargin)
 
-  val model: AccountingPeriod = AccountingPeriod("2018-11-25","2018-11-26")
+  private val model = AccountingPeriod("2018-11-25", "2018-11-26")
 
   "AccountingPeriod" when {
     "read from valid JSON" should {

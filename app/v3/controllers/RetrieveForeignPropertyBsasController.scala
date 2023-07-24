@@ -19,11 +19,9 @@ package v3.controllers
 import api.controllers.{ AuthorisedController, EndpointLogContext, RequestContext, RequestHandler }
 import api.hateoas.HateoasFactory
 import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
-import config.AppConfig
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import utils.{ IdGenerator, Logging }
-import v3.controllers.requestParsers.RetrieveForeignPropertyRequestParser
-import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRawData
+import v3.controllers.validators.RetrieveForeignPropertyBsasValidatorFactory
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyHateoasData
 import v3.services.RetrieveForeignPropertyBsasService
 
@@ -33,11 +31,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveForeignPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
                                                       val lookupService: MtdIdLookupService,
-                                                      parser: RetrieveForeignPropertyRequestParser,
+                                                      validatorFactory: RetrieveForeignPropertyBsasValidatorFactory,
                                                       service: RetrieveForeignPropertyBsasService,
                                                       hateoasFactory: HateoasFactory,
                                                       cc: ControllerComponents,
-                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with V3Controller
     with Logging {
@@ -49,14 +47,14 @@ class RetrieveForeignPropertyBsasController @Inject()(val authService: Enrolment
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = RetrieveForeignPropertyBsasRawData(nino, calculationId, taxYear)
+      val validator = validatorFactory.validator(nino, calculationId, taxYear)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.retrieveForeignPropertyBsas)
           .withHateoasResultFrom(hateoasFactory)((parsedRequest, _) => RetrieveForeignPropertyHateoasData(nino, calculationId, parsedRequest.taxYear))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 }

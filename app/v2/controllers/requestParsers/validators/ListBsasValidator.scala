@@ -16,8 +16,7 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import api.models.errors.{ MtdError, RuleTaxYearNotSupportedError }
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.request.ListBsasRawData

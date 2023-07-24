@@ -17,7 +17,7 @@
 package v3.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
@@ -28,13 +28,14 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   val nino: String   = "AA123456A"
   val bsasId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val calculationId  = CalculationId(bsasId)
 
   def makeRequest(taxYear: Option[String]): SubmitUkPropertyBsasRequestData = {
     SubmitUkPropertyBsasRequestData(
       nino = Nino(nino),
-      calculationId = bsasId,
-      body = nonFHLBody,
-      taxYear = taxYear.map(TaxYear.fromMtd)
+      calculationId = calculationId,
+      taxYear = taxYear.map(TaxYear.fromMtd),
+      body = nonFHLBody
     )
   }
 

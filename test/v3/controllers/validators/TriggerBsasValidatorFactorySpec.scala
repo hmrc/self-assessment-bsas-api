@@ -1,0 +1,240 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package v3.controllers.validators
+
+import api.mocks.MockCurrentDate
+import api.models.domain.Nino
+import api.models.errors._
+import mocks.MockAppConfig
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import support.UnitSpec
+import v3.models.domain.TypeOfBusiness
+import v3.models.errors.RuleAccountingPeriodNotSupportedError
+import v3.models.request.triggerBsas.{ TriggerBsasRequestBody, TriggerBsasRequestData }
+
+import java.time.LocalDate
+
+class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
+
+  private implicit val correlationId: String = "1234"
+
+  private val validNino  = "AA123456A"
+  private val parsedNino = Nino(validNino)
+
+  private val validatorFactory = new TriggerBsasValidatorFactory(mockAppConfig)
+
+  private def validator(nino: String, body: JsValue) =
+    validatorFactory.validator(nino, body)
+
+  private def triggerBsasRequestJson(startDate: String = "2021-05-05",
+                                     endDate: String = "2022-05-06",
+                                     typeOfBusiness: String = "self-employment",
+                                     businessId: String = "XAIS12345678901"): JsObject = {
+    Json.obj(
+      "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+      "typeOfBusiness"   -> typeOfBusiness,
+      "businessId"       -> businessId
+    )
+
+  }
+
+  class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDate {
+//    val validator = validatorFactory.validator(validNino, body)
+    //  val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDate, appConfig = mockAppConfig)
+
+    MockCurrentDate.getCurrentDate().returns(date)
+    MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
+    MockedAppConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
+  }
+
+  "running validation" should {
+    "return no errors" when {
+      List(
+        "self-employment",
+        "uk-property-fhl",
+        "uk-property-non-fhl",
+        "foreign-property-fhl-eea",
+        "foreign-property"
+      ).foreach { typeOfBusiness =>
+        s"$typeOfBusiness is supplied" in new SetUp {
+          val body: JsObject                       = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness)
+          val expectedBody: TriggerBsasRequestBody = body.as[TriggerBsasRequestBody]
+
+          val result: Either[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
+          result shouldBe Right(TriggerBsasRequestData(parsedNino, expectedBody))
+        }
+      }
+    }
+
+    "return NinoFormatError" when {
+      "the nino is invalid" in new SetUp {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator("not-a-nino", triggerBsasRequestJson()).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, NinoFormatError)
+        )
+      }
+    }
+
+    "return a StartDateFormatError" when {
+      "the start date format is incorrect" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(startDate = "06-05-2019")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, StartDateFormatError)
+        )
+      }
+    }
+
+    "return an EndDateFormatError" when {
+      "the end date format is incorrect" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(endDate = "06-05-2020")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, EndDateFormatError)
+        )
+      }
+    }
+
+    "return a TypeOfBusinessFormatError" when {
+      "an incorrect business type is given" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(typeOfBusiness = "not-a-type-of-business")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, TypeOfBusinessFormatError)
+        )
+      }
+    }
+
+    "return a BusinessIdFormatError" when {
+      "a business id is provided with wrong formatting" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(businessId = "not-a-business-id")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, BusinessIdFormatError)
+        )
+      }
+    }
+
+    "return a RuleIncorrectOrEmptyBodyError" when {
+      "an empty body is submitted" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, JsObject.empty).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
+        )
+      }
+
+      "mandatory fields are missing" in new SetUp() {
+        val requestJs: JsObject                                  = Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, requestJs).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPaths(List("/accountingPeriod/startDate", "/businessId", "/typeOfBusiness")))
+        )
+      }
+    }
+
+    "return a RuleEndBeforeStartDateError" when {
+      "the end date is before the start date" in new SetUp {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(startDate = "2022-05-07")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleEndBeforeStartDateError)
+        )
+      }
+    }
+
+    "return a RuleAccountingPeriodNotSupportedError" when {
+      "the accounting period is before the minimum tax year" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(startDate = "2015-05-05", endDate = "2016-05-06")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleAccountingPeriodNotSupportedError)
+        )
+      }
+    }
+
+    "return multiple errors" when {
+      "the request body has muliple issues" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator("not-a-nino", triggerBsasRequestJson(typeOfBusiness = "", businessId = "")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            BadRequestError,
+            Some(List(NinoFormatError, BusinessIdFormatError, TypeOfBusinessFormatError))
+          )
+        )
+      }
+    }
+  }
+
+  "the Accounting Period validation" should {
+    "return no errors" when {
+      "passed the correct Accounting Period dates for each Type of Business" in {
+        List(
+          (TypeOfBusiness.`self-employment`, "2019-04-06"),
+          (TypeOfBusiness.`uk-property-fhl`, "2019-04-06"),
+          (TypeOfBusiness.`uk-property-non-fhl`, "2019-04-06"),
+          (TypeOfBusiness.`foreign-property-fhl-eea`, "2021-04-06"),
+          (TypeOfBusiness.`foreign-property`, "2021-04-06"),
+        ).foreach {
+          case (typeOfBusiness, endDate) =>
+            s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in {
+              val body         = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, endDate = endDate)
+              val expectedBody = body.as[TriggerBsasRequestBody]
+
+              val result: Either[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
+              result shouldBe Right(TriggerBsasRequestData(parsedNino, expectedBody))
+            }
+        }
+      }
+
+      "return a RuleAccountingPeriodNotSupportedError" when {
+        "passed incorrect Accounting Period dates for each Type of Business" in {
+          List(
+            (TypeOfBusiness.`self-employment`, "2019-04-05"),
+            (TypeOfBusiness.`uk-property-fhl`, "2019-04-05"),
+            (TypeOfBusiness.`uk-property-non-fhl`, "2019-04-05"),
+            (TypeOfBusiness.`foreign-property-fhl-eea`, "2021-04-05"),
+            (TypeOfBusiness.`foreign-property`, "2021-04-05"),
+          ).foreach {
+            case (typeOfBusiness, endDate) =>
+              s"typeOfBusiness is $typeOfBusiness and the endDate is before the earliest allowed end date" in {
+                val body = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, endDate = endDate)
+
+                val result: Either[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
+
+                result shouldBe Left(
+                  ErrorWrapper(correlationId, RuleAccountingPeriodNotSupportedError)
+                )
+              }
+          }
+        }
+      }
+    }
+  }
+
+}

@@ -19,11 +19,9 @@ package v3.controllers
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
-import config.AppConfig
 import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import utils._
-import v3.controllers.requestParsers.ListBsasRequestParser
-import v3.models.request.ListBsasRawData
+import v3.controllers.validators.ListBsasValidatorFactory
 import v3.models.response.listBsas.ListBsasHateoasData
 import v3.services.ListBsasService
 
@@ -33,11 +31,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    val lookupService: MtdIdLookupService,
-                                   parser: ListBsasRequestParser,
+                                   validatorFactory: ListBsasValidatorFactory,
                                    service: ListBsasService,
                                    hateoasFactory: HateoasFactory,
                                    cc: ControllerComponents,
-                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with V3Controller
     with Logging {
@@ -49,15 +47,15 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = ListBsasRawData(nino, taxYear, typeOfBusiness, businessId)
+      val validator = validatorFactory.validator(nino, taxYear, typeOfBusiness, businessId)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.listBsas)
           .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, responseData) =>
             ListBsasHateoasData(nino, responseData, Some(parsedRequest.taxYear))))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 }

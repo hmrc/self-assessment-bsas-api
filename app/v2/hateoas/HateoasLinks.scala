@@ -16,8 +16,8 @@
 
 package v2.hateoas
 
-import api.hateoas.Link
-import api.hateoas.Method._
+import api.models.hateoas.Link
+import api.models.hateoas.Method._
 import config.AppConfig
 import v2.hateoas.RelType._
 

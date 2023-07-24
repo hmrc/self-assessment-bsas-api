@@ -17,24 +17,24 @@
 package v3.controllers
 
 import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
 import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.errors._
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
-import routing.Version3
+import v3.controllers.validators.MockSubmitUkPropertyBsasValidatorFactory
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v3.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v3.mocks.services._
 import v3.models.errors._
-import v3.models.request.submitBsas.ukProperty.{ SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData }
+import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 import v3.models.response.SubmitUkPropertyBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -45,7 +45,7 @@ class SubmitUkPropertyBsasControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockSubmitUkPropertyRequestParser
+    with MockSubmitUkPropertyBsasValidatorFactory
     with MockSubmitUkPropertyBsasService
     with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
@@ -53,22 +53,13 @@ class SubmitUkPropertyBsasControllerSpec
     with MockAuditService
     with MockAppConfig {
 
-  private val version = Version3
-
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
   private val rawTaxYear    = "2023-24"
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
-  private val rawData = SubmitUkPropertyBsasRawData(
-    nino = nino,
-    calculationId = calculationId,
-    body = submitBsasRawDataBodyNonFHL(income = nonFHLIncomeAllFields, expenses = nonFHLExpensesAllFields),
-    taxYear = Some(rawTaxYear)
-  )
-
   private val requestData = SubmitUkPropertyBsasRequestData(
     nino = Nino(nino),
-    calculationId = calculationId,
+    calculationId = CalculationId(calculationId),
     body = nonFHLBody,
     taxYear = Some(taxYear)
   )
@@ -87,10 +78,7 @@ class SubmitUkPropertyBsasControllerSpec
 
     "return OK" when {
       "the request is valid" in new Test {
-
-        MockSubmitUkPropertyBsasDataParser
-          .parse(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockSubmitUKPropertyBsasNrsProxyService
           .submit(nino)
@@ -116,30 +104,19 @@ class SubmitUkPropertyBsasControllerSpec
     "return parser errors as per spec" when {
 
       "the parser validation fails" in new Test {
-        MockSubmitUkPropertyBsasDataParser
-          .parse(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
 
       "multiple parser errors occur" in new Test {
-
         private val errors = List(NinoFormatError, CalculationIdFormatError)
-        private val error  = ErrorWrapper(correlationId, BadRequestError, Some(errors))
-
-        MockSubmitUkPropertyBsasDataParser
-          .parse(rawData)
-          .returns(Left(error))
-
+        willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
     }
 
     "the service returns an error" in new Test {
-      MockSubmitUkPropertyBsasDataParser
-        .parse(rawData)
-        .returns(Right(requestData))
+      willUseValidator(returningSuccess(requestData))
 
       MockSubmitUKPropertyBsasNrsProxyService
         .submit(nino)
@@ -158,7 +135,7 @@ class SubmitUkPropertyBsasControllerSpec
     val controller = new SubmitUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockSubmitUkPropertyBsasValidatorFactory,
       service = mockService,
       nrsService = mockSubmitUKPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
@@ -184,7 +161,5 @@ class SubmitUkPropertyBsasControllerSpec
           auditResponse = auditResponse
         )
       )
-
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

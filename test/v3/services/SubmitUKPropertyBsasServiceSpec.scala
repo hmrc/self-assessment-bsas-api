@@ -17,7 +17,7 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{ CalculationId, Nino }
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -31,14 +31,14 @@ import scala.concurrent.Future
 
 class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
 
-  private val nino = Nino("AA123456A")
-  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = Nino("AA123456A")
+  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   val requestData: SubmitUkPropertyBsasRequestData = SubmitUkPropertyBsasRequestData(
     nino = nino,
-    calculationId = id,
-    body = fhlBody,
-    taxYear = None
+    calculationId = calculationId,
+    taxYear = None,
+    body = fhlBody
   )
 
   trait Test extends MockSubmitUkPropertyBsasConnector {

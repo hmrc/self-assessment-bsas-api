@@ -21,10 +21,10 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSelfEmploymentBsasConnector extends MockFactory {
 

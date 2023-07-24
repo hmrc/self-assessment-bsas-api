@@ -17,11 +17,12 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.Method.{ GET, POST }
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
+import api.models.hateoas.Method.{GET, POST}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -35,7 +36,7 @@ import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v2.mocks.services.MockRetrieveSelfEmploymentBsasService
 import v2.models.errors._
-import v2.models.request.{ RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData }
+import v2.models.request.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

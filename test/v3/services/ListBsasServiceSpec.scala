@@ -17,7 +17,7 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ BusinessId, Nino, TaxYear }
 import api.models.errors.{
   BusinessIdFormatError,
   DownstreamErrorCode,
@@ -35,7 +35,7 @@ import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
 import scala.concurrent.Future
@@ -44,10 +44,10 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture {
 
   private val nino                   = Nino("AA123456A")
   private val taxYear                = TaxYear.fromMtd("2019-20")
-  private val incomeSourceIdentifier = Some("IncomeSourceType")
-  private val identifierValue        = Some("01")
+  private val incomeSourceIdentifier = "IncomeSourceType"
+  private val identifierValue        = BusinessId("01")
 
-  val request: ListBsasRequest                = ListBsasRequest(nino, taxYear, incomeSourceIdentifier, identifierValue)
+  val request: ListBsasRequestData            = ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
   val response: ListBsasResponse[BsasSummary] = listBsasResponseModel
 
   trait Test extends MockListBsasConnector {

@@ -17,22 +17,23 @@
 package v3.controllers
 
 import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.Method.GET
-import api.hateoas.{ HateoasWrapper, Link, MockHateoasFactory }
+import api.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
 import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.domain.Nino
+import api.models.domain.{ CalculationId, Nino }
 import api.models.errors._
+import api.models.hateoas.Method.GET
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockRetrieveSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v3.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v3.mocks.services.MockRetrieveSelfEmploymentBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.selfEmployment.{ RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData }
+import v3.models.request.retrieveBsas
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,7 +44,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveSelfEmploymentRequestParser
+    with MockRetrieveSelfEmploymentBsasValidatorFactory
     with MockRetrieveSelfEmploymentBsasService
     with MockHateoasFactory
     with MockIdGenerator
@@ -53,8 +54,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
   private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
-  private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId, None)
-  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId, None)
+  private val requestData = retrieveBsas.RetrieveSelfEmploymentBsasRequestData(Nino(nino), CalculationId(calculationId), None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -68,12 +68,10 @@ class RetrieveSelfEmploymentBsasControllerSpec
   "retrieve" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveSelfEmploymentRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveSelfEmploymentBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
         MockHateoasFactory
@@ -89,20 +87,15 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveSelfEmploymentRequestParser
-          .parse(requestRawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveSelfEmploymentRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveSelfEmploymentBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))))
 
         runErrorTest(expectedError = RuleTypeOfBusinessIncorrectError)
@@ -115,7 +108,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     val controller = new RetrieveSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockRetrieveSelfEmploymentBsasValidatorFactory,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

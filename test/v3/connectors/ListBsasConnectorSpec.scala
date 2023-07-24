@@ -17,21 +17,21 @@
 package v3.connectors
 
 import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ Nino, TaxYear }
+import api.models.domain.{ BusinessId, Nino, TaxYear }
 import api.models.errors.{ DownstreamErrorCode, DownstreamErrors }
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v3.fixtures.ListBsasFixture
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
 
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
 
-  val nino: Nino               = Nino("AA123456A")
-  val incomeSourceId: String   = "XAIS12345678910"
-  val incomeSourceType: String = "02"
+  val nino: Nino       = Nino("AA123456A")
+  val incomeSourceId   = "XAIS12345678910"
+  val incomeSourceType = "02"
 
   private val preTysTaxYear = TaxYear.fromMtd("2018-19")
   private val tysTaxYear    = TaxYear.fromMtd("2023-24")
@@ -100,7 +100,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
   trait Test { _: ConnectorTest =>
     def taxYear: TaxYear
     def downstreamQueryParams: Seq[(String, String)]
-    val request: ListBsasRequest = ListBsasRequest(nino, taxYear, Some(incomeSourceId), Some(incomeSourceType))
+    val request: ListBsasRequestData = ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
 
     val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 

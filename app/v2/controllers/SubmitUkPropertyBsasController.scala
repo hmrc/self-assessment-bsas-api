@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers._
+import api.controllers.{ RequestHandler => _, _ }
 import api.hateoas.HateoasFactory
 import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
 import config.AppConfig

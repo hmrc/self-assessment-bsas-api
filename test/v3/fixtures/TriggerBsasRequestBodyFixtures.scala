@@ -16,9 +16,9 @@
 
 package v3.fixtures
 
-import v3.models.domain.TypeOfBusiness
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.AnyContentAsJson
+import v3.models.domain.TypeOfBusiness
 import v3.models.request.AccountingPeriod
 import v3.models.request.triggerBsas.TriggerBsasRequestBody
 import v3.models.response.TriggerBsasResponse
@@ -226,8 +226,11 @@ object TriggerBsasRequestBodyFixtures {
                                  endDate: String = "2020-05-06",
                                  typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
                                  businessId: String = "XAIS12345678901"): TriggerBsasRequestBody = {
-    TriggerBsasRequestBody(AccountingPeriod(startDate, endDate), typeOfBusiness = typeOfBusiness.toString, businessId = businessId)
-
+    TriggerBsasRequestBody(
+      AccountingPeriod(startDate, endDate),
+      typeOfBusiness = typeOfBusiness.toString,
+      businessId = businessId
+    )
   }
 
 }
