@@ -26,13 +26,13 @@ object ResolveParsedCountryCode extends Resolver[String, String] {
 
   def apply(value: String, notUsedError: Option[MtdError], path: Option[String]): Either[Seq[MtdError], String] = {
     if (value.length != 3) {
-      Left(List(CountryCodeFormatError.maybeWithExtraPath(path)))
+      Left(List(CountryCodeFormatError.maybeWithPath(path)))
     } else if (permittedCustomCodes.contains(value)) {
       Right(value)
     } else {
       Option(CountryCode.getByAlpha3Code(value)) match {
         case Some(_) => Right(value)
-        case None    => Left(List(RuleCountryCodeError.maybeWithExtraPath(path)))
+        case None    => Left(List(RuleCountryCodeError.maybeWithPath(path)))
       }
     }
   }

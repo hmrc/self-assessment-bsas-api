@@ -30,7 +30,6 @@ import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
-import routing.Version3
 import v3.controllers.validators.MockSubmitSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.services._
@@ -53,8 +52,6 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockAuditService
     with MockIdGenerator
     with MockAppConfig {
-
-  private val version = Version3
 
   private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
 
@@ -112,8 +109,8 @@ class SubmitSelfEmploymentBsasControllerSpec
 
       "multiple errors occur for the customised errors" in new Test {
         val errors = List(
-          RuleBothExpensesError.copy(paths = Some(List("expenses"))),
-          ValueFormatError.copy(paths = Some(List("turnover")))
+          ValueFormatError.copy(paths = Some(List("turnover"))),
+          RuleBothExpensesError.copy(paths = Some(List("expenses")))
         )
 
         willUseValidator(returningErrors(errors))
@@ -166,7 +163,5 @@ class SubmitSelfEmploymentBsasControllerSpec
           auditResponse = auditResponse
         )
       )
-
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

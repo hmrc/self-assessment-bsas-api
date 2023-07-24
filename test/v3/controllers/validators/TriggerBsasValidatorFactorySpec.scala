@@ -37,8 +37,7 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
 
   private val validatorFactory = new TriggerBsasValidatorFactory(mockAppConfig)
 
-  private def validator(nino: String, body: JsValue) =
-    validatorFactory.validator(nino, body)
+  private def validator(nino: String, body: JsValue) = validatorFactory.validator(nino, body)
 
   private def triggerBsasRequestJson(startDate: String = "2021-05-05",
                                      endDate: String = "2022-05-06",
@@ -53,9 +52,6 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
   }
 
   class SetUp(date: LocalDate = LocalDate.of(2020, 6, 18)) extends MockCurrentDate {
-//    val validator = validatorFactory.validator(validNino, body)
-    //  val validator = new TriggerBsasValidator(currentDateProvider = mockCurrentDate, appConfig = mockAppConfig)
-
     MockCurrentDate.getCurrentDate().returns(date)
     MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
     MockedAppConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
@@ -178,13 +174,13 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
     "return multiple errors" when {
       "the request body has muliple issues" in new SetUp() {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
-          validator("not-a-nino", triggerBsasRequestJson(typeOfBusiness = "", businessId = "")).validateAndWrapResult()
+          validator(validNino, triggerBsasRequestJson(typeOfBusiness = "", businessId = "")).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
             BadRequestError,
-            Some(List(NinoFormatError, BusinessIdFormatError, TypeOfBusinessFormatError))
+            Some(List(TypeOfBusinessFormatError, BusinessIdFormatError))
           )
         )
       }
@@ -193,7 +189,7 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
 
   "the Accounting Period validation" should {
     "return no errors" when {
-      "passed the correct Accounting Period dates for each Type of Business" in {
+      "passed the correct Accounting Period dates for each Type of Business" when {
         List(
           (TypeOfBusiness.`self-employment`, "2019-04-06"),
           (TypeOfBusiness.`uk-property-fhl`, "2019-04-06"),
@@ -203,7 +199,7 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
         ).foreach {
           case (typeOfBusiness, endDate) =>
             s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in {
-              val body         = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, endDate = endDate)
+              val body         = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
               val expectedBody = body.as[TriggerBsasRequestBody]
 
               val result: Either[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
@@ -213,7 +209,7 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
       }
 
       "return a RuleAccountingPeriodNotSupportedError" when {
-        "passed incorrect Accounting Period dates for each Type of Business" in {
+        "passed incorrect Accounting Period dates for each Type of Business" when {
           List(
             (TypeOfBusiness.`self-employment`, "2019-04-05"),
             (TypeOfBusiness.`uk-property-fhl`, "2019-04-05"),
@@ -223,9 +219,9 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
           ).foreach {
             case (typeOfBusiness, endDate) =>
               s"typeOfBusiness is $typeOfBusiness and the endDate is before the earliest allowed end date" in {
-                val body = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, endDate = endDate)
+                val body = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
 
-                val result: Either[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
+                val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, body).validateAndWrapResult()
 
                 result shouldBe Left(
                   ErrorWrapper(correlationId, RuleAccountingPeriodNotSupportedError)

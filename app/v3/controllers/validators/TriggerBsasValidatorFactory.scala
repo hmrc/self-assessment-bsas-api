@@ -18,17 +18,18 @@ package v3.controllers.validators
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers._
+import api.models.domain.Nino
 import api.models.errors.MtdError
 import config.AppConfig
 import play.api.libs.json.JsValue
 import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors.RuleAccountingPeriodNotSupportedError
-import v3.models.request.triggerBsas.{TriggerBsasRequestBody, TriggerBsasRequestData}
+import v3.models.request.triggerBsas.{ TriggerBsasRequestBody, TriggerBsasRequestData }
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.annotation.nowarn
 
 @Singleton
@@ -57,23 +58,27 @@ class TriggerBsasValidatorFactory @Inject()(appConfig: AppConfig) {
         val result: Either[Seq[MtdError], TriggerBsasRequestData] = flatten(for {
           nino <- resolvedNino
           body <- resolvedBody
-        } yield {
-          val parsed = TriggerBsasRequestData(nino, body)
-          import parsed.body.accountingPeriod._
-
-          val resolvedBusinessId     = ResolveBusinessId(body.businessId)
-          val resolvedTypeOfBusiness = ResolveTypeOfBusiness(body.typeOfBusiness)
-          val resolvedDateRange      = ResolveDateRange(startDate -> endDate)
-
-          for {
-            _              <- resolvedBusinessId
-            typeOfBusiness <- resolvedTypeOfBusiness
-            dateRange      <- resolvedDateRange
-            _              <- validateAccountingPeriodNotSupported(typeOfBusiness, dateRange.endDate)
-          } yield parsed
-        })
+        } yield validateParsedRequestBody(nino, body))
 
         mapResult(result, possibleErrors = resolvedNino, resolvedBody)
+      }
+
+      private def validateParsedRequestBody(nino: Nino, body: TriggerBsasRequestBody): Either[Seq[MtdError], TriggerBsasRequestData] = {
+        val parsed = TriggerBsasRequestData(nino, body)
+        import parsed.body.accountingPeriod._
+
+        val resolvedBusinessId     = ResolveBusinessId(body.businessId)
+        val resolvedTypeOfBusiness = ResolveTypeOfBusiness(body.typeOfBusiness)
+        val resolvedDateRange      = ResolveDateRange(startDate -> endDate)
+
+        val bodyValidationResult = for {
+          _              <- resolvedBusinessId
+          typeOfBusiness <- resolvedTypeOfBusiness
+          dateRange      <- resolvedDateRange
+          _              <- validateAccountingPeriodNotSupported(typeOfBusiness, dateRange.endDate)
+        } yield parsed
+
+        mapResult(bodyValidationResult, possibleErrors = resolvedBusinessId, resolvedTypeOfBusiness, resolvedDateRange)
       }
 
       private def validateAccountingPeriodNotSupported(typeOfBusiness: TypeOfBusiness, endDate: LocalDate): Either[Seq[MtdError], Unit] = {

@@ -32,7 +32,8 @@ import javax.inject.Singleton
       def validate: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = {
         val validatedForeignFhlEea = parsed.body.foreignFhlEea match {
           case Some(fhlEea) =>
-            combineLefts(
+            combine(
+              parsed,
               validateForeignFhlEea(fhlEea),
               validateForeignFhlEeaConsolidatedExpenses(fhlEea)
             )
@@ -43,7 +44,8 @@ import javax.inject.Singleton
         val validatedNonFurnishedHolidayLets = parsed.body.nonFurnishedHolidayLet match {
           case Some(foreignProperties) =>
             val foreignPropertiesWithIndex = foreignProperties.zipWithIndex.toList
-            combineLefts(
+            combine(
+              parsed,
               validateNonFurnishedHolidayLets(foreignPropertiesWithIndex),
               duplicateCountryCodeValidation(foreignPropertiesWithIndex)
             )
@@ -51,20 +53,21 @@ import javax.inject.Singleton
             Right(parsed)
         }
 
-        combineLefts(
+        combine(
+          parsed,
           validatedForeignFhlEea,
           validatedNonFurnishedHolidayLets
         )
       }
 
-      private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99)
+      private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
 
       private def resolveAdjusted(path: String, value: Option[BigDecimal]): Either[Seq[MtdError], Option[BigDecimal]] =
         resolveAdjustment(value, path = Some(path))
 
       private def validateForeignFhlEea(foreignFhlEea: FhlEea): Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = {
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           resolveAdjusted("/foreignFhlEea/income/totalRentsReceived", foreignFhlEea.income.flatMap(_.totalRentsReceived)),
           resolveAdjusted("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts)),
           resolveAdjusted("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance)),
@@ -96,13 +99,14 @@ import javax.inject.Singleton
 
         val validatedFhls = foreignProperties.map {
           case (foreignProperty, i) =>
-            combineLefts(
+            combine(
+              parsed,
               validateForeignProperty(foreignProperty, i),
               validateForeignPropertyConsolidatedExpenses(foreignProperty, i)
             )
         }
 
-        combineLefts(validatedFhls: _*)
+        combine(parsed, validatedFhls: _*)
       }
 
       private def duplicateCountryCodeValidation(
@@ -130,8 +134,8 @@ import javax.inject.Singleton
 
         def path(suffix: String) = s"/nonFurnishedHolidayLet/$index/$suffix"
 
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           ResolveParsedCountryCode(foreignProperty.countryCode, path = Some(path("countryCode"))),
           resolveAdjusted(path("income/totalRentsReceived"), foreignProperty.income.flatMap(_.totalRentsReceived)),
           resolveAdjusted(path("income/premiumsOfLeaseGrant"), foreignProperty.income.flatMap(_.premiumsOfLeaseGrant)),

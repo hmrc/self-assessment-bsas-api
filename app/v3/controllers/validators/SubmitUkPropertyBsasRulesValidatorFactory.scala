@@ -33,7 +33,8 @@ class SubmitUkPropertyBsasRulesValidatorFactory {
       def validate: Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = {
         val validatedFurnishedHolidayLets = parsed.body.furnishedHolidayLet match {
           case Some(fhl) =>
-            mapResult(
+            combine(
+              parsed,
               validateFhl(fhl),
               validateFhlConsolidatedExpenses(fhl)
             )
@@ -43,7 +44,8 @@ class SubmitUkPropertyBsasRulesValidatorFactory {
 
         val validatedNonFurnishedHolidayLets = parsed.body.nonFurnishedHolidayLet match {
           case Some(ukProperty) =>
-            mapResult(
+            combine(
+              parsed,
               validateNonFhl(ukProperty),
               validateNonFhlConsolidatedExpenses(ukProperty)
             )
@@ -51,20 +53,21 @@ class SubmitUkPropertyBsasRulesValidatorFactory {
             Right(parsed)
         }
 
-        mapResult(
+        combine(
+          parsed,
           validatedFurnishedHolidayLets,
           validatedNonFurnishedHolidayLets
         )
       }
 
-      private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99)
+      private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
 
       private def resolveAdjusted(path: String, value: Option[BigDecimal]): Either[Seq[MtdError], Option[BigDecimal]] =
         resolveAdjustment(value, path = Some(path))
 
       private def validateFhl(fhl: FurnishedHolidayLet): Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = {
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           resolveAdjusted("/furnishedHolidayLet/income/totalRentsReceived", fhl.income.flatMap(_.totalRentsReceived)),
           resolveAdjusted("/furnishedHolidayLet/expenses/premisesRunningCosts", fhl.expenses.flatMap(_.premisesRunningCosts)),
           resolveAdjusted("/furnishedHolidayLet/expenses/repairsAndMaintenance", fhl.expenses.flatMap(_.repairsAndMaintenance)),
@@ -78,8 +81,8 @@ class SubmitUkPropertyBsasRulesValidatorFactory {
       }
 
       private def validateNonFhl(nonFhl: NonFurnishedHolidayLet): Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = {
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           resolveAdjusted("/nonFurnishedHolidayLet/income/totalRentsReceived", nonFhl.income.flatMap(_.totalRentsReceived)),
           resolveAdjusted("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", nonFhl.income.flatMap(_.premiumsOfLeaseGrant)),
           resolveAdjusted("/nonFurnishedHolidayLet/income/reversePremiums", nonFhl.income.flatMap(_.reversePremiums)),

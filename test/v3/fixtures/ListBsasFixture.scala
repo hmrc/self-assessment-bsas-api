@@ -170,7 +170,7 @@ trait ListBsasFixture {
     """.stripMargin
   )
 
-  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(businessSourceSummaryModel()))
+  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(List(businessSourceSummaryModel()))
 
   val listBsasResponseJson: JsValue = Json.parse(
     """

@@ -19,5 +19,5 @@ package v3.models.request.triggerBsas
 import api.models.domain.{ Nino, TaxYear }
 
 case class TriggerBsasRequestData(nino: Nino, body: TriggerBsasRequestBody) {
-  val taxYear: TaxYear = TaxYear.fromIso(body.accountingPeriod.endDate)
+  lazy val taxYear: TaxYear = TaxYear.fromIso(body.accountingPeriod.endDate)
 }

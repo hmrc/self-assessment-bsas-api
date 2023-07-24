@@ -28,7 +28,6 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsObject, Json }
 import play.api.mvc.Result
-import routing.Version3
 import v3.controllers.validators.MockRetrieveSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.mocks.services.MockRetrieveSelfEmploymentBsasService
@@ -49,8 +48,6 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockHateoasFactory
     with MockIdGenerator
     with MockAppConfig {
-
-  private val version = Version3
 
   private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
@@ -116,7 +113,5 @@ class RetrieveSelfEmploymentBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.handleRequest(nino, calculationId)(fakeGetRequest)
-
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

@@ -27,7 +27,7 @@ import scala.annotation.nowarn
 
 class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
 
-  case class TestDataObject(fieldOne: String, fieldTwo: String, oneOf1: Option[String] = None, oneOf2: Option[String] = None)
+  case class TestDataObject(field1: String, field2: String, oneOf1: Option[String] = None, oneOf2: Option[String] = None)
   case class TestDataWrapper(arrayField: Seq[TestDataObject])
 
   implicit val testDataObjectFormat: OFormat[TestDataObject]   = Json.format[TestDataObject]
@@ -45,33 +45,33 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
   private val resolveTestDataWrapper = new ResolveNonEmptyJsonObject[TestDataWrapper]()
 
   "ResolveNonEmptyJsonObject" should {
-    "return no errors" when {
+    "return the object" when {
       "given a valid JSON object" in {
-        val json = Json.parse("""{ "fieldOne" : "field one", "fieldTwo" : "field two" }""")
+        val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse" }""")
 
         val result = resolveTestDataObject(json)
-        result shouldBe Right(TestDataObject("field one", "field two"))
+        result shouldBe Right(TestDataObject("Something", "SomethingElse"))
       }
     }
 
     "return an error " when {
       "a required field is missing" in {
-        val json = Json.parse("""{ "fieldOne" : "field one" }""")
+        val json = Json.parse("""{ "field1" : "Something" }""")
 
         val result = resolveTestDataObject(json)
         result shouldBe Left(
           List(
-            RuleIncorrectOrEmptyBodyError.withPath("/fieldTwo")
+            RuleIncorrectOrEmptyBodyError.withPath("/field2")
           ))
       }
 
       "a required field is missing in an array object" in {
-        val json = Json.parse("""{ "arrayField" : [{ "fieldOne" : "Something" }]}""")
+        val json = Json.parse("""{ "arrayField" : [{ "field1" : "Something" }]}""")
 
         val result = resolveTestDataWrapper(json)
         result shouldBe Left(
           List(
-            RuleIncorrectOrEmptyBodyError.withPath("/arrayField/0/fieldTwo")
+            RuleIncorrectOrEmptyBodyError.withPath("/arrayField/0/field2")
           ))
       }
 
@@ -79,8 +79,8 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
         val json = Json.parse("""
             |{
             |  "arrayField" : [
-            |    { "fieldOne" : "Something" },
-            |    { "fieldOne" : "Something" }
+            |    { "field1" : "Something" },
+            |    { "field1" : "Something" }
             |  ]
             |}
             |""".stripMargin)
@@ -90,8 +90,8 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
           List(
             RuleIncorrectOrEmptyBodyError.withPaths(
               List(
-                "/arrayField/0/fieldTwo",
-                "/arrayField/1/fieldTwo"
+                "/arrayField/0/field2",
+                "/arrayField/1/field2"
               ))
           ))
       }
@@ -109,22 +109,22 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
         val result = resolveTestDataObject(json)
         result shouldBe Left(
           List(
-            RuleIncorrectOrEmptyBodyError.withPaths(List("/fieldOne", "/fieldTwo"))
+            RuleIncorrectOrEmptyBodyError.withPaths(List("/field1", "/field2"))
           ))
       }
 
       "a field is supplied with the wrong data type" in {
-        val json = Json.parse("""{"fieldOne": true, "fieldTwo": "value"}""")
+        val json = Json.parse("""{"field1": true, "field2": "value"}""")
 
         val result = resolveTestDataObject(json)
         result shouldBe Left(
           List(
-            RuleIncorrectOrEmptyBodyError.withPath("/fieldOne")
+            RuleIncorrectOrEmptyBodyError.withPath("/field1")
           ))
       }
 
       "detect empty objects" in {
-        val json = Json.parse("""{ "fieldOne" : "Something", "fieldTwo" : "SomethingElse" }""")
+        val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse" }""")
 
         val result = resolveTestDataObject(json)
         result shouldBe Left(List(RuleIncorrectOrEmptyBodyError))
@@ -141,11 +141,11 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
       }
 
       "return no error when all objects are non-empty" in {
-        val json = Json.parse("""{ "fieldOne" : "field one", "fieldTwo" : "field two", "oneOf1": "value" }""")
+        val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse", "oneOf1": "value" }""")
 
         val result = resolveTestDataObject(json)
         result shouldBe Right(
-          TestDataObject("field one", "field two")
+          TestDataObject("Something", "SomethingElse")
         )
       }
     }

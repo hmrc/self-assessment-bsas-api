@@ -27,7 +27,7 @@ import javax.inject.Singleton
 @Singleton
 class SubmitSelfEmploymentBsasRulesValidatorFactory {
 
-  private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99)
+  private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
 
   private def resolveAdjusted(path: String, value: Option[BigDecimal]): Either[Seq[MtdError], Option[BigDecimal]] =
     resolveAdjustment(value, path = Some(path))
@@ -41,14 +41,16 @@ class SubmitSelfEmploymentBsasRulesValidatorFactory {
         val validatedExpenses = parsed.body.expenses
           .map(
             expenses =>
-              mapResult(
+              combine(
+                parsed,
                 validateExpenses(expenses),
                 validateBothExpenses(expenses, parsed.body.additions)
             ))
           .getOrElse(Right(parsed))
         val validatedAdditions = parsed.body.additions.map(validateAdditions).getOrElse(Right(parsed))
 
-        mapResult(
+        combine(
+          parsed,
           validatedIncome,
           validatedExpenses,
           validatedAdditions
@@ -56,22 +58,22 @@ class SubmitSelfEmploymentBsasRulesValidatorFactory {
       }
 
       private def validateIncome(income: Income): Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           resolveAdjusted("/income/turnover", income.turnover),
           resolveAdjusted("/income/other", income.other)
         )
 
       private def validateExpenses(expenses: Expenses): Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           resolveAdjusted("/expenses/costOfGoodsAllowable", expenses.costOfGoodsAllowable),
           resolveAdjusted("/expenses/paymentsToSubcontractorsAllowable", expenses.paymentsToSubcontractorsAllowable),
           resolveAdjusted("/expenses/wagesAndStaffCostsAllowable", expenses.wagesAndStaffCostsAllowable),
           resolveAdjusted("/expenses/carVanTravelExpensesAllowable", expenses.carVanTravelExpensesAllowable),
           resolveAdjusted("/expenses/premisesRunningCostsAllowable", expenses.premisesRunningCostsAllowable),
           resolveAdjusted("/expenses/maintenanceCostsAllowable", expenses.maintenanceCostsAllowable),
-          resolveAdjusted("/expenses/interestOnBankOtherLoansAllowable", expenses.interestOnBankOtherLoansAllowable),
+          resolveAdjusted("/expenses/adminCostsAllowable", expenses.adminCostsAllowable),
           resolveAdjusted("/expenses/interestOnBankOtherLoansAllowable", expenses.interestOnBankOtherLoansAllowable),
           resolveAdjusted("/expenses/financeChargesAllowable", expenses.financeChargesAllowable),
           resolveAdjusted("/expenses/irrecoverableDebtsAllowable", expenses.irrecoverableDebtsAllowable),
@@ -84,8 +86,8 @@ class SubmitSelfEmploymentBsasRulesValidatorFactory {
         )
 
       private def validateAdditions(additions: Additions): Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
-        mapResult(
-          Right(parsed),
+        combine(
+          parsed,
           resolveAdjusted("/additions/costOfGoodsDisallowable", additions.costOfGoodsDisallowable),
           resolveAdjusted("/additions/paymentsToSubcontractorsDisallowable", additions.paymentsToSubcontractorsDisallowable),
           resolveAdjusted("/additions/wagesAndStaffCostsDisallowable", additions.wagesAndStaffCostsDisallowable),
@@ -103,9 +105,8 @@ class SubmitSelfEmploymentBsasRulesValidatorFactory {
           resolveAdjusted("/additions/businessEntertainmentCostsDisallowable", additions.businessEntertainmentCostsDisallowable),
         )
 
-      // TODO move test from BothExpensesValidationSpec.bothExpensesValidation
       private def validateBothExpenses(expenses: Expenses,
-                                       additions: Option[Additions]): Either[List[MtdError], SubmitSelfEmploymentBsasRequestData] = {
+                                       additions: Option[Additions]): Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = {
 
         def bothExpensesError = List(RuleBothExpensesError.withPath("/expenses"))
 

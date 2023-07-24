@@ -30,7 +30,6 @@ import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
-import routing.Version3
 import v3.controllers.validators.MockTriggerBsasValidatorFactory
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.services.MockTriggerBsasService
@@ -53,8 +52,6 @@ class TriggerBsasControllerSpec
     with MockIdGenerator
     with MockAuditService
     with MockAppConfig {
-
-  private val version = Version3
 
   private val requestData = TriggerBsasRequestData(
     Nino(nino),
@@ -178,8 +175,6 @@ class TriggerBsasControllerSpec
           auditResponse = auditResponse
         )
       )
-
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 
 }

@@ -30,7 +30,6 @@ import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.Result
-import routing.Version3
 import v3.controllers.validators.MockSubmitForeignPropertyBsasValidatorFactory
 import v3.mocks.services._
 import v3.models.errors._
@@ -53,11 +52,9 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockIdGenerator
     with MockAppConfig {
 
-  private val version = Version3
-
-  private val calculationId     = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val rawTaxYear = "2023-24"
-  private val taxYear    = TaxYear.fromMtd(rawTaxYear)
+  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val rawTaxYear    = "2023-24"
+  private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
   private val testHateoasLink =
     Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust", method = GET, rel = "self")
@@ -204,7 +201,5 @@ class SubmitForeignPropertyBsasControllerSpec
           auditResponse = auditResponse
         )
       )
-
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }

@@ -27,23 +27,19 @@ trait Validator[PARSED] extends Logging {
   def validateAndWrapResult()(implicit correlationId: String): Either[ErrorWrapper, PARSED] = {
     validate match {
       case Right(parsed) =>
-        logger.info(
-          "[RequestParser][parseRequest] " +
-            s"Validation successful for the request with CorrelationId: $correlationId")
-
+        logger.info(s"Validation successful for the request with CorrelationId: $correlationId")
         Right(parsed)
 
-      case Left(err :: Nil) =>
-        logger.warn(
-          "[RequestParser][parseRequest] " +
-            s"Validation failed with ${err.code} error for the request with CorrelationId: $correlationId")
-        Left(ErrorWrapper(correlationId, err, None))
-
       case Left(errs) =>
-        logger.warn(
-          "[RequestParser][parseRequest] " +
-            s"Validation failed with ${errs.map(_.code).mkString(",")} error for the request with CorrelationId: $correlationId")
-        Left(ErrorWrapper(correlationId, BadRequestError, Some(errs)))
+        combineErrors(errs) match {
+          case err :: Nil =>
+            logger.warn(s"Validation failed with ${err.code} error for the request with CorrelationId: $correlationId")
+            Left(ErrorWrapper(correlationId, err, None))
+
+          case errs =>
+            logger.warn(s"Validation failed with ${errs.map(_.code).mkString(",")} error for the request with CorrelationId: $correlationId")
+            Left(ErrorWrapper(correlationId, BadRequestError, Some(errs)))
+        }
     }
   }
 
@@ -76,11 +72,53 @@ trait Validator[PARSED] extends Logging {
     }
   }
 
+  /**
+    * If all of the results are Rights, return the parsed value as a Right.
+    * If any of the results are Lefts, return a combined Left containing all the separate errors.
+    */
+  protected def combine(parsed: PARSED, results: Either[Seq[MtdError], _]*): Either[Seq[MtdError], PARSED] = {
+    val lefts = results.collect {
+      case Left(errs) => errs
+      case Right(_)   => Nil
+    }.flatten
+
+    if (lefts.isEmpty) {
+      Right(parsed)
+    } else {
+      Left(lefts)
+    }
+  }
+
+  /**
+    * Always returns a Left.
+    */
   protected def combineLefts(possibleErrors: Either[Seq[MtdError], _]*): Either[Seq[MtdError], PARSED] =
     Left(
       possibleErrors.distinct
         .collect { case Left(errs) => errs }
         .flatten
         .toList)
+
+  private def combineErrors(errors: Seq[MtdError]): Seq[MtdError] = {
+    errors
+      .groupBy(_.message)
+      .map {
+        case (_, errors) =>
+          val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
+
+          errors.fold(baseError)(
+            (error1, error2) => {
+              val paths: Option[Seq[String]] = for {
+                error1Paths <- error1.paths
+                error2Paths <- error2.paths
+              } yield {
+                error1Paths ++ error2Paths
+              }
+              error1.copy(paths = paths)
+            }
+          )
+      }
+      .toList
+  }
 
 }

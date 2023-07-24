@@ -19,7 +19,7 @@ package v3.controllers.validators
 import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.errors._
 import support.UnitSpec
-import v3.models.request.retrieveBsas
+import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 
 class RetrieveUkPropertyBsasValidatorFactorySpec extends UnitSpec {
 
@@ -44,7 +44,7 @@ class RetrieveUkPropertyBsasValidatorFactorySpec extends UnitSpec {
         val result = validator(validNino, validCalculationId, None).validateAndWrapResult()
 
         result shouldBe Right(
-          retrieveBsas.RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, None)
+          RetrieveUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None)
         )
       }
 
@@ -52,7 +52,7 @@ class RetrieveUkPropertyBsasValidatorFactorySpec extends UnitSpec {
         val result = validator(validNino, validCalculationId, Some(validTaxYear)).validateAndWrapResult()
 
         result shouldBe Right(
-          retrieveBsas.RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
+          RetrieveUkPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
         )
       }
     }

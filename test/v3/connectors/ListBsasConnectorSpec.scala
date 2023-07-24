@@ -50,11 +50,12 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
       "a valid request is supplied" in new IfsTest with Test {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
-        val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponseModel))
 
+        val outcome = Right(ResponseWrapper(correlationId, listBsasResponseModel))
         stubHttpResponse(outcome)
 
-        await(connector.listBsas(request)) shouldBe outcome
+        val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] = await(connector.listBsas(request))
+        result shouldBe outcome
       }
     }
   }

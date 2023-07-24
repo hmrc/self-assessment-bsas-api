@@ -19,7 +19,7 @@ package v3.controllers.validators
 import api.models.domain.{ CalculationId, Nino, TaxYear }
 import api.models.errors._
 import support.UnitSpec
-import v3.models.request.retrieveBsas
+import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 
 class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
 
@@ -44,7 +44,7 @@ class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
         val result = validator(validNino, validCalculationId, None).validateAndWrapResult()
 
         result shouldBe Right(
-          retrieveBsas.RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, None)
+          RetrieveForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None)
         )
       }
 
@@ -52,7 +52,7 @@ class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
         val result = validator(validNino, validCalculationId, Some(validTaxYear)).validateAndWrapResult()
 
         result shouldBe Right(
-          retrieveBsas.RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
+          RetrieveForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
         )
       }
     }
@@ -66,7 +66,7 @@ class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
       }
 
       "passed an invalid calculation id" in {
-        val result = validator(validNino, validCalculationId, None).validateAndWrapResult()
+        val result = validator(validNino, "not-a-calculation-id", None).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, CalculationIdFormatError)
         )

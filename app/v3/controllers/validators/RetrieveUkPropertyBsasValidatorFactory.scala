@@ -17,9 +17,8 @@
 package v3.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear}
+import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveTysTaxYear }
 import api.models.errors.MtdError
-import v3.models.request.retrieveBsas
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -40,7 +39,7 @@ class RetrieveUkPropertyBsasValidatorFactory {
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
         } yield {
-          retrieveBsas.RetrieveUkPropertyBsasRequestData(nino, calculationId, maybeTaxYear)
+          RetrieveUkPropertyBsasRequestData(nino, calculationId, maybeTaxYear)
         })
 
         mapResult(result, possibleErrors = resolvedNino, resolvedCalculationId, resolvedTaxYear)

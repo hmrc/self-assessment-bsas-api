@@ -35,14 +35,9 @@ class ResolveNonEmptyJsonObject[T: OFormat: EmptinessChecker]()(implicit val rea
 
       case Right(parsed) =>
         EmptinessChecker.findEmptyPaths(parsed) match {
-          case CompletelyEmpty =>
-            Left(List(RuleIncorrectOrEmptyBodyError))
-
-          case EmptyPaths(paths) =>
-            Left(List(RuleIncorrectOrEmptyBodyError.withPaths(paths = paths)))
-
-          case NoEmptyPaths =>
-            Right(parsed)
+          case CompletelyEmpty   => Left(List(RuleIncorrectOrEmptyBodyError))
+          case EmptyPaths(paths) => Left(List(RuleIncorrectOrEmptyBodyError.withPaths(paths)))
+          case NoEmptyPaths      => Right(parsed)
         }
     }
   }

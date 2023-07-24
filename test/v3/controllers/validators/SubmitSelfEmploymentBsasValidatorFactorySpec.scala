@@ -193,7 +193,7 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
         List(
           "/income/turnover",
           "/income/other",
-          "/expenses/consolidatedExpenses",
+          // "/expenses/consolidatedExpenses",
           "/expenses/costOfGoodsAllowable",
           "/expenses/paymentsToSubcontractorsAllowable",
           "/expenses/wagesAndStaffCostsAllowable",
@@ -228,7 +228,7 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
       }
 
       "consolidated expenses is invalid" when {
-        Seq(
+        List(
           "/expenses/consolidatedExpenses",
         ).foreach(path => testWith(mtdRequestWithOnlyConsolidatedExpenses.update(path, _), path))
       }
@@ -258,7 +258,11 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
-            ValueFormatError.copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99")
+            BadRequestError,
+            Some(List(
+              RuleBothExpensesError.withPath("/expenses"), // because there's consolidatedExpenses + an addition
+              ValueFormatError.copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99")
+            ))
           )
         )
       }

@@ -27,7 +27,6 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.Version3
 import v3.controllers.validators.MockListBsasValidatorFactory
 import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks
@@ -55,7 +54,6 @@ class ListBsasControllerSpec
 
   private val typeOfBusiness = "self-employment"
   private val businessId     = "XAIS12345678901"
-  private val version        = Version3
 
   "list bsas" should {
     "return OK" when {
@@ -196,7 +194,5 @@ class ListBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.listBsas(nino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
-
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 }
