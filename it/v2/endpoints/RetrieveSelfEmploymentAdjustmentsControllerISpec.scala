@@ -67,8 +67,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+
         response.json shouldBe Json.parse(hateoasResponseForSelfEmploymentAdjustments(nino, bsasId))
       }
 
@@ -85,8 +84,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+
         response.json shouldBe Json.parse(hateoasResponseWithoutAdditionsSEAdjustments(nino, bsasId))
       }
     }

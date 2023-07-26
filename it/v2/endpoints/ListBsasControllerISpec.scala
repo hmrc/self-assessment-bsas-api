@@ -30,10 +30,10 @@ import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class ListBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
-    val taxYear: Option[String] = Some("2019-20")
+    val nino                           = "AA123456B"
+    val taxYear: Option[String]        = Some("2019-20")
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String] = None
+    val businessId: Option[String]     = None
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
@@ -42,8 +42,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
     def request: WSRequest = {
 
       val queryParams = Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
 
       setupStubs()
@@ -72,8 +72,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+
         response.json shouldBe summariesJSONWithHateoas(nino)
       }
 
@@ -89,8 +88,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+
         response.json shouldBe summariesJSONForeignWithHateoas(nino)
       }
 
@@ -108,8 +106,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+
         response.json shouldBe summariesJSONWithHateoas(nino)
       }
     }
@@ -123,10 +120,10 @@ class ListBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
-          override val taxYear: Option[String] = Some(requestTaxYear)
+          override val nino: String                   = requestNino
+          override val taxYear: Option[String]        = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String] = requestBusinessId
+          override val businessId: Option[String]     = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()

@@ -397,8 +397,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
 
       "any valid foreignProperty request is made with a failed nrs call" in new Test {
@@ -414,8 +412,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
 
       "any valid foreignFhlEea request is made" in new Test {
@@ -430,8 +426,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
 
       "any valid foreignProperty consolidated request is made" in new Test {
@@ -446,8 +440,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
 
       "any valid foreignFhlEea consolidated request is made" in new Test {

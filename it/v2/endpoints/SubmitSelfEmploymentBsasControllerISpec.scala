@@ -88,8 +88,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
 
       "a valid request is made with a failed nrs call" in new Test {
@@ -106,8 +104,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, bsasId))
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
       }
     }
 
