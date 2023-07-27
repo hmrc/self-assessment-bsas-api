@@ -34,13 +34,13 @@ class RetrieveUkPropertyBsasValidatorFactory {
         val resolvedCalculationId = ResolveCalculationId(calculationId)
         val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
 
-        val result: Either[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = for {
           nino          <- resolvedNino
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
         } yield {
           RetrieveUkPropertyBsasRequestData(nino, calculationId, maybeTaxYear)
-        })
+        }
 
         mapResult(result, possibleErrors = resolvedNino, resolvedCalculationId, resolvedTaxYear)
       }

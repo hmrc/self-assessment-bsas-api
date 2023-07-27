@@ -34,13 +34,13 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
         val resolvedCalculationId = ResolveCalculationId(calculationId)
         val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
 
-        val result: Either[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = for {
           nino          <- resolvedNino
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
         } yield {
           RetrieveSelfEmploymentBsasRequestData(nino, calculationId, maybeTaxYear)
-        })
+        }
 
         mapResult(result, possibleErrors = resolvedNino, resolvedCalculationId, resolvedTaxYear)
       }

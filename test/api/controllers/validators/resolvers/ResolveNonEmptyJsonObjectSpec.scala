@@ -47,10 +47,11 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
   "ResolveNonEmptyJsonObject" should {
     "return the object" when {
       "given a valid JSON object" in {
-        val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse" }""")
-
-        val result = resolveTestDataObject(json)
-        result shouldBe Right(TestDataObject("Something", "SomethingElse"))
+        withClue("Uses the implicit emptinessChecker from above, which requires oneOf1 and oneOf2") {
+          val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse", "oneOf1": "another1", "oneOf2": "another2" }""")
+          val result = resolveTestDataObject(json)
+          result shouldBe Right(TestDataObject("Something", "SomethingElse", Some("another1"), Some("another2")))
+        }
       }
     }
 
@@ -141,11 +142,11 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
       }
 
       "return no error when all objects are non-empty" in {
-        val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse", "oneOf1": "value" }""")
+        val json = Json.parse("""{ "field1" : "Something", "field2" : "SomethingElse", "oneOf1": "another1" }""")
 
         val result = resolveTestDataObject(json)
         result shouldBe Right(
-          TestDataObject("Something", "SomethingElse")
+          TestDataObject("Something", "SomethingElse", Some("another1"))
         )
       }
     }

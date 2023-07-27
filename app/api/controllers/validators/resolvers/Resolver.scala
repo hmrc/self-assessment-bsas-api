@@ -29,48 +29,48 @@ trait Resolver[S, T] {
 
   def apply(value: S, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], T]
 
-  def apply(value: S): Either[Seq[MtdError], T] = apply(value, None, None)
+  final def apply(value: S): Either[Seq[MtdError], T] = apply(value, None, None)
 
-  def apply(value: S, path: Option[String]): Either[Seq[MtdError], T] = apply(value, None, path)
+  final def apply(value: S, path: Option[String]): Either[Seq[MtdError], T] = apply(value, None, path)
 
-  def apply(value: S, path: String): Either[Seq[MtdError], T] = apply(value, None, Some(path))
+  final def apply(value: S, path: String): Either[Seq[MtdError], T] = apply(value, None, Some(path))
 
-  def apply(value: S, error: MtdError): Either[Seq[MtdError], T] =
+  final def apply(value: S, error: MtdError): Either[Seq[MtdError], T] =
     apply(value, Option(error), path = None)
 
-  def apply(maybeValue: Option[S], error: MtdError): Either[Seq[MtdError], Option[T]] =
+  final def apply(maybeValue: Option[S], error: MtdError): Either[Seq[MtdError], Option[T]] =
     apply(maybeValue, Option(error))
 
-  def apply(maybeValue: Option[S], defaultValue: T): Either[Seq[MtdError], T] =
+  final def apply(maybeValue: Option[S], defaultValue: T): Either[Seq[MtdError], T] =
     apply(maybeValue, defaultValue, error = None)
 
-  def apply(maybeValue: Option[S], defaultValue: T, error: MtdError): Either[Seq[MtdError], T] =
+  final def apply(maybeValue: Option[S], defaultValue: T, error: MtdError): Either[Seq[MtdError], T] =
     apply(maybeValue, defaultValue, Option(error))
 
-  def apply(maybeValue: Option[S], defaultValue: T, error: Option[MtdError]): Either[Seq[MtdError], T] =
+  final def apply(maybeValue: Option[S], defaultValue: T, error: Option[MtdError]): Either[Seq[MtdError], T] =
     apply(maybeValue, error)
       .map(maybeResolvedValue => maybeResolvedValue.getOrElse(defaultValue))
 
-  def apply(maybeValue: Option[S], error: Option[MtdError] = None, path: Option[String] = None): Either[Seq[MtdError], Option[T]] =
+  final def apply(maybeValue: Option[S], error: Option[MtdError] = None, path: Option[String] = None): Either[Seq[MtdError], Option[T]] =
     maybeValue match {
       case Some(value) => apply(value, error, path).map(Option(_))
       case None        => Right(None)
     }
 
-  protected def requirePath(path: Option[String]): String = {
+  final protected def requirePath(path: Option[String]): String = {
     path.getOrElse(throw new IllegalArgumentException(s"${getClass.getSimpleName} requires the path"))
   }
 
-  protected def requireError(maybeError: Option[MtdError], path: Option[String]): MtdError =
+  final protected def requireError(maybeError: Option[MtdError], path: Option[String]): MtdError =
     withError(maybeError, orDefault = InternalError, path)
 
-  protected def withError(maybeError: Option[MtdError], orDefault: MtdError, extraPath: Option[String]): MtdError =
+  final protected def withError(maybeError: Option[MtdError], orDefault: MtdError, extraPath: Option[String]): MtdError =
     maybeError match {
       case Some(error) => error.maybeWithExtraPath(extraPath)
       case None        => orDefault
     }
 
-  protected def withErrors(maybeError: Option[MtdError], additional: Seq[MtdError], extraPath: Option[String]): Seq[MtdError] =
+  final protected def withErrors(maybeError: Option[MtdError], additional: Seq[MtdError], extraPath: Option[String]): Seq[MtdError] =
     maybeError match {
       case Some(error) => List(error.maybeWithExtraPath(extraPath))
       case None        => additional

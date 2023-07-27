@@ -55,20 +55,23 @@ class TriggerBsasValidatorFactory @Inject()(appConfig: AppConfig) {
         val resolvedNino = ResolveNino(nino)
         val resolvedBody = resolveJson(body)
 
-        val result: Either[Seq[MtdError], TriggerBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], TriggerBsasRequestData] = for {
           nino <- resolvedNino
           body <- resolvedBody
-        } yield validateParsedRequestBody(nino, body))
+          parsed = TriggerBsasRequestData(nino, body)
+          _ <- validateParsedRequestBody(nino, parsed)
+        } yield {
+          parsed
+        }
 
         mapResult(result, possibleErrors = resolvedNino, resolvedBody)
       }
 
-      private def validateParsedRequestBody(nino: Nino, body: TriggerBsasRequestBody): Either[Seq[MtdError], TriggerBsasRequestData] = {
-        val parsed = TriggerBsasRequestData(nino, body)
+      private def validateParsedRequestBody(nino: Nino, parsed: TriggerBsasRequestData): Either[Seq[MtdError], TriggerBsasRequestData] = {
         import parsed.body.accountingPeriod._
 
-        val resolvedBusinessId     = ResolveBusinessId(body.businessId)
-        val resolvedTypeOfBusiness = ResolveTypeOfBusiness(body.typeOfBusiness)
+        val resolvedBusinessId     = ResolveBusinessId(parsed.body.businessId)
+        val resolvedTypeOfBusiness = ResolveTypeOfBusiness(parsed.body.typeOfBusiness)
         val resolvedDateRange      = ResolveDateRange(startDate -> endDate)
 
         val bodyValidationResult = for {

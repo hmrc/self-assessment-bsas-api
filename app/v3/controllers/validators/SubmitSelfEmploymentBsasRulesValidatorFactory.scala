@@ -36,7 +36,6 @@ class SubmitSelfEmploymentBsasRulesValidatorFactory {
     new Validator[SubmitSelfEmploymentBsasRequestData] {
 
       def validate: Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = {
-
         val validatedIncome = parsed.body.income.map(validateIncome).getOrElse(Right(parsed))
         val validatedExpenses = parsed.body.expenses
           .map(

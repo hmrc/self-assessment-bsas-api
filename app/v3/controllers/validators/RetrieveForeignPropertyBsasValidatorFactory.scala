@@ -17,9 +17,8 @@
 package v3.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear}
+import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveTysTaxYear }
 import api.models.errors.MtdError
-import v3.models.request.retrieveBsas
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -35,13 +34,13 @@ class RetrieveForeignPropertyBsasValidatorFactory {
         val resolvedCalculationId = ResolveCalculationId(calculationId)
         val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
 
-        val result: Either[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] = for {
           nino          <- resolvedNino
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
         } yield {
-          retrieveBsas.RetrieveForeignPropertyBsasRequestData(nino, calculationId, maybeTaxYear)
-        })
+          RetrieveForeignPropertyBsasRequestData(nino, calculationId, maybeTaxYear)
+        }
 
         mapResult(result, possibleErrors = resolvedNino, resolvedCalculationId, resolvedTaxYear)
       }

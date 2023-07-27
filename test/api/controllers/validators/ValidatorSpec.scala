@@ -56,24 +56,17 @@ class ValidatorSpec extends UnitSpec with MockFactory {
       val resolvedNino    = ResolveNino(nino)
       val resolvedTaxYear = ResolveTaxYear(taxYear)
 
-      val result = flatten((for {
+      val result = (for {
         nino    <- resolvedNino
         taxYear <- resolvedTaxYear
+        body    <- jsonResolver(jsonBody, RuleIncorrectOrEmptyBodyError)
+        _       <- new TestParsedRequestBodyValidator(body).validate
       } yield {
-        // This could be done as a separate, nested validator if parsing the json is more complex:
-        val resolvedJson = jsonResolver(jsonBody, RuleIncorrectOrEmptyBodyError)
-
-        for {
-          body <- resolvedJson
-          _    <- new TestParsedRequestBodyValidator(body).validate
-        } yield {
-          TestParsedRequest(nino, taxYear, body)
-        }
-      }))
+        TestParsedRequest(nino, taxYear, body)
+      })
 
       mapResult(result, possibleErrors = resolvedNino, resolvedTaxYear)
     }
-
   }
 
   /** Perform additional business-rules validation on the correctly parsed request.

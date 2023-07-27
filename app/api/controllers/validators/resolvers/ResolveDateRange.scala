@@ -27,19 +27,21 @@ object ResolveDateRange extends Resolver[(String, String), DateRange] {
   def apply(value: (String, String), notUsedError: Option[MtdError], path: Option[String]): Either[Seq[MtdError], DateRange] = {
     val (startDate, endDate) = value
 
-    ResolverHelpers.flatten[DateRange](for {
+    for {
       parsedStartDate <- ResolveIsoDate(startDate, StartDateFormatError)
       parsedEndDate   <- ResolveIsoDate(endDate, EndDateFormatError)
-    } yield {
-      val startDateEpochTime = parsedStartDate.toEpochDay
-      val endDateEpochTime   = parsedEndDate.toEpochDay
-
-      if ((endDateEpochTime - startDateEpochTime) <= 0) {
-        Left(List(RuleEndBeforeStartDateError))
-      } else {
-        Right(DateRange(parsedStartDate, parsedEndDate))
+      startDateEpochTime = parsedStartDate.toEpochDay
+      endDateEpochTime   = parsedEndDate.toEpochDay
+      parsed <- {
+        if ((endDateEpochTime - startDateEpochTime) <= 0) {
+          Left(List(RuleEndBeforeStartDateError))
+        } else {
+          Right(DateRange(parsedStartDate, parsedEndDate))
+        }
       }
-    })
+    } yield {
+      parsed
+    }
   }
 
 }

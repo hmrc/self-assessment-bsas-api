@@ -17,12 +17,12 @@
 package v3.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear}
+import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear }
 import api.models.errors.MtdError
 import play.api.libs.json.JsValue
-import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
+import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import scala.annotation.nowarn
 
 @Singleton
@@ -40,16 +40,17 @@ class SubmitSelfEmploymentBsasValidatorFactory @Inject()(rulesValidatorFactory: 
         val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
         val resolvedBody          = resolveJson(body)
 
-        val result: Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = for {
           nino          <- resolvedNino
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
           body          <- resolvedBody
+          parsed = SubmitSelfEmploymentBsasRequestData(nino, calculationId, maybeTaxYear, body)
+          _ <- rulesValidatorFactory.validator(parsed).validate
+
         } yield {
-          val parsed         = SubmitSelfEmploymentBsasRequestData(nino, calculationId, maybeTaxYear, body)
-          val rulesValidator = rulesValidatorFactory.validator(parsed)
-          rulesValidator.validate
-        })
+          parsed
+        }
 
         mapResult(
           result,

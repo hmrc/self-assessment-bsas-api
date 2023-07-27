@@ -16,7 +16,6 @@
 
 package api.controllers.validators
 
-import api.controllers.validators.resolvers.ResolverHelpers
 import api.models.errors.{ BadRequestError, ErrorWrapper, MtdError }
 import utils.Logging
 
@@ -42,25 +41,6 @@ trait Validator[PARSED] extends Logging {
         }
     }
   }
-
-  /** Flatten an arbitrarily nested result. 'either' may be any of:
-    * {{{
-    *   Either[Seq[MtdError], PARSED]
-    *   Either[Seq[MtdError], Either[Seq[MtdError], PARSED]]
-    *   Either[Seq[MtdError], Either[Seq[MtdError], Either[Seq[MtdError], PARSED]]]
-    *   etc
-    * }}}
-    *
-    * to:
-    *
-    * {{{
-    *   Either[Seq[MtdError], PARSED]]
-    * }}}.
-    *
-    * The asInstanceOfs are a workaround for type erasure.
-    */
-  protected def flatten(either: Either[Seq[MtdError], _]): Either[Seq[MtdError], PARSED] =
-    ResolverHelpers.flatten(either)
 
   /** Assuming one or more validation errors - combines the possibleErrors with the Left error from result, then removes duplicates. The Left 'result'
     * is included as it may be the result being returned by a nested Validator.

@@ -28,10 +28,6 @@ import javax.inject.Singleton
 @Singleton
 class ListBsasValidatorFactory {
 
-  // TODO:
-  //  check cats validated
-  //  run tests
-
   def validator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Validator[ListBsasRequestData] =
     new Validator[ListBsasRequestData] {
 
@@ -41,7 +37,7 @@ class ListBsasValidatorFactory {
         val resolvedTypeOfBusiness = ResolveTypeOfBusiness(typeOfBusiness)
         val resolvedBusinessId     = ResolveBusinessId(businessId)
 
-        val result: Either[Seq[MtdError], ListBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], ListBsasRequestData] = for {
           nino                  <- resolvedNino
           maybeTaxYear          <- resolvedTaxYear
           maybeIncomeSourceType <- resolvedTypeOfBusiness
@@ -51,7 +47,7 @@ class ListBsasValidatorFactory {
           val maybeIncomeSourceTypeIdentifier = maybeIncomeSourceType.map(_.toIdentifierValue)
 
           ListBsasRequestData(nino, taxYear, maybeIncomeSourceId, maybeIncomeSourceTypeIdentifier)
-        })
+        }
 
         mapResult(result, possibleErrors = resolvedNino, resolvedTaxYear, resolvedTypeOfBusiness, resolvedBusinessId)
       }

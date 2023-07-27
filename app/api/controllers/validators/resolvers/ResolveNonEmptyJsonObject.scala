@@ -26,18 +26,19 @@ class ResolveNonEmptyJsonObject[T: OFormat: EmptinessChecker]()(implicit val rea
     with JsonObjectResolving[T] {
 
   def apply(data: JsValue, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], T] =
-    validateAndCheckNonEmpty(data).left.map(schemaErrors => withErrors(error, schemaErrors, path))
+    validateAndCheckNonEmpty(data).left
+      .map(schemaErrors => withErrors(error, schemaErrors, path))
 
-  def validateAndCheckNonEmpty(data: JsValue): Either[Seq[MtdError], T] = {
+  private def validateAndCheckNonEmpty(data: JsValue): Either[Seq[MtdError], T] = {
     validate(data) match {
       case Left(schemaErrors) =>
         Left(schemaErrors)
 
-      case Right(parsed) =>
-        EmptinessChecker.findEmptyPaths(parsed) match {
+      case Right(parsedBody) =>
+        EmptinessChecker.findEmptyPaths(parsedBody) match {
           case CompletelyEmpty   => Left(List(RuleIncorrectOrEmptyBodyError))
           case EmptyPaths(paths) => Left(List(RuleIncorrectOrEmptyBodyError.withPaths(paths)))
-          case NoEmptyPaths      => Right(parsed)
+          case NoEmptyPaths      => Right(parsedBody)
         }
     }
   }

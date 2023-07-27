@@ -43,17 +43,17 @@ class SubmitUkPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory: Subm
 
         val validatedOneProperty = validateOnePropertyOnly(body)
 
-        val result: Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = for {
           nino          <- resolvedNino
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
           body          <- resolvedBody
           _             <- validatedOneProperty
+          parsed = SubmitUkPropertyBsasRequestData(nino, calculationId, maybeTaxYear, body)
+          _ <- rulesValidatorFactory.validator(parsed).validate
         } yield {
-          val parsed         = SubmitUkPropertyBsasRequestData(nino, calculationId, maybeTaxYear, body)
-          val rulesValidator = rulesValidatorFactory.validator(parsed)
-          rulesValidator.validate
-        })
+          parsed
+        }
 
         mapResult(
           result,

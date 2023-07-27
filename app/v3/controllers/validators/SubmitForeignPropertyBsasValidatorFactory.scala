@@ -40,18 +40,19 @@ class SubmitForeignPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory:
         val resolvedCalculationId = ResolveCalculationId(calculationId)
         val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
         val resolvedBody          = resolveJson(body)
-        val validatedOneProperty  = validateOnePropertyOnly(body)
+        val validatedFhlOrNonFhl  = validateFhlOrNonFhlOnly(body)
 
-        val result: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = flatten(for {
+        val result: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = for {
           nino          <- resolvedNino
           calculationId <- resolvedCalculationId
           maybeTaxYear  <- resolvedTaxYear
           body          <- resolvedBody
-          _             <- validatedOneProperty
+          _             <- validatedFhlOrNonFhl
+          parsed = SubmitForeignPropertyBsasRequestData(nino, calculationId, maybeTaxYear, body)
+          _ <- rulesValidatorFactory.validator(parsed).validate
         } yield {
-          val parsed = SubmitForeignPropertyBsasRequestData(nino, calculationId, maybeTaxYear, body)
-          rulesValidatorFactory.validator(parsed).validate
-        })
+          parsed
+        }
 
         mapResult(
           result,
@@ -59,12 +60,12 @@ class SubmitForeignPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory:
           resolvedCalculationId,
           resolvedTaxYear,
           resolvedBody,
-          validatedOneProperty
+          validatedFhlOrNonFhl
         )
       }
     }
 
-  private def validateOnePropertyOnly(jsBody: JsValue): Either[Seq[MtdError], Unit] =
+  private def validateFhlOrNonFhlOnly(jsBody: JsValue): Either[Seq[MtdError], Unit] =
     if ((jsBody \ "foreignFhlEea").isDefined && (jsBody \ "nonFurnishedHolidayLet").isDefined)
       Left(List(RuleBothPropertiesSuppliedError))
     else
