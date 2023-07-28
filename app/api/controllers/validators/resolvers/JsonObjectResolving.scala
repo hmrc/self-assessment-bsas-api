@@ -17,28 +17,30 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import play.api.libs.json._
 import utils.Logging
 
 trait JsonObjectResolving[T] extends Logging {
   implicit val reads: Reads[T]
 
-  protected def validate(json: JsValue): Either[Seq[MtdError], T] = {
+  protected def validate(json: JsValue): Validated[Seq[MtdError], T] = {
     json match {
       case jsObj: JsObject if jsObj.fields.isEmpty =>
-        Left(List(RuleIncorrectOrEmptyBodyError))
+        Invalid(List(RuleIncorrectOrEmptyBodyError))
 
       case jsObj: JsObject =>
         jsObj.validate[T] match {
-          case JsSuccess(parsed, _) => Right(parsed)
+          case JsSuccess(parsed, _) => Valid(parsed)
           case JsError(errors) => {
             val immutableErrors = errors.map { case (path, errors) => (path, errors.toList) }.toList
-            Left(handleErrors(immutableErrors))
+            Invalid(handleErrors(immutableErrors))
           }
         }
 
       case _ =>
-        Left(List(RuleIncorrectOrEmptyBodyError))
+        Invalid(List(RuleIncorrectOrEmptyBodyError))
     }
   }
 

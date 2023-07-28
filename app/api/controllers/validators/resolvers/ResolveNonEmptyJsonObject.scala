@@ -17,6 +17,8 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import play.api.libs.json.{ JsValue, OFormat, Reads }
 import utils.EmptinessChecker
 import utils.EmptyPathsResult.{ CompletelyEmpty, EmptyPaths, NoEmptyPaths }
@@ -25,20 +27,19 @@ class ResolveNonEmptyJsonObject[T: OFormat: EmptinessChecker]()(implicit val rea
     extends Resolver[JsValue, T]
     with JsonObjectResolving[T] {
 
-  def apply(data: JsValue, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], T] =
-    validateAndCheckNonEmpty(data).left
-      .map(schemaErrors => withErrors(error, schemaErrors, path))
+  def apply(data: JsValue, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], T] =
+    validateAndCheckNonEmpty(data).leftMap(schemaErrors => withErrors(error, schemaErrors, path))
 
-  private def validateAndCheckNonEmpty(data: JsValue): Either[Seq[MtdError], T] = {
+  private def validateAndCheckNonEmpty(data: JsValue): Validated[Seq[MtdError], T] = {
     validate(data) match {
-      case Left(schemaErrors) =>
-        Left(schemaErrors)
+      case Invalid(schemaErrors) =>
+        Invalid(schemaErrors)
 
-      case Right(parsedBody) =>
+      case Valid(parsedBody) =>
         EmptinessChecker.findEmptyPaths(parsedBody) match {
-          case CompletelyEmpty   => Left(List(RuleIncorrectOrEmptyBodyError))
-          case EmptyPaths(paths) => Left(List(RuleIncorrectOrEmptyBodyError.withPaths(paths)))
-          case NoEmptyPaths      => Right(parsedBody)
+          case CompletelyEmpty   => Invalid(List(RuleIncorrectOrEmptyBodyError))
+          case EmptyPaths(paths) => Invalid(List(RuleIncorrectOrEmptyBodyError.withPaths(paths)))
+          case NoEmptyPaths      => Valid(parsedBody)
         }
     }
   }

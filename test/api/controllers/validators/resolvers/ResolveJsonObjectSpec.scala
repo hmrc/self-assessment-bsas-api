@@ -18,8 +18,9 @@ package api.controllers.validators.resolvers
 
 import api.models.errors.MtdError
 import api.models.utils.JsonErrorValidators
+import cats.data.Validated.{ Invalid, Valid }
 import play.api.http.Status.BAD_REQUEST
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{ Json, Reads }
 import support.UnitSpec
 
 class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
@@ -38,7 +39,7 @@ class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
         val json = Json.parse("""{ "fieldOne" : "field one", "fieldTwo" : "field two" }""")
 
         val result = resolve(json, someError)
-        result shouldBe Right(TestDataObject("field one", "field two"))
+        result shouldBe Valid(TestDataObject("field one", "field two"))
       }
     }
 
@@ -47,7 +48,7 @@ class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
         val json = Json.parse("""{ "fieldOne" : "field one" }""")
 
         val validationResult = resolve(json, someError)
-        validationResult shouldBe Left(List(someError))
+        validationResult shouldBe Invalid(List(someError))
       }
 
     }

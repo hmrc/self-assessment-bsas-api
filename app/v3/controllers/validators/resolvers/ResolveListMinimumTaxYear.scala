@@ -18,21 +18,22 @@ package v3.controllers.validators.resolvers
 
 import api.controllers.validators.resolvers.ResolvingTaxYear
 import api.models.domain.TaxYear
-import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import api.models.errors.{ MtdError, RuleTaxYearNotSupportedError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import config.FixedConfig
 
 object ResolveListMinimumTaxYear extends ResolvingTaxYear with FixedConfig {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], TaxYear] = {
-    for {
-      taxYear <- resolve(value, error, path)
-      _ <- {
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] = {
+
+    resolve(value, error, path)
+      .andThen { taxYear =>
         if (taxYear.year < listMinimumTaxYear) {
-          Left(List(RuleTaxYearNotSupportedError))
+          Invalid(List(error.getOrElse(RuleTaxYearNotSupportedError)))
         } else {
-          Right(taxYear)
+          Valid(taxYear)
         }
       }
-    } yield taxYear
   }
 }

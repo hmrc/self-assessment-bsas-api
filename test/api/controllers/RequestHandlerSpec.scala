@@ -25,6 +25,8 @@ import api.models.errors.{ ErrorWrapper, MtdError, NinoFormatError }
 import api.models.hateoas.{ HateoasData, HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.{ MockAuditService, ServiceOutcome }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import config.AppConfig
 import org.scalamock.handlers.CallHandler
 import play.api.http.{ HeaderNames, Status }
@@ -78,11 +80,11 @@ class RequestHandlerSpec
   }
 
   private val successValidatorForRequest = new Validator[Input.type] {
-    def validate: Either[Seq[MtdError], Input.type] = Right(Input)
+    def validate: Validated[Seq[MtdError], Input.type] = Valid(Input)
   }
 
   private val singleErrorValidatorForRequest = new Validator[Input.type] {
-    def validate: Either[Seq[MtdError], Input.type] = Left(List(NinoFormatError))
+    def validate: Validated[Seq[MtdError], Input.type] = Invalid(List(NinoFormatError))
   }
 
   private val mockService = mock[DummyService]

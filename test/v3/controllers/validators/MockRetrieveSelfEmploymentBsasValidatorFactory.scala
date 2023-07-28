@@ -18,6 +18,8 @@ package v3.controllers.validators
 
 import api.controllers.validators.Validator
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
@@ -41,14 +43,14 @@ trait MockRetrieveSelfEmploymentBsasValidatorFactory extends MockFactory {
 
   def returningSuccess(result: RetrieveSelfEmploymentBsasRequestData): Validator[RetrieveSelfEmploymentBsasRequestData] =
     new Validator[RetrieveSelfEmploymentBsasRequestData] {
-      def validate: Either[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = Right(result)
+      def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = Valid(result)
     }
 
   def returning(result: MtdError*): Validator[RetrieveSelfEmploymentBsasRequestData] = returningErrors(result)
 
   def returningErrors(result: Seq[MtdError]): Validator[RetrieveSelfEmploymentBsasRequestData] =
     new Validator[RetrieveSelfEmploymentBsasRequestData] {
-      def validate: Either[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = Left(result)
+      def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = Invalid(result)
     }
 
 }

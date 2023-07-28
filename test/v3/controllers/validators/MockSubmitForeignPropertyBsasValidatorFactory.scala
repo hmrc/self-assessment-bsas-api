@@ -18,6 +18,8 @@ package v3.controllers.validators
 
 import api.controllers.validators.Validator
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
@@ -42,13 +44,13 @@ trait MockSubmitForeignPropertyBsasValidatorFactory extends MockFactory {
 
   def returningSuccess(result: SubmitForeignPropertyBsasRequestData): Validator[SubmitForeignPropertyBsasRequestData] =
     new Validator[SubmitForeignPropertyBsasRequestData] {
-      def validate: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = Right(result)
+      def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = Valid(result)
     }
 
   def returning(result: MtdError*): Validator[SubmitForeignPropertyBsasRequestData] = returningErrors(result)
 
   def returningErrors(result: Seq[MtdError]): Validator[SubmitForeignPropertyBsasRequestData] = new Validator[SubmitForeignPropertyBsasRequestData] {
-    def validate: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = Left(result)
+    def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = Invalid(result)
   }
 
 }

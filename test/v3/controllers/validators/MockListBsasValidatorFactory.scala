@@ -18,6 +18,8 @@ package v3.controllers.validators
 
 import api.controllers.validators.Validator
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.ListBsasRequestData
@@ -41,14 +43,14 @@ trait MockListBsasValidatorFactory extends MockFactory {
 
   def returningSuccess(result: ListBsasRequestData): Validator[ListBsasRequestData] =
     new Validator[ListBsasRequestData] {
-      def validate: Either[Seq[MtdError], ListBsasRequestData] = Right(result)
+      def validate: Validated[Seq[MtdError], ListBsasRequestData] = Valid(result)
     }
 
   def returning(result: MtdError*): Validator[ListBsasRequestData] = returningErrors(result)
 
   def returningErrors(result: Seq[MtdError]): Validator[ListBsasRequestData] =
     new Validator[ListBsasRequestData] {
-      def validate: Either[Seq[MtdError], ListBsasRequestData] = Left(result)
+      def validate: Validated[Seq[MtdError], ListBsasRequestData] = Invalid(result)
     }
 
 }

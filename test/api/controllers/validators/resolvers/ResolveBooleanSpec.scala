@@ -17,6 +17,7 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.BadRequestError
+import cats.data.Validated.{ Invalid, Valid }
 import support.UnitSpec
 
 class ResolveBooleanSpec extends UnitSpec {
@@ -26,44 +27,44 @@ class ResolveBooleanSpec extends UnitSpec {
     "return no errors" when {
       "given the string 'true'" in {
         val result = ResolveBoolean("true", BadRequestError)
-        result shouldBe Right(true)
+        result shouldBe Valid(true)
       }
 
       "given the upper case string 'TRUE'" in {
         val result = ResolveBoolean("TRUE", BadRequestError)
-        result shouldBe Right(true)
+        result shouldBe Valid(true)
       }
 
       "given the string 'false'" in {
         val result = ResolveBoolean("false", BadRequestError)
-        result shouldBe Right(false)
+        result shouldBe Valid(false)
       }
 
       "given the optional string 'true'" in {
         val result = ResolveBoolean(Some("true"), BadRequestError)
-        result shouldBe Right(Some(true))
+        result shouldBe Valid(Some(true))
       }
 
       "given None with a default value" in {
         val result = ResolveBoolean(None, defaultValue = true, BadRequestError)
-        result shouldBe Right(true)
+        result shouldBe Valid(true)
       }
     }
 
     "return an error" when {
       "given an invalid string" in {
         val result = ResolveBoolean("invalid", BadRequestError)
-        result shouldBe Left(List(BadRequestError))
+        result shouldBe Invalid(List(BadRequestError))
       }
 
       "given an invalid optional string" in {
         val result = ResolveBoolean(Some("invalid"), BadRequestError)
-        result shouldBe Left(List(BadRequestError))
+        result shouldBe Invalid(List(BadRequestError))
       }
 
       "given an invalid optional string with a default value" in {
         val result = ResolveBoolean(Some("invalid"), defaultValue = true, BadRequestError)
-        result shouldBe Left(List(BadRequestError))
+        result shouldBe Invalid(List(BadRequestError))
       }
     }
   }

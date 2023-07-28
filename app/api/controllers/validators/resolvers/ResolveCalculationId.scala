@@ -18,15 +18,18 @@ package api.controllers.validators.resolvers
 
 import api.models.domain.CalculationId
 import api.models.errors.{ CalculationIdFormatError, MtdError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 object ResolveCalculationId extends Resolver[String, CalculationId] {
 
   private val calculationIdRegex = """^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$""".r
 
-  def apply(value: String, unusedError: Option[MtdError], path: Option[String]): Either[Seq[MtdError], CalculationId] =
+  def apply(value: String, unusedError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], CalculationId] = {
     if (calculationIdRegex.matches(value))
-      Right(CalculationId(value))
+      Valid(CalculationId(value))
     else
-      Left(List(CalculationIdFormatError.maybeWithExtraPath(path)))
+      Invalid(List(CalculationIdFormatError.maybeWithExtraPath(path)))
+  }
 
 }

@@ -17,30 +17,31 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.{ EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
+import cats.implicits._
 
 import java.time.LocalDate
-
 case class DateRange(startDate: LocalDate, endDate: LocalDate)
 
 object ResolveDateRange extends Resolver[(String, String), DateRange] {
 
-  def apply(value: (String, String), notUsedError: Option[MtdError], path: Option[String]): Either[Seq[MtdError], DateRange] = {
+  def apply(value: (String, String), notUsedError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], DateRange] = {
     val (startDate, endDate) = value
+    (
+      ResolveIsoDate(startDate, StartDateFormatError),
+      ResolveIsoDate(endDate, EndDateFormatError)
+    ).mapN(resolveDateRange).andThen(identity)
+  }
 
-    for {
-      parsedStartDate <- ResolveIsoDate(startDate, StartDateFormatError)
-      parsedEndDate   <- ResolveIsoDate(endDate, EndDateFormatError)
-      startDateEpochTime = parsedStartDate.toEpochDay
-      endDateEpochTime   = parsedEndDate.toEpochDay
-      parsed <- {
-        if ((endDateEpochTime - startDateEpochTime) <= 0) {
-          Left(List(RuleEndBeforeStartDateError))
-        } else {
-          Right(DateRange(parsedStartDate, parsedEndDate))
-        }
-      }
-    } yield {
-      parsed
+  private def resolveDateRange(parsedStartDate: LocalDate, parsedEndDate: LocalDate): Validated[Seq[MtdError], DateRange] = {
+    val startDateEpochTime = parsedStartDate.toEpochDay
+    val endDateEpochTime   = parsedEndDate.toEpochDay
+
+    if ((endDateEpochTime - startDateEpochTime) <= 0) {
+      Invalid(List(RuleEndBeforeStartDateError))
+    } else {
+      Valid(DateRange(parsedStartDate, parsedEndDate))
     }
   }
 

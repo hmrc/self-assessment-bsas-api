@@ -17,17 +17,19 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.BusinessId
-import api.models.errors.{BusinessIdFormatError, MtdError}
+import api.models.errors.{ BusinessIdFormatError, MtdError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 object ResolveBusinessId extends Resolver[String, BusinessId] {
 
   private val businessIdRegex = "^X[A-Z0-9]{1}IS[0-9]{11}$".r
 
-  def apply(value: String, unusedError: Option[MtdError], path: Option[String]): Either[Seq[MtdError], BusinessId] = {
+  def apply(value: String, unusedError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], BusinessId] = {
     if (businessIdRegex.matches(value))
-      Right(BusinessId(value))
+      Valid(BusinessId(value))
     else
-      Left(List(BusinessIdFormatError.maybeWithExtraPath(path)))
+      Invalid(List(BusinessIdFormatError.maybeWithExtraPath(path)))
   }
 
 }

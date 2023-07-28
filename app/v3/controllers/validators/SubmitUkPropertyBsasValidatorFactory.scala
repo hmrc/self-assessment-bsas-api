@@ -19,15 +19,17 @@ package v3.controllers.validators
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear }
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits._
 import play.api.libs.json.JsValue
-import v3.models.errors.RuleBothPropertiesSuppliedError
+import v3.controllers.validators.SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 import v3.models.request.submitBsas.ukProperty.{ SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData }
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.Singleton
 import scala.annotation.nowarn
 
 @Singleton
-class SubmitUkPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory: SubmitUkPropertyBsasRulesValidatorFactory) {
+class SubmitUkPropertyBsasValidatorFactory {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitUKPropertyBsasRequestBody]()
@@ -35,41 +37,12 @@ class SubmitUkPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory: Subm
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitUkPropertyBsasRequestData] =
     new Validator[SubmitUkPropertyBsasRequestData] {
 
-      def validate: Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = {
-        val resolvedNino          = ResolveNino(nino)
-        val resolvedCalculationId = ResolveCalculationId(calculationId)
-        val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
-        val resolvedBody          = resolveJson(body)
-
-        val validatedOneProperty = validateOnePropertyOnly(body)
-
-        val result: Either[Seq[MtdError], SubmitUkPropertyBsasRequestData] = for {
-          nino          <- resolvedNino
-          calculationId <- resolvedCalculationId
-          maybeTaxYear  <- resolvedTaxYear
-          body          <- resolvedBody
-          _             <- validatedOneProperty
-          parsed = SubmitUkPropertyBsasRequestData(nino, calculationId, maybeTaxYear, body)
-          _ <- rulesValidatorFactory.validator(parsed).validate
-        } yield {
-          parsed
-        }
-
-        mapResult(
-          result,
-          possibleErrors = resolvedNino,
-          resolvedCalculationId,
-          resolvedTaxYear,
-          resolvedBody,
-          validatedOneProperty
-        )
-      }
+      def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
+        (
+          ResolveNino(nino),
+          ResolveCalculationId(calculationId),
+          ResolveTysTaxYear(taxYear),
+          resolveJson(body)
+        ).mapN(SubmitUkPropertyBsasRequestData) andThen validateBusinessRules
     }
-
-  private def validateOnePropertyOnly(jsBody: JsValue): Either[List[RuleBothPropertiesSuppliedError.type], Unit] =
-    if ((jsBody \ "furnishedHolidayLet").isDefined && (jsBody \ "nonFurnishedHolidayLet").isDefined)
-      Left(List(RuleBothPropertiesSuppliedError))
-    else
-      Right(())
-
 }

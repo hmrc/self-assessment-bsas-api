@@ -17,6 +17,8 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.{ InternalError, MtdError }
+import cats.data.Validated
+import cats.data.Validated.Valid
 
 /** Parses a raw value (e.g. String or JsValue) to a target type, validating in the process.
   *
@@ -27,34 +29,34 @@ import api.models.errors.{ InternalError, MtdError }
   */
 trait Resolver[S, T] {
 
-  def apply(value: S, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], T]
+  def apply(value: S, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], T]
 
-  final def apply(value: S): Either[Seq[MtdError], T] = apply(value, None, None)
+  final def apply(value: S): Validated[Seq[MtdError], T] = apply(value, None, None)
 
-  final def apply(value: S, path: Option[String]): Either[Seq[MtdError], T] = apply(value, None, path)
+  final def apply(value: S, path: Option[String]): Validated[Seq[MtdError], T] = apply(value, None, path)
 
-  final def apply(value: S, path: String): Either[Seq[MtdError], T] = apply(value, None, Some(path))
+  final def apply(value: S, path: String): Validated[Seq[MtdError], T] = apply(value, None, Some(path))
 
-  final def apply(value: S, error: MtdError): Either[Seq[MtdError], T] =
+  final def apply(value: S, error: MtdError): Validated[Seq[MtdError], T] =
     apply(value, Option(error), path = None)
 
-  final def apply(maybeValue: Option[S], error: MtdError): Either[Seq[MtdError], Option[T]] =
+  final def apply(maybeValue: Option[S], error: MtdError): Validated[Seq[MtdError], Option[T]] =
     apply(maybeValue, Option(error))
 
-  final def apply(maybeValue: Option[S], defaultValue: T): Either[Seq[MtdError], T] =
+  final def apply(maybeValue: Option[S], defaultValue: => T): Validated[Seq[MtdError], T] =
     apply(maybeValue, defaultValue, error = None)
 
-  final def apply(maybeValue: Option[S], defaultValue: T, error: MtdError): Either[Seq[MtdError], T] =
+  final def apply(maybeValue: Option[S], defaultValue: => T, error: MtdError): Validated[Seq[MtdError], T] =
     apply(maybeValue, defaultValue, Option(error))
 
-  final def apply(maybeValue: Option[S], defaultValue: T, error: Option[MtdError]): Either[Seq[MtdError], T] =
+  final def apply(maybeValue: Option[S], defaultValue: => T, error: Option[MtdError]): Validated[Seq[MtdError], T] =
     apply(maybeValue, error)
       .map(maybeResolvedValue => maybeResolvedValue.getOrElse(defaultValue))
 
-  final def apply(maybeValue: Option[S], error: Option[MtdError] = None, path: Option[String] = None): Either[Seq[MtdError], Option[T]] =
+  final def apply(maybeValue: Option[S], error: Option[MtdError] = None, path: Option[String] = None): Validated[Seq[MtdError], Option[T]] =
     maybeValue match {
       case Some(value) => apply(value, error, path).map(Option(_))
-      case None        => Right(None)
+      case None        => Valid(None)
     }
 
   final protected def requirePath(path: Option[String]): String = {

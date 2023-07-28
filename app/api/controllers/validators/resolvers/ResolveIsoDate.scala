@@ -17,6 +17,8 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -26,9 +28,9 @@ import java.time.format.DateTimeParseException
   */
 object ResolveIsoDate extends Resolver[String, LocalDate] {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], LocalDate] =
-    try Right(LocalDate.parse(value))
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], LocalDate] =
+    try Valid(LocalDate.parse(value))
     catch {
-      case _: DateTimeParseException => Left(List(requireError(error, path)))
+      case _: DateTimeParseException => Invalid(List(requireError(error, path)))
     }
 }

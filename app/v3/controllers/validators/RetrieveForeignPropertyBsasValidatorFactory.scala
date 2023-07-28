@@ -19,6 +19,9 @@ package v3.controllers.validators
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveTysTaxYear }
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated._
+import cats.implicits._
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -29,21 +32,12 @@ class RetrieveForeignPropertyBsasValidatorFactory {
   def validator(nino: String, calculationId: String, taxYear: Option[String]): Validator[RetrieveForeignPropertyBsasRequestData] =
     new Validator[RetrieveForeignPropertyBsasRequestData] {
 
-      def validate: Either[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] = {
-        val resolvedNino          = ResolveNino(nino)
-        val resolvedCalculationId = ResolveCalculationId(calculationId)
-        val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
-
-        val result: Either[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] = for {
-          nino          <- resolvedNino
-          calculationId <- resolvedCalculationId
-          maybeTaxYear  <- resolvedTaxYear
-        } yield {
-          RetrieveForeignPropertyBsasRequestData(nino, calculationId, maybeTaxYear)
-        }
-
-        mapResult(result, possibleErrors = resolvedNino, resolvedCalculationId, resolvedTaxYear)
-      }
+      def validate: Validated[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] =
+        (
+          ResolveNino(nino),
+          ResolveCalculationId(calculationId),
+          ResolveTysTaxYear(taxYear)
+        ).mapN(RetrieveForeignPropertyBsasRequestData)
     }
 
 }

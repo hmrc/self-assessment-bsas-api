@@ -17,11 +17,12 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.MtdError
+import cats.data.Validated
 import play.api.libs.json._
 
 class ResolveJsonObject[T](implicit val reads: Reads[T]) extends Resolver[JsValue, T] with JsonObjectResolving[T] {
 
-  def apply(data: JsValue, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], T] =
-    validate(data).left.map(errs => withErrors(error, errs, path))
+  def apply(data: JsValue, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], T] =
+    validate(data).leftMap(errs => withErrors(error, errs, path))
 
 }

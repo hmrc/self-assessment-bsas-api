@@ -17,17 +17,19 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.{ MtdError, ValueFormatError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 case class ResolveParsedNumber(min: BigDecimal = 0, max: BigDecimal = 99999999999.99, disallowZero: Boolean = false)
     extends Resolver[BigDecimal, BigDecimal] {
 
-  def apply(value: BigDecimal, notUsedError: Option[MtdError], path: Option[String]): Either[Seq[MtdError], BigDecimal] = {
+  def apply(value: BigDecimal, notUsedError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], BigDecimal] = {
     val usePath = requirePath(path)
 
     if (value >= min && value <= max && value.scale <= 2 && (!disallowZero || value != 0))
-      Right(value)
+      Valid(value)
     else
-      Left(
+      Invalid(
         List(
           ValueFormatError.forPathAndRange(usePath, min.toString, max.toString)
         ))

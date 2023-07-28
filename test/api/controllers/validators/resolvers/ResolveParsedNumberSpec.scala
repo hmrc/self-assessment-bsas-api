@@ -17,6 +17,7 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.ValueFormatError
+import cats.data.Validated.{ Invalid, Valid }
 import org.scalacheck.Arbitrary
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import support.UnitSpec
@@ -39,32 +40,32 @@ class ResolveParsedNumberSpec extends UnitSpec with ScalaCheckDrivenPropertyChec
         "using validate" in forAll { money: BigDecimal =>
           val result = resolve(money, path)
           result shouldBe
-            (if (min <= money && money <= max) Right(money) else Left(List(error)))
+            (if (min <= money && money <= max) Valid(money) else Invalid(List(error)))
         }
 
         "using validateOptional" in forAll { money: BigDecimal =>
           val result = resolve(Some(money), path = Some(path))
           result shouldBe
-            (if (min <= money && money <= max) Right(Some(money)) else Left(List(error)))
+            (if (min <= money && money <= max) Valid(Some(money)) else Invalid(List(error)))
         }
       }
 
       "more than two significant decimals are provided" when {
         "return an error for validateOptional" in {
           val result = resolve(Some(BigDecimal(100.123)), path = Some(path))
-          result shouldBe Left(List(error))
+          result shouldBe Invalid(List(error))
         }
 
         "return an error for validate" in {
           val result = resolve(100.123, path)
-          result shouldBe Left(List(error))
+          result shouldBe Invalid(List(error))
         }
       }
 
       "no number is supplied to validateOptional" when {
         "return no error" in {
           val result = resolve(None)
-          result shouldBe Right(None)
+          result shouldBe Valid(None)
         }
       }
     }
@@ -76,23 +77,23 @@ class ResolveParsedNumberSpec extends UnitSpec with ScalaCheckDrivenPropertyChec
 
       "allow 0" in {
         val result = resolve(0, path)
-        result shouldBe Right(BigDecimal(0))
+        result shouldBe Valid(BigDecimal(0))
       }
 
       "disallow less than 0" in {
         val result = resolve(-0.01, path)
-        result shouldBe Left(List(error))
+        result shouldBe Invalid(List(error))
       }
 
       "allow 99999999999.99" in {
         val value  = BigDecimal(99999999999.99)
         val result = resolve(value, path)
-        result shouldBe Right(value)
+        result shouldBe Valid(value)
       }
 
       "disallow more than 99999999999.99" in {
         val result = resolve(100000000000.00, path)
-        result shouldBe Left(List(error))
+        result shouldBe Invalid(List(error))
       }
     }
 
@@ -105,32 +106,32 @@ class ResolveParsedNumberSpec extends UnitSpec with ScalaCheckDrivenPropertyChec
         "allow -99999999999.99" in {
           val value  = BigDecimal(-99999999999.99)
           val result = resolveAdjustment(value, path)
-          result shouldBe Right(value)
+          result shouldBe Valid(value)
         }
 
         "disallow less than -99999999999.99" in {
           val result = resolveAdjustment(-100000000000.00, path)
-          result shouldBe Left(List(error))
+          result shouldBe Invalid(List(error))
         }
 
         "allow 99999999999.99" in {
           val value  = BigDecimal(99999999999.99)
           val result = resolveAdjustment(value, path)
-          result shouldBe Right(value)
+          result shouldBe Valid(value)
         }
 
         "disallow more than 99999999999.99" in {
           val result = resolveAdjustment(100000000000.00, path)
-          result shouldBe Left(List(error))
+          result shouldBe Invalid(List(error))
         }
 
         "not allow 0" in {
           val result = resolveAdjustment(0, path)
-          result shouldBe Left(List(error))
+          result shouldBe Invalid(List(error))
         }
 
         "allow None" in {
-          resolveAdjustment(None) shouldBe Right(None)
+          resolveAdjustment(None) shouldBe Valid(None)
         }
       }
     }

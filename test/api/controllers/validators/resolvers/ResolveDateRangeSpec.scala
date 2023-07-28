@@ -16,7 +16,8 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{EndDateFormatError, RuleEndBeforeStartDateError, StartDateFormatError}
+import api.models.errors.{ EndDateFormatError, RuleEndBeforeStartDateError, StartDateFormatError }
+import cats.data.Validated.{ Invalid, Valid }
 import support.UnitSpec
 
 import java.time.LocalDate
@@ -24,30 +25,30 @@ import java.time.LocalDate
 class ResolveDateRangeSpec extends UnitSpec {
 
   private val validStart = "2023-06-21"
-  private val validEnd = "2024-06-21"
+  private val validEnd   = "2024-06-21"
 
   "ResolveDateRange" should {
     "return no errors" when {
       "passed a valid start and end date" in {
-        val result    = ResolveDateRange(validStart -> validEnd)
-        result shouldBe Right(DateRange(LocalDate.parse(validStart), LocalDate.parse(validEnd)))
+        val result = ResolveDateRange(validStart -> validEnd)
+        result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validEnd)))
       }
     }
 
     "return an error" when {
       "passed an invalid start date" in {
-        val result    = ResolveDateRange("not-a-date" -> validEnd)
-        result shouldBe Left(List(StartDateFormatError))
+        val result = ResolveDateRange("not-a-date" -> validEnd)
+        result shouldBe Invalid(List(StartDateFormatError))
       }
 
       "passed an invalid end date" in {
-        val result    = ResolveDateRange(validStart -> "not-a-date")
-        result shouldBe Left(List(EndDateFormatError))
+        val result = ResolveDateRange(validStart -> "not-a-date")
+        result shouldBe Invalid(List(EndDateFormatError))
       }
 
       "passed an end date before start date" in {
-        val result    = ResolveDateRange(validEnd -> validStart)
-        result shouldBe Left(List(RuleEndBeforeStartDateError))
+        val result = ResolveDateRange(validEnd -> validStart)
+        result shouldBe Invalid(List(RuleEndBeforeStartDateError))
       }
     }
   }

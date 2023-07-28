@@ -38,8 +38,7 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
   private val parsedCalculationId = CalculationId(validCalculationId)
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
-  val rulesValidatorFactory = new SubmitSelfEmploymentBsasRulesValidatorFactory
-  val validatorFactory      = new SubmitSelfEmploymentBsasValidatorFactory(rulesValidatorFactory)
+  val validatorFactory = new SubmitSelfEmploymentBsasValidatorFactory
 
   private def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue) =
     validatorFactory.validator(nino, calculationId, taxYear, body)

@@ -17,17 +17,19 @@
 package api.controllers.validators.resolvers
 
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 import scala.util.{ Failure, Success, Try }
 
 object ResolveBoolean extends Resolver[String, Boolean] {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], Boolean] =
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], Boolean] =
     Try {
       value.toBoolean
     } match {
-      case Success(result) => Right(result)
-      case Failure(_)      => Left(List(requireError(error, path)))
+      case Success(result) => Valid(result)
+      case Failure(_)      => Invalid(List(requireError(error, path)))
     }
 
 }

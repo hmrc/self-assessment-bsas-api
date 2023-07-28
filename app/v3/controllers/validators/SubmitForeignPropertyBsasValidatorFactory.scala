@@ -19,15 +19,17 @@ package v3.controllers.validators
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers._
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits._
 import play.api.libs.json.JsValue
-import v3.models.errors.RuleBothPropertiesSuppliedError
+import v3.controllers.validators.SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 import v3.models.request.submitBsas.foreignProperty._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.Singleton
 import scala.annotation.nowarn
 
 @Singleton
-class SubmitForeignPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory: SubmitForeignPropertyBsasRulesValidatorFactory) {
+class SubmitForeignPropertyBsasValidatorFactory {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitForeignPropertyBsasRequestBody]()
@@ -35,40 +37,12 @@ class SubmitForeignPropertyBsasValidatorFactory @Inject()(rulesValidatorFactory:
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitForeignPropertyBsasRequestData] =
     new Validator[SubmitForeignPropertyBsasRequestData] {
 
-      def validate: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = {
-        val resolvedNino          = ResolveNino(nino)
-        val resolvedCalculationId = ResolveCalculationId(calculationId)
-        val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
-        val resolvedBody          = resolveJson(body)
-        val validatedFhlOrNonFhl  = validateFhlOrNonFhlOnly(body)
-
-        val result: Either[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = for {
-          nino          <- resolvedNino
-          calculationId <- resolvedCalculationId
-          maybeTaxYear  <- resolvedTaxYear
-          body          <- resolvedBody
-          _             <- validatedFhlOrNonFhl
-          parsed = SubmitForeignPropertyBsasRequestData(nino, calculationId, maybeTaxYear, body)
-          _ <- rulesValidatorFactory.validator(parsed).validate
-        } yield {
-          parsed
-        }
-
-        mapResult(
-          result,
-          possibleErrors = resolvedNino,
-          resolvedCalculationId,
-          resolvedTaxYear,
-          resolvedBody,
-          validatedFhlOrNonFhl
-        )
-      }
+      def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
+        (
+          ResolveNino(nino),
+          ResolveCalculationId(calculationId),
+          ResolveTysTaxYear(taxYear),
+          resolveJson(body)
+        ).mapN(SubmitForeignPropertyBsasRequestData) andThen validateBusinessRules
     }
-
-  private def validateFhlOrNonFhlOnly(jsBody: JsValue): Either[Seq[MtdError], Unit] =
-    if ((jsBody \ "foreignFhlEea").isDefined && (jsBody \ "nonFurnishedHolidayLet").isDefined)
-      Left(List(RuleBothPropertiesSuppliedError))
-    else
-      Right(())
-
 }

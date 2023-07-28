@@ -19,6 +19,9 @@ package api.controllers.validators
 import api.controllers.validators.resolvers.{ ResolveJsonObject, ResolveNino, ResolveTaxYear }
 import api.models.domain.{ Nino, TaxYear }
 import api.models.errors._
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import cats.implicits._
 import org.scalamock.scalatest.MockFactory
 import play.api.http.Status.BAD_REQUEST
 import play.api.libs.json.{ JsValue, Json, Reads }
@@ -47,44 +50,33 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
   /** The main/outermost validator.
     */
-  private class TestParsedRequestValidator(nino: String = "AA123456A", taxYear: String = "2023-24", jsonBody: JsValue = validBody)
+  private class TestValidator(nino: String = "AA123456A", taxYear: String = "2023-24", jsonBody: JsValue = validBody)
       extends Validator[TestParsedRequest] {
 
     private val jsonResolver = new ResolveJsonObject[TestParsedRequestBody]
 
-    def validate: Either[Seq[MtdError], TestParsedRequest] = {
-      val resolvedNino    = ResolveNino(nino)
-      val resolvedTaxYear = ResolveTaxYear(taxYear)
-
-      val result = (for {
-        nino    <- resolvedNino
-        taxYear <- resolvedTaxYear
-        body    <- jsonResolver(jsonBody, RuleIncorrectOrEmptyBodyError)
-        _       <- new TestParsedRequestBodyValidator(body).validate
-      } yield {
-        TestParsedRequest(nino, taxYear, body)
-      })
-
-      mapResult(result, possibleErrors = resolvedNino, resolvedTaxYear)
-    }
+    def validate: Validated[Seq[MtdError], TestParsedRequest] =
+      (
+        ResolveNino(nino),
+        ResolveTaxYear(taxYear),
+        jsonResolver(jsonBody, RuleIncorrectOrEmptyBodyError)
+      ).mapN(TestParsedRequest) andThen TestRulesValidator.validateBusinessRules
   }
 
   /** Perform additional business-rules validation on the correctly parsed request.
     */
-  private class TestParsedRequestBodyValidator(parsedBody: TestParsedRequestBody) extends Validator[TestParsedRequestBody] {
+  private object TestRulesValidator extends RulesValidator[TestParsedRequest] {
 
-    def validate: Either[Seq[MtdError], TestParsedRequestBody] = {
-      val resolvedValue1 = if (parsedBody.value1 == "value 1") Right(parsedBody) else Left(List(RuleValue1Invalid))
-      val resolvedValue2 = if (parsedBody.value2) Right(parsedBody) else Left(List(RuleValue2Invalid))
+    def validateBusinessRules(parsed: TestParsedRequest): Validated[Seq[MtdError], TestParsedRequest] = {
+      val resolvedValue1 = if (parsed.body.value1 == "value 1") valid else Invalid(List(RuleValue1Invalid))
+      val resolvedValue2 = if (parsed.body.value2) valid else Invalid(List(RuleValue2Invalid))
 
-      val result = for {
-        _ <- resolvedValue1
-        _ <- resolvedValue2
-      } yield parsedBody
-
-      mapResult(result, possibleErrors = resolvedValue1, resolvedValue2)
+      combineResults(
+        parsed,
+        resolvedValue1,
+        resolvedValue2
+      )
     }
-
   }
 
   private object RuleValue1Invalid extends MtdError("RULE_VALUE_1_INVALID", "value1 can only be 'value 1'", BAD_REQUEST)
@@ -94,7 +86,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
     "return the parsed domain object" when {
       "given valid input" in {
-        val validator = new TestParsedRequestValidator()
+        val validator = new TestValidator()
         val result    = validator.validateAndWrapResult()
         result shouldBe Right(parsedRequest)
       }
@@ -102,13 +94,13 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
     "return an error from the request params" when {
       "given a single invalid request param" in {
-        val validator = new TestParsedRequestValidator(nino = "not-a-nino")
+        val validator = new TestValidator(nino = "not-a-nino")
         val result    = validator.validateAndWrapResult()
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
       "given two invalid request params" in {
-        val validator = new TestParsedRequestValidator(nino = "not-a-nino", taxYear = "not-a-tax-year")
+        val validator = new TestValidator(nino = "not-a-nino", taxYear = "not-a-tax-year")
         val result    = validator.validateAndWrapResult()
         result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
       }
@@ -124,7 +116,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
                                            | }
                                            |""".stripMargin)
 
-        val validator = new TestParsedRequestValidator(jsonBody = jsonRequestBody)
+        val validator = new TestValidator(jsonBody = jsonRequestBody)
         val result    = validator.validateAndWrapResult()
         result shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError))
       }

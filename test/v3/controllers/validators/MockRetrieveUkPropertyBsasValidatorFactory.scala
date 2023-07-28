@@ -18,6 +18,8 @@ package v3.controllers.validators
 
 import api.controllers.validators.Validator
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
@@ -41,14 +43,14 @@ trait MockRetrieveUkPropertyBsasValidatorFactory extends MockFactory {
 
   def returningSuccess(result: RetrieveUkPropertyBsasRequestData): Validator[RetrieveUkPropertyBsasRequestData] =
     new Validator[RetrieveUkPropertyBsasRequestData] {
-      def validate: Either[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = Right(result)
+      def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = Valid(result)
     }
 
   def returning(result: MtdError*): Validator[RetrieveUkPropertyBsasRequestData] = returningErrors(result)
 
   def returningErrors(result: Seq[MtdError]): Validator[RetrieveUkPropertyBsasRequestData] =
     new Validator[RetrieveUkPropertyBsasRequestData] {
-      def validate: Either[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = Left(result)
+      def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = Invalid(result)
     }
 
 }

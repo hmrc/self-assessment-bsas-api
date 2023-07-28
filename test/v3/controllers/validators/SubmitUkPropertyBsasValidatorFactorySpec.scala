@@ -127,8 +127,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     )
   private val parsedFhlConsolidatedBody = fhlConsolidatedBodyJson.as[SubmitUKPropertyBsasRequestBody]
 
-  private val rulesValidatorFactory = new SubmitUkPropertyBsasRulesValidatorFactory
-  private val validatorFactory      = new SubmitUkPropertyBsasValidatorFactory(rulesValidatorFactory)
+  private val validatorFactory = new SubmitUkPropertyBsasValidatorFactory
 
   private def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue) =
     validatorFactory.validator(nino, calculationId, taxYear, body)

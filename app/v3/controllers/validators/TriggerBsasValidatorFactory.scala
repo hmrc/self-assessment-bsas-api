@@ -16,14 +16,17 @@
 
 package v3.controllers.validators
 
-import api.controllers.validators.Validator
 import api.controllers.validators.resolvers._
-import api.models.domain.Nino
+import api.controllers.validators.{ RulesValidator, Validator }
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import cats.implicits._
 import config.AppConfig
 import play.api.libs.json.JsValue
 import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v3.models.domain.TypeOfBusiness
+import v3.models.domain.TypeOfBusiness.{ `foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl` }
 import v3.models.errors.RuleAccountingPeriodNotSupportedError
 import v3.models.request.triggerBsas.{ TriggerBsasRequestBody, TriggerBsasRequestData }
 
@@ -33,10 +36,25 @@ import javax.inject.{ Inject, Singleton }
 import scala.annotation.nowarn
 
 @Singleton
-class TriggerBsasValidatorFactory @Inject()(appConfig: AppConfig) {
+class TriggerBsasValidatorFactory @Inject()(rulesValidator: TriggerBsasRulesValidator) {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[TriggerBsasRequestBody]()
+
+  def validator(nino: String, body: JsValue): Validator[TriggerBsasRequestData] =
+    new Validator[TriggerBsasRequestData] {
+
+      def validate: Validated[Seq[MtdError], TriggerBsasRequestData] = {
+        (
+          ResolveNino(nino),
+          resolveJson(body)
+        ).mapN(TriggerBsasRequestData) andThen rulesValidator.validateBusinessRules
+      }
+    }
+}
+
+@Singleton
+class TriggerBsasRulesValidator @Inject()(appConfig: AppConfig) extends RulesValidator[TriggerBsasRequestData] {
 
   private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
     s"${appConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
@@ -48,56 +66,39 @@ class TriggerBsasValidatorFactory @Inject()(appConfig: AppConfig) {
     DateTimeFormatter.ISO_LOCAL_DATE
   )
 
-  def validator(nino: String, body: JsValue): Validator[TriggerBsasRequestData] =
-    new Validator[TriggerBsasRequestData] {
+  def validateBusinessRules(parsed: TriggerBsasRequestData): Validated[Seq[MtdError], TriggerBsasRequestData] = {
+    import parsed.body
+    import parsed.body.accountingPeriod._
 
-      def validate: Either[Seq[MtdError], TriggerBsasRequestData] = {
-        val resolvedNino = ResolveNino(nino)
-        val resolvedBody = resolveJson(body)
+    val (validatedBusinessId, validatedDateRange, validatedTypeOfBusiness) = (
+      ResolveBusinessId(body.businessId),
+      ResolveDateRange(startDate -> endDate),
+      ResolveTypeOfBusiness(body.typeOfBusiness)
+    )
 
-        val result: Either[Seq[MtdError], TriggerBsasRequestData] = for {
-          nino <- resolvedNino
-          body <- resolvedBody
-          parsed = TriggerBsasRequestData(nino, body)
-          _ <- validateParsedRequestBody(nino, parsed)
-        } yield {
-          parsed
-        }
+    (
+      validatedBusinessId,
+      validatedDateRange,
+      validatedTypeOfBusiness
+    ).mapN((_, _, _))
+      .andThen { case (_, dateRange, typeOfBusiness) => validateAccountingPeriodNotSupported(dateRange.endDate, typeOfBusiness) }
+      .map(_ => parsed)
+  }
 
-        mapResult(result, possibleErrors = resolvedNino, resolvedBody)
-      }
+  private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusiness): Validated[Seq[MtdError], Unit] = {
 
-      private def validateParsedRequestBody(nino: Nino, parsed: TriggerBsasRequestData): Either[Seq[MtdError], TriggerBsasRequestData] = {
-        import parsed.body.accountingPeriod._
-
-        val resolvedBusinessId     = ResolveBusinessId(parsed.body.businessId)
-        val resolvedTypeOfBusiness = ResolveTypeOfBusiness(parsed.body.typeOfBusiness)
-        val resolvedDateRange      = ResolveDateRange(startDate -> endDate)
-
-        val bodyValidationResult = for {
-          _              <- resolvedBusinessId
-          typeOfBusiness <- resolvedTypeOfBusiness
-          dateRange      <- resolvedDateRange
-          _              <- validateAccountingPeriodNotSupported(typeOfBusiness, dateRange.endDate)
-        } yield parsed
-
-        mapResult(bodyValidationResult, possibleErrors = resolvedBusinessId, resolvedTypeOfBusiness, resolvedDateRange)
-      }
-
-      private def validateAccountingPeriodNotSupported(typeOfBusiness: TypeOfBusiness, endDate: LocalDate): Either[Seq[MtdError], Unit] = {
-        val earliestDate: LocalDate = typeOfBusiness match {
-          case TypeOfBusiness.`self-employment` | TypeOfBusiness.`uk-property-fhl` | TypeOfBusiness.`uk-property-non-fhl` =>
-            selfEmploymentAndUkPropertyEarliestEndDate
-          case TypeOfBusiness.`foreign-property-fhl-eea` | TypeOfBusiness.`foreign-property` =>
-            foreignPropertyEarliestEndDate
-        }
-
-        if (endDate.isBefore(earliestDate)) {
-          Left(List(RuleAccountingPeriodNotSupportedError))
-        } else {
-          Right(())
-        }
-      }
+    val earliestDate: LocalDate = typeOfBusiness match {
+      case `self-employment` | `uk-property-fhl` | `uk-property-non-fhl` =>
+        selfEmploymentAndUkPropertyEarliestEndDate
+      case `foreign-property-fhl-eea` | `foreign-property` =>
+        foreignPropertyEarliestEndDate
     }
+
+    if (endDate.isBefore(earliestDate)) {
+      Invalid(List(RuleAccountingPeriodNotSupportedError))
+    } else {
+      valid
+    }
+  }
 
 }

@@ -18,12 +18,14 @@ package api.controllers.validators.resolvers
 
 import api.models.domain.TaxYear
 import api.models.errors._
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 trait ResolvingTaxYear extends Resolver[String, TaxYear] {
 
   private val taxYearFormat = "20[1-9][0-9]-[1-9][0-9]".r
 
-  protected def resolve(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], TaxYear] = {
+  protected def resolve(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] = {
     if (taxYearFormat.matches(value)) {
       val startTaxYearStart: Int = 2
       val startTaxYearEnd: Int   = 4
@@ -35,13 +37,13 @@ trait ResolvingTaxYear extends Resolver[String, TaxYear] {
       val end   = value.substring(endTaxYearStart, endTaxYearEnd).toInt
 
       if (end - start == 1) {
-        Right(TaxYear.fromMtd(value))
+        Valid(TaxYear.fromMtd(value))
       } else {
-        Left(List(withError(error, RuleTaxYearRangeInvalid, path)))
+        Invalid(List(withError(error, RuleTaxYearRangeInvalid, path)))
       }
 
     } else {
-      Left(List(withError(error, TaxYearFormatError, path)))
+      Invalid(List(withError(error, TaxYearFormatError, path)))
     }
   }
 
@@ -49,38 +51,30 @@ trait ResolvingTaxYear extends Resolver[String, TaxYear] {
 
 object ResolveTaxYear extends ResolvingTaxYear {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], TaxYear] =
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] =
     resolve(value, error, path)
 
-  def apply(minimumTaxYear: Int, value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], TaxYear] = {
-    for {
-      taxYear <- resolve(value, error, path)
-      _ <- {
+  def apply(minimumTaxYear: Int, value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] =
+    resolve(value, error, path)
+      .andThen { taxYear =>
         if (taxYear.year < minimumTaxYear) {
-          Left(List(RuleTaxYearNotSupportedError))
+          Invalid(List(RuleTaxYearNotSupportedError))
         } else {
-          Right(taxYear)
+          Valid(taxYear)
         }
       }
-    } yield taxYear
-  }
 
 }
 
 object ResolveTysTaxYear extends ResolvingTaxYear {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], TaxYear] = {
-    for {
-      taxYear <- resolve(value, error, path)
-      _ <- {
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] =
+    resolve(value, error, path)
+      .andThen { taxYear =>
         if (taxYear.year < TaxYear.tysTaxYear) {
-          Left(List(InvalidTaxYearParameterError))
+          Invalid(List(InvalidTaxYearParameterError) ++ error)
         } else {
-          Right(taxYear)
+          Valid(taxYear)
         }
       }
-    } yield taxYear
-
-  }
-
 }

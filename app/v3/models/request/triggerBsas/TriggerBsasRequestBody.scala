@@ -20,6 +20,9 @@ import play.api.libs.json.{ Json, OWrites, Reads }
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.AccountingPeriod
 
+/**
+  * @param typeOfBusiness reads "self-employment" etc from the vendor request, writes "01" etc to the downstream request.
+  */
 case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod, typeOfBusiness: String, businessId: String)
 
 object TriggerBsasRequestBody {
@@ -29,7 +32,7 @@ object TriggerBsasRequestBody {
   implicit val writes: OWrites[TriggerBsasRequestBody] = (requestBody: TriggerBsasRequestBody) => {
     val typeOfBusiness = TypeOfBusiness.parser(requestBody.typeOfBusiness)
     Json.obj(
-      "incomeSourceType"          -> typeOfBusiness.toIdentifierValue,
+      "incomeSourceType"          -> typeOfBusiness.asDownstreamValue,
       "incomeSourceId"            -> requestBody.businessId,
       "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
       "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate

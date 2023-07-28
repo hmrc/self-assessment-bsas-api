@@ -18,6 +18,8 @@ package api.controllers.validators.resolvers
 
 import api.models.domain.Nino
 import api.models.errors.{ MtdError, NinoFormatError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
 
 object ResolveNino extends Resolver[String, Nino] {
 
@@ -25,10 +27,10 @@ object ResolveNino extends Resolver[String, Nino] {
     ("^([ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|" +
       "[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6}[A-D ]?$").r
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Either[Seq[MtdError], Nino] =
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], Nino] = {
     if (Nino.isValid(value) && ninoRegex.matches(value))
-      Right(Nino(value))
+      Valid(Nino(value))
     else
-      Left(List(withError(error, NinoFormatError, path)))
-
+      Invalid(List(withError(error, NinoFormatError, path)))
+  }
 }

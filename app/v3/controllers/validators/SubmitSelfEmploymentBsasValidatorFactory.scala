@@ -19,14 +19,17 @@ package v3.controllers.validators
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear }
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits._
 import play.api.libs.json.JsValue
+import v3.controllers.validators.SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
 import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.Singleton
 import scala.annotation.nowarn
 
 @Singleton
-class SubmitSelfEmploymentBsasValidatorFactory @Inject()(rulesValidatorFactory: SubmitSelfEmploymentBsasRulesValidatorFactory) {
+class SubmitSelfEmploymentBsasValidatorFactory {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitSelfEmploymentBsasRequestBody]()
@@ -34,31 +37,12 @@ class SubmitSelfEmploymentBsasValidatorFactory @Inject()(rulesValidatorFactory: 
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitSelfEmploymentBsasRequestData] =
     new Validator[SubmitSelfEmploymentBsasRequestData] {
 
-      def validate: Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = {
-        val resolvedNino          = ResolveNino(nino)
-        val resolvedCalculationId = ResolveCalculationId(calculationId)
-        val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
-        val resolvedBody          = resolveJson(body)
-
-        val result: Either[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = for {
-          nino          <- resolvedNino
-          calculationId <- resolvedCalculationId
-          maybeTaxYear  <- resolvedTaxYear
-          body          <- resolvedBody
-          parsed = SubmitSelfEmploymentBsasRequestData(nino, calculationId, maybeTaxYear, body)
-          _ <- rulesValidatorFactory.validator(parsed).validate
-
-        } yield {
-          parsed
-        }
-
-        mapResult(
-          result,
-          possibleErrors = resolvedNino,
-          resolvedCalculationId,
-          resolvedTaxYear,
-          resolvedBody
-        )
-      }
+      def validate: Validated[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
+        (
+          ResolveNino(nino),
+          ResolveCalculationId(calculationId),
+          ResolveTysTaxYear(taxYear),
+          resolveJson(body)
+        ).mapN(SubmitSelfEmploymentBsasRequestData) andThen validateBusinessRules
     }
 }

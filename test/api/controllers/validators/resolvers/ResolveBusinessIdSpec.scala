@@ -18,6 +18,7 @@ package api.controllers.validators.resolvers
 
 import api.models.domain.BusinessId
 import api.models.errors.BusinessIdFormatError
+import cats.data.Validated.{ Invalid, Valid }
 import support.UnitSpec
 
 class ResolveBusinessIdSpec extends UnitSpec {
@@ -27,7 +28,7 @@ class ResolveBusinessIdSpec extends UnitSpec {
       "passed a valid business ID" in {
         val validBusinessId = "XAIS12345678901"
         val result          = ResolveBusinessId(validBusinessId)
-        result shouldBe Right(BusinessId(validBusinessId))
+        result shouldBe Valid(BusinessId(validBusinessId))
       }
     }
 
@@ -35,7 +36,7 @@ class ResolveBusinessIdSpec extends UnitSpec {
       "passed an invalid business ID" in {
         val invalidBusinessId = "XAXAIS65271982AD"
         val result            = ResolveBusinessId(invalidBusinessId)
-        result shouldBe Left(List(BusinessIdFormatError))
+        result shouldBe Invalid(List(BusinessIdFormatError))
       }
     }
   }

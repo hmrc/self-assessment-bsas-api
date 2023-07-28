@@ -17,19 +17,37 @@
 package api.controllers.validators
 
 import api.models.errors.{ BadRequestError, ErrorWrapper, MtdError }
+import cats.data.Validated
+import cats.data.Validated.{ Invalid, Valid }
+import cats.implicits._
 import utils.Logging
+
+trait RulesValidator[PARSED] extends Logging {
+
+  protected val valid: Validated[Seq[MtdError], Unit] = Valid(())
+
+  def validateBusinessRules(parsed: PARSED): Validated[Seq[MtdError], PARSED]
+
+  protected def combineResults(parsed: PARSED, results: Validated[Seq[MtdError], _]*): Validated[Seq[MtdError], PARSED] =
+    results.traverse_(identity).map(_ => parsed)
+
+  protected def combineProgress(results: Validated[Seq[MtdError], _]*): Validated[Seq[MtdError], Unit] =
+    results.traverse_(identity)
+}
+
+object Validator {}
 
 trait Validator[PARSED] extends Logging {
 
-  def validate: Either[Seq[MtdError], PARSED]
+  def validate: Validated[Seq[MtdError], PARSED]
 
   def validateAndWrapResult()(implicit correlationId: String): Either[ErrorWrapper, PARSED] = {
     validate match {
-      case Right(parsed) =>
+      case Valid(parsed) =>
         logger.info(s"Validation successful for the request with CorrelationId: $correlationId")
         Right(parsed)
 
-      case Left(errs) =>
+      case Invalid(errs) =>
         combineErrors(errs) match {
           case err :: Nil =>
             logger.warn(s"Validation failed with ${err.code} error for the request with CorrelationId: $correlationId")
@@ -41,43 +59,6 @@ trait Validator[PARSED] extends Logging {
         }
     }
   }
-
-  /** Assuming one or more validation errors - combines the possibleErrors with the Left error from result, then removes duplicates. The Left 'result'
-    * is included as it may be the result being returned by a nested Validator.
-    */
-  protected def mapResult(result: Either[Seq[MtdError], PARSED], possibleErrors: Either[Seq[MtdError], _]*): Either[Seq[MtdError], PARSED] = {
-    result match {
-      case Left(_)       => combineLefts((possibleErrors :+ result): _*)
-      case Right(parsed) => Right(parsed)
-    }
-  }
-
-  /**
-    * If all of the results are Rights, return the parsed value as a Right.
-    * If any of the results are Lefts, return a combined Left containing all the separate errors.
-    */
-  protected def combine(parsed: PARSED, results: Either[Seq[MtdError], _]*): Either[Seq[MtdError], PARSED] = {
-    val lefts = results.collect {
-      case Left(errs) => errs
-      case Right(_)   => Nil
-    }.flatten
-
-    if (lefts.isEmpty) {
-      Right(parsed)
-    } else {
-      Left(lefts)
-    }
-  }
-
-  /**
-    * Always returns a Left.
-    */
-  protected def combineLefts(possibleErrors: Either[Seq[MtdError], _]*): Either[Seq[MtdError], PARSED] =
-    Left(
-      possibleErrors.distinct
-        .collect { case Left(errs) => errs }
-        .flatten
-        .toList)
 
   private def combineErrors(errors: Seq[MtdError]): Seq[MtdError] = {
     errors

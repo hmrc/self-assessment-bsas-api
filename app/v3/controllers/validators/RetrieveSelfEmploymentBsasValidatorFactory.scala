@@ -19,6 +19,9 @@ package v3.controllers.validators
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveTysTaxYear }
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated._
+import cats.implicits._
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
 import javax.inject.Singleton
@@ -29,20 +32,11 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
   def validator(nino: String, calculationId: String, taxYear: Option[String]): Validator[RetrieveSelfEmploymentBsasRequestData] =
     new Validator[RetrieveSelfEmploymentBsasRequestData] {
 
-      def validate: Either[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = {
-        val resolvedNino          = ResolveNino(nino)
-        val resolvedCalculationId = ResolveCalculationId(calculationId)
-        val resolvedTaxYear       = ResolveTysTaxYear(taxYear)
-
-        val result: Either[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = for {
-          nino          <- resolvedNino
-          calculationId <- resolvedCalculationId
-          maybeTaxYear  <- resolvedTaxYear
-        } yield {
-          RetrieveSelfEmploymentBsasRequestData(nino, calculationId, maybeTaxYear)
-        }
-
-        mapResult(result, possibleErrors = resolvedNino, resolvedCalculationId, resolvedTaxYear)
-      }
+      def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] =
+        (
+          ResolveNino(nino),
+          ResolveCalculationId(calculationId),
+          ResolveTysTaxYear(taxYear)
+        ).mapN(RetrieveSelfEmploymentBsasRequestData)
     }
 }

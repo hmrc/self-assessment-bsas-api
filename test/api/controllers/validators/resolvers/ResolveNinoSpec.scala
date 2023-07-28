@@ -18,6 +18,7 @@ package api.controllers.validators.resolvers
 
 import api.models.domain.Nino
 import api.models.errors.NinoFormatError
+import cats.data.Validated.{ Invalid, Valid }
 import support.UnitSpec
 
 class ResolveNinoSpec extends UnitSpec {
@@ -27,7 +28,7 @@ class ResolveNinoSpec extends UnitSpec {
       "passed a valid NINO" in {
         val validNino = "AA123456A"
         val result    = ResolveNino(validNino, NinoFormatError)
-        result shouldBe Right(Nino(validNino))
+        result shouldBe Valid(Nino(validNino))
       }
     }
 
@@ -35,7 +36,7 @@ class ResolveNinoSpec extends UnitSpec {
       "passed an invalid NINO" in {
         val invalidNino = "AA123456ABCBBCBCBC"
         val result      = ResolveNino(invalidNino, NinoFormatError)
-        result shouldBe Left(List(NinoFormatError))
+        result shouldBe Invalid(List(NinoFormatError))
       }
     }
   }

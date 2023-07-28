@@ -20,6 +20,9 @@ import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ ResolveBusinessId, ResolveNino }
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated._
+import cats.implicits._
 import v3.controllers.validators.resolvers.{ ResolveListMinimumTaxYear, ResolveTypeOfBusiness }
 import v3.models.request.ListBsasRequestData
 
@@ -31,26 +34,12 @@ class ListBsasValidatorFactory {
   def validator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Validator[ListBsasRequestData] =
     new Validator[ListBsasRequestData] {
 
-      def validate: Either[Seq[MtdError], ListBsasRequestData] = {
-        val resolvedNino           = ResolveNino(nino)
-        val resolvedTaxYear        = ResolveListMinimumTaxYear(taxYear)
-        val resolvedTypeOfBusiness = ResolveTypeOfBusiness(typeOfBusiness)
-        val resolvedBusinessId     = ResolveBusinessId(businessId)
-
-        val result: Either[Seq[MtdError], ListBsasRequestData] = for {
-          nino                  <- resolvedNino
-          maybeTaxYear          <- resolvedTaxYear
-          maybeIncomeSourceType <- resolvedTypeOfBusiness
-          maybeIncomeSourceId   <- resolvedBusinessId
-        } yield {
-          val taxYear                         = maybeTaxYear.getOrElse(TaxYear.currentTaxYear())
-          val maybeIncomeSourceTypeIdentifier = maybeIncomeSourceType.map(_.toIdentifierValue)
-
-          ListBsasRequestData(nino, taxYear, maybeIncomeSourceId, maybeIncomeSourceTypeIdentifier)
-        }
-
-        mapResult(result, possibleErrors = resolvedNino, resolvedTaxYear, resolvedTypeOfBusiness, resolvedBusinessId)
-      }
+      def validate: Validated[Seq[MtdError], ListBsasRequestData] =
+        (
+          ResolveNino(nino),
+          ResolveListMinimumTaxYear(taxYear, defaultValue = TaxYear.currentTaxYear()),
+          ResolveBusinessId(businessId),
+          ResolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
+        ).mapN(ListBsasRequestData)
     }
-
 }

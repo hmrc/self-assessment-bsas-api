@@ -126,8 +126,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
   )
   private val parsedFhlBodyConsolidated = fhlBodyConsolidated.as[SubmitForeignPropertyBsasRequestBody]
 
-  val rulesValidatorFactory = new SubmitForeignPropertyBsasRulesValidatorFactory
-  val validatorFactory      = new SubmitForeignPropertyBsasValidatorFactory(rulesValidatorFactory)
+  val validatorFactory = new SubmitForeignPropertyBsasValidatorFactory
 
   private def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue) =
     validatorFactory.validator(nino, calculationId, taxYear, body)
