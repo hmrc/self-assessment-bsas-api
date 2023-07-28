@@ -39,9 +39,9 @@ object Metadata {
       (JsPath \ "metadata" \ "status").read[String] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].map {
         case Some(_) => true
-        case _       => false
+        case _ => false
       }
-  )(Metadata.apply _)
+    ) (Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

@@ -16,13 +16,16 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
 import api.models.errors.MtdError
-import v2.controllers.requestParsers.validators.validations.{ AdjustedStatusValidation, BsasIdValidation, NinoValidation }
+import v2.controllers.requestParsers.validators.validations.{AdjustedStatusValidation, BsasIdValidation, NinoValidation}
 import v2.models.request.RetrieveSelfEmploymentBsasRawData
 
 class RetrieveSelfEmploymentValidator extends Validator[RetrieveSelfEmploymentBsasRawData] {
 
   private val validationSet = List(parameterFormatValidation)
+
+  override def validate(data: RetrieveSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data).distinct
 
   private def parameterFormatValidation: RetrieveSelfEmploymentBsasRawData => List[List[MtdError]] = (data: RetrieveSelfEmploymentBsasRawData) => {
     List(
@@ -31,6 +34,4 @@ class RetrieveSelfEmploymentValidator extends Validator[RetrieveSelfEmploymentBs
       data.adjustedStatus.map(AdjustedStatusValidation.validate).getOrElse(Nil)
     )
   }
-
-  override def validate(data: RetrieveSelfEmploymentBsasRawData): List[MtdError] = run(validationSet, data).distinct
 }

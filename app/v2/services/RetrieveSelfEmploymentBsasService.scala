@@ -29,15 +29,27 @@ import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseService {
 
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "INVALID_RETURN" -> InternalError,
+      "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -50,21 +62,9 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
   private def validateRetrieveSelfEmploymentBsasSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case RetrieveSelfEmploymentBsasResponse(retrieveBsas.selfEmployment.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if typeOfBusiness != TypeOfBusiness.`self-employment` =>
+        if typeOfBusiness != TypeOfBusiness.`self-employment` =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotSelfEmployment, None))
 
       case _ => Right(desResponseWrapper)
     }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
-      "INVALID_CORRELATION_ID"    -> InternalError,
-      "INVALID_RETURN"            -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 }

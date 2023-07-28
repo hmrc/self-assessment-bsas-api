@@ -16,19 +16,19 @@
 
 package v2.controllers
 
-import api.controllers.{ RequestHandler => _, _ }
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
-import utils.{ IdGenerator, Logging }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveUkPropertyRequestParser
 import v2.models.request.RetrieveUkPropertyBsasRawData
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse.RetrieveUkPropertyBsasHateoasFactory
 import v2.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 import v2.services.RetrieveUkPropertyBsasService
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -40,7 +40,7 @@ class RetrieveUkPropertyBsasController @Inject()(val authService: EnrolmentsAuth
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
+  extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 

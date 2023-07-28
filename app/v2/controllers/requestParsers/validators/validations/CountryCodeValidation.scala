@@ -16,15 +16,16 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.models.errors.{ CountryCodeFormatError, MtdError }
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{CountryCodeFormatError, MtdError}
 import com.neovisionaries.i18n.CountryCode
 import v2.models.errors._
 
 object CountryCodeValidation {
 
   def validate(field: String, path: String): List[MtdError] = (CountryCode.getByAlpha3Code(field), field) match {
-    case (_: CountryCode, _)           => NoValidationErrors
+    case (_: CountryCode, _) => NoValidationErrors
     case (_, code) if code.length == 3 => List(RuleCountryCodeError.copy(paths = Some(List(path))))
-    case _                             => List(CountryCodeFormatError.copy(paths = Some(List(path))))
+    case _ => List(CountryCodeFormatError.copy(paths = Some(List(path))))
   }
 }

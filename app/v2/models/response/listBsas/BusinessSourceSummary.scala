@@ -34,7 +34,7 @@ object BusinessSourceSummary {
         (JsPath \ "incomeSourceId").readNullable[String] and
         JsPath.read[AccountingPeriod](AccountingPeriod.desReads) and
         (JsPath \ "ascCalculations").read[Seq[I]]
-    )(BusinessSourceSummary.apply(_, _, _, _))
+      ) (BusinessSourceSummary.apply(_, _, _, _))
 
   implicit def writes[I: Writes]: OWrites[BusinessSourceSummary[I]] = Json.writes[BusinessSourceSummary[I]]
 }

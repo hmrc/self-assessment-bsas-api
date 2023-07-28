@@ -25,7 +25,7 @@ object Profit {
   implicit val reads: Reads[Profit] = (
     (JsPath \ "netProfit").readNullable[BigDecimal] and
       (JsPath \ "taxableProfit").readNullable[BigInt]
-  )(Profit.apply _)
+    ) (Profit.apply _)
 
   implicit val writes: OWrites[Profit] = Json.writes[Profit]
 }

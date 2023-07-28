@@ -29,7 +29,7 @@ object BsasEntries {
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean]
-  )(BsasEntries.apply _)
+    ) (BsasEntries.apply _)
 
   implicit val writes: OWrites[BsasEntries] = Json.writes[BsasEntries]
 }

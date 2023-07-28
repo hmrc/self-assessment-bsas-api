@@ -16,8 +16,7 @@
 
 package v2.models.response.listBsas
 
-import api.hateoas.HateoasListLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasListLinksFactory, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
@@ -51,7 +50,7 @@ object ListBsasResponse extends HateoasLinks {
                   Seq(getUkPropertyBsas(appConfig, data.nino, item.bsasId))
                 case TypeOfBusiness.`foreign-property` | TypeOfBusiness.`foreign-property-fhl-eea` =>
                   Seq(getForeignPropertyBsas(appConfig, data.nino, item.bsasId))
-            }))
+              }))
     }
   }
 

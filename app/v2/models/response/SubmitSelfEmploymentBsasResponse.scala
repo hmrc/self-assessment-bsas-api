@@ -16,8 +16,7 @@
 
 package v2.models.response
 
-import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -31,7 +30,7 @@ object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
   implicit val reads: Reads[SubmitSelfEmploymentBsasResponse] = (
     (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
-  )(SubmitSelfEmploymentBsasResponse.apply _)
+    ) (SubmitSelfEmploymentBsasResponse.apply _)
 
   implicit val writes: OWrites[SubmitSelfEmploymentBsasResponse] = new OWrites[SubmitSelfEmploymentBsasResponse] {
 
@@ -42,7 +41,7 @@ object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
   }
 
   implicit object SubmitSelfEmploymentAdjustmentHateoasFactory
-      extends HateoasLinksFactory[SubmitSelfEmploymentBsasResponse, SubmitSelfEmploymentBsasHateoasData] {
+    extends HateoasLinksFactory[SubmitSelfEmploymentBsasResponse, SubmitSelfEmploymentBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitSelfEmploymentBsasHateoasData): Seq[Link] = {
       import data._
 

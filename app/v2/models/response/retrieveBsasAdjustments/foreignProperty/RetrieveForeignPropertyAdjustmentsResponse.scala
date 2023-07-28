@@ -16,8 +16,7 @@
 
 package v2.models.response.retrieveBsasAdjustments.foreignProperty
 
-import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
@@ -32,16 +31,16 @@ object RetrieveForeignPropertyAdjustmentsResponse extends HateoasLinks {
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
         case TypeOfBusiness.`foreign-property-fhl-eea` => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
-        case TypeOfBusiness.`foreign-property`         => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.nonFhlSeqReads)
-        case _                                         => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
+        case TypeOfBusiness.`foreign-property` => (JsPath \ "adjustments").read[Seq[BsasDetail]](BsasDetail.nonFhlSeqReads)
+        case _ => (JsPath \ "adjustments").read[BsasDetail](BsasDetail.fhlReads).fmap(Seq(_))
         // Reading as normal property, we are handling the error in the service layer.
       }
-  )(RetrieveForeignPropertyAdjustmentsResponse.apply _)
+    ) (RetrieveForeignPropertyAdjustmentsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignPropertyAdjustmentsResponse] = Json.writes[RetrieveForeignPropertyAdjustmentsResponse]
 
   implicit object RetrieveForeignPropertyAdjustmentsHateoasFactory
-      extends HateoasLinksFactory[RetrieveForeignPropertyAdjustmentsResponse, RetrieveForeignPropertyAdjustmentsHateoasData] {
+    extends HateoasLinksFactory[RetrieveForeignPropertyAdjustmentsResponse, RetrieveForeignPropertyAdjustmentsHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveForeignPropertyAdjustmentsHateoasData): Seq[Link] = {
       import data._
 

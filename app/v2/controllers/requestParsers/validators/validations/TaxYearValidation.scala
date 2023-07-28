@@ -16,7 +16,8 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.models.errors.{ MtdError, TaxYearFormatError }
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{MtdError, TaxYearFormatError}
 import v2.models.errors._
 
 object TaxYearValidation {
@@ -27,7 +28,7 @@ object TaxYearValidation {
     if (taxYear.matches(taxYearFormat)) {
 
       val start = taxYear.substring(2, 4).toInt
-      val end   = taxYear.substring(5, 7).toInt
+      val end = taxYear.substring(5, 7).toInt
 
       if (end - start == 1) {
         NoValidationErrors

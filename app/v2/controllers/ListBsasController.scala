@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers.{AuditHandler, AuthorisedController, EndpointLogContext, RequestContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
@@ -41,7 +41,7 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
                                    cc: ControllerComponents,
                                    val currentDateProvider: CurrentDate,
                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
+  extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 

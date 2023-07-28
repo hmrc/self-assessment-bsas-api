@@ -16,13 +16,16 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
 import api.models.errors.MtdError
-import v2.controllers.requestParsers.validators.validations.{ AdjustedStatusValidation, BsasIdValidation, NinoValidation }
+import v2.controllers.requestParsers.validators.validations.{AdjustedStatusValidation, BsasIdValidation, NinoValidation}
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
 
 class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignPropertyRawData] {
 
   private val validationSet = List(parameterFormatValidation)
+
+  override def validate(data: RetrieveForeignPropertyRawData): List[MtdError] = run(validationSet, data).distinct
 
   private def parameterFormatValidation: RetrieveForeignPropertyRawData => List[List[MtdError]] = (data: RetrieveForeignPropertyRawData) => {
     List(
@@ -31,6 +34,4 @@ class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignProperty
       data.adjustedStatus.map(AdjustedStatusValidation.validate).getOrElse(Nil)
     )
   }
-
-  override def validate(data: RetrieveForeignPropertyRawData): List[MtdError] = run(validationSet, data).distinct
 }

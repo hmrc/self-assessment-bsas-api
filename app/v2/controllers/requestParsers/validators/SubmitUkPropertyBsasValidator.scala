@@ -16,7 +16,9 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.request.submitBsas.ukProperty._
@@ -25,6 +27,8 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
   private val validationSet =
     List(parameterFormatValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, adjustmentFieldValidator, otherBodyFieldsValidator)
+
+  override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
 
   private def parameterFormatValidator: SubmitUkPropertyBsasRawData => List[List[MtdError]] = { data =>
     List(
@@ -62,7 +66,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     }
 
     def validateNonFHL(nonFurnishedHolidayLet: NonFurnishedHolidayLet): List[List[MtdError]] = {
-      val income: Option[NonFHLIncome]     = nonFurnishedHolidayLet.income
+      val income: Option[NonFHLIncome] = nonFurnishedHolidayLet.income
       val expenses: Option[NonFHLExpenses] = nonFurnishedHolidayLet.expenses
       List(
         doValidationFor("/nonFurnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome)),
@@ -82,7 +86,7 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
     }
 
     def validateFHL(furnishedHolidayLet: FurnishedHolidayLet): List[List[MtdError]] = {
-      val income: Option[FHLIncome]     = furnishedHolidayLet.income
+      val income: Option[FHLIncome] = furnishedHolidayLet.income
       val expenses: Option[FHLExpenses] = furnishedHolidayLet.expenses
       List(
         doValidationFor("/furnishedHolidayLet/income/rentIncome", income.flatMap(_.rentIncome)),
@@ -99,8 +103,8 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
 
     List(flattenErrors((model.furnishedHolidayLet, model.nonFurnishedHolidayLet) match {
       case (None, Some(nonFurnishedHolidayLet)) => validateNonFHL(nonFurnishedHolidayLet)
-      case (Some(furnishedHolidayLet), None)    => validateFHL(furnishedHolidayLet)
-      case _                                    => List(List(RuleIncorrectOrEmptyBodyError))
+      case (Some(furnishedHolidayLet), None) => validateFHL(furnishedHolidayLet)
+      case _ => List(List(RuleIncorrectOrEmptyBodyError))
     }))
   }
 
@@ -112,6 +116,4 @@ class SubmitUkPropertyBsasValidator extends Validator[SubmitUkPropertyBsasRawDat
       BothExpensesValidation.validate(model.nonFurnishedHolidayLet.flatMap(_.expenses.map(_.params)))
     )
   }
-
-  override def validate(data: SubmitUkPropertyBsasRawData): List[MtdError] = run(validationSet, data)
 }

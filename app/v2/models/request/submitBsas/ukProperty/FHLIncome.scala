@@ -28,6 +28,6 @@ case class FHLIncome(rentIncome: Option[BigDecimal]) {
 }
 
 object FHLIncome {
-  implicit val reads: Reads[FHLIncome]   = Json.reads[FHLIncome]
+  implicit val reads: Reads[FHLIncome] = Json.reads[FHLIncome]
   implicit val writes: Writes[FHLIncome] = (o: FHLIncome) => Json.toJsObject(o.params)
 }

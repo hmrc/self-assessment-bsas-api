@@ -16,8 +16,7 @@
 
 package v2.models.response.retrieveBsas.ukProperty
 
-import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -31,20 +30,20 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks {
   implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (
     JsPath.read[Metadata] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness).flatMap {
-        case TypeOfBusiness.`uk-property-fhl`     => fhlBsasDetailReads
+        case TypeOfBusiness.`uk-property-fhl` => fhlBsasDetailReads
         case TypeOfBusiness.`uk-property-non-fhl` => nonFhlBsasDetailReads
-        case _                                    => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
+        case _ => fhlBsasDetailReads // Reading as normal property, we are handling the error in the service layer.
       }
-  )(RetrieveUkPropertyBsasResponse.apply _)
+    ) (RetrieveUkPropertyBsasResponse.apply _)
 
   private val fhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap {
     case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
-    case _       => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
+    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.fhlReads)
   }
 
   private val nonFhlBsasDetailReads = (JsPath \ "adjustedSummaryCalculation").readNullable[JsObject].flatMap {
     case Some(_) => (JsPath \ "adjustedSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
-    case _       => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
+    case _ => (JsPath \ "adjustableSummaryCalculation").readNullable[BsasDetail](BsasDetail.nonFhlReads)
   }
 
   implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]

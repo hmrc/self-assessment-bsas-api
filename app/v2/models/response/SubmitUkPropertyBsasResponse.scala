@@ -16,8 +16,7 @@
 
 package v2.models.response
 
-import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -39,7 +38,7 @@ object SubmitUkPropertyBsasResponse extends HateoasLinks {
   implicit val reads: Reads[SubmitUkPropertyBsasResponse] = (
     (JsPath \ "metadata" \ "calculationId").read[String] and
       (JsPath \ "inputs" \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness)
-  )(SubmitUkPropertyBsasResponse.apply _)
+    ) (SubmitUkPropertyBsasResponse.apply _)
 
   implicit object SubmitPropertyAdjustmentHateoasFactory extends HateoasLinksFactory[SubmitUkPropertyBsasResponse, SubmitUkPropertyBsasHateoasData] {
     override def links(appConfig: AppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {

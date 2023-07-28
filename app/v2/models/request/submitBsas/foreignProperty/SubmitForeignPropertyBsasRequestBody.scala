@@ -21,6 +21,11 @@ import utils.JsonWritesUtil
 
 case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[Seq[ForeignProperty]], foreignFhlEea: Option[FhlEea]) {
 
+  def isIncorrectOrEmptyBody: Boolean =
+    isEmpty ||
+      (if (foreignProperty.isDefined) foreignPropertyIsEmpty else false) ||
+      (foreignFhlEea.isDefined && foreignFhlEea.get.isEmpty)
+
   private def isEmpty: Boolean = (foreignProperty.isEmpty && foreignFhlEea.isEmpty)
 
   private def foreignPropertyIsEmpty: Boolean = {
@@ -29,11 +34,6 @@ case class SubmitForeignPropertyBsasRequestBody(foreignProperty: Option[Seq[Fore
     }
     if (x.contains(true)) true else false
   }
-
-  def isIncorrectOrEmptyBody: Boolean =
-    isEmpty ||
-    (if (foreignProperty.isDefined) foreignPropertyIsEmpty else false) ||
-    (foreignFhlEea.isDefined && foreignFhlEea.get.isEmpty)
 }
 
 object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
@@ -50,11 +50,11 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
                   i =>
                     Json.obj(
                       "countryCode" -> i.countryCode,
-                      "income"      -> i.income,
-                      "expenses"    -> i.expenses
-                  ))
+                      "income" -> i.income,
+                      "expenses" -> i.expenses
+                    ))
               )
-          ))
+            ))
         .getOrElse(
           o.foreignFhlEea
             .map(
@@ -63,7 +63,7 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
                   Json.obj(
                     "incomeSourceType" -> "03",
                     "adjustments" -> Json.obj(
-                      "income"   -> x.income,
+                      "income" -> x.income,
                       "expenses" -> x.expenses
                     )
                   )))

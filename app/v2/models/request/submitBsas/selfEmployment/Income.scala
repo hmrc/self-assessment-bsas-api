@@ -24,5 +24,5 @@ case class Income(turnover: Option[BigDecimal], other: Option[BigDecimal]) {
 
 object Income {
   implicit val writes: OWrites[Income] = Json.writes[Income]
-  implicit val reads: Reads[Income]    = Json.reads[Income]
+  implicit val reads: Reads[Income] = Json.reads[Income]
 }

@@ -16,8 +16,7 @@
 
 package api.hateoas
 
-import api.models.hateoas
-import api.models.hateoas.{HateoasData, HateoasWrapper, Link}
+import api.hateoas
 import cats.Functor
 import cats.implicits._
 import config.AppConfig
@@ -32,7 +31,7 @@ class HateoasFactory @Inject()(appConfig: AppConfig) {
     hateoas.HateoasWrapper(payload, links)
   }
 
-  def wrapList[A[_]: Functor, I, D](payload: A[I], data: D)(implicit lf: HateoasListLinksFactory[A, I, D]): HateoasWrapper[A[HateoasWrapper[I]]] = {
+  def wrapList[A[_] : Functor, I, D](payload: A[I], data: D)(implicit lf: HateoasListLinksFactory[A, I, D]): HateoasWrapper[A[HateoasWrapper[I]]] = {
     val hateoasList = payload.map(i => hateoas.HateoasWrapper(i, lf.itemLinks(appConfig, data, i)))
 
     hateoas.HateoasWrapper(hateoasList, lf.links(appConfig, data))
@@ -45,5 +44,6 @@ trait HateoasLinksFactory[A, D] {
 
 trait HateoasListLinksFactory[A[_], I, D] {
   def itemLinks(appConfig: AppConfig, data: D, item: I): Seq[Link]
+
   def links(appConfig: AppConfig, data: D): Seq[Link]
 }

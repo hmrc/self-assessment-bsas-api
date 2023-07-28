@@ -17,9 +17,8 @@
 package api.controllers
 
 import api.controllers.validators.Validator
-import api.hateoas.{ HateoasFactory, HateoasLinksFactory }
+import api.hateoas.{ HateoasData, HateoasFactory, HateoasLinksFactory, HateoasWrapper }
 import api.models.errors.{ ErrorWrapper, InternalError }
-import api.models.hateoas.{ HateoasData, HateoasWrapper }
 import api.models.outcomes.ResponseWrapper
 import cats.data.EitherT
 import cats.implicits._

@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers.validators.validations
+package api.hateoas
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{FormatAdjustmentValueError, MtdError}
-
-object AdjustmentValueValidation {
-
-  def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
-
-    lazy val error = FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName)))
-
-    field match {
-      case Some(amount) if amount.scale > 2 | amount == 0 => List(error)
-      case _ => NoValidationErrors
-    }
-  }
-}
+/**
+  * Marker trait that represents data to be used as parameters to the links that are to be returned
+  * for a particular endpoint. This data may be identifiers (e.g. nino and/or other resource id) to embed in
+  * links, or data from the response that determines whether or not a particular link should be returned in
+  * certain scenarios.
+  */
+trait HateoasData

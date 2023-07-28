@@ -25,7 +25,7 @@ object IncomeBreakdown {
   implicit val reads: Reads[IncomeBreakdown] = (
     (JsPath \ "turnover").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal]
-  )(IncomeBreakdown.apply _)
+    ) (IncomeBreakdown.apply _)
 
   implicit val writes: OWrites[IncomeBreakdown] = Json.writes[IncomeBreakdown]
 }

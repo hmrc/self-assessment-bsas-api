@@ -16,13 +16,19 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors._
 import v2.controllers.requestParsers.validators.validations._
-import v2.models.request.submitBsas.foreignProperty.{ FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData }
+import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
   private val validationSet =
     List(parameterFormatValidation, bodyFormatValidation, incorrectOrEmptyBodySubmittedValidation, bodyFieldValidation, otherBodyFieldsValidator)
+
+  override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
 
   private def parameterFormatValidation: SubmitForeignPropertyRawData => List[List[MtdError]] = (data: SubmitForeignPropertyRawData) => {
     List(
@@ -113,9 +119,5 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
         },
       BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
     )
-  }
-
-  override def validate(data: SubmitForeignPropertyRawData): List[MtdError] = {
-    run(validationSet, data).distinct
   }
 }

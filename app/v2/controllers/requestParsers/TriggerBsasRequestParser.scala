@@ -18,7 +18,7 @@ package v2.controllers.requestParsers
 
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.TriggerBSASValidator
-import v2.models.request.triggerBsas.{ TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody }
+import v2.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest, TriggerBsasRequestBody}
 
 import javax.inject.Inject
 

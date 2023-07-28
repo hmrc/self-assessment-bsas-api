@@ -18,12 +18,12 @@ package v2.controllers.requestParsers
 
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.SubmitUkPropertyBsasValidator
-import v2.models.request.submitBsas.ukProperty.{ SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData }
+import v2.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData}
 
 import javax.inject.Inject
 
 class SubmitUkPropertyBsasDataParser @Inject()(val validator: SubmitUkPropertyBsasValidator)
-    extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
+  extends RequestParser[SubmitUkPropertyBsasRawData, SubmitUkPropertyBsasRequestData] {
 
   override protected def requestFor(data: SubmitUkPropertyBsasRawData): SubmitUkPropertyBsasRequestData = {
     val requestBody = data.body.json.as[SubmitUKPropertyBsasRequestBody]

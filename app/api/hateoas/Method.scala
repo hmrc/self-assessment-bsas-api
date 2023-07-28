@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers.validators.validations
+package api.hateoas
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{FormatAdjustmentValueError, MtdError}
+import play.api.libs.json.Format
+import utils.enums.Enums
 
-object AdjustmentValueValidation {
+sealed trait Method
 
-  def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
+object Method {
+  case object GET extends Method
 
-    lazy val error = FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName)))
+  case object POST extends Method
 
-    field match {
-      case Some(amount) if amount.scale > 2 | amount == 0 => List(error)
-      case _ => NoValidationErrors
-    }
-  }
+  case object DELETE extends Method
+
+  implicit val formats: Format[Method] = Enums.format[Method]
 }

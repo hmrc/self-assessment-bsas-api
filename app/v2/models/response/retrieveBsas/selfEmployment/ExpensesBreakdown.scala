@@ -56,5 +56,5 @@ object ExpensesBreakdown {
       (JsPath \ "depreciationAllowable").readNullable[BigDecimal] and
       (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").readNullable[BigDecimal]
-  )(ExpensesBreakdown.apply _)
+    ) (ExpensesBreakdown.apply _)
 }

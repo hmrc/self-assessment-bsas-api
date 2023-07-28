@@ -22,15 +22,29 @@ import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v2.connectors.TriggerBsasConnector
-import v2.models.errors.{ RuleAccountingPeriodNotEndedError, RuleNoAccountingPeriodError, RulePeriodicDataIncompleteError }
+import v2.models.errors.{RuleAccountingPeriodNotEndedError, RuleNoAccountingPeriodError, RulePeriodicDataIncompleteError}
 import v2.models.request.triggerBsas.TriggerBsasRequest
 import v2.models.response.TriggerBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {
+
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "ACCOUNTING_PERIOD_NOT_ENDED" -> RuleAccountingPeriodNotEndedError,
+      "OBLIGATIONS_NOT_MET" -> RulePeriodicDataIncompleteError,
+      "NO_ACCOUNTING_PERIOD" -> RuleNoAccountingPeriodError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "INVALID_PAYLOAD" -> InternalError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError,
+      "INCOME_SOURCEID_NOT_PROVIDED" -> InternalError,
+      "INVALID_CORRELATIONID" -> InternalError
+    )
 
   def triggerBsas(request: TriggerBsasRequest)(implicit ctx: RequestContext,
                                                ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]] = {
@@ -39,18 +53,4 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends Base
       .triggerBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
-      "ACCOUNTING_PERIOD_NOT_ENDED"  -> RuleAccountingPeriodNotEndedError,
-      "OBLIGATIONS_NOT_MET"          -> RulePeriodicDataIncompleteError,
-      "NO_ACCOUNTING_PERIOD"         -> RuleNoAccountingPeriodError,
-      "NO_DATA_FOUND"                -> NotFoundError,
-      "INVALID_PAYLOAD"              -> InternalError,
-      "SERVER_ERROR"                 -> InternalError,
-      "SERVICE_UNAVAILABLE"          -> InternalError,
-      "INCOME_SOURCEID_NOT_PROVIDED" -> InternalError,
-      "INVALID_CORRELATIONID"        -> InternalError
-    )
 }

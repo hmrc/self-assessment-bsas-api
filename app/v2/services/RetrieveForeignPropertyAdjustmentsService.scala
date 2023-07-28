@@ -17,27 +17,39 @@
 package v2.services
 
 import api.controllers.RequestContext
-import api.models.errors.{ BsasIdFormatError, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError }
+import api.models.errors.{BsasIdFormatError, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError}
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
 import v2.connectors.RetrieveForeignPropertyAdjustmentsConnector
 import v2.models.domain.TypeOfBusiness
-import v2.models.errors.{ RuleNoAdjustmentsMade, RuleNotForeignProperty }
+import v2.models.errors.{RuleNoAdjustmentsMade, RuleNotForeignProperty}
 import v2.models.request.RetrieveAdjustmentsRequestData
 import v2.models.response.retrieveBsasAdjustments
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveForeignPropertyAdjustmentsService @Inject()(connector: RetrieveForeignPropertyAdjustmentsConnector) extends BaseService {
 
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CORRELATION_ID " -> InternalError,
+      "INVALID_CALCULATION_ID" -> BsasIdFormatError,
+      "INVALID_RETURN" -> InternalError,
+      "UNPROCESSABLE_ENTITY" -> RuleNoAdjustmentsMade,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
+    )
+
   def retrieveForeignPropertyAdjustments(request: RetrieveAdjustmentsRequestData)(
-      implicit ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyAdjustmentsResponse]]] = {
+    implicit ctx: RequestContext,
+    ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyAdjustmentsResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveForeignPropertyAdjustments(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -47,24 +59,12 @@ class RetrieveForeignPropertyAdjustmentsService @Inject()(connector: RetrieveFor
   }
 
   private def validateRetrieveForeignPropertyAdjustmentsSuccessResponse[T](
-      desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+                                                                            desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
     desResponseWrapper.responseData match {
       case RetrieveForeignPropertyAdjustmentsResponse(retrieveBsasAdjustments.foreignProperty.Metadata(typeOfBusiness, _, _, _, _, _, _, _), _)
-          if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
+        if !List(TypeOfBusiness.`foreign-property`, TypeOfBusiness.`foreign-property-fhl-eea`).contains(typeOfBusiness) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, RuleNotForeignProperty, None))
 
       case _ => Right(desResponseWrapper)
     }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CORRELATION_ID "   -> InternalError,
-      "INVALID_CALCULATION_ID"    -> BsasIdFormatError,
-      "INVALID_RETURN"            -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> RuleNoAdjustmentsMade,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
 }

@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers.validators.validations
+package api.hateoas
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors.{FormatAdjustmentValueError, MtdError}
+import play.api.libs.json.{Json, Writes}
 
-object AdjustmentValueValidation {
+case class Link(
+                 href: String,
+                 method: Method,
+                 rel: String
+               )
 
-  def validate(field: Option[BigDecimal], fieldName: String): List[MtdError] = {
-
-    lazy val error = FormatAdjustmentValueError.copy(paths = Some(Seq(fieldName)))
-
-    field match {
-      case Some(amount) if amount.scale > 2 | amount == 0 => List(error)
-      case _ => NoValidationErrors
-    }
-  }
+object Link {
+  implicit val writes: Writes[Link] = Json.writes[Link]
 }
