@@ -17,20 +17,21 @@
 package definition
 
 import config.AppConfig
-import routing.{Version, Version2, Version3}
+import routing.{Version, Version3}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.Logging
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
+class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
 
   lazy val confidenceLevel: ConfidenceLevel = {
     val clConfig = appConfig.confidenceLevelConfig
 
     if (clConfig.definitionEnabled) clConfig.confidenceLevel else ConfidenceLevel.L50
   }
+
   lazy val definition: Definition =
     Definition(
       scopes = Seq(
@@ -54,11 +55,6 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
         categories = Seq("INCOME_TAX_MTD"),
         versions = Seq(
           APIVersion(
-            version = Version2,
-            status = buildAPIStatus(Version2),
-            endpointsEnabled = appConfig.endpointsEnabled(Version2)
-          ),
-          APIVersion(
             version = Version3,
             status = buildAPIStatus(Version3),
             endpointsEnabled = appConfig.endpointsEnabled(Version3)
@@ -67,7 +63,8 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
         requiresTrust = None
       )
     )
-  private val readScope = "read:self-assessment"
+
+  private val readScope  = "read:self-assessment"
   private val writeScope = "write:self-assessment"
 
   private[definition] def buildAPIStatus(version: Version): APIStatus = {
@@ -78,4 +75,5 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
         APIStatus.ALPHA
       }
   }
+
 }
