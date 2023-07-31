@@ -21,19 +21,13 @@ import api.controllers.validators.resolvers.ResolveParsedNumber
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import v3.models.errors.{ RuleBothExpensesError, RuleBothPropertiesSuppliedError }
+import v3.models.errors.RuleBothExpensesError
 import v3.models.request.submitBsas.ukProperty._
 
 object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropertyBsasRequestData] {
 
   def validateBusinessRules(parsed: SubmitUkPropertyBsasRequestData): Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] = {
     import parsed.body
-
-    val validatedFhlOrNonFhlOnly =
-      if (body.furnishedHolidayLet.isDefined && body.nonFurnishedHolidayLet.isDefined)
-        Invalid(List(RuleBothPropertiesSuppliedError))
-      else
-        valid
 
     val (validatedFhl, validatedFhlConsolidated) = body.furnishedHolidayLet match {
       case Some(fhl) =>
@@ -57,7 +51,6 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
 
     combineResults(
       parsed,
-      validatedFhlOrNonFhlOnly,
       validatedFhl,
       validatedFhlConsolidated,
       validatedNonFhl,
@@ -129,4 +122,5 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
       }
       .getOrElse(valid)
   }
+
 }

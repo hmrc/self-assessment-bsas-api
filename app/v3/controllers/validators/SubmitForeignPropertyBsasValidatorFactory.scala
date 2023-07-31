@@ -23,6 +23,7 @@ import cats.data.Validated
 import cats.implicits._
 import play.api.libs.json.JsValue
 import v3.controllers.validators.SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+import v3.controllers.validators.resolvers.ResolveOnlyOneJsonProperty
 import v3.models.request.submitBsas.foreignProperty._
 
 import javax.inject.Singleton
@@ -34,15 +35,21 @@ class SubmitForeignPropertyBsasValidatorFactory {
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitForeignPropertyBsasRequestBody]()
 
+  private val resolveOnlyOneJsonProperty = new ResolveOnlyOneJsonProperty("foreignFhlEea", "nonFurnishedHolidayLet")
+
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitForeignPropertyBsasRequestData] =
     new Validator[SubmitForeignPropertyBsasRequestData] {
 
       def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveCalculationId(calculationId),
-          ResolveTysTaxYear(taxYear),
-          resolveJson(body)
-        ).mapN(SubmitForeignPropertyBsasRequestData) andThen validateBusinessRules
+        resolveOnlyOneJsonProperty(body).productR(
+          (
+            ResolveNino(nino),
+            ResolveCalculationId(calculationId),
+            ResolveTysTaxYear(taxYear),
+            resolveJson(body)
+          ).mapN(SubmitForeignPropertyBsasRequestData)
+        ) andThen validateBusinessRules
+
     }
+
 }

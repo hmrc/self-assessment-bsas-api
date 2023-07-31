@@ -17,13 +17,14 @@
 package v3.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear }
+import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import play.api.libs.json.JsValue
 import v3.controllers.validators.SubmitUkPropertyBsasRulesValidator.validateBusinessRules
-import v3.models.request.submitBsas.ukProperty.{ SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData }
+import v3.controllers.validators.resolvers.ResolveOnlyOneJsonProperty
+import v3.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
 
 import javax.inject.Singleton
 import scala.annotation.nowarn
@@ -34,15 +35,21 @@ class SubmitUkPropertyBsasValidatorFactory {
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitUKPropertyBsasRequestBody]()
 
+  private val resolveOnlyOneJsonProperty = new ResolveOnlyOneJsonProperty("furnishedHolidayLet", "nonFurnishedHolidayLet")
+
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitUkPropertyBsasRequestData] =
     new Validator[SubmitUkPropertyBsasRequestData] {
 
       def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveCalculationId(calculationId),
-          ResolveTysTaxYear(taxYear),
-          resolveJson(body)
-        ).mapN(SubmitUkPropertyBsasRequestData) andThen validateBusinessRules
+        resolveOnlyOneJsonProperty(body).productR(
+          (
+            ResolveNino(nino),
+            ResolveCalculationId(calculationId),
+            ResolveTysTaxYear(taxYear),
+            resolveJson(body)
+          ).mapN(SubmitUkPropertyBsasRequestData)
+        ) andThen validateBusinessRules
+
     }
+
 }

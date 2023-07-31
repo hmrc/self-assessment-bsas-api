@@ -29,6 +29,7 @@ import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
+import routing.Version3
 import v3.controllers.validators.MockSubmitForeignPropertyBsasValidatorFactory
 import v3.mocks.services._
 import v3.models.errors._
@@ -201,6 +202,7 @@ class SubmitForeignPropertyBsasControllerSpec
         )
       )
 
+    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

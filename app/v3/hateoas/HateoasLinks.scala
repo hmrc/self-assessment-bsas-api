@@ -37,7 +37,7 @@ trait HateoasLinks {
 
   // L3
   def getUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
-    val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"$nino/uk-property/$calcId", taxYear)
+    val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/uk-property/$calcId", taxYear)
     Link(href = href, method = GET, rel = SELF)
   }
 

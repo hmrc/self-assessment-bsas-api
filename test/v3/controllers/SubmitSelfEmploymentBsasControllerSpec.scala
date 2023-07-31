@@ -29,6 +29,7 @@ import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
+import routing.Version3
 import v3.controllers.validators.MockSubmitSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.services._
@@ -161,6 +162,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         )
       )
 
+    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

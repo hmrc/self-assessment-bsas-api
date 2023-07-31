@@ -17,24 +17,18 @@
 package v3.controllers.validators
 
 import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.{ ResolveParsedCountryCode, ResolveParsedNumber }
+import api.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
-import v3.models.errors.{ RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError }
+import v3.models.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import v3.models.request.submitBsas.foreignProperty._
 
 object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitForeignPropertyBsasRequestData] {
 
   def validateBusinessRules(parsed: SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = {
     import parsed.body
-
-    val validatedFhlOrNonFhlOnly =
-      if (body.foreignFhlEea.isDefined && body.nonFurnishedHolidayLet.isDefined)
-        Invalid(List(RuleBothPropertiesSuppliedError))
-      else
-        valid
 
     val (validatedForeignFhlEea, validatedForeignFhlEeaConsolidated) = body.foreignFhlEea match {
       case Some(fhlEea) =>
@@ -61,7 +55,6 @@ object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitFore
 
     combineResults(
       parsed,
-      validatedFhlOrNonFhlOnly,
       validatedForeignFhlEea,
       validatedForeignFhlEeaConsolidated,
       validatedNonFurnishedHolidayLets,
@@ -102,18 +95,17 @@ object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitFore
   }
 
   private def validateNonFurnishedHolidayLets(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
-    foreignProperties.traverse_ {
-      case (foreignProperty, i) =>
-        validateForeignProperty(foreignProperty, i)
-          .combine(validateForeignPropertyConsolidatedExpenses(foreignProperty, i))
+    foreignProperties.traverse_ { case (foreignProperty, i) =>
+      validateForeignProperty(foreignProperty, i)
+        .combine(validateForeignPropertyConsolidatedExpenses(foreignProperty, i))
     }
   }
 
   private def duplicateCountryCodeValidation(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
     val duplicateErrors = {
       foreignProperties
-        .map {
-          case (entry, idx) => (entry.countryCode, s"/nonFurnishedHolidayLet/$idx/countryCode")
+        .map { case (entry, idx) =>
+          (entry.countryCode, s"/nonFurnishedHolidayLet/$idx/countryCode")
         }
         .groupBy(_._1)
         .collect {
@@ -163,4 +155,5 @@ object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitFore
       }
       .getOrElse(valid)
   }
+
 }

@@ -27,6 +27,7 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
+import routing.Version3
 import v3.controllers.validators.MockRetrieveUkPropertyBsasValidatorFactory
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.services.MockRetrieveUkPropertyBsasService
@@ -137,6 +138,8 @@ class RetrieveUkPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.retrieve(nino.nino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
+
+    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

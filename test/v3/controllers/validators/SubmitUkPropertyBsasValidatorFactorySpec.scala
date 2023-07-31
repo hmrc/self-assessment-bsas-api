@@ -16,14 +16,14 @@
 
 package v3.controllers.validators
 
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors._
 import api.models.utils.JsonErrorValidators
 import org.scalatest.Assertion
-import play.api.libs.json.{ JsNumber, JsObject, JsValue, Json }
+import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import support.UnitSpec
-import v3.models.errors.{ RuleBothExpensesError, RuleBothPropertiesSuppliedError }
-import v3.models.request.submitBsas.ukProperty.{ SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData }
+import v3.models.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
+import v3.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
 
 class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
@@ -64,6 +64,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
        |""".stripMargin
       )
       .as[JsObject]
+
   private val parsedNonFhlBody = nonFhlBodyJson.as[SubmitUKPropertyBsasRequestBody]
 
   private val nonFhlConsolidatedBodyJson =
@@ -83,6 +84,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
       |   }
       |}""".stripMargin
     )
+
   private val parsedNonFhlConsolidatedBody = nonFhlConsolidatedBodyJson.as[SubmitUKPropertyBsasRequestBody]
 
   private val fhlBodyJson =
@@ -108,6 +110,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
        |""".stripMargin
       )
       .as[JsObject]
+
   private val parsedFhlBody = fhlBodyJson.as[SubmitUKPropertyBsasRequestBody]
 
   private val fhlConsolidatedBodyJson =
@@ -125,6 +128,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
        |}
        |""".stripMargin
     )
+
   private val parsedFhlConsolidatedBody = fhlConsolidatedBodyJson.as[SubmitUKPropertyBsasRequestBody]
 
   private val validatorFactory = new SubmitUkPropertyBsasValidatorFactory
@@ -247,22 +251,27 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
       }
 
       "passed both fhl and non-fhl even if they are empty" in {
-        withClue("No other errors should be returned") {
-          val body = Json.parse(
-            s"""
+        val body = Json.parse(
+          s"""
                |{
                |  "furnishedHolidayLet": {},
                |  "nonFurnishedHolidayLet": []
                |}
                |""".stripMargin
-          )
-          val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        )
+        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
-          result shouldBe Left(
-            ErrorWrapper(correlationId, RuleBothPropertiesSuppliedError)
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            BadRequestError,
+            Some(
+              List(
+                RuleIncorrectOrEmptyBodyError.withPaths(List("/nonFurnishedHolidayLet", "/furnishedHolidayLet")),
+                RuleBothPropertiesSuppliedError
+              ))
           )
-        }
-
+        )
       }
     }
 
@@ -281,13 +290,13 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
         List(
           "/furnishedHolidayLet",
           "/furnishedHolidayLet/income",
-          "/furnishedHolidayLet/expenses",
+          "/furnishedHolidayLet/expenses"
         ).foreach(path => testWith(fhlBodyJson.replaceWithEmptyObject(path), path))
 
         List(
           "/nonFurnishedHolidayLet",
           "/nonFurnishedHolidayLet/income",
-          "/nonFurnishedHolidayLet/expenses",
+          "/nonFurnishedHolidayLet/expenses"
         ).foreach(path => testWith(nonFhlBodyJson.replaceWithEmptyObject(path), path))
 
         def testWith(body: JsValue, expectedPath: String): Unit =
@@ -324,7 +333,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
           "/furnishedHolidayLet/expenses/professionalFees",
           "/furnishedHolidayLet/expenses/costOfServices",
           "/furnishedHolidayLet/expenses/other",
-          "/furnishedHolidayLet/expenses/travelCosts",
+          "/furnishedHolidayLet/expenses/travelCosts"
         ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
 
         List(
@@ -339,17 +348,17 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
           "/nonFurnishedHolidayLet/expenses/costOfServices",
           "/nonFurnishedHolidayLet/expenses/residentialFinancialCost",
           "/nonFurnishedHolidayLet/expenses/other",
-          "/nonFurnishedHolidayLet/expenses/travelCosts",
+          "/nonFurnishedHolidayLet/expenses/travelCosts"
         ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path))
       }
 
       "consolidated expenses is invalid" when {
         List(
-          "/furnishedHolidayLet/expenses/consolidatedExpenses",
+          "/furnishedHolidayLet/expenses/consolidatedExpenses"
         ).foreach(path => testWith(fhlConsolidatedBodyJson.update(path, _), path))
 
         List(
-          "/nonFurnishedHolidayLet/expenses/consolidatedExpenses",
+          "/nonFurnishedHolidayLet/expenses/consolidatedExpenses"
         ).foreach(path => testWith(nonFhlConsolidatedBodyJson.update(path, _), path))
       }
 

@@ -16,9 +16,9 @@
 
 package v3.models.response.listBsas
 
-import api.models.domain.TaxYear
 import api.hateoas.Link
 import api.hateoas.Method.{GET, POST}
+import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsObject, Json}
