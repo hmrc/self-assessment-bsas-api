@@ -16,7 +16,7 @@
 
 package v3.fixtures
 
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.AccountingPeriod
@@ -216,9 +216,10 @@ object TriggerBsasRequestBodyFixtures {
                              businessId: String = "XAIS12345678901"): AnyContentAsJson = {
 
     AnyContentAsJson(
-      Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-               "typeOfBusiness"   -> typeOfBusiness,
-               "businessId"       -> businessId)
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+        "typeOfBusiness"   -> typeOfBusiness,
+        "businessId"       -> businessId)
     )
   }
 

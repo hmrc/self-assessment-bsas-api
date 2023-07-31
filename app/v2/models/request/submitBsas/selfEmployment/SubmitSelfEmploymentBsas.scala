@@ -17,8 +17,8 @@
 package v2.models.request.submitBsas.selfEmployment
 
 import api.models.domain.Nino
-import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
+import v2.models.request.RawData
 
 case class SubmitSelfEmploymentBsasRawData(nino: String, bsasId: String, body: AnyContentAsJson) extends RawData
 

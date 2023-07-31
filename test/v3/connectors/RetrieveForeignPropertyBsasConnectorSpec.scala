@@ -16,8 +16,8 @@
 
 package v3.connectors
 
-import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
@@ -43,7 +43,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         val request: RetrieveForeignPropertyBsasRequestData =
           RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear = None)
 
-        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId"
+        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
@@ -55,7 +55,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         val request: RetrieveForeignPropertyBsasRequestData =
           RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), Some(taxYear))
 
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calculationId") returns Future.successful(outcome)
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome

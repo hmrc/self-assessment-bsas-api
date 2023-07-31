@@ -16,9 +16,8 @@
 
 package v2.models.response
 
-import api.hateoas.HateoasFactory
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
@@ -76,6 +75,7 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
   }
 
   "HateoasFactory" must {
+
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
@@ -87,13 +87,15 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec {
       hateoasFactory.wrap(submitSelfEmploymentBsasResponseModel, SubmitSelfEmploymentBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
           submitSelfEmploymentBsasResponseModel,
-          Seq(
+          List(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust", GET, "self"),
-            Link(s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
-                 GET,
-                 "retrieve-adjustable-summary")
+            Link(
+              s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId?adjustedStatus=true",
+              GET,
+              "retrieve-adjustable-summary")
           )
         )
     }
   }
+
 }

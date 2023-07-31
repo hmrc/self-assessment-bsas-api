@@ -18,9 +18,9 @@ package v3.controllers.validators.resolvers
 
 import api.controllers.validators.resolvers.ResolvingTaxYear
 import api.models.domain.TaxYear
-import api.models.errors.{ MtdError, RuleTaxYearNotSupportedError }
+import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 import config.FixedConfig
 
 object ResolveListMinimumTaxYear extends ResolvingTaxYear with FixedConfig {
@@ -36,4 +36,5 @@ object ResolveListMinimumTaxYear extends ResolvingTaxYear with FixedConfig {
         }
       }
   }
+
 }

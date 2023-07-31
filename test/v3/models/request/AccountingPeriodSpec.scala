@@ -16,7 +16,7 @@
 
 package v3.models.request
 
-import play.api.libs.json.{ JsError, JsSuccess, Json }
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import support.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
@@ -56,4 +56,5 @@ class AccountingPeriodSpec extends UnitSpec {
       }
     }
   }
+
 }

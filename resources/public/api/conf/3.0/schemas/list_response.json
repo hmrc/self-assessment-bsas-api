@@ -18,8 +18,12 @@
           "summaries"
         ],
         "properties": {
-          "typeOfBusiness": {"$ref": "definitions.json#/definitions/typeOfBusiness"},
-          "businessId": {"$ref": "definitions.json#/definitions/businessId"},
+          "typeOfBusiness": {
+            "$ref": "definitions.json#/definitions/typeOfBusiness"
+          },
+          "businessId": {
+            "$ref": "definitions.json#/definitions/businessId"
+          },
           "accountingPeriod": {
             "type": "object",
             "title": "The accounting period",
@@ -70,7 +74,11 @@
                   "title": "Summary Status",
                   "description": "The status of this calculated summary.",
                   "type": "string",
-                  "enum": [ "valid", "invalid", "superseded" ]
+                  "enum": [
+                    "valid",
+                    "invalid",
+                    "superseded"
+                  ]
                 },
                 "adjustedSummary": {
                   "title": "Adjusted Summary",

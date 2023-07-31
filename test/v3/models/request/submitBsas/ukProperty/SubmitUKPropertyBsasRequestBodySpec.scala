@@ -24,14 +24,15 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
 
   val emptyModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(None, None)
 
-  val nonFhlModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)),None)
+  val nonFhlModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
 
   val fhlModel: SubmitUKPropertyBsasRequestBody = SubmitUKPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None)))
 
   "reads" when {
     "reading a simple non-fhl body" should {
       "return the expected non-fhl model" in {
-        Json.parse("""
+        Json.parse(
+          """
             |{
             |  "nonFurnishedHolidayLet": {
             |  }
@@ -45,11 +46,11 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
         Json
           .parse(
             """
-            |{
-            |  "furnishedHolidayLet": {
-            |  }
-            |}
-            |""".stripMargin
+              |{
+              |  "furnishedHolidayLet": {
+              |  }
+              |}
+              |""".stripMargin
           )
           .as[SubmitUKPropertyBsasRequestBody] shouldBe fhlModel
       }
@@ -77,7 +78,8 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "writing a simple non-fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlModel) shouldBe Json.parse("""
+        Json.toJson(nonFhlModel) shouldBe Json.parse(
+          """
             |{
             |  "incomeSourceType": "02",
             |  "adjustments": {

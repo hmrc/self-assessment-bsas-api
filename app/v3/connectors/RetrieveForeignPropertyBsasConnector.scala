@@ -28,10 +28,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveForeignPropertyBsasConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(
-      implicit hc: HeaderCarrier,
+  def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(implicit
+      hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
@@ -47,4 +47,5 @@ class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClient, val a
     get(downstreamUri)
 
   }
+
 }

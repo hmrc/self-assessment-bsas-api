@@ -31,15 +31,13 @@ import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino          = "AA123456A"
+    val nino = "AA123456A"
 
     val requestJson: JsObject = Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
-      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "typeOfBusiness" -> TypeOfBusiness.`self-employment`.toString,
       "businessId" -> "XAIS12345678901"
     )
-
-    def uri: String = s"/$nino/trigger"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
@@ -51,8 +49,10 @@ class AuthISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+    def uri: String = s"/$nino/trigger"
   }
 
   "Calling the sample endpoint" when {

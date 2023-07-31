@@ -16,19 +16,18 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.MockHateoasFactory
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{CalculationId, TaxYear}
 import api.models.errors._
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v3.controllers.validators.MockSubmitUkPropertyBsasValidatorFactory
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
@@ -53,13 +52,13 @@ class SubmitUkPropertyBsasControllerSpec
     with MockAuditService
     with MockAppConfig {
 
-  private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
+  private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
   private val rawTaxYear    = "2023-24"
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
   private val requestData = SubmitUkPropertyBsasRequestData(
-    nino = Nino(nino),
-    calculationId = CalculationId(calculationId),
+    nino = nino,
+    calculationId = calculationId,
     body = nonFHLBody,
     taxYear = Some(taxYear)
   )
@@ -72,7 +71,7 @@ class SubmitUkPropertyBsasControllerSpec
     )
   )
 
-  private val mtdResponseJson = Json.parse(hateoasResponse(nino, calculationId))
+  private val mtdResponseJson = Json.parse(hateoasResponse(nino.nino, calculationId.calculationId))
 
   "submitUkPropertyBsas" should {
 
@@ -81,7 +80,7 @@ class SubmitUkPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitUKPropertyBsasNrsProxyService
-          .submit(nino)
+          .submit(nino.nino)
           .returns(Future.successful(()))
 
         MockSubmitUkPropertyBsasService
@@ -89,7 +88,7 @@ class SubmitUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino, calculationId, Some(taxYear)))
+          .wrap((), SubmitUkPropertyBsasHateoasData(nino.nino, calculationId.calculationId, Some(taxYear)))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(
@@ -119,7 +118,7 @@ class SubmitUkPropertyBsasControllerSpec
       willUseValidator(returningSuccess(requestData))
 
       MockSubmitUKPropertyBsasNrsProxyService
-        .submit(nino)
+        .submit(nino.nino)
         .returns(Future.successful(()))
 
       MockSubmitUkPropertyBsasService
@@ -145,7 +144,7 @@ class SubmitUkPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] =
-      controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
+      controller.handleRequest(nino.nino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -155,11 +154,13 @@ class SubmitUkPropertyBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino, "calculationId" -> calculationId),
+          params = Map("nino" -> nino.nino, "calculationId" -> calculationId.calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse
         )
       )
+
   }
+
 }

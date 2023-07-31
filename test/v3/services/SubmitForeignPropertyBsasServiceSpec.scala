@@ -17,7 +17,7 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{ CalculationId, Nino }
+import api.models.domain.{CalculationId, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -108,7 +108,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("ASC_ID_INVALID", RuleSummaryStatusInvalid),
         ("INCOMESOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
         ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       val extraTysErrors = Seq(

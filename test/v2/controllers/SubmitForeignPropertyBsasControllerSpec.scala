@@ -17,24 +17,22 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.MockHateoasFactory
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.Nino
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
+import routing.Version2
 import v2.mocks.requestParsers.MockSubmitForeignPropertyBsasRequestParser
 import v2.mocks.services._
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import routing.Version2
 import v2.models.request.submitBsas.foreignProperty._
 import v2.models.response.{SubmitForeignPropertyBsasHateoasData, SubmitForeignPropertyBsasResponse}
 
@@ -55,26 +53,6 @@ class SubmitForeignPropertyBsasControllerSpec
 
   private val correlationId = "X-123"
   private val version       = Version2
-
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new SubmitForeignPropertyBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
 
   private val nino   = "AA123456A"
   private val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
@@ -128,16 +106,17 @@ class SubmitForeignPropertyBsasControllerSpec
         ))
     )
 
-  val requestBody: SubmitForeignPropertyBsasRequestBody =
-    SubmitForeignPropertyBsasRequestBody(Some(Seq(foreignProperty)), None)
+  private val requestBody: SubmitForeignPropertyBsasRequestBody =
+    SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)), None)
 
-  val responseBody = SubmitForeignPropertyBsasResponse("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", TypeOfBusiness.`foreign-property`)
+  private val responseBody = SubmitForeignPropertyBsasResponse("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", TypeOfBusiness.`foreign-property`)
 
   private val rawData     = SubmitForeignPropertyRawData(nino, bsasId, requestJson)
   private val requestData = SubmitForeignPropertyBsasRequestData(Nino(nino), bsasId, requestBody)
 
   "handleRequest" should {
     "return Ok" when {
+
       "the request received is valid" in new Test {
 
         MockSubmitForeignPropertyBsasRequestParser
@@ -154,13 +133,14 @@ class SubmitForeignPropertyBsasControllerSpec
 
         MockHateoasFactory
           .wrap(responseBody, SubmitForeignPropertyBsasHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(responseBody, Seq(testHateoasLink)))
+          .returns(HateoasWrapper(responseBody, List(testHateoasLink)))
 
         val result: Future[Result] = controller.handleRequest(nino, bsasId)(fakePostRequest(requestJson))
         status(result) shouldBe OK
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
+
     "return the error as per spec" when {
       "parser errors occur" should {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
@@ -178,7 +158,7 @@ class SubmitForeignPropertyBsasControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (BsasIdFormatError, BAD_REQUEST),
@@ -215,7 +195,7 @@ class SubmitForeignPropertyBsasControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (NinoFormatError, BAD_REQUEST),
           (BsasIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
@@ -233,4 +213,24 @@ class SubmitForeignPropertyBsasControllerSpec
       }
     }
   }
+
+  private trait Test {
+
+    protected val controller = new SubmitForeignPropertyBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

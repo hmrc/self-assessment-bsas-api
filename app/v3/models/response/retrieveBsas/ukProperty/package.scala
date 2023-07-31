@@ -23,17 +23,17 @@ import play.api.libs.json._
 package object ukProperty {
 
   private type SummaryCalculationReads = FunctionalBuilder[Reads]#CanBuild12[Option[BigDecimal],
-                                                                             Option[SummaryCalculationIncome],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationExpenses],
-                                                                             Option[BigDecimal],
-                                                                             Option[BigDecimal],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationAdditions],
-                                                                             Option[BigDecimal],
-                                                                             Option[SummaryCalculationDeductions],
-                                                                             Option[BigDecimal],
-                                                                             Option[BigDecimal]]
+    Option[SummaryCalculationIncome],
+    Option[BigDecimal],
+    Option[SummaryCalculationExpenses],
+    Option[BigDecimal],
+    Option[BigDecimal],
+    Option[BigDecimal],
+    Option[SummaryCalculationAdditions],
+    Option[BigDecimal],
+    Option[SummaryCalculationDeductions],
+    Option[BigDecimal],
+    Option[BigDecimal]]
 
   val summaryCalculationReadsFhl: SummaryCalculationReads =
     (JsPath \ "totalIncome").readNullable[BigDecimal] and

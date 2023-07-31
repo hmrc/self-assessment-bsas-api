@@ -16,8 +16,8 @@
 
 package v3.models.response
 
-import api.models.hateoas.Link
-import api.models.hateoas.Method.GET
+import api.hateoas.Link
+import api.hateoas.Method.GET
 import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import play.api.Configuration
@@ -45,8 +45,10 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
   "LinksFactory" should {
     "return the correct links without tax year" in new TysDisabledTest {
       private val data         = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None)
-      private val result       = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
       private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId", method = GET, rel = "self")
+
+      val result: Seq[Link] =
+        SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
 
       result shouldBe Seq(expectedLink)
     }
@@ -59,4 +61,5 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
       result shouldBe Seq(expectedLink)
     }
   }
+
 }

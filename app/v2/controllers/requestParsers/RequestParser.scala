@@ -16,7 +16,7 @@
 
 package v2.controllers.requestParsers
 
-import api.models.errors.{ BadRequestError, ErrorWrapper }
+import api.models.errors.{BadRequestError, ErrorWrapper}
 import utils.Logging
 import v2.controllers.requestParsers.validators.Validator
 import v2.models.request.RawData

@@ -16,11 +16,11 @@
 
 package v2.hateoas
 
-import api.models.hateoas.Link
-import api.models.hateoas.Method.{ GET, POST }
+import api.hateoas.Link
+import api.hateoas.Method.{GET, POST}
 import mocks.MockAppConfig
 import support.UnitSpec
-import v2.hateoas.RelType.{ RETRIEVE_BSAS, SUBMIT_ADJUSTMENTS }
+import v2.hateoas.RelType.{RETRIEVE_BSAS, SUBMIT_ADJUSTMENTS}
 import v3.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
@@ -28,12 +28,12 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
   private val nino   = "AA111111A"
   private val bsasId = "1234567890"
 
-  object Target extends HateoasLinks
-
   class Test {
     val context = "context"
     MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
   }
+
+  object Target extends HateoasLinks
 
   "HateoasLinks" when {
 
@@ -94,4 +94,5 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
       }
     }
   }
+
 }

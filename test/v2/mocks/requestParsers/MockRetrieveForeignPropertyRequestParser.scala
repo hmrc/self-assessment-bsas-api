@@ -16,10 +16,10 @@
 
 package v2.mocks.requestParsers
 
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.RetrieveForeignPropertyRequestParser
-import api.models.errors.ErrorWrapper
 import v2.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData}
 
 trait MockRetrieveForeignPropertyRequestParser extends MockFactory {

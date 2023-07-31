@@ -17,11 +17,11 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
@@ -32,13 +32,17 @@ import v3.models.errors._
 class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino          = "AA123456B"
+    val nino = "AA123456B"
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def taxYear: Option[String]
+
     def mtdUrl: String
+
     def downstreamUrl: String
+
     def retrieveHateoasLink: String
+
     def submitHateoasLink: String
 
     def request: WSRequest = {
@@ -54,7 +58,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     }
 
     def responseWithHateoas(response: JsValue, nino: String, calculationId: String): JsValue =
-      response.as[JsObject] ++ Json.parse(s"""
+      response.as[JsObject] ++ Json.parse(
+        s"""
            |{
            |  "links": [
            |    {
@@ -72,18 +77,27 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: Option[String]     = None
-    def mtdUrl: String              = s"/$nino/foreign-property/$calculationId"
-    def downstreamUrl: String       = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def taxYear: Option[String] = None
+
+    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+
     def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
-    def submitHateoasLink: String   = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust"
+
+    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust"
   }
+
   private trait TysTest extends Test {
-    def taxYear: Option[String]     = Some("2023-24")
-    def mtdUrl: String              = s"/$nino/foreign-property/$calculationId"
-    def downstreamUrl: String       = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def taxYear: Option[String] = Some("2023-24")
+
+    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+
     def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
-    def submitHateoasLink: String   = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24"
+
+    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24"
   }
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
@@ -150,12 +164,12 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit =
         s"validation fails with ${expectedBody.code} error" in new TysTest {
-          override val nino: String          = requestNino
+          override val nino: String = requestNino
           override val calculationId: String = requestBsasId
 
           val response: WSResponse = requestTaxYear match {
             case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get())
-            case _          => await(request.get())
+            case _ => await(request.get())
           }
 
           response.json shouldBe Json.toJson(expectedBody)

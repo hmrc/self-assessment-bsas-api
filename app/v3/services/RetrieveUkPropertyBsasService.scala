@@ -34,6 +34,27 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`)
+  private val errorMap: Map[String, MtdError] = {
+
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID" -> models.errors.InternalError,
+      "INVALID_RETURN" -> models.errors.InternalError,
+      "UNPROCESSABLE_ENTITY" -> models.errors.InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE" -> models.errors.InternalError
+    )
+
+    val extraTysErrors: Map[String, MtdError] = Map(
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "NOT_FOUND" -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit ctx: RequestContext,
                                                            ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkPropertyBsasResponse]] = {
@@ -45,28 +66,6 @@ class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasC
     } yield mtdResponseWrapper
 
     result.value
-  }
-
-  private val errorMap: Map[String, MtdError] = {
-
-    val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID"     -> models.errors.InternalError,
-      "INVALID_RETURN"            -> models.errors.InternalError,
-      "UNPROCESSABLE_ENTITY"      -> models.errors.InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE"       -> models.errors.InternalError
-    )
-
-    val extraTysErrors: Map[String, MtdError] = Map(
-      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
-      "NOT_FOUND"              -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
-    )
-
-    errors ++ extraTysErrors
   }
 
 }

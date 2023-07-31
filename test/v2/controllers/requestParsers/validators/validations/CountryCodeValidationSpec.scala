@@ -16,11 +16,12 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.models.errors._
+import api.models.errors.{RuleCountryCodeError => _, _}
 import support.UnitSpec
 import v2.models.errors._
 
 class CountryCodeValidationSpec extends UnitSpec {
+
   "CountryCodeValidation" when {
     "validate" must {
       // @formatter:off
@@ -60,4 +61,5 @@ class CountryCodeValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

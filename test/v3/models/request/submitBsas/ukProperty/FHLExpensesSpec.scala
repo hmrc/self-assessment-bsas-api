@@ -20,18 +20,19 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
 
 class FHLExpensesSpec extends UnitSpec {
-  val json: JsValue = Json.parse("""
-                                   |{
-                                   |  "premisesRunningCosts": 1.12,
-                                   |  "repairsAndMaintenance": 2.12,
-                                   |  "financialCosts": 3.12,
-                                   |  "professionalFees": 4.12,
-                                   |  "costOfServices": 6.12,
-                                   |  "travelCosts": 5.12,
-                                   |  "other": 7.12,
-                                   |  "consolidatedExpenses": 8.12
-                                   |}
-                                   |""".stripMargin)
+  val json: JsValue = Json.parse(
+    """
+      |{
+      |  "premisesRunningCosts": 1.12,
+      |  "repairsAndMaintenance": 2.12,
+      |  "financialCosts": 3.12,
+      |  "professionalFees": 4.12,
+      |  "costOfServices": 6.12,
+      |  "travelCosts": 5.12,
+      |  "other": 7.12,
+      |  "consolidatedExpenses": 8.12
+      |}
+      |""".stripMargin)
 
   val model: FHLExpenses = FHLExpenses(
     premisesRunningCosts = Some(1.12),

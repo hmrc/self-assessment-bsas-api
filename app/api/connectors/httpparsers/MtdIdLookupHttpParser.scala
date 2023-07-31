@@ -31,11 +31,11 @@ object MtdIdLookupHttpParser extends HttpParser {
       case OK =>
         response.validateJson[String](mtdIdJsonReads) match {
           case Some(mtdId) => Right(mtdId)
-          case None        => Left(InternalError)
+          case None => Left(InternalError)
         }
-      case FORBIDDEN    => Left(NinoFormatError)
+      case FORBIDDEN => Left(NinoFormatError)
       case UNAUTHORIZED => Left(InvalidBearerTokenError)
-      case _            => Left(InternalError)
+      case _ => Left(InternalError)
     }
   }
 }

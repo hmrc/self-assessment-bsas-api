@@ -17,7 +17,7 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{ BusinessId, Nino, TaxYear }
+import api.models.domain.{BusinessId, Nino, TaxYear}
 import api.models.errors.{
   BusinessIdFormatError,
   DownstreamErrorCode,
@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector
 import v3.models.request.ListBsasRequestData
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.Future
 
@@ -101,4 +101,5 @@ class ListBsasServiceSpec extends ServiceSpec with ListBsasFixture {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

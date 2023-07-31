@@ -17,8 +17,8 @@
 package v2.models.response
 
 import api.hateoas.HateoasFactory
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
@@ -123,4 +123,5 @@ class TriggerBsasResponseSpec extends UnitSpec {
     }
 
   }
+
 }

@@ -60,19 +60,19 @@ tags:
 
 
 paths:
-    /individuals/self-assessment/adjustable-summary/{nino}:
-      $ref: "./list.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/trigger:
-      $ref: "./trigger.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}:
-      $ref: "./retrieve_se_bsas.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}/adjust:
-      $ref: "./se_adjustments_endpoints.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/property/{bsasId}:
-      $ref: "./retrieve_property_bsas.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/property/{bsasId}/adjust:
-      $ref: "./property_adjustments_endpoints.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}:
-      $ref: "./retrieve_foreign_property_bsas.yaml"
-    /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}/adjust:
-      $ref: "./foreign_property_adjustments_endpoints.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}:
+    $ref: "./list.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/trigger:
+    $ref: "./trigger.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}:
+    $ref: "./retrieve_se_bsas.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{bsasId}/adjust:
+    $ref: "./se_adjustments_endpoints.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/property/{bsasId}:
+    $ref: "./retrieve_property_bsas.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/property/{bsasId}/adjust:
+    $ref: "./property_adjustments_endpoints.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}:
+    $ref: "./retrieve_foreign_property_bsas.yaml"
+  /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{bsasId}/adjust:
+    $ref: "./foreign_property_adjustments_endpoints.yaml"

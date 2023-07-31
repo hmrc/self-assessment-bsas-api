@@ -18,9 +18,9 @@ package api.controllers.validators.resolvers
 
 import api.models.errors.MtdError
 import api.models.utils.JsonErrorValidators
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 import play.api.http.Status.BAD_REQUEST
-import play.api.libs.json.{ Json, Reads }
+import play.api.libs.json.{Json, Reads}
 import support.UnitSpec
 
 class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
@@ -47,8 +47,8 @@ class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
       "a required field is missing" in {
         val json = Json.parse("""{ "fieldOne" : "field one" }""")
 
-        val validationResult = resolve(json, someError)
-        validationResult shouldBe Invalid(List(someError))
+        val result = resolve(json, someError)
+        result shouldBe Invalid(List(someError))
       }
 
     }

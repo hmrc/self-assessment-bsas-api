@@ -2,7 +2,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "id": { "$ref": "definitions.json#/definitions/bsasId"},
+    "id": {
+      "$ref": "definitions.json#/definitions/bsasId"
+    },
     "links": {
       "type": "array",
       "items": {
@@ -18,7 +20,8 @@
             "description": "A label for the endpoint which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is the retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "retrieve-adjustable-summary"
+              "self",
+              "retrieve-adjustable-summary"
             ]
           },
           "method": {

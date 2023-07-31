@@ -16,13 +16,13 @@
 
 package v3.controllers.validators
 
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors._
 import api.models.utils.JsonErrorValidators
 import play.api.libs.json._
 import support.UnitSpec
-import v3.models.errors.{ RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleCountryCodeError, RuleDuplicateCountryCodeError }
-import v3.models.request.submitBsas.foreignProperty.{ SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData }
+import v3.models.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError}
+import v3.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
 
 class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
@@ -109,6 +109,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
          |""".stripMargin
       )
       .as[JsObject]
+
   private val parsedFhlBody = fhlBodyJson.as[SubmitForeignPropertyBsasRequestBody]
 
   private val fhlBodyConsolidated = Json.parse(
@@ -124,6 +125,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
        |}
        |""".stripMargin
   )
+
   private val parsedFhlBodyConsolidated = fhlBodyConsolidated.as[SubmitForeignPropertyBsasRequestBody]
 
   val validatorFactory = new SubmitForeignPropertyBsasValidatorFactory
@@ -190,7 +192,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
       }
 
       "a minimal non-fhl request is supplied" in {
-        val minimalNonFhlBody       = Json.parse("""
+        val minimalNonFhlBody = Json.parse("""
           |{
           |   "nonFurnishedHolidayLet":  [
           |       {
@@ -311,7 +313,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
         List(
           "/foreignFhlEea",
           "/foreignFhlEea/income",
-          "/foreignFhlEea/expenses",
+          "/foreignFhlEea/expenses"
         ).foreach(path => testWith(fhlBodyJson.replaceWithEmptyObject(path), path))
 
         List(
@@ -319,7 +321,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
           (nonFhlBodyWith(entry.replaceWithEmptyObject("/income")), "/nonFurnishedHolidayLet/0/income"),
           (nonFhlBodyWith(entry.replaceWithEmptyObject("/expenses")), "/nonFurnishedHolidayLet/0/expenses"),
           (nonFhlBodyWith(entry.removeProperty("/countryCode")), "/nonFurnishedHolidayLet/0/countryCode"),
-          (nonFhlBodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/nonFurnishedHolidayLet/0"),
+          (nonFhlBodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/nonFurnishedHolidayLet/0")
         ).foreach((testWith _).tupled)
 
         def testWith(body: JsValue, expectedPath: String): Unit =
@@ -356,36 +358,41 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
             "/foreignFhlEea/expenses/professionalFees",
             "/foreignFhlEea/expenses/costOfServices",
             "/foreignFhlEea/expenses/other",
-            "/foreignFhlEea/expenses/travelCosts",
+            "/foreignFhlEea/expenses/travelCosts"
           ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
 
           List(
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/totalRentsReceived", v)), "/nonFurnishedHolidayLet/0/income/totalRentsReceived"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/premiumsOfLeaseGrant", v)),
-             "/nonFurnishedHolidayLet/0/income/premiumsOfLeaseGrant"),
+            (
+              (v: JsNumber) => nonFhlBodyWith(entry.update("/income/premiumsOfLeaseGrant", v)),
+              "/nonFurnishedHolidayLet/0/income/premiumsOfLeaseGrant"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/otherPropertyIncome", v)), "/nonFurnishedHolidayLet/0/income/otherPropertyIncome"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/premisesRunningCosts", v)),
-             "/nonFurnishedHolidayLet/0/expenses/premisesRunningCosts"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/repairsAndMaintenance", v)),
-             "/nonFurnishedHolidayLet/0/expenses/repairsAndMaintenance"),
+            (
+              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/premisesRunningCosts", v)),
+              "/nonFurnishedHolidayLet/0/expenses/premisesRunningCosts"),
+            (
+              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/repairsAndMaintenance", v)),
+              "/nonFurnishedHolidayLet/0/expenses/repairsAndMaintenance"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/financialCosts", v)), "/nonFurnishedHolidayLet/0/expenses/financialCosts"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/professionalFees", v)), "/nonFurnishedHolidayLet/0/expenses/professionalFees"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/costOfServices", v)), "/nonFurnishedHolidayLet/0/expenses/costOfServices"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-             "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
+            (
+              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
+              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/other", v)), "/nonFurnishedHolidayLet/0/expenses/other"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts"),
+            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts")
           ).foreach((testWith _).tupled)
         }
 
         "consolidated expenses is invalid" when {
           List(
-            "/foreignFhlEea/expenses/consolidatedExpenses",
+            "/foreignFhlEea/expenses/consolidatedExpenses"
           ).foreach(path => testWith(fhlBodyConsolidated.update(path, _), path))
 
           List(
-            ((v: JsNumber) => nonFhlBodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
-             "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
+            (
+              (v: JsNumber) => nonFhlBodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
+              "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
           ).foreach(p => (testWith _).tupled(p))
         }
 
@@ -442,8 +449,9 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
           val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
           result shouldBe Left(
-            ErrorWrapper(correlationId,
-                         RuleCountryCodeError.withPaths(List("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode")))
+            ErrorWrapper(
+              correlationId,
+              RuleCountryCodeError.withPaths(List("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode")))
           )
         }
       }
@@ -457,9 +465,9 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
           result shouldBe Left(
             ErrorWrapper(
               correlationId,
-              RuleDuplicateCountryCodeError.forDuplicatedCodesAndPaths(code = code,
-                                                                       paths = Seq("/nonFurnishedHolidayLet/0/countryCode",
-                                                                                   "/nonFurnishedHolidayLet/1/countryCode"))
+              RuleDuplicateCountryCodeError.forDuplicatedCodesAndPaths(
+                code = code,
+                paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode"))
             )
           )
         }
@@ -476,11 +484,13 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
               BadRequestError,
               Some(List(
                 RuleDuplicateCountryCodeError
-                  .forDuplicatedCodesAndPaths(code = code1,
-                                              paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/2/countryCode")),
+                  .forDuplicatedCodesAndPaths(
+                    code = code1,
+                    paths = Seq("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/2/countryCode")),
                 RuleDuplicateCountryCodeError
-                  .forDuplicatedCodesAndPaths(code = code2,
-                                              paths = Seq("/nonFurnishedHolidayLet/1/countryCode", "/nonFurnishedHolidayLet/3/countryCode"))
+                  .forDuplicatedCodesAndPaths(
+                    code = code2,
+                    paths = Seq("/nonFurnishedHolidayLet/1/countryCode", "/nonFurnishedHolidayLet/3/countryCode"))
               ))
             )
           )
@@ -528,4 +538,5 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
       }
     }
   }
+
 }

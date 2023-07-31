@@ -18,10 +18,10 @@ package v2.models.response.retrieveBsas
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.models.utils.JsonErrorValidators
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v2.models.utils.JsonErrorValidators
 
-class LossSpec extends UnitSpec with JsonErrorValidators{
+class LossSpec extends UnitSpec with JsonErrorValidators {
 
   val mtdJson = Json.parse(
     """{

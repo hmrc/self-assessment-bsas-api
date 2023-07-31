@@ -29,11 +29,12 @@ class FhlIncomeSpec extends UnitSpec {
     "passed mtd json" should {
       "return the corresponding model" in {
         Json
-          .parse("""
-            |{
-            |   "totalRentsReceived": 123.12
-            |}
-            |""".stripMargin)
+          .parse(
+            """
+              |{
+              |   "totalRentsReceived": 123.12
+              |}
+              |""".stripMargin)
           .as[FhlIncome] shouldBe model
       }
     }
@@ -49,11 +50,12 @@ class FhlIncomeSpec extends UnitSpec {
     "passed a model" should {
       "return the downstream JSON" in {
         Json.toJson(model) shouldBe
-          Json.parse("""
-            |{
-            |   "rentAmount": 123.12
-            |}
-            |""".stripMargin)
+          Json.parse(
+            """
+              |{
+              |   "rentAmount": 123.12
+              |}
+              |""".stripMargin)
       }
     }
 

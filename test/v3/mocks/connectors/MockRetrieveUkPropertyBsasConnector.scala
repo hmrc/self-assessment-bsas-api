@@ -33,7 +33,7 @@ trait MockRetrieveUkPropertyBsasConnector extends MockFactory {
   object MockRetrievePropertyBsasConnector {
 
     def retrievePropertyBsas(
-        requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
+                              requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
       (mockConnector
         .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

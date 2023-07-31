@@ -16,7 +16,7 @@
 
 package v2.fixtures
 
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v2.models.domain.TypeOfBusiness
 import v2.models.request.AccountingPeriod
@@ -25,7 +25,8 @@ import v2.models.response.TriggerBsasResponse
 
 object TriggerBsasRequestBodyFixtures {
 
-  val mtdJson: JsValue = Json.parse("""
+  val mtdJson: JsValue = Json.parse(
+    """
       |{
       |  "accountingPeriod" : {
       |     "startDate" : "2018-11-25",
@@ -36,7 +37,8 @@ object TriggerBsasRequestBodyFixtures {
       |}
   """.stripMargin)
 
-  val desJson: JsValue = Json.parse("""
+  val desJson: JsValue = Json.parse(
+    """
       |{
       |   "incomeSourceType" : "01",
       |   "incomeSourceId" : "anId",
@@ -53,38 +55,41 @@ object TriggerBsasRequestBodyFixtures {
 
   val responseObj = TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
-  val response = Json.parse("""{
+  val response = Json.parse(
+    """{
       |"id" : "c75f40a6-a3df-4429-a697-471eeec46435"
       |}""".stripMargin)
 
-  val hateoasResponseForSE = (nino: String) => s"""
-      |{
-      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
-      |  "links":[
-      |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-      |      "rel":"self",
-      |      "method":"GET"
-      |    }
-      |  ]
-      |}
+  val hateoasResponseForSE = (nino: String) =>
+    s"""
+       |{
+       |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
     """.stripMargin
 
-  val hateoasResponseForProperty = (nino: String) => s"""
-      |{
-      |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
-      |  "links":[
-      |    {
-      |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
-      |      "rel":"self",
-      |      "method":"GET"
-      |    }
-      |  ]
-      |}
+  val hateoasResponseForProperty = (nino: String) =>
+    s"""
+       |{
+       |  "id": "c75f40a6-a3df-4429-a697-471eeec46435",
+       |  "links":[
+       |    {
+       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+       |      "rel":"self",
+       |      "method":"GET"
+       |    }
+       |  ]
+       |}
     """.stripMargin
 
   val requestBody = Json.parse(
-   """
+    """
       |{
       |  "accountingPeriod": {
       |    "startDate": "2019-05-05",
@@ -213,8 +218,8 @@ object TriggerBsasRequestBodyFixtures {
 
     AnyContentAsJson(
       Json.obj("accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-               "typeOfBusiness"   -> typeOfBusiness,
-               "businessId" -> businessId)
+        "typeOfBusiness" -> typeOfBusiness,
+        "businessId" -> businessId)
     )
   }
 

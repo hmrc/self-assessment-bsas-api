@@ -17,9 +17,8 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.MockHateoasFactory
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -31,7 +30,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import routing.Version2
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.RetrieveBsasUkPropertyAdjustmentsFixtures._
 import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
 import v2.mocks.services.MockRetrieveUkPropertyBsasAdjustmentsService
@@ -56,37 +54,18 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new RetrieveUkPropertyBsasAdjustmentsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
   private val nino   = "AA123456A"
   private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
   private val request        = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
-  val testHateoasLinkRetrieve = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
-                                     method = GET,
-                                     rel = "retrieve-adjustable-summary")
+  private val testHateoasLinkRetrieve = Link(
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true",
+    method = GET,
+    rel = "retrieve-adjustable-summary")
 
-  val testHateoasLinkRetrieveAdjustments =
+  private val testHateoasLinkRetrieveAdjustments =
     Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", method = GET, rel = "self")
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -201,7 +180,7 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            private val auditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
             MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
           }
         }
@@ -219,4 +198,24 @@ class RetrieveUkPropertyBsasAdjustmentsControllerSpec
       }
     }
   }
+
+  private trait Test {
+
+    protected val controller = new RetrieveUkPropertyBsasAdjustmentsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

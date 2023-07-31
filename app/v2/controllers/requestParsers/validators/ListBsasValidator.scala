@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations._
@@ -42,4 +41,5 @@ class ListBsasValidator extends Validator[ListBsasRawData] with FixedConfig {
       List(
         data.taxYear.map(MtdTaxYearValidation.validate(_, RuleTaxYearNotSupportedError, listMinimumTaxYear)).getOrElse(Nil)
       )
+
 }

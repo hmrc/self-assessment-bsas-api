@@ -21,20 +21,18 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentAdjustmentsFixtures._
 import v2.models.errors._
-import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino   = "AA123456B"
+    val nino = "AA123456B"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
-    def uri: String = s"/$nino/self-employment/$bsasId/adjust"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
@@ -48,6 +46,8 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/self-employment/$bsasId/adjust"
   }
 
   "Calling the retrieve Self Employment Adjustments endpoint" should {
@@ -114,7 +114,7 @@ class RetrieveSelfEmploymentAdjustmentsControllerISpec extends IntegrationBaseSp
       def validationErrorTest(requestNino: String, requestBsasId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String   = requestNino
+          override val nino: String = requestNino
           override val bsasId: String = requestBsasId
 
           override def setupStubs(): StubMapping = {

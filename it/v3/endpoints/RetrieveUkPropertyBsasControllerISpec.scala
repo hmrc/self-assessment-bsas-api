@@ -17,11 +17,11 @@
 package v3.endpoints
 
 import api.models.errors._
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
@@ -31,11 +31,8 @@ import v3.models.errors._
 class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino                    = "AA123456B"
-    val calculationId           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    def taxYear: Option[String] = None
-
-    def uri: String = s"/$nino/uk-property/$calculationId"
+    val nino = "AA123456B"
+    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def downstreamUri: String
 
@@ -53,6 +50,10 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123")
         )
     }
+
+    def taxYear: Option[String] = None
+
+    def uri: String = s"/$nino/uk-property/$calculationId"
   }
 
   private trait NonTysTest extends Test {
@@ -129,9 +130,9 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET,
-                                   downstreamUri,
-                                   OK,
-                                   downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
+            downstreamUri,
+            OK,
+            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
         }
 
         val response: WSResponse = await(request.get())
@@ -150,8 +151,9 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-          override val nino: String            = requestNino
-          override val calculationId: String   = requestCalculationId
+          override val nino: String = requestNino
+          override val calculationId: String = requestCalculationId
+
           override def taxYear: Option[String] = taxYearString
 
           override def setupStubs(): Unit = {}
@@ -176,9 +178,9 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
       def errorBody(code: String): String =
         s"""{
-             |  "code": "$code",
-             |  "reason": "des message"
-             |}""".stripMargin
+           |  "code": "$code",
+           |  "reason": "des message"
+           |}""".stripMargin
 
       def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"des returns an $desCode error and status $desStatus" in new NonTysTest {

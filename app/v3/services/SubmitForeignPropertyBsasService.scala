@@ -19,17 +19,52 @@ package v3.services
 import api.controllers.RequestContext
 import api.models
 import api.models.errors._
-import api.services.{ BaseService, ServiceOutcome }
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v3.connectors.SubmitForeignPropertyBsasConnector
 import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends BaseService {
+
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID" -> models.errors.InternalError,
+      "INVALID_PAYLOAD" -> models.errors.InternalError,
+      "BVR_FAILURE_C15320" -> models.errors.InternalError,
+      "BVR_FAILURE_C55508" -> models.errors.InternalError,
+      "BVR_FAILURE_C55509" -> models.errors.InternalError,
+      "BVR_FAILURE_C559107" -> RulePropertyIncomeAllowanceClaimed,
+      "BVR_FAILURE_C559103" -> RulePropertyIncomeAllowanceClaimed,
+      "BVR_FAILURE_C559099" -> RuleOverConsolidatedExpensesThreshold,
+      "BVR_FAILURE_C55503" -> models.errors.InternalError,
+      "BVR_FAILURE_C55316" -> models.errors.InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "ASC_ALREADY_SUPERSEDED" -> RuleSummaryStatusSuperseded,
+      "ASC_ALREADY_ADJUSTED" -> RuleAlreadyAdjusted,
+      "UNALLOWABLE_VALUE" -> RuleResultingValueNotPermitted,
+      "ASC_ID_INVALID" -> RuleSummaryStatusInvalid,
+      "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
+      "SERVER_ERROR" -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE" -> models.errors.InternalError,
+    )
+
+    val extraTysErrors =
+      Map(
+        "INVALID_TAX_YEAR" -> TaxYearFormatError,
+        "NOT_FOUND" -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+        "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError
+      )
+
+    errors ++ extraTysErrors
+  }
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit ctx: RequestContext,
                                                                                ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
@@ -37,40 +72,5 @@ class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropert
     connector
       .submitForeignPropertyBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
-
-  private val errorMap: Map[String, MtdError] = {
-    val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
-      "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID"         -> models.errors.InternalError,
-      "INVALID_PAYLOAD"               -> models.errors.InternalError,
-      "BVR_FAILURE_C15320"            -> models.errors.InternalError,
-      "BVR_FAILURE_C55508"            -> models.errors.InternalError,
-      "BVR_FAILURE_C55509"            -> models.errors.InternalError,
-      "BVR_FAILURE_C559107"           -> RulePropertyIncomeAllowanceClaimed,
-      "BVR_FAILURE_C559103"           -> RulePropertyIncomeAllowanceClaimed,
-      "BVR_FAILURE_C559099"           -> RuleOverConsolidatedExpensesThreshold,
-      "BVR_FAILURE_C55503"            -> models.errors.InternalError,
-      "BVR_FAILURE_C55316"            -> models.errors.InternalError,
-      "NO_DATA_FOUND"                 -> NotFoundError,
-      "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
-      "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
-      "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
-      "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
-      "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-      "SERVER_ERROR"                  -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE"           -> models.errors.InternalError,
-    )
-
-    val extraTysErrors =
-      Map(
-        "INVALID_TAX_YEAR"               -> TaxYearFormatError,
-        "NOT_FOUND"                      -> NotFoundError,
-        "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError,
-        "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError
-      )
-
-    errors ++ extraTysErrors
   }
 }

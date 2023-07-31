@@ -102,7 +102,7 @@ class ForeignPropertySpec extends UnitSpec {
       }
     }
   }
-  "reads from an empty JSON" when{
+  "reads from an empty JSON" when {
     "passed an empty JSON" should {
       "return an empty model" in {
         noIncomeOrOutcomeJson.as[ForeignProperty] shouldBe emptyModel

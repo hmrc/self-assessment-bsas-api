@@ -67,9 +67,9 @@ class FHLExpensesSpec extends UnitSpec {
   )
 
   val model: FHLExpenses = FHLExpenses(Some(-1000.49), Some(1000.49),
-                                      Some(1000.49), Some(1000.49),
-                                      Some(1000.49), Some(1000.49),
-                                      Some(1000.49), Some(1000.49))
+    Some(1000.49), Some(1000.49),
+    Some(1000.49), Some(1000.49),
+    Some(1000.49), Some(1000.49))
 
   "FHLExpenses" when {
     "read from valid JSON" should {

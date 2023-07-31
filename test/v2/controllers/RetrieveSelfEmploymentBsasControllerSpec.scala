@@ -17,9 +17,8 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.MockHateoasFactory
-import api.models.hateoas.Method.{GET, POST}
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -31,7 +30,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import routing.Version2
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v2.mocks.services.MockRetrieveSelfEmploymentBsasService
@@ -56,26 +54,6 @@ class RetrieveSelfEmploymentBsasControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new RetrieveSelfEmploymentBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
   private val nino              = "AA123456A"
   private val bsasId            = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val adjustedMtdStatus = Some("true")
@@ -84,11 +62,13 @@ class RetrieveSelfEmploymentBsasControllerSpec
   private val request        = RetrieveSelfEmploymentBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
   private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, bsasId, adjustedMtdStatus)
 
-  val testHateoasLinkSelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId", method = GET, rel = "self")
+  private val testHateoasLinkSelf =
+    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId", method = GET, rel = "self")
 
-  val testHateoasLinkAdjustSubmit = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
-                                         method = POST,
-                                         rel = "submit-summary-adjustments")
+  private val testHateoasLinkAdjustSubmit = Link(
+    href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
+    method = POST,
+    rel = "submit-summary-adjustments")
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -197,4 +177,24 @@ class RetrieveSelfEmploymentBsasControllerSpec
       }
     }
   }
+
+  private trait Test {
+
+    protected val controller = new RetrieveSelfEmploymentBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

@@ -34,7 +34,7 @@ trait MockRetrieveUkPropertyBsasService extends MockFactory {
   object MockRetrieveUkPropertyBsasService {
 
     def retrieveBsas(requestData: RetrieveUkPropertyBsasRequestData)
-      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]]] = {
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]]] = {
       (mockService
         .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

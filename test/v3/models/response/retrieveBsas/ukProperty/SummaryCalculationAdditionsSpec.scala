@@ -25,8 +25,8 @@ class SummaryCalculationAdditionsSpec extends UnitSpec with JsonErrorValidators 
   import SummaryCalculationAdditions._
 
   testRoundTrip("Summary Calculation Additions",
-                downstreamSummaryCalculationAdditionsJson,
-                summaryCalculationAdditionsModel,
-                mtdSummaryCalculationAdditionsJson)(reads)
+    downstreamSummaryCalculationAdditionsJson,
+    summaryCalculationAdditionsModel,
+    mtdSummaryCalculationAdditionsJson)(reads)
 
 }

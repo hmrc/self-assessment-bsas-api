@@ -16,19 +16,18 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.MockHateoasFactory
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ CalculationId, Nino }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.CalculationId
 import api.models.errors._
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v3.controllers.validators.MockSubmitSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
@@ -53,11 +52,8 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockIdGenerator
     with MockAppConfig {
 
-  private val calculationId = "c75f40a6-a3df-4429-a697-471eeec46435"
-
-  private val requestData =
-    SubmitSelfEmploymentBsasRequestData(Nino(nino), CalculationId(calculationId), None, submitSelfEmploymentBsasRequestBodyModel)
-
+  private val calculationId   = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
+  private val requestData     = SubmitSelfEmploymentBsasRequestData(nino, calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
   private val mtdResponseJson = Json.parse(hateoasResponse(nino, calculationId))
 
   val testHateoasLinks: Seq[Link] = Seq(
@@ -74,7 +70,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasNrsProxyService
-          .submit(nino)
+          .submit(nino.nino)
           .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
@@ -82,7 +78,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino, calculationId, requestData.taxYear))
+          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino.nino, calculationId.calculationId, requestData.taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(
@@ -121,7 +117,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasNrsProxyService
-          .submit(nino)
+          .submit(nino.nino)
           .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
@@ -147,7 +143,8 @@ class SubmitSelfEmploymentBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.submitSelfEmploymentBsas(nino, calculationId, None)(fakePostRequest(mtdRequestJson))
+    protected def callController(): Future[Result] =
+      controller.submitSelfEmploymentBsas(nino.nino, calculationId.calculationId, None)(fakePostRequest(mtdRequestJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -157,11 +154,13 @@ class SubmitSelfEmploymentBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino, "calculationId" -> calculationId),
+          params = Map("nino" -> nino.nino, "calculationId" -> calculationId.calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse
         )
       )
+
   }
+
 }

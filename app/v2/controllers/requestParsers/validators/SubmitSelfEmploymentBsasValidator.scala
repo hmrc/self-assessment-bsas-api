@@ -16,8 +16,6 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import config.FixedConfig
 import v2.controllers.requestParsers.validators.validations._
@@ -108,7 +106,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
         doValidationFor("/expenses/professionalFees", expenses.professionalFees),
         doValidationFor("/expenses/depreciation", expenses.depreciation),
         doValidationFor("/expenses/other", expenses.other),
-        doValidationFor("/expenses/consolidatedExpenses", expenses.consolidatedExpenses),
+        doValidationFor("/expenses/consolidatedExpenses", expenses.consolidatedExpenses)
       ).flatten
 
     List(
@@ -116,7 +114,7 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
         List(
           model.income.map(validateIncome),
           model.additions.map(validateAdditions),
-          model.expenses.map(validateExpenses),
+          model.expenses.map(validateExpenses)
         ).flatten
       )
     )
@@ -128,11 +126,12 @@ class SubmitSelfEmploymentBsasValidator extends Validator[SubmitSelfEmploymentBs
     List(
       if (model.expenses.exists(_.isBothSupplied)
         || (!(model.additions.isEmpty || model.additions.exists(_.isEmpty))
-        && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))) {
+          && (!(model.expenses.isEmpty || model.expenses.exists(_.isConsolidatedExpensesEmpty))))) {
         List(RuleBothExpensesError)
       } else {
         NoValidationErrors
       }
     )
   }
+
 }

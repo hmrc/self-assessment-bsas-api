@@ -27,8 +27,8 @@ import v2.models.request.submitBsas.ukProperty.{SubmitUkPropertyBsasRawData, Sub
 
 class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
 
-  val bsasId                         = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  val nino                           = "AA123456A"
+  val bsasId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
+  val nino = "AA123456A"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockSubmitUkPropertyBsasValidator {
@@ -137,8 +137,8 @@ class SubmitUkPropertyBsasRequestParserSpec extends UnitSpec {
         result shouldBe
           Left(
             ErrorWrapper(correlationId,
-                         RuleAdjustmentRangeInvalid.copy(
-                           paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
+              RuleAdjustmentRangeInvalid.copy(
+                paths = Some(Seq("premisesRunningCosts", "repairsAndMaintenance", "financialCosts", "professionalFees")))))
       }
     }
   }

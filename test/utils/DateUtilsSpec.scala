@@ -16,9 +16,10 @@
 
 package utils
 
-import java.time.LocalDate
 import support.UnitSpec
 import v2.models.domain.DownstreamTaxYear
+
+import java.time.LocalDate
 
 class DateUtilsSpec extends UnitSpec {
 

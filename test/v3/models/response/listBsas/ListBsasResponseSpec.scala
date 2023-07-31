@@ -16,12 +16,12 @@
 
 package v3.models.response.listBsas
 
-import api.models.hateoas.Link
-import api.models.hateoas.Method.{ GET, POST }
 import api.models.domain.TaxYear
+import api.hateoas.Link
+import api.hateoas.Method.{GET, POST}
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{ JsError, JsObject, Json }
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
 import v3.models.domain.TypeOfBusiness
@@ -30,15 +30,15 @@ import v3.models.response.listBsas.ListBsasResponse.LinksFactory._
 
 class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixture {
 
-  def makeResponse(typeOfBusiness: TypeOfBusiness): ListBsasResponse[BsasSummary] = ListBsasResponse(
-    Seq(businessSourceSummaryModel().copy(typeOfBusiness = typeOfBusiness))
-  )
-
   val selfEmploymentBsasResponse: ListBsasResponse[BsasSummary]        = makeResponse(`self-employment`)
   val ukPropertyFhlBsasResponse: ListBsasResponse[BsasSummary]         = makeResponse(`uk-property-fhl`)
   val ukPropertyNonFhlBsasResponse: ListBsasResponse[BsasSummary]      = makeResponse(`uk-property-non-fhl`)
   val foreignPropertyFhlEeaBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`foreign-property-fhl-eea`)
   val foreignPropertyBsasResponse: ListBsasResponse[BsasSummary]       = makeResponse(`foreign-property`)
+
+  def makeResponse(typeOfBusiness: TypeOfBusiness): ListBsasResponse[BsasSummary] = ListBsasResponse(
+    Seq(businessSourceSummaryModel().copy(typeOfBusiness = typeOfBusiness))
+  )
 
   "ListBsasResponse" when {
     "read from valid JSON" should {
@@ -162,4 +162,5 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
       }
     }
   }
+
 }

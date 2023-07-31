@@ -16,19 +16,18 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.MockHateoasFactory
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{CalculationId, TaxYear}
 import api.models.errors._
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v3.controllers.validators.MockSubmitForeignPropertyBsasValidatorFactory
 import v3.mocks.services._
@@ -52,7 +51,7 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockIdGenerator
     with MockAppConfig {
 
-  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
   private val rawTaxYear    = "2023-24"
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
@@ -104,8 +103,8 @@ class SubmitForeignPropertyBsasControllerSpec
     SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)), None)
 
   private val requestData = SubmitForeignPropertyBsasRequestData(
-    Nino(nino),
-    CalculationId(calculationId),
+    nino,
+    calculationId,
     Some(taxYear),
     requestBody
   )
@@ -128,7 +127,7 @@ class SubmitForeignPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitForeignPropertyBsasNrsProxyService
-          .submit(nino)
+          .submit(nino.nino)
           .returns(Future.successful(()))
 
         MockSubmitForeignPropertyBsasService
@@ -136,7 +135,7 @@ class SubmitForeignPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitForeignPropertyBsasHateoasData(nino, calculationId, requestData.taxYear))
+          .wrap((), SubmitForeignPropertyBsasHateoasData(nino.nino, calculationId.calculationId, requestData.taxYear))
           .returns(HateoasWrapper((), List(testHateoasLink)))
 
         runOkTestWithAudit(
@@ -158,7 +157,7 @@ class SubmitForeignPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitForeignPropertyBsasNrsProxyService
-          .submit(nino)
+          .submit(nino.nino)
           .returns(Future.successful(()))
 
         MockSubmitForeignPropertyBsasService
@@ -185,7 +184,7 @@ class SubmitForeignPropertyBsasControllerSpec
     )
 
     override protected def callController(): Future[Result] =
-      controller.handleRequest(nino, calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
+      controller.handleRequest(nino.nino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -195,11 +194,13 @@ class SubmitForeignPropertyBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino, "calculationId" -> calculationId),
+          params = Map("nino" -> nino.nino, "calculationId" -> calculationId.calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse
         )
       )
+
   }
+
 }

@@ -24,7 +24,7 @@ import org.scalamock.scalatest.MockFactory
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v3.services.SubmitSelfEmploymentBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitSelfEmploymentBsasService extends MockFactory {
 
@@ -33,7 +33,7 @@ trait MockSubmitSelfEmploymentBsasService extends MockFactory {
   object MockSubmitSelfEmploymentBsasService {
 
     def submitSelfEmploymentBsas(
-        requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+                                  requestData: SubmitSelfEmploymentBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockService
         .submitSelfEmploymentBsas(_: SubmitSelfEmploymentBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

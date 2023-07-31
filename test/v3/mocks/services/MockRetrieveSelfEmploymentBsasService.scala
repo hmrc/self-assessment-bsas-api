@@ -34,7 +34,7 @@ trait MockRetrieveSelfEmploymentBsasService extends MockFactory {
   object MockRetrieveSelfEmploymentBsasService {
 
     def retrieveBsas(requestData: RetrieveSelfEmploymentBsasRequestData)
-      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]]] = {
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]]] = {
       (mockService
         .retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

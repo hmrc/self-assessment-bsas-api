@@ -63,7 +63,7 @@ class AuditServiceSpec extends ServiceSpec {
           .sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
           .expects(
             where { (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.auditSource == mockedAppName // <- assertion in mock
+              eventArg.auditSource == mockedAppName // <- assertion in mock
             }
           )
           .returns(expected)
@@ -78,7 +78,7 @@ class AuditServiceSpec extends ServiceSpec {
           .sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
           .expects(
             where { (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.auditType == auditType // <- assertion in mock
+              eventArg.auditType == auditType // <- assertion in mock
             }
           )
           .returns(expected)
@@ -93,7 +93,7 @@ class AuditServiceSpec extends ServiceSpec {
           .sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
           .expects(
             where { (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.detail == Json.toJson(eventDetails) // <- assertion in mock
+              eventArg.detail == Json.toJson(eventDetails) // <- assertion in mock
             }
           )
           .returns(expected)
@@ -108,7 +108,7 @@ class AuditServiceSpec extends ServiceSpec {
           .sendExtendedEvent(_: ExtendedDataEvent)(_: HeaderCarrier, _: ExecutionContext))
           .expects(
             where { (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.tags.exists(tag => tag == "transactionName" -> transactionName) // <- assertion in mock
+              eventArg.tags.exists(tag => tag == "transactionName" -> transactionName) // <- assertion in mock
             }
           )
           .returns(expected)

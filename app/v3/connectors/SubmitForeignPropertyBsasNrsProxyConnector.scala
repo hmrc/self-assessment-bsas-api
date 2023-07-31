@@ -30,6 +30,6 @@ class SubmitForeignPropertyBsasNrsProxyConnector @Inject()(http: HttpClient, app
     implicit val readsEmpty: HttpReads[Unit] = (_: String, _: String, _: HttpResponse) => ()
 
     http.POST[SubmitForeignPropertyBsasRequestBody, Unit](s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
-                                                          requestBody)
+      requestBody)
   }
 }

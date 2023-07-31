@@ -16,13 +16,12 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors._
 import v2.controllers.requestParsers.validators.validations._
 import v2.models.request.submitBsas.foreignProperty.{FhlEea, ForeignProperty, SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyRawData}
 
 class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignPropertyRawData] {
+
   private val validationSet =
     List(parameterFormatValidation, bodyFormatValidation, incorrectOrEmptyBodySubmittedValidation, bodyFieldValidation, otherBodyFieldsValidator)
 
@@ -100,8 +99,8 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
         (model.foreignFhlEea, model.foreignProperty) match {
           case (Some(foreignFhlEea), None) => validateForeignFhlEea(foreignFhlEea)
           case (None, Some(foreignProperty)) =>
-            foreignProperty.zipWithIndex.toList.flatMap {
-              case (entry, i) => validateForeignProperty(entry, i)
+            foreignProperty.zipWithIndex.toList.flatMap { case (entry, i) =>
+              validateForeignProperty(entry, i)
             }
           case _ => List(List(RuleIncorrectOrEmptyBodyError))
         }
@@ -114,10 +113,11 @@ class SubmitForeignPropertyBsasValidator extends Validator[SubmitForeignProperty
     List(
       if (model.foreignProperty.isEmpty) NoValidationErrors
       else
-        model.foreignProperty.get.toList.flatMap {
-          case entity => BothExpensesValidation.validate(entity.expenses.map(_.params))
+        model.foreignProperty.get.toList.flatMap { case entity =>
+          BothExpensesValidation.validate(entity.expenses.map(_.params))
         },
       BothExpensesValidation.validate(model.foreignFhlEea.flatMap(_.expenses.map(_.params)))
     )
   }
+
 }

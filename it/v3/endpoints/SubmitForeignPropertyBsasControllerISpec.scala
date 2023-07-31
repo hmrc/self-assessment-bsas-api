@@ -20,8 +20,8 @@ import api.models.errors._
 import api.stubs._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
@@ -31,14 +31,10 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String            = "AA123456A"
-    val calculationId: String   = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
-    def taxYear: Option[String] = None
-    def retrieveHateoasLink: String
-
+    val nino: String = "AA123456A"
+    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
     // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
-
     val nrsSuccess: JsValue = Json.parse(
       s"""
          |{
@@ -48,8 +44,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          """.stripMargin
     )
-
-    val responseBody: JsValue = Json.parse(s"""
+    val responseBody: JsValue = Json.parse(
+      s"""
          |{
          |  "links":[
          |    {
@@ -61,7 +57,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin)
 
-    def setupStubs(): Unit = ()
+    def retrieveHateoasLink: String
 
     def downstreamUrl: String
 
@@ -89,6 +85,10 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         )
     }
 
+    def taxYear: Option[String] = None
+
+    def setupStubs(): Unit = ()
+
     def errorBody(code: String): String =
       s"""
          |      {
@@ -99,14 +99,16 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def downstreamUrl: String       = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+
     def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
   }
 
   private trait TysIfsTest extends Test {
     override def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamUrl: String       = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+
     def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
   }
 
@@ -153,7 +155,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def requestBodyWithCountryCode(code: String): JsValue = Json.parse(s"""
+      def requestBodyWithCountryCode(code: String): JsValue = Json.parse(
+        s"""
            |{
            |  "nonFurnishedHolidayLet": [
            |    {
@@ -175,8 +178,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String            = requestNino
-            override val calculationId: String   = requestCalculationId
+            override val nino: String = requestNino
+            override val calculationId: String = requestCalculationId
             override val taxYear: Option[String] = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
@@ -193,23 +196,23 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-24"), mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           None,
-           mtdRequestNonFhlFull,
-           BAD_REQUEST,
-           RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            None,
+            mtdRequestNonFhlFull,
+            BAD_REQUEST,
+            RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           None,
-           requestBodyWithCountryCode("XXX"),
-           BAD_REQUEST,
-           RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            None,
+            requestBodyWithCountryCode("XXX"),
+            BAD_REQUEST,
+            RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
           ("AA123456A",
-           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-           None,
-           requestBodyWithCountryCode("FRANCE"),
-           BAD_REQUEST,
-           CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            None,
+            requestBodyWithCountryCode("FRANCE"),
+            BAD_REQUEST,
+            CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

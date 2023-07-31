@@ -20,7 +20,7 @@ import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import support.UnitSpec
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec{
+class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
 
   val nonFHLDesJson: JsValue = Json.parse(
     """

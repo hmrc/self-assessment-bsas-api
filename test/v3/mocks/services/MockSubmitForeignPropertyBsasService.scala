@@ -24,7 +24,7 @@ import org.scalamock.scalatest.MockFactory
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 import v3.services.SubmitForeignPropertyBsasService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitForeignPropertyBsasService extends MockFactory {
 
@@ -33,7 +33,7 @@ trait MockSubmitForeignPropertyBsasService extends MockFactory {
   object MockSubmitForeignPropertyBsasService {
 
     def submitForeignPropertyBsas(
-        requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+                                   requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockService
         .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

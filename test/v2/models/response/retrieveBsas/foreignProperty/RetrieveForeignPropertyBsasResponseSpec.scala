@@ -16,9 +16,8 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.HateoasFactory
-import api.models.hateoas.Method.{GET, POST}
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
@@ -27,7 +26,7 @@ import v2.models.utils.JsonErrorValidators
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 
-  val nonFhlMtdJson = Json.parse(
+  private val nonFhlMtdJson = Json.parse(
     """{
       |  "metadata": {
       |    "typeOfBusiness": "foreign-property",
@@ -102,7 +101,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |}""".stripMargin
   )
 
-  val fhlMtdJson = Json.parse(
+  private val fhlMtdJson = Json.parse(
     """{
       |  "metadata": {
       |    "typeOfBusiness": "foreign-property-fhl-eea",
@@ -169,7 +168,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |}""".stripMargin
   )
 
-  val nonFhlDesJson = Json.parse(
+  private val nonFhlDesJson = Json.parse(
     """{
       |  "inputs": {
       |    "incomeSourceType": "15",
@@ -267,7 +266,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |}""".stripMargin
   )
 
-  val fhlDesJson = Json.parse(
+  private val fhlDesJson = Json.parse(
     """{
       |  "inputs": {
       |    "incomeSourceType": "03",
@@ -357,7 +356,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |}""".stripMargin
   )
 
-  val adjustableSummaryCalculationNonFhlDesJson = Json.parse(
+  private val adjustableSummaryCalculationNonFhlDesJson = Json.parse(
     """{
       |  "inputs": {
       |    "incomeSourceType": "15",
@@ -428,7 +427,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       |}""".stripMargin
   )
 
-  val adjustableSummaryCalculationFhlDesJson = Json.parse(
+  private val adjustableSummaryCalculationFhlDesJson = Json.parse(
     """{
       |  "inputs": {
       |    "incomeSourceType": "03",
@@ -669,7 +668,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
       hateoasFactory.wrap(retrieveForeignPropertyBsasResponseModel, RetrieveForeignPropertyHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
           retrieveForeignPropertyBsasResponseModel,
-          Seq(
+          List(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", GET, "self"),
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", POST, "submit-summary-adjustments")
           )

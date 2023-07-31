@@ -31,8 +31,8 @@
       "rentIncome": 100.49,
       "premiumsOfLeaseGrant": 100.49,
       "reversePremiums": 100.49,
-      "otherPropertyIncome":100.49,
-      "rarRentReceived":100.49
+      "otherPropertyIncome": 100.49,
+      "rarRentReceived": 100.49
     },
     "expensesBreakdown": {
       "premisesRunningCosts": 100.49,
@@ -48,14 +48,14 @@
   },
   "links": [
     {
-      "href":"/individuals/self-assessment/adjustable-summary/property/c75f40a6-a3df-4429-a697-471eeec46435",
-      "rel":"self",
-      "method":"GET"
+      "href": "/individuals/self-assessment/adjustable-summary/property/c75f40a6-a3df-4429-a697-471eeec46435",
+      "rel": "self",
+      "method": "GET"
     },
     {
-      "href":"/individuals/self-assessment/adjustable-summary/property/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
-      "rel":"submit-accounting-adjustments",
-      "method":"POST"
+      "href": "/individuals/self-assessment/adjustable-summary/property/c75f40a6-a3df-4429-a697-471eeec46435/adjust",
+      "rel": "submit-accounting-adjustments",
+      "method": "POST"
     }
   ]
 }

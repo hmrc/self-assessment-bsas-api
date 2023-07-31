@@ -24,7 +24,7 @@ import v2.connectors.RetrieveSelfEmploymentBsasConnector
 import v2.models.request.RetrieveSelfEmploymentBsasRequestData
 import v2.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSelfEmploymentBsasConnector extends MockFactory {
 
@@ -33,7 +33,7 @@ trait MockRetrieveSelfEmploymentBsasConnector extends MockFactory {
   object MockRetrieveSelfEmploymentBsasConnector {
 
     def retrieveSelfEmploymentBsas(
-        requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
+                                    requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
       (mockConnector
         .retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

@@ -33,7 +33,7 @@ trait MockRetrieveSelfEmploymentBsasConnector extends MockFactory {
   object MockRetrieveSelfEmploymentBsasConnector {
 
     def retrieveSelfEmploymentBsas(
-        requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
+                                    requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
       (mockConnector
         .retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

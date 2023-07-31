@@ -314,27 +314,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val validMinimalBody: SubmitUKPropertyBsasRequestBody =
     SubmitUKPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
-
-  def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
-                               expenses: Option[JsObject] = None): AnyContentAsJson = {
-    AnyContentAsJson(
-      Json.obj("furnishedHolidayLet" ->
-        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
-          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses)))
-      )
-    )
-  }
-
-  def submitBsasRawDataBodyNonFHL(income: Option[JsObject] = None,
-                                  expenses: Option[JsObject] = None): AnyContentAsJson = {
-    AnyContentAsJson(
-      Json.obj("nonFurnishedHolidayLet" ->
-        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
-          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses)))
-      )
-    )
-  }
-
   val hateoasResponse: (String, String) => String = (nino: String, bsasId: String) =>
     s"""
        |{
@@ -353,7 +332,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |  ]
        |}
     """.stripMargin
-
   val fhlDesResponse: (String, String) => String = (bsasId: String, typeOfBusiness: String) =>
     s"""
        |{
@@ -486,4 +464,24 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
        |      }
        |    }
        |""".stripMargin
+
+  def submitBsasRawDataBodyFHL(income: Option[JsObject] = None,
+                               expenses: Option[JsObject] = None): AnyContentAsJson = {
+    AnyContentAsJson(
+      Json.obj("furnishedHolidayLet" ->
+        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
+          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses)))
+      )
+    )
+  }
+
+  def submitBsasRawDataBodyNonFHL(income: Option[JsObject] = None,
+                                  expenses: Option[JsObject] = None): AnyContentAsJson = {
+    AnyContentAsJson(
+      Json.obj("nonFurnishedHolidayLet" ->
+        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
+          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses)))
+      )
+    )
+  }
 }

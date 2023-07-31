@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors.MtdError
 import v2.models.domain.TypeOfBusiness
 import v2.models.errors._
@@ -27,9 +26,9 @@ import java.time.format.DateTimeFormatter
 object AccountingPeriodNotSupportedValidation {
   // self-employment and uk property: end date earliest 2019-20
   // foreign property: end date earliest 2021-22
-  private lazy val foreignPropertyEarliestEndDate = LocalDate.parse("2021-04-06", DateTimeFormatter.ISO_LOCAL_DATE)
+  private lazy val foreignPropertyEarliestEndDate             = LocalDate.parse("2021-04-06", DateTimeFormatter.ISO_LOCAL_DATE)
   private lazy val selfEmploymentAndUkPropertyEarliestEndDate = LocalDate.parse("2019-04-06", DateTimeFormatter.ISO_LOCAL_DATE)
-  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  val dateTimeFormatter: DateTimeFormatter                    = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
   def validate(typeOfBusiness: TypeOfBusiness, endDate: String): List[MtdError] = {
 
@@ -49,4 +48,5 @@ object AccountingPeriodNotSupportedValidation {
     }
 
   }
+
 }

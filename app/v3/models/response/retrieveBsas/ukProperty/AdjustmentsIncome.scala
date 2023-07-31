@@ -20,11 +20,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class AdjustmentsIncome(
-    totalRentsReceived: Option[BigDecimal],
-    premiumsOfLeaseGrant: Option[BigDecimal],
-    reversePremiums: Option[BigDecimal],
-    otherPropertyIncome: Option[BigDecimal]
-)
+                              totalRentsReceived: Option[BigDecimal],
+                              premiumsOfLeaseGrant: Option[BigDecimal],
+                              reversePremiums: Option[BigDecimal],
+                              otherPropertyIncome: Option[BigDecimal]
+                            )
 
 object AdjustmentsIncome {
 
@@ -33,14 +33,14 @@ object AdjustmentsIncome {
       Reads.pure(None) and
       Reads.pure(None) and
       Reads.pure(None)
-  )(AdjustmentsIncome.apply _)
+    ) (AdjustmentsIncome.apply _)
 
   val readsNonFhl: Reads[AdjustmentsIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-  )(AdjustmentsIncome.apply _)
+    ) (AdjustmentsIncome.apply _)
 
   implicit val writes: OWrites[AdjustmentsIncome] = Json.writes[AdjustmentsIncome]
 }

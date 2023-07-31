@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers._
+import api.controllers.{RequestHandler => _, _}
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
@@ -32,16 +32,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                               val lookupService: MtdIdLookupService,
-                                               nrsService: SubmitUKPropertyBsasNrsProxyService,
-                                               parser: SubmitUkPropertyBsasDataParser,
-                                               service: SubmitUkPropertyBsasService,
-                                               hateoasFactory: HateoasFactory,
-                                               auditService: AuditService,
-                                               cc: ControllerComponents,
-                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class SubmitUkPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                nrsService: SubmitUKPropertyBsasNrsProxyService,
+                                                parser: SubmitUkPropertyBsasDataParser,
+                                                service: SubmitUkPropertyBsasService,
+                                                hateoasFactory: HateoasFactory,
+                                                auditService: AuditService,
+                                                cc: ControllerComponents,
+                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 
@@ -58,7 +58,7 @@ class SubmitUkPropertyBsasController @Inject()(val authService: EnrolmentsAuthSe
         RequestHandler
           .withParser(parser)
           .withService { parsedRequest =>
-            nrsService.submit(nino, parsedRequest.body) //Submit asynchronously to NRS
+            nrsService.submit(nino, parsedRequest.body) // Submit asynchronously to NRS
             service.submitPropertyBsas(parsedRequest)
           }
           .withHateoasResultFrom(hateoasFactory)((_, response) => SubmitUkPropertyBsasHateoasData(nino, response.id))

@@ -24,7 +24,7 @@ class AdjustmentRangeValidationSpec extends UnitSpec with JsonErrorValidators {
 
   val validAdjustment = Some(BigDecimal(2.00))
 
-  val invaldAdjustmentPositive  = Some(BigDecimal(100000000000.00))
+  val invaldAdjustmentPositive = Some(BigDecimal(100000000000.00))
   val invalidAdjustmentNegative = Some(BigDecimal(-100000000000.00))
 
   case class SetUp(adjustmentValue: Option[BigDecimal], fieldName: String = "other")

@@ -34,7 +34,7 @@ trait MockRetrieveForeignPropertyBsasService extends MockFactory {
   object MockRetrieveForeignPropertyBsasService {
 
     def retrieveBsas(requestData: RetrieveForeignPropertyBsasRequestData)
-      : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]]] = {
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignPropertyBsasResponse]]]] = {
       (mockService
         .retrieveForeignPropertyBsas(_: RetrieveForeignPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

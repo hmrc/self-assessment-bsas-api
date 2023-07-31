@@ -19,21 +19,21 @@ package v3.models.response.retrieveBsas.selfEmployment
 import play.api.libs.json._
 
 case class AdjustedSummaryCalculation(
-    totalIncome: Option[BigDecimal],
-    income: Option[SummaryCalculationIncome],
-    totalExpenses: Option[BigDecimal],
-    expenses: Option[SummaryCalculationExpenses],
-    netProfit: Option[BigDecimal],
-    netLoss: Option[BigDecimal],
-    totalAdditions: Option[BigDecimal],
-    additions: Option[SummaryCalculationAdditions],
-    totalDeductions: Option[BigDecimal],
-    deductions: Option[SummaryCalculationDeductions],
-    totalAccountingAdjustments: Option[BigDecimal],
-    accountingAdjustments: Option[SummaryCalculationAccountingAdjustments],
-    taxableProfit: Option[BigDecimal],
-    adjustedIncomeTaxLoss: Option[BigDecimal],
-)
+                                       totalIncome: Option[BigDecimal],
+                                       income: Option[SummaryCalculationIncome],
+                                       totalExpenses: Option[BigDecimal],
+                                       expenses: Option[SummaryCalculationExpenses],
+                                       netProfit: Option[BigDecimal],
+                                       netLoss: Option[BigDecimal],
+                                       totalAdditions: Option[BigDecimal],
+                                       additions: Option[SummaryCalculationAdditions],
+                                       totalDeductions: Option[BigDecimal],
+                                       deductions: Option[SummaryCalculationDeductions],
+                                       totalAccountingAdjustments: Option[BigDecimal],
+                                       accountingAdjustments: Option[SummaryCalculationAccountingAdjustments],
+                                       taxableProfit: Option[BigDecimal],
+                                       adjustedIncomeTaxLoss: Option[BigDecimal],
+                                     )
 
 object AdjustedSummaryCalculation {
   implicit val reads: Reads[AdjustedSummaryCalculation] = summaryCalculationReads(AdjustedSummaryCalculation.apply _)

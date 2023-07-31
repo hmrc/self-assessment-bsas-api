@@ -3,56 +3,22 @@ description: |
   This endpoint allows a developer to provide accounting adjustments against a specified Business Source Adjustable Summary (BSAS) using its unique identifier. The BSAS ID used must be for a self-employment business that has not been previously adjusted.
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers are only available in the sandbox environment.</p>
-  <table>
-  <thead>
-      <tr>
-          <th>Header Value (Gov-Test-Scenario)</th>
-          <th>Scenario</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><p>N/A - DEFAULT</p></td>
-          <td><p>Simulates a successful response for a self-employment.</p></td>
-      </tr>
-      <tr>
-          <td><p>NOT_SELF_EMPLOYMENT</p></td>
-          <td><p>Simulates the error response where the BSAS ID is for an incorrect type of business.</p></td>
-      </tr>
-      <tr>
-          <td><p>SUMMARY_STATUS_INVALID</p></td>
-          <td><p>Simulates the error response where the summary is invalid and cannot be adjusted.</p></td>
-      </tr>
-      <tr>
-          <td><p>SUMMARY_STATUS_SUPERSEDED</p></td>
-          <td><p>Simulates the error response where the summary is superseded and cannot be adjusted.</p></td>
-      </tr>
-      <tr>
-          <td><p>BSAS_ALREADY_ADJUSTED</p></td>
-          <td><p>Simulates the error response where the summary has already been adjusted.</p></td>
-      </tr>
-      <tr>
-          <td><p>SELF_EMPLOYMENT_OVER_CONSOLIDATED_EXPENSES_THRESHOLD</p></td>
-          <td><p>Simulates the error response where the cumulative turnover amount exceeds the consolidated expenses threshold.</p></td>
-      </tr>
-      <tr>
-          <td><p>RULE_TRADING_INCOME_ALLOWANCE_CLAIMED</p></td>
-          <td><p>Simulates the error response where a claim for trading income allowance was made - cannot also have expenses.</p></td>
-      </tr>
-      <tr>
-          <td><p>RESULTING_VALUE_NOT_PERMITTED</p></td>
-          <td><p>Simulates the error response that may occur if one or more adjustments submitted would result in a negative value.</p></td>
-      </tr>
-      <tr>
-          <td><p>NOT_FOUND</p></td>
-          <td><p>Simulates the scenario where no data was found.</p></td>
-      </tr>
-  </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+
+  | Header Value (Gov-Test-Scenario)                     | Scenario                                                                             |
+  |------------------------------------------------------|--------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                                        | Simulates a successful response for a self-employment.                               |
+  | NOT_SELF_EMPLOYMENT                                  | Simulates the error response where the BSAS ID is for an incorrect type of business. |
+  | SUMMARY_STATUS_INVALID                               | Simulates the error response where the summary is invalid and cannot be adjusted.    |
+  | SUMMARY_STATUS_SUPERSEDED                            | Simulates the error response where the summary is superseded and cannot be adjusted. |
+  | BSAS_ALREADY_ADJUSTED                                | Simulates the error response where the summary has already been adjusted.            |
+  | SELF_EMPLOYMENT_OVER_CONSOLIDATED_EXPENSES_THRESHOLD | Simulates the error response where the cumulative turnover amount exceeds the consolidated expenses threshold. |
+  | RULE_TRADING_INCOME_ALLOWANCE_CLAIMED                | Simulates the error response where a claim for trading income allowance was made - cannot also have expenses.      |
+  | RESULTING_VALUE_NOT_PERMITTED                        | Simulates the error response that may occur if one or more adjustments submitted would result in a negative value. |
+  | NOT_FOUND                                            | Simulates the scenario where no data was found.                                      |
 
 tags:
-  - Self-employment business    
+  - Self-employment business
 
 parameters:
   - $ref: ./common/pathParameters.yaml#/components/parameters/nino

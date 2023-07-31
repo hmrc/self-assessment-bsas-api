@@ -28,10 +28,10 @@ trait MockSubmitSelfEmploymentBsasNrsProxyConnector extends MockFactory {
 
   val mockNrsProxyConnector: SubmitSelfEmploymentBsasNrsProxyConnector = mock[SubmitSelfEmploymentBsasNrsProxyConnector]
 
-  object MockNrsProxyConnector{
+  object MockNrsProxyConnector {
     def submit(nino: String): CallHandler[Future[Unit]] = {
       (mockNrsProxyConnector.submit(_: String, _: SubmitSelfEmploymentBsasRequestBody)(_: HeaderCarrier, _: ExecutionContext))
-       .expects(nino, *, *, *)
+        .expects(nino, *, *, *)
     }
   }
 }

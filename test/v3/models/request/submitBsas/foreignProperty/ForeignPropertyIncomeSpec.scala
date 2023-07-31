@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.json.{JsObject, Json}
 import support.UnitSpec
 
 class ForeignPropertyIncomeSpec extends UnitSpec {
@@ -30,13 +30,14 @@ class ForeignPropertyIncomeSpec extends UnitSpec {
     "passed mtd json" should {
       "return the corresponding model" in {
         Json
-          .parse("""
-            |{
-            |   "totalRentsReceived": 1.12,
-            |   "premiumsOfLeaseGrant": 2.12,
-            |   "otherPropertyIncome": 3.12
-            |}
-            |""".stripMargin)
+          .parse(
+            """
+              |{
+              |   "totalRentsReceived": 1.12,
+              |   "premiumsOfLeaseGrant": 2.12,
+              |   "otherPropertyIncome": 3.12
+              |}
+              |""".stripMargin)
           .as[ForeignPropertyIncome] shouldBe model
       }
     }
@@ -52,13 +53,14 @@ class ForeignPropertyIncomeSpec extends UnitSpec {
     "passed a model" should {
       "return the downstream JSON" in {
         Json.toJson(model) shouldBe
-          Json.parse("""
-                       |{
-                       |   "rent": 1.12,
-                       |   "premiumsOfLeaseGrant": 2.12,
-                       |   "otherPropertyIncome": 3.12
-                       |}
-                       |""".stripMargin)
+          Json.parse(
+            """
+              |{
+              |   "rent": 1.12,
+              |   "premiumsOfLeaseGrant": 2.12,
+              |   "otherPropertyIncome": 3.12
+              |}
+              |""".stripMargin)
       }
     }
 

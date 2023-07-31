@@ -25,12 +25,12 @@ class SummaryCalculationIncomeSpec extends UnitSpec with JsonErrorValidators wit
   import SummaryCalculationIncome._
 
   testRoundTrip("Summary Calculation Income FHL",
-                downstreamSummaryCalculationIncomeJson,
-                summaryCalculationIncomeFhlModel,
-                mtdSummaryCalculationIncomeFhlJson)(readsFhl)
+    downstreamSummaryCalculationIncomeJson,
+    summaryCalculationIncomeFhlModel,
+    mtdSummaryCalculationIncomeFhlJson)(readsFhl)
   testRoundTrip("Summary Calculation Income Non-FHL",
-                downstreamSummaryCalculationIncomeJson,
-                summaryCalculationIncomeNonFhlModel,
-                mtdSummaryCalculationIncomeNonFhlJson)(readsNonFhl)
+    downstreamSummaryCalculationIncomeJson,
+    summaryCalculationIncomeNonFhlModel,
+    mtdSummaryCalculationIncomeNonFhlJson)(readsNonFhl)
 
 }

@@ -20,22 +20,22 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class AdjustmentsAdditions(
-    costOfGoodsDisallowable: Option[BigDecimal],
-    paymentsToSubcontractorsDisallowable: Option[BigDecimal],
-    wagesAndStaffCostsDisallowable: Option[BigDecimal],
-    carVanTravelExpensesDisallowable: Option[BigDecimal],
-    premisesRunningCostsDisallowable: Option[BigDecimal],
-    maintenanceCostsDisallowable: Option[BigDecimal],
-    adminCostsDisallowable: Option[BigDecimal],
-    interestOnBankOtherLoansDisallowable: Option[BigDecimal],
-    financeChargesDisallowable: Option[BigDecimal],
-    irrecoverableDebtsDisallowable: Option[BigDecimal],
-    professionalFeesDisallowable: Option[BigDecimal],
-    depreciationDisallowable: Option[BigDecimal],
-    otherExpensesDisallowable: Option[BigDecimal],
-    advertisingCostsDisallowable: Option[BigDecimal],
-    businessEntertainmentCostsDisallowable: Option[BigDecimal],
-)
+                                 costOfGoodsDisallowable: Option[BigDecimal],
+                                 paymentsToSubcontractorsDisallowable: Option[BigDecimal],
+                                 wagesAndStaffCostsDisallowable: Option[BigDecimal],
+                                 carVanTravelExpensesDisallowable: Option[BigDecimal],
+                                 premisesRunningCostsDisallowable: Option[BigDecimal],
+                                 maintenanceCostsDisallowable: Option[BigDecimal],
+                                 adminCostsDisallowable: Option[BigDecimal],
+                                 interestOnBankOtherLoansDisallowable: Option[BigDecimal],
+                                 financeChargesDisallowable: Option[BigDecimal],
+                                 irrecoverableDebtsDisallowable: Option[BigDecimal],
+                                 professionalFeesDisallowable: Option[BigDecimal],
+                                 depreciationDisallowable: Option[BigDecimal],
+                                 otherExpensesDisallowable: Option[BigDecimal],
+                                 advertisingCostsDisallowable: Option[BigDecimal],
+                                 businessEntertainmentCostsDisallowable: Option[BigDecimal],
+                               )
 
 object AdjustmentsAdditions {
   implicit val reads: Reads[AdjustmentsAdditions] = (
@@ -54,7 +54,7 @@ object AdjustmentsAdditions {
       (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "advertisingCostsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsDisallowable").readNullable[BigDecimal]
-  )(AdjustmentsAdditions.apply _)
+    ) (AdjustmentsAdditions.apply _)
 
   implicit val writes: OWrites[AdjustmentsAdditions] = Json.writes[AdjustmentsAdditions]
 }

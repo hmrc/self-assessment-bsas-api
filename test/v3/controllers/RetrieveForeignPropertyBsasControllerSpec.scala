@@ -16,17 +16,16 @@
 
 package v3.controllers
 
-import api.controllers.{ ControllerBaseSpec, ControllerTestRunner }
-import api.hateoas.MockHateoasFactory
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{ MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.domain.{ CalculationId, Nino }
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.CalculationId
 import api.models.errors._
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveForeignPropertyBsasValidatorFactory
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
@@ -49,18 +48,20 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockIdGenerator
     with MockAppConfig {
 
-  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  private val requestData = retrieveBsas.RetrieveForeignPropertyBsasRequestData(Nino(nino), CalculationId(calculationId), taxYear = None)
+  private val requestData = retrieveBsas.RetrieveForeignPropertyBsasRequestData(nino, calculationId, taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
 
   private val hateoasResponse = retrieveForeignPropertyBsasMtdNonFhlJson
-    .as[JsObject] ++ Json.parse("""{
+    .as[JsObject] ++ Json
+    .parse("""{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+    .as[JsObject]
 
   "retrieve" should {
     "return OK" when {
@@ -71,7 +72,9 @@ class RetrieveForeignPropertyBsasControllerSpec
           Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel)))
 
         MockHateoasFactory
-          .wrap(retrieveForeignPropertyBsasResponseNonFhlModel, RetrieveForeignPropertyHateoasData(nino, calculationId, None)) returns
+          .wrap(
+            retrieveForeignPropertyBsasResponseNonFhlModel,
+            RetrieveForeignPropertyHateoasData(nino.nino, calculationId.calculationId, None)) returns
           HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
 
         runOkTest(
@@ -100,7 +103,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveForeignPropertyBsasController(
+    private val controller = new RetrieveForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveForeignPropertyBsasValidatorFactory,
@@ -110,6 +113,7 @@ class RetrieveForeignPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieve(nino.nino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
   }
+
 }

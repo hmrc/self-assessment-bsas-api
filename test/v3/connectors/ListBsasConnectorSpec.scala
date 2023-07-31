@@ -16,31 +16,31 @@
 
 package v3.connectors
 
-import api.connectors.{ ConnectorSpec, DownstreamOutcome }
-import api.models.domain.{ BusinessId, Nino, TaxYear }
-import api.models.errors.{ DownstreamErrorCode, DownstreamErrors }
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{BusinessId, Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v3.fixtures.ListBsasFixture
 import v3.models.request.ListBsasRequestData
-import v3.models.response.listBsas.{ BsasSummary, ListBsasResponse }
+import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
 
-  val nino: Nino       = Nino("AA123456A")
-  val incomeSourceId   = "XAIS12345678910"
-  val incomeSourceType = "02"
+  private val nino             = Nino("AA123456A")
+  private val incomeSourceId   = "XAIS12345678910"
+  private val incomeSourceType = "02"
 
   private val preTysTaxYear = TaxYear.fromMtd("2018-19")
   private val tysTaxYear    = TaxYear.fromMtd("2023-24")
 
-  val additionalQueryParams: Seq[(String, String)] = Seq(
-    ("taxYear", preTysTaxYear.asDownstream),
+  private val additionalQueryParams: Seq[(String, String)] = List(
+    ("taxYear", preTysTaxYear.asDownstream)
   )
 
-  val commonQueryParams: Seq[(String, String)] = Seq(
+  private val commonQueryParams: Seq[(String, String)] = List(
     ("incomeSourceId", incomeSourceId),
     ("incomeSourceType", incomeSourceType)
   )
@@ -99,26 +99,33 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
   }
 
   trait Test { _: ConnectorTest =>
-    def taxYear: TaxYear
-    def downstreamQueryParams: Seq[(String, String)]
-    val request: ListBsasRequestData = ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
+    protected def taxYear: TaxYear
+    protected def downstreamQueryParams: Seq[(String, String)]
 
-    val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    protected val request: ListBsasRequestData =
+      ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
+
+    protected val connector: ListBsasConnector =
+      new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
-        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }
 
     protected def stubTysHttpResponse(
-        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }
+
   }
+
 }

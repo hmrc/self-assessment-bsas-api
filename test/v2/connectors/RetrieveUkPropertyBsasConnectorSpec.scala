@@ -17,12 +17,12 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
+import v2.mocks.MockHttpClient
 import v2.models.request.RetrieveUkPropertyBsasRequestData
 
 import scala.concurrent.Future
@@ -46,7 +46,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "retrieve" should {
     "return a valid response" when {
-      val outcome                    = Right(ResponseWrapper(correlationId, mtdResponse))
+      val outcome = Right(ResponseWrapper(correlationId, mtdResponse))
       implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
       "a valid request with queryParams is supplied" in new Test {
         val request = RetrieveUkPropertyBsasRequestData(nino, "incomeSourceId", Some("03"))

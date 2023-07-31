@@ -17,7 +17,7 @@
 package v3.models.response.retrieveBsas.foreignProperty
 
 import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{ HateoasData, Link }
 import api.models.domain.TaxYear
 import config.AppConfig
 import play.api.libs.json._
@@ -29,7 +29,7 @@ case class RetrieveForeignPropertyBsasResponse(metadata: Metadata,
                                                adjustableSummaryCalculation: SummaryCalculation,
                                                adjustments: Option[Adjustments],
                                                adjustedSummaryCalculation: Option[SummaryCalculation])
-    extends HasTypeOfBusiness {
+  extends HasTypeOfBusiness {
   override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
 }
 
@@ -37,7 +37,7 @@ object RetrieveForeignPropertyBsasResponse {
   implicit val reads: Reads[RetrieveForeignPropertyBsasResponse] = (json: JsValue) =>
     for {
       metadata <- (json \ "metadata").validate[Metadata]
-      inputs   <- (json \ "inputs").validate[Inputs]
+      inputs <- (json \ "inputs").validate[Inputs]
 
       isFhl = inputs.typeOfBusiness == TypeOfBusiness.`foreign-property-fhl-eea`
 
@@ -57,7 +57,7 @@ object RetrieveForeignPropertyBsasResponse {
         adjustableSummaryCalculation = adjustableSummaryCalculation,
         adjustments = adjustments,
         adjustedSummaryCalculation = adjustedSummaryCalculation
-    )
+      )
 
   private def fhlEeaAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments").validateOpt[Adjustments](Adjustments.readsFhl)
@@ -71,7 +71,7 @@ object RetrieveForeignPropertyBsasResponse {
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = Json.writes[RetrieveForeignPropertyBsasResponse]
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-      extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
       import data._
 

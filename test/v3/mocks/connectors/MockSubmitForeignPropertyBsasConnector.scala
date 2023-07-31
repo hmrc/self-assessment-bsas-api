@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.SubmitForeignPropertyBsasConnector
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitForeignPropertyBsasConnector extends MockFactory {
 

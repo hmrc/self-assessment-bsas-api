@@ -17,10 +17,9 @@
 package v2.controllers
 
 import api.controllers.ControllerBaseSpec
-import api.hateoas.MockHateoasFactory
-import api.models.hateoas
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -32,7 +31,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version2
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v2.mocks.requestParsers.MockSubmitUkPropertyRequestParser
 import v2.mocks.services._
@@ -59,27 +57,6 @@ class SubmitUkPropertyBsasControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new SubmitUkPropertyBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      nrsService = mockSubmitUKPropertyBsasNrsProxyService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
   private val nino = "AA123456A"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
@@ -89,11 +66,12 @@ class SubmitUkPropertyBsasControllerSpec
 
   private val nonFhlRawRequest =
     SubmitUkPropertyBsasRawData(nino, bsasId, submitBsasRawDataBodyNonFHL(nonFHLIncomeAllFields, nonFHLExpensesAllFields))
+
   private val nonFhlRequest = SubmitUkPropertyBsasRequestData(Nino(nino), bsasId, nonFHLBody)
 
-  val response = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
+  private val response = SubmitUkPropertyBsasResponse(bsasId, TypeOfBusiness.`uk-property-fhl`)
 
-  val testHateoasLinks: Seq[Link] = Seq(
+  private val testHateoasLinks = List(
     Link(
       href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust",
       method = GET,
@@ -194,12 +172,12 @@ class SubmitUkPropertyBsasControllerSpec
           contentAsJson(result) shouldBe Json.toJson(error)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(List(AuditError(error.code))), None)
           MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
         }
       }
 
-      val input = Seq(
+      val input = List(
         (BadRequestError, BAD_REQUEST),
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
@@ -214,7 +192,8 @@ class SubmitUkPropertyBsasControllerSpec
 
       "multiple parser errors occur" in new Test {
 
-        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper =
+          ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitUkPropertyBsasDataParser
           .parse(fhlRawRequest)
@@ -227,21 +206,22 @@ class SubmitUkPropertyBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse =
-          AuditResponse(BAD_REQUEST, Some(Seq(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
+          AuditResponse(BAD_REQUEST, Some(List(AuditError(NinoFormatError.code), AuditError(BsasIdFormatError.code))), None)
         MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
       }
 
       "multiple errors occur for the customised errors" in new Test {
-        val error = ErrorWrapper(
-          correlationId,
-          BadRequestError,
-          Some(
-            Seq(
-              FormatAdjustmentValueError,
-              RuleAdjustmentRangeInvalid
+        val error: ErrorWrapper =
+          ErrorWrapper(
+            correlationId,
+            BadRequestError,
+            Some(
+              List(
+                FormatAdjustmentValueError,
+                RuleAdjustmentRangeInvalid
+              )
             )
           )
-        )
 
         MockSubmitUkPropertyBsasDataParser
           .parse(fhlRawRequest)
@@ -253,13 +233,14 @@ class SubmitUkPropertyBsasControllerSpec
         contentAsJson(result) shouldBe Json.toJson(error)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(BAD_REQUEST,
-                                                         Some(
-                                                           Seq(
-                                                             AuditError(FormatAdjustmentValueError.code),
-                                                             AuditError(RuleAdjustmentRangeInvalid.code)
-                                                           )),
-                                                         None)
+        val auditResponse: AuditResponse = AuditResponse(
+          BAD_REQUEST,
+          Some(
+            List(
+              AuditError(FormatAdjustmentValueError.code),
+              AuditError(RuleAdjustmentRangeInvalid.code)
+            )),
+          None)
 
         MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
       }
@@ -287,12 +268,12 @@ class SubmitUkPropertyBsasControllerSpec
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(List(AuditError(mtdError.code))), None)
           MockedAuditService.verifyAuditEvent(event(auditResponse, Some(validfhlInputJson))).once()
         }
       }
 
-      val input = Seq(
+      val input = List(
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
@@ -308,4 +289,25 @@ class SubmitUkPropertyBsasControllerSpec
       input.foreach(args => (serviceErrors _).tupled(args))
     }
   }
+
+  private trait Test {
+
+    protected val controller = new SubmitUkPropertyBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      nrsService = mockSubmitUKPropertyBsasNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

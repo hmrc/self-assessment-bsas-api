@@ -4,53 +4,22 @@ get:
     This endpoint allows a developer to request a specific Business Source Adjustable Summary (BSAS) using a unique identifier. By default, when it is available the adjusted summary will be returned. A filter can be set to specify whether the original or the adjusted summary is returned.
 
     ### Test data
-    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-    <table>
-    <thead>
-        <tr>
-            <th>Header Value (Gov-Test-Scenario)</th>
-            <th>Scenario</th>
-        </tr>
-    </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates the scenario where no data was found.</p></td>
-          </tr>
-          <tr>
-              <td><p>UK_PROPERTY_FHL_ADJUSTED</p></td>
-              <td><p>Simulates a response containing an adjusted FHL summary.</p></td>
-          </tr>
-          <tr>
-              <td><p>UK_PROPERTY_FHL_UNADJUSTED</p></td>
-              <td><p>Simulates a response containing an unadjusted FHL summary.</p></td>
-          </tr>
-          <tr>
-              <td><p>UK_PROPERTY_FHL_CONSOLIDATED</p></td>
-              <td><p>Simulates a response containing an adjusted FHL summary with consolidated expenses.</p></td>
-          </tr>
-          <tr>
-              <td><p>UK_PROPERTY_NON_FHL_ADJUSTED</p></td>
-              <td><p>Simulates a response containing an adjusted non-FHL summary.</p></td>
-          </tr>
-          <tr>
-              <td><p>UK_PROPERTY_NON_FHL_UNADJUSTED</p></td>
-              <td><p>Simulates a response containing an unadjusted non-FHL summary.</p></td>
-          </tr>
-          <tr>
-              <td><p>UK_PROPERTY_NON_FHL_CONSOLIDATED</p></td>
-              <td><p>Simulates a response containing an adjusted non-FHL summary with consolidated expenses.</p></td>
-          </tr>
-          <tr>
-              <td><p>NOT_UK_PROPERTY</p></td>
-              <td><p>Simulates an unsuccessful response where a non-property BSAS ID was requested.</p></td>
-          </tr>
-      </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario)   | Scenario                                                                       |
+    |------------------------------------|--------------------------------------------------------------------------------|
+    | N/A - DEFAULT                      | Simulates the scenario where no data was found.                                |
+    | UK_PROPERTY_FHL_ADJUSTED           | Simulates a response containing an adjusted FHL summary.                       |
+    | UK_PROPERTY_FHL_UNADJUSTED         | Simulates a response containing an unadjusted FHL summary.                     |
+    | UK_PROPERTY_FHL_CONSOLIDATED       | Simulates a response containing an adjusted FHL summary with consolidated expenses. |
+    | UK_PROPERTY_NON_FHL_ADJUSTED       | Simulates a response containing an adjusted non-FHL summary.                   |
+    | UK_PROPERTY_NON_FHL_UNADJUSTED     | Simulates a response containing an unadjusted non-FHL summary.                 |
+    | UK_PROPERTY_NON_FHL_CONSOLIDATED   | Simulates a response containing an adjusted non-FHL summary with consolidated expenses. |
+    | NOT_UK_PROPERTY                    | Simulates an unsuccessful response where a non-property BSAS ID was requested. |
 
   tags:
     - UK property business
-    
+
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino

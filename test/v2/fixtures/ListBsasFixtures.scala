@@ -17,10 +17,10 @@
 package v2.fixtures
 
 import api.models.domain.Status
-import play.api.libs.json.{ JsArray, JsValue, Json }
+import play.api.libs.json.{JsArray, JsValue, Json}
 import v2.models.domain.TypeOfBusiness
 import v2.models.request.AccountingPeriod
-import v2.models.response.listBsas.{ BsasEntries, BusinessSourceSummary, ListBsasResponse }
+import v2.models.response.listBsas.{BsasEntries, BusinessSourceSummary, ListBsasResponse}
 
 object ListBsasFixtures {
 
@@ -33,14 +33,16 @@ object ListBsasFixtures {
       |""".stripMargin
   )
 
-  val accountingFromDesJSON: JsValue = Json.parse("""
+  val accountingFromDesJSON: JsValue = Json.parse(
+    """
       |{
       | "accountingStartDate": "2018-10-11",
       | "accountingEndDate": "2019-10-10"
       | }
       |""".stripMargin)
 
-  val invalidAccountingJson: JsValue = Json.parse("""
+  val invalidAccountingJson: JsValue = Json.parse(
+    """
       |{
       |  "startDate" : 4,
       |  "endDate" : true
@@ -210,141 +212,141 @@ object ListBsasFixtures {
   val summariesJSONWithHateoas: String => JsValue = nino =>
     Json.parse(
       s"""
-      |{
-      |  "businessSourceSummaries": [
-      |    {
-      |      "typeOfBusiness": "self-employment",
-      |      "businessId": "000000000000210",
-      |      "accountingPeriod": {
-      |        "startDate": "2018-10-11",
-      |        "endDate": "2019-10-10"
-      |      },
-      |      "bsasEntries": [
-      |        {
-      |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |          "requestedDateTime": "2019-10-14T11:33:27Z",
-      |          "summaryStatus": "valid",
-      |          "adjustedSummary": false,
-      |          "links": [
-      |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |              "method": "GET",
-      |              "rel": "self"
-      |            }
-      |          ]
-      |        }
-      |      ]
-      |    },
-      |    {
-      |      "typeOfBusiness": "uk-property-fhl",
-      |      "accountingPeriod": {
-      |        "startDate": "2018-10-11",
-      |        "endDate": "2019-10-10"
-      |      },
-      |      "bsasEntries": [
-      |        {
-      |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
-      |          "requestedDateTime": "2019-10-14T11:33:27Z",
-      |          "summaryStatus": "valid",
-      |          "adjustedSummary": false,
-      |          "links": [
-      |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
-      |              "method": "GET",
-      |              "rel": "self"
-      |            }
-      |          ]
-      |        }
-      |      ]
-      |    },
-      |    {
-      |      "typeOfBusiness": "uk-property-non-fhl",
-      |      "accountingPeriod": {
-      |        "startDate": "2018-10-11",
-      |        "endDate": "2019-10-10"
-      |      },
-      |      "bsasEntries": [
-      |        {
-      |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-      |          "requestedDateTime": "2019-10-14T11:33:27Z",
-      |          "summaryStatus": "valid",
-      |          "adjustedSummary": false,
-      |          "links": [
-      |            {
-      |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-      |              "method": "GET",
-      |              "rel": "self"
-      |            }
-      |          ]
-      |        }
-      |      ]
-      |    }
-      |  ],
-      |  "links": [
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
-      |      "method": "POST",
-      |      "rel": "trigger-business-source-adjustable-summary"
-      |    },
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
-      |      "method": "GET",
-      |      "rel": "self"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin
-  )
+         |{
+         |  "businessSourceSummaries": [
+         |    {
+         |      "typeOfBusiness": "self-employment",
+         |      "businessId": "000000000000210",
+         |      "accountingPeriod": {
+         |        "startDate": "2018-10-11",
+         |        "endDate": "2019-10-10"
+         |      },
+         |      "bsasEntries": [
+         |        {
+         |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+         |          "requestedDateTime": "2019-10-14T11:33:27Z",
+         |          "summaryStatus": "valid",
+         |          "adjustedSummary": false,
+         |          "links": [
+         |            {
+         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+         |              "method": "GET",
+         |              "rel": "self"
+         |            }
+         |          ]
+         |        }
+         |      ]
+         |    },
+         |    {
+         |      "typeOfBusiness": "uk-property-fhl",
+         |      "accountingPeriod": {
+         |        "startDate": "2018-10-11",
+         |        "endDate": "2019-10-10"
+         |      },
+         |      "bsasEntries": [
+         |        {
+         |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+         |          "requestedDateTime": "2019-10-14T11:33:27Z",
+         |          "summaryStatus": "valid",
+         |          "adjustedSummary": false,
+         |          "links": [
+         |            {
+         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce3",
+         |              "method": "GET",
+         |              "rel": "self"
+         |            }
+         |          ]
+         |        }
+         |      ]
+         |    },
+         |    {
+         |      "typeOfBusiness": "uk-property-non-fhl",
+         |      "accountingPeriod": {
+         |        "startDate": "2018-10-11",
+         |        "endDate": "2019-10-10"
+         |      },
+         |      "bsasEntries": [
+         |        {
+         |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+         |          "requestedDateTime": "2019-10-14T11:33:27Z",
+         |          "summaryStatus": "valid",
+         |          "adjustedSummary": false,
+         |          "links": [
+         |            {
+         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+         |              "method": "GET",
+         |              "rel": "self"
+         |            }
+         |          ]
+         |        }
+         |      ]
+         |    }
+         |  ],
+         |  "links": [
+         |    {
+         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
+         |      "method": "POST",
+         |      "rel": "trigger-business-source-adjustable-summary"
+         |    },
+         |    {
+         |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
+         |      "method": "GET",
+         |      "rel": "self"
+         |    }
+         |  ]
+         |}
+         |""".stripMargin
+    )
 
   val summariesJSONForeignWithHateoas: String => JsValue = nino =>
     Json.parse(
       s"""
-       |{
-       |  "businessSourceSummaries": [
-       |    {
-       |      "typeOfBusiness": "foreign-property",
-       |      "businessId": "000000000000210",
-       |      "accountingPeriod": {
-       |        "startDate": "2018-10-11",
-       |        "endDate": "2019-10-10"
-       |      },
-       |      "bsasEntries": [
-       |        {
-       |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-       |          "requestedDateTime": "2019-10-14T11:33:27Z",
-       |          "summaryStatus": "valid",
-       |          "adjustedSummary": false,
-       |          "links": [
-       |            {
-       |              "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
-       |              "method": "GET",
-       |              "rel": "self"
-       |            }
-       |          ]
-       |        }
-       |      ]
-       |    }
-       |  ],
-       |  "links": [
-       |    {
-       |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
-       |      "method": "POST",
-       |      "rel": "trigger-business-source-adjustable-summary"
-       |    },
-       |    {
-       |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
-       |      "method": "GET",
-       |      "rel": "self"
-       |    }
-       |  ]
-       |}
-       |""".stripMargin
-  )
+         |{
+         |  "businessSourceSummaries": [
+         |    {
+         |      "typeOfBusiness": "foreign-property",
+         |      "businessId": "000000000000210",
+         |      "accountingPeriod": {
+         |        "startDate": "2018-10-11",
+         |        "endDate": "2019-10-10"
+         |      },
+         |      "bsasEntries": [
+         |        {
+         |          "bsasId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+         |          "requestedDateTime": "2019-10-14T11:33:27Z",
+         |          "summaryStatus": "valid",
+         |          "adjustedSummary": false,
+         |          "links": [
+         |            {
+         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce2",
+         |              "method": "GET",
+         |              "rel": "self"
+         |            }
+         |          ]
+         |        }
+         |      ]
+         |    }
+         |  ],
+         |  "links": [
+         |    {
+         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
+         |      "method": "POST",
+         |      "rel": "trigger-business-source-adjustable-summary"
+         |    },
+         |    {
+         |      "href": "/individuals/self-assessment/adjustable-summary/$nino",
+         |      "method": "GET",
+         |      "rel": "self"
+         |    }
+         |  ]
+         |}
+         |""".stripMargin
+    )
 
-  val summariesFromDesJSONSingle: JsArray   = JsArray(Seq(summaryFromDesJSONSE))
+  val summariesFromDesJSONSingle: JsArray = JsArray(Seq(summaryFromDesJSONSE))
   val summariesFromDesJSONMultiple: JsArray = JsArray(Seq(summaryFromDesJSONSE, summaryFromDesJSONUkFhl, summaryFromDesJSONUkNonFhl))
-  val summariesFromDesJSONForeign: JsArray  = JsArray(Seq(summaryFromDesJSONForeign))
-  val summariesFromDesJSONFhlEea: JsArray   = JsArray(Seq(summaryFromDesJSONFhlEea))
+  val summariesFromDesJSONForeign: JsArray = JsArray(Seq(summaryFromDesJSONForeign))
+  val summariesFromDesJSONFhlEea: JsArray = JsArray(Seq(summaryFromDesJSONFhlEea))
 
   val summaryModel: ListBsasResponse[BsasEntries] =
     ListBsasResponse(

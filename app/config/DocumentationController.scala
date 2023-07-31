@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class DocumentationController @Inject()(apiDefinition: ApiDefinitionFactory, cc: ControllerComponents, assets: Assets, errorHandler: HttpErrorHandler)
-    extends BackendController(cc) {
+  extends BackendController(cc) {
 
   def definition(): Action[AnyContent] = Action {
     Ok(Json.toJson(apiDefinition.definition))

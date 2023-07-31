@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers._
+import api.controllers.{RequestHandler => _, _}
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
@@ -31,15 +31,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                                     val lookupService: MtdIdLookupService,
-                                                     parser: RetrieveSelfEmploymentRequestParser,
-                                                     service: RetrieveSelfEmploymentBsasService,
-                                                     hateoasFactory: HateoasFactory,
-                                                     auditService: AuditService,
-                                                     cc: ControllerComponents,
-                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class RetrieveSelfEmploymentBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                                      val lookupService: MtdIdLookupService,
+                                                      parser: RetrieveSelfEmploymentRequestParser,
+                                                      service: RetrieveSelfEmploymentBsasService,
+                                                      hateoasFactory: HateoasFactory,
+                                                      auditService: AuditService,
+                                                      cc: ControllerComponents,
+                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 

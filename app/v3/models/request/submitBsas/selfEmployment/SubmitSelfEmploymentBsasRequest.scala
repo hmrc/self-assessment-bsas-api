@@ -16,8 +16,8 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import api.models.domain.{ CalculationId, Nino, TaxYear }
-import play.api.libs.json.{ JsObject, Json, OWrites, Reads }
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
 import utils.JsonWritesUtil
 
 case class SubmitSelfEmploymentBsasRequestData(nino: Nino,
@@ -33,6 +33,7 @@ case class SubmitSelfEmploymentBsasRequestBody(income: Option[Income], expenses:
 object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil {
 
   implicit val reads: Reads[SubmitSelfEmploymentBsasRequestBody] = Json.reads[SubmitSelfEmploymentBsasRequestBody]
+
   implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = (o: SubmitSelfEmploymentBsasRequestBody) =>
     if (o.isEmpty) JsObject.empty
     else
@@ -46,4 +47,5 @@ object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil {
               "additions" -> o.additions
             ))
         ))
+
 }

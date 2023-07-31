@@ -16,10 +16,10 @@
 
 package api.models.domain
 
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-import java.time.{ LocalDate, ZoneId }
+import java.time.{LocalDate, ZoneId}
 
 class TaxYearSpec extends UnitSpec {
 
@@ -45,12 +45,11 @@ class TaxYearSpec extends UnitSpec {
       "be the expected year, taking into account the UK tax year start date" in {
 
         def test(datesAndExpectedYears: Seq[(String, Int)]): Unit = {
-          datesAndExpectedYears.foreach {
-            case (date, expectedYear) =>
-              withClue(s"Given $date:") {
-                val result = TaxYear.fromIso(date)
-                result.year shouldBe expectedYear
-              }
+          datesAndExpectedYears.foreach { case (date, expectedYear) =>
+            withClue(s"Given $date:") {
+              val result = TaxYear.fromIso(date)
+              result.year shouldBe expectedYear
+            }
           }
         }
 
@@ -74,6 +73,21 @@ class TaxYearSpec extends UnitSpec {
 
       "allow the MTD tax year to be extracted" in {
         TaxYear.fromDownstream("2019").asMtd shouldBe "2018-19"
+      }
+    }
+
+    "TaxYear.now()" should {
+      "return the current tax year" in {
+        val now  = LocalDate.now(ZoneId.of("UTC"))
+        val year = now.getYear
+
+        val expectedYear = {
+          val taxYearStartDate = LocalDate.of(year, 4, 6)
+          if (now.isBefore(taxYearStartDate)) year else year + 1
+        }
+
+        val result = TaxYear.now()
+        result.year shouldBe expectedYear
       }
     }
 

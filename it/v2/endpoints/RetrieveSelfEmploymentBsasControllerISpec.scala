@@ -21,22 +21,20 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v2.models.errors._
-import v2.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v2.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino                                = "AA123456A"
-    val adjustedStatus: Option[String]      = Some("true")
-    val bsasId                              = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    val nino = "AA123456A"
+    val adjustedStatus: Option[String] = Some("true")
+    val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
     val desQueryParams: Map[String, String] = Map("return" -> "3")
-
-    def uri: String = s"/$nino/self-employment/$bsasId"
 
     def desUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$bsasId"
 
@@ -57,6 +55,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/self-employment/$bsasId"
   }
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
@@ -104,8 +104,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String                   = requestNino
-          override val bsasId: String                 = requestBsasId
+          override val nino: String = requestNino
+          override val bsasId: String = requestBsasId
           override val adjustedStatus: Option[String] = requestAdjustedStatus
 
           override def setupStubs(): StubMapping = {

@@ -17,19 +17,19 @@
 package definition
 
 import config.ConfidenceLevelConfig
-import definition.APIStatus.{ ALPHA, BETA }
+import definition.APIStatus.{ALPHA, BETA}
 import mocks.MockAppConfig
-import routing.{ Version2, Version3 }
+import routing.{Version2, Version3}
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
+  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
+
   class Test {
     val factory = new ApiDefinitionFactory(mockAppConfig)
   }
-
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "definition" when {
     "there is no appConfig.apiStatus" should {
@@ -84,8 +84,8 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
         s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
           s"return confidence level $expectedDefinitionCL" in new Test {
             MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(confidenceLevel = configCL,
-                                                                                      definitionEnabled = definitionEnabled,
-                                                                                      authValidationEnabled = true)
+              definitionEnabled = definitionEnabled,
+              authValidationEnabled = true)
             factory.confidenceLevel shouldBe expectedDefinitionCL
           }
         }

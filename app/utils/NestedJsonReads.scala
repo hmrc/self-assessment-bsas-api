@@ -35,28 +35,29 @@ trait NestedJsonReads {
             invalid = _ => JsSuccess(None),
             valid = {
               case JsNull => JsSuccess(None)
-              case js     => rds.reads(js).repath(jsPath).map(Some(_))
+              case js => rds.reads(js).repath(jsPath).map(Some(_))
             }
-        )
+          )
       )
     }
 
     private def applyTillLastNested(json: JsValue): Either[JsError, JsResult[JsValue]] = {
       def singleJsError(msg: String) = JsError(Seq(jsPath -> Seq(JsonValidationError(msg))))
+
       @tailrec
       def step(pathNodes: List[PathNode], json: JsValue): Either[JsError, JsResult[JsValue]] = pathNodes match {
         case Nil => Left(singleJsError("error.path.empty"))
         case node :: Nil =>
           node(json) match {
-            case Nil       => Right(singleJsError("error.path.missing"))
+            case Nil => Right(singleJsError("error.path.missing"))
             case js :: Nil => Right(JsSuccess(js))
-            case _ :: _    => Right(singleJsError("error.path.result.multiple"))
+            case _ :: _ => Right(singleJsError("error.path.result.multiple"))
           }
         case head :: tail =>
           head(json) match {
-            case Nil       => Right(singleJsError("error.path.missing"))
+            case Nil => Right(singleJsError("error.path.missing"))
             case js :: Nil => step(tail, js)
-            case _ :: _    => Left(singleJsError("error.path.result.multiple"))
+            case _ :: _ => Left(singleJsError("error.path.result.multiple"))
           }
       }
 

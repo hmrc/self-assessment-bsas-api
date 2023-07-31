@@ -16,13 +16,30 @@
 
 package v3.hateoas
 
-import api.models.hateoas.Link
-import api.models.hateoas.Method._
+import api.hateoas.Link
+import api.hateoas.Method._
 import api.models.domain.TaxYear
 import config.AppConfig
 import v3.hateoas.RelType._
 
 trait HateoasLinks {
+
+  // API resource links
+  // L1
+  def triggerBsas(appConfig: AppConfig, nino: String): Link =
+    Link(href = bsasBasUri(appConfig, nino) + "/trigger", method = POST, rel = TRIGGER)
+
+  // L2
+  def getSelfEmploymentBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
+    val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/self-employment/$calcId", taxYear)
+    Link(href = href, method = GET, rel = SELF)
+  }
+
+  // L3
+  def getUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
+    val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"$nino/uk-property/$calcId", taxYear)
+    Link(href = href, method = GET, rel = SELF)
+  }
 
   private def withTaxYearParameter(uri: String, maybeTaxYear: Option[TaxYear]): String = {
     maybeTaxYear match {
@@ -34,30 +51,13 @@ trait HateoasLinks {
   private def bsasBasUri(appConfig: AppConfig, nino: String) =
     s"/${appConfig.apiGatewayContext}/$nino"
 
-  //API resource links
-  //L1
-  def triggerBsas(appConfig: AppConfig, nino: String): Link =
-    Link(href = bsasBasUri(appConfig, nino) + "/trigger", method = POST, rel = TRIGGER)
-
-  //L2
-  def getSelfEmploymentBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
-    val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/self-employment/$calcId", taxYear)
-    Link(href = href, method = GET, rel = SELF)
-  }
-
-  //L3
-  def getUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
-    val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/uk-property/$calcId", taxYear)
-    Link(href = href, method = GET, rel = SELF)
-  }
-
-  //L4
+  // L4
   def getForeignPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
     val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/foreign-property/$calcId", taxYear)
     Link(href = href, method = GET, rel = SELF)
   }
 
-  //L5
+  // L5
   def listBsas(appConfig: AppConfig, nino: String, taxYear: Option[TaxYear]): Link = {
     val href = withTaxYearParameter(bsasBasUri(appConfig, nino), taxYear)
     Link(href = href, method = GET, rel = SELF)
@@ -69,15 +69,16 @@ trait HateoasLinks {
     Link(href = href, method = POST, rel = SUBMIT_SE_ADJUSTMENTS)
   }
 
-  //L7
+  // L7
   def adjustUkPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
     val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/uk-property/$calcId/adjust", taxYear)
     Link(href = href, method = POST, rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS)
   }
 
-  //L8
+  // L8
   def adjustForeignPropertyBsas(appConfig: AppConfig, nino: String, calcId: String, taxYear: Option[TaxYear]): Link = {
     val href = withTaxYearParameter(bsasBasUri(appConfig, nino) + s"/foreign-property/$calcId/adjust", taxYear)
     Link(href = href, method = POST, rel = SUBMIT_FOREIGN_PROPERTY_ADJUSTMENTS)
   }
+
 }

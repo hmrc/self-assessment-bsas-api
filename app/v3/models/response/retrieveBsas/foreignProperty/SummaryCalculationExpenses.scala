@@ -28,7 +28,7 @@ case class SummaryCalculationExpenses(consolidatedExpenses: Option[BigDecimal],
                                       broughtFwdResidentialFinancialCost: Option[BigDecimal],
                                       other: Option[BigDecimal],
                                       travelCosts: Option[BigDecimal],
-)
+                                     )
 
 object SummaryCalculationExpenses {
   implicit val reads: Reads[SummaryCalculationExpenses] = Json.reads[SummaryCalculationExpenses]

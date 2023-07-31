@@ -37,10 +37,6 @@ trait AuditHandler extends RequestContextImplicits {
 
 object AuditHandler {
 
-  trait AuditDetailCreator[A] {
-    def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit ctx: RequestContext): A
-  }
-
   def apply(auditService: AuditService,
             auditType: String,
             transactionName: String,
@@ -72,13 +68,17 @@ object AuditHandler {
       responseBodyMap = responseBodyMap
     )
 
+  trait AuditDetailCreator[A] {
+    def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit ctx: RequestContext): A
+  }
+
   private class AuditHandlerImpl[A: Writes](auditService: AuditService,
                                             auditType: String,
                                             transactionName: String,
                                             auditDetailCreator: AuditDetailCreator[A],
                                             requestBody: Option[JsValue],
                                             responseBodyMap: Option[JsValue] => Option[JsValue])
-      extends AuditHandler {
+    extends AuditHandler {
 
     def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
                                                                                                                  ctx: RequestContext,

@@ -16,9 +16,9 @@
 
 package v3.hateoas
 
-import api.models.hateoas.Method.{ GET, POST }
-import api.models.hateoas.{ Link, Method }
 import api.models.domain.TaxYear
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{Link, Method}
 import mocks.MockAppConfig
 import support.UnitSpec
 import v3.hateoas.RelType._
@@ -30,7 +30,19 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
   private val taxYear2023 = TaxYear.fromMtd("2022-23")
   private val taxYear2024 = TaxYear.fromMtd("2023-24")
 
-  object Target extends HateoasLinks
+  def assertCorrectLink(makeLink: Option[TaxYear] => Link, baseHref: String, method: Method, rel: String): Unit = {
+    "return the correct link" in new Test {
+      makeLink(None) shouldBe Link(href = baseHref, method = method, rel = rel)
+    }
+
+    "not include tax year query parameter given a non-TYS tax year" in new Test {
+      makeLink(Some(taxYear2023)) shouldBe Link(href = baseHref, method = method, rel = rel)
+    }
+
+    "include tax year query parameter given a TYS tax year" in new Test {
+      makeLink(Some(taxYear2024)) shouldBe Link(href = s"$baseHref?taxYear=2023-24", method = method, rel = rel)
+    }
+  }
 
   class Test {
     MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
@@ -109,17 +121,5 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
   }
 
-  def assertCorrectLink(makeLink: Option[TaxYear] => Link, baseHref: String, method: Method, rel: String): Unit = {
-    "return the correct link" in new Test {
-      makeLink(None) shouldBe Link(href = baseHref, method = method, rel = rel)
-    }
-
-    "not include tax year query parameter given a non-TYS tax year" in new Test {
-      makeLink(Some(taxYear2023)) shouldBe Link(href = baseHref, method = method, rel = rel)
-    }
-
-    "include tax year query parameter given a TYS tax year" in new Test {
-      makeLink(Some(taxYear2024)) shouldBe Link(href = s"$baseHref?taxYear=2023-24", method = method, rel = rel)
-    }
-  }
+  object Target extends HateoasLinks
 }

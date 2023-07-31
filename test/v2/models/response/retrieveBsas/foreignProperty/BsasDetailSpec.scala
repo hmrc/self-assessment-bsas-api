@@ -16,9 +16,9 @@
 
 package v2.models.response.retrieveBsas.foreignProperty
 
-import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import play.api.libs.json.Json
 import support.UnitSpec
+import v2.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v2.models.utils.JsonErrorValidators
 
 class BsasDetailSpec extends UnitSpec with JsonErrorValidators {

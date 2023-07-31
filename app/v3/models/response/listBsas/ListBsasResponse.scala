@@ -16,8 +16,7 @@
 
 package v3.models.response.listBsas
 
-import api.hateoas.HateoasListLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasListLinksFactory, Link}
 import api.models.domain.TaxYear
 import cats.Functor
 import config.AppConfig
@@ -29,10 +28,12 @@ case class ListBsasResponse[I](businessSources: Seq[BusinessSourceSummary[I]])
 
 object ListBsasResponse extends HateoasLinks {
 
-  implicit def reads[I: Reads]: Reads[ListBsasResponse[I]]     = implicitly[Reads[Seq[BusinessSourceSummary[I]]]].map(ListBsasResponse(_))
+  implicit def reads[I: Reads]: Reads[ListBsasResponse[I]] = implicitly[Reads[Seq[BusinessSourceSummary[I]]]].map(ListBsasResponse(_))
+
   implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] = Json.writes[ListBsasResponse[I]]
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListBsasResponse, BsasSummary, ListBsasHateoasData] {
+
     override def links(appConfig: AppConfig, data: ListBsasHateoasData): Seq[Link] = Seq(
       triggerBsas(appConfig, data.nino),
       listBsas(appConfig, data.nino, data.taxYear)
@@ -41,25 +42,28 @@ object ListBsasResponse extends HateoasLinks {
     override def itemLinks(appConfig: AppConfig, data: ListBsasHateoasData, item: BsasSummary): Seq[Link] = {
       val filteredSummary: Seq[BusinessSourceSummary[BsasSummary]] = data.listBsasResponse.businessSources.filter(_.summaries.contains(item))
 
-      filteredSummary.flatMap(
-        summary =>
-          summary.summaries
-            .filter(_ == item)
-            .map(_ =>
-              summary.typeOfBusiness match {
-                case `self-employment`                               => getSelfEmploymentBsas(appConfig, data.nino, item.calculationId, data.taxYear)
-                case `uk-property-fhl` | `uk-property-non-fhl`       => getUkPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
-                case `foreign-property` | `foreign-property-fhl-eea` => getForeignPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
+      filteredSummary.flatMap(summary =>
+        summary.summaries
+          .filter(_ == item)
+          .map(_ =>
+            summary.typeOfBusiness match {
+              case `self-employment`                               => getSelfEmploymentBsas(appConfig, data.nino, item.calculationId, data.taxYear)
+              case `uk-property-fhl` | `uk-property-non-fhl`       => getUkPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
+              case `foreign-property` | `foreign-property-fhl-eea` => getForeignPropertyBsas(appConfig, data.nino, item.calculationId, data.taxYear)
             }))
     }
+
   }
 
   implicit object ResponseFunctor extends Functor[ListBsasResponse] {
+
     override def map[A, B](fa: ListBsasResponse[A])(f: A => B): ListBsasResponse[B] =
       ListBsasResponse(fa.businessSources.map { summary =>
         summary.copy(summaries = summary.summaries.map(f))
       })
+
   }
+
 }
 
 case class ListBsasHateoasData(nino: String, listBsasResponse: ListBsasResponse[BsasSummary], taxYear: Option[TaxYear]) extends HateoasData

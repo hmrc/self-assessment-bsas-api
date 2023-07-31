@@ -17,24 +17,22 @@
 package v2.controllers.requestParsers
 
 import api.models.domain.Nino
+import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import support.UnitSpec
 import v2.mocks.validators.MockRetrieveForeignPropertyValidator
-import api.models.errors.{BadRequestError, BsasIdFormatError, ErrorWrapper, NinoFormatError}
 import v2.models.request.retrieveBsas.foreignProperty.{RetrieveForeignPropertyBsasRequestData, RetrieveForeignPropertyRawData}
 
 class RetrieveForeignPropertyRequestParserSpec extends UnitSpec {
+  val nino = "AA123456A"
+  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val adjustedStatus = Some("true")
+  val inputRawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedStatus)
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), bsasId, Some("3"))
 
   trait Test extends MockRetrieveForeignPropertyValidator {
     lazy val parser = new RetrieveForeignPropertyRequestParser(mockValidator)
   }
-
-  val nino = "AA123456A"
-  val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val adjustedStatus = Some("true")
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  val inputRawData = RetrieveForeignPropertyRawData(nino, bsasId, adjustedStatus)
-  val outputRequestData = RetrieveForeignPropertyBsasRequestData(Nino(nino), bsasId, Some("3"))
 
   "parser" should {
     "return a valid request object" when {

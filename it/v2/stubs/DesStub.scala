@@ -23,6 +23,13 @@ import support.WireMockMethods
 
 object DesStub extends WireMockMethods {
 
+  private val responseBody = Json.parse(
+    """
+      | {
+      | "responseData" : "someResponse"
+      | }
+    """.stripMargin)
+
   def onSuccess(method: HTTPMethod, uri: String, status: Int, body: JsValue): StubMapping = {
     when(method = method, uri = uri)
       .thenReturn(status = status, body)
@@ -43,16 +50,6 @@ object DesStub extends WireMockMethods {
       .thenReturn(status = errorStatus, errorBody)
   }
 
-  private val responseBody = Json.parse(
-    """
-      | {
-      | "responseData" : "someResponse"
-      | }
-    """.stripMargin)
-
-  private def url(nino: String, taxYear: String): String =
-    s"/income-tax/nino/$nino/taxYear/$taxYear/someService"
-
   def serviceSuccess(nino: String, taxYear: String): StubMapping = {
     when(method = POST, uri = url(nino, taxYear))
       .thenReturn(status = OK, responseBody)
@@ -62,4 +59,7 @@ object DesStub extends WireMockMethods {
     when(method = POST, uri = url(nino, taxYear))
       .thenReturn(status = errorStatus, errorBody)
   }
+
+  private def url(nino: String, taxYear: String): String =
+    s"/income-tax/nino/$nino/taxYear/$taxYear/someService"
 }

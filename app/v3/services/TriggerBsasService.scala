@@ -19,18 +19,18 @@ package v3.services
 import api.controllers.RequestContext
 import api.models
 import api.models.errors._
-import api.services.{ BaseService, ServiceOutcome }
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v3.connectors.TriggerBsasConnector
 import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends BaseService {
+class TriggerBsasService @Inject() (connector: TriggerBsasConnector) extends BaseService {
 
   def triggerBsas(request: TriggerBsasRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[TriggerBsasResponse]] =
     connector
@@ -58,4 +58,5 @@ class TriggerBsasService @Inject()(connector: TriggerBsasConnector) extends Base
 
     errors ++ extraTysErrors
   }
+
 }

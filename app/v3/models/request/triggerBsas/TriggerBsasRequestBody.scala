@@ -16,12 +16,12 @@
 
 package v3.models.request.triggerBsas
 
-import play.api.libs.json.{ Json, OWrites, Reads }
+import play.api.libs.json.{Json, OWrites, Reads}
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.AccountingPeriod
 
-/**
-  * @param typeOfBusiness reads "self-employment" etc from the vendor request, writes "01" etc to the downstream request.
+/** @param typeOfBusiness
+  *   reads "self-employment" etc from the vendor request, writes "01" etc to the downstream request.
   */
 case class TriggerBsasRequestBody(accountingPeriod: AccountingPeriod, typeOfBusiness: String, businessId: String)
 
@@ -38,4 +38,5 @@ object TriggerBsasRequestBody {
       "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate
     )
   }
+
 }

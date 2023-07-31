@@ -19,19 +19,19 @@ package v3.models.response.retrieveBsas.ukProperty
 import play.api.libs.json._
 
 case class AdjustedSummaryCalculation(
-    totalIncome: Option[BigDecimal],
-    income: Option[SummaryCalculationIncome],
-    totalExpenses: Option[BigDecimal],
-    expenses: Option[SummaryCalculationExpenses],
-    netProfit: Option[BigDecimal],
-    netLoss: Option[BigDecimal],
-    totalAdditions: Option[BigDecimal],
-    additions: Option[SummaryCalculationAdditions],
-    totalDeductions: Option[BigDecimal],
-    deductions: Option[SummaryCalculationDeductions],
-    taxableProfit: Option[BigDecimal],
-    adjustedIncomeTaxLoss: Option[BigDecimal],
-)
+                                       totalIncome: Option[BigDecimal],
+                                       income: Option[SummaryCalculationIncome],
+                                       totalExpenses: Option[BigDecimal],
+                                       expenses: Option[SummaryCalculationExpenses],
+                                       netProfit: Option[BigDecimal],
+                                       netLoss: Option[BigDecimal],
+                                       totalAdditions: Option[BigDecimal],
+                                       additions: Option[SummaryCalculationAdditions],
+                                       totalDeductions: Option[BigDecimal],
+                                       deductions: Option[SummaryCalculationDeductions],
+                                       taxableProfit: Option[BigDecimal],
+                                       adjustedIncomeTaxLoss: Option[BigDecimal],
+                                     )
 
 object AdjustedSummaryCalculation {
   implicit val readsFhl: Reads[AdjustedSummaryCalculation] = summaryCalculationReadsFhl(AdjustedSummaryCalculation.apply _)

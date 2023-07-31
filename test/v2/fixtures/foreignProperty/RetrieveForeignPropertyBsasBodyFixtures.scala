@@ -16,11 +16,11 @@
 
 package v2.fixtures.foreignProperty
 
-import java.time.LocalDate
-
 import v2.models.domain.TypeOfBusiness
 import v2.models.response.retrieveBsas.foreignProperty._
 import v2.models.response.retrieveBsas.{AccountingPeriod, Loss, Profit, TotalBsas}
+
+import java.time.LocalDate
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 

@@ -16,13 +16,13 @@
 
 package v3.connectors
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v3.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v3.fixtures.selfEmployment.IncomeFixture.incomeModel
-import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 
 import scala.concurrent.Future
 
@@ -36,41 +36,44 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     )
 
   private val nino          = Nino("AA123456A")
-  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
     val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
   }
 
   "submitBsas" must {
 
     "post a SubmitBsasRequest body and return the result" in new IfsTest with Test {
-      val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
       val request: SubmitSelfEmploymentBsasRequestData =
-        SubmitSelfEmploymentBsasRequestData(nino, CalculationId(calculationId), None, submitSelfEmploymentBsasRequestBodyModel)
+        SubmitSelfEmploymentBsasRequestData(nino, calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
+
+      val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
       willPut(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId",
         body = submitSelfEmploymentBsasRequestBodyModel
       ).returns(Future.successful(outcome))
 
-      await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome
+      val result: DownstreamOutcome[Unit] = await(connector.submitSelfEmploymentBsas(request))
+      result shouldBe outcome
     }
 
     "post a SubmitBsasRequest body and return the result for a TYS tax year" in new TysIfsTest with Test {
-      val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
       val request: SubmitSelfEmploymentBsasRequestData =
-        SubmitSelfEmploymentBsasRequestData(nino,
-                                            CalculationId(calculationId),
-                                            Some(TaxYear.fromMtd("2023-24")),
-                                            submitSelfEmploymentBsasRequestBodyModel)
+        SubmitSelfEmploymentBsasRequestData(nino, calculationId, Some(TaxYear.fromMtd("2023-24")), submitSelfEmploymentBsasRequestBodyModel)
+
+      val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/${nino.nino}/$calculationId",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId",
         body = submitSelfEmploymentBsasRequestBodyModel
       ).returns(Future.successful(outcome))
 
-      await(connector.submitSelfEmploymentBsas(request)) shouldBe outcome
+      val result: DownstreamOutcome[Unit] = await(connector.submitSelfEmploymentBsas(request))
+      result shouldBe outcome
     }
   }
+
 }

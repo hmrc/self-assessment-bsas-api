@@ -18,7 +18,7 @@ package api.models.domain
 
 import play.api.libs.json.Writes
 
-import java.time.{ LocalDate, ZoneOffset }
+import java.time.{LocalDate, ZoneOffset}
 
 /** Opaque representation of a tax year.
   *
@@ -31,16 +31,14 @@ final case class TaxYear private (private val value: String) {
     */
   val year: Int = value.toInt
 
-  /**
-    * e.g. for tax year 2023-24, "2023-04-06"
+  /** e.g. for tax year 2023-24, "2023-04-06"
     */
   val taxYearStart: String = {
     val fromYear = year - 1
     s"$fromYear-04-06"
   }
 
-  /**
-    * e.g. for tax year 2023-24, "2024-04-05"
+  /** e.g. for tax year 2023-24, "2024-04-05"
     */
   val taxYearEnd: String = {
     s"$year-04-05"
@@ -62,9 +60,9 @@ final case class TaxYear private (private val value: String) {
   /** The tax year in the Tax Year Specific downstream format, e.g. "23-24".
     */
   val asTysDownstream: String = {
-    val year2 = value.toInt - 2000
-    val year1 = year2 - 1
-    s"$year1-$year2"
+    val yearTwo = value.toInt - 2000
+    val yearOne = yearTwo - 1
+    s"$yearOne-$yearTwo"
   }
 
   /** Use this for downstream API endpoints that are known to be TYS.
@@ -89,10 +87,12 @@ object TaxYear {
     *   tax year in MTD format (e.g. 2017-18)
     */
   def fromMtd(taxYear: String): TaxYear =
-    new TaxYear(taxYear.take(2) + taxYear.drop(5))
+    TaxYear(taxYear.take(2) + taxYear.drop(5))
+
+  def now(): TaxYear = TaxYear.fromIso(LocalDate.now().toString)
 
   /** @param date
-    * the date in extended ISO-8601 format (e.g. 2020-04-05)
+    *   the date in extended ISO-8601 format (e.g. 2020-04-05)
     */
   def fromIso(date: String): TaxYear = {
     val date1 = LocalDate.parse(date)

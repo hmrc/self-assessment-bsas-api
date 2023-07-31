@@ -19,6 +19,7 @@ package v3.models.response.listBsas
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v3.fixtures.ListBsasFixture
+
 class BsasSummarySpec extends UnitSpec with ListBsasFixture {
 
   "BsasSummary" when {
@@ -36,7 +37,7 @@ class BsasSummarySpec extends UnitSpec with ListBsasFixture {
 
     "written to JSON" should {
       "return the expected JSON" in {
-          Json.toJson(bsasSummaryModel) shouldBe bsasSummaryJson
+        Json.toJson(bsasSummaryModel) shouldBe bsasSummaryJson
       }
     }
   }

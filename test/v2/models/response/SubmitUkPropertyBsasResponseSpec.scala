@@ -16,9 +16,8 @@
 
 package v2.models.response
 
-import api.hateoas.HateoasFactory
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.GET
+import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
@@ -83,7 +82,7 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec {
       hateoasFactory.wrap(submitBsasResponse, SubmitUkPropertyBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
           submitBsasResponse,
-          Seq(
+          List(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", GET, "self"),
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
           )
