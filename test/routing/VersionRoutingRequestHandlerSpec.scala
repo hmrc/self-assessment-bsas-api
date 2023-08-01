@@ -39,7 +39,6 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   import play.api.routing.sird._
 
   object DefaultHandler extends Handler
-  object V2Handler      extends Handler
   object V3Handler      extends Handler
 
   private val defaultRouter = Router.from { case GET(p"") =>
