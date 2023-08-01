@@ -17,8 +17,7 @@
 package v3.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
@@ -32,11 +31,12 @@ trait MockSubmitUkPropertyBsasService extends MockFactory {
 
   object MockSubmitUkPropertyBsasService {
 
-    def submitPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def submitPropertyBsas(requestData: SubmitUkPropertyBsasRequestData): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (mockService
         .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
+
   }
 
 }

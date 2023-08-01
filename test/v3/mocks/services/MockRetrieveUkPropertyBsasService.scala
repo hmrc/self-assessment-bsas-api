@@ -17,8 +17,7 @@
 package v3.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
@@ -33,11 +32,12 @@ trait MockRetrieveUkPropertyBsasService extends MockFactory {
 
   object MockRetrieveUkPropertyBsasService {
 
-    def retrieveBsas(requestData: RetrieveUkPropertyBsasRequestData)
-    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkPropertyBsasResponse]]]] = {
+    def retrieveBsas(requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[ServiceOutcome[RetrieveUkPropertyBsasResponse]]] = {
       (mockService
         .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
+
   }
+
 }

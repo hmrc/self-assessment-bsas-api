@@ -20,6 +20,7 @@ import api.controllers.validators.Validator
 import api.hateoas.{HateoasData, HateoasFactory, HateoasLinksFactory, HateoasWrapper}
 import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
@@ -51,14 +52,14 @@ object RequestHandler {
   // Intermediate class so that the compiler can separately capture the InputRaw and Input types here, and the Output type later
   class ValidatorOnlyBuilder[Input] private[RequestHandler] (validator: Validator[Input]) {
 
-    def withService[Output](serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[Input, Output] =
+    def withService[Output](serviceFunction: Input => Future[ServiceOutcome[Output]]): RequestHandlerBuilder[Input, Output] =
       RequestHandlerBuilder(validator, serviceFunction)
 
   }
 
   case class RequestHandlerBuilder[Input, Output] private[RequestHandler] (
       validator: Validator[Input],
-      service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+      service: Input => Future[ServiceOutcome[Output]],
       errorHandling: ErrorHandling = ErrorHandling.Default,
       resultCreator: ResultCreator[Input, Output] = ResultCreator.noContent[Input, Output](),
       auditHandler: Option[AuditHandler] = None

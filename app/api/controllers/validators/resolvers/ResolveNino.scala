@@ -17,9 +17,9 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.Nino
-import api.models.errors.{ MtdError, NinoFormatError }
+import api.models.errors.{MtdError, NinoFormatError}
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 
 object ResolveNino extends Resolver[String, Nino] {
 
@@ -33,4 +33,5 @@ object ResolveNino extends Resolver[String, Nino] {
     else
       Invalid(List(withError(error, NinoFormatError, path)))
   }
+
 }

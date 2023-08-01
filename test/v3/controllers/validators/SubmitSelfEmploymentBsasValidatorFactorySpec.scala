@@ -16,7 +16,7 @@
 
 package v3.controllers.validators
 
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors._
 import api.models.utils.JsonErrorValidators
 import org.scalatest.Assertion
@@ -192,7 +192,6 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
         List(
           "/income/turnover",
           "/income/other",
-          // "/expenses/consolidatedExpenses",
           "/expenses/costOfGoodsAllowable",
           "/expenses/paymentsToSubcontractorsAllowable",
           "/expenses/wagesAndStaffCostsAllowable",
@@ -228,7 +227,7 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
 
       "consolidated expenses is invalid" when {
         List(
-          "/expenses/consolidatedExpenses",
+          "/expenses/consolidatedExpenses"
         ).foreach(path => testWith(mtdRequestWithOnlyConsolidatedExpenses.update(path, _), path))
       }
 
@@ -335,4 +334,5 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
       )
     }
   }
+
 }
