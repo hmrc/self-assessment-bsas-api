@@ -49,7 +49,6 @@ object RequestHandler {
   def withValidator[Input](validator: Validator[Input]): ValidatorOnlyBuilder[Input] =
     new ValidatorOnlyBuilder[Input](validator)
 
-  // Intermediate class so that the compiler can separately capture the InputRaw and Input types here, and the Output type later
   class ValidatorOnlyBuilder[Input] private[RequestHandler] (validator: Validator[Input]) {
 
     def withService[Output](serviceFunction: Input => Future[ServiceOutcome[Output]]): RequestHandlerBuilder[Input, Output] =
