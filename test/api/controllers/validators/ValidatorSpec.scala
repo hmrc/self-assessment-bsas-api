@@ -16,15 +16,15 @@
 
 package api.controllers.validators
 
-import api.controllers.validators.resolvers.{ ResolveJsonObject, ResolveNino, ResolveTaxYear }
-import api.models.domain.{ Nino, TaxYear }
+import api.controllers.validators.resolvers.{ResolveJsonObject, ResolveNino, ResolveTaxYear}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
 import org.scalamock.scalatest.MockFactory
 import play.api.http.Status.BAD_REQUEST
-import play.api.libs.json.{ JsValue, Json, Reads }
+import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 
 class ValidatorSpec extends UnitSpec with MockFactory {
@@ -35,11 +35,11 @@ class ValidatorSpec extends UnitSpec with MockFactory {
   private val validTaxYear = TaxYear.fromMtd("2023-24")
 
   private val validBody = Json.parse("""
-                                       | {
-                                       |   "value1": "value 1",
-                                       |   "value2": true
-                                       | }
-                                       |""".stripMargin)
+    | {
+    |   "value1": "value 1",
+    |   "value2": true
+    | }
+    |""".stripMargin)
 
   private val parsedRequestBody = TestParsedRequestBody("value 1", value2 = true)
   private val parsedRequest     = TestParsedRequest(validNino, validTaxYear, parsedRequestBody)
@@ -61,6 +61,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
         ResolveTaxYear(taxYear),
         jsonResolver(jsonBody, RuleIncorrectOrEmptyBodyError)
       ).mapN(TestParsedRequest) andThen TestRulesValidator.validateBusinessRules
+
   }
 
   /** Perform additional business-rules validation on the correctly parsed request.
@@ -71,12 +72,12 @@ class ValidatorSpec extends UnitSpec with MockFactory {
       val resolvedValue1 = if (parsed.body.value1 == "value 1") valid else Invalid(List(RuleValue1Invalid))
       val resolvedValue2 = if (parsed.body.value2) valid else Invalid(List(RuleValue2Invalid))
 
-      combineResults(
-        parsed,
+      combine(
         resolvedValue1,
         resolvedValue2
-      )
+      ).onSuccess(parsed)
     }
+
   }
 
   private object RuleValue1Invalid extends MtdError("RULE_VALUE_1_INVALID", "value1 can only be 'value 1'", BAD_REQUEST)
@@ -110,11 +111,11 @@ class ValidatorSpec extends UnitSpec with MockFactory {
     "return an error from the Json body" when {
       "given a request with valid params and an invalid body" in {
         val jsonRequestBody = Json.parse("""
-                                           | {
-                                           |   "value1": "value 1",
-                                           |   "value2": "not-a-boolean"
-                                           | }
-                                           |""".stripMargin)
+          | {
+          |   "value1": "value 1",
+          |   "value2": "not-a-boolean"
+          | }
+          |""".stripMargin)
 
         val validator = new TestValidator(jsonBody = jsonRequestBody)
         val result    = validator.validateAndWrapResult()

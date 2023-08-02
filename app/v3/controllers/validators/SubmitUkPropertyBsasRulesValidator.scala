@@ -49,13 +49,12 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
         ((valid, valid))
     }
 
-    combineResults(
-      parsed,
+    combine(
       validatedFhl,
       validatedFhlConsolidated,
       validatedNonFhl,
       validatedNonFhlConsolidated
-    )
+    ).onSuccess(parsed)
   }
 
   private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
@@ -64,7 +63,7 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
     resolveAdjustment(value, path = Some(path)).map(_ => ())
 
   private def validateFhl(fhl: FurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
-    combineProgress(
+    combine(
       resolveAdjusted("/furnishedHolidayLet/income/totalRentsReceived", fhl.income.flatMap(_.totalRentsReceived)),
       resolveAdjusted("/furnishedHolidayLet/expenses/premisesRunningCosts", fhl.expenses.flatMap(_.premisesRunningCosts)),
       resolveAdjusted("/furnishedHolidayLet/expenses/repairsAndMaintenance", fhl.expenses.flatMap(_.repairsAndMaintenance)),
@@ -78,7 +77,7 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
   }
 
   private def validateNonFhl(nonFhl: NonFurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
-    combineProgress(
+    combine(
       resolveAdjusted("/nonFurnishedHolidayLet/income/totalRentsReceived", nonFhl.income.flatMap(_.totalRentsReceived)),
       resolveAdjusted("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", nonFhl.income.flatMap(_.premiumsOfLeaseGrant)),
       resolveAdjusted("/nonFurnishedHolidayLet/income/reversePremiums", nonFhl.income.flatMap(_.reversePremiums)),

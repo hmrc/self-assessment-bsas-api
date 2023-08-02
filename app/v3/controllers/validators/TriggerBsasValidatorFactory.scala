@@ -16,27 +16,19 @@
 
 package v3.controllers.validators
 
+import api.controllers.validators.Validator
 import api.controllers.validators.resolvers._
-import api.controllers.validators.{ RulesValidator, Validator }
 import api.models.errors.MtdError
 import cats.data.Validated
-import cats.data.Validated.Invalid
 import cats.implicits._
-import config.AppConfig
 import play.api.libs.json.JsValue
-import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
-import v3.models.domain.TypeOfBusiness
-import v3.models.domain.TypeOfBusiness.{ `foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl` }
-import v3.models.errors.RuleAccountingPeriodNotSupportedError
-import v3.models.request.triggerBsas.{ TriggerBsasRequestBody, TriggerBsasRequestData }
+import v3.models.request.triggerBsas.{TriggerBsasRequestBody, TriggerBsasRequestData}
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import scala.annotation.nowarn
 
 @Singleton
-class TriggerBsasValidatorFactory @Inject()(rulesValidator: TriggerBsasRulesValidator) {
+class TriggerBsasValidatorFactory @Inject() (rulesValidator: TriggerBsasRulesValidator) {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[TriggerBsasRequestBody]()
@@ -50,55 +42,7 @@ class TriggerBsasValidatorFactory @Inject()(rulesValidator: TriggerBsasRulesVali
           resolveJson(body)
         ).mapN(TriggerBsasRequestData) andThen rulesValidator.validateBusinessRules
       }
+
     }
-}
-
-@Singleton
-class TriggerBsasRulesValidator @Inject()(appConfig: AppConfig) extends RulesValidator[TriggerBsasRequestData] {
-
-  private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
-    s"${appConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
-    DateTimeFormatter.ISO_LOCAL_DATE
-  )
-
-  private lazy val selfEmploymentAndUkPropertyEarliestEndDate: LocalDate = LocalDate.parse(
-    s"${appConfig.v3TriggerNonForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
-    DateTimeFormatter.ISO_LOCAL_DATE
-  )
-
-  def validateBusinessRules(parsed: TriggerBsasRequestData): Validated[Seq[MtdError], TriggerBsasRequestData] = {
-    import parsed.body
-    import parsed.body.accountingPeriod._
-
-    val (validatedBusinessId, validatedDateRange, validatedTypeOfBusiness) = (
-      ResolveBusinessId(body.businessId),
-      ResolveDateRange(startDate -> endDate),
-      ResolveTypeOfBusiness(body.typeOfBusiness)
-    )
-
-    (
-      validatedBusinessId,
-      validatedDateRange,
-      validatedTypeOfBusiness
-    ).mapN((_, _, _))
-      .andThen { case (_, dateRange, typeOfBusiness) => validateAccountingPeriodNotSupported(dateRange.endDate, typeOfBusiness) }
-      .map(_ => parsed)
-  }
-
-  private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusiness): Validated[Seq[MtdError], Unit] = {
-
-    val earliestDate: LocalDate = typeOfBusiness match {
-      case `self-employment` | `uk-property-fhl` | `uk-property-non-fhl` =>
-        selfEmploymentAndUkPropertyEarliestEndDate
-      case `foreign-property-fhl-eea` | `foreign-property` =>
-        foreignPropertyEarliestEndDate
-    }
-
-    if (endDate.isBefore(earliestDate)) {
-      Invalid(List(RuleAccountingPeriodNotSupportedError))
-    } else {
-      valid
-    }
-  }
 
 }

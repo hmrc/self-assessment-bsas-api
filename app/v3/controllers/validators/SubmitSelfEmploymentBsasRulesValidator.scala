@@ -37,13 +37,12 @@ object SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[SubmitSelfE
 
     val validatedAdditions = body.additions.map(validateAdditions).getOrElse(valid)
 
-    combineResults(
-      parsed,
+    combine(
       validatedIncome,
       validatedExpenses,
       validatedBothExpenses,
       validatedAdditions
-    )
+    ).onSuccess(parsed)
   }
 
   private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
@@ -52,14 +51,14 @@ object SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[SubmitSelfE
     resolveAdjustment(value, path = Some(path)).map(_ => ())
 
   private def validateIncome(income: Income): Validated[Seq[MtdError], Unit] = {
-    combineProgress(
+    combine(
       resolveAdjusted("/income/turnover", income.turnover),
       resolveAdjusted("/income/other", income.other)
     )
   }
 
   private def validateExpenses(expenses: Expenses): Validated[Seq[MtdError], Unit] =
-    combineProgress(
+    combine(
       resolveAdjusted("/expenses/costOfGoodsAllowable", expenses.costOfGoodsAllowable),
       resolveAdjusted("/expenses/paymentsToSubcontractorsAllowable", expenses.paymentsToSubcontractorsAllowable),
       resolveAdjusted("/expenses/wagesAndStaffCostsAllowable", expenses.wagesAndStaffCostsAllowable),
@@ -75,11 +74,11 @@ object SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[SubmitSelfE
       resolveAdjusted("/expenses/otherExpensesAllowable", expenses.otherExpensesAllowable),
       resolveAdjusted("/expenses/advertisingCostsAllowable", expenses.advertisingCostsAllowable),
       resolveAdjusted("/expenses/businessEntertainmentCostsAllowable", expenses.businessEntertainmentCostsAllowable),
-      resolveAdjusted("/expenses/consolidatedExpenses", expenses.consolidatedExpenses),
+      resolveAdjusted("/expenses/consolidatedExpenses", expenses.consolidatedExpenses)
     )
 
   private def validateAdditions(additions: Additions): Validated[Seq[MtdError], Unit] =
-    combineProgress(
+    combine(
       resolveAdjusted("/additions/costOfGoodsDisallowable", additions.costOfGoodsDisallowable),
       resolveAdjusted("/additions/paymentsToSubcontractorsDisallowable", additions.paymentsToSubcontractorsDisallowable),
       resolveAdjusted("/additions/wagesAndStaffCostsDisallowable", additions.wagesAndStaffCostsDisallowable),
@@ -94,7 +93,7 @@ object SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[SubmitSelfE
       resolveAdjusted("/additions/depreciationDisallowable", additions.depreciationDisallowable),
       resolveAdjusted("/additions/otherExpensesDisallowable", additions.otherExpensesDisallowable),
       resolveAdjusted("/additions/advertisingCostsDisallowable", additions.advertisingCostsDisallowable),
-      resolveAdjusted("/additions/businessEntertainmentCostsDisallowable", additions.businessEntertainmentCostsDisallowable),
+      resolveAdjusted("/additions/businessEntertainmentCostsDisallowable", additions.businessEntertainmentCostsDisallowable)
     )
 
   private def validateBothExpenses(expenses: Expenses, additions: Option[Additions]): Validated[Seq[MtdError], Unit] = {

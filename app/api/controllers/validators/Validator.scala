@@ -16,26 +16,10 @@
 
 package api.controllers.validators
 
-import api.models.errors.{ BadRequestError, ErrorWrapper, MtdError }
+import api.models.errors.{BadRequestError, ErrorWrapper, MtdError}
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
-import cats.implicits._
+import cats.data.Validated.{Invalid, Valid}
 import utils.Logging
-
-trait RulesValidator[PARSED] extends Logging {
-
-  protected val valid: Validated[Seq[MtdError], Unit] = Valid(())
-
-  def validateBusinessRules(parsed: PARSED): Validated[Seq[MtdError], PARSED]
-
-  protected def combineResults(parsed: PARSED, results: Validated[Seq[MtdError], _]*): Validated[Seq[MtdError], PARSED] =
-    results.traverse_(identity).map(_ => parsed)
-
-  protected def combineProgress(results: Validated[Seq[MtdError], _]*): Validated[Seq[MtdError], Unit] =
-    results.traverse_(identity)
-}
-
-object Validator {}
 
 trait Validator[PARSED] extends Logging {
 
@@ -63,21 +47,18 @@ trait Validator[PARSED] extends Logging {
   private def combineErrors(errors: Seq[MtdError]): Seq[MtdError] = {
     errors
       .groupBy(_.message)
-      .map {
-        case (_, errors) =>
-          val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
+      .map { case (_, errors) =>
+        val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
 
-          errors.fold(baseError)(
-            (error1, error2) => {
-              val paths: Option[Seq[String]] = for {
-                error1Paths <- error1.paths
-                error2Paths <- error2.paths
-              } yield {
-                error1Paths ++ error2Paths
-              }
-              error1.copy(paths = paths)
-            }
-          )
+        errors.fold(baseError)((error1, error2) => {
+          val paths: Option[Seq[String]] = for {
+            error1Paths <- error1.paths
+            error2Paths <- error2.paths
+          } yield {
+            error1Paths ++ error2Paths
+          }
+          error1.copy(paths = paths)
+        })
       }
       .toList
   }

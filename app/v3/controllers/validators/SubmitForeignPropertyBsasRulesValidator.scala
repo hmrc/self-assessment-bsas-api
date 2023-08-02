@@ -53,13 +53,12 @@ object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitFore
         (valid, valid)
     }
 
-    combineResults(
-      parsed,
+    combine(
       validatedForeignFhlEea,
       validatedForeignFhlEeaConsolidated,
       validatedNonFurnishedHolidayLets,
       validatedDuplicateCountryCode
-    )
+    ).onSuccess(parsed)
   }
 
   private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
@@ -68,7 +67,7 @@ object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitFore
     resolveAdjustment(value, path = Some(path)).map(_ => ())
 
   private def validateForeignFhlEea(foreignFhlEea: FhlEea): Validated[Seq[MtdError], Unit] =
-    combineProgress(
+    combine(
       resolveAdjusted("/foreignFhlEea/income/totalRentsReceived", foreignFhlEea.income.flatMap(_.totalRentsReceived)),
       resolveAdjusted("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts)),
       resolveAdjusted("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance)),
@@ -124,7 +123,7 @@ object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitFore
 
     def path(suffix: String) = s"/nonFurnishedHolidayLet/$index/$suffix"
 
-    combineProgress(
+    combine(
       ResolveParsedCountryCode(foreignProperty.countryCode, path = Some(path("countryCode"))).map(_ => ()),
       resolveAdjusted(path("income/totalRentsReceived"), foreignProperty.income.flatMap(_.totalRentsReceived)),
       resolveAdjusted(path("income/premiumsOfLeaseGrant"), foreignProperty.income.flatMap(_.premiumsOfLeaseGrant)),
