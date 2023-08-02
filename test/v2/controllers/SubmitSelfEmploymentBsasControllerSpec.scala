@@ -30,7 +30,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsJson, Result}
 import routing.Version2
-import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v2.mocks.requestParsers.MockSubmitSelfEmploymentRequestParser
 import v2.mocks.services._
 import v2.models.domain.TypeOfBusiness
@@ -56,29 +56,6 @@ class SubmitSelfEmploymentBsasControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new SubmitSelfEmploymentBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
-  import v2.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
-
   private val nino = "AA123456A"
 
   private val bsasId = "c75f40a6-a3df-4429-a697-471eeec46435"
@@ -86,9 +63,9 @@ class SubmitSelfEmploymentBsasControllerSpec
   private val rawRequest = SubmitSelfEmploymentBsasRawData(nino, bsasId, AnyContentAsJson(mtdRequest))
   private val request    = SubmitSelfEmploymentBsasRequestData(Nino(nino), bsasId, submitSelfEmploymentBsasRequestBodyModel)
 
-  val response = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
+  private val response = SubmitSelfEmploymentBsasResponse(bsasId, TypeOfBusiness.`self-employment`)
 
-  val testHateoasLinks: Seq[Link] = Seq(
+  private val testHateoasLinks = List(
     Link(
       href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$bsasId/adjust",
       method = GET,
@@ -101,7 +78,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     )
   )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+  private def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "submitBusinessSourceAccountingAdjustments",
       transactionName = "submit-self-employment-accounting-adjustments",
@@ -161,12 +138,12 @@ class SubmitSelfEmploymentBsasControllerSpec
           contentAsJson(result) shouldBe Json.toJson(error)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(List(AuditError(error.code))), None)
           MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
         }
       }
 
-      val input = Seq(
+      val input = List(
         (BadRequestError, BAD_REQUEST),
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
@@ -180,8 +157,8 @@ class SubmitSelfEmploymentBsasControllerSpec
       input.foreach(args => (errorsFromParserTester _).tupled(args))
 
       "multiple parser errors occur" in new Test {
-
-        val error = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BsasIdFormatError)))
+        val error: ErrorWrapper =
+          ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, BsasIdFormatError)))
 
         MockSubmitSelfEmploymentBsasDataParser
           .parse(rawRequest)
@@ -197,7 +174,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           AuditResponse(
             httpStatus = BAD_REQUEST,
             errors = Some(
-              Seq(
+              List(
                 AuditError(NinoFormatError.code),
                 AuditError(BsasIdFormatError.code)
               )),
@@ -208,13 +185,13 @@ class SubmitSelfEmploymentBsasControllerSpec
       }
 
       "multiple errors occur for the customised errors" in new Test {
-        val error = ErrorWrapper(
+        val error: ErrorWrapper = ErrorWrapper(
           correlationId,
           BadRequestError,
           Some(
-            Seq(
-              FormatAdjustmentValueError.copy(paths = Some(Seq("turnover"))),
-              RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("other")))
+            List(
+              FormatAdjustmentValueError.copy(paths = Some(List("turnover"))),
+              RuleAdjustmentRangeInvalid.copy(paths = Some(List("other")))
             )
           )
         )
@@ -230,13 +207,14 @@ class SubmitSelfEmploymentBsasControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse =
-          AuditResponse(httpStatus = BAD_REQUEST,
-                        errors = Some(
-                          Seq(
-                            AuditError(FormatAdjustmentValueError.code),
-                            AuditError(RuleAdjustmentRangeInvalid.code)
-                          )),
-                        body = None)
+          AuditResponse(
+            httpStatus = BAD_REQUEST,
+            errors = Some(
+              List(
+                AuditError(FormatAdjustmentValueError.code),
+                AuditError(RuleAdjustmentRangeInvalid.code)
+              )),
+            body = None)
 
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
       }
@@ -264,12 +242,12 @@ class SubmitSelfEmploymentBsasControllerSpec
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(List(AuditError(mtdError.code))), None)
           MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
         }
       }
 
-      val input = Seq(
+      val input = List(
         (NinoFormatError, BAD_REQUEST),
         (BsasIdFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
@@ -284,6 +262,26 @@ class SubmitSelfEmploymentBsasControllerSpec
       )
       input.foreach(args => (serviceErrors _).tupled(args))
     }
+  }
+
+  private trait Test {
+
+    protected val controller = new SubmitSelfEmploymentBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
   }
 
 }

@@ -27,33 +27,33 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames {
 
-  lazy val baseUrl = "http://test-BaseUrl"
+  lazy val baseUrl                   = "http://test-BaseUrl"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val otherHeaders: Seq[(String, String)] = Seq(
+  val otherHeaders: Seq[(String, String)] = List(
     "Gov-Test-Scenario" -> "DEFAULT",
-    "AnotherHeader" -> "HeaderValue"
+    "AnotherHeader"     -> "HeaderValue"
   )
 
-  implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+  implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
 
   val dummyHeaderCarrierConfig: HeaderCarrier.Config =
     HeaderCarrier.Config(
-      Seq("^not-test-BaseUrl?$".r),
+      List("^not-test-BaseUrl?$".r),
       Seq.empty[String],
       Some("this-api")
     )
 
-  val requiredDesHeaders: Seq[(String, String)] = Seq(
-    "Authorization" -> "Bearer des-token",
-    "Environment" -> "des-environment",
-    "User-Agent" -> "this-api",
-    "CorrelationId" -> correlationId,
+  val requiredDesHeaders: Seq[(String, String)] = List(
+    "Authorization"     -> "Bearer des-token",
+    "Environment"       -> "des-environment",
+    "User-Agent"        -> "this-api",
+    "CorrelationId"     -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
-  val allowedDesHeaders: Seq[String] = Seq(
+  val allowedDesHeaders: Seq[String] = List(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
@@ -62,15 +62,15 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
-  val requiredIfsHeaders: Seq[(String, String)] = Seq(
-    "Authorization" -> "Bearer ifs-token",
-    "Environment" -> "ifs-environment",
-    "User-Agent" -> "this-api",
-    "CorrelationId" -> correlationId,
+  val requiredIfsHeaders: Seq[(String, String)] = List(
+    "Authorization"     -> "Bearer ifs-token",
+    "Environment"       -> "ifs-environment",
+    "User-Agent"        -> "this-api",
+    "CorrelationId"     -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
-  val allowedIfsHeaders: Seq[String] = Seq(
+  val allowedIfsHeaders: Seq[String] = List(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
@@ -79,15 +79,15 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
-  val requiredTysIfsHeaders: Seq[(String, String)] = Seq(
-    "Authorization" -> "Bearer TYS-IFS-token",
-    "Environment" -> "TYS-IFS-environment",
-    "User-Agent" -> "this-api",
-    "CorrelationId" -> correlationId,
+  val requiredTysIfsHeaders: Seq[(String, String)] = List(
+    "Authorization"     -> "Bearer TYS-IFS-token",
+    "Environment"       -> "TYS-IFS-environment",
+    "User-Agent"        -> "this-api",
+    "CorrelationId"     -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
-  val allowedTysIfsHeaders: Seq[String] = Seq(
+  val allowedTysIfsHeaders: Seq[String] = List(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
@@ -109,7 +109,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           url = url,
           config = dummyHeaderCarrierConfig,
           requiredHeaders = requiredHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 
@@ -120,7 +120,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           parameters = parameters,
           config = dummyHeaderCarrierConfig,
           requiredHeaders = requiredHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 
@@ -130,8 +130,8 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           url = url,
           config = dummyHeaderCarrierConfig,
           body = body,
-          requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          requiredHeaders = requiredHeaders ++ List("Content-Type" -> "application/json"),
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 
@@ -141,8 +141,8 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           url = url,
           config = dummyHeaderCarrierConfig,
           body = body,
-          requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          requiredHeaders = requiredHeaders ++ List("Content-Type" -> "application/json"),
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 
@@ -152,7 +152,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           url = url,
           config = dummyHeaderCarrierConfig,
           requiredHeaders = requiredHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 

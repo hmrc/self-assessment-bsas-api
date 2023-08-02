@@ -21,11 +21,10 @@ import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.mvc.{Action, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v3.controllers.requestParsers.TriggerBsasRequestParser
+import v3.controllers.validators.TriggerBsasValidatorFactory
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.triggerBsas.TriggerBsasRawData
 import v3.models.response.TriggerBsasHateoasData
 import v3.services.TriggerBsasService
 
@@ -33,15 +32,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                      val lookupService: MtdIdLookupService,
-                                      parser: TriggerBsasRequestParser,
-                                      service: TriggerBsasService,
-                                      hateoasFactory: HateoasFactory,
-                                      auditService: AuditService,
-                                      cc: ControllerComponents,
-                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                       val lookupService: MtdIdLookupService,
+                                       validatorFactory: TriggerBsasValidatorFactory,
+                                       service: TriggerBsasService,
+                                       hateoasFactory: HateoasFactory,
+                                       auditService: AuditService,
+                                       cc: ControllerComponents,
+                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V3Controller
     with Logging {
 
@@ -52,11 +51,11 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = TriggerBsasRawData(nino, AnyContentAsJson(request.body))
+      val validator = validatorFactory.validator(nino, request.body)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.triggerBsas)
           .withHateoasResultFrom(hateoasFactory) { (parsedRequest, responseData) =>
             val typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness)
@@ -72,6 +71,7 @@ class TriggerBsasController @Inject()(val authService: EnrolmentsAuthService,
             includeResponse = true
           ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
+
 }

@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors.MtdError
 
 object DateValidation {
@@ -26,4 +25,5 @@ object DateValidation {
   def validate(error: MtdError)(date: String): List[MtdError] = {
     if (date.matches(dateFormat)) NoValidationErrors else List(error)
   }
+
 }

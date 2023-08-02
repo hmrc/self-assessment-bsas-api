@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers
 
-import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveAdjustmentsValidator
 import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}

@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers._
+import api.controllers.{RequestHandler => _, _}
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
@@ -31,15 +31,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveSelfEmploymentAdjustmentsController @Inject()(val authService: EnrolmentsAuthService,
-                                                            val lookupService: MtdIdLookupService,
-                                                            parser: RetrieveAdjustmentsRequestParser,
-                                                            service: RetrieveSelfEmploymentAdjustmentsService,
-                                                            hateoasFactory: HateoasFactory,
-                                                            auditService: AuditService,
-                                                            cc: ControllerComponents,
-                                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class RetrieveSelfEmploymentAdjustmentsController @Inject() (val authService: EnrolmentsAuthService,
+                                                             val lookupService: MtdIdLookupService,
+                                                             parser: RetrieveAdjustmentsRequestParser,
+                                                             service: RetrieveSelfEmploymentAdjustmentsService,
+                                                             hateoasFactory: HateoasFactory,
+                                                             auditService: AuditService,
+                                                             cc: ControllerComponents,
+                                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 
@@ -56,8 +56,8 @@ class RetrieveSelfEmploymentAdjustmentsController @Inject()(val authService: Enr
         RequestHandler
           .withParser(parser)
           .withService(service.retrieveSelfEmploymentsAdjustments)
-          .withHateoasResultFrom(hateoasFactory)(
-            (_, responseData) => RetrieveSelfEmploymentAdjustmentsHateoasData(nino, responseData.metadata.bsasId))
+          .withHateoasResultFrom(hateoasFactory)((_, responseData) =>
+            RetrieveSelfEmploymentAdjustmentsHateoasData(nino, responseData.metadata.bsasId))
           .withAuditing(AuditHandler(
             auditService,
             auditType = "retrieveBusinessSourceAccountingAdjustments",
@@ -70,4 +70,5 @@ class RetrieveSelfEmploymentAdjustmentsController @Inject()(val authService: Enr
 
       requestHandler.handleRequest(rawData)
     }
+
 }

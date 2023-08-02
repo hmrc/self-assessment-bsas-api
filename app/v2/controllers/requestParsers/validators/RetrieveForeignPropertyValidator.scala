@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import api.models.errors.MtdError
 import v2.controllers.requestParsers.validators.validations.{AdjustedStatusValidation, BsasIdValidation, NinoValidation}
 import v2.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyRawData
@@ -34,4 +33,5 @@ class RetrieveForeignPropertyValidator extends Validator[RetrieveForeignProperty
       data.adjustedStatus.map(AdjustedStatusValidation.validate).getOrElse(Nil)
     )
   }
+
 }

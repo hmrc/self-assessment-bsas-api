@@ -16,7 +16,6 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors.MtdError
 import config.FixedConfig
 import v2.models.domain.DownstreamTaxYear
@@ -30,4 +29,5 @@ object MtdTaxYearValidation extends FixedConfig {
 
     if (downstreamTaxYear >= minTaxYear) NoValidationErrors else List(error)
   }
+
 }

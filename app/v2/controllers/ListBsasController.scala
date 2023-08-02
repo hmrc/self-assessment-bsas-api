@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers._
+import api.controllers.{RequestHandler => _, ResultCreator => _, _}
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
@@ -32,16 +32,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                   val lookupService: MtdIdLookupService,
-                                   parser: ListBsasRequestParser,
-                                   service: ListBsasService,
-                                   hateoasFactory: HateoasFactory,
-                                   auditService: AuditService,
-                                   cc: ControllerComponents,
-                                   val currentDateProvider: CurrentDate,
-                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class ListBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                    val lookupService: MtdIdLookupService,
+                                    parser: ListBsasRequestParser,
+                                    service: ListBsasService,
+                                    hateoasFactory: HateoasFactory,
+                                    auditService: AuditService,
+                                    cc: ControllerComponents,
+                                    val currentDateProvider: CurrentDate,
+                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 
@@ -73,4 +73,5 @@ class ListBsasController @Inject()(val authService: EnrolmentsAuthService,
 
       requestHandler.handleRequest(rawData)
     }
+
 }

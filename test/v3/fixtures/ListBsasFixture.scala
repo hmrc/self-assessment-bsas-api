@@ -16,7 +16,7 @@
 
 package v3.fixtures
 
-import api.models.domain.{Status, TaxYear}
+import api.models.domain.{Nino, Status, TaxYear}
 import play.api.libs.json.{JsArray, JsValue, Json}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.listBsas.{AccountingPeriod, BsasSummary, BusinessSourceSummary, ListBsasResponse}
@@ -95,6 +95,7 @@ trait ListBsasFixture {
       |}
     """.stripMargin
   )
+
   val businessSourceSummaryJson: JsValue = Json.parse(
     """
       |{
@@ -116,6 +117,7 @@ trait ListBsasFixture {
       |}
     """.stripMargin
   )
+
   val listBsasResponseDownstreamJson: JsValue = Json.parse(
     """
       |[
@@ -137,6 +139,7 @@ trait ListBsasFixture {
       |]
     """.stripMargin
   )
+
   val listBsasResponseDownstreamJsonForeign: JsValue = Json.parse(
     """
       |[
@@ -158,7 +161,9 @@ trait ListBsasFixture {
       |]
     """.stripMargin
   )
-  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(Seq(businessSourceSummaryModel()))
+
+  val listBsasResponseModel: ListBsasResponse[BsasSummary] = ListBsasResponse(List(businessSourceSummaryModel()))
+
   val listBsasResponseJson: JsValue = Json.parse(
     """
       |{
@@ -184,6 +189,7 @@ trait ListBsasFixture {
       |}
     """.stripMargin
   )
+
   val listBsasResponseDownstreamJsonSE: JsValue = Json.parse(
     """
       |{
@@ -203,6 +209,7 @@ trait ListBsasFixture {
       |}
     """.stripMargin
   )
+
   val listBsasResponseDownstreamJsonUkFhl: JsValue = Json.parse(
     """
       |{
@@ -222,6 +229,7 @@ trait ListBsasFixture {
       |}
     """.stripMargin
   )
+
   val listBsasResponseDownstreamJsonUkNonFhl: JsValue = Json.parse(
     """
       |{
@@ -241,6 +249,7 @@ trait ListBsasFixture {
       |}
     """.stripMargin
   )
+
   val listBsasDownstreamJsonMultiple: JsArray = JsArray(
     Seq(
       listBsasResponseDownstreamJsonSE,
@@ -256,7 +265,7 @@ trait ListBsasFixture {
     summaries = Seq(bsasSummaryModel)
   )
 
-  def summariesJSONWithHateoas(nino: String, taxYear: Option[String] = None): JsValue = {
+  def summariesJSONWithHateoas(nino: Nino, taxYear: Option[String] = None): JsValue = {
     val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
     Json.parse(
@@ -353,7 +362,7 @@ trait ListBsasFixture {
     )
   }
 
-  def summariesJSONForeignWithHateoas(nino: String, taxYear: Option[String] = None): JsValue = {
+  def summariesJSONForeignWithHateoas(nino: Nino, taxYear: Option[String] = None): JsValue = {
     val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
     Json.parse(
@@ -401,4 +410,5 @@ trait ListBsasFixture {
     """.stripMargin
     )
   }
+
 }

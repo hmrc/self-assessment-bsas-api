@@ -17,11 +17,10 @@
 package v3.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 import v3.services.TriggerBsasService
 
@@ -33,10 +32,12 @@ trait MockTriggerBsasService extends MockFactory {
 
   object MockTriggerBsasService {
 
-    def triggerBsas(requestData: TriggerBsasRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[TriggerBsasResponse]]]] = {
+    def triggerBsas(requestData: TriggerBsasRequestData): CallHandler[Future[ServiceOutcome[TriggerBsasResponse]]] = {
       (mockService
-        .triggerBsas(_: TriggerBsasRequest)(_: RequestContext, _: ExecutionContext))
+        .triggerBsas(_: TriggerBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
+
   }
+
 }

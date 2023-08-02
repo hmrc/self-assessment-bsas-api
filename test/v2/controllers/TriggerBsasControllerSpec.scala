@@ -30,7 +30,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version2
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.TriggerBsasRequestBodyFixtures._
 import v2.mocks.requestParsers.MockTriggerBsasRequestParser
 import v2.mocks.services.MockTriggerBsasService
@@ -56,42 +55,28 @@ class TriggerBsasControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new TriggerBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
   private val nino = "AA123456A"
 
   private val request        = TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody())
   private val requestRawData = TriggerBsasRawData(nino, triggerBsasRawDataBody())
 
-  private val requestForProperty        = TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`))
+  private val requestForProperty = TriggerBsasRequest(Nino(nino), triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`))
   private val requestRawDataForProperty = TriggerBsasRawData(nino, triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString))
 
-  val testHateoasLinkSE = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-                               method = GET,
-                               rel = "self")
+  private val testHateoasLinkSE =
+    Link(
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+      method = GET,
+      rel = "self")
 
-  val testHateoasLinkProperty =
-    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435", method = GET, rel = "self")
+  private val testHateoasLinkProperty =
+    Link(
+      href = s"/individuals/self-assessment/adjustable-summary/$nino/property/c75f40a6-a3df-4429-a697-471eeec46435",
+      method = GET,
+      rel = "self"
+    )
 
-  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+  private def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "triggerABusinessSourceAdjustableSummary",
       transactionName = "trigger-a-business-source-adjustable-Summary",
@@ -120,7 +105,7 @@ class TriggerBsasControllerSpec
 
         MockHateoasFactory
           .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.id))
-          .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
+          .returns(HateoasWrapper(responseObj, List(testHateoasLinkSE)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(Json.toJson(requestBody)))
 
@@ -144,7 +129,7 @@ class TriggerBsasControllerSpec
 
         MockHateoasFactory
           .wrap(responseObj, TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.id))
-          .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
+          .returns(HateoasWrapper(responseObj, List(testHateoasLinkProperty)))
 
         val result: Future[Result] = controller.triggerBsas(nino)(fakePostRequest(Json.toJson(requestBodyForProperty)))
 
@@ -172,12 +157,12 @@ class TriggerBsasControllerSpec
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(List(AuditError(error.code))), None)
             MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once()
           }
         }
 
-        val input = Seq(
+        val input = List(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
@@ -211,12 +196,12 @@ class TriggerBsasControllerSpec
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(List(AuditError(mtdError.code))), None)
             MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestBody))).once()
           }
         }
 
-        val input = Seq(
+        val input = List(
           (NinoFormatError, BAD_REQUEST),
           (RuleAccountingPeriodNotEndedError, FORBIDDEN),
           (RulePeriodicDataIncompleteError, FORBIDDEN),
@@ -229,4 +214,24 @@ class TriggerBsasControllerSpec
       }
     }
   }
+
+  private trait Test {
+
+    protected val controller = new TriggerBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

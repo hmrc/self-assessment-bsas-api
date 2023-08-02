@@ -16,7 +16,7 @@
 
 package v2.endpoints
 
-import api.models.errors._
+import api.models.errors.{RuleCountryCodeError => _, _}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -31,7 +31,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino   = "AA123456A"
     val bsasId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     val nrsSuccess: JsValue = Json.parse(
@@ -44,8 +44,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          """.stripMargin
     )
 
-    val desResponse: String => String = (typeOfBusiness: String) =>
-      s"""
+    val desResponse: String => String = (typeOfBusiness: String) => s"""
          |{
          |    "metadata": {
          |        "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -257,8 +256,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |}
          |""".stripMargin
 
-    val requestBodyForeignPropertyJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignPropertyJson: JsValue = Json.parse("""
         |{
         |  "foreignProperty": [
         |    {
@@ -284,8 +282,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignPropertyConsolidatedJson: JsValue = Json.parse("""
         |{
         |  "foreignProperty": [
         |    {
@@ -305,8 +302,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val requestBodyForeignFhlEeaJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignFhlEeaJson: JsValue = Json.parse("""
         |{
         |    "foreignFhlEea": {
         |        "income": {
@@ -325,8 +321,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse(
-      """
+    val requestBodyForeignFhlEeaConsolidatedJson: JsValue = Json.parse("""
         |{
         |    "foreignFhlEea": {
         |        "income": {
@@ -339,8 +334,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
-    val responseBody: JsValue = Json.parse(
-      s"""
+    val responseBody: JsValue = Json.parse(s"""
          |{
          |  "id": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
          |  "links":[
@@ -380,6 +374,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |        "reason": "des message"
          |      }
     """.stripMargin
+
   }
 
   "Calling the submit foreign property bsas endpoint" should {
@@ -398,7 +393,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+          "This endpoint is deprecated. See the API documentation: " +
+            "https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
+        )
       }
 
       "any valid foreignProperty request is made with a failed nrs call" in new Test {
@@ -406,7 +403,12 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
+          NrsStub.onError(
+            NrsStub.PUT,
+            s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment",
+            INTERNAL_SERVER_ERROR,
+            "An internal server error occurred"
+          )
           DesStub.onSuccess(DesStub.PUT, desUrl, OK, Json.parse(desResponse("15")))
         }
 
@@ -415,7 +417,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+          "This endpoint is deprecated. See the API documentation: " +
+            "https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
+        )
       }
 
       "any valid foreignFhlEea request is made" in new Test {
@@ -431,7 +435,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+          "This endpoint is deprecated. See the API documentation: " +
+            "https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
+        )
       }
 
       "any valid foreignProperty consolidated request is made" in new Test {
@@ -447,7 +453,9 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseBody
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+          "This endpoint is deprecated. See the API documentation: " +
+            "https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api"
+        )
       }
 
       "any valid foreignFhlEea consolidated request is made" in new Test {
@@ -467,8 +475,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestBody: JsValue = Json.parse(
-        s"""
+      val validRequestBody: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -481,8 +488,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyAdjustmentValue: JsValue = Json.parse(
-        s"""
+      val requestBodyAdjustmentValue: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -495,8 +501,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyRangeInvalid: JsValue = Json.parse(
-        s"""
+      val requestBodyRangeInvalid: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {
@@ -509,8 +514,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyIncorrectBody: JsValue = Json.parse(
-        s"""
+      val requestBodyIncorrectBody: JsValue = Json.parse(s"""
            |{
            |    "foreignFhlEea": {
            |        "income": {},
@@ -519,8 +523,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyBothExpenses: JsValue = Json.parse(
-        s"""
+      val requestBodyBothExpenses: JsValue = Json.parse(s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -547,8 +550,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyInvalidCountryCode: JsValue = Json.parse(
-        s"""
+      val requestBodyInvalidCountryCode: JsValue = Json.parse(s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -575,8 +577,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |}
            |""".stripMargin)
 
-      val requestBodyUnformattedCountryCode: JsValue = Json.parse(
-        s"""
+      val requestBodyUnformattedCountryCode: JsValue = Json.parse(s"""
            |{
            |  "foreignProperty": [
            |    {
@@ -611,8 +612,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val bsasId: String = requestBsasId
+            override val nino: String                            = requestNino
+            override val bsasId: String                          = requestBsasId
             override val requestBodyForeignPropertyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -630,24 +631,28 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", validRequestBody, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "Walrus", validRequestBody, BAD_REQUEST, BsasIdFormatError),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             requestBodyAdjustmentValue,
             BAD_REQUEST,
             FormatAdjustmentValueError.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             requestBodyRangeInvalid,
             BAD_REQUEST,
             RuleAdjustmentRangeInvalid.copy(paths = Some(Seq("/foreignFhlEea/expenses/consolidatedExpenses")))),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyIncorrectBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", requestBodyBothExpenses, BAD_REQUEST, RuleBothExpensesError),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             requestBodyInvalidCountryCode,
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(Seq("/foreignProperty/0/countryCode")))),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             requestBodyUnformattedCountryCode,
             BAD_REQUEST,
@@ -695,4 +700,5 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

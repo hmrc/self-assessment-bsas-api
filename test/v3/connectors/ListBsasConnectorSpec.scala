@@ -17,30 +17,30 @@
 package v3.connectors
 
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{BusinessId, Nino, TaxYear}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v3.fixtures.ListBsasFixture
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
 
-  val nino: Nino               = Nino("AA123456A")
-  val incomeSourceId: String   = "XAIS12345678910"
-  val incomeSourceType: String = "02"
+  private val nino             = Nino("AA123456A")
+  private val incomeSourceId   = "XAIS12345678910"
+  private val incomeSourceType = "02"
 
   private val preTysTaxYear = TaxYear.fromMtd("2018-19")
   private val tysTaxYear    = TaxYear.fromMtd("2023-24")
 
-  val additionalQueryParams: Seq[(String, String)] = Seq(
-    ("taxYear", preTysTaxYear.asDownstream),
+  private val additionalQueryParams: Seq[(String, String)] = List(
+    ("taxYear", preTysTaxYear.asDownstream)
   )
 
-  val commonQueryParams: Seq[(String, String)] = Seq(
+  private val commonQueryParams: Seq[(String, String)] = List(
     ("incomeSourceId", incomeSourceId),
     ("incomeSourceType", incomeSourceType)
   )
@@ -50,11 +50,12 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
       "a valid request is supplied" in new IfsTest with Test {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
-        val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponseModel))
 
+        val outcome = Right(ResponseWrapper(correlationId, listBsasResponseModel))
         stubHttpResponse(outcome)
 
-        await(connector.listBsas(request)) shouldBe outcome
+        val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] = await(connector.listBsas(request))
+        result shouldBe outcome
       }
     }
   }
@@ -98,26 +99,33 @@ class ListBsasConnectorSpec extends ConnectorSpec with ListBsasFixture {
   }
 
   trait Test { _: ConnectorTest =>
-    def taxYear: TaxYear
-    def downstreamQueryParams: Seq[(String, String)]
-    val request: ListBsasRequest = ListBsasRequest(nino, taxYear, Some(incomeSourceId), Some(incomeSourceType))
+    protected def taxYear: TaxYear
+    protected def downstreamQueryParams: Seq[(String, String)]
 
-    val connector: ListBsasConnector = new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    protected val request: ListBsasRequestData =
+      ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
+
+    protected val connector: ListBsasConnector =
+      new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
-        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }
 
     protected def stubTysHttpResponse(
-        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}",
+        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }
+
   }
+
 }

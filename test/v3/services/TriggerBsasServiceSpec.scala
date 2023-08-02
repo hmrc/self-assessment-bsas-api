@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.connectors.MockTriggerBsasConnector
 import v3.models.errors._
-import v3.models.request.triggerBsas.TriggerBsasRequest
+import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 
 import scala.concurrent.Future
@@ -35,7 +35,7 @@ class TriggerBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
 
   val calculationId                 = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val request: TriggerBsasRequest   = TriggerBsasRequest(nino, model)
+  val request: TriggerBsasRequestData   = TriggerBsasRequestData(nino, model)
   val response: TriggerBsasResponse = TriggerBsasResponse(calculationId)
 
   trait Test extends MockTriggerBsasConnector {

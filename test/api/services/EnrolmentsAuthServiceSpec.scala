@@ -16,8 +16,9 @@
 
 package api.services
 
-import api.models.UserDetails
+import api.models.auth.UserDetails
 import api.models.errors.{ClientNotAuthorisedError, InternalError}
+import api.models.outcomes.AuthOutcome
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
@@ -43,9 +44,9 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
     )
   )
 
-  trait Test {
-    lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
-    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  private trait Test {
+    lazy val target                                                   = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
+    val mockAuthConnector: AuthConnector                              = mock[AuthConnector]
     val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {
@@ -67,6 +68,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
       }
 
     }
+
   }
 
   "calling .buildPredicate" when {
@@ -135,14 +137,13 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig()
 
         val retrievalsResult = new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))
-        val expected = Right(UserDetails("", "Individual", None))
+        val expected         = Right(UserDetails("", "Individual", None))
 
         MockedAuthConnector
           .authorised(extraPredicatesAnd(EmptyPredicate), authRetrievals)
           .returns(Future.successful(retrievalsResult))
 
-        private val result = await(target.authorised(EmptyPredicate))
-
+        val result: AuthOutcome = await(target.authorised(EmptyPredicate))
         result shouldBe expected
       }
     }
@@ -153,14 +154,13 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
         val retrievalsResult = new ~(Some(Individual), Enrolments(Set.empty))
-        val expected = Right(UserDetails("", "Individual", None))
+        val expected         = Right(UserDetails("", "Individual", None))
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
           .returns(Future.successful(retrievalsResult))
 
-        private val result = await(target.authorised(EmptyPredicate))
-
+        val result: AuthOutcome = await(target.authorised(EmptyPredicate))
         result shouldBe expected
       }
     }
@@ -171,13 +171,13 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
         val retrievalsResult = new ~(Some(Organisation), Enrolments(Set.empty))
-        val expected = Right(UserDetails("", "Organisation", None))
+        val expected         = Right(UserDetails("", "Organisation", None))
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
           .returns(Future.successful(retrievalsResult))
 
-        private val result = await(target.authorised(EmptyPredicate))
+        val result: AuthOutcome = await(target.authorised(EmptyPredicate))
 
         result shouldBe expected
       }
@@ -207,8 +207,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorised(EmptyPredicate, authRetrievals)
           .returns(Future.successful(retrievalsResult))
 
-        private val result = await(target.authorised(EmptyPredicate))
-
+        val result: AuthOutcome = await(target.authorised(EmptyPredicate))
         result shouldBe expected
       }
     }
@@ -224,8 +223,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorised(EmptyPredicate, authRetrievals)
           .returns(Future.failed(MissingBearerToken()))
 
-        private val result = await(target.authorised(EmptyPredicate))
-
+        val result: AuthOutcome = await(target.authorised(EmptyPredicate))
         result shouldBe expected
       }
     }
@@ -241,8 +239,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorised(EmptyPredicate, authRetrievals)
           .returns(Future.failed(InsufficientEnrolments()))
 
-        private val result = await(target.authorised(EmptyPredicate))
-
+        val result: AuthOutcome = await(target.authorised(EmptyPredicate))
         result shouldBe expected
       }
     }

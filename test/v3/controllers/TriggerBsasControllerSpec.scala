@@ -22,7 +22,7 @@ import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.TaxYear
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
@@ -30,73 +30,66 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockTriggerBsasValidatorFactory
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
-import v3.mocks.requestParsers.MockTriggerBsasRequestParser
 import v3.mocks.services.MockTriggerBsasService
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
-import v3.models.request.triggerBsas.{TriggerBsasRawData, TriggerBsasRequest}
+import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class TriggerBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockTriggerBsasRequestParser
+    with MockTriggerBsasValidatorFactory
     with MockTriggerBsasService
     with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
     with MockAppConfig {
 
+  private val requestData = TriggerBsasRequestData(
+    nino,
+    triggerBsasRequestDataBody()
+  )
+
+  private val requestForProperty = TriggerBsasRequestData(
+    nino,
+    triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
+  )
+
   val testHateoasLinkSE: Link = Link(
     href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET,
     rel = "self"
   )
+
   val testHateoasLinkProperty: Link = Link(
     href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET,
     rel = "self"
   )
-  private val version = Version3
-  private val request = TriggerBsasRequest(
-    Nino(nino),
-    triggerBsasRequestDataBody()
-  )
-  private val requestRawData = TriggerBsasRawData(
-    nino,
-    triggerBsasRawDataBody()
-  )
-  private val requestForProperty = TriggerBsasRequest(
-    Nino(nino),
-    triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
-  )
-  private val requestRawDataForProperty = TriggerBsasRawData(
-    nino,
-    triggerBsasRawDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`.toString)
-  )
 
   "triggerBsas" should {
     "return OK" when {
       "a valid request is supplied for business type self-employment" in new Test {
-        private val mtdResponseJson = Json.parse(hateoasResponseForSE(nino))
+        private val mtdResponseJson = Json.parse(hateoasResponseForSE(nino.nino))
 
-        MockTriggerBsasRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
-          .triggerBsas(request)
+          .triggerBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj,
-            TriggerBsasHateoasData(nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
+          .wrap(
+            responseObj,
+            TriggerBsasHateoasData(nino.nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         runOkTestWithAudit(
@@ -110,19 +103,18 @@ class TriggerBsasControllerSpec
       "a valid request is supplied for business type uk-property" in new Test {
         override protected val requestBodyForController: JsValue = requestBodyForProperty
 
-        private val mtdResponseJson = Json.parse(hateoasResponseForProperty(nino))
+        private val mtdResponseJson = Json.parse(hateoasResponseForProperty(nino.nino))
 
-        MockTriggerBsasRequestParser
-          .parse(requestRawDataForProperty)
-          .returns(Right(requestForProperty))
+        willUseValidator(returningSuccess(requestForProperty))
 
         MockTriggerBsasService
           .triggerBsas(requestForProperty)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
 
         MockHateoasFactory
-          .wrap(responseObj,
-            TriggerBsasHateoasData(nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
+          .wrap(
+            responseObj,
+            TriggerBsasHateoasData(nino.nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         runOkTestWithAudit(
@@ -137,20 +129,15 @@ class TriggerBsasControllerSpec
     "return the error as per spec" when {
 
       "the parser validation fails" in new Test {
-        MockTriggerBsasRequestParser
-          .parse(requestRawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestBody))
       }
 
       "the service returns an error" in new Test {
-        MockTriggerBsasRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
-          .triggerBsas(request)
+          .triggerBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RulePeriodicDataIncompleteError))))
 
         runErrorTestWithAudit(RulePeriodicDataIncompleteError, maybeAuditRequestBody = Some(requestBody))
@@ -163,7 +150,7 @@ class TriggerBsasControllerSpec
     val controller = new TriggerBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockTriggerBsasValidatorFactory,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
@@ -174,7 +161,7 @@ class TriggerBsasControllerSpec
     protected val requestBodyForController: JsValue = requestBody
 
     protected def callController(): Future[Result] =
-      controller.triggerBsas(nino)(fakePostRequest(requestBodyForController))
+      controller.triggerBsas(nino.nino)(fakePostRequest(requestBodyForController))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -184,14 +171,14 @@ class TriggerBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino),
+          params = Map("nino" -> nino.nino),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse
         )
       )
 
-    MockedAppConfig.isApiDeprecated(version) returns false
+    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

@@ -25,7 +25,7 @@ import v3.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
-  private val nino = "AA111111A"
+  private val nino   = "AA111111A"
   private val bsasId = "1234567890"
 
   class Test {
@@ -94,4 +94,5 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
       }
     }
   }
+
 }

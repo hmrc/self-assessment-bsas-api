@@ -17,8 +17,7 @@
 package v3.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
@@ -32,11 +31,12 @@ trait MockSubmitForeignPropertyBsasService extends MockFactory {
 
   object MockSubmitForeignPropertyBsasService {
 
-    def submitForeignPropertyBsas(
-                                   requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def submitForeignPropertyBsas(requestData: SubmitForeignPropertyBsasRequestData): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (mockService
         .submitForeignPropertyBsas(_: SubmitForeignPropertyBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
+
   }
+
 }

@@ -16,8 +16,9 @@
 
 package v2.models.response
 
+import api.hateoas.HateoasFactory
 import api.hateoas.Method.GET
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
@@ -25,8 +26,7 @@ import v2.models.domain.TypeOfBusiness
 
 class TriggerBsasResponseSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse(
-    """
+  val desJson: JsValue = Json.parse("""
       |{
       |   "metadata" : {
       |       "calculationId" : "anId"
@@ -34,15 +34,13 @@ class TriggerBsasResponseSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val mtdJson: JsValue = Json.parse(
-    """
+  val mtdJson: JsValue = Json.parse("""
       |{
       |   "id" : "anId"
       |}
   """.stripMargin)
 
-  val invalidDesJson: JsValue = Json.parse(
-    """
+  val invalidDesJson: JsValue = Json.parse("""
       |{
       |   "id" : 3
       |}
@@ -73,8 +71,8 @@ class TriggerBsasResponseSpec extends UnitSpec {
   "HateoasFactory" must {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val bsasId = "anId"
+      val nino           = "someNino"
+      val bsasId         = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
     }
 
@@ -125,4 +123,5 @@ class TriggerBsasResponseSpec extends UnitSpec {
     }
 
   }
+
 }

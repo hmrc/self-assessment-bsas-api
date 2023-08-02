@@ -73,7 +73,7 @@ trait BaseDownstreamConnector extends Logging {
     HeaderCarrier(
       extraHeaders = hc.extraHeaders ++
         // Contract headers
-        Seq(
+        List(
           "Authorization" -> s"Bearer ${downstreamConfig.token}",
           "Environment" -> downstreamConfig.env,
           "CorrelationId" -> correlationId

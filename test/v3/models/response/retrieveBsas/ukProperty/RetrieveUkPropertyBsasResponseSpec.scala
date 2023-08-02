@@ -16,9 +16,10 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import api.hateoas.Method._
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.hateoas.HateoasFactory
 import api.models.domain.TaxYear
+import api.hateoas.Method._
+import api.hateoas.{HateoasWrapper, Link}
 import api.models.utils.JsonErrorValidators
 import mocks.MockAppConfig
 import play.api.Configuration
@@ -46,10 +47,10 @@ class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidato
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val calculationId = "anId"
-      val context = "individuals/self-assessment/adjustable-summary"
-      val taxYear = Some(TaxYear.fromMtd("2023-24"))
+      val nino           = "someNino"
+      val calculationId  = "anId"
+      val context        = "individuals/self-assessment/adjustable-summary"
+      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }

@@ -16,16 +16,16 @@
 
 package v2.controllers.requestParsers.validators.validations
 
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
-import api.models.errors._
+import api.models.errors.{RuleCountryCodeError => _, _}
 import support.UnitSpec
 import v2.models.errors._
 
 class CountryCodeValidationSpec extends UnitSpec {
+
   "CountryCodeValidation" when {
     "validate" must {
       // @formatter:off
-      Seq("AFG", "ALB", "DZA", "ASM", "AND", "AGO", "AIA", "ATG", "ARG", "ARM", "ABW", "AUS", "AUT", "AZE", "BHS",
+      List("AFG", "ALB", "DZA", "ASM", "AND", "AGO", "AIA", "ATG", "ARG", "ARM", "ABW", "AUS", "AUT", "AZE", "BHS",
         "BHR", "BGD", "BRB", "BLR", "BEL", "BLZ", "BEN", "BMU", "BTN", "BOL", "BES", "BIH", "BWA", "BRA", "VGB",
         "BRN", "BGR", "BFA", "MMR", "BDI", "KHM", "CMR", "CAN", "CPV", "CYM", "CAF", "TCD", "CHL", "CHN", "CXR",
         "CCK", "COL", "COM", "COG", "COK", "CRI", "CIV", "HRV", "CUB", "CUW", "CYP", "CZE", "COD", "DNK", "DJI",
@@ -61,4 +61,5 @@ class CountryCodeValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

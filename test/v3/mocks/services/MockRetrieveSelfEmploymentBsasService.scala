@@ -17,11 +17,10 @@
 package v3.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v3.services.RetrieveSelfEmploymentBsasService
 
@@ -33,11 +32,12 @@ trait MockRetrieveSelfEmploymentBsasService extends MockFactory {
 
   object MockRetrieveSelfEmploymentBsasService {
 
-    def retrieveBsas(requestData: RetrieveSelfEmploymentBsasRequestData)
-    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfEmploymentBsasResponse]]]] = {
+    def retrieveBsas(requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[ServiceOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
       (mockService
         .retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
+
   }
+
 }

@@ -30,7 +30,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import routing.Version2
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v2.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v2.mocks.services.MockRetrieveUkPropertyBsasService
@@ -55,26 +54,6 @@ class RetrieveUkPropertyBsasControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new RetrieveUkPropertyBsasController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
   private val nino              = "AA123456A"
   private val bsasId            = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
   private val adjustedMtdStatus = Some("true")
@@ -83,9 +62,10 @@ class RetrieveUkPropertyBsasControllerSpec
   private val request        = RetrieveUkPropertyBsasRequestData(Nino(nino), bsasId, adjustedDesStatus)
   private val requestRawData = RetrieveUkPropertyBsasRawData(nino, bsasId, adjustedMtdStatus)
 
-  val testHateoasLinkPropertySelf = Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", method = GET, rel = "self")
+  private val testHateoasLinkPropertySelf =
+    Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId", method = GET, rel = "self")
 
-  val testHateoasLinkPropertyAdjust =
+  private val testHateoasLinkPropertyAdjust =
     Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", method = POST, rel = "submit-summary-adjustments")
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -197,4 +177,24 @@ class RetrieveUkPropertyBsasControllerSpec
       }
     }
   }
+
+  private trait Test {
+
+    protected val controller = new RetrieveUkPropertyBsasController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

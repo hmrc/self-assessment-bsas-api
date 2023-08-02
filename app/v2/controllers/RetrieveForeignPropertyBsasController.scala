@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.controllers.{RequestHandler => _, _}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
@@ -31,14 +31,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveForeignPropertyBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                                      val lookupService: MtdIdLookupService,
-                                                      parser: RetrieveForeignPropertyRequestParser,
-                                                      service: RetrieveForeignPropertyBsasService,
-                                                      hateoasFactory: HateoasFactory,
-                                                      cc: ControllerComponents,
-                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class RetrieveForeignPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                                       val lookupService: MtdIdLookupService,
+                                                       parser: RetrieveForeignPropertyRequestParser,
+                                                       service: RetrieveForeignPropertyBsasService,
+                                                       hateoasFactory: HateoasFactory,
+                                                       cc: ControllerComponents,
+                                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V2Controller
     with Logging {
 

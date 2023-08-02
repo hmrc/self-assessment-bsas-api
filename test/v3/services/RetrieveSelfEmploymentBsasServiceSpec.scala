@@ -17,7 +17,7 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{ CalculationId, Nino }
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -26,7 +26,7 @@ import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors._
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-  val id           = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   val request: RetrieveSelfEmploymentBsasRequestData = RetrieveSelfEmploymentBsasRequestData(nino, id, None)
 

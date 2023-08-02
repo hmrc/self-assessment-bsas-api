@@ -25,8 +25,7 @@ import v2.models.domain.TypeOfBusiness
 
 class SubmitUkPropertyBsasResponseSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse(
-    """
+  val desJson: JsValue = Json.parse("""
       |{
       |   "metadata" : {
       |       "calculationId" : "anId"
@@ -37,15 +36,13 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec {
       |}
   """.stripMargin)
 
-  val mtdJson: JsValue = Json.parse(
-    """
+  val mtdJson: JsValue = Json.parse("""
       |{
       |   "id" : "anId"
       |}
   """.stripMargin)
 
-  val invalidDesJson: JsValue = Json.parse(
-    """
+  val invalidDesJson: JsValue = Json.parse("""
       |{
       |   "id" : 3
       |}
@@ -76,8 +73,8 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec {
   "HateoasFactory" must {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val bsasId = "anId"
+      val nino           = "someNino"
+      val bsasId         = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
     }
 
@@ -85,7 +82,7 @@ class SubmitUkPropertyBsasResponseSpec extends UnitSpec {
       hateoasFactory.wrap(submitBsasResponse, SubmitUkPropertyBsasHateoasData(nino, bsasId)) shouldBe
         HateoasWrapper(
           submitBsasResponse,
-          Seq(
+          List(
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId/adjust", GET, "self"),
             Link(s"/individuals/self-assessment/adjustable-summary/$nino/property/$bsasId?adjustedStatus=true", GET, "retrieve-adjustable-summary")
           )

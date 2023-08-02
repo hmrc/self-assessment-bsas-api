@@ -21,18 +21,17 @@ import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.Nino
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
+import routing.Version2
 import v2.fixtures.foreignProperty.RetrieveForeignPropertyAdjustmentsFixtures._
 import v2.mocks.requestParsers.MockRetrieveAdjustmentsRequestParser
 import v2.mocks.services._
 import v2.models.errors._
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import routing.Version2
 import v2.models.request.{RetrieveAdjustmentsRawData, RetrieveAdjustmentsRequestData}
 import v2.models.response.retrieveBsasAdjustments.foreignProperty.RetrieveForeignPropertyAdjustmentsHateoasData
 
@@ -52,35 +51,16 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec
   private val correlationId = "X-123"
   private val version       = Version2
 
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new RetrieveForeignPropertyAdjustmentsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
-      service = mockService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful((Right("test-mtd-id"))))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-    MockedAppConfig.isApiDeprecated(version) returns true
-  }
-
   private val nino   = "AA123456A"
   private val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"
 
   private val request        = RetrieveAdjustmentsRequestData(Nino(nino), bsasId)
   private val requestRawData = RetrieveAdjustmentsRawData(nino, bsasId)
 
-  val testHateoasLinkRetrieveBsas =
+  private val testHateoasLinkRetrieveBsas =
     Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId", method = GET, rel = "retrieve-adjustable-summary")
 
-  val testHateoasLinkAdjustSelf =
+  private val testHateoasLinkAdjustSelf =
     Link(href = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$bsasId/adjust", method = GET, rel = "self")
 
   "retrieve" should {
@@ -97,8 +77,10 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec
 
         MockHateoasFactory
           .wrap(validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel, RetrieveForeignPropertyAdjustmentsHateoasData(nino, bsasId))
-          .returns(HateoasWrapper(validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel,
-                                  Seq(testHateoasLinkRetrieveBsas, testHateoasLinkAdjustSelf)))
+          .returns(
+            HateoasWrapper(
+              validForeignPropertyRetrieveForeignPropertyAdjustmentResponseModel,
+              Seq(testHateoasLinkRetrieveBsas, testHateoasLinkAdjustSelf)))
 
         val result: Future[Result] = controller.retrieve(nino, bsasId)(fakeGetRequest)
 
@@ -167,4 +149,23 @@ class RetrieveForeignPropertyAdjustmentsControllerSpec
       }
     }
   }
+
+  private trait Test {
+
+    protected val controller = new RetrieveForeignPropertyAdjustmentsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRequestParser,
+      service = mockService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful((Right("test-mtd-id"))))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    MockedAppConfig.isApiDeprecated(version) returns true
+  }
+
 }

@@ -22,8 +22,7 @@ import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v3.controllers.requestParsers.RetrieveSelfEmploymentRequestParser
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRawData
+import v3.controllers.validators.RetrieveSelfEmploymentBsasValidatorFactory
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 import v3.services.RetrieveSelfEmploymentBsasService
 
@@ -31,14 +30,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveSelfEmploymentBsasController @Inject()(val authService: EnrolmentsAuthService,
-                                                     val lookupService: MtdIdLookupService,
-                                                     parser: RetrieveSelfEmploymentRequestParser,
-                                                     service: RetrieveSelfEmploymentBsasService,
-                                                     hateoasFactory: HateoasFactory,
-                                                     cc: ControllerComponents,
-                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-  extends AuthorisedController(cc)
+class RetrieveSelfEmploymentBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                                      val lookupService: MtdIdLookupService,
+                                                      validatorFactory: RetrieveSelfEmploymentBsasValidatorFactory,
+                                                      service: RetrieveSelfEmploymentBsasService,
+                                                      hateoasFactory: HateoasFactory,
+                                                      cc: ControllerComponents,
+                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with V3Controller
     with Logging {
 
@@ -49,15 +48,16 @@ class RetrieveSelfEmploymentBsasController @Inject()(val authService: Enrolments
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId, taxYear)
+      val validator = validatorFactory.validator(nino, calculationId, taxYear)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.retrieveSelfEmploymentBsas)
           .withHateoasResultFrom(hateoasFactory)((parsedRequest, responseData) =>
             RetrieveSelfAssessmentBsasHateoasData(nino, responseData.metadata.calculationId, parsedRequest.taxYear))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
+
 }
