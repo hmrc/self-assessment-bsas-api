@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import utils.enums.Enums
 
 sealed trait TypeOfBusiness {
-  def toIdentifierValue: String
+  def asDownstreamValue: String
 }
 
 trait HasTypeOfBusiness {
@@ -32,24 +32,24 @@ object TypeOfBusiness {
   val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 
   case object `self-employment` extends TypeOfBusiness {
-    override def toIdentifierValue: String = "01"
+    val asDownstreamValue: String = "01"
   }
 
   case object `uk-property-fhl` extends TypeOfBusiness {
-    override def toIdentifierValue: String = "04"
+    val asDownstreamValue: String = "04"
   }
 
   case object `uk-property-non-fhl` extends TypeOfBusiness {
-    override def toIdentifierValue: String = "02"
+    val asDownstreamValue: String = "02"
   }
 
   case object `foreign-property-fhl-eea` extends TypeOfBusiness {
-    override def toIdentifierValue: String = "03"
+    val asDownstreamValue: String = "03"
   }
 
   implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
 
   case object `foreign-property` extends TypeOfBusiness {
-    override def toIdentifierValue: String = "15"
+    val asDownstreamValue: String = "15"
   }
 }

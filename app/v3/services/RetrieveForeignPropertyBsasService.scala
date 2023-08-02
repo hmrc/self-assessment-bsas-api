@@ -23,7 +23,7 @@ import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveForeignPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
-import v3.models.request.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 
 import javax.inject.{Inject, Singleton}

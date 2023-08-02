@@ -21,34 +21,33 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.models.request.ListBsasRequest
+import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListBsasConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listBsas(request: ListBsasRequest)(implicit hc: HeaderCarrier,
-                                         ec: ExecutionContext,
-                                         correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
+  def listBsas(request: ListBsasRequestData)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]] = {
 
     import request._
 
     val queryParams = Map(
-      "incomeSourceId" -> incomeSourceId,
+      "incomeSourceId"   -> incomeSourceId.map(_.businessId),
       "incomeSourceType" -> incomeSourceType
     )
 
-    val mappedQueryParams: Map[String, String] = queryParams.collect {
-      case (k: String, Some(v: String)) => (k, v)
-    }
+    val mappedQueryParams: Map[String, String] = queryParams.collect { case (k: String, Some(v: String)) => (k, v) }
 
     if (taxYear.useTaxYearSpecificApi) {
       get(
         TaxYearSpecificIfsUri[ListBsasResponse[BsasSummary]](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino"),
-        mappedQueryParams.toSeq
+        mappedQueryParams.toList
       )
     } else {
       val mappedQueryParamsWithTaxYear: Map[String, String] = mappedQueryParams ++ Map("taxYear" -> taxYear.asDownstream)
@@ -56,4 +55,5 @@ class ListBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig
     }
 
   }
+
 }

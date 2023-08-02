@@ -18,17 +18,18 @@ package v3.services
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 import v3.models.errors._
 
 trait BaseRetrieveBsasService extends BaseService {
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness]
 
-  final protected def validateTypeOfBusiness[T <: HasTypeOfBusiness](responseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] =
+  final protected def validateTypeOfBusiness[T <: HasTypeOfBusiness](responseWrapper: ResponseWrapper[T]): ServiceOutcome[T] =
     if (supportedTypesOfBusiness.contains(responseWrapper.responseData.typeOfBusiness)) {
       Right(responseWrapper)
     } else {
       Left(ErrorWrapper(responseWrapper.correlationId, RuleTypeOfBusinessIncorrectError, None))
     }
+
 }

@@ -30,11 +30,11 @@ import v3.models.response.listBsas.ListBsasResponse.LinksFactory._
 
 class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixture {
 
-  val selfEmploymentBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`self-employment`)
-  val ukPropertyFhlBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`uk-property-fhl`)
-  val ukPropertyNonFhlBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`uk-property-non-fhl`)
+  val selfEmploymentBsasResponse: ListBsasResponse[BsasSummary]        = makeResponse(`self-employment`)
+  val ukPropertyFhlBsasResponse: ListBsasResponse[BsasSummary]         = makeResponse(`uk-property-fhl`)
+  val ukPropertyNonFhlBsasResponse: ListBsasResponse[BsasSummary]      = makeResponse(`uk-property-non-fhl`)
   val foreignPropertyFhlEeaBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`foreign-property-fhl-eea`)
-  val foreignPropertyBsasResponse: ListBsasResponse[BsasSummary] = makeResponse(`foreign-property`)
+  val foreignPropertyBsasResponse: ListBsasResponse[BsasSummary]       = makeResponse(`foreign-property`)
 
   def makeResponse(typeOfBusiness: TypeOfBusiness): ListBsasResponse[BsasSummary] = ListBsasResponse(
     Seq(businessSourceSummaryModel().copy(typeOfBusiness = typeOfBusiness))
@@ -62,8 +62,8 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
 
   "Links Factory" should {
     class Test extends MockAppConfig {
-      val nino = "someNino"
-      val bsasId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+      val nino    = "someNino"
+      val bsasId  = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
       val context = "individuals/self-assessment/adjustable-summary"
       val taxYear = Some(TaxYear.fromMtd("2023-24"))
 
@@ -162,4 +162,5 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
       }
     }
   }
+
 }

@@ -26,10 +26,10 @@ import support.UnitSpec
 class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
 
   class Test extends MockAppConfig {
-    val nino = "someNino"
+    val nino          = "someNino"
     val calculationId = "anId"
-    val taxYear = Some(TaxYear.fromMtd("2023-24"))
-    val context = "individuals/self-assessment/adjustable-summary"
+    val taxYear       = Some(TaxYear.fromMtd("2023-24"))
+    val context       = "individuals/self-assessment/adjustable-summary"
 
     MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
   }
@@ -44,19 +44,22 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory" should {
     "return the correct links without tax year" in new TysDisabledTest {
-      private val data = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None)
-      private val result = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val data         = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, None)
       private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId", method = GET, rel = "self")
+
+      val result: Seq[Link] =
+        SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
 
       result shouldBe Seq(expectedLink)
     }
 
     "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-      private val data = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, taxYear)
-      private val result = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val data         = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, taxYear)
+      private val result       = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
       private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId?taxYear=2023-24", method = GET, rel = "self")
 
       result shouldBe Seq(expectedLink)
     }
   }
+
 }

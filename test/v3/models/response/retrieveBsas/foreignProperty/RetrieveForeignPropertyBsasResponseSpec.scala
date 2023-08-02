@@ -16,9 +16,10 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import api.hateoas.HateoasFactory
 import api.models.domain.TaxYear
+import api.hateoas.Method.{GET, POST}
+import api.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
@@ -34,6 +35,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
     retrieveForeignPropertyBsasResponseFhlModel,
     retrieveForeignPropertyBsasMtdFhlJson
   )(reads)
+
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response Non-FHL",
     retrieveForeignPropertyBsasDesNonFhlJson,
@@ -44,11 +46,11 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
   "HateoasFactory" should {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val calculationId = "anId"
-      val context = "individuals/self-assessment/adjustable-summary"
-      val taxYear = Some(TaxYear.fromMtd("2023-24"))
-      val rawResponse = retrieveForeignPropertyBsasResponseFhlModel
+      val nino           = "someNino"
+      val calculationId  = "anId"
+      val context        = "individuals/self-assessment/adjustable-summary"
+      val taxYear        = Some(TaxYear.fromMtd("2023-24"))
+      val rawResponse    = retrieveForeignPropertyBsasResponseFhlModel
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
@@ -81,4 +83,5 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
       result shouldBe HateoasWrapper(rawResponse, expectedLinks)
     }
   }
+
 }

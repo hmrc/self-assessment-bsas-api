@@ -16,6 +16,7 @@
 
 package v3.fixtures.selfEmployment
 
+import api.models.domain.{CalculationId, Nino}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v3.fixtures.selfEmployment.AdditionsFixture.{additionsFromVendorJson, additionsModel, additionsToDesJson}
 import v3.fixtures.selfEmployment.ExpensesFixture.{expensesFromMtdJson, expensesModel, expensesToDesJson}
@@ -46,6 +47,7 @@ object SubmitSelfEmploymentBsasFixtures {
       additions = None,
       expenses = None
     )
+
   val mtdRequestJson: JsValue = Json.parse(
     """
       |{
@@ -90,8 +92,11 @@ object SubmitSelfEmploymentBsasFixtures {
       |}
       |""".stripMargin
   )
-  val mtdRequestWithOnlyConsolidatedExpenses: JsValue = Json.parse(
-    """
+
+  val parsedMtdRequestBody: SubmitSelfEmploymentBsasRequestBody =
+    mtdRequestJson.as[SubmitSelfEmploymentBsasRequestBody]
+
+  val mtdRequestWithOnlyConsolidatedExpenses: JsValue = Json.parse("""
       |{
       |  "income": {
       |    "turnover": 1000.25,
@@ -102,8 +107,11 @@ object SubmitSelfEmploymentBsasFixtures {
       |  }
       |}
       |""".stripMargin)
-  val mtdRequestWithOnlyAdditionsExpenses: JsValue = Json.parse(
-    """
+
+  val parsedMtdRequestWithOnlyConsolidatedExpensesBody: SubmitSelfEmploymentBsasRequestBody =
+    mtdRequestWithOnlyConsolidatedExpenses.as[SubmitSelfEmploymentBsasRequestBody]
+
+  val mtdRequestWithOnlyAdditionsExpenses: JsValue = Json.parse("""
       |{
       |  "income": {
       |    "turnover": 1000.25,
@@ -128,8 +136,11 @@ object SubmitSelfEmploymentBsasFixtures {
       |  }
       |}
       |""".stripMargin)
-  val mtdRequestWithAdditionsAndExpenses: JsValue = Json.parse(
-    """
+
+  val parsedMtdRequestWithOnlyAdditionsExpenses: SubmitSelfEmploymentBsasRequestBody =
+    mtdRequestWithOnlyAdditionsExpenses.as[SubmitSelfEmploymentBsasRequestBody]
+
+  val mtdRequestWithAdditionsAndExpenses: JsValue = Json.parse("""
       |{
       |  "income": {
       |    "turnover": 1000.25,
@@ -157,8 +168,8 @@ object SubmitSelfEmploymentBsasFixtures {
       |  }
       |}
       |""".stripMargin)
-  val mtdRequestWithBothExpenses: JsValue = Json.parse(
-    """
+
+  val mtdRequestWithBothExpenses: JsValue = Json.parse("""
       |{
       |  "income": {
       |    "turnover": 1000.25,
@@ -200,8 +211,8 @@ object SubmitSelfEmploymentBsasFixtures {
       |    "consolidatedExpenses": -2002.25
       |   }
       |}""".stripMargin)
-  val requestToIfs: JsValue = Json.parse(
-    """
+
+  val requestToIfs: JsValue = Json.parse("""
       |{
       | "incomeSourceType": "01",
       | "adjustments": {
@@ -245,8 +256,8 @@ object SubmitSelfEmploymentBsasFixtures {
       |    }
       |  }
       |}""".stripMargin)
-  val ifsResponse: (String, String) => String = (calcId: String, typeOfBusiness: String) =>
-    s"""
+
+  val ifsResponse: (String, String) => String = (calcId: String, typeOfBusiness: String) => s"""
        |{
        |      "metadata":{
        |        "calculationId":"$calcId",
@@ -315,8 +326,8 @@ object SubmitSelfEmploymentBsasFixtures {
     json
   }
 
-  def hateoasResponse(nino: String, calcId: String, taxYear: Option[String] = None): String = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
+  def hateoasResponse(nino: Nino, calcId: CalculationId, taxYear: Option[String] = None): String = {
+    val taxYearParam = taxYear.map("?taxYear=" + _).getOrElse("")
 
     s"""
        |{
@@ -330,4 +341,5 @@ object SubmitSelfEmploymentBsasFixtures {
        |}
     """.stripMargin
   }
+
 }

@@ -16,6 +16,7 @@
 
 package v3.endpoints
 
+import api.models.domain.{CalculationId, Nino}
 import api.models.errors._
 import api.stubs._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
@@ -66,6 +67,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
          |        "reason": "error message"
          |      }
     """.stripMargin
+
   }
 
   private trait NonTysTest extends Test {
@@ -95,7 +97,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
         result.header("Content-Type") shouldBe Some("application/json")
         result.header("Deprecation") shouldBe None
       }
@@ -112,7 +114,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
+        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
         result.header("Deprecation") shouldBe None
       }
@@ -129,7 +131,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
+        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
         result.header("Content-Type") shouldBe Some("application/json")
         result.header("Deprecation") shouldBe None
       }
@@ -146,7 +148,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId, Some("2023-24")))
+        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
       }
     }
@@ -223,11 +225,12 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "RULE_TAX_YEAR_RANGE_INVALID", BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

@@ -16,17 +16,17 @@
 
 package v3.hateoas
 
+import api.models.domain.TaxYear
 import api.hateoas.Method.{GET, POST}
 import api.hateoas.{Link, Method}
-import api.models.domain.TaxYear
 import mocks.MockAppConfig
 import support.UnitSpec
 import v3.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
-  private val nino = "AA111111A"
-  private val calcId = "1234567890"
+  private val nino        = "AA111111A"
+  private val calcId      = "1234567890"
   private val taxYear2023 = TaxYear.fromMtd("2022-23")
   private val taxYear2024 = TaxYear.fromMtd("2023-24")
 

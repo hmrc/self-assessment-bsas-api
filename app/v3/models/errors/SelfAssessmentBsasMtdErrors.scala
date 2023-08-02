@@ -46,8 +46,6 @@ object RuleResultingValueNotPermitted
     "The adjustments provided would produce an unacceptable negative monetary value",
     BAD_REQUEST)
 
-object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code", BAD_REQUEST)
-
 object RuleDuplicateCountryCodeError
   extends MtdError("RULE_DUPLICATE_COUNTRY_CODE", "The same countryCode cannot be supplied multiple times", BAD_REQUEST) {
 

@@ -32,11 +32,11 @@ class TypeOfBusinessSpec extends UnitSpec with EnumJsonSpecSupport {
 
   "toIdentifierValue" should {
     "return the correct identifier value" in {
-      TypeOfBusiness.`self-employment`.toIdentifierValue shouldBe "01"
-      TypeOfBusiness.`uk-property-non-fhl`.toIdentifierValue shouldBe "02"
-      TypeOfBusiness.`uk-property-fhl`.toIdentifierValue shouldBe "04"
-      TypeOfBusiness.`foreign-property-fhl-eea`.toIdentifierValue shouldBe "03"
-      TypeOfBusiness.`foreign-property`.toIdentifierValue shouldBe "15"
+      TypeOfBusiness.`self-employment`.asDownstreamValue shouldBe "01"
+      TypeOfBusiness.`uk-property-non-fhl`.asDownstreamValue shouldBe "02"
+      TypeOfBusiness.`uk-property-fhl`.asDownstreamValue shouldBe "04"
+      TypeOfBusiness.`foreign-property-fhl-eea`.asDownstreamValue shouldBe "03"
+      TypeOfBusiness.`foreign-property`.asDownstreamValue shouldBe "15"
     }
   }
 }

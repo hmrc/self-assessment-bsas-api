@@ -21,64 +21,57 @@ import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.Nino
+import api.models.domain.CalculationId
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockRetrieveSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v3.mocks.requestParsers.MockRetrieveSelfEmploymentRequestParser
 import v3.mocks.services.MockRetrieveSelfEmploymentBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasRawData, RetrieveSelfEmploymentBsasRequestData}
+import v3.models.request.retrieveBsas
 import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveSelfEmploymentRequestParser
+    with MockRetrieveSelfEmploymentBsasValidatorFactory
     with MockRetrieveSelfEmploymentBsasService
     with MockHateoasFactory
     with MockIdGenerator
     with MockAppConfig {
 
-  private val version = Version3
-
-  private val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
-
-  private val request = RetrieveSelfEmploymentBsasRequestData(Nino(nino), calculationId, None)
-  private val requestRawData = RetrieveSelfEmploymentBsasRawData(nino, calculationId, None)
-
-  private val testHateoasLinks =
-    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
+  private val calculationId    = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
+  private val requestData      = retrieveBsas.RetrieveSelfEmploymentBsasRequestData(nino, calculationId, None)
+  private val testHateoasLinks = List(Link(href = "/some/link", method = GET, rel = "someRel"))
 
   private val hateoasResponse = mtdRetrieveBsasResponseJson
-    .as[JsObject] ++ Json.parse(
-    """{
+    .as[JsObject] ++ Json
+    .parse("""{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+    .as[JsObject]
 
   "retrieve" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveSelfEmploymentRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveSelfEmploymentBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino, calculationId, None))
+          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino.nino, calculationId.calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseModel, testHateoasLinks))
 
         runOkTest(
@@ -90,20 +83,15 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveSelfEmploymentRequestParser
-          .parse(requestRawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveSelfEmploymentRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveSelfEmploymentBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))))
 
         runErrorTest(expectedError = RuleTypeOfBusinessIncorrectError)
@@ -116,15 +104,16 @@ class RetrieveSelfEmploymentBsasControllerSpec
     val controller = new RetrieveSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockRetrieveSelfEmploymentBsasValidatorFactory,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.handleRequest(nino, calculationId)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.handleRequest(nino.nino, calculationId.calculationId)(fakeGetRequest)
 
-    MockedAppConfig.isApiDeprecated(version) returns false
+    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
+
 }

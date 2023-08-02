@@ -16,7 +16,18 @@
 
 package v3.endpoints
 
-import api.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, TypeOfBusinessFormatError}
+import api.models.domain.Nino
+import api.models.errors.{
+  BusinessIdFormatError,
+  InternalError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  TypeOfBusinessFormatError
+}
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -31,9 +42,9 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
   private trait Test {
     // common
-    val nino = "AA123456B"
+    val nino                           = "AA123456B"
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String] = Some("XAIS12345678910")
+    val businessId: Option[String]     = Some("XAIS12345678910")
 
     def taxYear: Option[String]
 
@@ -59,8 +70,8 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
     def mtdQueryParams: Seq[(String, String)] =
       Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
 
     def errorBody(code: String): String =
@@ -102,7 +113,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(nino)
+        response.json shouldBe summariesJSONWithHateoas(Nino(nino))
         response.header("Deprecation") shouldBe None
       }
 
@@ -119,7 +130,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(nino, Some("2023-24"))
+        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some("2023-24"))
       }
 
       "valid request is made with foreign property" in new NonTysTest {
@@ -135,7 +146,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONForeignWithHateoas(nino)
+        response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino))
       }
 
       "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysIfsTest {
@@ -151,7 +162,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONForeignWithHateoas(nino, Some("2023-24"))
+        response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino), Some("2023-24"))
       }
 
       "valid request is made without a tax year" in new TysIfsTest {
@@ -168,7 +179,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(nino, Some("2023-24"))
+        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some("2023-24"))
       }
     }
 
@@ -182,10 +193,10 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
-          override val nino: String = requestNino
-          override val taxYear: Option[String] = Some(requestTaxYear)
+          override val nino: String                   = requestNino
+          override val taxYear: Option[String]        = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String] = requestBusinessId
+          override val businessId: Option[String]     = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -253,4 +264,5 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

@@ -21,71 +21,65 @@ import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.Nino
+import api.models.domain.CalculationId
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import routing.Version3
+import v3.controllers.validators.MockRetrieveUkPropertyBsasValidatorFactory
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
-import v3.mocks.requestParsers.MockRetrieveUkPropertyRequestParser
 import v3.mocks.services.MockRetrieveUkPropertyBsasService
 import v3.models.errors._
-import v3.models.request.retrieveBsas.ukProperty.{RetrieveUkPropertyBsasRawData, RetrieveUkPropertyBsasRequestData}
+import v3.models.request.retrieveBsas
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveUkPropertyRequestParser
+    with MockRetrieveUkPropertyBsasValidatorFactory
     with MockRetrieveUkPropertyBsasService
     with MockHateoasFactory
     with MockIdGenerator
     with MockAppConfig {
 
-  private val version = Version3
-
-  private val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
-  private val request = RetrieveUkPropertyBsasRequestData(Nino(nino), calculationId, taxYear = None)
-  private val requestRawData = RetrieveUkPropertyBsasRawData(nino, calculationId, taxYear = None)
-
-  private val testHateoasLinks =
-    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
+  private val calculationId    = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
+  private val requestData      = retrieveBsas.RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear = None)
+  private val testHateoasLinks = List(Link(href = "/some/link", method = GET, rel = "someRel"))
 
   private val hateoasFhlResponse = mtdRetrieveBsasResponseFhlJson
-    .as[JsObject] ++ Json.parse(
-    """{
+    .as[JsObject] ++ Json
+    .parse("""{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+    .as[JsObject]
 
   private val hateoasNonFhlResponse = mtdRetrieveBsasResponseNonFhlJson
-    .as[JsObject] ++ Json.parse(
-    """{
+    .as[JsObject] ++ Json
+    .parse("""{
       |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+    .as[JsObject]
 
   "retrieve" should {
     "return successful hateoas response for fhl with status OK" when {
       "the request is valid" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
+          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino.nino, calculationId.calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseFhlModel, testHateoasLinks))
 
         runOkTest(
@@ -96,16 +90,14 @@ class RetrieveUkPropertyBsasControllerSpec
     }
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino, calculationId, None))
+          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino.nino, calculationId.calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks))
 
         runOkTest(
@@ -117,20 +109,15 @@ class RetrieveUkPropertyBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
+        willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveUkPropertyRequestParser
-          .parse(requestRawData)
-          .returns(Right(request))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
-          .retrieveBsas(request)
+          .retrieveBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))))
 
         runErrorTest(expectedError = RuleTypeOfBusinessIncorrectError)
@@ -143,15 +130,16 @@ class RetrieveUkPropertyBsasControllerSpec
     val controller = new RetrieveUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestParser,
+      validatorFactory = mockRetrieveUkPropertyBsasValidatorFactory,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieve(nino, calculationId, taxYear = None)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieve(nino.nino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
 
-    MockedAppConfig.isApiDeprecated(version) returns false
+    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
+
 }

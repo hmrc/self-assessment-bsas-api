@@ -16,18 +16,19 @@
 
 package v3.connectors
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v3.models.request.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasRequestData
+import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
+import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
-  val calculationId: String = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  private val nino          = Nino("AA123456A")
+  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   trait Test {
     _: ConnectorTest =>
@@ -36,16 +37,19 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
     def requestWith(taxYear: Option[TaxYear]): RetrieveSelfEmploymentBsasRequestData =
       RetrieveSelfEmploymentBsasRequestData(nino, calculationId, taxYear)
+
   }
 
   "RetrieveSelfEmploymentBsasConnectorSpec" when {
     "retrieveSelfEmploymentBsas is called" must {
       "a valid request is supplied" in {
         new IfsTest with Test {
-          val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
-          val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${nino.nino}/$calculationId"
+          val outcome     = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+          val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
-          await(connector.retrieveSelfEmploymentBsas(requestWith(None))) shouldBe outcome
+
+          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(None)))
+          result shouldBe outcome
         }
       }
     }
@@ -53,15 +57,16 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year" must {
       "a valid request is supplied" in {
         new TysIfsTest with Test {
-          val taxYear = TaxYear.fromMtd("2023-24")
-          val outcome = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
-          val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/${nino.nino}/$calculationId"
-
+          val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+          val outcome          = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
+          val expectedUrl      = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
-          await(connector.retrieveSelfEmploymentBsas(requestWith(Some(taxYear)))) shouldBe outcome
+          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(Some(taxYear))))
+          result shouldBe outcome
         }
       }
     }
   }
+
 }
