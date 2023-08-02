@@ -154,21 +154,15 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     }
   }
 
-  "Routing requests for supported version but not enabled" when {
-    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
+  "Routing requests with retired v2 version" when {
+    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.5.0+json")
 
-    "the version has a route for the resource" must {
-      "return 404 Not Found" in new Test {
-        MockedAppConfig.endpointsEnabled(Version3).returns(false).anyNumberOfTimes()
-
-        private val request = buildRequest("/v2")
-        inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
-          val result = a.apply(request)
-
-          status(result) shouldBe NOT_FOUND
-          contentAsJson(result) shouldBe UnsupportedVersionError.asJson
-
-        }
+    "return 404 Not Found" in new Test {
+      private val request = buildRequest("/v2")
+      inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
+        val result = a.apply(request)
+        status(result) shouldBe NOT_FOUND
+        contentAsJson(result) shouldBe UnsupportedVersionError.asJson
       }
     }
   }
