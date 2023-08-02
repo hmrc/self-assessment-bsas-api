@@ -24,15 +24,15 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v2.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures
+import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures
 import v3.models.errors._
 
 class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
+    val nino          = "AA123456B"
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def taxYear: Option[String]
@@ -57,9 +57,9 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         )
     }
 
-    def responseWithHateoas(response: JsValue, nino: String, calculationId: String): JsValue =
-      response.as[JsObject] ++ Json.parse(
-        s"""
+    def responseWithHateoas(response: JsValue): JsValue =
+      response.as[JsObject] ++ Json
+        .parse(s"""
            |{
            |  "links": [
            |    {
@@ -73,7 +73,9 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
            |    }
            |  ]
            |}
-           |""".stripMargin).as[JsObject]
+           |""".stripMargin)
+        .as[JsObject]
+
   }
 
   private trait NonTysTest extends Test {
@@ -107,7 +109,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.header("Deprecation") shouldBe None
@@ -118,7 +120,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson, nino, calculationId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.header("Deprecation") shouldBe None
@@ -129,7 +131,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson, nino, calculationId)
+        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.header("Deprecation") shouldBe None
@@ -138,7 +140,7 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     "return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
-        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasResponse)
+        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
       }
 
       "Downstream response is self employment" in {
@@ -164,12 +166,12 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit =
         s"validation fails with ${expectedBody.code} error" in new TysTest {
-          override val nino: String = requestNino
+          override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
 
           val response: WSResponse = requestTaxYear match {
             case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get())
-            case _ => await(request.get())
+            case _          => await(request.get())
           }
 
           response.json shouldBe Json.toJson(expectedBody)
@@ -225,4 +227,5 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }
