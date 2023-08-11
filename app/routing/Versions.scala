@@ -46,15 +46,11 @@ object Version {
 
 sealed trait Version {
   val name: String
-  val configName: String
-  val maybePrevious: Option[Version] = None
-
   override def toString: String = name
 }
 
 case object Version3 extends Version {
-  val name       = "3.0"
-  val configName = "3"
+  val name = "3.0"
 }
 
 object Versions {
