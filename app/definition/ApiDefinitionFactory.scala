@@ -17,7 +17,7 @@
 package definition
 
 import config.AppConfig
-import routing.{Version, Version3}
+import routing.{Version, Version3, Version4}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.Logging
 
@@ -25,6 +25,9 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
+
+  private val readScope  = "read:self-assessment"
+  private val writeScope = "write:self-assessment"
 
   lazy val confidenceLevel: ConfidenceLevel = {
     val clConfig = appConfig.confidenceLevelConfig
@@ -58,14 +61,16 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
             version = Version3,
             status = buildAPIStatus(Version3),
             endpointsEnabled = appConfig.endpointsEnabled(Version3)
+          ),
+          APIVersion(
+            version = Version4,
+            status = buildAPIStatus(Version4),
+            endpointsEnabled = appConfig.endpointsEnabled(Version4)
           )
         ),
         requiresTrust = None
       )
     )
-
-  private val readScope  = "read:self-assessment"
-  private val writeScope = "write:self-assessment"
 
   private[definition] def buildAPIStatus(version: Version): APIStatus = {
     APIStatus.parser

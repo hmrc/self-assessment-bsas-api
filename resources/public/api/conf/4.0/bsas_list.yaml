@@ -1,0 +1,91 @@
+get:
+  summary: List Business Source Adjustable Summaries
+  description: |
+    This endpoint allows the user to generate a list of Business Source Adjustable Summaries for a given tax year. A 
+    filter can be set to return the summaries for a single business or business type. The National Insurance number must
+    be provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                              |
+    |---------------------------------|----------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                   | Simulate a successful response containing multiple business types.                     |
+    | SELF_EMPLOYMENT                 | Simulate a successful response containing a self-employment business.                  |
+    | UK_PROPERTY                     | Simulate a successful response containing UK FHL and non-FHL property businesses.      |
+    | FOREIGN_PROPERTY                | Simulate a successful response containing EEA FHL and foreign property businesses.     |
+    | NOT_FOUND                       | Simulates the scenario where no data is found.                                         |
+    | DYNAMIC                         | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearOptional
+    - $ref: ./common/queryParameters.yaml#/components/parameters/typeOfBusinessOptional
+    - $ref: ./common/queryParameters.yaml#/components/parameters/businessIdOptional
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: ./common/headers.yaml#/components/parameters/correlationId
+        Deprecation:
+          $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/list_response.json
+          examples:
+            example-response:
+              description: Example Response
+              value:
+                $ref: ./examples/list/list_response.json
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            FORMAT_NINO:
+              $ref: ./common/errors.yaml#/components/examples/formatNino
+            FORMAT_TAX_YEAR:
+              $ref: ./common/errors.yaml#/components/examples/formatTaxYear
+            FORMAT_BUSINESS_ID:
+              $ref: ./common/errors.yaml#/components/examples/formatBusinessId
+            FORMAT_TYPE_OF_BUSINESS:
+              $ref: ./common/errors.yaml#/components/examples/formatTypeOfBusiness
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: ./common/errors.yaml#/components/examples/triggerAndListNotFound

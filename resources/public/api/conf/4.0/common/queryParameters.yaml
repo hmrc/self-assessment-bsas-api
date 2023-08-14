@@ -1,0 +1,52 @@
+components:
+  parameters:
+    taxYearOptional:
+      name: taxYear
+      in: query
+      description: |
+        The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
+        For example, 2023-25 is not valid.
+        
+        The minimum tax year is 2019-20.
+        
+        Where no tax year is provided, it will default to the current tax year.
+      schema:
+        type: string
+        example: 2019-20
+        pattern: ^\d{4}-\d{2}$
+      required: false
+
+    taxYearTys:
+      name: taxYear
+      in: query
+      description: |
+        The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
+        For example, 2023-25 is not valid.
+        
+        This is mandatory for tax years 2023-24 and onwards and must not be provided for earlier tax years.
+      schema:
+        type: string
+        example: 2023-24
+        pattern: ^\d{4}-\d{2}$
+      required: false
+
+    businessIdOptional:
+      name: businessId
+      in: query
+      description: An identifier for the business, unique to the customer.
+      schema:
+        type: string
+        example: XAIS12345678910
+        pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
+      required: false
+
+    typeOfBusinessOptional:
+      name: typeOfBusiness
+      in: query
+      description: The type of business the summary calculation is for.
+      schema:
+        type: string
+        enum: [ self-employment, uk-property-fhl, uk-property-non-fhl, foreign-property-fhl-eea, foreign-property ]
+        example: foreign-property
+      required: false
+

@@ -17,8 +17,10 @@ package config
 
 import io.swagger.v3.parser.OpenAPIV3Parser
 import play.api.http.Status
+import play.api.http.Status.OK
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
+import routing.{Version3, Version4}
 import support.IntegrationBaseSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -54,6 +56,11 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
        |        "version":"3.0",
        |        "status":"BETA",
        |        "endpointsEnabled":true
+       |      },
+       |      {
+       |        "version":"4.0",
+       |        "status":"BETA",
+       |        "endpointsEnabled":true
        |      }
        |    ]
        |  }
@@ -69,21 +76,28 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
+    Seq(Version3, Version4).foreach { version =>
+      s"return the documentation for $version" in {
+        val response = get(s"/api/conf/${version.name}/application.yaml")
 
-    "return the v3 documentation that passes OAS parser" in {
-      val response: WSResponse = await(buildRequest("/api/conf/3.0/application.yaml").get())
-      response.status shouldBe Status.OK
+        val body         = response.body[String]
+        val parserResult = Try(new OpenAPIV3Parser().readContents(body))
+        parserResult.isSuccess shouldBe true
 
-      val contents     = response.body[String]
-      val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
-      parserResult.isSuccess shouldBe true
-
-      val openAPI = Option(parserResult.get.getOpenAPI)
-      openAPI.isEmpty shouldBe false
-      openAPI.get.getOpenapi shouldBe "3.0.3"
-      openAPI.get.getInfo.getTitle shouldBe "Business Source Adjustable Summary (MTD)"
-      openAPI.get.getInfo.getVersion shouldBe "3.0"
+        val openAPI = Option(parserResult.get.getOpenAPI).getOrElse(fail("openAPI wasn't defined"))
+        openAPI.getOpenapi shouldBe "3.0.3"
+        withClue(s"If v${version.name} endpoints are enabled in application.conf, remove the [test only] from this test: ") {
+          openAPI.getInfo.getTitle shouldBe "Business Source Adjustable Summary (MTD)"
+        }
+        openAPI.getInfo.getVersion shouldBe version.toString
+      }
     }
+  }
+
+  private def get(path: String): WSResponse = {
+    val response: WSResponse = await(buildRequest(path).get())
+    response.status shouldBe OK
+    response
   }
 
 }

@@ -38,13 +38,15 @@ trait VersionRoutingMap {
 case class VersionRoutingMapImpl @Inject() (
     appConfig: AppConfig,
     defaultRouter: Router,
-    v3Router: v3.Routes
+    v3Router: v3.Routes,
+    v4Router: v4.Routes
 ) extends VersionRoutingMap {
 
   lazy val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
 
   val map: Map[Version, Router] = Map(
-    Version3 -> v3Router
+    Version3 -> v3Router,
+    Version4 -> v4Router
   )
 
 }
