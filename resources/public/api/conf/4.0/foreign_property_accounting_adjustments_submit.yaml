@@ -1,0 +1,151 @@
+post:
+  summary: Submit Foreign Property Accounting Adjustments
+  description: |
+    This endpoint allows the user to provide accounting adjustments against a specified Business Source Accounting 
+    Summary quoting its unique identifier. The calculation ID quoted must be for a Foreign Property Business, and it 
+    must not have been adjusted previously. Only data for one property business either foreign property (FHL EEA) or 
+    foreign property (Non FHL) should be included in any submission. A National Insurance number and calculation ID must
+    be provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+    
+    | Header Value (Gov-Test-Scenario)                      | Scenario                                                                       |
+    |-------------------------------------------------------|--------------------------------------------------------------------------------|
+    | N/A - DEFAULT                                         | Simulates success response.                                                    |
+    | TYPE_OF_BUSINESS_INCORRECT                            | Simulates the scenario where the calculation ID supplied does not relate to a foreign property business. |
+    | SUMMARY_STATUS_INVALID                                | Simulates the scenario where the summary is invalid and cannot be adjusted.    |
+    | SUMMARY_STATUS_SUPERSEDED                             | Simulates the scenario where the summary is superseded and cannot be adjusted. |
+    | ALREADY_ADJUSTED                                      | Simulates the scenario where the summary has already been adjusted.            |
+    | RESULTING_VALUE_NOT_PERMITTED                         | Simulates the scenario where one or more adjustments would result in a negative value that is not permitted. |
+    | FOREIGN_PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD | Simulates the scenario where the cumulative turnover amount exceeds the consolidated expenses threshold. |
+    | FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED             | Simulates the scenario where property income allowance was claimed but the adjustment was made to expenses. |
+    | NOT_FOUND                                             | Simulates the scenario where no data is found.                                 |
+    | TAX_YEAR_NOT_SUPPORTED                                | Simulates the scenario where the tax year is not supported.                    |
+
+  tags:
+    - Foreign property business
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
+    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ./schemas/submit_foreign_property_accounting_adjustments_request.json
+        examples:
+          example-1:
+            description: Foreign Property EEA FHL
+            value:
+              $ref: ./examples/adjustments/submit_foreign_property_eeh_fhl_accounting_adjustments.json
+          example-2:
+            description: Foreign Property EEA FHL with Consolidated
+            value:
+              $ref: ./examples/adjustments/submit_foreign_property_eeh_fhl_consolidated_accounting_adjustments.json
+          example-3:
+            description: Foreign Property (Non-FHL)
+            value:
+              $ref: ./examples/adjustments/submit_foreign_property_non_fhl_accounting_adjustments.json
+          example-4:
+            description: Foreign Property (Non-FHL) with Consolidated
+            value:
+              $ref: ./examples/adjustments/submit_foreign_property_non_fhl_consolidated_accounting_adjustments.json
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: ./common/headers.yaml#/components/parameters/correlationId
+        Deprecation:
+          $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/submit_foreign_property_accounting_adjustments_response.json
+          examples:
+            example:
+              description: Foreign Property Response
+              value:
+                $ref: ./examples/adjustments/submit_foreign_property_accounting_adjustments_response.json
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            FORMAT_NINO:
+              $ref: ./common/errors.yaml#/components/examples/formatNino
+            FORMAT_CALCULATION_ID:
+              $ref: ./common/errors.yaml#/components/examples/formatCalculationId
+            FORMAT_VALUE:
+              $ref: ./common/errors.yaml#/components/examples/formatValue
+            RULE_BOTH_EXPENSES_SUPPLIED:
+              $ref: ./common/errors.yaml#/components/examples/ruleBothExpensesSupplied
+            RULE_TYPE_OF_BUSINESS_INCORRECT:
+              $ref: ./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectForeign
+            RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted
+            FORMAT_COUNTRY_CODE:
+              $ref: ./common/errors.yaml#/components/examples/formatCountryCode
+            RULE_COUNTRY_CODE:
+              $ref: ./common/errors.yaml#/components/examples/ruleCountryCode
+            RULE_SUMMARY_STATUS_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusInvalid
+            RULE_SUMMARY_STATUS_SUPERSEDED:
+              $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded
+            RULE_ALREADY_ADJUSTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleAlreadyAdjusted
+            RULE_RESULTING_VALUE_NOT_PERMITTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleResultingValueNotPermitted
+            RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
+              $ref: ./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold
+            RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED:
+              $ref: ./common/errors.yaml#/components/examples/rulePropertyIncomeAllowanceClaimed
+            RULE_DUPLICATE_COUNTRY_CODE:
+              $ref: ./common/errors.yaml#/components/examples/ruleDuplicateCountryCode
+            RULE_BOTH_PROPERTIES_SUPPLIED:
+              $ref: ./common/errors.yaml#/components/examples/ruleBothPropertiesSupplied
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: ./common/errors.yaml#/components/examples/invalidTaxYear
+            FORMAT_TAX_YEAR:
+              $ref: ./common/errors.yaml#/components/examples/formatTaxYear
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: ./common/errors.yaml#/components/examples/adjustmentNotFound

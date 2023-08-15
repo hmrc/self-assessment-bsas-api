@@ -27,6 +27,7 @@ object Version {
 
     def writes(version: Version): JsValue = version match {
       case Version3 => Json.toJson(Version3.name)
+      case Version4 => Json.toJson(Version4.name)
     }
 
   }
@@ -36,6 +37,7 @@ object Version {
     override def reads(version: JsValue): JsResult[Version] =
       version.validate[String].flatMap {
         case Version3.name => JsSuccess(Version3)
+        case Version4.name => JsSuccess(Version4)
         case _             => JsError("Unrecognised version")
       }
 
@@ -53,12 +55,17 @@ case object Version3 extends Version {
   val name = "3.0"
 }
 
+case object Version4 extends Version {
+  val name = "4.0"
+}
+
 object Versions {
 
   val latest: Version = Version3
 
   private val versionsByName: Map[String, Version] = Map(
-    Version3.name -> Version3
+    Version3.name -> Version3,
+    Version4.name -> Version4
   )
 
   private val versionRegex = """application/vnd.hmrc.(\d.\d)\+json""".r

@@ -1,0 +1,40 @@
+{
+  "income": {
+    "turnover": -599.99,
+    "other": 454544.59
+  },
+  "expenses": {
+    "costOfGoodsAllowable": 3353.39,
+    "paymentsToSubcontractorsAllowable": 35353.19,
+    "wagesAndStaffCostsAllowable": 24232.23,
+    "carVanTravelExpensesAllowable": 3563.77,
+    "premisesRunningCostsAllowable": 35635.34,
+    "maintenanceCostsAllowable": 35333.22,
+    "adminCostsAllowable": 24242.45,
+    "interestOnBankOtherLoansAllowable": 34535.34,
+    "financeChargesAllowable": 42342.56,
+    "irrecoverableDebtsAllowable": 54353.23,
+    "professionalFeesAllowable": 23421.23,
+    "depreciationAllowable": 24222.56,
+    "otherExpensesAllowable": 35435.23,
+    "advertisingCostsAllowable": 34223.33,
+    "businessEntertainmentCostsAllowable": 3543.78
+  },
+  "additions": {
+    "costOfGoodsDisallowable": 5464.56,
+    "paymentsToSubcontractorsDisallowable": 5643.23,
+    "wagesAndStaffCostsDisallowable": 3453.78,
+    "carVanTravelExpensesDisallowable": 53533.23,
+    "premisesRunningCostsDisallowable": 2433.23,
+    "maintenanceCostsDisallowable": 2342.53,
+    "adminCostsDisallowable": 42342.34,
+    "interestOnBankOtherLoansDisallowable": 2342.34,
+    "financeChargesDisallowable": 23424.34,
+    "irrecoverableDebtsDisallowable": 23424.23,
+    "professionalFeesDisallowable": 34222.23,
+    "depreciationDisallowable": 2342.54,
+    "otherExpensesDisallowable": 24232.34,
+    "advertisingCostsDisallowable": 23121.23,
+    "businessEntertainmentCostsDisallowable": 6575.56
+  }
+}

@@ -16,10 +16,11 @@
 
 package definition
 
+import api.mocks.MockHttpClient
 import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.MockAppConfig
-import routing.{Version3}
+import routing.{Version3, Version4}
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -27,46 +28,62 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
-  class Test {
-    val factory = new ApiDefinitionFactory(mockAppConfig)
+  class Test extends MockHttpClient with MockAppConfig {
+    val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
+    MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
   }
 
   "definition" when {
-    "there is no appConfig.apiStatus" should {
-      "default apiStatus to ALPHA" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("api.gateway.context")
-        MockedAppConfig.apiStatus(Version3).returns("").anyNumberOfTimes()
+    "called" should {
+      "return a valid Definition case class" in new Test {
+        MockedAppConfig.apiStatus(Version3) returns "BETA"
+        MockedAppConfig.apiStatus(Version4) returns "BETA"
         MockedAppConfig.endpointsEnabled(version = Version3).returns(true).anyNumberOfTimes()
+        MockedAppConfig.endpointsEnabled(version = Version4).returns(true).anyNumberOfTimes()
+
         MockedAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
-        factory.definition shouldBe Definition(
-          scopes = List(
-            Scope(
-              key = "read:self-assessment",
-              name = "View your Self Assessment information",
-              description = "Allow read access to self assessment data",
-              confidenceLevel
+        private val readScope  = "read:self-assessment"
+        private val writeScope = "write:self-assessment"
+
+        apiDefinitionFactory.definition shouldBe
+          Definition(
+            scopes = List(
+              Scope(
+                key = readScope,
+                name = "View your Self Assessment information",
+                description = "Allow read access to self assessment data",
+                confidenceLevel
+              ),
+              Scope(
+                key = writeScope,
+                name = "Change your Self Assessment information",
+                description = "Allow write access to self assessment data",
+                confidenceLevel
+              )
             ),
-            Scope(
-              key = "write:self-assessment",
-              name = "Change your Self Assessment information",
-              description = "Allow write access to self assessment data",
-              confidenceLevel
+            api = APIDefinition(
+              name = "Business Source Adjustable Summary (MTD)",
+              description = "An API for providing business source adjustable summary data",
+              context = "individuals/self-assessment/adjustable-summary",
+              categories = Seq("INCOME_TAX_MTD"),
+              versions = Seq(
+                APIVersion(
+                  Version3,
+                  status = BETA,
+                  endpointsEnabled = true
+                ),
+                APIVersion(
+                  Version4,
+                  status = BETA,
+                  endpointsEnabled = true
+                )
+              ),
+              requiresTrust = None
             )
-          ),
-          api = APIDefinition(
-            name = "Business Source Adjustable Summary (MTD)",
-            description = "An API for providing business source adjustable summary data",
-            context = "api.gateway.context",
-            categories = Seq("INCOME_TAX_MTD"),
-            versions = List(
-              APIVersion(Version3, status = ALPHA, endpointsEnabled = true)
-            ),
-            requiresTrust = None
           )
-        )
       }
     }
   }
@@ -83,25 +100,31 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)
-          factory.confidenceLevel shouldBe expectedDefinitionCL
+          apiDefinitionFactory.confidenceLevel shouldBe expectedDefinitionCL
         }
       }
     }
   }
 
   "buildAPIStatus" when {
-    val anyVersion = Version3
     "the 'apiStatus' parameter is present and valid" should {
-      "return the correct status" in new Test {
-        MockedAppConfig.apiStatus(version = anyVersion) returns "BETA"
-        factory.buildAPIStatus(version = anyVersion) shouldBe BETA
+      Seq(
+        (Version3, BETA),
+        (Version4, BETA)
+      ).foreach { case (version, status) =>
+        s"return the correct $status for $version " in new Test {
+          MockedAppConfig.apiStatus(version) returns status.toString
+          apiDefinitionFactory.buildAPIStatus(version) shouldBe status
+        }
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      "default to alpha" in new Test {
-        MockedAppConfig.apiStatus(version = anyVersion) returns "ALPHO"
-        factory.buildAPIStatus(version = anyVersion) shouldBe ALPHA
+      Seq(Version3, Version4).foreach { version =>
+        s"default to alpha for $version " in new Test {
+          MockedAppConfig.apiStatus(version) returns "ALPHO"
+          apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
+        }
       }
     }
   }
