@@ -19,24 +19,17 @@ package routing
 import play.api.http.HeaderNames.ACCEPT
 import play.api.test.FakeRequest
 import play.api.libs.json._
+import routing.Version.VersionWrites
 import support.UnitSpec
 
 class VersionSpec extends UnitSpec {
 
-  "VersionReads" when {
-    "reading a valid version string" should {
-      "return Version3" in {
-        JsString(Version3.name).validate[Version](Version.VersionReads) shouldBe JsSuccess(Version3)
-      }
-
-      "return Version4" in {
-        JsString(Version4.name).validate[Version](Version.VersionReads) shouldBe JsSuccess(Version4)
-      }
-    }
-    "reading an invalid version string" should {
-      "return a JsError" in {
-        JsString("unknown").validate[Version](Version.VersionReads) shouldBe a[JsError]
-      }
+  "serialized to Json" must {
+    "return the expected Json output" in {
+      val version: Version = Version3
+      val expected         = Json.parse(""" "3.0" """)
+      val result           = Json.toJson(version)
+      result shouldBe expected
     }
   }
 

@@ -20,12 +20,10 @@ import support.UnitSpec
 
 class BusinessIdSpec extends UnitSpec {
 
-  "BusinessId toString" should {
-    "return the BusinessId value" when {
-      "called" in {
-        val businessId = BusinessId("some id")
-        businessId.toString shouldBe "some id"
-      }
+  "toString" should {
+    "return the BusinessId value" in {
+      val businessId = BusinessId("some id")
+      businessId.toString shouldBe "some id"
     }
   }
 
