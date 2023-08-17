@@ -44,6 +44,7 @@ object Version {
   }
 
   implicit val versionFormat: Format[Version] = Format(VersionReads, VersionWrites)
+
 }
 
 sealed trait Version {

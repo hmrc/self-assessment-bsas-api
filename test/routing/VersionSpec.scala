@@ -18,23 +18,34 @@ package routing
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.test.FakeRequest
+import play.api.libs.json._
+import routing.Version.VersionWrites
 import support.UnitSpec
 
 class VersionSpec extends UnitSpec {
 
+  "serialized to Json" must {
+    "return the expected Json output" in {
+      val version: Version = Version3
+      val expected         = Json.parse(""" "3.0" """)
+      val result           = Json.toJson(version)
+      result shouldBe expected
+    }
+  }
+
   "Versions" when {
-    "retrieved from a request header" must {
-      "return an error if the version is unsupported" in {
+    "retrieved from a request header" should {
+      "return Version1 for valid header" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))) shouldBe Right(Version3)
+      }
+      "return InvalidHeader when the version header is missing" in {
+        Versions.getFromRequest(FakeRequest().withHeaders()) shouldBe Left(InvalidHeader)
+      }
+      "return VersionNotFound for unrecognised version" in {
         Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.5.0+json"))) shouldBe Left(VersionNotFound)
       }
-
-      "return an error if the Accept header value is invalid" in {
-        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/XYZ.3.0+json"))) shouldBe Left(InvalidHeader)
-      }
-
-      "work" in {
-        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))) shouldBe Right(Version3)
-        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.4.0+json"))) shouldBe Right(Version4)
+      "return InvalidHeader for a header format that doesn't match regex" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "invalidHeaderFormat"))) shouldBe Left(InvalidHeader)
       }
     }
   }
