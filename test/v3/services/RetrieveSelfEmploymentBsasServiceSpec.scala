@@ -57,6 +57,16 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
     }
 
     "return error response" when {
+      "a valid request is supplied with negative field value in response" in new Test {
+        MockRetrieveSelfEmploymentBsasConnector
+          .retrieveSelfEmploymentBsas(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModelWithNegativeValue))))
+
+        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
+      }
+    }
+
+    "return error response" when {
       "downstream returns a success response with invalid type of business" should {
         import TypeOfBusiness._
         Seq(`uk-property-fhl`, `uk-property-non-fhl`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>

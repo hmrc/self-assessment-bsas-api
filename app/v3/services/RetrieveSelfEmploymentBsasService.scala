@@ -18,13 +18,15 @@ package v3.services
 
 import api.controllers.RequestContext
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
 import v3.models.domain.TypeOfBusiness
+import v3.models.errors.RuleTypeOfBusinessIncorrectError
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
-import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v3.models.response.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasResponse, SummaryCalculationAdditions, SummaryCalculationExpenses}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -62,8 +64,54 @@ class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploym
     val result = for {
       responseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(responseWrapper))
-    } yield mtdResponseWrapper
+      validatedResponse <- EitherT.fromEither[Future](validateAdjustableSummaryCalculation(mtdResponseWrapper))
+    } yield validatedResponse
 
     result.value
+  }
+
+  final protected def validateAdjustableSummaryCalculation(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): ServiceOutcome[RetrieveSelfEmploymentBsasResponse] = {
+    val allSummaryCalculationExpensesFieldIsPositive: Boolean = validateSummaryCalculationExpenses(responseWrapper)
+    val allSummaryCalculationAdditionsFieldIsPositive: Boolean = validateSummaryCalculationAdditions(responseWrapper)
+
+    if (allSummaryCalculationExpensesFieldIsPositive && allSummaryCalculationAdditionsFieldIsPositive) {
+      Right(responseWrapper)
+    } else {
+      Left(ErrorWrapper(responseWrapper.correlationId, RuleTypeOfBusinessIncorrectError, None))
+    }
+  }
+
+  private def validateSummaryCalculationAdditions(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]) = {
+    val summaryCalculationAdditions: SummaryCalculationAdditions = responseWrapper
+      .responseData
+      .adjustableSummaryCalculation
+      .additions
+      .getOrElse(SummaryCalculationAdditions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None))
+
+    (summaryCalculationAdditions.paymentsToSubcontractorsDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.wagesAndStaffCostsDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.carVanTravelExpensesDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.adminCostsDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.professionalFeesDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.otherExpensesDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.advertisingCostsDisallowable.forall(_ > 0) &&
+      summaryCalculationAdditions.businessEntertainmentCostsDisallowable.forall(_ > 0))
+  }
+
+  def validateSummaryCalculationExpenses(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): Boolean = {
+    val summaryCalculationExpenses: SummaryCalculationExpenses = responseWrapper
+      .responseData
+      .adjustableSummaryCalculation
+      .expenses
+      .getOrElse(SummaryCalculationExpenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None))
+
+    (summaryCalculationExpenses.consolidatedExpenses.forall(_ > 0) &&
+      summaryCalculationExpenses.paymentsToSubcontractorsAllowable.forall(_ > 0) &&
+      summaryCalculationExpenses.wagesAndStaffCostsAllowable.forall(_ > 0) &&
+      summaryCalculationExpenses.carVanTravelExpensesAllowable.forall(_ > 0) &&
+      summaryCalculationExpenses.adminCostsAllowable.forall(_ > 0) &&
+      summaryCalculationExpenses.otherExpensesAllowable.forall(_ > 0) &&
+      summaryCalculationExpenses.advertisingCostsAllowable.forall(_ > 0) &&
+      summaryCalculationExpenses.businessEntertainmentCostsAllowable.forall(_ > 0))
   }
 }
