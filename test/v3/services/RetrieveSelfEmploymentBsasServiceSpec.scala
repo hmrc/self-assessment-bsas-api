@@ -17,7 +17,7 @@
 package v3.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{ CalculationId, Nino }
+import api.models.domain.{CalculationId, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -57,16 +57,14 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
     }
 
     "return error response" when {
+
       "a valid request is supplied with negative field value in response" in new Test {
         MockRetrieveSelfEmploymentBsasConnector
           .retrieveSelfEmploymentBsas(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModelWithNegativeValue))))
-
-        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
+        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
       }
-    }
 
-    "return error response" when {
       "downstream returns a success response with invalid type of business" should {
         import TypeOfBusiness._
         Seq(`uk-property-fhl`, `uk-property-non-fhl`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
@@ -78,7 +76,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
             await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
-        })
+          })
       }
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
@@ -111,4 +109,5 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

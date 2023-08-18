@@ -24,94 +24,84 @@ import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors.RuleTypeOfBusinessIncorrectError
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
-import v3.models.response.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasResponse, SummaryCalculationAdditions, SummaryCalculationExpenses}
+import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasService @Inject()(connector: RetrieveSelfEmploymentBsasConnector) extends BaseRetrieveBsasService {
+class RetrieveSelfEmploymentBsasService @Inject() (connector: RetrieveSelfEmploymentBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`self-employment`)
+
   private val errorMap: Map[String, MtdError] = {
 
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_RETURN" -> InternalError,
-      "UNPROCESSABLE_ENTITY" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_RETURN"            -> InternalError,
+      "UNPROCESSABLE_ENTITY"      -> InternalError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "NOT_FOUND" -> NotFoundError,
+      "NOT_FOUND"              -> NotFoundError
     )
 
     errors ++ extraTysErrors
   }
 
-  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(
-    implicit ctx: RequestContext,
-    ec: ExecutionContext): Future[ServiceOutcome[RetrieveSelfEmploymentBsasResponse]] = {
+  def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
     val result = for {
-      responseWrapper <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
+      responseWrapper    <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(responseWrapper))
-      validatedResponse <- EitherT.fromEither[Future](validateAdjustableSummaryCalculation(mtdResponseWrapper))
+      validatedResponse  <- EitherT.fromEither[Future](validateAdjustableSummaryCalculation(mtdResponseWrapper))
     } yield validatedResponse
 
     result.value
   }
 
-  final protected def validateAdjustableSummaryCalculation(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): ServiceOutcome[RetrieveSelfEmploymentBsasResponse] = {
-    val allSummaryCalculationExpensesFieldIsPositive: Boolean = validateSummaryCalculationExpenses(responseWrapper)
-    val allSummaryCalculationAdditionsFieldIsPositive: Boolean = validateSummaryCalculationAdditions(responseWrapper)
-
-    if (allSummaryCalculationExpensesFieldIsPositive && allSummaryCalculationAdditionsFieldIsPositive) {
+  private def validateAdjustableSummaryCalculation(
+      responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): ServiceOutcome[RetrieveSelfEmploymentBsasResponse] = {
+    if (validateSummaryCalculationExpenses(responseWrapper) && validateSummaryCalculationAdditions(responseWrapper)) {
       Right(responseWrapper)
     } else {
-      Left(ErrorWrapper(responseWrapper.correlationId, RuleTypeOfBusinessIncorrectError, None))
+      logger.warn("Unexpected negative value returned from downstream.")
+      Left(ErrorWrapper(responseWrapper.correlationId, InternalError, None))
     }
   }
 
-  private def validateSummaryCalculationAdditions(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]) = {
-    val summaryCalculationAdditions: SummaryCalculationAdditions = responseWrapper
-      .responseData
-      .adjustableSummaryCalculation
-      .additions
-      .getOrElse(SummaryCalculationAdditions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None))
-
-    (summaryCalculationAdditions.paymentsToSubcontractorsDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.wagesAndStaffCostsDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.carVanTravelExpensesDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.adminCostsDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.professionalFeesDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.otherExpensesDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.advertisingCostsDisallowable.forall(_ > 0) &&
-      summaryCalculationAdditions.businessEntertainmentCostsDisallowable.forall(_ > 0))
+  private def validateSummaryCalculationAdditions(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): Boolean = {
+    responseWrapper.responseData.adjustableSummaryCalculation.additions.forall(additions =>
+      additions.paymentsToSubcontractorsDisallowable.forall(_ >= 0) &&
+        additions.wagesAndStaffCostsDisallowable.forall(_ >= 0) &&
+        additions.carVanTravelExpensesDisallowable.forall(_ >= 0) &&
+        additions.adminCostsDisallowable.forall(_ >= 0) &&
+        additions.professionalFeesDisallowable.forall(_ >= 0) &&
+        additions.otherExpensesDisallowable.forall(_ >= 0) &&
+        additions.advertisingCostsDisallowable.forall(_ >= 0) &&
+        additions.businessEntertainmentCostsDisallowable.forall(_ >= 0))
   }
 
   def validateSummaryCalculationExpenses(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): Boolean = {
-    val summaryCalculationExpenses: SummaryCalculationExpenses = responseWrapper
-      .responseData
-      .adjustableSummaryCalculation
-      .expenses
-      .getOrElse(SummaryCalculationExpenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None))
-
-    (summaryCalculationExpenses.consolidatedExpenses.forall(_ > 0) &&
-      summaryCalculationExpenses.paymentsToSubcontractorsAllowable.forall(_ > 0) &&
-      summaryCalculationExpenses.wagesAndStaffCostsAllowable.forall(_ > 0) &&
-      summaryCalculationExpenses.carVanTravelExpensesAllowable.forall(_ > 0) &&
-      summaryCalculationExpenses.adminCostsAllowable.forall(_ > 0) &&
-      summaryCalculationExpenses.otherExpensesAllowable.forall(_ > 0) &&
-      summaryCalculationExpenses.advertisingCostsAllowable.forall(_ > 0) &&
-      summaryCalculationExpenses.businessEntertainmentCostsAllowable.forall(_ > 0))
+    responseWrapper.responseData.adjustableSummaryCalculation.expenses.forall(expenses =>
+      expenses.consolidatedExpenses.forall(_ >= 0) &&
+        expenses.paymentsToSubcontractorsAllowable.forall(_ >= 0) &&
+        expenses.wagesAndStaffCostsAllowable.forall(_ >= 0) &&
+        expenses.carVanTravelExpensesAllowable.forall(_ >= 0) &&
+        expenses.adminCostsAllowable.forall(_ >= 0) &&
+        expenses.otherExpensesAllowable.forall(_ >= 0) &&
+        expenses.advertisingCostsAllowable.forall(_ >= 0) &&
+        expenses.businessEntertainmentCostsAllowable.forall(_ >= 0))
   }
+
 }
