@@ -180,7 +180,7 @@
           "description": "Object containing the expenses for self-employment income sources.",
           "properties": {
             "consolidatedExpenses": {
-              "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -190,17 +190,17 @@
               "example": "1000.45"
             },
             "paymentsToSubcontractorsAllowable": {
-              "description": "Construction industry – payments to subcontractors. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Construction industry - payments to subcontractors. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "wagesAndStaffCostsAllowable": {
-              "description": "Wages, salaries and other staff costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Wages, salaries and other staff costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "carVanTravelExpensesAllowable": {
-              "description": "Car, van and travel expenses. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Car, van and travel expenses. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -215,7 +215,7 @@
               "example": "1000.45"
             },
             "adminCostsAllowable": {
-              "description": "Phone, fax, stationery and other office costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Phone, fax, stationery and other office costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -245,17 +245,17 @@
               "example": "1000.45"
             },
             "otherExpensesAllowable": {
-              "description": "Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "advertisingCostsAllowable": {
-              "description": "Advertising costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Advertising costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "businessEntertainmentCostsAllowable": {
-              "description": "Business entertainment costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Business entertainment costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             }
@@ -287,17 +287,17 @@
               "example": "1000.45"
             },
             "paymentsToSubcontractorsDisallowable": {
-              "description": "Payments to subcontractors - Construction Industry Scheme (CIS). Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Payments to subcontractors - Construction Industry Scheme (CIS). Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "wagesAndStaffCostsDisallowable": {
-              "description": "Wages, salaries and other staff costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Wages, salaries and other staff costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "carVanTravelExpensesDisallowable": {
-              "description": "Car, van and travel expenses. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Car, van and travel expenses. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -312,7 +312,7 @@
               "example": "1000.45"
             },
             "adminCostsDisallowable": {
-              "description": "Phone, fax, stationery and other office costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Phone, fax, stationery and other office costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -332,7 +332,7 @@
               "example": "1000.45"
             },
             "professionalFeesDisallowable": {
-              "description": "Accountancy, legal and other professional fees. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Accountancy, legal and other professional fees. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -342,17 +342,17 @@
               "example": "1000.45"
             },
             "otherExpensesDisallowable": {
-              "description": "Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "advertisingCostsDisallowable": {
-              "description": "Advertising costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Advertising costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "businessEntertainmentCostsDisallowable": {
-              "description": "Business entertainment costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Business entertainment costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },

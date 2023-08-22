@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v3.fixtures.selfEmployment
+package v4.fixtures.selfEmployment
 
 import api.models.domain.{Source, Status}
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v3.models.response.retrieveBsas.selfEmployment._
+import v4.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v4.models.response.retrieveBsas.selfEmployment._
 
 object RetrieveSelfEmploymentBsasFixtures {
 
@@ -613,25 +613,6 @@ object RetrieveSelfEmploymentBsasFixtures {
     businessEntertainmentCostsAllowable = Some(2.16)
   )
 
-  val summaryCalculationExpensesModelWithNegativeValue: SummaryCalculationExpenses = SummaryCalculationExpenses(
-    consolidatedExpenses = Some(-2.01),
-    costOfGoodsAllowable = Some(2.02),
-    paymentsToSubcontractorsAllowable = Some(-2.03),
-    wagesAndStaffCostsAllowable = Some(2.04),
-    carVanTravelExpensesAllowable = Some(2.05),
-    premisesRunningCostsAllowable = Some(2.06),
-    maintenanceCostsAllowable = Some(2.07),
-    adminCostsAllowable = Some(2.08),
-    interestOnBankOtherLoansAllowable = Some(2.09),
-    financeChargesAllowable = Some(2.10),
-    irrecoverableDebtsAllowable = Some(2.11),
-    professionalFeesAllowable = Some(2.12),
-    depreciationAllowable = Some(2.13),
-    otherExpensesAllowable = Some(2.14),
-    advertisingCostsAllowable = Some(2.15),
-    businessEntertainmentCostsAllowable = Some(2.16)
-  )
-
   val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
     costOfGoodsDisallowable = Some(5.01),
     paymentsToSubcontractorsDisallowable = Some(5.02),
@@ -683,23 +664,6 @@ object RetrieveSelfEmploymentBsasFixtures {
     income = Some(summaryCalculationIncomeModel),
     totalExpenses = Some(2),
     expenses = Some(summaryCalculationExpensesModel),
-    netProfit = Some(3),
-    netLoss = Some(4),
-    totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
-    totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsModel),
-    totalAccountingAdjustments = Some(7),
-    accountingAdjustments = Some(summaryCalculationAccountingAdjustmentsModel),
-    taxableProfit = Some(8),
-    adjustedIncomeTaxLoss = Some(9)
-  )
-
-  val adjustableSummaryCalculationModelWithNegativeValue: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
-    totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeModel),
-    totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesModelWithNegativeValue),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
@@ -781,14 +745,6 @@ object RetrieveSelfEmploymentBsasFixtures {
     metadata = metadataModel,
     inputs = inputsModel,
     adjustableSummaryCalculation = adjustableSummaryCalculationModel,
-    adjustments = Some(adjustmentsModel),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
-  )
-
-  val retrieveBsasResponseModelWithNegativeValue: RetrieveSelfEmploymentBsasResponse = RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataModel,
-    inputs = inputsModel,
-    adjustableSummaryCalculation = adjustableSummaryCalculationModelWithNegativeValue,
     adjustments = Some(adjustmentsModel),
     adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
   )

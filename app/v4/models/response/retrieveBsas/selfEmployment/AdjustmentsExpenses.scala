@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package v3.models.response.retrieveBsas.selfEmployment
+package v4.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class SummaryCalculationExpenses(
-    consolidatedExpenses: Option[BigDecimal],
-    costOfGoodsAllowable: Option[BigDecimal],
-    paymentsToSubcontractorsAllowable: Option[BigDecimal],
-    wagesAndStaffCostsAllowable: Option[BigDecimal],
-    carVanTravelExpensesAllowable: Option[BigDecimal],
-    premisesRunningCostsAllowable: Option[BigDecimal],
-    maintenanceCostsAllowable: Option[BigDecimal],
-    adminCostsAllowable: Option[BigDecimal],
-    interestOnBankOtherLoansAllowable: Option[BigDecimal],
-    financeChargesAllowable: Option[BigDecimal],
-    irrecoverableDebtsAllowable: Option[BigDecimal],
-    professionalFeesAllowable: Option[BigDecimal],
-    depreciationAllowable: Option[BigDecimal],
-    otherExpensesAllowable: Option[BigDecimal],
-    advertisingCostsAllowable: Option[BigDecimal],
-    businessEntertainmentCostsAllowable: Option[BigDecimal]
-)
+case class AdjustmentsExpenses(
+                                consolidatedExpenses: Option[BigDecimal],
+                                costOfGoodsAllowable: Option[BigDecimal],
+                                paymentsToSubcontractorsAllowable: Option[BigDecimal],
+                                wagesAndStaffCostsAllowable: Option[BigDecimal],
+                                carVanTravelExpensesAllowable: Option[BigDecimal],
+                                premisesRunningCostsAllowable: Option[BigDecimal],
+                                maintenanceCostsAllowable: Option[BigDecimal],
+                                adminCostsAllowable: Option[BigDecimal],
+                                interestOnBankOtherLoansAllowable: Option[BigDecimal],
+                                financeChargesAllowable: Option[BigDecimal],
+                                irrecoverableDebtsAllowable: Option[BigDecimal],
+                                professionalFeesAllowable: Option[BigDecimal],
+                                depreciationAllowable: Option[BigDecimal],
+                                otherExpensesAllowable: Option[BigDecimal],
+                                advertisingCostsAllowable: Option[BigDecimal],
+                                businessEntertainmentCostsAllowable: Option[BigDecimal],
+                              )
 
-object SummaryCalculationExpenses {
-
-  implicit val reads: Reads[SummaryCalculationExpenses] = (
+object AdjustmentsExpenses {
+  implicit val reads: Reads[AdjustmentsExpenses] = (
     (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
       (JsPath \ "costOfGoodsAllowable").readNullable[BigDecimal] and
       (JsPath \ "paymentsToSubcontractorsAllowable").readNullable[BigDecimal] and
@@ -57,7 +56,7 @@ object SummaryCalculationExpenses {
       (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
       (JsPath \ "advertisingCostsAllowable").readNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsAllowable").readNullable[BigDecimal]
-  )(SummaryCalculationExpenses.apply _)
+    ) (AdjustmentsExpenses.apply _)
 
-  implicit val writes: OWrites[SummaryCalculationExpenses] = Json.writes[SummaryCalculationExpenses]
+  implicit val writes: OWrites[AdjustmentsExpenses] = Json.writes[AdjustmentsExpenses]
 }

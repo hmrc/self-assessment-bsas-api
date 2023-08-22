@@ -14,36 +14,31 @@
  * limitations under the License.
  */
 
-package v3.models.response.retrieveBsas.selfEmployment
+package v4.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class SummaryCalculationAdditions(
-    costOfGoodsDisallowable: Option[BigDecimal],
-    paymentsToSubcontractorsDisallowable: Option[BigDecimal],
-    wagesAndStaffCostsDisallowable: Option[BigDecimal],
-    carVanTravelExpensesDisallowable: Option[BigDecimal],
-    premisesRunningCostsDisallowable: Option[BigDecimal],
-    maintenanceCostsDisallowable: Option[BigDecimal],
-    adminCostsDisallowable: Option[BigDecimal],
-    interestOnBankOtherLoansDisallowable: Option[BigDecimal],
-    financeChargesDisallowable: Option[BigDecimal],
-    irrecoverableDebtsDisallowable: Option[BigDecimal],
-    professionalFeesDisallowable: Option[BigDecimal],
-    depreciationDisallowable: Option[BigDecimal],
-    otherExpensesDisallowable: Option[BigDecimal],
-    advertisingCostsDisallowable: Option[BigDecimal],
-    businessEntertainmentCostsDisallowable: Option[BigDecimal],
-    outstandingBusinessIncome: Option[BigDecimal],
-    balancingChargeOther: Option[BigDecimal],
-    balancingChargeBpra: Option[BigDecimal],
-    goodsAndServicesOwnUse: Option[BigDecimal]
-)
+case class AdjustmentsAdditions(
+                                 costOfGoodsDisallowable: Option[BigDecimal],
+                                 paymentsToSubcontractorsDisallowable: Option[BigDecimal],
+                                 wagesAndStaffCostsDisallowable: Option[BigDecimal],
+                                 carVanTravelExpensesDisallowable: Option[BigDecimal],
+                                 premisesRunningCostsDisallowable: Option[BigDecimal],
+                                 maintenanceCostsDisallowable: Option[BigDecimal],
+                                 adminCostsDisallowable: Option[BigDecimal],
+                                 interestOnBankOtherLoansDisallowable: Option[BigDecimal],
+                                 financeChargesDisallowable: Option[BigDecimal],
+                                 irrecoverableDebtsDisallowable: Option[BigDecimal],
+                                 professionalFeesDisallowable: Option[BigDecimal],
+                                 depreciationDisallowable: Option[BigDecimal],
+                                 otherExpensesDisallowable: Option[BigDecimal],
+                                 advertisingCostsDisallowable: Option[BigDecimal],
+                                 businessEntertainmentCostsDisallowable: Option[BigDecimal],
+                               )
 
-object SummaryCalculationAdditions {
-
-  implicit val reads: Reads[SummaryCalculationAdditions] = (
+object AdjustmentsAdditions {
+  implicit val reads: Reads[AdjustmentsAdditions] = (
     (JsPath \ "costOfGoodsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "paymentsToSubcontractorsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "wagesAndStaffCostsDisallowable").readNullable[BigDecimal] and
@@ -58,13 +53,8 @@ object SummaryCalculationAdditions {
       (JsPath \ "depreciationDisallowable").readNullable[BigDecimal] and
       (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "advertisingCostsDisallowable").readNullable[BigDecimal] and
-      (JsPath \ "businessEntertainmentCostsDisallowable").readNullable[BigDecimal] and
-      (JsPath \ "outstandingBusinessIncome").readNullable[BigDecimal] and
-      (JsPath \ "balancingChargeOther").readNullable[BigDecimal] and
-      (JsPath \ "balancingChargeBpra").readNullable[BigDecimal] and
-      (JsPath \ "goodAndServicesOwnUse").readNullable[BigDecimal]
-  )(SummaryCalculationAdditions.apply _)
+      (JsPath \ "businessEntertainmentCostsDisallowable").readNullable[BigDecimal]
+    ) (AdjustmentsAdditions.apply _)
 
-  implicit val writes: OWrites[SummaryCalculationAdditions] = Json.writes[SummaryCalculationAdditions]
-
+  implicit val writes: OWrites[AdjustmentsAdditions] = Json.writes[AdjustmentsAdditions]
 }
