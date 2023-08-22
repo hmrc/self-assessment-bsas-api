@@ -40,9 +40,6 @@ case class SummaryCalculationExpenses(
 
 object SummaryCalculationExpenses {
 
-  def empty: SummaryCalculationExpenses =
-    SummaryCalculationExpenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
-
   implicit val reads: Reads[SummaryCalculationExpenses] = (
     (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
       (JsPath \ "costOfGoodsAllowable").readNullable[BigDecimal] and
