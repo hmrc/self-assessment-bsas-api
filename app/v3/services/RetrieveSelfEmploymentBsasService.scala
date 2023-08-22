@@ -87,15 +87,16 @@ class RetrieveSelfEmploymentBsasService @Inject() (connector: RetrieveSelfEmploy
     additions match {
       case None => true
       case Some(add) =>
+        import add._
         List(
-          add.paymentsToSubcontractorsDisallowable,
-          add.wagesAndStaffCostsDisallowable,
-          add.carVanTravelExpensesDisallowable,
-          add.adminCostsDisallowable,
-          add.professionalFeesDisallowable,
-          add.otherExpensesDisallowable,
-          add.advertisingCostsDisallowable,
-          add.businessEntertainmentCostsDisallowable
+          paymentsToSubcontractorsDisallowable,
+          wagesAndStaffCostsDisallowable,
+          carVanTravelExpensesDisallowable,
+          adminCostsDisallowable,
+          professionalFeesDisallowable,
+          otherExpensesDisallowable,
+          advertisingCostsDisallowable,
+          businessEntertainmentCostsDisallowable
         ).forall(_.forall(isPositive))
     }
   }
@@ -103,17 +104,19 @@ class RetrieveSelfEmploymentBsasService @Inject() (connector: RetrieveSelfEmploy
   def validateSummaryCalculationExpenses(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): Boolean = {
     val expenses = responseWrapper.responseData.adjustableSummaryCalculation.expenses
     expenses match {
+
       case None => true
       case Some(exp) =>
+        import exp._
         List(
-          exp.consolidatedExpenses,
-          exp.paymentsToSubcontractorsAllowable,
-          exp.wagesAndStaffCostsAllowable,
-          exp.carVanTravelExpensesAllowable,
-          exp.adminCostsAllowable,
-          exp.otherExpensesAllowable,
-          exp.advertisingCostsAllowable,
-          exp.businessEntertainmentCostsAllowable
+          consolidatedExpenses,
+          paymentsToSubcontractorsAllowable,
+          wagesAndStaffCostsAllowable,
+          carVanTravelExpensesAllowable,
+          adminCostsAllowable,
+          otherExpensesAllowable,
+          advertisingCostsAllowable,
+          businessEntertainmentCostsAllowable
         ).forall(_.forall(isPositive))
     }
   }
