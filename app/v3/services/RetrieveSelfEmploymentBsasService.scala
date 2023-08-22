@@ -25,7 +25,7 @@ import cats.implicits._
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
-import v3.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
+import v3.models.response.retrieveBsas.selfEmployment.{RetrieveSelfEmploymentBsasResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -80,28 +80,42 @@ class RetrieveSelfEmploymentBsasService @Inject() (connector: RetrieveSelfEmploy
     }
   }
 
+  private def isPositive(property: BigDecimal): Boolean = property >= 0
+
   private def validateSummaryCalculationAdditions(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): Boolean = {
-    responseWrapper.responseData.adjustableSummaryCalculation.additions.forall(additions =>
-      additions.paymentsToSubcontractorsDisallowable.forall(_ >= 0) &&
-        additions.wagesAndStaffCostsDisallowable.forall(_ >= 0) &&
-        additions.carVanTravelExpensesDisallowable.forall(_ >= 0) &&
-        additions.adminCostsDisallowable.forall(_ >= 0) &&
-        additions.professionalFeesDisallowable.forall(_ >= 0) &&
-        additions.otherExpensesDisallowable.forall(_ >= 0) &&
-        additions.advertisingCostsDisallowable.forall(_ >= 0) &&
-        additions.businessEntertainmentCostsDisallowable.forall(_ >= 0))
+    val additions = responseWrapper.responseData.adjustableSummaryCalculation.additions
+    additions match {
+      case None => true
+      case Some(add) =>
+        List(
+          add.paymentsToSubcontractorsDisallowable,
+          add.wagesAndStaffCostsDisallowable,
+          add.carVanTravelExpensesDisallowable,
+          add.adminCostsDisallowable,
+          add.professionalFeesDisallowable,
+          add.otherExpensesDisallowable,
+          add.advertisingCostsDisallowable,
+          add.businessEntertainmentCostsDisallowable
+        ).forall(_.forall(isPositive))
+    }
   }
 
   def validateSummaryCalculationExpenses(responseWrapper: ResponseWrapper[RetrieveSelfEmploymentBsasResponse]): Boolean = {
-    responseWrapper.responseData.adjustableSummaryCalculation.expenses.forall(expenses =>
-      expenses.consolidatedExpenses.forall(_ >= 0) &&
-        expenses.paymentsToSubcontractorsAllowable.forall(_ >= 0) &&
-        expenses.wagesAndStaffCostsAllowable.forall(_ >= 0) &&
-        expenses.carVanTravelExpensesAllowable.forall(_ >= 0) &&
-        expenses.adminCostsAllowable.forall(_ >= 0) &&
-        expenses.otherExpensesAllowable.forall(_ >= 0) &&
-        expenses.advertisingCostsAllowable.forall(_ >= 0) &&
-        expenses.businessEntertainmentCostsAllowable.forall(_ >= 0))
+    val expenses = responseWrapper.responseData.adjustableSummaryCalculation.expenses
+    expenses match {
+      case None => true
+      case Some(exp) =>
+        List(
+          exp.consolidatedExpenses,
+          exp.paymentsToSubcontractorsAllowable,
+          exp.wagesAndStaffCostsAllowable,
+          exp.carVanTravelExpensesAllowable,
+          exp.adminCostsAllowable,
+          exp.otherExpensesAllowable,
+          exp.advertisingCostsAllowable,
+          exp.businessEntertainmentCostsAllowable
+        ).forall(_.forall(isPositive))
+    }
   }
 
 }
