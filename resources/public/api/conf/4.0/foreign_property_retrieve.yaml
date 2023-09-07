@@ -5,7 +5,7 @@ get:
     business EEA Furnished Holiday Letting (FHL) or a non-FHL foreign property business. A National Insurance number and
     calculation ID must be provided. 
     
-    Please note that the expense items ‘residentialFinancialCost’ and ‘broughtFwdResidentialFinancialCost’ under 
+    Please note that the expense items 'residentialFinancialCost' and 'broughtFwdResidentialFinancialCost' under 
     'adjustableSummaryCalculation' and 'adjustedSummaryCalculation' are not currently in use and will not be returned 
     in a live environment. These fields will be removed in the near future.
     
