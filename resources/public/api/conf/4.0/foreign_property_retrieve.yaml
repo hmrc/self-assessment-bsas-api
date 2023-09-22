@@ -12,23 +12,50 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
      
-    | Header Value (Gov-Test-Scenario)     | Scenario                                                                            |
-    |--------------------------------------|-------------------------------------------------------------------------------------|
-    | N/A - DEFAULT                        | Simulates the scenario where no data is found.                                      |
-    | FOREIGN_PROPERTY_FHL_PROFIT          | Simulates success response with FHL foreign property and profit.                    |
-    | FOREIGN_PROPERTY_FHL_LOSS            | Simulates success response with FHL foreign property and loss.                      |
-    | FOREIGN_PROPERTY_NON_FHL_PROFIT      | Simulates success response with non FHL foreign property and profit.                |
-    | FOREIGN_PROPERTY_NON_FHL_LOSS        | Simulates success response with non FHL foreign property and loss.                  |
-    | FOREIGN_PROPERTY_FHL_CONSOLIDATED    | Simulates success response with FHL adjusted summary and consolidated expenses.     |
-    | FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED| Simulates success response with non FHL adjusted summary and consolidated expenses. |
-    | FOREIGN_FHL_PROPERTY_ALLOWANCE       | Simulates success response with FHL adjusted summary and propertyAllowance.         |
-    | FOREIGN_NON_FHL_PROPERTY_ALLOWANCE   | Simulates success response with non FHL adjusted summary and propertyAllowance.     |
-    | FOREIGN_PROPERTY_STATUS_INVALID      | Simulates success response with summary status invalid.                             |
-    | FOREIGN_PROPERTY_STATUS_SUPERSEDED   | Simulates success response with summary status superseded.                          |
-    | NOT_FOREIGN_PROPERTY                 | Simulates the scenario where the calculationId is not a foreign property.           |
-    | TAX_YEAR_NOT_SUPPORTED               | Simulates the scenario where the tax year is not supported.                         |
-    | NOT_FOUND                            | Simulates the scenario where no matching resource is found.                         |
-    | DYNAMIC                              | The following response parameters will be based on the data submitted in the request: <br><br/> &bull; taxYear <br/> &bull; CalculationID <br/> &bull; nino <br/> &bull; requestedDateTime <br/> &bull; adjustedDateTime <br/> &bull; accountingPeriodStartDate <br/> &bull; accountingPeriodEndDate <br/> &bull; startDate <br/> &bull; endDate <br/> &bull; receivedDateTime |
+    | Header Value (Gov-Test-Scenario)              | Scenario                                                                            |
+    |-----------------------------------------------|-------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                                 | Simulates the scenario where no data is found.                                      |
+    | FOREIGN_PROPERTY_FHL_PROFIT                   | Simulates success response with FHL foreign property and profit.                    |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_PROFIT           | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_FHL_LOSS                     | Simulates success response with FHL foreign property and loss.                      |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_LOSS             | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_NON_FHL_PROFIT               | Simulates success response with non FHL foreign property and profit.                |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_PROFIT       | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_NON_FHL_LOSS                 | Simulates success response with non FHL foreign property and loss.                  |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_LOSS         | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.     |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED	    | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses. |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED	| See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.         |
+    | DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE        | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.     |
+    | DYNAMIC_FOREIGN_NON_FHL_PROPERTY_ALLOWANCE    | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                             |
+    | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID	    | See below for details on DYNAMIC scenarios.                                         |
+    | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                          |
+    | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | See below for details on DYNAMIC scenarios.                                         |
+    | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.           |
+    | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                         |
+    | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                         |
+    
+    In each case where a scenario is prefixed by DYNAMIC_, the following response values will change to correspond to the values submitted in the request:
+      * metadata.
+        * calculationId
+        * taxYear
+        * nino
+        * requestedDateTime
+        * adjustedDateTime
+      * inputs.
+        * accountingPeriodStartDate
+        * accountingPeriodEndDate
+        * submissionPeriods
+          * startDate
+          * endDate
+          * receivedDateTime
+  
+      For tax years prior to 2023-24, when the tax year is not supplied, these values will be based on a tax year of 2022-23.
+
 
 
   tags:
