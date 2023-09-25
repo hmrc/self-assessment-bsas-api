@@ -24,29 +24,29 @@ get:
     | FOREIGN_PROPERTY_NON_FHL_LOSS                 | Simulates success response with non FHL foreign property and loss.                  |
     | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_LOSS         | See below for details on DYNAMIC scenarios.                                         |
     | FOREIGN_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.     |
-    | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED	    | See below for details on DYNAMIC scenarios.                                         |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED     | See below for details on DYNAMIC scenarios.                                         |
     | FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses. |
-    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED	| See below for details on DYNAMIC scenarios.                                         |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED | See below for details on DYNAMIC scenarios.                                         |
     | FOREIGN_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.         |
     | DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE        | See below for details on DYNAMIC scenarios.                                         |
     | FOREIGN_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.     |
     | DYNAMIC_FOREIGN_NON_FHL_PROPERTY_ALLOWANCE    | See below for details on DYNAMIC scenarios.                                         |
     | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                             |
-    | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID	    | See below for details on DYNAMIC scenarios.                                         |
+    | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | See below for details on DYNAMIC scenarios.                                         |
     | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                          |
     | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | See below for details on DYNAMIC scenarios.                                         |
     | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.           |
     | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                         |
     | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                         |
     
-    In each case where a scenario is prefixed by DYNAMIC_, the following response values will change to correspond to the values submitted in the request:
-      * metadata.
+    In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
+      * metadata
         * calculationId
         * taxYear
         * nino
         * requestedDateTime
         * adjustedDateTime
-      * inputs.
+      * inputs
         * accountingPeriodStartDate
         * accountingPeriodEndDate
         * submissionPeriods
