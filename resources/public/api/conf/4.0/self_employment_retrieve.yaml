@@ -71,15 +71,15 @@ get:
           schema:
             $ref: "./schemas/retrieve_self_employment.json"
           examples:
-            example-1:
+            "Full Expenses":
               description: Full Expenses
               value:
                 $ref: "./examples/retrieveBsas/retrieve_self_employment_full_expenses.json"
-            example-2:
+            "Consolidated Expenses":
               description: Consolidated Expenses
               value:
                 $ref: "./examples/retrieveBsas/retrieve_self_employment_consolidated_expenses.json"
-            example-3:
+            "Trading Allowance":
               description: Trading Allowance
               value:
                 $ref: "./examples/retrieveBsas/retrieve_self_employment_trading_allowance.json"
