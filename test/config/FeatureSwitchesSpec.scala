@@ -47,17 +47,5 @@ class FeatureSwitchesSpec extends UnitSpec {
       }
     }
   }
-//  "FeatureSwitches" should {
-//    "return true" when {
-//      "the feature switch is set to true" in {
-//        featureSwitches.featureSwitchConfig.getOptional[Boolean]("feature-switch.enabled") shouldBe Some(true)
-//      }
-//    }
-//    "return false" when {
-//      "the feature switch is not present in the config" in {
-//        featureSwitches.featureSwitchConfig.getOptional[Boolean]("invalid") shouldBe None
-//      }
-//    }
-//  }
 
 }
