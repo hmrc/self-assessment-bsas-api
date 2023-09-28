@@ -16,3 +16,6 @@ Some APIs may be marked \[test only\]. This means that they are not available fo
 Some endpoints support DYNAMIC gov test scenarios. The response is dynamic based on the request parameters:
 
 - List Business Source Adjustable Summaries V3.0
+- Retrieve a Self-Employment Business Source Adjustable Summary V4.0
+- Retrieve a UK Property Business Source Adjustable Summary V4.0
+- Retrieve a Foreign Property Business Source Adjustable Summary V4.0
