@@ -66,8 +66,6 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
        |}
     """.stripMargin)
 
-  private val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
-
   "GET /api/definition" should {
     "return a 200 with the correct response body" in {
       val response: WSResponse = await(buildRequest("/api/definition").get())
@@ -97,7 +95,8 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
         val response = get(s"/api/conf/${version.name}/common/headers.yaml")
         val body     = response.body[String]
 
-        val header = headerRegex.findFirstMatchIn(body)
+        val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
+        val header      = headerRegex.findFirstMatchIn(body)
         header.isDefined shouldBe true
 
         val versionFromHeader = header.get.group(1)
