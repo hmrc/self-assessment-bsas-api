@@ -56,8 +56,8 @@ class ResolveDateRangeSpec extends UnitSpec {
         result shouldBe Invalid(List(RuleEndBeforeStartDateError))
       }
 
-      "passed a fromYear less than or equal to minimumTaxYear" in {
-        val result = dateResolver("1890-04-06" -> "2019-04-05")
+      "passed a fromYear less than minimumTaxYear" in {
+        val result = dateResolver("1899-04-06" -> "2019-04-05")
         result shouldBe Invalid(List(StartDateFormatError))
       }
 
