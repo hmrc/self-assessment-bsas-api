@@ -17,7 +17,7 @@
 package v3.controllers.validators
 
 import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange, ResolveFromAndToDates}
+import api.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Invalid
@@ -39,8 +39,6 @@ class TriggerBsasRulesValidator @Inject() (appConfig: AppConfig) extends RulesVa
   private val minYear: Int = 1900
   private val maxYear: Int = 2100
 
-  private val resolveFromAndToDates = new ResolveFromAndToDates(minYear, maxYear)
-
   private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
     s"${appConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
     DateTimeFormatter.ISO_LOCAL_DATE
@@ -57,7 +55,7 @@ class TriggerBsasRulesValidator @Inject() (appConfig: AppConfig) extends RulesVa
 
     val (validatedBusinessId, validatedDateRange, validatedTypeOfBusiness) = (
       ResolveBusinessId(body.businessId),
-      ResolveDateRange(startDate -> endDate).andThen(resolveFromAndToDates(_)),
+      ResolveDateRange.withLimits(minYear, maxYear)(startDate -> endDate),
       ResolveTypeOfBusiness(body.typeOfBusiness)
     )
 

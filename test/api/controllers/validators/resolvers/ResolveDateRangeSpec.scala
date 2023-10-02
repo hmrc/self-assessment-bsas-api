@@ -27,28 +27,48 @@ class ResolveDateRangeSpec extends UnitSpec {
   private val validStart = "2023-06-21"
   private val validEnd   = "2024-06-21"
 
+  private val minYear = 1900
+  private val maxYear = 2100
+
+  private val dateResolver = ResolveDateRange.withLimits(minYear, maxYear)
+
   "ResolveDateRange" should {
     "return no errors" when {
       "passed a valid start and end date" in {
-        val result = ResolveDateRange(validStart -> validEnd)
+        val result = dateResolver(validStart -> validEnd)
         result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validEnd)))
       }
     }
 
     "return an error" when {
       "passed an invalid start date" in {
-        val result = ResolveDateRange("not-a-date" -> validEnd)
+        val result = dateResolver("not-a-date" -> validEnd)
         result shouldBe Invalid(List(StartDateFormatError))
       }
 
       "passed an invalid end date" in {
-        val result = ResolveDateRange(validStart -> "not-a-date")
+        val result = dateResolver(validStart -> "not-a-date")
         result shouldBe Invalid(List(EndDateFormatError))
       }
 
       "passed an end date before start date" in {
-        val result = ResolveDateRange(validEnd -> validStart)
+        val result = dateResolver(validEnd -> validStart)
         result shouldBe Invalid(List(RuleEndBeforeStartDateError))
+      }
+
+      "passed a fromYear less than or equal to minimumTaxYear" in {
+        val result = dateResolver("1890-04-06" -> "2019-04-05")
+        result shouldBe Invalid(List(StartDateFormatError))
+      }
+
+      "passed a toYear greater than or equal to maximumTaxYear" in {
+        val result = dateResolver("2020-04-06" -> "2101-04-05")
+        result shouldBe Invalid(List(EndDateFormatError))
+      }
+
+      "passed both dates that are out of range" in {
+        val result = dateResolver("0092-04-06" -> "2101-04-05")
+        result shouldBe Invalid(List(StartDateFormatError, EndDateFormatError))
       }
     }
   }
