@@ -62,7 +62,7 @@ class ResolveDateRangeSpec extends UnitSpec {
       }
 
       "passed a toYear greater than or equal to maximumTaxYear" in {
-        val result = dateResolver("2020-04-06" -> "2101-04-05")
+        val result = dateResolver("2020-04-06" -> "2100-04-05")
         result shouldBe Invalid(List(EndDateFormatError))
       }
 
