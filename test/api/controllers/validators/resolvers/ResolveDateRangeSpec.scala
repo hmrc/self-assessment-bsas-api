@@ -38,6 +38,18 @@ class ResolveDateRangeSpec extends UnitSpec {
         val result = dateResolver(validStart -> validEnd)
         result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validEnd)))
       }
+
+      "when both dates are at the bounds" in {
+        val result = dateResolver("1900-01-01" -> "2099-12-31")
+        result shouldBe Valid(DateRange(LocalDate.parse("1900-01-01"), LocalDate.parse("2099-12-31")))
+      }
+
+      "when date bounding is not in use" in {
+        val unboundedResolver = ResolveDateRange.unlimited
+        val result = unboundedResolver("1567-01-01" -> "1678-01-31")
+
+        result shouldBe Valid(DateRange(LocalDate.parse("1567-01-01"), LocalDate.parse("1678-01-31")))
+      }
     }
 
     "return an error" when {
