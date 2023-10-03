@@ -98,12 +98,30 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
           ErrorWrapper(correlationId, StartDateFormatError)
         )
       }
+
+      "the start date is before the min start date" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(startDate = "1890-05-23")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, StartDateFormatError)
+        )
+      }
     }
 
     "return an EndDateFormatError" when {
       "the end date format is incorrect" in new SetUp() {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(endDate = "06-05-2020")).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, EndDateFormatError)
+        )
+      }
+
+      "the end date is after the max end date" in new SetUp() {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(endDate = "2101-05-20")).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, EndDateFormatError)

@@ -36,6 +36,9 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class TriggerBsasRulesValidator @Inject() (appConfig: AppConfig) extends RulesValidator[TriggerBsasRequestData] {
 
+  private val minYear: Int = 1900
+  private val maxYear: Int = 2100
+
   private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
     s"${appConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
     DateTimeFormatter.ISO_LOCAL_DATE
@@ -52,7 +55,7 @@ class TriggerBsasRulesValidator @Inject() (appConfig: AppConfig) extends RulesVa
 
     val (validatedBusinessId, validatedDateRange, validatedTypeOfBusiness) = (
       ResolveBusinessId(body.businessId),
-      ResolveDateRange(startDate -> endDate),
+      ResolveDateRange.withLimits(minYear, maxYear)(startDate -> endDate),
       ResolveTypeOfBusiness(body.typeOfBusiness)
     )
 
