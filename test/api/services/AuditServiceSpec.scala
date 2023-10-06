@@ -29,9 +29,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuditServiceSpec extends ServiceSpec {
 
   private trait Test {
-    val mockedAppName = "sample-application"
+    val mockedAppName                      = "sample-application"
     val mockAuditConnector: AuditConnector = mock[AuditConnector]
-    val mockConfig: Configuration = mock[Configuration]
+    val mockConfig: Configuration          = mock[Configuration]
 
     (mockConfig
       .get(_: String)(_: play.api.ConfigLoader[String]))
@@ -43,9 +43,9 @@ class AuditServiceSpec extends ServiceSpec {
 
   "AuditService" when {
     "auditing an event" should {
-      val auditType = "auditType"
-      val transactionName = "transaction-name"
-      val eventDetails = "EventDetails"
+      val auditType                     = "auditType"
+      val transactionName               = "transaction-name"
+      val eventDetails                  = "EventDetails"
       val expected: Future[AuditResult] = Future.successful(Success)
       "return a successful audit result" in new Test {
 

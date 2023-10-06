@@ -30,8 +30,8 @@ import scala.concurrent.ExecutionContext
 trait AuditHandler extends RequestContextImplicits {
 
   def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-                                                                                                               ctx: RequestContext,
-                                                                                                               ec: ExecutionContext): Unit
+      ctx: RequestContext,
+      ec: ExecutionContext): Unit
 
 }
 
@@ -78,11 +78,11 @@ object AuditHandler {
                                             auditDetailCreator: AuditDetailCreator[A],
                                             requestBody: Option[JsValue],
                                             responseBodyMap: Option[JsValue] => Option[JsValue])
-    extends AuditHandler {
+      extends AuditHandler {
 
     def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-                                                                                                                 ctx: RequestContext,
-                                                                                                                 ec: ExecutionContext): Unit = {
+        ctx: RequestContext,
+        ec: ExecutionContext): Unit = {
 
       val auditEvent = {
         val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(_.auditErrors))

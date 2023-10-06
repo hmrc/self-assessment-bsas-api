@@ -20,11 +20,11 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.CalculationId
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -50,7 +50,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockAppConfig {
 
   private val calculationId    = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
-  private val requestData      = retrieveBsas.RetrieveSelfEmploymentBsasRequestData(nino, calculationId, None)
+  private val requestData      = retrieveBsas.RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, None)
   private val testHateoasLinks = List(Link(href = "/some/link", method = GET, rel = "someRel"))
 
   private val hateoasResponse = mtdRetrieveBsasResponseJson
@@ -71,7 +71,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(nino.nino, calculationId.calculationId, None))
+          .wrap(retrieveBsasResponseModel, RetrieveSelfAssessmentBsasHateoasData(validNino, calculationId.calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseModel, testHateoasLinks))
 
         runOkTest(
@@ -111,7 +111,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.handleRequest(nino.nino, calculationId.calculationId)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId)(fakeGetRequest)
 
     MockedAppConfig.isApiDeprecated(Version3) returns false
   }

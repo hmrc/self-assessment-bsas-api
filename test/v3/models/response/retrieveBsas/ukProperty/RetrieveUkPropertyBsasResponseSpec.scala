@@ -21,7 +21,7 @@ import api.models.domain.TaxYear
 import api.hateoas.Method._
 import api.hateoas.{HateoasWrapper, Link}
 import api.models.utils.JsonErrorValidators
-import mocks.MockAppConfig
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._

@@ -16,7 +16,7 @@
 
 package api.models.audit
 
-import api.fixtures.audit.GenericAuditDetailFixture._
+import GenericAuditDetailFixture._
 import play.api.libs.json.Json
 import support.UnitSpec
 
@@ -35,4 +35,5 @@ class GenericAuditDetailSpec extends UnitSpec {
       }
     }
   }
+
 }

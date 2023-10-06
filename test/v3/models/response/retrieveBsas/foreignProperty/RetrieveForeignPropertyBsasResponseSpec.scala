@@ -20,7 +20,7 @@ import api.hateoas.HateoasFactory
 import api.models.domain.TaxYear
 import api.hateoas.Method.{GET, POST}
 import api.hateoas.{HateoasWrapper, Link}
-import mocks.MockAppConfig
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package api.services
 
 import api.models.auth.UserDetails
 import api.models.outcomes.AuthOutcome
-import api.services.EnrolmentsAuthService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -42,11 +41,11 @@ trait MockEnrolmentsAuthService extends MockFactory {
     def authorised(predicate: Predicate): CallHandler[Future[AuthOutcome]] = {
       (
         mockEnrolmentsAuthService
-          .authorised(_: Predicate)(_: HeaderCarrier,
-            _: ExecutionContext)
+          .authorised(_: Predicate)(_: HeaderCarrier, _: ExecutionContext)
         )
         .expects(predicate, *, *)
     }
+
   }
 
 }

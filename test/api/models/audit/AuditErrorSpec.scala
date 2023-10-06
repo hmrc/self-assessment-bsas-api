@@ -16,14 +16,14 @@
 
 package api.models.audit
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import support.UnitSpec
 
 class AuditErrorSpec extends UnitSpec {
 
-  private val auditErrorModel: AuditError = AuditError(errorCode = "FORMAT_NINO")
+  private val auditError = AuditError("FORMAT_NINO")
 
-  private val auditErrorJson: JsValue = Json.parse(
+  private val auditErrorJson = Json.parse(
     """
       |{
       |  "errorCode": "FORMAT_NINO"
@@ -34,14 +34,15 @@ class AuditErrorSpec extends UnitSpec {
   "AuditError" when {
     "read from valid JSON" should {
       "produce the expected AuditError object" in {
-        auditErrorJson.as[AuditError] shouldBe auditErrorModel
+        auditErrorJson.as[AuditError] shouldBe auditError
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(auditErrorModel) shouldBe auditErrorJson
+        Json.toJson(auditError) shouldBe auditErrorJson
       }
     }
   }
+
 }

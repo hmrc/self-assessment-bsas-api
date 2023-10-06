@@ -23,7 +23,6 @@ import com.typesafe.config.ConfigFactory
 import config.rewriters._
 import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAssets}
 import definition.ApiDefinitionFactory
-import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
 import play.api.mvc.Result
@@ -33,6 +32,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig {
+
+  private val apiTitle = "Business Source Adjustable Summary (MTD)"
 
   "/file endpoint" should {
     "return a file" in new Test {
@@ -54,7 +55,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
         status(response) shouldBe OK
 
         private val result = contentAsString(response)
-        result should include("""  title: "Business Source Adjustable Summary (MTD) [test only]"""")
+        result should include(s"""  title: "$apiTitle [test only]"""")
 
         withClue("Only the title should have [test only] appended:") {
           numberOfTestOnlyOccurrences(result) shouldBe 1
@@ -79,7 +80,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
         private val result = contentAsString(response)
 
-        result should include("""  title: Business Source Adjustable Summary (MTD)""")
+        result should include(s"""  title: $apiTitle""")
         numberOfTestOnlyOccurrences(result) shouldBe 0
 
         result should startWith("""openapi: "3.0.3"

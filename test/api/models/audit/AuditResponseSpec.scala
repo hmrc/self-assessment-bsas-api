@@ -16,7 +16,7 @@
 
 package api.models.audit
 
-import api.fixtures.audit.AuditResponseFixture._
+import AuditResponseFixture._
 import play.api.libs.json.Json
 import support.UnitSpec
 
@@ -35,4 +35,5 @@ class AuditResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

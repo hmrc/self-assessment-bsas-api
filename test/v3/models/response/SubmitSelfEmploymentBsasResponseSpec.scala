@@ -19,7 +19,7 @@ package v3.models.response
 import api.hateoas.Link
 import api.hateoas.Method.GET
 import api.models.domain.TaxYear
-import mocks.MockAppConfig
+import config.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
 

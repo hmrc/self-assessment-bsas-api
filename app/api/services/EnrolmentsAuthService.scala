@@ -33,11 +33,24 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnrolmentsAuthService @Inject()(val connector: AuthConnector, val appConfig: AppConfig) extends Logging {
+class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: AppConfig) extends Logging {
 
   private val authFunction: AuthorisedFunctions = new AuthorisedFunctions {
     override def authConnector: AuthConnector = connector
   }
+
+  def getAgentReferenceFromEnrolments(enrolments: Enrolments): Option[String] =
+    enrolments
+      .getEnrolment("HMRC-AS-AGENT")
+      .flatMap(_.getIdentifier("AgentReferenceNumber"))
+      .map(_.value)
+
+  def buildPredicate(predicate: Predicate): Predicate =
+    if (appConfig.confidenceLevelConfig.authValidationEnabled) {
+      predicate and ((Individual and ConfidenceLevel.L200) or Organisation or Agent)
+    } else {
+      predicate
+    }
 
   def authorised(predicate: Predicate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuthOutcome] = {
     authFunction.authorised(buildPredicate(predicate)).retrieve(affinityGroup and authorisedEnrolments) {
@@ -49,7 +62,7 @@ class EnrolmentsAuthService @Inject()(val connector: AuthConnector, val appConfi
         Future.successful(Right(user))
       case Some(Agent) ~ _ =>
         retrieveAgentDetails() map {
-          case arn@Some(_) =>
+          case arn @ Some(_) =>
             val user: AuthOutcome = Right(UserDetails("", "Agent", arn))
             user
           case None =>
@@ -61,20 +74,13 @@ class EnrolmentsAuthService @Inject()(val connector: AuthConnector, val appConfi
         Future.successful(Left(ClientNotAuthorisedError))
 
     } recoverWith {
-      case _: MissingBearerToken => Future.successful(Left(ClientNotAuthorisedError))
+      case _: MissingBearerToken     => Future.successful(Left(ClientNotAuthorisedError))
       case _: AuthorisationException => Future.successful(Left(ClientNotAuthorisedError))
       case error =>
         logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
         Future.successful(Left(InternalError))
     }
   }
-
-  def buildPredicate(predicate: Predicate): Predicate =
-    if (appConfig.confidenceLevelConfig.authValidationEnabled) {
-      predicate and ((Individual and ConfidenceLevel.L200) or Organisation or Agent)
-    } else {
-      predicate
-    }
 
   private def retrieveAgentDetails()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] =
     authFunction
@@ -84,11 +90,5 @@ class EnrolmentsAuthService @Inject()(val connector: AuthConnector, val appConfi
           Future.successful(getAgentReferenceFromEnrolments(enrolments))
         case _ => Future.successful(None)
       }
-
-  def getAgentReferenceFromEnrolments(enrolments: Enrolments): Option[String] =
-    enrolments
-      .getEnrolment("HMRC-AS-AGENT")
-      .flatMap(_.getIdentifier("AgentReferenceNumber"))
-      .map(_.value)
 
 }

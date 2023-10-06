@@ -267,8 +267,8 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
             BadRequestError,
             Some(
               List(
-                RuleIncorrectOrEmptyBodyError.withPaths(List("/nonFurnishedHolidayLet", "/furnishedHolidayLet")),
-                RuleBothPropertiesSuppliedError
+                RuleBothPropertiesSuppliedError,
+                RuleIncorrectOrEmptyBodyError.withPaths(List("/nonFurnishedHolidayLet", "/furnishedHolidayLet"))
               ))
           )
         )
@@ -456,7 +456,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
           ErrorWrapper(
             correlationId,
             BadRequestError,
-            Some(List(NinoFormatError, CalculationIdFormatError))
+            Some(List(CalculationIdFormatError, NinoFormatError))
           )
         )
       }

@@ -20,13 +20,12 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{CalculationId, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.services.MockAuditService
-import mocks.MockAppConfig
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -58,7 +57,7 @@ class SubmitUkPropertyBsasControllerSpec
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
   private val requestData = SubmitUkPropertyBsasRequestData(
-    nino = nino,
+    nino = parsedNino,
     calculationId = calculationId,
     body = nonFHLBody,
     taxYear = Some(taxYear)
@@ -66,13 +65,13 @@ class SubmitUkPropertyBsasControllerSpec
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId",
+      href = s"/individuals/self-assessment/adjustable-summary/$validNino/uk-property/$calculationId",
       method = GET,
       rel = "self"
     )
   )
 
-  private val mtdResponseJson = Json.parse(hateoasResponse(nino.nino, calculationId.calculationId))
+  private val mtdResponseJson = Json.parse(hateoasResponse(validNino, calculationId.calculationId))
 
   "submitUkPropertyBsas" should {
 
@@ -81,7 +80,7 @@ class SubmitUkPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitUKPropertyBsasNrsProxyService
-          .submit(nino.nino)
+          .submit(validNino)
           .returns(Future.successful(()))
 
         MockSubmitUkPropertyBsasService
@@ -89,7 +88,7 @@ class SubmitUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(nino.nino, calculationId.calculationId, Some(taxYear)))
+          .wrap((), SubmitUkPropertyBsasHateoasData(validNino, calculationId.calculationId, Some(taxYear)))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(
@@ -109,7 +108,7 @@ class SubmitUkPropertyBsasControllerSpec
       }
 
       "multiple parser errors occur" in new Test {
-        private val errors = List(NinoFormatError, CalculationIdFormatError)
+        private val errors = List(CalculationIdFormatError, NinoFormatError)
         willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
@@ -119,7 +118,7 @@ class SubmitUkPropertyBsasControllerSpec
       willUseValidator(returningSuccess(requestData))
 
       MockSubmitUKPropertyBsasNrsProxyService
-        .submit(nino.nino)
+        .submit(validNino)
         .returns(Future.successful(()))
 
       MockSubmitUkPropertyBsasService
@@ -145,7 +144,7 @@ class SubmitUkPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] =
-      controller.handleRequest(nino.nino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
+      controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(validNonFHLInputJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -155,7 +154,7 @@ class SubmitUkPropertyBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino.nino, "calculationId" -> calculationId.calculationId),
+          params = Map("nino" -> validNino, "calculationId" -> calculationId.calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

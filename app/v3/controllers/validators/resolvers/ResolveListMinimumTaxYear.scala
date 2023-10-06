@@ -16,14 +16,14 @@
 
 package v3.controllers.validators.resolvers
 
-import api.controllers.validators.resolvers.ResolvingTaxYear
+import api.controllers.validators.resolvers.TaxYearResolving
 import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import config.FixedConfig
 
-object ResolveListMinimumTaxYear extends ResolvingTaxYear with FixedConfig {
+object ResolveListMinimumTaxYear extends TaxYearResolving with FixedConfig {
 
   def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] = {
 

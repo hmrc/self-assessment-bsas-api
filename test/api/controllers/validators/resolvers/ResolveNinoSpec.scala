@@ -18,14 +18,14 @@ package api.controllers.validators.resolvers
 
 import api.models.domain.Nino
 import api.models.errors.NinoFormatError
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 import support.UnitSpec
 
 class ResolveNinoSpec extends UnitSpec {
 
   "ResolveNino" should {
-    "return no errors" when {
-      "passed a valid NINO" in {
+    "return the parsed Nino" when {
+      "given a valid nino string" in {
         val validNino = "AA123456A"
         val result    = ResolveNino(validNino, NinoFormatError)
         result shouldBe Valid(Nino(validNino))
@@ -33,7 +33,7 @@ class ResolveNinoSpec extends UnitSpec {
     }
 
     "return an error" when {
-      "passed an invalid NINO" in {
+      "given an invalid NINO" in {
         val invalidNino = "AA123456ABCBBCBCBC"
         val result      = ResolveNino(invalidNino, NinoFormatError)
         result shouldBe Invalid(List(NinoFormatError))

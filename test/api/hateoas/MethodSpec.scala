@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package api.mocks
+package api.hateoas
 
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import utils.CurrentDate
+import api.hateoas.Method.{DELETE, GET, POST, PUT}
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
 
-import java.time.LocalDate
-
-trait MockCurrentDate extends MockFactory {
-
-  val mockCurrentDate: CurrentDate = mock[CurrentDate]
-
-  object MockCurrentDate {
-
-    def getCurrentDate(): CallHandler[LocalDate] = (mockCurrentDate.getCurrentDate _).expects()
-  }
+class MethodSpec extends UnitSpec with EnumJsonSpecSupport {
+  testRoundTrip[Method](("GET", GET), ("POST", POST), ("DELETE", DELETE), ("PUT", PUT))
 }

@@ -19,7 +19,7 @@ package v3.connectors
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
 import api.models.domain.TaxYear
-import mocks.MockAppConfig
+import config.MockAppConfig
 import v3.models.request.submitBsas.ukProperty._
 
 import scala.concurrent.Future
@@ -98,4 +98,5 @@ class SubmitUKPropertyBsasNrsproxyConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
 }

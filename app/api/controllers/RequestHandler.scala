@@ -148,7 +148,8 @@ object RequestHandler {
           request: UserRequest[_],
           ec: ExecutionContext,
           appConfig: AppConfig,
-          apiVersion: Version): Future[Result] = {
+          apiVersion: Version
+      ): Future[Result] = {
 
         logger.info(
           message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +

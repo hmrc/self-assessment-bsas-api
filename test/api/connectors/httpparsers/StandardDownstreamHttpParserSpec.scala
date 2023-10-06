@@ -39,6 +39,7 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   import api.connectors.httpparsers.StandardDownstreamHttpParser._
+
   val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
 
   val data                  = "someData"
@@ -227,7 +228,7 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
         |}
       """.stripMargin)
 
-    s"receiving a response with a bvr errors" should {
+    s"receiving a response with BVR errors" should {
       "return an outbound BUSINESS_ERROR error containing the BVR ids" in {
         val httpResponse = HttpResponse(BAD_REQUEST, singleBvrJson, Map("CorrelationId" -> List(correlationId)))
         val result       = httpReads.read(method, url, httpResponse)

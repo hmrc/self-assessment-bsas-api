@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package api.services
 
 import api.connectors.MtdIdLookupOutcome
-import api.services.MtdIdLookupService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -35,6 +34,7 @@ trait MockMtdIdLookupService extends MockFactory {
         .lookup(_: String)(_: HeaderCarrier, _: ExecutionContext))
         .expects(nino, *, *)
     }
+
   }
 
 }
