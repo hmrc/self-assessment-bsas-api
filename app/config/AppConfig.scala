@@ -26,45 +26,64 @@ import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
 
-  lazy val desDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
-
-  lazy val ifsDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
-
-  lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
-
   // MTD ID Lookup Config
   def mtdIdBaseUrl: String
 
   // DES Config
   def desBaseUrl: String
+
   def desEnv: String
+
   def desToken: String
+
   def desEnvironmentHeaders: Option[Seq[String]]
+
+  lazy val desDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
 
   // IFS Config
   def ifsBaseUrl: String
+
   def ifsEnv: String
+
   def ifsToken: String
+
   def ifsEnvironmentHeaders: Option[Seq[String]]
+
   def ifsEnabled: Boolean
+
+  lazy val ifsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
 
   // Tax Year Specific (TYS) IFS Config
   def tysIfsBaseUrl: String
+
   def tysIfsEnv: String
+
   def tysIfsToken: String
+
   def tysIfsEnvironmentHeaders: Option[Seq[String]]
+
+  lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
 
   // API Config
   def apiGatewayContext: String
+
   def apiStatus(version: Version): String
+
   def isApiDeprecated(version: Version): Boolean = apiStatus(version) == "DEPRECATED"
+
   def featureSwitches: Configuration
+
   def endpointsEnabled(version: String): Boolean
+
   def endpointsEnabled(version: Version): Boolean
+
   def confidenceLevelConfig: ConfidenceLevelConfig
+
+  def apiDocumentationUrl: String
+
   def mtdNrsProxyBaseUrl: String
 
   /** Currently only for OAS documentation.
@@ -105,19 +124,26 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val tysIfsToken: String                           = config.getString("microservice.services.tys-ifs.token")
   val tysIfsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.tys-ifs.environmentHeaders")
 
-  // Api Config
+  // API Config
   val apiGatewayContext: String                    = config.getString("api.gateway.context")
   val mtdNrsProxyBaseUrl: String                   = config.baseUrl("mtd-api-nrs-proxy")
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
+
+  val apiDocumentationUrl: String =
+    config.getConfString("api.documentation-url", defString = "https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
   // V3 Trigger BSAS minimum dates
   val v3TriggerForeignBsasMinimumTaxYear: String    = config.getString("v3TriggerForeignBsasMinimumTaxYear")
   val v3TriggerNonForeignBsasMinimumTaxYear: String = config.getString("v3TriggerNonForeignBsasMinimumTaxYear")
 
-  def apiStatus(version: Version): String         = config.getString(s"api.${version.name}.status")
-  def featureSwitches: Configuration              = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
-  def endpointsEnabled(version: String): Boolean  = config.getBoolean(s"api.$version.endpoints.enabled")
-  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.${version.name}.endpoints.enabled")
+  def apiStatus(version: Version): String = config.getString(s"api.$version.status")
+
+  def featureSwitches: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+
+  def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+
+  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
 
   def endpointReleasedInProduction(version: String, name: String): Boolean = {

@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package utils
+package api.models.domain
 
 import java.time.LocalDate
-import javax.inject.{Inject, Singleton}
 
-@Singleton
-class CurrentDate @Inject()() {
-  def getCurrentDate(): LocalDate = LocalDate.now()
-}
+case class DateRange(startDate: LocalDate, endDate: LocalDate)

@@ -20,11 +20,11 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.CalculationId
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -51,7 +51,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  private val requestData = retrieveBsas.RetrieveForeignPropertyBsasRequestData(nino, calculationId, taxYear = None)
+  private val requestData = retrieveBsas.RetrieveForeignPropertyBsasRequestData(parsedNino, calculationId, taxYear = None)
 
   private val testHateoasLinks =
     Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
@@ -75,7 +75,7 @@ class RetrieveForeignPropertyBsasControllerSpec
         MockHateoasFactory
           .wrap(
             retrieveForeignPropertyBsasResponseNonFhlModel,
-            RetrieveForeignPropertyHateoasData(nino.nino, calculationId.calculationId, None)) returns
+            RetrieveForeignPropertyHateoasData(validNino, calculationId.calculationId, None)) returns
           HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
 
         runOkTest(
@@ -114,7 +114,8 @@ class RetrieveForeignPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieve(nino.nino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
+    protected def callController(): Future[Result] =
+      controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
 
     MockedAppConfig.isApiDeprecated(Version3) returns false
   }

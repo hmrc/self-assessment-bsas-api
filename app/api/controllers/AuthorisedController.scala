@@ -20,7 +20,6 @@ import api.models.auth.UserDetails
 import api.models.errors.MtdError
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc._
-import routing.Version
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +31,6 @@ case class UserRequest[A](userDetails: UserDetails, request: Request[A]) extends
 
 abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) {
 
-  val apiVersion: Version
   val authService: EnrolmentsAuthService
   val lookupService: MtdIdLookupService
 
@@ -47,11 +45,11 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
         .withIdentifier("MTDITID", mtdId)
         .withDelegatedAuthRule("mtd-it-auth")
 
-    def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(
-      implicit headerCarrier: HeaderCarrier): Future[Result] = {
+    def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
+        headerCarrier: HeaderCarrier): Future[Result] = {
       authService.authorised(predicate(mtdId)).flatMap[Result] {
         case Right(userDetails) => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
-        case Left(mtdError) => errorResponse(mtdError)
+        case Left(mtdError)     => errorResponse(mtdError)
       }
     }
 
@@ -60,11 +58,12 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
       implicit val headerCarrier: HeaderCarrier = hc(request)
 
       lookupService.lookup(nino).flatMap[Result] {
-        case Right(mtdId) => invokeBlockWithAuthCheck(mtdId, request, block)
+        case Right(mtdId)   => invokeBlockWithAuthCheck(mtdId, request, block)
         case Left(mtdError) => errorResponse(mtdError)
       }
     }
 
     private def errorResponse[A](mtdError: MtdError): Future[Result] = Future.successful(Status(mtdError.httpStatus)(mtdError.asJson))
   }
+
 }

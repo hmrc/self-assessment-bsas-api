@@ -22,7 +22,8 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
   def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
 
-  def isEnabled(key: String): Boolean            = isConfigTrue(key + ".enabled")
+  def isEnabled(key: String): Boolean = isConfigTrue(key + ".enabled")
+
   private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
 }
 

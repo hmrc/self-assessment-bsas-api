@@ -16,13 +16,11 @@
 
 package api.controllers
 
-import api.controllers.ControllerTestRunner.validNino
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, MtdError}
-import api.services.MockAuditService
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
@@ -55,13 +53,16 @@ class ControllerBaseSpec
 
 trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator {
   _: ControllerBaseSpec =>
-  protected val nino: Nino    = validNino
+
+  protected val validNino        = "AA123456A"
+  protected val parsedNino: Nino = Nino(validNino)
+
   protected val correlationId = "X-123"
 
   trait ControllerTest {
     protected val hc: HeaderCarrier = HeaderCarrier()
 
-    MockedMtdIdLookupService.lookup(nino.nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedMtdIdLookupService.lookup(validNino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
@@ -146,8 +147,4 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
 
   }
 
-}
-
-object ControllerTestRunner {
-  val validNino: Nino = Nino("AA123456A")
 }

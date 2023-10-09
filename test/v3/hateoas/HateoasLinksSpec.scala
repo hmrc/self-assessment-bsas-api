@@ -19,7 +19,7 @@ package v3.hateoas
 import api.models.domain.TaxYear
 import api.hateoas.Method.{GET, POST}
 import api.hateoas.{Link, Method}
-import mocks.MockAppConfig
+import config.MockAppConfig
 import support.UnitSpec
 import v3.hateoas.RelType._
 

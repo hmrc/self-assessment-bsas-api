@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package config
 
 import io.swagger.v3.parser.OpenAPIV3Parser
@@ -26,6 +27,8 @@ import support.IntegrationBaseSpec
 import scala.util.Try
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
+
+  private val apiTitle = "Business Source Adjustable Summary (MTD)"
 
   private val config          = app.injector.instanceOf[AppConfig]
   private val confidenceLevel = config.confidenceLevelConfig.confidenceLevel
@@ -46,7 +49,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
        |    }
        |  ],
        |  "api": {
-       |    "name": "Business Source Adjustable Summary (MTD)",
+       |    "name": "$apiTitle",
        |    "description": "An API for providing business source adjustable summary data",
        |    "context": "individuals/self-assessment/adjustable-summary",
        |    "categories": ["INCOME_TAX_MTD"],
@@ -75,9 +78,10 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
-    Seq(Version3, Version4).foreach { version =>
+    List(Version3, Version4).foreach { version =>
       s"return the documentation for $version" in {
-        val response = get(s"/api/conf/${version.name}/application.yaml")
+        val response = get(s"/api/conf/$version/application.yaml")
+        response.status shouldBe Status.OK
 
         val body         = response.body[String]
         val parserResult = Try(new OpenAPIV3Parser().readContents(body))
@@ -86,15 +90,16 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
         val openAPI = Option(parserResult.get.getOpenAPI).getOrElse(fail("openAPI wasn't defined"))
         openAPI.getOpenapi shouldBe "3.0.3"
         withClue(s"If v${version.name} endpoints are enabled in application.conf, remove the [test only] from this test: ") {
-          openAPI.getInfo.getTitle shouldBe "Business Source Adjustable Summary (MTD)"
+          openAPI.getInfo.getTitle shouldBe apiTitle
         }
-        openAPI.getInfo.getVersion shouldBe version.toString
+        openAPI.getInfo.getVersion shouldBe version.name
       }
 
       s"return the documentation with the correct accept header for version $version" in {
         val response = get(s"/api/conf/${version.name}/common/headers.yaml")
-        val body     = response.body[String]
+        response.status shouldBe Status.OK
 
+        val body        = response.body[String]
         val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
         val header      = headerRegex.findFirstMatchIn(body)
         header.isDefined shouldBe true

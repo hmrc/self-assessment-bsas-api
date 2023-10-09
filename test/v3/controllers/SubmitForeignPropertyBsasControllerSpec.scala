@@ -20,13 +20,12 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{CalculationId, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.services.MockAuditService
-import mocks.MockAppConfig
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -57,7 +56,7 @@ class SubmitForeignPropertyBsasControllerSpec
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
   private val testHateoasLink =
-    Link(href = s"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust", method = GET, rel = "self")
+    Link(href = s"individuals/self-assessment/adjustable-summary/$validNino/foreign-property/$calculationId/adjust", method = GET, rel = "self")
 
   private val requestJson = Json.parse(
     """|{
@@ -103,18 +102,14 @@ class SubmitForeignPropertyBsasControllerSpec
   val requestBody: SubmitForeignPropertyBsasRequestBody =
     SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)), None)
 
-  private val requestData = SubmitForeignPropertyBsasRequestData(
-    nino,
-    calculationId,
-    Some(taxYear),
-    requestBody
-  )
+  private val requestData =
+    SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, Some(taxYear), requestBody)
 
   val mtdResponseJson: JsValue = Json.parse(s"""
        |{
        |  "links":[
        |    {
-       |      "href":"individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust",
+       |      "href":"individuals/self-assessment/adjustable-summary/$validNino/foreign-property/$calculationId/adjust",
        |      "rel":"self",
        |      "method":"GET"
        |    }
@@ -128,7 +123,7 @@ class SubmitForeignPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitForeignPropertyBsasNrsProxyService
-          .submit(nino.nino)
+          .submit(validNino)
           .returns(Future.successful(()))
 
         MockSubmitForeignPropertyBsasService
@@ -136,7 +131,7 @@ class SubmitForeignPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitForeignPropertyBsasHateoasData(nino.nino, calculationId.calculationId, requestData.taxYear))
+          .wrap((), SubmitForeignPropertyBsasHateoasData(validNino, calculationId.calculationId, requestData.taxYear))
           .returns(HateoasWrapper((), List(testHateoasLink)))
 
         runOkTestWithAudit(
@@ -158,7 +153,7 @@ class SubmitForeignPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitForeignPropertyBsasNrsProxyService
-          .submit(nino.nino)
+          .submit(validNino)
           .returns(Future.successful(()))
 
         MockSubmitForeignPropertyBsasService
@@ -185,7 +180,7 @@ class SubmitForeignPropertyBsasControllerSpec
     )
 
     override protected def callController(): Future[Result] =
-      controller.handleRequest(nino.nino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
+      controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -195,7 +190,7 @@ class SubmitForeignPropertyBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino.nino, "calculationId" -> calculationId.calculationId),
+          params = Map("nino" -> validNino, "calculationId" -> calculationId.calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

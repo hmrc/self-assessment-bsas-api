@@ -22,6 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
+import routing.{Version, Version3}
 import utils.{IdGenerator, Logging}
 import v3.controllers.validators.SubmitSelfEmploymentBsasValidatorFactory
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
@@ -42,7 +43,6 @@ class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsA
                                                     cc: ControllerComponents,
                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
-    with V3Controller
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -53,6 +53,7 @@ class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsA
 
   def submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
+      implicit val apiVersion: Version = Version.from(request, orElse = Version3)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)

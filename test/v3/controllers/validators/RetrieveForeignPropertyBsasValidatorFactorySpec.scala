@@ -16,7 +16,7 @@
 
 package v3.controllers.validators
 
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors._
 import support.UnitSpec
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
@@ -104,10 +104,11 @@ class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
           ErrorWrapper(
             correlationId,
             BadRequestError,
-            Some(List(NinoFormatError, CalculationIdFormatError))
+            Some(List(CalculationIdFormatError, NinoFormatError))
           )
         )
       }
     }
   }
+
 }

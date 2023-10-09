@@ -18,12 +18,12 @@ package v3.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.mocks.{MockCurrentDate, MockIdGenerator}
+import api.mocks.MockIdGenerator
 import api.models.domain.{BusinessId, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
 import routing.Version3
@@ -48,7 +48,6 @@ class ListBsasControllerSpec
     with MockHateoasFactory
     with MockAppConfig
     with HateoasLinks
-    with MockCurrentDate
     with MockIdGenerator
     with ListBsasFixture {
 
@@ -69,12 +68,12 @@ class ListBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(nino.nino, response, Some(requestData.taxYear)))
+          .wrapList(response, ListBsasHateoasData(validNino, response, Some(requestData.taxYear)))
           .returns(responseWithHateoas)
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(nino))
+          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(parsedNino))
         )
       }
 
@@ -91,12 +90,12 @@ class ListBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(nino.nino, response, Some(requestData.taxYear)))
+          .wrapList(response, ListBsasHateoasData(validNino, response, Some(requestData.taxYear)))
           .returns(responseWithHateoas)
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(nino))
+          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(parsedNino))
         )
       }
     }
@@ -134,7 +133,7 @@ class ListBsasControllerSpec
     )
 
     val requestData: ListBsasRequestData = ListBsasRequestData(
-      nino = nino,
+      nino = parsedNino,
       taxYear = TaxYear.currentTaxYear(),
       incomeSourceId = Some(BusinessId(businessId)),
       incomeSourceType = Some(typeOfBusiness)
@@ -166,7 +165,7 @@ class ListBsasControllerSpec
             List(
               HateoasWrapper(
                 bsasSummaryModel,
-                List(getSelfEmploymentBsas(mockAppConfig, nino.nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
+                List(getSelfEmploymentBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
               ))
           ),
           BusinessSourceSummary(
@@ -177,7 +176,7 @@ class ListBsasControllerSpec
             List(
               HateoasWrapper(
                 bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
-                List(getUkPropertyBsas(mockAppConfig, nino.nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
+                List(getUkPropertyBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
               ))
           ),
           BusinessSourceSummary(
@@ -188,16 +187,16 @@ class ListBsasControllerSpec
             List(
               HateoasWrapper(
                 bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
-                List(getUkPropertyBsas(mockAppConfig, nino.nino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
+                List(getUkPropertyBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
               ))
           )
         )
       ),
-      List(triggerBsas(mockAppConfig, nino.nino), listBsas(mockAppConfig, nino.nino, None))
+      List(triggerBsas(mockAppConfig, validNino), listBsas(mockAppConfig, validNino, None))
     )
 
     protected def callController(): Future[Result] =
-      controller.listBsas(nino.nino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
+      controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
 
     MockedAppConfig.isApiDeprecated(version) returns false
   }

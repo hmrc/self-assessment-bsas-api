@@ -20,11 +20,15 @@ import api.hateoas.Method._
 import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import api.models.domain.TaxYear
 import api.models.utils.JsonErrorValidators
-import mocks.MockAppConfig
+import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.Json
 import support.UnitSpec
-import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
+import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
+  downstreamRetrieveBsasResponseJson,
+  mtdRetrieveBsasResponseJson,
+  retrieveBsasResponseModel
+}
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 

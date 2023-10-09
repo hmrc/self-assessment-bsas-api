@@ -20,13 +20,12 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.CalculationId
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.services.MockAuditService
-import mocks.MockAppConfig
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -54,12 +53,12 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockAppConfig {
 
   private val calculationId   = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
-  private val requestData     = SubmitSelfEmploymentBsasRequestData(nino, calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
-  private val mtdResponseJson = Json.parse(hateoasResponse(nino, calculationId))
+  private val requestData     = SubmitSelfEmploymentBsasRequestData(parsedNino, calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
+  private val mtdResponseJson = Json.parse(hateoasResponse(parsedNino, calculationId))
 
   val testHateoasLinks: Seq[Link] = Seq(
     Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId",
+      href = s"/individuals/self-assessment/adjustable-summary/$validNino/self-employment/$calculationId",
       method = GET,
       rel = "self"
     )
@@ -71,7 +70,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasNrsProxyService
-          .submit(nino.nino)
+          .submit(validNino)
           .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
@@ -79,7 +78,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), SubmitSelfEmploymentBsasHateoasData(nino.nino, calculationId.calculationId, requestData.taxYear))
+          .wrap((), SubmitSelfEmploymentBsasHateoasData(validNino, calculationId.calculationId, requestData.taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(
@@ -99,7 +98,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       }
 
       "multiple parser errors occur" in new Test {
-        private val errors = List(NinoFormatError, CalculationIdFormatError)
+        private val errors = List(CalculationIdFormatError, NinoFormatError)
         willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(mtdRequestJson))
       }
@@ -118,7 +117,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasNrsProxyService
-          .submit(nino.nino)
+          .submit(validNino)
           .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
@@ -145,7 +144,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     )
 
     protected def callController(): Future[Result] =
-      controller.submitSelfEmploymentBsas(nino.nino, calculationId.calculationId, None)(fakePostRequest(mtdRequestJson))
+      controller.submitSelfEmploymentBsas(validNino, calculationId.calculationId, None)(fakePostRequest(mtdRequestJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -155,7 +154,7 @@ class SubmitSelfEmploymentBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino.nino, "calculationId" -> calculationId.calculationId),
+          params = Map("nino" -> validNino, "calculationId" -> calculationId.calculationId),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

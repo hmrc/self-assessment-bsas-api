@@ -19,15 +19,12 @@ package api.connectors
 import api.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
 import api.mocks.MockHttpClient
 import api.models.outcomes.ResponseWrapper
-import config.AppConfig
-import mocks.MockAppConfig
+import config.{AppConfig, MockAppConfig}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
 
 import scala.concurrent.Future
 
 class BaseDownstreamConnectorSpec extends ConnectorSpec {
-
-  // WLOG
   val body        = "body"
   val outcome     = Right(ResponseWrapper(correlationId, Result(2)))
   val url         = "some/url?param=value"

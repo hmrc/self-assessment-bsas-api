@@ -22,6 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
+import routing.{Version, Version3}
 import utils.{IdGenerator, Logging}
 import v3.controllers.validators.TriggerBsasValidatorFactory
 import v3.models.domain.TypeOfBusiness
@@ -41,7 +42,6 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
                                        cc: ControllerComponents,
                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
-    with V3Controller
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -49,6 +49,7 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
 
   def triggerBsas(nino: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
+      implicit val apiVersion: Version = Version.from(request, orElse = Version3)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, request.body)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,25 +28,22 @@ trait WireMockMethods {
     new Mapping(method, uri, queryParams, headers, None)
   }
 
-  sealed trait HTTPMethod {
-    def wireMockMapping(pattern: UrlPattern): MappingBuilder
-  }
-
   class Mapping(method: HTTPMethod, uri: String, queryParams: Map[String, String], headers: Map[String, String], body: Option[String]) {
+
     private val mapping = {
       val uriMapping = method.wireMockMapping(urlPathMatching(uri))
 
-      val uriMappingWithQueryParams = queryParams.foldLeft(uriMapping) {
-        case (m, (key, value)) => m.withQueryParam(key, matching(value))
+      val uriMappingWithQueryParams = queryParams.foldLeft(uriMapping) { case (m, (key, value)) =>
+        m.withQueryParam(key, matching(value))
       }
 
-      val uriMappingWithHeaders = headers.foldLeft(uriMappingWithQueryParams) {
-        case (m, (key, value)) => m.withHeader(key, equalTo(value))
+      val uriMappingWithHeaders = headers.foldLeft(uriMappingWithQueryParams) { case (m, (key, value)) =>
+        m.withHeader(key, equalTo(value))
       }
 
       body match {
         case Some(extractedBody) => uriMappingWithHeaders.withRequestBody(equalTo(extractedBody))
-        case None => uriMappingWithHeaders
+        case None                => uriMappingWithHeaders
       }
     }
 
@@ -71,17 +68,22 @@ trait WireMockMethods {
     private def thenReturnInternal(status: Int, headers: Map[String, String], body: Option[String]): StubMapping = {
       val response = {
         val statusResponse = aResponse().withStatus(status)
-        val responseWithHeaders = headers.foldLeft(statusResponse) {
-          case (res, (key, value)) => res.withHeader(key, value)
+        val responseWithHeaders = headers.foldLeft(statusResponse) { case (res, (key, value)) =>
+          res.withHeader(key, value)
         }
         body match {
           case Some(extractedBody) => responseWithHeaders.withBody(extractedBody)
-          case None => responseWithHeaders
+          case None                => responseWithHeaders
         }
       }
 
       stubFor(mapping.willReturn(response))
     }
+
+  }
+
+  sealed trait HTTPMethod {
+    def wireMockMapping(pattern: UrlPattern): MappingBuilder
   }
 
   case object POST extends HTTPMethod {

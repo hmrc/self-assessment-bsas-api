@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package api.fixtures.audit
+package api.models.audit
 
-import api.fixtures.audit.AuditResponseFixture.{auditResponseJsonWithErrors, auditResponseModelWithBody, auditResponseModelWithErrors}
-import api.models.audit.GenericAuditDetail
+import api.models.audit.AuditResponseFixture.{auditResponseJsonWithErrors, auditResponseModelWithBody, auditResponseModelWithErrors}
 import play.api.libs.json.{JsValue, Json}
 
 object GenericAuditDetailFixture {
 
-  val nino: String = "ZG903729C"
-  val calculationId: String = "calcId"
-  val userType: String = "Agent"
+  val nino: String                         = "ZG903729C"
+  val calculationId: String                = "calcId"
+  val userType: String                     = "Agent"
   val agentReferenceNumber: Option[String] = Some("012345678")
-  val pathParams: Map[String, String] = Map("nino" -> nino, "calculationId" -> calculationId)
-  val requestBody: Option[JsValue] = Some(Json.obj("field1" -> "value1"))
-  val xCorrId = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
-  val versionNumber: String = "3.0"
+  val pathParams: Map[String, String]      = Map("nino" -> nino, "calculationId" -> calculationId)
+  val requestBody: Option[JsValue]         = Some(Json.obj("field1" -> "value1"))
+  val xCorrId                              = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val versionNumber: String                = "3.0"
 
   val genericAuditDetailModelSuccess: GenericAuditDetail =
     GenericAuditDetail(
@@ -83,4 +82,5 @@ object GenericAuditDetailFixture {
        |}
      """.stripMargin
   )
+
 }

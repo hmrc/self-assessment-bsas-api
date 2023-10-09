@@ -20,11 +20,11 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.CalculationId
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -50,7 +50,7 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockAppConfig {
 
   private val calculationId    = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
-  private val requestData      = retrieveBsas.RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear = None)
+  private val requestData      = retrieveBsas.RetrieveUkPropertyBsasRequestData(parsedNino, calculationId, taxYear = None)
   private val testHateoasLinks = List(Link(href = "/some/link", method = GET, rel = "someRel"))
 
   private val hateoasFhlResponse = mtdRetrieveBsasResponseFhlJson
@@ -79,7 +79,7 @@ class RetrieveUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(nino.nino, calculationId.calculationId, None))
+          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(validNino, calculationId.calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseFhlModel, testHateoasLinks))
 
         runOkTest(
@@ -97,7 +97,7 @@ class RetrieveUkPropertyBsasControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))))
 
         MockHateoasFactory
-          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(nino.nino, calculationId.calculationId, None))
+          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(validNino, calculationId.calculationId, None))
           .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks))
 
         runOkTest(
@@ -137,7 +137,7 @@ class RetrieveUkPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieve(nino.nino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
 
     MockedAppConfig.isApiDeprecated(Version3) returns false
   }

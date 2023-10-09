@@ -14,14 +14,30 @@
  * limitations under the License.
  */
 
-package v4.controllers
+package api.models.outcomes
 
-import api.controllers.AuthorisedController
-import routing.{Version, Version4}
+import play.api.libs.json.{JsValue, Json}
+import support.UnitSpec
 
-trait V4Controller {
-  _: AuthorisedController =>
+class ResponseWrapperSpec extends UnitSpec {
 
-  implicit val apiVersion: Version = Version4
+  "ResponseWrapper" should {
+
+    val responseData = Json.parse(
+      """
+        |{
+        |   "who": "Knows"
+        |}
+    """.stripMargin
+    )
+
+    val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+    val wrapper       = ResponseWrapper(correlationId, responseData)
+
+    "read in a singleError" in {
+      val result: ResponseWrapper[JsValue] = wrapper.map(a => a)
+      result shouldBe ResponseWrapper(correlationId, responseData)
+    }
+  }
 
 }

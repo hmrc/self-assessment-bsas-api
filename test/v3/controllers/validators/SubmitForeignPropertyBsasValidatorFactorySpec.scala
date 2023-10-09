@@ -297,8 +297,8 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
             BadRequestError,
             Some(
               List(
-                RuleIncorrectOrEmptyBodyError.withPaths(List("/nonFurnishedHolidayLet", "/foreignFhlEea")),
-                RuleBothPropertiesSuppliedError
+                RuleBothPropertiesSuppliedError,
+                RuleIncorrectOrEmptyBodyError.withPaths(List("/nonFurnishedHolidayLet", "/foreignFhlEea"))
               ))
           )
         )
@@ -537,7 +537,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
             ErrorWrapper(
               correlationId,
               BadRequestError,
-              Some(List(NinoFormatError, CalculationIdFormatError))
+              Some(List(CalculationIdFormatError, NinoFormatError))
             )
           )
         }

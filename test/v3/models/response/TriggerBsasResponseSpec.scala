@@ -20,7 +20,7 @@ import api.hateoas.HateoasFactory
 import api.models.domain.TaxYear
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link}
-import mocks.MockAppConfig
+import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec

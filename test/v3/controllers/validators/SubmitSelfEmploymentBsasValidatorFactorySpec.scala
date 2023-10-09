@@ -258,8 +258,9 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
             correlationId,
             BadRequestError,
             Some(List(
-              RuleBothExpensesError.withPath("/expenses"), // because there's consolidatedExpenses + an addition
-              ValueFormatError.copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99")
+              ValueFormatError
+                .copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99"),
+              RuleBothExpensesError.withPath("/expenses") // because there's consolidatedExpenses + an addition
             ))
           )
         )
@@ -301,7 +302,7 @@ class SubmitSelfEmploymentBsasValidatorFactorySpec extends UnitSpec with JsonErr
           ErrorWrapper(
             correlationId,
             BadRequestError,
-            Some(List(NinoFormatError, CalculationIdFormatError))
+            Some(List(CalculationIdFormatError, NinoFormatError))
           )
         )
       }

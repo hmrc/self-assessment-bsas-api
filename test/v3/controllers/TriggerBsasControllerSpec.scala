@@ -20,13 +20,12 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.Method.GET
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.TaxYear
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.services.MockAuditService
-import mocks.MockAppConfig
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import config.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import routing.Version3
@@ -54,23 +53,23 @@ class TriggerBsasControllerSpec
     with MockAppConfig {
 
   private val requestData = TriggerBsasRequestData(
-    nino,
+    parsedNino,
     triggerBsasRequestDataBody()
   )
 
   private val requestForProperty = TriggerBsasRequestData(
-    nino,
+    parsedNino,
     triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
   )
 
   val testHateoasLinkSE: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
+    href = s"/individuals/self-assessment/adjustable-summary/$validNino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET,
     rel = "self"
   )
 
   val testHateoasLinkProperty: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
+    href = s"/individuals/self-assessment/adjustable-summary/$validNino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
     method = GET,
     rel = "self"
   )
@@ -78,7 +77,7 @@ class TriggerBsasControllerSpec
   "triggerBsas" should {
     "return OK" when {
       "a valid request is supplied for business type self-employment" in new Test {
-        private val mtdResponseJson = Json.parse(hateoasResponseForSE(nino.nino))
+        private val mtdResponseJson = Json.parse(hateoasResponseForSE(validNino))
 
         willUseValidator(returningSuccess(requestData))
 
@@ -89,7 +88,7 @@ class TriggerBsasControllerSpec
         MockHateoasFactory
           .wrap(
             responseObj,
-            TriggerBsasHateoasData(nino.nino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
+            TriggerBsasHateoasData(validNino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         runOkTestWithAudit(
@@ -103,7 +102,7 @@ class TriggerBsasControllerSpec
       "a valid request is supplied for business type uk-property" in new Test {
         override protected val requestBodyForController: JsValue = requestBodyForProperty
 
-        private val mtdResponseJson = Json.parse(hateoasResponseForProperty(nino.nino))
+        private val mtdResponseJson = Json.parse(hateoasResponseForProperty(validNino))
 
         willUseValidator(returningSuccess(requestForProperty))
 
@@ -114,7 +113,7 @@ class TriggerBsasControllerSpec
         MockHateoasFactory
           .wrap(
             responseObj,
-            TriggerBsasHateoasData(nino.nino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
+            TriggerBsasHateoasData(validNino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
           .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         runOkTestWithAudit(
@@ -161,7 +160,7 @@ class TriggerBsasControllerSpec
     protected val requestBodyForController: JsValue = requestBody
 
     protected def callController(): Future[Result] =
-      controller.triggerBsas(nino.nino)(fakePostRequest(requestBodyForController))
+      controller.triggerBsas(validNino)(fakePostRequest(requestBodyForController))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -171,7 +170,7 @@ class TriggerBsasControllerSpec
           versionNumber = "3.0",
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino.nino),
+          params = Map("nino" -> validNino),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse
