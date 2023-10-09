@@ -156,12 +156,6 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
 
 }
 
-trait FixedConfig {
-  // Minimum tax year for MTD
-  val minimumTaxYear     = 2018
-  val listMinimumTaxYear = 2020
-}
-
 case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)
 
 object ConfidenceLevelConfig {
