@@ -172,7 +172,7 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
           validator(validNino, triggerBsasRequestJson(startDate = "2022-05-07")).validateAndWrapResult()
 
         result shouldBe Left(
-          ErrorWrapper(correlationId, RuleEndBeforeStartDateError)
+          ErrorWrapper(correlationId, RuleEndDateBeforeStartDateError)
         )
       }
     }

@@ -116,7 +116,7 @@ object RuleInvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANG
 
 object NoTransactionDetailsFoundError extends MtdError(code = "NO_DETAILS_FOUND", message = "No transaction details found", BAD_REQUEST)
 
-object RuleEndBeforeStartDateError
+object RuleEndDateBeforeStartDateError
     extends MtdError("RULE_END_DATE_BEFORE_START_DATE", "The supplied accounting period end date is before the start date", BAD_REQUEST)
 
 object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code", BAD_REQUEST)

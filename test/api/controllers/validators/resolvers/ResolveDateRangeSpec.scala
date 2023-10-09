@@ -16,7 +16,7 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{EndDateFormatError, RuleEndBeforeStartDateError, StartDateFormatError}
+import api.models.errors.{EndDateFormatError, RuleEndDateBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated.{Invalid, Valid}
 import support.UnitSpec
 
@@ -65,7 +65,7 @@ class ResolveDateRangeSpec extends UnitSpec {
 
       "given an end date before start date" in {
         val result = dateResolver(validEnd -> validStart)
-        result shouldBe Invalid(List(RuleEndBeforeStartDateError))
+        result shouldBe Invalid(List(RuleEndDateBeforeStartDateError))
       }
 
       "given a fromYear less than minimumYear" in {

@@ -240,7 +240,7 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", endDateErrorRequestJson, BAD_REQUEST, EndDateFormatError),
           ("AA123456A", typeOfBusinessErrorRequestJson, BAD_REQUEST, TypeOfBusinessFormatError),
           ("AA123456A", businessIdErrorRequestJson, BAD_REQUEST, BusinessIdFormatError),
-          ("AA123456A", DateOrderErrorRequestJson, BAD_REQUEST, RuleEndBeforeStartDateError),
+          ("AA123456A", DateOrderErrorRequestJson, BAD_REQUEST, RuleEndDateBeforeStartDateError),
           ("AA123456A", accountingPeriodNotSupportRequestJson, BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))

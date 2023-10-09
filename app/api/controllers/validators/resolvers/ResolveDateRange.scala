@@ -16,7 +16,7 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
+import api.models.errors.{EndDateFormatError, MtdError, RuleEndDateBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
@@ -44,7 +44,7 @@ private[resolvers] class ResolveDateRange private (yearLimits: Option[YearLimits
     val endDateEpochTime   = parsedEndDate.toEpochDay
 
     if ((endDateEpochTime - startDateEpochTime) <= 0) {
-      Invalid(List(RuleEndBeforeStartDateError))
+      Invalid(List(RuleEndDateBeforeStartDateError))
     } else {
       Valid(DateRange(parsedStartDate, parsedEndDate))
     }
