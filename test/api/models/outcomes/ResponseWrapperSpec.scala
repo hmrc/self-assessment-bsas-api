@@ -14,12 +14,30 @@
  * limitations under the License.
  */
 
-package utils
+package api.models.outcomes
 
-import java.time.LocalDate
-import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{JsValue, Json}
+import support.UnitSpec
 
-@Singleton
-class CurrentDate @Inject()() {
-  def getCurrentDate(): LocalDate = LocalDate.now()
+class ResponseWrapperSpec extends UnitSpec {
+
+  "ResponseWrapper" should {
+
+    val responseData = Json.parse(
+      """
+        |{
+        |   "who": "Knows"
+        |}
+    """.stripMargin
+    )
+
+    val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+    val wrapper       = ResponseWrapper(correlationId, responseData)
+
+    "read in a singleError" in {
+      val result: ResponseWrapper[JsValue] = wrapper.map(a => a)
+      result shouldBe ResponseWrapper(correlationId, responseData)
+    }
+  }
+
 }

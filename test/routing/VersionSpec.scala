@@ -17,9 +17,9 @@
 package routing
 
 import play.api.http.HeaderNames.ACCEPT
-import play.api.test.FakeRequest
 import play.api.libs.json._
-import routing.Version.VersionWrites
+import play.api.test.FakeRequest
+import routing.Version.VersionReads
 import support.UnitSpec
 
 class VersionSpec extends UnitSpec {
@@ -35,7 +35,7 @@ class VersionSpec extends UnitSpec {
 
   "Versions" when {
     "retrieved from a request header" should {
-      "return Version1 for valid header" in {
+      "return Version for valid header" in {
         Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))) shouldBe Right(Version3)
       }
       "return InvalidHeader when the version header is missing" in {
@@ -47,6 +47,29 @@ class VersionSpec extends UnitSpec {
       "return InvalidHeader for a header format that doesn't match regex" in {
         Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "invalidHeaderFormat"))) shouldBe Left(InvalidHeader)
       }
+    }
+  }
+
+  "VersionReads" should {
+    "successfully read Version3" in {
+      val versionJson: JsValue      = JsString(Version3.name)
+      val result: JsResult[Version] = VersionReads.reads(versionJson)
+
+      result shouldEqual JsSuccess(Version3)
+    }
+
+    "successfully read Version4" in {
+      val versionJson: JsValue      = JsString(Version4.name)
+      val result: JsResult[Version] = VersionReads.reads(versionJson)
+
+      result shouldEqual JsSuccess(Version4)
+    }
+
+    "return error for unrecognised version" in {
+      val versionJson: JsValue      = JsString("UnknownVersion")
+      val result: JsResult[Version] = VersionReads.reads(versionJson)
+
+      result shouldBe a[JsError]
     }
   }
 

@@ -82,6 +82,8 @@ trait AppConfig {
 
   def confidenceLevelConfig: ConfidenceLevelConfig
 
+  def apiDocumentationUrl: String
+
   def mtdNrsProxyBaseUrl: String
 
   /** Currently only for OAS documentation.
@@ -126,6 +128,9 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val apiGatewayContext: String                    = config.getString("api.gateway.context")
   val mtdNrsProxyBaseUrl: String                   = config.baseUrl("mtd-api-nrs-proxy")
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
+
+  val apiDocumentationUrl: String =
+    config.getConfString("api.documentation-url", defString = "https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
   // V3 Trigger BSAS minimum dates
   val v3TriggerForeignBsasMinimumTaxYear: String    = config.getString("v3TriggerForeignBsasMinimumTaxYear")

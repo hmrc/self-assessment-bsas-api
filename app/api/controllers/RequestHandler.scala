@@ -127,7 +127,8 @@ object RequestHandler {
           val maybeDeprecatedHeader =
             if (appConfig.isApiDeprecated(apiVersion))
               List(
-                "Deprecation" -> "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+                "Deprecation" -> s"This endpoint is deprecated. See the API documentation: ${appConfig.apiDocumentationUrl}"
+              )
             else Nil
 
           val headers =
