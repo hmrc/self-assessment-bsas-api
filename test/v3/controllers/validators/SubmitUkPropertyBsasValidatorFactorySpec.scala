@@ -139,7 +139,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
   "running a validation" should {
     "return the parsed domain object" when {
 
-      "passed a valid fhl request" in {
+      "given a valid fhl request" in {
         val result = validator(validNino, validCalculationId, None, fhlBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
@@ -223,7 +223,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     }
 
     "return NinoFormatError" when {
-      "passed an invalid nino" in {
+      "given an invalid nino" in {
         val result = validator("A12344A", validCalculationId, None, fhlBodyJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, NinoFormatError)
@@ -232,7 +232,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     }
 
     "return CalculationIdFormatError" when {
-      "passed an invalid calculationId" in {
+      "given an invalid calculationId" in {
         val result = validator(validNino, "12345", None, fhlBodyJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, CalculationIdFormatError)
@@ -276,7 +276,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     }
 
     "return RuleIncorrectOrEmptyBodyError" when {
-      "passed an empty body" in {
+      "given an empty body" in {
         val body   = Json.parse("{}")
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
@@ -422,7 +422,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     }
 
     "return TaxYearFormatError" when {
-      "passed a badly formatted tax year" in {
+      "given a badly formatted tax year" in {
         val result = validator(validNino, validCalculationId, Some("202324"), fhlBodyJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, TaxYearFormatError)
@@ -431,7 +431,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
-      "passed a tax year range of more than one year" in {
+      "given a tax year range of more than one year" in {
         val result = validator(validNino, validCalculationId, Some("2022-24"), fhlBodyJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
@@ -440,7 +440,7 @@ class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorVa
     }
 
     "return InvalidTaxYearParameterError" when {
-      "passed a tax year before TYS" in {
+      "given a tax year before TYS" in {
         val result = validator(validNino, validCalculationId, Some("2022-23"), fhlBodyJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, InvalidTaxYearParameterError)

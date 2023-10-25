@@ -90,15 +90,10 @@ case class DetailedResolveTaxYear(
         }
 
     def validateIncompleteTaxYear(parsed: TaxYear): Validated[Seq[MtdError], Unit] =
-      if (allowIncompleteTaxYear)
+      if (allowIncompleteTaxYear || parsed.isTaxYearComplete)
         Valid(())
-      else {
-        val currentTaxYear = TaxYear.currentTaxYear()
-        if (parsed.year >= currentTaxYear.year)
-          Invalid(List(incompleteTaxYearError.maybeWithExtraPath(errorPath)))
-        else
-          Valid(())
-      }
+      else
+        Invalid(List(incompleteTaxYearError.maybeWithExtraPath(errorPath)))
 
     resolve(value, maybeFormatError, errorPath)
       .andThen { parsed =>
@@ -106,7 +101,6 @@ case class DetailedResolveTaxYear(
           validateMinimumTaxYear(parsed),
           validateIncompleteTaxYear(parsed)
         ).map(_ => parsed)
-
       }
   }
 

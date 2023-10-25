@@ -32,7 +32,6 @@ class DetailedResolveTaxYearSpec extends UnitSpec {
         val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2010-11")
         result shouldBe Valid(TaxYear.fromMtd("2010-11"))
       }
-
     }
 
     "a minimum tax year is specified" should {
@@ -62,7 +61,6 @@ class DetailedResolveTaxYearSpec extends UnitSpec {
       val resolveTaxYear = DetailedResolveTaxYear(allowIncompleteTaxYear = false)
       val result         = resolveTaxYear("2090-91")
       result shouldBe Invalid(List(RuleTaxYearNotEndedError))
-
     }
   }
 

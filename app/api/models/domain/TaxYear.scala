@@ -16,6 +16,7 @@
 
 package api.models.domain
 
+import api.models.domain.TaxYear.currentTaxYear
 import play.api.libs.json.Writes
 
 import java.time.{LocalDate, ZoneOffset}
@@ -65,6 +66,8 @@ final case class TaxYear private (private val value: String) {
     val yearOne = yearTwo - 1
     s"$yearOne-$yearTwo"
   }
+
+  def isTaxYearComplete(implicit todaySupplier: TodaySupplier): Boolean = year < currentTaxYear().year
 
   /** Use this for downstream API endpoints that are known to be TYS.
     */
@@ -126,8 +129,6 @@ object TaxYear {
 
     new TaxYear(taxYear.toString)
   }
-
-  def today(): LocalDate = LocalDate.now(ZoneOffset.UTC)
 
   implicit val writes: Writes[TaxYear] = implicitly[Writes[String]].contramap(_.asMtd)
 }

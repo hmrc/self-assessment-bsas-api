@@ -57,7 +57,7 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
   }
 
   "running validation" should {
-    "return no errors" when {
+    "return the parsed domain object" when {
       List(
         "self-employment",
         "uk-property-fhl",
