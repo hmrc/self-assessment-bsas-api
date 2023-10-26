@@ -53,7 +53,7 @@ class ResolveTaxYearSpec extends UnitSpec {
         result shouldBe Invalid(List(RuleTaxYearRangeInvalidError))
       }
 
-      "the tax year is bad" in {
+      "the tax year format is invalid" in {
         val result = ResolveTaxYear("20177-17")
         result shouldBe Invalid(List(TaxYearFormatError))
       }
@@ -63,7 +63,7 @@ class ResolveTaxYearSpec extends UnitSpec {
   "ResolveTysTaxYear" should {
 
     "return no errors" when {
-      "passed a valid tax year that's above or equal to TaxYear.tysTaxYear" in {
+      "given a valid tax year that's above or equal to TaxYear.tysTaxYear" in {
         val validTaxYear = "2023-24"
         val result       = ResolveTysTaxYear(validTaxYear)
         result shouldBe Valid(TaxYear.fromMtd(validTaxYear))
@@ -71,7 +71,7 @@ class ResolveTaxYearSpec extends UnitSpec {
     }
 
     "return an error" when {
-      "passed a valid tax year but below TaxYear.tysTaxYear" in {
+      "given a valid tax year but below TaxYear.tysTaxYear" in {
         val result = ResolveTysTaxYear("2021-22")
         result shouldBe Invalid(List(InvalidTaxYearParameterError))
       }

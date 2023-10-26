@@ -16,26 +16,26 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.domain.CalculationId
-import api.models.errors.CalculationIdFormatError
+import api.models.domain.TransactionId
+import api.models.errors.TransactionIdFormatError
 import cats.data.Validated.{Invalid, Valid}
 import support.UnitSpec
 
-class ResolveCalculationIdSpec extends UnitSpec {
+class ResolveTransactionIdSpec extends UnitSpec {
 
-  "ResolveCalculationId" should {
+  "ResolveTransactionId" should {
     "return no errors" when {
-      "given a valid Calculation ID" in {
-        val value  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-        val result = ResolveCalculationId(value)
-        result shouldBe Valid(CalculationId(value))
+      "given a valid Transaction ID" in {
+        val value  = "1234567890AB"
+        val result = ResolveTransactionId(value)
+        result shouldBe Valid(TransactionId(value))
       }
     }
 
     "return an error" when {
-      "given an invalid CalculationId" in {
-        val result = ResolveCalculationId("not-a-calculation-id")
-        result shouldBe Invalid(List(CalculationIdFormatError))
+      "given an invalid TransactionId" in {
+        val result = ResolveTransactionId("not-a-transaction-id")
+        result shouldBe Invalid(List(TransactionIdFormatError))
       }
     }
   }
