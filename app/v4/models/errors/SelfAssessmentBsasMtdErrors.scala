@@ -16,7 +16,7 @@
 
 package v4.models.errors
 
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import play.api.http.Status.BAD_REQUEST
 
 // Rule Errors

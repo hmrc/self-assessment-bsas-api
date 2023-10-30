@@ -16,13 +16,13 @@
 
 package v3.models.response.listBsas
 
-import api.hateoas.Link
-import api.hateoas.Method.{GET, POST}
-import api.models.domain.TaxYear
-import config.MockAppConfig
+import shared.hateoas.Link
+import shared.hateoas.Method.{GET, POST}
+import shared.models.domain.TaxYear
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsObject, Json}
-import support.UnitSpec
+import shared.UnitSpec
+import shared.config.MockAppConfig
 import v3.fixtures.ListBsasFixture
 import v3.models.domain.TypeOfBusiness
 import v3.models.domain.TypeOfBusiness._
@@ -71,11 +71,11 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "top level links" should {

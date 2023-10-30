@@ -16,25 +16,25 @@
 
 package v3.controllers.validators
 
-import api.models.domain.Nino
-import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Valid
-import config.MockAppConfig
+import config.MockBsasConfig
 import play.api.libs.json.{JsObject, JsValue, Json}
-import support.UnitSpec
+import shared.UnitSpec
+import shared.models.domain.Nino
+import shared.models.errors._
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors.RuleAccountingPeriodNotSupportedError
 import v3.models.request.triggerBsas.{TriggerBsasRequestBody, TriggerBsasRequestData}
 
-class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class TriggerBsasValidatorFactorySpec extends UnitSpec with MockBsasConfig {
 
   private implicit val correlationId: String = "1234"
 
   private val validNino  = "AA123456A"
   private val parsedNino = Nino(validNino)
 
-  private val rulesValidator   = new TriggerBsasRulesValidator(mockAppConfig)
+  private val rulesValidator   = new TriggerBsasRulesValidator(mockBsasConfig)
   private val validatorFactory = new TriggerBsasValidatorFactory(rulesValidator)
 
   private def validator(nino: String, body: JsValue) = validatorFactory.validator(nino, body)
@@ -52,8 +52,8 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockAppConfig {
   }
 
   class SetUp {
-    MockedAppConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
-    MockedAppConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
+    MockedBsasConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
+    MockedBsasConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
   }
 
   "running validation" should {

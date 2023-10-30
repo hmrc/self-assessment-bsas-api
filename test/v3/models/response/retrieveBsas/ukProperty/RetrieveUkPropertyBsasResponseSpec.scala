@@ -16,14 +16,14 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import api.hateoas.HateoasFactory
-import api.models.domain.TaxYear
-import api.hateoas.Method._
-import api.hateoas.{HateoasWrapper, Link}
-import api.models.utils.JsonErrorValidators
-import config.MockAppConfig
+import shared.hateoas.HateoasFactory
+import shared.models.domain.TaxYear
+import shared.hateoas.Method._
+import shared.hateoas.{HateoasWrapper, Link}
+import shared.models.utils.JsonErrorValidators
 import play.api.Configuration
-import support.UnitSpec
+import shared.UnitSpec
+import shared.config.MockAppConfig
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -56,11 +56,11 @@ class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidato
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "return the correct links without tax year" in new TysDisabledTest {

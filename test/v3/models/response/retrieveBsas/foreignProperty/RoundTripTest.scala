@@ -16,9 +16,9 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.models.utils.JsonErrorValidators
+import shared.models.utils.JsonErrorValidators
 import play.api.libs.json.{JsValue, Json, Reads, Writes}
-import support.UnitSpec
+import shared.UnitSpec
 
 trait RoundTripTest extends UnitSpec with JsonErrorValidators {
   private[foreignProperty] def testRoundTrip[A](

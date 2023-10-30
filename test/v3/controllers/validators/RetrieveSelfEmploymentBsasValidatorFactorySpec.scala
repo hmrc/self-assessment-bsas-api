@@ -16,9 +16,9 @@
 
 package v3.controllers.validators
 
-import api.models.domain.{CalculationId, Nino, TaxYear}
-import api.models.errors._
-import support.UnitSpec
+import shared.UnitSpec
+import shared.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.errors._
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
 class RetrieveSelfEmploymentBsasValidatorFactorySpec extends UnitSpec {

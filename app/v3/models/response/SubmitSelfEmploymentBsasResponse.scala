@@ -16,10 +16,10 @@
 
 package v3.models.response
 
-import api.hateoas.{ HateoasData, HateoasLinksFactory }
-import api.models.domain.TaxYear
-import api.hateoas.Link
-import config.AppConfig
+import shared.config.AppConfig
+import shared.hateoas.{HateoasData, HateoasLinksFactory}
+import shared.models.domain.TaxYear
+import shared.hateoas.Link
 import v3.hateoas.HateoasLinks
 
 object SubmitSelfEmploymentBsasResponse extends HateoasLinks {

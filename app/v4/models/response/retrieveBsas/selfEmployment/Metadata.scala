@@ -16,7 +16,7 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import api.models.domain.Status
+import shared.models.domain.Status
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v4.models.domain.DownstreamTaxYear

@@ -16,7 +16,7 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import api.models.domain.Status
+import shared.models.domain.Status
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v3.models.domain.DownstreamTaxYear

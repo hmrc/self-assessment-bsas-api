@@ -16,9 +16,9 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import api.models.domain.{ CalculationId, Nino, TaxYear }
+import shared.models.domain.{ CalculationId, Nino, TaxYear }
 import play.api.libs.json._
-import utils.JsonWritesUtil
+import shared.utils.JsonWritesUtil
 
 case class SubmitForeignPropertyBsasRequestData(nino: Nino,
                                                 calculationId: CalculationId,

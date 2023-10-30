@@ -16,7 +16,7 @@
 
 package v3.models.response.listBsas
 
-import api.models.domain.Status
+import shared.models.domain.Status
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 

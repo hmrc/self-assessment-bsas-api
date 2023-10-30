@@ -17,7 +17,7 @@
 package v3.models.domain
 
 import play.api.libs.json
-import utils.enums.Enums
+import shared.utils.enums.Enums
 
 sealed trait IncomeSourceType {
   def toTypeOfBusiness: TypeOfBusiness

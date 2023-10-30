@@ -16,10 +16,10 @@
 
 package v4.hateoas
 
-import api.hateoas.Link
-import api.hateoas.Method._
-import api.models.domain.TaxYear
-import config.AppConfig
+import shared.config.AppConfig
+import shared.hateoas.Link
+import shared.hateoas.Method._
+import shared.models.domain.TaxYear
 import v4.hateoas.RelType._
 
 trait HateoasLinks {

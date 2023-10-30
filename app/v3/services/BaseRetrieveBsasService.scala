@@ -16,9 +16,9 @@
 
 package v3.services
 
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
-import api.services.{BaseService, ServiceOutcome}
+import shared.models.errors.ErrorWrapper
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{BaseService, ServiceOutcome}
 import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 import v3.models.errors._
 

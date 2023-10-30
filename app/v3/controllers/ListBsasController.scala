@@ -16,13 +16,13 @@
 
 package v3.controllers
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import shared.controllers._
+import shared.hateoas.HateoasFactory
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.{Version, Version3}
-import utils._
+import shared.config.AppConfig
+import shared.routing.{Version, Version3}
+import shared.utils._
 import v3.controllers.validators.ListBsasValidatorFactory
 import v3.models.response.listBsas.ListBsasHateoasData
 import v3.services.ListBsasService

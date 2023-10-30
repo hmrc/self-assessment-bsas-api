@@ -16,13 +16,13 @@
 
 package v4.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.{Version, Version4}
-import utils.{IdGenerator, Logging}
+import shared.config.AppConfig
+import shared.routing.{Version, Version4}
+import shared.utils.{IdGenerator, Logging}
 import v4.controllers.validators.RetrieveSelfEmploymentBsasValidatorFactory
 import v4.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 import v4.services.RetrieveSelfEmploymentBsasService

@@ -16,13 +16,13 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.HateoasFactory
-import api.models.domain.TaxYear
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasWrapper, Link}
-import config.MockAppConfig
+import shared.hateoas.HateoasFactory
+import shared.models.domain.TaxYear
+import shared.hateoas.Method.{GET, POST}
+import shared.hateoas.{HateoasWrapper, Link}
 import play.api.Configuration
-import support.UnitSpec
+import shared.UnitSpec
+import shared.config.MockAppConfig
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {
@@ -56,11 +56,11 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "return the correct links without tax year" in new TysDisabledTest {

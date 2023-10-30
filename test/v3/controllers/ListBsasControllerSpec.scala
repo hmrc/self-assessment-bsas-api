@@ -16,17 +16,17 @@
 
 package v3.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.mocks.MockIdGenerator
-import api.models.domain.{BusinessId, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import config.MockAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
+import shared.mocks.MockIdGenerator
+import shared.models.domain.{BusinessId, TaxYear}
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.Version3
+import shared.config.MockAppConfig
+import shared.routing.Version3
 import v3.controllers.validators.MockListBsasValidatorFactory
 import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks
@@ -59,7 +59,7 @@ class ListBsasControllerSpec
     "return OK" when {
       "the request is valid" in new Test {
         MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -79,7 +79,7 @@ class ListBsasControllerSpec
 
       "valid request with no taxYear path parameter" in new Test {
         MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         override def maybeTaxYear: Option[String] = None
 

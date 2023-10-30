@@ -16,8 +16,8 @@
 
 package v3.models.domain
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import shared.UnitSpec
+import shared.utils.enums.EnumJsonSpecSupport
 import v3.models.domain.IncomeSourceType._
 
 class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {

@@ -16,9 +16,9 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import api.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
-import utils.JsonWritesUtil
+import shared.utils.JsonWritesUtil
 
 case class SubmitSelfEmploymentBsasRequestData(nino: Nino,
                                                calculationId: CalculationId,

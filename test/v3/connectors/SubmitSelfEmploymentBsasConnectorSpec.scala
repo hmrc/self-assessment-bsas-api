@@ -16,9 +16,9 @@
 
 package v3.connectors
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{CalculationId, Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
+import shared.connectors.{ConnectorSpec, DownstreamOutcome}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.outcomes.ResponseWrapper
 import v3.fixtures.selfEmployment.AdditionsFixture.additionsModel
 import v3.fixtures.selfEmployment.ExpensesFixture.expensesModel
 import v3.fixtures.selfEmployment.IncomeFixture.incomeModel

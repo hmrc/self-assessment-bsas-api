@@ -16,9 +16,9 @@
 
 package v3.controllers.validators
 
-import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.ResolveParsedNumber
-import api.models.errors.MtdError
+import shared.controllers.validators.RulesValidator
+import shared.controllers.validators.resolvers.ResolveParsedNumber
+import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import v3.models.errors.RuleBothExpensesError

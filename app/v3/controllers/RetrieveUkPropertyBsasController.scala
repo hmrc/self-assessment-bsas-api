@@ -16,13 +16,13 @@
 
 package v3.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.{Version, Version3}
-import utils.{IdGenerator, Logging}
+import shared.config.AppConfig
+import shared.routing.{Version, Version3}
+import shared.utils.{IdGenerator, Logging}
 import v3.controllers.validators.RetrieveUkPropertyBsasValidatorFactory
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 import v3.services.RetrieveUkPropertyBsasService
