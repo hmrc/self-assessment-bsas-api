@@ -22,6 +22,9 @@ import routing.Version
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import java.time.LocalDateTime
+import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
+import java.time.temporal.ChronoField
 import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
@@ -73,6 +76,12 @@ trait AppConfig {
   def apiStatus(version: Version): String
 
   def isApiDeprecated(version: Version): Boolean = apiStatus(version) == "DEPRECATED"
+
+  def deprecatedOn(version: Version): Option[LocalDateTime]
+
+  def sunsetDate(version: Version): Option[LocalDateTime]
+
+  def sunsetEnabled(version: Version): Boolean
 
   def featureSwitches: Configuration
 
@@ -137,6 +146,28 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val v3TriggerNonForeignBsasMinimumTaxYear: String = config.getString("v3TriggerNonForeignBsasMinimumTaxYear")
 
   def apiStatus(version: Version): String = config.getString(s"api.$version.status")
+
+  private val DATEFORMATTER = new DateTimeFormatterBuilder()
+    .append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    .parseDefaulting(ChronoField.HOUR_OF_DAY, 23)
+    .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 59)
+    .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 59)
+    .toFormatter()
+
+  def deprecatedOn(version: Version): Option[LocalDateTime] = configuration.getOptional[String](s"api.$version.deprecatedOn") match {
+    case Some(value) => Some(LocalDateTime.parse(value, DATEFORMATTER))
+    case None        => None
+  }
+
+  def sunsetDate(version: Version): Option[LocalDateTime] = configuration.getOptional[String](s"api.$version.sunsetDate") match {
+    case Some(value) => Some(LocalDateTime.parse(value, DATEFORMATTER))
+    case None        => None
+  }
+
+  override def sunsetEnabled(version: Version): Boolean = configuration.getOptional[Boolean](s"api.$version.sunsetEnabled") match {
+    case Some(value) => value
+    case None        => true
+  }
 
   def featureSwitches: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
