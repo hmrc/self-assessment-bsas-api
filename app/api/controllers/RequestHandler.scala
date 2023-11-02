@@ -31,6 +31,9 @@ import play.api.mvc.Results.InternalServerError
 import routing.Version
 import utils.Logging
 
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import scala.concurrent.{ExecutionContext, Future}
 
 trait RequestHandler {
@@ -123,13 +126,25 @@ object RequestHandler {
 
       implicit class Response(result: Result) {
 
+        private val HttpDateFormatter = DateTimeFormatter
+          .ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+          .withZone(ZoneId.of("GMT"))
+
         def withApiHeaders(correlationId: String, responseHeaders: (String, String)*)(implicit appConfig: AppConfig, apiVersion: Version): Result = {
           val maybeDeprecatedHeader =
             if (appConfig.isApiDeprecated(apiVersion))
               List(
-                "Deprecation" -> s"This endpoint is deprecated. See the API documentation: ${appConfig.apiDocumentationUrl}"
+                "Deprecation" -> s"${HttpDateFormatter.format(appConfig.deprecatedOn(apiVersion).get)}",
+                "Link"        -> s"${appConfig.apiDocumentationUrl}"
               )
             else Nil
+
+          val maybeSunsetHeader =
+            if (appConfig.sunsetDate(apiVersion).nonEmpty) {
+              List("Sunset" -> s"${HttpDateFormatter.format(appConfig.sunsetDate(apiVersion).get)}")
+            } else if (appConfig.sunsetDate(apiVersion).isEmpty && appConfig.sunsetEnabled(apiVersion)) {
+              List("Sunset" -> s"${HttpDateFormatter.format(appConfig.deprecatedOn(apiVersion).get.plusMonths(6))}")
+            } else Nil
 
           val headers =
             responseHeaders ++
@@ -137,7 +152,8 @@ object RequestHandler {
                 "X-CorrelationId"        -> correlationId,
                 "X-Content-Type-Options" -> "nosniff"
               ) ++
-              maybeDeprecatedHeader
+              maybeDeprecatedHeader ++
+              maybeSunsetHeader
 
           result.copy(header = result.header.copy(headers = result.header.headers ++ headers))
         }
