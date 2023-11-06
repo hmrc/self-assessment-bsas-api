@@ -22,14 +22,14 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
 
+/** Put API-specific config here...
+  */
 @Singleton
 class BsasConfig @Inject() (config: ServicesConfig, configuration: Configuration) {
 
   def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
   def featureSwitches: FeatureSwitches = BsasFeatureSwitches(featureSwitchConfig)
-
-  // Put API-specific config here...
 
   // V3 Trigger BSAS minimum dates
   def v3TriggerForeignBsasMinimumTaxYear: String    = config.getString("v3TriggerForeignBsasMinimumTaxYear")
