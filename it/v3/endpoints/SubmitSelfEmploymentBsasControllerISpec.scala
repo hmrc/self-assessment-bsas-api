@@ -16,9 +16,9 @@
 
 package v3.endpoints
 
-import api.models.domain.{CalculationId, Nino}
-import api.models.errors._
-import api.stubs._
+import shared.models.domain.{CalculationId, Nino}
+import shared.models.errors._
+import shared.stubs._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._

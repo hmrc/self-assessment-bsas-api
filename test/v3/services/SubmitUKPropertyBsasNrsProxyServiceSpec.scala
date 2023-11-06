@@ -16,8 +16,8 @@
 
 package v3.services
 
-import api.models.domain.Nino
-import api.services.ServiceSpec
+import shared.models.domain.Nino
+import shared.services.ServiceSpec
 import v3.mocks.connectors.MockSubmitUKPropertyBsasNrsproxyConnector
 import v3.models.request.submitBsas.ukProperty.SubmitUKPropertyBsasRequestBody
 

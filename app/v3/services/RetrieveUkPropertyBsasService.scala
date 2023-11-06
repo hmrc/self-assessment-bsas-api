@@ -16,10 +16,10 @@
 
 package v3.services
 
-import api.controllers.RequestContext
-import api.models
-import api.models.errors._
-import api.services.ServiceOutcome
+import shared.controllers.RequestContext
+import shared.models
+import shared.models.errors._
+import shared.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
 import v3.connectors.RetrieveUkPropertyBsasConnector

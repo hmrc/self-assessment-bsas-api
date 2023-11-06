@@ -16,13 +16,13 @@
 
 package v3.controllers.validators
 
-import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
-import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
-import config.AppConfig
+import config.BsasConfig
+import shared.controllers.validators.RulesValidator
+import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
+import shared.models.errors.MtdError
 import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v3.models.domain.TypeOfBusiness
 import v3.models.domain.TypeOfBusiness.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
@@ -34,7 +34,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class TriggerBsasRulesValidator @Inject() (appConfig: AppConfig) extends RulesValidator[TriggerBsasRequestData] {
+class TriggerBsasRulesValidator @Inject() (bsasConfig: BsasConfig) extends RulesValidator[TriggerBsasRequestData] {
 
   private val minYear: Int = 1900
   private val maxYear: Int = 2100
@@ -42,12 +42,12 @@ class TriggerBsasRulesValidator @Inject() (appConfig: AppConfig) extends RulesVa
   private val resolveDateRange = ResolveDateRange.withLimits(minYear, maxYear)
 
   private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
-    s"${appConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
+    s"${bsasConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
     DateTimeFormatter.ISO_LOCAL_DATE
   )
 
   private lazy val selfEmploymentAndUkPropertyEarliestEndDate: LocalDate = LocalDate.parse(
-    s"${appConfig.v3TriggerNonForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
+    s"${bsasConfig.v3TriggerNonForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
     DateTimeFormatter.ISO_LOCAL_DATE
   )
 

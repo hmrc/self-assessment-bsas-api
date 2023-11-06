@@ -16,9 +16,9 @@
 
 package v3.services
 
-import api.controllers.EndpointLogContext
-import api.models.domain.{BusinessId, Nino, TaxYear}
-import api.models.errors.{
+import shared.controllers.EndpointLogContext
+import shared.models.domain.{BusinessId, Nino, TaxYear}
+import shared.models.errors.{
   BusinessIdFormatError,
   DownstreamErrorCode,
   DownstreamErrors,
@@ -30,8 +30,8 @@ import api.models.errors.{
   RuleTaxYearNotSupportedError,
   TaxYearFormatError
 }
-import api.models.outcomes.ResponseWrapper
-import api.services.ServiceSpec
+import shared.models.outcomes.ResponseWrapper
+import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.ListBsasFixture
 import v3.mocks.connectors.MockListBsasConnector

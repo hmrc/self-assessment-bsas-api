@@ -16,16 +16,16 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import api.models.utils.JsonErrorValidators
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
-    "return a valid model" when {
-      "passed valid JSON" in {
+    "return the parsed Metadata" when {
+      "given valid JSON" in {
         downstreamMetadataJson.as[Metadata] shouldBe metadataModel
       }
     }
@@ -33,7 +33,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
   "writes" should {
     "return valid JSON" when {
-      "passed a valid model" in {
+      "given a Metadata instance" in {
         Json.toJson(metadataModel) shouldBe mtdMetadataJson
       }
     }

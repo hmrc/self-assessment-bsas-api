@@ -16,7 +16,7 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import api.models.domain.Source
+import shared.models.domain.Source
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._

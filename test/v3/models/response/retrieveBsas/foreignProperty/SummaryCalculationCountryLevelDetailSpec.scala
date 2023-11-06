@@ -16,7 +16,7 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import support.UnitSpec
+import shared.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class SummaryCalculationCountryLevelDetailSpec extends UnitSpec with RoundTripTest {
@@ -26,7 +26,7 @@ class SummaryCalculationCountryLevelDetailSpec extends UnitSpec with RoundTripTe
   testRoundTrip(
     "Summary Calculation Country Level Detail",
     summaryCalculationCountryLevelDetailDesJson,
-    summaryCalculationCountryLevelDetailModel,
+    parsedSummaryCalculationCountryLevelDetail,
     summaryCalculationCountryLevelDetailMtdJson
   )(reads)
 }

@@ -16,8 +16,8 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.models.utils.JsonErrorValidators
-import support.UnitSpec
+import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
@@ -25,7 +25,7 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid submission period model" when {
       "a valid json with all fields are supplied" in {
-        submissionPeriodDesJson.as[SubmissionPeriods] shouldBe submissionPeriodModel
+        submissionPeriodDesJson.as[SubmissionPeriods] shouldBe parsedSubmissionPeriod
       }
     }
   }
@@ -33,7 +33,7 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return a valid json" when {
       "a valid model is supplied" in {
-        submissionPeriodModel.toJson shouldBe submissionPeriodMtdJson
+          parsedSubmissionPeriod.toJson shouldBe submissionPeriodMtdJson
       }
     }
   }

@@ -16,11 +16,11 @@
 
 package v3.models.response.listBsas
 
-import api.hateoas.{HateoasData, HateoasListLinksFactory, Link}
-import api.models.domain.TaxYear
+import shared.hateoas.{HateoasData, HateoasListLinksFactory, Link}
+import shared.models.domain.TaxYear
 import cats.Functor
-import config.AppConfig
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
+import shared.config.AppConfig
 import v3.hateoas.HateoasLinks
 import v3.models.domain.TypeOfBusiness._
 

@@ -16,7 +16,7 @@
 
 package v3.fixtures.selfEmployment
 
-import api.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v3.fixtures.selfEmployment.AdditionsFixture.{additionsFromVendorJson, additionsModel, additionsToDesJson}
 import v3.fixtures.selfEmployment.ExpensesFixture.{expensesFromMtdJson, expensesModel, expensesToDesJson}

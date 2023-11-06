@@ -16,19 +16,15 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import api.hateoas.Method._
-import api.hateoas.{HateoasFactory, HateoasWrapper, Link}
-import api.models.domain.TaxYear
-import api.models.utils.JsonErrorValidators
-import config.MockAppConfig
+import shared.hateoas.Method._
+import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import shared.models.domain.TaxYear
+import shared.models.utils.JsonErrorValidators
 import play.api.Configuration
 import play.api.libs.json.Json
-import support.UnitSpec
-import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
-  downstreamRetrieveBsasResponseJson,
-  mtdRetrieveBsasResponseJson,
-  retrieveBsasResponseModel
-}
+import shared.UnitSpec
+import shared.config.MockAppConfig
+import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 
@@ -60,11 +56,11 @@ class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorVali
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "return the correct links without tax year" in new TysDisabledTest {

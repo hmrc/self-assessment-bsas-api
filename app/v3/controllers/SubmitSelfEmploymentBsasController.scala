@@ -16,14 +16,14 @@
 
 package v3.controllers
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import shared.controllers._
+import shared.hateoas.HateoasFactory
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import routing.{Version, Version3}
-import utils.{IdGenerator, Logging}
+import shared.config.AppConfig
+import shared.routing.{Version, Version3}
+import shared.utils.{IdGenerator, Logging}
 import v3.controllers.validators.SubmitSelfEmploymentBsasValidatorFactory
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory

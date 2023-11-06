@@ -16,21 +16,22 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import api.models.utils.JsonErrorValidators
 import play.api.libs.json.{JsValue, Json, Reads, Writes}
-import support.UnitSpec
+import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 
 trait RoundTripTest extends UnitSpec with JsonErrorValidators {
+
   private[ukProperty] def testRoundTrip[A](
-                                            testName: String,
-                                            downstreamJson: JsValue,
-                                            model: A,
-                                            mtdJson: JsValue
-                                          )(reads: Reads[A])(implicit writes: Writes[A]): Unit = {
+      testName: String,
+      downstreamJson: JsValue,
+      model: A,
+      mtdJson: JsValue
+  )(reads: Reads[A])(implicit writes: Writes[A]): Unit = {
     s"$testName model tests" when {
       "reads" should {
-        "return a valid model" when {
-          "passed valid JSON" in {
+        "return the parsed item" when {
+          "given valid JSON" in {
             downstreamJson.as[A](reads) shouldBe model
           }
         }
@@ -38,11 +39,12 @@ trait RoundTripTest extends UnitSpec with JsonErrorValidators {
 
       "writes" should {
         "return valid JSON" when {
-          "passed a valid model" in {
+          "given a valid model" in {
             Json.toJson(model) shouldBe mtdJson
           }
         }
       }
     }
   }
+
 }

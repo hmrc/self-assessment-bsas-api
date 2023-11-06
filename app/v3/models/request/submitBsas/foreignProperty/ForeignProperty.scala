@@ -18,7 +18,7 @@ package v3.models.request.submitBsas.foreignProperty
 
 import play.api.libs.json.{Format, Json}
 import shapeless.HNil
-import utils.EmptinessChecker
+import shared.utils.EmptinessChecker
 
 import scala.annotation.nowarn
 

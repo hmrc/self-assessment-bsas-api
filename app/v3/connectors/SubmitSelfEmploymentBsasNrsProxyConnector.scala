@@ -16,7 +16,7 @@
 
 package v3.connectors
 
-import config.AppConfig
+import shared.config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestBody
 

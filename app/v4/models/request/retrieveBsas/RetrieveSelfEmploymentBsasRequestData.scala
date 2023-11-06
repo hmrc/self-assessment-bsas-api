@@ -16,6 +16,6 @@
 
 package v4.models.request.retrieveBsas
 
-import api.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 
 case class RetrieveSelfEmploymentBsasRequestData(nino: Nino, calculationId: CalculationId, taxYear: Option[TaxYear])

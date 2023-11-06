@@ -16,14 +16,14 @@
 
 package v3.models.response
 
-import api.hateoas.HateoasFactory
-import api.models.domain.TaxYear
-import api.hateoas.Method.GET
-import api.hateoas.{HateoasWrapper, Link}
-import config.MockAppConfig
+import shared.hateoas.HateoasFactory
+import shared.models.domain.TaxYear
+import shared.hateoas.Method.GET
+import shared.hateoas.{HateoasWrapper, Link}
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsValue, Json}
-import support.UnitSpec
+import shared.UnitSpec
+import shared.config.MockAppConfig
 import v3.models.domain.TypeOfBusiness._
 
 class TriggerBsasResponseSpec extends UnitSpec {
@@ -82,11 +82,11 @@ class TriggerBsasResponseSpec extends UnitSpec {
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "triggering a self employment BSAS" should {

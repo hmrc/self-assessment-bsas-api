@@ -16,13 +16,13 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.hateoas.HateoasFactory
-import api.models.domain.TaxYear
-import api.hateoas.Method.{GET, POST}
-import api.hateoas.{HateoasWrapper, Link}
-import config.MockAppConfig
+import shared.hateoas.HateoasFactory
+import shared.models.domain.TaxYear
+import shared.hateoas.Method.{GET, POST}
+import shared.hateoas.{HateoasWrapper, Link}
 import play.api.Configuration
-import support.UnitSpec
+import shared.UnitSpec
+import shared.config.MockAppConfig
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {
@@ -32,14 +32,14 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response FHL",
     retrieveForeignPropertyBsasDesFhlJson,
-    retrieveForeignPropertyBsasResponseFhlModel,
+    parsedFhlRetrieveForeignPropertyBsasResponse,
     retrieveForeignPropertyBsasMtdFhlJson
   )(reads)
 
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response Non-FHL",
     retrieveForeignPropertyBsasDesNonFhlJson,
-    retrieveForeignPropertyBsasResponseNonFhlModel,
+    parsedNonFhlRetrieveForeignPropertyBsasResponse,
     retrieveForeignPropertyBsasMtdNonFhlJson
   )(reads)
 
@@ -50,17 +50,17 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
       val calculationId  = "anId"
       val context        = "individuals/self-assessment/adjustable-summary"
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
-      val rawResponse    = retrieveForeignPropertyBsasResponseFhlModel
+      val rawResponse    = parsedFhlRetrieveForeignPropertyBsasResponse
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "return the correct links without tax year" in new TysDisabledTest {

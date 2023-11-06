@@ -16,9 +16,9 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import api.models.utils.JsonErrorValidators
+import shared.models.utils.JsonErrorValidators
 import play.api.libs.json.JsResultException
-import support.UnitSpec
+import shared.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {

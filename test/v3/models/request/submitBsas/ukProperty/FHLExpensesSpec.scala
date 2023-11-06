@@ -17,7 +17,7 @@
 package v3.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import support.UnitSpec
+import shared.UnitSpec
 
 class FHLExpensesSpec extends UnitSpec {
   val json: JsValue = Json.parse(

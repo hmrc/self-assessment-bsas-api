@@ -16,10 +16,10 @@
 
 package v3.connectors
 
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
-import api.connectors.httpparsers.StandardDownstreamHttpParser._
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.AppConfig
+import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
@@ -41,11 +41,11 @@ class RetrieveForeignPropertyBsasConnector @Inject() (val http: HttpClient, val 
       case Some(ty) if ty.useTaxYearSpecificApi =>
         TaxYearSpecificIfsUri[RetrieveForeignPropertyBsasResponse](
           s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/$nino/$calculationId")
-      case _ => IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      case _ =>
+        IfsUri[RetrieveForeignPropertyBsasResponse](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
     }
 
     get(downstreamUri)
-
   }
 
 }

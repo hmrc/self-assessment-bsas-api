@@ -16,13 +16,13 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import support.UnitSpec
+import shared.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class InputsSpec extends UnitSpec with RoundTripTest {
 
   import Inputs._
 
-  testRoundTrip("Inputs FHL", inputsDesFhlJson, inputsFhlModel, inputsMtdFhlJson)(reads)
-  testRoundTrip("Inputs Non-FHL", inputsDesNonFhlJson, inputsNonFhlModel, inputsMtdNonFhlJson)(reads)
+  testRoundTrip("Inputs FHL", inputsDesFhlJson, parsedFhlInputs, inputsMtdFhlJson)(reads)
+  testRoundTrip("Inputs Non-FHL", inputsDesNonFhlJson, parsedNonFhlInputs, inputsMtdNonFhlJson)(reads)
 }

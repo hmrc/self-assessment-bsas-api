@@ -16,9 +16,9 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import api.models.utils.JsonErrorValidators
+import shared.models.utils.JsonErrorValidators
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.UnitSpec
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 
 class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators {

@@ -16,9 +16,9 @@
 
 package v3.connectors
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{CalculationId, Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
+import shared.connectors.{ConnectorSpec, DownstreamOutcome}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.outcomes.ResponseWrapper
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyBsasResponse

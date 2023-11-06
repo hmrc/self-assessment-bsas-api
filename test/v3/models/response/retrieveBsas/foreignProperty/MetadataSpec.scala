@@ -16,8 +16,8 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
-import api.models.utils.JsonErrorValidators
-import support.UnitSpec
+import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
@@ -25,7 +25,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid metadata model" when {
       "a valid json with all fields are supplied" in {
-        metadataDesJson.as[Metadata] shouldBe metaDataModel
+        metadataDesJson.as[Metadata] shouldBe parsedMetadata
       }
     }
   }
@@ -33,7 +33,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return a valid metadata json" when {
       "a valid model is supplied" in {
-        metaDataModel.toJson shouldBe metadataMtdJson
+          parsedMetadata.toJson shouldBe metadataMtdJson
       }
     }
   }

@@ -16,12 +16,12 @@
 
 package v3.models.response
 
-import api.hateoas.Link
-import api.hateoas.Method.GET
-import api.models.domain.TaxYear
-import config.MockAppConfig
+import shared.hateoas.Link
+import shared.hateoas.Method.GET
+import shared.models.domain.TaxYear
 import play.api.Configuration
-import support.UnitSpec
+import shared.UnitSpec
+import shared.config.MockAppConfig
 
 class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
 
@@ -35,11 +35,11 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
   }
 
   class TysDisabledTest extends Test {
-    MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
   }
 
   class TysEnabledTest extends Test {
-    MockedAppConfig.featureSwitches.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
   }
 
   "LinksFactory" should {

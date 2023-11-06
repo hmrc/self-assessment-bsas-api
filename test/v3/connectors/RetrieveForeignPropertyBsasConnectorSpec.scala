@@ -16,9 +16,9 @@
 
 package v3.connectors
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{CalculationId, Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
+import shared.connectors.{ConnectorSpec, DownstreamOutcome}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.outcomes.ResponseWrapper
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
@@ -37,7 +37,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "retrieveForeignPropertyBsas" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel))
+      val outcome = Right(ResponseWrapper(correlationId, parsedNonFhlRetrieveForeignPropertyBsasResponse))
 
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData =

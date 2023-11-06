@@ -17,7 +17,7 @@
 package v4.models.domain
 
 import play.api.libs.json.Format
-import utils.enums.Enums
+import shared.utils.enums.Enums
 
 sealed trait TypeOfBusiness {
   def asDownstreamValue: String
