@@ -20,16 +20,17 @@ import play.api.routing.Router
 import shared.config.AppConfig
 import shared.routing.{Version, Version3, Version4, VersionRoutingMap}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
-// Add routes corresponding to available versions...
-case class BsasVersionRoutingMap @Inject() (
+@Singleton case class BsasVersionRoutingMap @Inject() (
     appConfig: AppConfig,
     defaultRouter: Router,
     v3Router: v3.Routes,
     v4Router: v4.Routes
 ) extends VersionRoutingMap {
 
+  /** Routes corresponding to available versions.
+    */
   val map: Map[Version, Router] = Map(
     Version3 -> v3Router,
     Version4 -> v4Router

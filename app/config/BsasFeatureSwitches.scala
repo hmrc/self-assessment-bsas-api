@@ -19,10 +19,11 @@ package config
 import play.api.Configuration
 import shared.config.{AppConfig, FeatureSwitches}
 
+/** API-specific feature switches.
+  */
 case class BsasFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  // Put API-specific feature switches here...
-  val isIfsEnabled: Boolean = isEnabled("ifs")
+  val isIfsEnabled: Boolean      = isEnabled("ifs")
   val isIfsInProduction: Boolean = isReleasedInProduction("ifs")
 
 }

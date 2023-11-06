@@ -23,10 +23,6 @@ import shared.routing.VersionRoutingMap
 class BsasPlayModule extends AbstractModule {
 
   override def configure(): Unit = {
-
-    // TODO probably not needed now, as AppConfig is no longer a Trait
-    // bind(classOf[AppConfig]).to(classOf[AppConfigImpl]).asEagerSingleton()
-
     bind(classOf[VersionRoutingMap]).to(classOf[BsasVersionRoutingMap]).asEagerSingleton()
   }
 

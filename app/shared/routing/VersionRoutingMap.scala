@@ -18,10 +18,9 @@ package shared.routing
 
 import play.api.routing.Router
 
-// So that we can have API-independent implementations of
-// VersionRoutingRequestHandler and VersionRoutingRequestHandlerSpec
-// implement this for the specific API...
-//@ImplementedBy(classOf[BsasVersionRoutingMap])
+/** So that we can have API-independent implementations of VersionRoutingRequestHandler and VersionRoutingRequestHandlerSpec implement this for the
+  * specific API...
+  */
 trait VersionRoutingMap {
   val defaultRouter: Router
 
