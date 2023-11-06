@@ -24,7 +24,7 @@ import shared.UnitSpec
 import shared.models.domain.Nino
 import shared.models.errors._
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors.RuleAccountingPeriodNotSupportedError
+import v3.models.errors.{RuleAccountingPeriodNotSupportedError, TypeOfBusinessFormatError}
 import v3.models.request.triggerBsas.{TriggerBsasRequestBody, TriggerBsasRequestData}
 
 class TriggerBsasValidatorFactorySpec extends UnitSpec with MockBsasConfig {

@@ -467,9 +467,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  /* Models */
+  /* Parsed items */
 
-  lazy val metaDataModel: Metadata = Metadata(
+  lazy val parsedMetadata: Metadata = Metadata(
     calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
     requestedDateTime = "2020-12-05T16:19:44Z",
     adjustedDateTime = Some("2020-12-05T16:19:44Z"),
@@ -478,46 +478,46 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     summaryStatus = "valid"
   )
 
-  lazy val submissionPeriodModel: SubmissionPeriods = SubmissionPeriods(
+  lazy val parsedSubmissionPeriod: SubmissionPeriods = SubmissionPeriods(
     submissionId = "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
     startDate = "2019-04-06",
     endDate = "2020-04-05",
     receivedDateTime = "2019-02-15T09:35:04.843Z"
   )
 
-  lazy val inputsFhlModel: Inputs = Inputs(
+  lazy val parsedFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`,
     businessName = Some("Business Name"),
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
     source = "MTD-SA",
-    submissionPeriods = Seq(submissionPeriodModel)
+    submissionPeriods = Seq(parsedSubmissionPeriod)
   )
 
-  lazy val inputsNonFhlModel: Inputs = Inputs(
+  lazy val parsedNonFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`foreign-property`,
     businessName = Some("Business Name"),
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
     source = "MTD-SA",
-    submissionPeriods = Seq(submissionPeriodModel)
+    submissionPeriods = Seq(parsedSubmissionPeriod)
   )
 
-  lazy val summaryCalculationIncomeFhlModel: SummaryCalculationIncome = SummaryCalculationIncome(
+  lazy val parsedFhlSummaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
     totalRentsReceived = Some(0.02),
     premiumsOfLeaseGrant = None,
     otherPropertyIncome = None
   )
 
-  lazy val summaryCalculationIncomeNonFhlModel: SummaryCalculationIncome = SummaryCalculationIncome(
+  lazy val parsedNonFhlSummaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
     totalRentsReceived = Some(0.02),
     premiumsOfLeaseGrant = Some(0.03),
     otherPropertyIncome = Some(0.04)
   )
 
-  lazy val summaryCalculationExpensesModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
+  lazy val parsedSummaryCalculationExpenses: SummaryCalculationExpenses = SummaryCalculationExpenses(
     consolidatedExpenses = Some(0.06),
     premisesRunningCosts = Some(0.07),
     repairsAndMaintenance = Some(0.08),
@@ -530,12 +530,12 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     travelCosts = Some(0.11)
   )
 
-  lazy val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
+  lazy val parsedSummaryCalculationAdditions: SummaryCalculationAdditions = SummaryCalculationAdditions(
     privateUseAdjustment = Some(0.19),
     balancingCharge = Some(0.20)
   )
 
-  lazy val summaryCalculationDeductionsFhlModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
+  lazy val parsedFhlSummaryCalculationDeductions: SummaryCalculationDeductions = SummaryCalculationDeductions(
     annualInvestmentAllowance = Some(0.22),
     costOfReplacingDomesticItems = None,
     zeroEmissionGoods = None,
@@ -546,7 +546,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     zeroEmissionsCarAllowance = Some(0.29)
   )
 
-  lazy val summaryCalculationDeductionsNonFhlModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
+  lazy val parsedNonFhlSummaryCalculationDeductions: SummaryCalculationDeductions = SummaryCalculationDeductions(
     annualInvestmentAllowance = Some(0.22),
     costOfReplacingDomesticItems = Some(0.23),
     zeroEmissionGoods = Some(0.24),
@@ -557,67 +557,67 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     zeroEmissionsCarAllowance = Some(0.29)
   )
 
-  lazy val summaryCalculationCountryLevelDetailModel: SummaryCalculationCountryLevelDetail = SummaryCalculationCountryLevelDetail(
+  lazy val parsedSummaryCalculationCountryLevelDetail: SummaryCalculationCountryLevelDetail = SummaryCalculationCountryLevelDetail(
     countryCode = "AFG",
     totalIncome = Some(0.01),
-    income = Some(summaryCalculationIncomeNonFhlModel),
+    income = Some(parsedNonFhlSummaryCalculationIncome),
     totalExpenses = Some(0.02),
-    expenses = Some(summaryCalculationExpensesModel),
+    expenses = Some(parsedSummaryCalculationExpenses),
     netProfit = Some(0.03),
     netLoss = Some(0.04),
     totalAdditions = Some(0.05),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(parsedSummaryCalculationAdditions),
     totalDeductions = Some(0.06),
-    deductions = Some(summaryCalculationDeductionsNonFhlModel),
+    deductions = Some(parsedNonFhlSummaryCalculationDeductions),
     taxableProfit = Some(1.12),
     adjustedIncomeTaxLoss = Some(1.13)
   )
 
-  lazy val summaryCalculationFhlModel: SummaryCalculation = SummaryCalculation(
+  lazy val parsedFhlsummaryCalculation: SummaryCalculation = SummaryCalculation(
     totalIncome = Some(0.01),
-    income = Some(summaryCalculationIncomeFhlModel),
+    income = Some(parsedFhlSummaryCalculationIncome),
     totalExpenses = Some(0.05),
-    expenses = Some(summaryCalculationExpensesModel),
+    expenses = Some(parsedSummaryCalculationExpenses),
     netProfit = Some(0.16),
     netLoss = Some(0.17),
     totalAdditions = Some(0.18),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(parsedSummaryCalculationAdditions),
     totalDeductions = Some(0.21),
-    deductions = Some(summaryCalculationDeductionsFhlModel),
+    deductions = Some(parsedFhlSummaryCalculationDeductions),
     taxableProfit = Some(0.30),
     adjustedIncomeTaxLoss = Some(0.31),
     countryLevelDetail = None
   )
 
-  lazy val summaryCalculationNonFhlModel: SummaryCalculation = SummaryCalculation(
+  lazy val parsedNonFhlSummaryCalculation: SummaryCalculation = SummaryCalculation(
     totalIncome = Some(0.01),
-    income = Some(summaryCalculationIncomeNonFhlModel),
+    income = Some(parsedNonFhlSummaryCalculationIncome),
     totalExpenses = Some(0.05),
-    expenses = Some(summaryCalculationExpensesModel),
+    expenses = Some(parsedSummaryCalculationExpenses),
     netProfit = Some(0.16),
     netLoss = Some(0.17),
     totalAdditions = Some(0.18),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(parsedSummaryCalculationAdditions),
     totalDeductions = Some(0.21),
-    deductions = Some(summaryCalculationDeductionsNonFhlModel),
+    deductions = Some(parsedNonFhlSummaryCalculationDeductions),
     taxableProfit = Some(0.30),
     adjustedIncomeTaxLoss = Some(0.31),
-    countryLevelDetail = Some(Seq(summaryCalculationCountryLevelDetailModel))
+    countryLevelDetail = Some(Seq(parsedSummaryCalculationCountryLevelDetail))
   )
 
-  lazy val adjustmentsIncomeFhlModel: AdjustmentsIncome = AdjustmentsIncome(
+  lazy val parsedFhlAdjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(0.12),
     premiumsOfLeaseGrant = None,
     otherPropertyIncome = None
   )
 
-  lazy val adjustmentsIncomeNonFhlModel: AdjustmentsIncome = AdjustmentsIncome(
+  lazy val parsedNonFhlAdjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(0.12),
     premiumsOfLeaseGrant = Some(0.13),
     otherPropertyIncome = Some(0.14)
   )
 
-  lazy val adjustmentsExpensesFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
+  lazy val parsedFhlAdjustmentsExpenses: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(0.01),
     premisesRunningCosts = Some(0.08),
     repairsAndMaintenance = Some(0.02),
@@ -629,7 +629,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     travelCosts = Some(0.06)
   )
 
-  lazy val adjustmentsExpensesNonFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
+  lazy val parsedNonFhlAdjustmentsExpenses: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(0.01),
     premisesRunningCosts = Some(0.08),
     repairsAndMaintenance = Some(0.02),
@@ -641,56 +641,55 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     travelCosts = Some(0.06)
   )
 
-  lazy val adjustmentsFhlModel: Adjustments = Adjustments(
+  lazy val parsedFhlAdjustments: Adjustments = Adjustments(
     countryLevelDetail = None,
     countryCode = None,
-    income = Some(adjustmentsIncomeFhlModel),
-    expenses = Some(adjustmentsExpensesFhlModel)
+    income = Some(parsedFhlAdjustmentsIncome),
+    expenses = Some(parsedFhlAdjustmentsExpenses)
   )
 
-  lazy val adjustmentsNonFhlModel: Adjustments = Adjustments(
+  lazy val parsedNonFhlAdjustments: Adjustments = Adjustments(
     countryLevelDetail = None,
     countryCode = Some("AFG"),
-    income = Some(adjustmentsIncomeNonFhlModel),
-    expenses = Some(adjustmentsExpensesNonFhlModel)
+    income = Some(parsedNonFhlAdjustmentsIncome),
+    expenses = Some(parsedNonFhlAdjustmentsExpenses)
   )
 
-  lazy val adjustmentsNonFhlSeqModel: Adjustments = Adjustments(
+  lazy val parsedNonFhlAdjustmentsSeq: Adjustments = Adjustments(
     countryLevelDetail = Some(
-      Seq(
-        Adjustments(
-          countryLevelDetail = None,
-          countryCode = adjustmentsNonFhlModel.countryCode,
-          income = adjustmentsNonFhlModel.income,
-          expenses = adjustmentsNonFhlModel.expenses
-        ))),
+      List(Adjustments(
+        countryLevelDetail = None,
+        countryCode = parsedNonFhlAdjustments.countryCode,
+        income = parsedNonFhlAdjustments.income,
+        expenses = parsedNonFhlAdjustments.expenses
+      ))),
     countryCode = None,
     income = None,
     expenses = None
   )
 
-  lazy val retrieveForeignPropertyBsasResponseFhlModel: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
-    metadata = metaDataModel,
-    inputs = inputsFhlModel,
-    adjustableSummaryCalculation = summaryCalculationFhlModel,
-    adjustments = Some(adjustmentsFhlModel),
-    adjustedSummaryCalculation = Some(summaryCalculationFhlModel)
+  lazy val parsedFhlRetrieveForeignPropertyBsasResponse: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
+    metadata = parsedMetadata,
+    inputs = parsedFhlInputs,
+    adjustableSummaryCalculation = parsedFhlsummaryCalculation,
+    adjustments = Some(parsedFhlAdjustments),
+    adjustedSummaryCalculation = Some(parsedFhlsummaryCalculation)
   )
 
-  lazy val retrieveForeignPropertyBsasResponseNonFhlModel: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
-    metadata = metaDataModel,
-    inputs = inputsNonFhlModel,
-    adjustableSummaryCalculation = summaryCalculationNonFhlModel,
-    adjustments = Some(adjustmentsNonFhlSeqModel),
-    adjustedSummaryCalculation = Some(summaryCalculationNonFhlModel)
+  lazy val parsedNonFhlRetrieveForeignPropertyBsasResponse: RetrieveForeignPropertyBsasResponse = RetrieveForeignPropertyBsasResponse(
+    metadata = parsedMetadata,
+    inputs = parsedNonFhlInputs,
+    adjustableSummaryCalculation = parsedNonFhlSummaryCalculation,
+    adjustments = Some(parsedNonFhlAdjustmentsSeq),
+    adjustedSummaryCalculation = Some(parsedNonFhlSummaryCalculation)
   )
 
-  def retrieveForeignPropertyBsasResponseNonFhlModelWith(typeOfBusiness: TypeOfBusiness): RetrieveForeignPropertyBsasResponse =
+  def parsedNonFhlRetrieveForeignPropertyBsasResponseWith(typeOfBusiness: TypeOfBusiness): RetrieveForeignPropertyBsasResponse =
     RetrieveForeignPropertyBsasResponse(
-      metadata = metaDataModel,
-      inputs = inputsNonFhlModel.copy(typeOfBusiness = typeOfBusiness),
-      adjustableSummaryCalculation = summaryCalculationNonFhlModel,
-      adjustments = Some(adjustmentsNonFhlSeqModel),
-      adjustedSummaryCalculation = Some(summaryCalculationNonFhlModel)
+      metadata = parsedMetadata,
+      inputs = parsedNonFhlInputs.copy(typeOfBusiness = typeOfBusiness),
+      adjustableSummaryCalculation = parsedNonFhlSummaryCalculation,
+      adjustments = Some(parsedNonFhlAdjustmentsSeq),
+      adjustedSummaryCalculation = Some(parsedNonFhlSummaryCalculation)
     )
 }

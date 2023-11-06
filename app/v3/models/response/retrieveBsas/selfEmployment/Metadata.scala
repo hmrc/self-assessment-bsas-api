@@ -16,29 +16,29 @@
 
 package v3.models.response.retrieveBsas.selfEmployment
 
-import shared.models.domain.Status
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v3.models.domain.DownstreamTaxYear
+import shared.models.domain.{Status, TaxYear}
 
 case class Metadata(
-                     calculationId: String,
-                     requestedDateTime: String,
-                     adjustedDateTime: Option[String],
-                     nino: String,
-                     taxYear: String,
-                     summaryStatus: Status
-                   )
+    calculationId: String,
+    requestedDateTime: String,
+    adjustedDateTime: Option[String],
+    nino: String,
+    taxYear: String,
+    summaryStatus: Status
+)
 
 object Metadata {
+
   implicit val reads: Reads[Metadata] = (
     (JsPath \ "calculationId").read[String] and
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "adjustedDateTime").readNullable[String] and
       (JsPath \ "taxableEntityId").read[String] and
-      (JsPath \ "taxYear").read[BigInt].map(taxYear => DownstreamTaxYear.fromDownstream(taxYear.toString())) and
+      (JsPath \ "taxYear").read[Int].map(taxYear => TaxYear.fromDownstreamInt(taxYear).asMtd) and
       (JsPath \ "status").read[Status]
-    ) (Metadata.apply _)
+  )(Metadata.apply _)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

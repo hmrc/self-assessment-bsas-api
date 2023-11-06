@@ -70,13 +70,12 @@ class RetrieveForeignPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveForeignPropertyBsasService.retrieveBsas(requestData) returns
-          Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignPropertyBsasResponseNonFhlModel)))
+          Future.successful(Right(ResponseWrapper(correlationId, parsedNonFhlRetrieveForeignPropertyBsasResponse)))
 
         MockHateoasFactory
-          .wrap(
-            retrieveForeignPropertyBsasResponseNonFhlModel,
+          .wrap(parsedNonFhlRetrieveForeignPropertyBsasResponse,
             RetrieveForeignPropertyHateoasData(validNino, calculationId.calculationId, None)) returns
-          HateoasWrapper(retrieveForeignPropertyBsasResponseNonFhlModel, testHateoasLinks)
+          HateoasWrapper(parsedNonFhlRetrieveForeignPropertyBsasResponse, testHateoasLinks)
 
         runOkTest(
           expectedStatus = OK,

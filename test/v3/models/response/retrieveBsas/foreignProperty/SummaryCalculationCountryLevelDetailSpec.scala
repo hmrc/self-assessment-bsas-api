@@ -26,7 +26,7 @@ class SummaryCalculationCountryLevelDetailSpec extends UnitSpec with RoundTripTe
   testRoundTrip(
     "Summary Calculation Country Level Detail",
     summaryCalculationCountryLevelDetailDesJson,
-    summaryCalculationCountryLevelDetailModel,
+    parsedSummaryCalculationCountryLevelDetail,
     summaryCalculationCountryLevelDetailMtdJson
   )(reads)
 }

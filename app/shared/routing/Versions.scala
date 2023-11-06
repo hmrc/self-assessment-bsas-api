@@ -27,36 +27,22 @@ object Version {
     Versions.getFromRequest(request).getOrElse(orElse)
 
   object VersionWrites extends Writes[Version] {
-
-    def writes(version: Version): JsValue = version match {
-      case Version1 => Json.toJson(Version1.name)
-      case Version2 => Json.toJson(Version2.name)
-      case Version3 => Json.toJson(Version3.name)
-      case Version4 => Json.toJson(Version4.name)
-      case Version5 => Json.toJson(Version5.name)
-      case Version6 => Json.toJson(Version6.name)
-      case Version7 => Json.toJson(Version7.name)
-      case Version8 => Json.toJson(Version8.name)
-      case Version9 => Json.toJson(Version9.name)
-    }
-
+    def writes(version: Version): JsValue = version.asJson
   }
 
   object VersionReads extends Reads[Version] {
 
+    /** @param version
+      *   expecting a JsString e.g. "1.0"
+      */
     override def reads(version: JsValue): JsResult[Version] =
-      version.validate[String].flatMap {
-        case Version1.name => JsSuccess(Version1)
-        case Version2.name => JsSuccess(Version2)
-        case Version3.name => JsSuccess(Version3)
-        case Version4.name => JsSuccess(Version4)
-        case Version5.name => JsSuccess(Version5)
-        case Version6.name => JsSuccess(Version6)
-        case Version7.name => JsSuccess(Version7)
-        case Version8.name => JsSuccess(Version8)
-        case Version9.name => JsSuccess(Version9)
-        case _             => JsError("Unrecognised version")
-      }
+      version
+        .validate[String]
+        .flatMap(name =>
+          Versions.getFrom(name) match {
+            case Left(_)        => JsError("Version not recognised")
+            case Right(version) => JsSuccess(version)
+          })
 
   }
 
@@ -66,6 +52,8 @@ object Version {
 
 sealed trait Version {
   val name: String
+  lazy val asJson: JsValue = Json.toJson(name)
+
   override def toString: String = name
 }
 
@@ -116,7 +104,7 @@ object Versions {
     Version6.name -> Version6,
     Version7.name -> Version7,
     Version8.name -> Version8,
-    Version9.name -> Version9,
+    Version9.name -> Version9
   )
 
   private val versionRegex = """application/vnd.hmrc.(\d.\d)\+json""".r
@@ -130,7 +118,7 @@ object Versions {
   private def getFrom(headers: Seq[(String, String)]): Either[GetFromRequestError, String] =
     headers.collectFirst { case (ACCEPT, versionRegex(ver)) => ver }.toRight(left = InvalidHeader)
 
-  private def getFrom(name: String): Either[GetFromRequestError, Version] =
+  def getFrom(name: String): Either[GetFromRequestError, Version] =
     versionsByName.get(name).toRight(left = VersionNotFound)
 
 }

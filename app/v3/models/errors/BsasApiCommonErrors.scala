@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package shared.models.errors
+package v3.models.errors
 
 import play.api.http.Status.BAD_REQUEST
+import shared.models.errors.MtdError
 
 // MtdError types that are common to SA BSAS API.
 

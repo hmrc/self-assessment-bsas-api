@@ -25,10 +25,10 @@ class SummaryCalculationDeductionsSpec extends UnitSpec with RoundTripTest {
 
   testRoundTrip("Summary Calculation Deductions FHL",
     summaryCalculationDeductionsDesJson,
-    summaryCalculationDeductionsFhlModel,
+    parsedFhlSummaryCalculationDeductions,
     summaryCalculationDeductionsMtdFhlJson)(readsFhl)
   testRoundTrip("Adjustments Non-FHL",
     summaryCalculationDeductionsDesJson,
-    summaryCalculationDeductionsNonFhlModel,
+    parsedNonFhlSummaryCalculationDeductions,
     summaryCalculationDeductionsMtdNonFhlJson)(readsNonFhl)
 }

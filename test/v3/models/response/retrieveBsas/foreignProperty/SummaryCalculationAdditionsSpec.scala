@@ -25,6 +25,6 @@ class SummaryCalculationAdditionsSpec extends UnitSpec with RoundTripTest {
 
   testRoundTrip("Summary Calculation Additions",
     summaryCalculationAdditionsDesJson,
-    summaryCalculationAdditionsModel,
+    parsedSummaryCalculationAdditions,
     summaryCalculationAdditionsMtdJson)(reads)
 }

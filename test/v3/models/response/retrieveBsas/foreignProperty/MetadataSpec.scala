@@ -25,7 +25,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid metadata model" when {
       "a valid json with all fields are supplied" in {
-        metadataDesJson.as[Metadata] shouldBe metaDataModel
+        metadataDesJson.as[Metadata] shouldBe parsedMetadata
       }
     }
   }
@@ -33,7 +33,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return a valid metadata json" when {
       "a valid model is supplied" in {
-        metaDataModel.toJson shouldBe metadataMtdJson
+          parsedMetadata.toJson shouldBe metadataMtdJson
       }
     }
   }

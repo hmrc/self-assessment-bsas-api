@@ -25,6 +25,6 @@ class SummaryCalculationExpensesSpec extends UnitSpec with RoundTripTest {
 
   testRoundTrip("Summary Calculation Expenses",
     summaryCalculationExpensesDesJson,
-    summaryCalculationExpensesModel,
+    parsedSummaryCalculationExpenses,
     summaryCalculationExpensesMtdJson)(reads)
 }

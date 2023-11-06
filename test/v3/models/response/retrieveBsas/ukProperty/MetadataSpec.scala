@@ -20,7 +20,7 @@ import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
 
-class MetadataOldSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
   import Metadata._
 

@@ -16,8 +16,8 @@
 
 package shared.models.domain
 
-import shared.models.domain.TaxYear.currentTaxYear
 import play.api.libs.json.Writes
+import shared.models.domain.TaxYear.currentTaxYear
 
 import java.time.{LocalDate, ZoneOffset}
 import javax.inject.Singleton
@@ -104,6 +104,8 @@ object TaxYear {
 
     new TaxYear(year)
   }
+
+  private def apply(value: String): TaxYear = new TaxYear(value)
 
   private def isPreviousTaxYear(date: LocalDate): Boolean = {
     val taxYearStartDate = LocalDate.of(date.getYear, taxYearMonthStart, taxYearDayStart)

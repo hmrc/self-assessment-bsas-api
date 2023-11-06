@@ -38,7 +38,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   val request: RetrieveForeignPropertyBsasRequestData = RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
 
-  val response: RetrieveForeignPropertyBsasResponse = retrieveForeignPropertyBsasResponseNonFhlModel
+  val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponse
 
   trait Test extends MockRetrieveForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -63,7 +63,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
         import TypeOfBusiness._
         Seq(`self-employment`, `uk-property-fhl`, `uk-property-non-fhl`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
-            val response: RetrieveForeignPropertyBsasResponse = retrieveForeignPropertyBsasResponseNonFhlModelWith(typeOfBusiness)
+            val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponseWith(typeOfBusiness)
 
             MockRetrieveForeignPropertyBsasConnector
               .retrieveForeignPropertyBsas(request)

@@ -97,6 +97,12 @@ class TaxYearSpec extends UnitSpec {
       }
     }
 
+    "constructed via apply(string)" should {
+      "not compile" in {
+        """TaxYear("2021-22")""" shouldNot compile
+      }
+    }
+
     "compared with equals" should {
       "have equality based on content" in {
         val taxYear = TaxYear.fromMtd("2021-22")

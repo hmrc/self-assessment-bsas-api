@@ -32,14 +32,14 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response FHL",
     retrieveForeignPropertyBsasDesFhlJson,
-    retrieveForeignPropertyBsasResponseFhlModel,
+    parsedFhlRetrieveForeignPropertyBsasResponse,
     retrieveForeignPropertyBsasMtdFhlJson
   )(reads)
 
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response Non-FHL",
     retrieveForeignPropertyBsasDesNonFhlJson,
-    retrieveForeignPropertyBsasResponseNonFhlModel,
+    parsedNonFhlRetrieveForeignPropertyBsasResponse,
     retrieveForeignPropertyBsasMtdNonFhlJson
   )(reads)
 
@@ -50,7 +50,7 @@ class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTes
       val calculationId  = "anId"
       val context        = "individuals/self-assessment/adjustable-summary"
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
-      val rawResponse    = retrieveForeignPropertyBsasResponseFhlModel
+      val rawResponse    = parsedFhlRetrieveForeignPropertyBsasResponse
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
