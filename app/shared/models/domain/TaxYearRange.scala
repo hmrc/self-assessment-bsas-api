@@ -16,6 +16,8 @@
 
 package shared.models.domain
 
+import java.time.Clock
+
 /** A tax year range.
   *
   * @param from
@@ -27,8 +29,8 @@ case class TaxYearRange(from: TaxYear, to: TaxYear)
 
 object TaxYearRange {
 
-  def todayMinus(years: Int)(implicit todaySupplier: TodaySupplier = new TodaySupplier): TaxYearRange = {
-    val currentTaxYear = TaxYear.currentTaxYear()
+  def todayMinus(years: Int)(implicit clock: Clock = Clock.systemUTC): TaxYearRange = {
+    val currentTaxYear = TaxYear.currentTaxYear
     val from           = TaxYear.fromDownstreamInt(currentTaxYear.year - years)
     TaxYearRange(from = from, to = currentTaxYear)
   }

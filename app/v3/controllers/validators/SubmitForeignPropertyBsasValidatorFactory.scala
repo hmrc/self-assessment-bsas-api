@@ -16,12 +16,13 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import play.api.libs.json.JsValue
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.ResolverSupport._
+import shared.controllers.validators.resolvers._
+import shared.models.errors.MtdError
 import v3.controllers.validators.SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 import v3.controllers.validators.resolvers.ResolveOnlyOneJsonProperty
 import v3.models.request.submitBsas.foreignProperty._
@@ -37,6 +38,8 @@ class SubmitForeignPropertyBsasValidatorFactory {
 
   private val resolveOnlyOneJsonProperty = new ResolveOnlyOneJsonProperty("foreignFhlEea", "nonFurnishedHolidayLet")
 
+  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitForeignPropertyBsasRequestData] =
     new Validator[SubmitForeignPropertyBsasRequestData] {
 
@@ -45,7 +48,7 @@ class SubmitForeignPropertyBsasValidatorFactory {
           (
             ResolveNino(nino),
             ResolveCalculationId(calculationId),
-            ResolveTysTaxYear(taxYear),
+            resolveTysTaxYear(taxYear),
             resolveJson(body)
           ).mapN(SubmitForeignPropertyBsasRequestData)
         ) andThen validateBusinessRules

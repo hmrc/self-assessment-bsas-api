@@ -36,7 +36,7 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
           validateFhlConsolidatedExpenses(fhl)
         )
       case None =>
-        ((valid, valid))
+        (valid, valid)
     }
 
     val (validatedNonFhl, validatedNonFhlConsolidated) = body.nonFurnishedHolidayLet match {
@@ -46,7 +46,7 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
           validateNonFhlConsolidatedExpenses(ukProperty)
         )
       case None =>
-        ((valid, valid))
+        (valid, valid)
     }
 
     combine(
@@ -60,7 +60,7 @@ object SubmitUkPropertyBsasRulesValidator extends RulesValidator[SubmitUkPropert
   private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
 
   private def resolveAdjusted(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Unit] =
-    resolveAdjustment(value, path = Some(path)).map(_ => ())
+    resolveAdjustment(value, path).map(_ => ())
 
   private def validateFhl(fhl: FurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
     combine(

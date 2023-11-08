@@ -27,12 +27,15 @@ import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasReq
 
 import javax.inject.Singleton
 import scala.annotation.nowarn
+import shared.controllers.validators.resolvers.ResolverSupport._
 
 @Singleton
 class SubmitSelfEmploymentBsasValidatorFactory {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitSelfEmploymentBsasRequestBody]()
+
+  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
 
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitSelfEmploymentBsasRequestData] =
     new Validator[SubmitSelfEmploymentBsasRequestData] {
@@ -41,7 +44,7 @@ class SubmitSelfEmploymentBsasValidatorFactory {
         (
           ResolveNino(nino),
           ResolveCalculationId(calculationId),
-          ResolveTysTaxYear(taxYear),
+          resolveTysTaxYear(taxYear),
           resolveJson(body)
         ).mapN(SubmitSelfEmploymentBsasRequestData) andThen validateBusinessRules
     }

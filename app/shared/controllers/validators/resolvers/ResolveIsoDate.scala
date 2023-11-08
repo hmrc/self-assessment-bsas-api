@@ -16,21 +16,37 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.errors.MtdError
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
+import shared.models.errors.MtdError
 
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
-/**
-  * Checks that the date format is YYYY-MM-DD, and returns a new LocalDate.
+/** Checks that the date format is YYYY-MM-DD, and returns a new LocalDate.
   */
-object ResolveIsoDate extends Resolver[String, LocalDate] {
+case class ResolveIsoDate(error: MtdError) extends ResolverSupport {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], LocalDate] =
+ val resolver: Resolver[String, LocalDate] = value =>
     try Valid(LocalDate.parse(value))
     catch {
-      case _: DateTimeParseException => Invalid(List(requireError(error, path)))
+      case _: DateTimeParseException => Invalid(List(error))
     }
+
+  def apply(value: String): Validated[Seq[MtdError], LocalDate] =
+    resolver(value)
+
+}
+
+object ResolveIsoDate extends ResolverSupport {
+
+  def apply(value: String, error: MtdError): Validated[Seq[MtdError], LocalDate] =
+    ResolveIsoDate(error).resolver(value)
+
+  def apply(value: Option[String], error: MtdError): Validated[Seq[MtdError], Option[LocalDate]] = {
+    val resolver = ResolveIsoDate(error).resolver.resolveOptionally
+
+    resolver(value)
+  }
+
 }

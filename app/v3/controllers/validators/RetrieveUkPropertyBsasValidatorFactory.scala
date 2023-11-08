@@ -16,17 +16,20 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveTysTaxYear }
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.ResolverSupport._
+import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear}
+import shared.models.errors.MtdError
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 
 import javax.inject.Singleton
 
 @Singleton
 class RetrieveUkPropertyBsasValidatorFactory {
+
+  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
 
   def validator(nino: String, calculationId: String, taxYear: Option[String]): Validator[RetrieveUkPropertyBsasRequestData] =
     new Validator[RetrieveUkPropertyBsasRequestData] {
@@ -35,7 +38,7 @@ class RetrieveUkPropertyBsasValidatorFactory {
         (
           ResolveNino(nino),
           ResolveCalculationId(calculationId),
-          ResolveTysTaxYear(taxYear)
+          resolveTysTaxYear(taxYear)
         ).mapN(RetrieveUkPropertyBsasRequestData)
     }
 }
