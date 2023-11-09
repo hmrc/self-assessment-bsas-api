@@ -30,7 +30,13 @@ trait ApiDefinitionFactory extends Logging {
 
   protected val appConfig: AppConfig
 
-  protected val scopes: Seq[Scope] = List(
+  lazy val confidenceLevel: ConfidenceLevel = {
+    val clConfig = appConfig.confidenceLevelConfig
+
+    if (clConfig.definitionEnabled) clConfig.confidenceLevel else ConfidenceLevel.L50
+  }
+
+  lazy protected val scopes: Seq[Scope] = List(
     Scope(
       key = readScope,
       name = "View your Self Assessment information",
@@ -46,12 +52,6 @@ trait ApiDefinitionFactory extends Logging {
   )
 
   val definition: Definition
-
-  lazy val confidenceLevel: ConfidenceLevel = {
-    val clConfig = appConfig.confidenceLevelConfig
-
-    if (clConfig.definitionEnabled) clConfig.confidenceLevel else ConfidenceLevel.L50
-  }
 
   protected def buildAPIStatus(version: Version): APIStatus =
     APIStatus.parser
