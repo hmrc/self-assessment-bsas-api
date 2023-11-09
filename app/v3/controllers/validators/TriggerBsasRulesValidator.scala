@@ -21,10 +21,8 @@ import cats.data.Validated.Invalid
 import cats.implicits._
 import config.BsasConfig
 import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.ResolverSupport._
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
-import shared.models.domain.DateRange
-import shared.models.errors.{EndDateFormatError, MtdError, StartDateFormatError}
+import shared.models.errors.MtdError
 import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v3.models.domain.TypeOfBusiness
 import v3.models.domain.TypeOfBusiness.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
@@ -41,12 +39,7 @@ class TriggerBsasRulesValidator @Inject() (bsasConfig: BsasConfig) extends Rules
   private val minYear: Int = 1900
   private val maxYear: Int = 2099
 
-  private val resolveDateRange = ResolveDateRange().resolver thenValidate { case DateRange(start, end) =>
-    val validatedFromDate = if (start.getYear >= minYear) Nil else List(StartDateFormatError)
-    val validatedToDate   = if (end.getYear <= maxYear) Nil else List(EndDateFormatError)
-
-    Option(validatedFromDate ++ validatedToDate).filter(_.nonEmpty)
-  }
+  private val resolveDateRange = ResolveDateRange().yearLimited(minYear, maxYear)
 
   private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
     s"${bsasConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
