@@ -23,9 +23,10 @@ import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAsset
 import play.api.Configuration
 import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.config.rewriters._
-import shared.definition.ApiDefinitionFactory
+import shared.config.{AppConfig, MockAppConfig}
+import shared.definition._
+import shared.routing.Version1
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -103,7 +104,21 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     MockedAppConfig.featureSwitchConfig returns Configuration("openApiFeatureTest.enabled" -> featureEnabled)
 
-    private val apiFactory = new ApiDefinitionFactory(mockAppConfig)
+    private val apiFactory = new ApiDefinitionFactory {
+      protected val appConfig: AppConfig = mockAppConfig
+
+      val definition: Definition = Definition(
+        Nil,
+        APIDefinition(
+          "test API definition",
+          "description",
+          "context",
+          List("category"),
+          List(APIVersion(Version1, APIStatus.BETA, endpointsEnabled = true)),
+          None)
+      )
+
+    }
 
     private val config    = new Configuration(ConfigFactory.load())
     private val mimeTypes = HttpConfiguration.parseFileMimeTypes(config) ++ Map("yaml" -> "text/yaml", "md" -> "text/markdown")
