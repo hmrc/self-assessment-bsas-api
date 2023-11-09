@@ -28,12 +28,10 @@ import v3.controllers.validators.resolvers.ResolveOnlyOneJsonProperty
 import v3.models.request.submitBsas.foreignProperty._
 
 import javax.inject.Singleton
-import scala.annotation.nowarn
 
 @Singleton
 class SubmitForeignPropertyBsasValidatorFactory {
 
-  @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitForeignPropertyBsasRequestBody]()
 
   private val resolveOnlyOneJsonProperty = new ResolveOnlyOneJsonProperty("foreignFhlEea", "nonFurnishedHolidayLet")

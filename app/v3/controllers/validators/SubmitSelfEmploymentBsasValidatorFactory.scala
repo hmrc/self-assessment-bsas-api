@@ -26,13 +26,11 @@ import v3.controllers.validators.SubmitSelfEmploymentBsasRulesValidator.validate
 import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
 
 import javax.inject.Singleton
-import scala.annotation.nowarn
 import shared.controllers.validators.resolvers.ResolverSupport._
 
 @Singleton
 class SubmitSelfEmploymentBsasValidatorFactory {
 
-  @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[SubmitSelfEmploymentBsasRequestBody]()
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally

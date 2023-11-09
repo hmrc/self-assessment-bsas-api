@@ -20,13 +20,10 @@ import play.api.libs.json.{Format, Json}
 import shapeless.HNil
 import shared.utils.EmptinessChecker
 
-import scala.annotation.nowarn
-
 case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses])
 
 object ForeignProperty {
 
-  @nowarn("cat=lint-byname-implicit")
   implicit val emptinessChecker: EmptinessChecker[ForeignProperty] = EmptinessChecker.use { body =>
     "income" -> body.income ::
       "expenses" -> body.expenses :: HNil
