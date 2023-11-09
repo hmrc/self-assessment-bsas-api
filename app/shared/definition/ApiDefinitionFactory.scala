@@ -23,12 +23,29 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 trait ApiDefinitionFactory extends Logging {
 
-  protected val appConfig: AppConfig
-
-  val definition: Definition
-
   protected val readScope  = "read:self-assessment"
   protected val writeScope = "write:self-assessment"
+
+  protected val mtdCategory = "INCOME_TAX_MTD"
+
+  protected val appConfig: AppConfig
+
+  protected val scopes: Seq[Scope] = List(
+    Scope(
+      key = readScope,
+      name = "View your Self Assessment information",
+      description = "Allow read access to self assessment data",
+      confidenceLevel = confidenceLevel
+    ),
+    Scope(
+      key = writeScope,
+      name = "Change your Self Assessment information",
+      description = "Allow write access to self assessment data",
+      confidenceLevel = confidenceLevel
+    )
+  )
+
+  val definition: Definition
 
   lazy val confidenceLevel: ConfidenceLevel = {
     val clConfig = appConfig.confidenceLevelConfig

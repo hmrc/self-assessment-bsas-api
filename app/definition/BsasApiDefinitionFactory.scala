@@ -27,25 +27,12 @@ class BsasApiDefinitionFactory @Inject() (protected val appConfig: AppConfig) ex
 
   lazy val definition: Definition =
     Definition(
-      scopes = List(
-        Scope(
-          key = readScope,
-          name = "View your Self Assessment information",
-          description = "Allow read access to self assessment data",
-          confidenceLevel = confidenceLevel
-        ),
-        Scope(
-          key = writeScope,
-          name = "Change your Self Assessment information",
-          description = "Allow write access to self assessment data",
-          confidenceLevel = confidenceLevel
-        )
-      ),
+      scopes = scopes,
       api = APIDefinition(
         name = "Business Source Adjustable Summary (MTD)",
         description = "An API for providing business source adjustable summary data",
         context = appConfig.apiGatewayContext,
-        categories = List("INCOME_TAX_MTD"),
+        categories = List(mtdCategory),
         versions = List(
           APIVersion(
             version = Version3,
