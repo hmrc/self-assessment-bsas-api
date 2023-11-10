@@ -17,115 +17,77 @@
 package shared.definition
 
 import shared.UnitSpec
-import shared.config.{ConfidenceLevelConfig, MockAppConfig}
+import shared.config.{AppConfig, ConfidenceLevelConfig, MockAppConfig}
 import shared.definition.APIStatus.{ALPHA, BETA}
 import shared.mocks.MockHttpClient
-import shared.routing.{Version3, Version4}
+import shared.routing.{Version, Version1, Version3, Version4}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
+  private[definition] class MyApiDefinitionFactory extends ApiDefinitionFactory {
+    protected val appConfig: AppConfig = mockAppConfig
+
+    val definition: Definition = Definition(
+      Nil,
+      APIDefinition(
+        "test API definition",
+        "description",
+        "context",
+        List("category"),
+        List(APIVersion(Version1, APIStatus.BETA, endpointsEnabled = true)),
+        None)
+    )
+
+    def checkBuildApiStatus(version: Version): APIStatus = buildAPIStatus(version)
+  }
 
   class Test extends MockHttpClient with MockAppConfig {
     MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
-    val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
-  }
 
-  "definition" when {
-    "called" should {
-      "return a valid Definition case class" in new Test {
-        MockedAppConfig.apiStatus(Version3) returns "BETA"
-        MockedAppConfig.apiStatus(Version4) returns "BETA"
-        MockedAppConfig.endpointsEnabled(version = Version3).returns(true).anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(version = Version4).returns(true).anyNumberOfTimes()
+    protected val apiDefinitionFactory = new MyApiDefinitionFactory
 
-        MockedAppConfig.confidenceLevelCheckEnabled
-          .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
-          .anyNumberOfTimes()
-
-        private val readScope  = "read:self-assessment"
-        private val writeScope = "write:self-assessment"
-
-        apiDefinitionFactory.definition shouldBe
-          Definition(
-            scopes = List(
-              Scope(
-                key = readScope,
-                name = "View your Self Assessment information",
-                description = "Allow read access to self assessment data",
-                confidenceLevel
-              ),
-              Scope(
-                key = writeScope,
-                name = "Change your Self Assessment information",
-                description = "Allow write access to self assessment data",
-                confidenceLevel
-              )
-            ),
-            api = APIDefinition(
-              name = "Business Source Adjustable Summary (MTD)",
-              description = "An API for providing business source adjustable summary data",
-              context = "individuals/self-assessment/adjustable-summary",
-              categories = Seq("INCOME_TAX_MTD"),
-              versions = Seq(
-                APIVersion(
-                  Version3,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
-                APIVersion(
-                  Version4,
-                  status = BETA,
-                  endpointsEnabled = true
-                )
-              ),
-              requiresTrust = None
-            )
-          )
-      }
-    }
-  }
-
-  "confidenceLevel" when {
-    Seq(
-      (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
-      (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
-      (false, ConfidenceLevel.L200, ConfidenceLevel.L50)
-    ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
-      s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
-        s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
-            confidenceLevel = configCL,
-            definitionEnabled = definitionEnabled,
-            authValidationEnabled = true)
-          apiDefinitionFactory.confidenceLevel shouldBe expectedDefinitionCL
-        }
-      }
-    }
-  }
-
-  "buildAPIStatus" when {
-    "the 'apiStatus' parameter is present and valid" should {
-      Seq(
-        (Version3, BETA),
-        (Version4, BETA)
-      ).foreach { case (version, status) =>
-        s"return the correct $status for $version " in new Test {
-          MockedAppConfig.apiStatus(version) returns status.toString
-          apiDefinitionFactory.buildAPIStatus(version) shouldBe status
+    "confidenceLevel" when {
+      List(
+        (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
+        (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
+        (false, ConfidenceLevel.L200, ConfidenceLevel.L50)
+      ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
+        s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
+          s"return confidence level $expectedDefinitionCL" in new Test {
+            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+              confidenceLevel = configCL,
+              definitionEnabled = definitionEnabled,
+              authValidationEnabled = true)
+            apiDefinitionFactory.confidenceLevel shouldBe expectedDefinitionCL
+          }
         }
       }
     }
 
-    "the 'apiStatus' parameter is present and invalid" should {
-      Seq(Version3, Version4).foreach { version =>
-        s"default to alpha for $version " in new Test {
-          MockedAppConfig.apiStatus(version) returns "ALPHO"
-          apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
+    "buildAPIStatus" when {
+      "the 'apiStatus' parameter is present and valid" should {
+          List(
+            (Version3, BETA),
+            (Version4, BETA)
+          ).foreach { case (version, status) =>
+          s"return the correct $status for $version " in new Test {
+            MockedAppConfig.apiStatus(version) returns status.toString
+            apiDefinitionFactory.checkBuildApiStatus(version) shouldBe status
+          }
         }
       }
+
+      "the 'apiStatus' parameter is present and invalid" should {
+          List(Version3, Version4).foreach { version =>
+            s"default to alpha for $version " in new Test {
+              MockedAppConfig.apiStatus(version) returns "ALPHO"
+              apiDefinitionFactory.checkBuildApiStatus(version) shouldBe ALPHA
+            }
+          }
+      }
     }
+
   }
 
 }

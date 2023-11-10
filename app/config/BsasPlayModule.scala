@@ -17,12 +17,15 @@
 package config
 
 import com.google.inject.AbstractModule
+import definition.BsasApiDefinitionFactory
 import routing.BsasVersionRoutingMap
+import shared.definition.ApiDefinitionFactory
 import shared.routing.VersionRoutingMap
 
 class BsasPlayModule extends AbstractModule {
 
   override def configure(): Unit = {
+    bind(classOf[ApiDefinitionFactory]).to(classOf[BsasApiDefinitionFactory]).asEagerSingleton()
     bind(classOf[VersionRoutingMap]).to(classOf[BsasVersionRoutingMap]).asEagerSingleton()
   }
 
