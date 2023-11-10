@@ -24,12 +24,12 @@ import shared.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDat
 
 import java.time.LocalDate
 import scala.math.Ordering.Implicits.infixOrderingOps
-import ResolveDateRange._
 
 case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatError,
                             endDateFormatError: MtdError = EndDateFormatError,
                             endBeforeStartDateError: MtdError = RuleEndBeforeStartDateError)
     extends ResolverSupport {
+  import ResolveDateRange._
 
   val resolver: Resolver[(String, String), DateRange] = { case (startDate, endDate) =>
     (
@@ -51,6 +51,7 @@ case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatErro
       Invalid(List(endBeforeStartDateError))
     else
       Valid(DateRange(parsedStartDate, parsedEndDate))
+
 }
 
 object ResolveDateRange extends ResolverSupport {
