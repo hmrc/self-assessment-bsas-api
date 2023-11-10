@@ -57,7 +57,7 @@ trait ApiDefinitionFactory extends Logging {
     APIStatus.parser
       .lift(appConfig.apiStatus(version))
       .getOrElse {
-        logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
+        logger.error("[ApiDefinition][buildApiStatus] no API Status found in config. Reverting to Alpha")
         APIStatus.ALPHA
       }
 
