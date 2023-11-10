@@ -18,21 +18,21 @@ package v3.controllers.validators.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import shared.controllers.validators.resolvers.Resolver
+import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
 import v3.models.domain.TypeOfBusiness
 import v3.models.errors.TypeOfBusinessFormatError
 
 import scala.util.{Failure, Success, Try}
 
-object ResolveTypeOfBusiness extends Resolver[String, TypeOfBusiness] {
+object ResolveTypeOfBusiness extends ResolverSupport {
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TypeOfBusiness] =
-    Try {
-      TypeOfBusiness.parser(value)
-    } match {
-      case Failure(_)              => Invalid(List(error.getOrElse(TypeOfBusinessFormatError)))
+  val resolver: Resolver[String, TypeOfBusiness] = value =>
+    Try(TypeOfBusiness.parser(value)) match {
+      case Failure(_)              => Invalid(List(TypeOfBusinessFormatError))
       case Success(typeOfBusiness) => Valid(typeOfBusiness)
     }
+
+  def apply(value: String): Validated[Seq[MtdError], TypeOfBusiness] = resolver(value)
 
 }

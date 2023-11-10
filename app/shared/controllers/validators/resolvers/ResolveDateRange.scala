@@ -16,60 +16,57 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.domain.DateRange
-import shared.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
+import shared.models.domain.DateRange
+import shared.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
 
 import java.time.LocalDate
+import scala.math.Ordering.Implicits.infixOrderingOps
 
-private[resolvers] class ResolveDateRange private (yearLimits: Option[YearLimits]) extends Resolver[(String, String), DateRange] {
+case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatError,
+                            endDateFormatError: MtdError = EndDateFormatError,
+                            endBeforeStartDateError: MtdError = RuleEndBeforeStartDateError)
+    extends ResolverSupport {
+  import ResolveDateRange._
 
-  def apply(value: (String, String), notUsedError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], DateRange] = {
-    val (startDate, endDate) = value
-
-    val resolvedDates = (
-      ResolveIsoDate(startDate, StartDateFormatError),
-      ResolveIsoDate(endDate, EndDateFormatError)
+  val resolver: Resolver[(String, String), DateRange] = { case (startDate, endDate) =>
+    (
+      ResolveIsoDate(startDate, startDateFormatError),
+      ResolveIsoDate(endDate, endDateFormatError)
     ).mapN(resolveDateRange).andThen(identity)
-
-    yearLimits match {
-      case Some(YearLimits(minYear, maxYear)) => resolvedDates.andThen(validateFromAndToDate(_, minYear, maxYear))
-      case None                               => resolvedDates
-    }
   }
 
-  private def resolveDateRange(parsedStartDate: LocalDate, parsedEndDate: LocalDate): Validated[Seq[MtdError], DateRange] = {
-    val startDateEpochTime = parsedStartDate.toEpochDay
-    val endDateEpochTime   = parsedEndDate.toEpochDay
+  def apply(value: (String, String)): Validated[Seq[MtdError], DateRange] = resolver(value)
 
-    if ((endDateEpochTime - startDateEpochTime) <= 0) {
-      Invalid(List(RuleEndBeforeStartDateError))
-    } else {
+  def withDatesLimitedTo(minDate: LocalDate, maxDate: LocalDate): Resolver[(String, String), DateRange] =
+    resolver thenValidate datesLimitedTo(minDate, startDateFormatError, maxDate, endDateFormatError)
+
+  def withYearsLimitedTo(minYear: Int, maxYear: Int): Resolver[(String, String), DateRange] =
+    resolver thenValidate yearsLimitedTo(minYear, startDateFormatError, maxYear, endDateFormatError)
+
+  private def resolveDateRange(parsedStartDate: LocalDate, parsedEndDate: LocalDate): Validated[Seq[MtdError], DateRange] =
+    if (parsedEndDate <= parsedStartDate)
+      Invalid(List(endBeforeStartDateError))
+    else
       Valid(DateRange(parsedStartDate, parsedEndDate))
-    }
-  }
-
-  private def validateFromAndToDate(value: DateRange, minYear: Int, maxYear: Int): Validated[Seq[MtdError], DateRange] = {
-    val validatedFromDate = if (value.startDate.getYear < minYear) Invalid(List(StartDateFormatError)) else Valid(())
-    val validatedToDate   = if (value.endDate.getYear >= maxYear) Invalid(List(EndDateFormatError)) else Valid(())
-
-    List(
-      validatedFromDate,
-      validatedToDate
-    ).traverse_(identity).map(_ => value)
-
-  }
 
 }
 
-object ResolveDateRange {
-  def unlimited: ResolveDateRange = new ResolveDateRange(None)
+object ResolveDateRange extends ResolverSupport {
 
-  def withLimits(minYear: Int, maxYear: Int): ResolveDateRange =
-    new ResolveDateRange(Some(YearLimits(minYear, maxYear)))
+  def datesLimitedTo(minDate: LocalDate, minError: => MtdError, maxDate: LocalDate, maxError: => MtdError): Validator[DateRange] =
+    combinedValidator[DateRange](
+      satisfies(minError)(_.startDate >= minDate),
+      satisfies(maxError)(_.endDate <= maxDate)
+    )
+
+  def yearsLimitedTo(minYear: Int, minError: => MtdError, maxYear: Int, maxError: => MtdError): Validator[DateRange] = {
+    def yearStartDate(year: Int) = LocalDate.ofYearDay(year, 1)
+    def yearEndDate(year: Int)   = yearStartDate(year + 1).minusDays(1)
+
+    datesLimitedTo(yearStartDate(minYear), minError, yearEndDate(maxYear), maxError)
+  }
 
 }
-
-private case class YearLimits(minYear: Int, maxYear: Int)

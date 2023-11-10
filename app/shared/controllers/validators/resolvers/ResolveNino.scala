@@ -16,22 +16,22 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.domain.Nino
-import shared.models.errors.{MtdError, NinoFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import shared.models.domain.Nino
+import shared.models.errors.{MtdError, NinoFormatError}
 
-object ResolveNino extends Resolver[String, Nino] {
+object ResolveNino {
 
   private val ninoRegex =
     ("^([ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|" +
       "[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6}[A-D ]?$").r
 
-  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], Nino] = {
+  def apply(value: String): Validated[Seq[MtdError], Nino] = {
     if (Nino.isValid(value) && ninoRegex.matches(value))
       Valid(Nino(value))
     else
-      Invalid(List(withError(error, NinoFormatError, path)))
+      Invalid(List(NinoFormatError))
   }
 
 }

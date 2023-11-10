@@ -25,9 +25,12 @@ import cats.implicits._
 import v4.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
 import javax.inject.Singleton
+import shared.controllers.validators.resolvers.ResolverSupport._
 
 @Singleton
 class RetrieveSelfEmploymentBsasValidatorFactory {
+
+  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
 
   def validator(nino: String, calculationId: String, taxYear: Option[String]): Validator[RetrieveSelfEmploymentBsasRequestData] =
     new Validator[RetrieveSelfEmploymentBsasRequestData] {
@@ -36,7 +39,7 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
         (
           ResolveNino(nino),
           ResolveCalculationId(calculationId),
-          ResolveTysTaxYear(taxYear)
+          resolveTysTaxYear(taxYear)
         ).mapN(RetrieveSelfEmploymentBsasRequestData)
     }
 }

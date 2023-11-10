@@ -16,28 +16,29 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import shared.models.errors.MtdError
 
 import scala.util.matching.Regex
 
-trait StringPatternResolving extends Resolver[String, String] {
+case class ResolveStringPattern(regexFormat: Regex, error: MtdError) extends ResolverSupport {
 
-  protected val regexFormat: Regex
-  protected val error: MtdError
-
-  protected def resolve(value: String, maybeError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], String] =
+  val resolver: Resolver[String, String] = value =>
     if (regexFormat.matches(value))
       Valid(value)
     else
-      Invalid(List(maybeError.getOrElse(error).maybeWithExtraPath(path)))
+      Invalid(List(error))
 
+  def apply(value: String): Validated[Seq[MtdError], String] = resolver(value)
 }
 
-class ResolveStringPattern(protected val regexFormat: Regex, protected val error: MtdError) extends StringPatternResolving {
+object ResolveStringPattern {
 
-  def apply(value: String, maybeError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], String] =
-    resolve(value, maybeError, path)
+  def apply(value: String, regexFormat: Regex, error: MtdError): Validated[Seq[MtdError], String] = {
+    val resolver = ResolveStringPattern(regexFormat, error)
+
+    resolver(value)
+  }
 
 }

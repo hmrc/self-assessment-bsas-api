@@ -16,21 +16,19 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import play.api.libs.json.JsValue
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers._
+import shared.models.errors.MtdError
 import v3.models.request.triggerBsas.{TriggerBsasRequestBody, TriggerBsasRequestData}
 
 import javax.inject.{Inject, Singleton}
-import scala.annotation.nowarn
 
 @Singleton
 class TriggerBsasValidatorFactory @Inject() (rulesValidator: TriggerBsasRulesValidator) {
 
-  @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[TriggerBsasRequestBody]()
 
   def validator(nino: String, body: JsValue): Validator[TriggerBsasRequestData] =

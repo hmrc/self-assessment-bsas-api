@@ -83,7 +83,7 @@ class ListBsasValidatorFactorySpec extends UnitSpec {
         )
       }
 
-      "passed an invalid taxYear (i.e. earlier than 2023-24)" in {
+      "passed an invalid taxYear (i.e. earlier than 2019-20)" in {
         val result = validator(validNino, Some("2018-19"), None, None).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
@@ -119,4 +119,5 @@ class ListBsasValidatorFactorySpec extends UnitSpec {
       }
     }
   }
+
 }

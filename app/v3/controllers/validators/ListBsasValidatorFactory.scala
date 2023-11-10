@@ -16,14 +16,15 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ ResolveBusinessId, ResolveNino }
-import shared.models.domain.TaxYear
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
-import v3.controllers.validators.resolvers.{ ResolveListMinimumTaxYear, ResolveTypeOfBusiness }
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.ResolverSupport._
+import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear}
+import shared.models.domain.TaxYear
+import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v3.models.request.ListBsasRequestData
 
 import javax.inject.Singleton
@@ -31,15 +32,25 @@ import javax.inject.Singleton
 @Singleton
 class ListBsasValidatorFactory {
 
+  private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
+
+  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
+    satisfiesMin(listMinimumTaxYear, RuleTaxYearNotSupportedError)
+
+  private val resolveBusinessId = ResolveBusinessId.resolver.resolveOptionally
+  private val resolveTypeOfBusiness = ResolveTypeOfBusiness.resolver.resolveOptionally
+
   def validator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Validator[ListBsasRequestData] =
     new Validator[ListBsasRequestData] {
 
       def validate: Validated[Seq[MtdError], ListBsasRequestData] =
         (
           ResolveNino(nino),
-          ResolveListMinimumTaxYear(taxYear, defaultValue = TaxYear.currentTaxYear()),
-          ResolveBusinessId(businessId),
-          ResolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
+          resolveTaxYear(taxYear),
+          resolveBusinessId(businessId),
+          resolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
         ).mapN(ListBsasRequestData)
+
     }
+
 }

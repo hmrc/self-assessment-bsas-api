@@ -16,16 +16,15 @@
 
 package v3.controllers.validators.resolvers
 
-import shared.controllers.validators.resolvers.Resolver
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
+import shared.models.errors.MtdError
 import v3.models.errors.RuleBothPropertiesSuppliedError
 
-class ResolveOnlyOneJsonProperty(fieldOneName: String, fieldTwoName: String) extends Resolver[JsValue, Unit] {
+class ResolveOnlyOneJsonProperty(fieldOneName: String, fieldTwoName: String) {
 
-  def apply(body: JsValue, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], Unit] = {
+  def apply(body: JsValue): Validated[Seq[MtdError], Unit] = {
     if (List(fieldOneName, fieldTwoName).forall(field => (body \ field).isDefined)) {
       Invalid(List(RuleBothPropertiesSuppliedError))
     } else {

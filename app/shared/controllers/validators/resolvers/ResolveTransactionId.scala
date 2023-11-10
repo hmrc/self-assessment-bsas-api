@@ -16,20 +16,16 @@
 
 package shared.controllers.validators.resolvers
 
+import cats.data.Validated
 import shared.models.domain.TransactionId
 import shared.models.errors.{MtdError, TransactionIdFormatError}
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
 
-object ResolveTransactionId extends Resolver[String, TransactionId] {
+object ResolveTransactionId extends ResolverSupport {
 
   private val transactionIdRegex = "^[0-9A-Za-z]{1,12}$".r
 
-  def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], TransactionId] = {
-    if (transactionIdRegex.matches(value))
-      Valid(TransactionId(value))
-    else
-      Invalid(List(maybeError.getOrElse(TransactionIdFormatError).maybeWithExtraPath(errorPath)))
-  }
+  val resolver: Resolver[String, TransactionId] =
+    ResolveStringPattern(transactionIdRegex, TransactionIdFormatError).resolver.map(TransactionId)
 
+  def apply(value: String): Validated[Seq[MtdError], TransactionId] = resolver(value)
 }

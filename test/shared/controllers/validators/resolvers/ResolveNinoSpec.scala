@@ -16,10 +16,10 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.domain.Nino
-import shared.models.errors.NinoFormatError
 import cats.data.Validated.{Invalid, Valid}
 import shared.UnitSpec
+import shared.models.domain.Nino
+import shared.models.errors.NinoFormatError
 
 class ResolveNinoSpec extends UnitSpec {
 
@@ -27,7 +27,7 @@ class ResolveNinoSpec extends UnitSpec {
     "return the parsed Nino" when {
       "given a valid nino string" in {
         val validNino = "AA123456A"
-        val result    = ResolveNino(validNino, NinoFormatError)
+        val result    = ResolveNino(validNino)
         result shouldBe Valid(Nino(validNino))
       }
     }
@@ -35,7 +35,7 @@ class ResolveNinoSpec extends UnitSpec {
     "return an error" when {
       "given an invalid NINO" in {
         val invalidNino = "AA123456ABCBBCBCBC"
-        val result      = ResolveNino(invalidNino, NinoFormatError)
+        val result      = ResolveNino(invalidNino)
         result shouldBe Invalid(List(NinoFormatError))
       }
     }

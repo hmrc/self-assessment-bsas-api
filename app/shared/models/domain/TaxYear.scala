@@ -17,34 +17,27 @@
 package shared.models.domain
 
 import play.api.libs.json.Writes
-import shared.models.domain.TaxYear.currentTaxYear
 
-import java.time.{LocalDate, ZoneOffset}
-import javax.inject.Singleton
+import java.time.{Clock, LocalDate}
 
 /** Opaque representation of a tax year.
   *
   * @param value
   *   A single-year representation, e.g. "2024" represents the tax year 2023-24.
   */
-case class TaxYear private (private val value: String) {
+final case class TaxYear private (private val value: String) {
 
-  /** The tax year as a number, e.g. for "2023-24" this will be 2024.
+  /** The year that the tax year ends as a number, e.g. for "2023-24" this will be 2024.
     */
   val year: Int = value.toInt
 
-  /** e.g. for tax year 2023-24, "2023-04-06"
+  /** The year that the tax year starts as a number, e.g. for "2023-24" this will be 2023.
     */
-  val taxYearStart: String = {
-    val fromYear = year - 1
-    s"$fromYear-04-06"
-  }
+  val startYear: Int = year - 1
 
-  /** e.g. for tax year 2023-24, "2024-04-05"
-    */
-  val taxYearEnd: String = {
-    s"$year-04-05"
-  }
+  def startDate: LocalDate = TaxYear.startInYear(startYear)
+
+  def endDate: LocalDate = startDate.plusYears(1).minusDays(1)
 
   /** The tax year in MTD (vendor-facing) format, e.g. "2023-24".
     */
@@ -67,8 +60,6 @@ case class TaxYear private (private val value: String) {
     s"$yearOne-$yearTwo"
   }
 
-  def isTaxYearComplete(implicit todaySupplier: TodaySupplier): Boolean = year < currentTaxYear().year
-
   /** Use this for downstream API endpoints that are known to be TYS.
     */
   def useTaxYearSpecificApi: Boolean = year >= 2024
@@ -78,12 +69,15 @@ case class TaxYear private (private val value: String) {
 
 object TaxYear {
 
-  val tysTaxYear: Int = 2024
+  val tysTaxYear: TaxYear = TaxYear.ending(2024)
 
   /** UK tax year starts on 6 April.
     */
   private val taxYearMonthStart = 4
   private val taxYearDayStart   = 6
+
+  def starting(year: Int): TaxYear = TaxYear.ending(year + 1)
+  def ending(year: Int): TaxYear   = new TaxYear(year.toString)
 
   /** @param taxYear
     *   tax year in MTD format (e.g. 2017-18)
@@ -91,26 +85,29 @@ object TaxYear {
   def fromMtd(taxYear: String): TaxYear =
     TaxYear(taxYear.take(2) + taxYear.drop(5))
 
-  def now(): TaxYear = TaxYear.fromIso(LocalDate.now().toString)
+  def now(implicit clock: Clock = Clock.systemUTC): TaxYear = TaxYear.containing(LocalDate.now(clock))
+  def currentTaxYear(implicit clock: Clock = Clock.systemUTC): TaxYear = TaxYear.now
 
   /** @param date
     *   the date in extended ISO-8601 format (e.g. 2020-04-05)
     */
-  def fromIso(date: String): TaxYear = {
-    val date1 = LocalDate.parse(date)
+  def fromIso(date: String): TaxYear = containing(LocalDate.parse(date))
+
+  def containing(date: LocalDate): TaxYear = {
     val year = (
-      if (isPreviousTaxYear(date1)) date1.getYear else date1.getYear + 1
+      if (isPreviousTaxYear(date)) date.getYear else date.getYear + 1
     ).toString
 
     new TaxYear(year)
   }
 
-  private def apply(value: String): TaxYear = new TaxYear(value)
-
   private def isPreviousTaxYear(date: LocalDate): Boolean = {
     val taxYearStartDate = LocalDate.of(date.getYear, taxYearMonthStart, taxYearDayStart)
     date.isBefore(taxYearStartDate)
   }
+
+  private def startInYear(year: Int): LocalDate =
+    LocalDate.of(year, taxYearMonthStart, taxYearDayStart)
 
   def fromDownstream(taxYear: String): TaxYear =
     new TaxYear(taxYear)
@@ -118,22 +115,9 @@ object TaxYear {
   def fromDownstreamInt(taxYear: Int): TaxYear =
     new TaxYear(taxYear.toString)
 
-  def currentTaxYear()(implicit todaySupplier: TodaySupplier = new TodaySupplier): TaxYear = {
-    val today            = todaySupplier.today()
-    val year             = today.getYear
-    val taxYearStartDate = LocalDate.parse(s"$year-04-06")
 
-    val taxYear =
-      if (today.isBefore(taxYearStartDate)) year
-      else year + 1
-
-    new TaxYear(taxYear.toString)
-  }
+  implicit val ordering: Ordering[TaxYear] = Ordering.by(_.year)
 
   implicit val writes: Writes[TaxYear] = implicitly[Writes[String]].contramap(_.asMtd)
 }
 
-@Singleton
-class TodaySupplier {
-  def today(): LocalDate = LocalDate.now(ZoneOffset.UTC)
-}

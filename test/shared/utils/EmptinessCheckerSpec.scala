@@ -20,9 +20,6 @@ import shared.UnitSpec
 import shared.utils.EmptinessChecker._
 import shared.utils.EmptyPathsResult._
 
-import scala.annotation.nowarn
-
-@nowarn("cat=lint-byname-implicit")
 class EmptinessCheckerSpec extends UnitSpec {
 
   sealed trait SomeEnum

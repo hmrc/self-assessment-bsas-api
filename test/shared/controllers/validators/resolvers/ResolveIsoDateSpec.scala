@@ -16,9 +16,9 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.errors.StartDateFormatError
 import cats.data.Validated.{Invalid, Valid}
 import shared.UnitSpec
+import shared.models.errors.StartDateFormatError
 
 import java.time.LocalDate
 
@@ -28,7 +28,7 @@ class ResolveIsoDateSpec extends UnitSpec {
     "return the parsed date" when {
       "given a valid ISO date string" in {
         val validDate = "2024-06-21"
-        val result    = ResolveIsoDate(validDate, Some(StartDateFormatError), None)
+        val result    = ResolveIsoDate(validDate, StartDateFormatError)
         result shouldBe Valid(LocalDate.parse("2024-06-21"))
       }
     }
@@ -36,7 +36,7 @@ class ResolveIsoDateSpec extends UnitSpec {
     "return an error" when {
       "given an invalid/non-ISO date string" in {
         val invalidDate = "not-a-date"
-        val result      = ResolveIsoDate(invalidDate, Some(StartDateFormatError), None)
+        val result      = ResolveIsoDate(invalidDate, StartDateFormatError)
         result shouldBe Invalid(List(StartDateFormatError))
       }
     }

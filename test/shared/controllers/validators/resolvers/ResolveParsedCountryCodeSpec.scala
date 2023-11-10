@@ -16,9 +16,9 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.errors.{CountryCodeFormatError, RuleCountryCodeError}
 import cats.data.Validated.{Invalid, Valid}
 import shared.UnitSpec
+import shared.models.errors.{CountryCodeFormatError, RuleCountryCodeError}
 
 class ResolveParsedCountryCodeSpec extends UnitSpec {
 

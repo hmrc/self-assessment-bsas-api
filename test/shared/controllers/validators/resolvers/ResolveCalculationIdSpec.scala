@@ -16,10 +16,10 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.domain.CalculationId
-import shared.models.errors.CalculationIdFormatError
 import cats.data.Validated.{Invalid, Valid}
 import shared.UnitSpec
+import shared.models.domain.CalculationId
+import shared.models.errors.CalculationIdFormatError
 
 class ResolveCalculationIdSpec extends UnitSpec {
 

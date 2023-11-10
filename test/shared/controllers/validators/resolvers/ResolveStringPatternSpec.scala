@@ -16,13 +16,13 @@
 
 package shared.controllers.validators.resolvers
 
-import shared.models.errors.{BVRError, TaxYearFormatError}
 import cats.data.Validated.{Invalid, Valid}
 import shared.UnitSpec
+import shared.models.errors.TaxYearFormatError
 
 class ResolveStringPatternSpec extends UnitSpec {
 
-  private val resolveTaxYearPattern = new ResolveStringPattern("20[1-9][0-9]-[1-9][0-9]".r, TaxYearFormatError)
+  private val resolveTaxYearPattern = ResolveStringPattern("20[1-9][0-9]-[1-9][0-9]".r, TaxYearFormatError)
 
   "ResolveStringPattern" should {
     "return the input value" when {
@@ -36,11 +36,6 @@ class ResolveStringPatternSpec extends UnitSpec {
       "given a non-matching string and no override error" in {
         val result = resolveTaxYearPattern("does-not-match-regex")
         result shouldBe Invalid(List(TaxYearFormatError))
-      }
-
-      "given a non-matching string and a different, overriding error" in {
-        val result = resolveTaxYearPattern("does-not-match-regex", BVRError)
-        result shouldBe Invalid(List(BVRError))
       }
     }
 
