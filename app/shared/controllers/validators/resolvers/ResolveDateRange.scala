@@ -24,6 +24,7 @@ import shared.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDat
 
 import java.time.LocalDate
 import scala.math.Ordering.Implicits.infixOrderingOps
+import ResolveDateRange._
 
 case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatError,
                             endDateFormatError: MtdError = EndDateFormatError,
@@ -40,10 +41,10 @@ case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatErro
   def apply(value: (String, String)): Validated[Seq[MtdError], DateRange] = resolver(value)
 
   def withDatesLimitedTo(minDate: LocalDate, maxDate: LocalDate): Resolver[(String, String), DateRange] =
-    resolver thenValidate ResolveDateRange.datesLimitedTo(minDate, startDateFormatError, maxDate, endDateFormatError)
+    resolver thenValidate datesLimitedTo(minDate, startDateFormatError, maxDate, endDateFormatError)
 
   def withYearsLimitedTo(minYear: Int, maxYear: Int): Resolver[(String, String), DateRange] =
-    resolver thenValidate ResolveDateRange.yearsLimitedTo(minYear, startDateFormatError, maxYear, endDateFormatError)
+    resolver thenValidate yearsLimitedTo(minYear, startDateFormatError, maxYear, endDateFormatError)
 
   private def resolveDateRange(parsedStartDate: LocalDate, parsedEndDate: LocalDate): Validated[Seq[MtdError], DateRange] =
     if (parsedEndDate <= parsedStartDate)
