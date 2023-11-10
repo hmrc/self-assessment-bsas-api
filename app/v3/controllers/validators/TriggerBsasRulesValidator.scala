@@ -39,7 +39,7 @@ class TriggerBsasRulesValidator @Inject() (bsasConfig: BsasConfig) extends Rules
   private val minYear: Int = 1900
   private val maxYear: Int = 2099
 
-  private val resolveDateRange = ResolveDateRange().yearLimited(minYear, maxYear)
+  private val resolveDateRange = ResolveDateRange().withYearsLimitedTo(minYear, maxYear)
 
   private lazy val foreignPropertyEarliestEndDate: LocalDate = LocalDate.parse(
     s"${bsasConfig.v3TriggerForeignBsasMinimumTaxYear.dropRight(3)}-04-06",

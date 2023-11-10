@@ -47,8 +47,8 @@ object SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[SubmitSelfE
 
   private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
 
-  private def resolveAdjusted(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Unit] =
-    resolveAdjustment(value, path).map(_ => ())
+  private def resolveAdjusted(path: String, value: Option[BigDecimal]) =
+    resolveAdjustment(value, path)
 
   private def validateIncome(income: Income): Validated[Seq[MtdError], Unit] = {
     combine(
