@@ -218,11 +218,17 @@ components:
         message: The client and/or agent is not authorised
 
     # 404
-    triggerAndListNotFound:
+    ListNotFound:
       description: The supplied income source could not be found, or the type of business does not relate to the business ID.
       value:
         code: MATCHING_RESOURCE_NOT_FOUND
         message: Matching resource not found
+
+    TriggerNotFound:
+      description: The supplied income source could not be found, or the type of business does not relate to the business ID.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: A matching incomeSourceId record was not found, or the incomeSourceType provided does not relate to the incomeSourceId
 
     incomeSourceNotFound:
       description: The supplied income source could not be found.

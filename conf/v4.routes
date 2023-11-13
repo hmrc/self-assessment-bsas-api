@@ -1,6 +1,6 @@
 GET         /:nino                                        v3.controllers.ListBsasController.listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
 
-POST        /:nino/trigger                                v3.controllers.TriggerBsasController.triggerBsas(nino: String)
+POST        /:nino/trigger                                v4.controllers.TriggerBsasController.triggerBsas(nino: String)
 
 GET         /:nino/uk-property/:calculationId             v3.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
 
