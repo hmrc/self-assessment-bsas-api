@@ -16,41 +16,16 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 
-trait MockSubmitSelfEmploymentBsasValidatorFactory extends MockFactory {
+trait MockSubmitSelfEmploymentBsasValidatorFactory extends MockValidatorFactory[SubmitSelfEmploymentBsasRequestData] {
 
   val mockSubmitSelfEmploymentBsasValidatorFactory: SubmitSelfEmploymentBsasValidatorFactory = mock[SubmitSelfEmploymentBsasValidatorFactory]
 
-  object MockedSubmitSelfEmploymentBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[SubmitSelfEmploymentBsasRequestData]] =
-      (mockSubmitSelfEmploymentBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
-  }
-
-  def willUseValidator(use: Validator[SubmitSelfEmploymentBsasRequestData]): CallHandler[Validator[SubmitSelfEmploymentBsasRequestData]] = {
-    MockedSubmitSelfEmploymentBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: SubmitSelfEmploymentBsasRequestData): Validator[SubmitSelfEmploymentBsasRequestData] =
-    new Validator[SubmitSelfEmploymentBsasRequestData] {
-      def validate: Validated[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[SubmitSelfEmploymentBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[SubmitSelfEmploymentBsasRequestData] = new Validator[SubmitSelfEmploymentBsasRequestData] {
-    def validate: Validated[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] = Invalid(result)
-  }
+  def validator(): CallHandler[Validator[SubmitSelfEmploymentBsasRequestData]] =
+    (mockSubmitSelfEmploymentBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
 
 }

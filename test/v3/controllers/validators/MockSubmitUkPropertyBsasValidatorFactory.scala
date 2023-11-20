@@ -16,41 +16,16 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
-trait MockSubmitUkPropertyBsasValidatorFactory extends MockFactory {
+trait MockSubmitUkPropertyBsasValidatorFactory extends MockValidatorFactory[SubmitUkPropertyBsasRequestData] {
 
   val mockSubmitUkPropertyBsasValidatorFactory: SubmitUkPropertyBsasValidatorFactory = mock[SubmitUkPropertyBsasValidatorFactory]
 
-  object MockedSubmitUkPropertyBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[SubmitUkPropertyBsasRequestData]] =
-      (mockSubmitUkPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
-  }
-
-  def willUseValidator(use: Validator[SubmitUkPropertyBsasRequestData]): CallHandler[Validator[SubmitUkPropertyBsasRequestData]] = {
-    MockedSubmitUkPropertyBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: SubmitUkPropertyBsasRequestData): Validator[SubmitUkPropertyBsasRequestData] =
-    new Validator[SubmitUkPropertyBsasRequestData] {
-      def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError): Validator[SubmitUkPropertyBsasRequestData] = returningErrors(List(result))
-
-  def returningErrors(result: Seq[MtdError]): Validator[SubmitUkPropertyBsasRequestData] = new Validator[SubmitUkPropertyBsasRequestData] {
-    def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] = Invalid(result)
-  }
+  def validator(): CallHandler[Validator[SubmitUkPropertyBsasRequestData]] =
+    (mockSubmitUkPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
 
 }
