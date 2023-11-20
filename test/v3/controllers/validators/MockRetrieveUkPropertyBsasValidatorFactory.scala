@@ -16,41 +16,15 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 
-trait MockRetrieveUkPropertyBsasValidatorFactory extends MockFactory {
+trait MockRetrieveUkPropertyBsasValidatorFactory extends MockValidatorFactory[RetrieveUkPropertyBsasRequestData] {
 
   val mockRetrieveUkPropertyBsasValidatorFactory: RetrieveUkPropertyBsasValidatorFactory = mock[RetrieveUkPropertyBsasValidatorFactory]
 
-  object MockedRetrieveUkPropertyBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveUkPropertyBsasRequestData]] =
-      (mockRetrieveUkPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
-  }
-
-  def willUseValidator(use: Validator[RetrieveUkPropertyBsasRequestData]): CallHandler[Validator[RetrieveUkPropertyBsasRequestData]] = {
-    MockedRetrieveUkPropertyBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: RetrieveUkPropertyBsasRequestData): Validator[RetrieveUkPropertyBsasRequestData] =
-    new Validator[RetrieveUkPropertyBsasRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[RetrieveUkPropertyBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[RetrieveUkPropertyBsasRequestData] =
-    new Validator[RetrieveUkPropertyBsasRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[RetrieveUkPropertyBsasRequestData]] =
+    (mockRetrieveUkPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
 
 }

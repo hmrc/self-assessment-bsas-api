@@ -16,41 +16,16 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 
-trait MockSubmitForeignPropertyBsasValidatorFactory extends MockFactory {
+trait MockSubmitForeignPropertyBsasValidatorFactory extends MockValidatorFactory[SubmitForeignPropertyBsasRequestData] {
 
   val mockSubmitForeignPropertyBsasValidatorFactory: SubmitForeignPropertyBsasValidatorFactory = mock[SubmitForeignPropertyBsasValidatorFactory]
 
-  object MockedSubmitForeignPropertyBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[SubmitForeignPropertyBsasRequestData]] =
-      (mockSubmitForeignPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
-  }
-
-  def willUseValidator(use: Validator[SubmitForeignPropertyBsasRequestData]): CallHandler[Validator[SubmitForeignPropertyBsasRequestData]] = {
-    MockedSubmitForeignPropertyBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: SubmitForeignPropertyBsasRequestData): Validator[SubmitForeignPropertyBsasRequestData] =
-    new Validator[SubmitForeignPropertyBsasRequestData] {
-      def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[SubmitForeignPropertyBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[SubmitForeignPropertyBsasRequestData] = new Validator[SubmitForeignPropertyBsasRequestData] {
-    def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = Invalid(result)
-  }
+  def validator(): CallHandler[Validator[SubmitForeignPropertyBsasRequestData]] =
+    (mockSubmitForeignPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
 
 }

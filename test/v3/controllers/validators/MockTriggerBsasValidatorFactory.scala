@@ -16,41 +16,16 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 
-trait MockTriggerBsasValidatorFactory extends MockFactory {
+trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRequestData] {
 
   val mockTriggerBsasValidatorFactory: TriggerBsasValidatorFactory = mock[TriggerBsasValidatorFactory]
 
-  object MockedTriggerBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
-      (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue)).expects(*, *)
-  }
-
-  def willUseValidator(use: Validator[TriggerBsasRequestData]): CallHandler[Validator[TriggerBsasRequestData]] = {
-    MockedTriggerBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: TriggerBsasRequestData): Validator[TriggerBsasRequestData] =
-    new Validator[TriggerBsasRequestData] {
-      def validate: Validated[Seq[MtdError], TriggerBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[TriggerBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[TriggerBsasRequestData] = new Validator[TriggerBsasRequestData] {
-    def validate: Validated[Seq[MtdError], TriggerBsasRequestData] = Invalid(result)
-  }
+  def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
+    (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue)).expects(*, *)
 
 }
