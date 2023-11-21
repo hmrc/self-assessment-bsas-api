@@ -16,41 +16,15 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.ListBsasRequestData
 
-trait MockListBsasValidatorFactory extends MockFactory {
+trait MockListBsasValidatorFactory extends MockValidatorFactory[ListBsasRequestData] {
 
   val mockListBsasValidatorFactory: ListBsasValidatorFactory = mock[ListBsasValidatorFactory]
 
-  object MockedListBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[ListBsasRequestData]] =
-      (mockListBsasValidatorFactory.validator(_: String, _: Option[String], _: Option[String], _: Option[String])).expects(*, *, *, *)
-  }
-
-  def willUseValidator(use: Validator[ListBsasRequestData]): CallHandler[Validator[ListBsasRequestData]] = {
-    MockedListBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: ListBsasRequestData): Validator[ListBsasRequestData] =
-    new Validator[ListBsasRequestData] {
-      def validate: Validated[Seq[MtdError], ListBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[ListBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[ListBsasRequestData] =
-    new Validator[ListBsasRequestData] {
-      def validate: Validated[Seq[MtdError], ListBsasRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[ListBsasRequestData]] =
+    (mockListBsasValidatorFactory.validator(_: String, _: Option[String], _: Option[String], _: Option[String])).expects(*, *, *, *)
 
 }

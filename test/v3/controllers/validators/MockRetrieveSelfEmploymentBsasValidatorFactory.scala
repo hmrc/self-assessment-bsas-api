@@ -16,41 +16,15 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
-trait MockRetrieveSelfEmploymentBsasValidatorFactory extends MockFactory {
+trait MockRetrieveSelfEmploymentBsasValidatorFactory extends MockValidatorFactory[RetrieveSelfEmploymentBsasRequestData] {
 
   val mockRetrieveSelfEmploymentBsasValidatorFactory: RetrieveSelfEmploymentBsasValidatorFactory = mock[RetrieveSelfEmploymentBsasValidatorFactory]
 
-  object MockedRetrieveSelfEmploymentBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveSelfEmploymentBsasRequestData]] =
-      (mockRetrieveSelfEmploymentBsasValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
-  }
-
-  def willUseValidator(use: Validator[RetrieveSelfEmploymentBsasRequestData]): CallHandler[Validator[RetrieveSelfEmploymentBsasRequestData]] = {
-    MockedRetrieveSelfEmploymentBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: RetrieveSelfEmploymentBsasRequestData): Validator[RetrieveSelfEmploymentBsasRequestData] =
-    new Validator[RetrieveSelfEmploymentBsasRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[RetrieveSelfEmploymentBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[RetrieveSelfEmploymentBsasRequestData] =
-    new Validator[RetrieveSelfEmploymentBsasRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[RetrieveSelfEmploymentBsasRequestData]] =
+    (mockRetrieveSelfEmploymentBsasValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
 
 }

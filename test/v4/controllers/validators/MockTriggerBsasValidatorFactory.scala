@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package v3.controllers.validators
+package v4.controllers.validators
 
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
 import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
+import v4.models.request.triggerBsas.TriggerBsasRequestData
 
-trait MockSubmitUkPropertyBsasValidatorFactory extends MockValidatorFactory[SubmitUkPropertyBsasRequestData] {
+trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRequestData] {
 
-  val mockSubmitUkPropertyBsasValidatorFactory: SubmitUkPropertyBsasValidatorFactory = mock[SubmitUkPropertyBsasValidatorFactory]
+  val mockTriggerBsasValidatorFactory: TriggerBsasValidatorFactory = mock[TriggerBsasValidatorFactory]
 
-  def validator(): CallHandler[Validator[SubmitUkPropertyBsasRequestData]] =
-    (mockSubmitUkPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String], _: JsValue)).expects(*, *, *, *)
+  def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
+    (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue)).expects(*, *)
 
 }

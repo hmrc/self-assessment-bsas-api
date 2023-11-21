@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package v3.controllers.validators
+package v4.models.request
 
-import org.scalamock.handlers.CallHandler
-import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.models.request.triggerBsas.TriggerBsasRequestData
+import play.api.libs.json.{Json, OFormat}
 
-trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRequestData] {
+case class AccountingPeriod(startDate: String, endDate: String)
 
-  val mockTriggerBsasValidatorFactory: TriggerBsasValidatorFactory = mock[TriggerBsasValidatorFactory]
-
-  def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
-    (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue)).expects(*, *)
-
+object AccountingPeriod {
+  implicit val format: OFormat[AccountingPeriod] = Json.format[AccountingPeriod]
 }

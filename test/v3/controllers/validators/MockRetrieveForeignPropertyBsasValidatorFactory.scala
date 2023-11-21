@@ -16,41 +16,15 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 
-trait MockRetrieveForeignPropertyBsasValidatorFactory extends MockFactory {
+trait MockRetrieveForeignPropertyBsasValidatorFactory extends MockValidatorFactory[RetrieveForeignPropertyBsasRequestData] {
 
   val mockRetrieveForeignPropertyBsasValidatorFactory: RetrieveForeignPropertyBsasValidatorFactory = mock[RetrieveForeignPropertyBsasValidatorFactory]
 
-  object MockedRetrieveForeignPropertyBsasValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveForeignPropertyBsasRequestData]] =
-      (mockRetrieveForeignPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
-  }
-
-  def willUseValidator(use: Validator[RetrieveForeignPropertyBsasRequestData]): CallHandler[Validator[RetrieveForeignPropertyBsasRequestData]] = {
-    MockedRetrieveForeignPropertyBsasValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: RetrieveForeignPropertyBsasRequestData): Validator[RetrieveForeignPropertyBsasRequestData] =
-    new Validator[RetrieveForeignPropertyBsasRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[RetrieveForeignPropertyBsasRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[RetrieveForeignPropertyBsasRequestData] =
-    new Validator[RetrieveForeignPropertyBsasRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[RetrieveForeignPropertyBsasRequestData]] =
+    (mockRetrieveForeignPropertyBsasValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
 
 }

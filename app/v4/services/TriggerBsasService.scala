@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package v3.services
+package v4.services
 
 import cats.implicits._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
-import v3.connectors.TriggerBsasConnector
-import v3.models.errors._
-import v3.models.request.triggerBsas.TriggerBsasRequestData
-import v3.models.response.TriggerBsasResponse
+import v4.connectors.TriggerBsasConnector
+import v4.models.errors._
+import v4.models.request.triggerBsas.TriggerBsasRequestData
+import v4.models.response.triggerBsas.TriggerBsasResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,7 +41,7 @@ class TriggerBsasService @Inject() (connector: TriggerBsasConnector) extends Bas
       "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
       "INVALID_CORRELATIONID"       -> InternalError,
       "INVALID_PAYLOAD"             -> InternalError,
-      "NO_DATA_FOUND"               -> NotFoundError,
+      "NO_DATA_FOUND"               -> TriggerNotFoundError,
       "ACCOUNTING_PERIOD_NOT_ENDED" -> RuleAccountingPeriodNotEndedError,
       "OBLIGATIONS_NOT_MET"         -> RulePeriodicDataIncompleteError,
       "NO_ACCOUNTING_PERIOD"        -> RuleNoAccountingPeriodError,

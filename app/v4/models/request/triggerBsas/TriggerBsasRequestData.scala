@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package v3.controllers.validators
+package v4.models.request.triggerBsas
 
-import org.scalamock.handlers.CallHandler
-import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.models.request.triggerBsas.TriggerBsasRequestData
+import shared.models.domain.{Nino, TaxYear}
 
-trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRequestData] {
-
-  val mockTriggerBsasValidatorFactory: TriggerBsasValidatorFactory = mock[TriggerBsasValidatorFactory]
-
-  def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
-    (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue)).expects(*, *)
-
+case class TriggerBsasRequestData(nino: Nino, body: TriggerBsasRequestBody) {
+  lazy val taxYear: TaxYear = TaxYear.fromIso(body.accountingPeriod.endDate)
 }

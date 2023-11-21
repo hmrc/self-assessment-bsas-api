@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package v3.controllers.validators
+package v4.models.request.triggerBsas
 
-import org.scalamock.handlers.CallHandler
-import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.models.request.triggerBsas.TriggerBsasRequestData
+import play.api.libs.json.Json
+import shared.UnitSpec
+import v4.fixtures.TriggerBsasRequestBodyFixtures._
 
-trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRequestData] {
+class TriggerBsasRequestBodySpec extends UnitSpec {
 
-  val mockTriggerBsasValidatorFactory: TriggerBsasValidatorFactory = mock[TriggerBsasValidatorFactory]
+  "TriggerBsasRequestBody" when {
+    "reads" should {
+      "return the expected TriggerBsasRequestBody object" in {
+        mtdJson.as[TriggerBsasRequestBody] shouldBe model
+      }
+    }
 
-  def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
-    (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue)).expects(*, *)
+    "writes" should {
+      "return the expected JSON" in {
+        Json.toJson(model) shouldBe downstreamJson
+      }
+    }
+  }
 
 }
