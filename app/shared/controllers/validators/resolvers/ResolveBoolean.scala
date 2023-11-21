@@ -31,7 +31,6 @@ object ResolveBoolean {
 
   def apply(value: String, error: MtdError): Validated[Seq[MtdError], Boolean] = {
     val resolver = ResolveBoolean(error)
-
     resolver(value)
   }
 

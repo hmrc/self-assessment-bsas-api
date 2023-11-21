@@ -38,29 +38,34 @@ class ResolveParsedNumberSpec extends UnitSpec with ScalaCheckDrivenPropertyChec
         implicit val arbitraryMoney: Arbitrary[BigDecimal] = Arbitrary(Arbitrary.arbitrary[BigInt].map(x => BigDecimal(x) / 100))
 
         "using validate" in forAll { money: BigDecimal =>
-          resolve(money, path) shouldBe
-            (if (min <= money && money <= max) Valid(money) else Invalid(List(error)))
+          val expected = if (min <= money && money <= max) Valid(money) else Invalid(List(error))
+          val result   = resolve(money, path)
+          result shouldBe expected
         }
 
         "using validateOptional" in forAll { money: BigDecimal =>
-          resolve(Some(money), path) shouldBe
-            (if (min <= money && money <= max) Valid(Some(money)) else Invalid(List(error)))
+          val expected = if (min <= money && money <= max) Valid(Some(money)) else Invalid(List(error))
+          val result   = resolve(Some(money), path)
+          result shouldBe expected
         }
       }
 
       "more than two significant decimals are provided" when {
         "return an error for validateOptional" in {
-          resolve(Some(BigDecimal(100.123)), path) shouldBe Invalid(List(error))
+          val result = resolve(Some(BigDecimal(100.123)), path)
+          result shouldBe Invalid(List(error))
         }
 
         "return an error for validate" in {
-          resolve(100.123, path) shouldBe Invalid(List(error))
+          val result = resolve(100.123, path)
+          result shouldBe Invalid(List(error))
         }
       }
 
       "no number is supplied to validateOptional" when {
         "return no error" in {
-          resolve(None, path) shouldBe Valid(None)
+          val result = resolve(None, path)
+          result shouldBe Valid(None)
         }
       }
     }
@@ -71,20 +76,24 @@ class ResolveParsedNumberSpec extends UnitSpec with ScalaCheckDrivenPropertyChec
       val error = ValueFormatError.copy(paths = Some(List(path)), message = "The value must be between 0 and 99999999999.99")
 
       "allow 0" in {
-        resolve(0, path) shouldBe Valid(BigDecimal(0))
+        val result = resolve(0, path)
+        result shouldBe Valid(BigDecimal(0))
       }
 
       "disallow less than 0" in {
-        resolve(-0.01, path) shouldBe Invalid(List(error))
+        val result = resolve(-0.01, path)
+        result shouldBe Invalid(List(error))
       }
 
       "allow 99999999999.99" in {
         val value  = BigDecimal(99999999999.99)
-        resolve(value, path) shouldBe Valid(value)
+        val result = resolve(value, path)
+        result shouldBe Valid(value)
       }
 
       "disallow more than 99999999999.99" in {
-        resolve(100000000000.00, path) shouldBe Invalid(List(error))
+        val result = resolve(100000000000.00, path)
+        result shouldBe Invalid(List(error))
       }
     }
 
@@ -96,28 +105,34 @@ class ResolveParsedNumberSpec extends UnitSpec with ScalaCheckDrivenPropertyChec
 
         "allow -99999999999.99" in {
           val value  = BigDecimal(-99999999999.99)
-          resolve(value, path) shouldBe Valid(value)
+          val result = resolve(value, path)
+          result shouldBe Valid(value)
         }
 
         "disallow less than -99999999999.99" in {
-          resolve(-100000000000.00, path) shouldBe Invalid(List(error))
+          val result = resolve(-100000000000.00, path)
+          result shouldBe Invalid(List(error))
         }
 
         "allow 99999999999.99" in {
           val value  = BigDecimal(99999999999.99)
-          resolve(value, path) shouldBe Valid(value)
+          val result = resolve(value, path)
+          result shouldBe Valid(value)
         }
 
         "disallow more than 99999999999.99" in {
-          resolve(100000000000.00, path) shouldBe Invalid(List(error))
+          val result = resolve(100000000000.00, path)
+          result shouldBe Invalid(List(error))
         }
 
         "not allow 0" in {
-          resolve(0, path) shouldBe Invalid(List(error))
+          val result = resolve(0, path)
+          result shouldBe Invalid(List(error))
         }
 
         "allow None" in {
-          resolve(None, path) shouldBe Valid(None)
+          val result = resolve(None, path)
+          result shouldBe Valid(None)
         }
       }
     }

@@ -19,7 +19,7 @@ package shared.controllers.validators.resolvers
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import shared.models.domain.TaxYear
-import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import shared.models.errors._
 
 import java.time.Clock
 import scala.math.Ordering.Implicits.infixOrderingOps
@@ -40,10 +40,17 @@ object ResolveTaxYear extends ResolverSupport {
 
   def apply(value: String): Validated[Seq[MtdError], TaxYear] = resolver(value)
 
-  // Adaptor for existing callers:
+  def apply(value: Option[String]): Validated[Seq[MtdError], Option[TaxYear]] =
+    value match {
+      case Some(value) => resolver(value).map(Some(_))
+      case None        => Valid(None)
+    }
+
+  /**
+    * Adaptor for existing callers.
+    */
   def apply(minimumTaxYear: TaxYear, value: String): Validated[Seq[MtdError], TaxYear] = {
     val resolver = ResolveTaxYearMinimum(minimumTaxYear)
-
     resolver(value)
   }
 
@@ -55,6 +62,13 @@ case class ResolveTaxYearMinimum(minimumTaxYear: TaxYear) extends ResolverSuppor
     ResolveTaxYear.resolver thenValidate satisfiesMin(minimumTaxYear, RuleTaxYearNotSupportedError)
 
   def apply(value: String): Validated[Seq[MtdError], TaxYear] = resolver(value)
+
+  def apply(value: Option[String]): Validated[Seq[MtdError], Option[TaxYear]] =
+    value match {
+      case Some(value) => resolver(value).map(Some(_))
+      case None        => Valid(None)
+    }
+
 }
 
 case class ResolveIncompleteTaxYear(incompleteTaxYearError: MtdError = RuleTaxYearNotEndedError)(implicit clock: Clock) extends ResolverSupport {
@@ -71,5 +85,11 @@ object ResolveTysTaxYear extends ResolverSupport {
     ResolveTaxYear.resolver thenValidate satisfiesMin(TaxYear.tysTaxYear, InvalidTaxYearParameterError)
 
   def apply(value: String): Validated[Seq[MtdError], TaxYear] = resolver(value)
+
+  def apply(value: Option[String]): Validated[Seq[MtdError], Option[TaxYear]] =
+    value match {
+      case Some(value) => resolver(value).map(Some(_))
+      case None        => Valid(None)
+    }
 
 }

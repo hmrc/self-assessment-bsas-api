@@ -22,20 +22,21 @@ import com.neovisionaries.i18n.CountryCode
 import shared.controllers.validators.resolvers.ResolveParsedCountryCode.permittedCustomCodes
 import shared.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError}
 
+case class ResolveParsedCountryCode(path: String) {
 
-case class ResolveParsedCountryCode(path: String){
-def apply(value: String): Validated[List[MtdError], String] = {
-  if (value.length != 3) {
-    Invalid(List(CountryCodeFormatError.withPath(path)))
-  } else if (permittedCustomCodes.contains(value)) {
-    Valid(value)
-  } else {
-    Option(CountryCode.getByAlpha3Code(value)) match {
-      case Some(_) => Valid(value)
-      case None    => Invalid(List(RuleCountryCodeError.withPath(path)))
+  def apply(value: String): Validated[List[MtdError], String] = {
+    if (value.length != 3) {
+      Invalid(List(CountryCodeFormatError.withPath(path)))
+    } else if (permittedCustomCodes.contains(value)) {
+      Valid(value)
+    } else {
+      Option(CountryCode.getByAlpha3Code(value)) match {
+        case Some(_) => Valid(value)
+        case None    => Invalid(List(RuleCountryCodeError.withPath(path)))
+      }
     }
   }
-}
+
 }
 
 object ResolveParsedCountryCode {

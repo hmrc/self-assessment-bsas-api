@@ -36,22 +36,6 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
     .withIdentifier("MTDITID", mtdId)
     .withDelegatedAuthRule("mtd-it-auth")
 
-  trait Test extends MockEnrolmentsAuthService with MockMtdIdLookupService {
-    lazy val target       = new TestController()
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    class TestController extends AuthorisedController(cc) {
-      override val authService: EnrolmentsAuthService = mockEnrolmentsAuthService
-      override val lookupService: MtdIdLookupService  = mockMtdIdLookupService
-
-      def action(nino: String): Action[AnyContent] = authorisedAction(nino).async {
-        Future.successful(Ok(Json.obj()))
-      }
-
-    }
-
-  }
-
   "calling an action" when {
 
     "the user is authorised" should {
@@ -63,7 +47,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
         MockedEnrolmentsAuthService.authoriseUser()
 
-        val result: Future[Result] = target.action(nino)(fakeGetRequest)
+        private val result = target.action(nino)(fakeGetRequest)
         status(result) shouldBe OK
       }
     }
@@ -164,6 +148,23 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
       val result: Future[Result] = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN
     }
+  }
+
+  trait Test extends MockEnrolmentsAuthService with MockMtdIdLookupService {
+
+    val hc: HeaderCarrier = HeaderCarrier()
+
+    class TestController extends AuthorisedController(cc) {
+      override val authService: EnrolmentsAuthService = mockEnrolmentsAuthService
+      override val lookupService: MtdIdLookupService  = mockMtdIdLookupService
+
+      def action(nino: String): Action[AnyContent] = authorisedAction(nino).async {
+        Future.successful(Ok(Json.obj()))
+      }
+
+    }
+
+    lazy val target = new TestController()
   }
 
 }

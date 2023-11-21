@@ -27,14 +27,16 @@ import java.time.format.DateTimeParseException
   */
 case class ResolveIsoDate(error: MtdError) extends ResolverSupport {
 
- val resolver: Resolver[String, LocalDate] = value =>
+  val resolver: Resolver[String, LocalDate] = value =>
     try Valid(LocalDate.parse(value))
     catch {
       case _: DateTimeParseException => Invalid(List(error))
     }
 
-  def apply(value: String): Validated[Seq[MtdError], LocalDate] =
-    resolver(value)
+  def apply(value: String): Validated[Seq[MtdError], LocalDate] = resolver(value)
+
+  def apply(maybeValue: Option[String]): Validated[Seq[MtdError], Option[LocalDate]] =
+    resolver.resolveOptionally(maybeValue)
 
 }
 
@@ -45,7 +47,6 @@ object ResolveIsoDate extends ResolverSupport {
 
   def apply(value: Option[String], error: MtdError): Validated[Seq[MtdError], Option[LocalDate]] = {
     val resolver = ResolveIsoDate(error).resolver.resolveOptionally
-
     resolver(value)
   }
 
