@@ -16,9 +16,6 @@
 
 package shared.controllers.validators
 
-import shared.controllers.validators.resolvers.{ResolveJsonObject, ResolveNino, ResolveTaxYear}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
@@ -26,6 +23,9 @@ import org.scalamock.scalatest.MockFactory
 import play.api.http.Status.BAD_REQUEST
 import play.api.libs.json.{JsValue, Json, Reads}
 import shared.UnitSpec
+import shared.controllers.validators.resolvers.{ResolveJsonObject, ResolveNino, ResolveTaxYear}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
 
 class ValidatorSpec extends UnitSpec with MockFactory {
 
