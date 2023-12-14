@@ -18,8 +18,8 @@ or
 To view documentation locally ensure the Self Assessment BSAS Api is running, and run api-documentation-frontend:
 `./run_local_with_dependencies.sh`
 
-Then go to http://localhost:9680/api-documentation/docs/api/preview and use this port and version:
-`http://localhost:9787/api/conf/1.0/application.yaml`
+Then go to http://localhost:9680/api-documentation/docs/openapi/preview and use this port and version:
+`http://localhost:9787/api/conf/4.0/application.yaml`
 
 ## Changelog
 
