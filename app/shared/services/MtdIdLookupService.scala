@@ -17,7 +17,7 @@
 package shared.services
 
 import shared.connectors.{MtdIdLookupConnector, MtdIdLookupOutcome}
-import shared.models.domain.Nino
+import shared.controllers.validators.resolvers.ResolveNino
 import shared.models.errors.NinoFormatError
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class MtdIdLookupService @Inject() (val connector: MtdIdLookupConnector) {
 
   def lookup(nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MtdIdLookupOutcome] = {
-    if (Nino.isValid(nino)) {
+    if (ResolveNino.isValid(nino)) {
       connector.getMtdId(nino)
     } else {
       Future.successful(Left(NinoFormatError))
