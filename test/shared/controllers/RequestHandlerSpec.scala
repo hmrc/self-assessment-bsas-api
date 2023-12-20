@@ -27,13 +27,13 @@ import shared.UnitSpec
 import shared.config.{AppConfig, MockAppConfig}
 import shared.controllers.validators.Validator
 import shared.hateoas._
-import shared.mocks.MockIdGenerator
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.auth.UserDetails
 import shared.models.errors.{ErrorWrapper, MtdError, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3, Version4}
 import shared.services.{MockAuditService, ServiceOutcome}
+import shared.utils.MockIdGenerator
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 

@@ -19,7 +19,6 @@ package v3.controllers
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import shared.mocks.MockIdGenerator
 import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -28,6 +27,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.routing.Version3
+import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockRetrieveForeignPropertyBsasValidatorFactory
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.services.MockRetrieveForeignPropertyBsasService

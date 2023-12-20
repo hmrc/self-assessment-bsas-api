@@ -18,7 +18,6 @@ package v3.controllers
 
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
-import shared.mocks.MockIdGenerator
 import shared.models.domain.{BusinessId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -27,6 +26,7 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.routing.Version3
+import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockListBsasValidatorFactory
 import v3.fixtures.ListBsasFixture
 import v3.hateoas.HateoasLinks

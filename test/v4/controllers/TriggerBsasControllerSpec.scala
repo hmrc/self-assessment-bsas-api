@@ -22,13 +22,13 @@ import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import shared.mocks.MockIdGenerator
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.Version3
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import shared.utils.MockIdGenerator
 import v4.controllers.validators.MockTriggerBsasValidatorFactory
 import v4.fixtures.TriggerBsasRequestBodyFixtures._
 import v4.mocks.services.MockTriggerBsasService
