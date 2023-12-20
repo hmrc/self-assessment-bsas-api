@@ -16,7 +16,6 @@
 
 package shared.controllers
 
-import shared.mocks.MockIdGenerator
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.Nino
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
@@ -27,6 +26,7 @@ import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
 import shared.UnitSpec
+import shared.utils.MockIdGenerator
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future

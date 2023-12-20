@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package shared.controllers
+package shared.endpoints
 
 import io.swagger.v3.parser.OpenAPIV3Parser
 import play.api.http.Status

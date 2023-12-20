@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package shared.mocks
+package shared.utils
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import shared.utils.IdGenerator
 
 trait MockIdGenerator extends MockFactory {
 
