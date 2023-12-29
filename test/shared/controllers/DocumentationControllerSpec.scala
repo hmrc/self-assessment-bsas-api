@@ -16,11 +16,9 @@
 
 package shared.controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
 import com.typesafe.config.ConfigFactory
 import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAssets}
-import play.api.Configuration
+import play.api.{Configuration, Environment}
 import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
 import play.api.mvc.Result
 import shared.config.rewriters._
@@ -75,9 +73,6 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
         val response: Future[Result] = requestAsset("application.yaml", accept = "text/plain")
         status(response) shouldBe OK
-
-        val as: ActorSystem                     = ActorSystem()
-        implicit val materializer: Materializer = Materializer(as) // needed for contentAsString(), which defaults to NoMaterializer
 
         private val result = contentAsString(response)
 
@@ -141,7 +136,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
       new OasFeatureRewriter()(mockAppConfig)
     )
 
-    private val assets       = new RewriteableAssets(errorHandler, assetsMetadata)
+    private val assets       = new RewriteableAssets(errorHandler, assetsMetadata, mock[Environment])
     protected val controller = new DocumentationController(apiFactory, docRewriters, assets, cc)
   }
 
