@@ -32,11 +32,19 @@ trait ResolverSupport {
   implicit class ResolverOps[In, Out](resolver: In => Validated[Seq[MtdError], Out]) {
     def map[Out2](f: Out => Out2): Resolver[In, Out2] = i => resolver(i).map(f)
 
+    def thenResolve[Out2](other: Resolver[Out, Out2]): Resolver[In, Out2] = in => resolver(in).andThen(other)
+
     def thenValidate(validator: Validator[Out]): Resolver[In, Out] = i => resolver(i).andThen(o => validator(o).toInvalid(o))
 
     def resolveOptionally: Resolver[Option[In], Option[Out]] = _.map(in => resolver(in).map(Some(_))).getOrElse(Valid(None))
 
     def resolveOptionallyWithDefault(default: => Out): Resolver[Option[In], Out] = _.map(in => resolver(in)).getOrElse(Valid(default))
+
+    def asValidator: Validator[In] = in =>
+      resolver(in) match {
+        case Valid(_)      => None
+        case Invalid(errs) => Some(errs)
+      }
 
   }
 
