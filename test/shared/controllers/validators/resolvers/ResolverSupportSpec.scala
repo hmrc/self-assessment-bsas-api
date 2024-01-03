@@ -137,7 +137,7 @@ class ResolverSupportSpec extends UnitSpec with ResolverSupport {
       resolver(11) shouldBe Invalid(List(outOfRangeError))
     }
 
-    "provides the ability to create validators our of a resolver (throwing away any result)" in {
+    "provides the ability to create validators out of a resolver (throwing away any result)" in {
       val validator = resolveInt.asValidator
 
       validator("1") shouldBe None
