@@ -19,7 +19,7 @@ package shared.services
 import org.scalamock.handlers.CallHandler
 import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.models.auth.UserDetails
-import shared.models.errors.{ClientNotAuthenticatedError, InternalError}
+import shared.models.errors.{ClientNotAuthorisedError, InternalError}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
@@ -139,7 +139,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorised(expectedPredicate, affinityGroup)
           .returns(Future.failed(MissingBearerToken()))
 
-        await(target.authorised(inputPredicate)) shouldBe Left(ClientNotAuthenticatedError)
+        await(target.authorised(inputPredicate)) shouldBe Left(ClientNotAuthorisedError)
       }
 
     def disallowUsersWithoutEnrolments(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit =
@@ -150,7 +150,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorised(expectedPredicate, affinityGroup)
           .returns(Future.failed(InsufficientEnrolments()))
 
-        await(target.authorised(inputPredicate)) shouldBe Left(ClientNotAuthenticatedError)
+        await(target.authorised(inputPredicate)) shouldBe Left(ClientNotAuthorisedError)
       }
   }
 
