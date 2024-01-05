@@ -16,10 +16,10 @@
 
 package shared.controllers
 
+import play.api.mvc._
 import shared.models.auth.UserDetails
 import shared.models.errors.MtdError
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc._
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
@@ -48,8 +48,8 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
     def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
         headerCarrier: HeaderCarrier): Future[Result] = {
       authService.authorised(predicate(mtdId)).flatMap[Result] {
-        case Right(userDetails) => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
-        case Left(mtdError)     => errorResponse(mtdError)
+        case Right(userDetails)                => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
+        case Left(mtdError)                    => errorResponse(mtdError)
       }
     }
 
