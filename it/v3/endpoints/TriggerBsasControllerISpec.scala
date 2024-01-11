@@ -139,7 +139,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           result.status shouldBe OK
           result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
           result.header("Content-Type") shouldBe Some("application/json")
-          result.header("Deprecation") shouldBe None
+          result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
         }
 
         s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
@@ -155,7 +156,8 @@ class TriggerBsasControllerISpec extends IntegrationBaseSpec {
           result.status shouldBe OK
           result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
           result.header("Content-Type") shouldBe Some("application/json")
-          result.header("Deprecation") shouldBe None
+          result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
         }
       }
     }

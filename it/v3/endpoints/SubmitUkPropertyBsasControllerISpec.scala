@@ -45,7 +45,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "any valid request is made for a TYS tax year" in new TysIfsTest {
@@ -58,7 +58,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, calculationId, taxYear))
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "a valid request is made with a failed nrs call" in new NonTysTest {
@@ -71,7 +71,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe None
+        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
       }
     }

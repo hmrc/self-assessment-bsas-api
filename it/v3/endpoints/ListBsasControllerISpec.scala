@@ -114,7 +114,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe summariesJSONWithHateoas(Nino(nino))
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "valid request is made with a Tax Year Specific (TYS) tax year" in new TysIfsTest {
