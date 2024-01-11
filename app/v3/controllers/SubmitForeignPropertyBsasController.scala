@@ -16,14 +16,14 @@
 
 package v3.controllers
 
-import shared.controllers._
-import shared.hateoas.HateoasFactory
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
+import shared.controllers._
+import shared.hateoas.HateoasFactory
 import shared.routing.{Version, Version3}
-import shared.utils.{IdGenerator, Logging}
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import v3.controllers.validators.SubmitForeignPropertyBsasValidatorFactory
 import v3.models.response.SubmitForeignPropertyBsasHateoasData
 import v3.models.response.SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory
@@ -35,15 +35,13 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class SubmitForeignPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
-                                                     nrsService: SubmitForeignPropertyBsasNrsProxyService,
                                                      validatorFactory: SubmitForeignPropertyBsasValidatorFactory,
                                                      service: SubmitForeignPropertyBsasService,
                                                      hateoasFactory: HateoasFactory,
                                                      auditService: AuditService,
                                                      cc: ControllerComponents,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitForeignPropertyBsasController", endpointName = "SubmitForeignPropertyBsas")
@@ -58,10 +56,7 @@ class SubmitForeignPropertyBsasController @Inject() (val authService: Enrolments
       val requestHandler =
         RequestHandler
           .withValidator(validator)
-          .withService { parsedRequest =>
-            nrsService.submit(nino, parsedRequest.body) // Submit asynchronously to NRS
-            service.submitForeignPropertyBsas(parsedRequest)
-          }
+          .withService(service.submitForeignPropertyBsas)
           .withHateoasResultFrom(hateoasFactory) { (parsedRequest, _) =>
             SubmitForeignPropertyBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
           }

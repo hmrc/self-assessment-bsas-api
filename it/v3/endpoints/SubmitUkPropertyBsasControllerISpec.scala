@@ -37,7 +37,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
       "any valid request is made for a non-tys tax year" in new NonTysTest {
 
         override def setupStubs(): Unit = {
-          stubNrsSuccess()
           stubDownstreamSuccess()
         }
 
@@ -50,7 +49,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
       "any valid request is made for a TYS tax year" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          stubNrsSuccess()
           stubDownstreamSuccess()
         }
 
@@ -61,19 +59,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.header("Deprecation") shouldBe None
       }
 
-      "a valid request is made with a failed nrs call" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          stubDownstreamSuccess()
-        }
-
-        val result: WSResponse = await(request().post(requestBodyJson))
-        result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
-        result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe None
-
-      }
     }
 
     "return validation error according to spec" when {
@@ -86,8 +71,8 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String = requestNino
-            override val calculationId: String = requestCalculationId
+            override val nino: String            = requestNino
+            override val calculationId: String   = requestCalculationId
             override val taxYear: Option[String] = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
@@ -102,25 +87,29 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
           ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-23"), requestBodyJson, BAD_REQUEST, InvalidTaxYearParameterError),
           ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), requestBodyJson, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-24"), requestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A",
+          (
+            "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             None,
             requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
             BAD_REQUEST,
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/furnishedHolidayLet/income")))),
-          ("AA123456A",
+          (
+            "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             None,
             requestBodyJson.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(Seq("/furnishedHolidayLet/expenses")))),
-          ("AA123456A",
+          (
+            "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             None,
             requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
             BAD_REQUEST,
             RuleBothPropertiesSuppliedError),
-          ("AA123456A",
+          (
+            "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             None,
             requestBodyJson
@@ -185,28 +174,15 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val calculationId: String = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val nino: String                       = "AA123456A"
+    val calculationId: String              = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
-    val nrsSuccess: JsValue = Json.parse(
-      s"""
-         |{
-         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
-         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
-         |  "timestamp":""
-         |}
-         """.stripMargin
-    )
 
     def downstreamUri: String
 
     def stubDownstreamSuccess(): Unit = {
       DownstreamStub
         .onSuccess(DownstreamStub.PUT, downstreamUri, OK)
-    }
-
-    def stubNrsSuccess(): Unit = {
-      NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
     }
 
     def request(): WSRequest = {
@@ -233,6 +209,7 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
          |  "reason": "message"
          |}
        """.stripMargin
+
   }
 
   private trait TysIfsTest extends Test {
