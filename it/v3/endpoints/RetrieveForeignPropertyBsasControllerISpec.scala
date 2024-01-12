@@ -112,7 +112,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
       "valid request is made and fhl is returned" in new NonTysTest {
@@ -123,7 +124,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
@@ -134,7 +136,8 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
     }
 

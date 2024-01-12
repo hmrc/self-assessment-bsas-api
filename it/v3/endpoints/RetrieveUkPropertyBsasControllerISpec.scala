@@ -81,7 +81,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "valid request is made and Non-FHL is returned" in new NonTysTest {
@@ -95,7 +95,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
@@ -108,7 +108,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId, taxYear)
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "any valid Tax Year Specific request is made and Non-FHL is returned" in new TysIfsTest {
@@ -120,7 +120,8 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
         response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId, taxYear)
       }
     }

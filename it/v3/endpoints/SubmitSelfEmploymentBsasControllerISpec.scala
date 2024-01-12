@@ -99,7 +99,8 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe None
+        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
       "any valid TYS request is made" in new TysIfsTest {
@@ -116,7 +117,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe None
+        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "a valid request is made with a failed nrs call" in new NonTysTest {
@@ -133,7 +134,7 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe None
+        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "a valid TYS request is made with a failed nrs call" in new TysIfsTest {

@@ -77,7 +77,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
       "valid request is made for TYS" in new TysIfsTest {
         override def setupStubs(): Unit = {
@@ -89,7 +90,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId, taxYear)
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
     }
 
