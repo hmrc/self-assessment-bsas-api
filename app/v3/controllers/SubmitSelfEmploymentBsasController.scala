@@ -16,14 +16,14 @@
 
 package v3.controllers
 
-import shared.controllers._
-import shared.hateoas.HateoasFactory
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
+import shared.controllers._
+import shared.hateoas.HateoasFactory
 import shared.routing.{Version, Version3}
-import shared.utils.{IdGenerator, Logging}
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import v3.controllers.validators.SubmitSelfEmploymentBsasValidatorFactory
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 import v3.models.response.SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory
@@ -37,13 +37,11 @@ class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsA
                                                     val lookupService: MtdIdLookupService,
                                                     validatorFactory: SubmitSelfEmploymentBsasValidatorFactory,
                                                     service: SubmitSelfEmploymentBsasService,
-                                                    nrsService: SubmitSelfEmploymentBsasNrsProxyService,
                                                     hateoasFactory: HateoasFactory,
                                                     auditService: AuditService,
                                                     cc: ControllerComponents,
                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -61,10 +59,7 @@ class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsA
       val requestHandler =
         RequestHandler
           .withValidator(validator)
-          .withService { parsedRequest =>
-            nrsService.submit(nino, parsedRequest.body) // Submit asynchronously to NRS
-            service.submitSelfEmploymentBsas(parsedRequest)
-          }
+          .withService(service.submitSelfEmploymentBsas)
           .withHateoasResultFrom(hateoasFactory) { (parsedRequest, _) =>
             SubmitSelfEmploymentBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
           }

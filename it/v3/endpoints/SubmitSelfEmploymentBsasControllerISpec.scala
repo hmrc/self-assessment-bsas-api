@@ -35,16 +35,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     val nino          = "AA123456A"
     val calculationId = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
 
-    val nrsSuccess: JsValue = Json.parse(
-      s"""
-         |{
-         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
-         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
-         |  "timestamp":""
-         |}
-         """.stripMargin
-    )
-
     def setupStubs(): StubMapping
 
     def mtdUri: String
@@ -91,7 +81,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
@@ -99,7 +88,8 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+        result.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
       }
 
@@ -109,7 +99,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
         }
 
@@ -117,41 +106,10 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+        result.header("Deprecation") shouldBe Some(
+          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
-      "a valid request is made with a failed nrs call" in new NonTysTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
-        result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
-      }
-
-      "a valid TYS request is made with a failed nrs call" in new TysIfsTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
-        result.header("Content-Type") shouldBe Some("application/json")
-      }
     }
 
     "return error according to spec" when {

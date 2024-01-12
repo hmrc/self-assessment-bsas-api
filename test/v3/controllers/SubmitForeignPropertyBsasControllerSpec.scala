@@ -45,7 +45,6 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitForeignPropertyBsasValidatorFactory
     with MockSubmitForeignPropertyBsasService
-    with MockSubmitForeignPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator
@@ -122,10 +121,6 @@ class SubmitForeignPropertyBsasControllerSpec
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockSubmitForeignPropertyBsasNrsProxyService
-          .submit(validNino)
-          .returns(Future.successful(()))
-
         MockSubmitForeignPropertyBsasService
           .submitForeignPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
@@ -152,10 +147,6 @@ class SubmitForeignPropertyBsasControllerSpec
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockSubmitForeignPropertyBsasNrsProxyService
-          .submit(validNino)
-          .returns(Future.successful(()))
-
         MockSubmitForeignPropertyBsasService
           .submitForeignPropertyBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleSummaryStatusSuperseded))))
@@ -172,7 +163,6 @@ class SubmitForeignPropertyBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitForeignPropertyBsasValidatorFactory,
       service = mockService,
-      nrsService = mockSubmitForeignPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,

@@ -46,7 +46,6 @@ class SubmitUkPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitUkPropertyBsasValidatorFactory
     with MockSubmitUkPropertyBsasService
-    with MockSubmitUKPropertyBsasNrsProxyService
     with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
@@ -78,10 +77,6 @@ class SubmitUkPropertyBsasControllerSpec
     "return OK" when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
-
-        MockSubmitUKPropertyBsasNrsProxyService
-          .submit(validNino)
-          .returns(Future.successful(()))
 
         MockSubmitUkPropertyBsasService
           .submitPropertyBsas(requestData)
@@ -117,10 +112,6 @@ class SubmitUkPropertyBsasControllerSpec
     "the service returns an error" in new Test {
       willUseValidator(returningSuccess(requestData))
 
-      MockSubmitUKPropertyBsasNrsProxyService
-        .submit(validNino)
-        .returns(Future.successful(()))
-
       MockSubmitUkPropertyBsasService
         .submitPropertyBsas(requestData)
         .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleOverConsolidatedExpensesThreshold))))
@@ -136,7 +127,6 @@ class SubmitUkPropertyBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitUkPropertyBsasValidatorFactory,
       service = mockService,
-      nrsService = mockSubmitUKPropertyBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,

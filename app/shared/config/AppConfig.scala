@@ -60,7 +60,6 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
 
   // API Config
   def apiGatewayContext: String                    = config.getString("api.gateway.context")
-  def mtdNrsProxyBaseUrl: String                   = config.baseUrl("mtd-api-nrs-proxy")
   def confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
 
   def apiDocumentationUrl: String =

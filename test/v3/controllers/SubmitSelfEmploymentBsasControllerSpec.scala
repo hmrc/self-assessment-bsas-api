@@ -46,7 +46,6 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentBsasValidatorFactory
     with MockSubmitSelfEmploymentBsasService
-    with MockSubmitSelfEmploymentBsasNrsProxyService
     with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator
@@ -68,10 +67,6 @@ class SubmitSelfEmploymentBsasControllerSpec
     "return OK" when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
-
-        MockSubmitSelfEmploymentBsasNrsProxyService
-          .submit(validNino)
-          .returns(Future.successful(()))
 
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(requestData)
@@ -116,10 +111,6 @@ class SubmitSelfEmploymentBsasControllerSpec
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockSubmitSelfEmploymentBsasNrsProxyService
-          .submit(validNino)
-          .returns(Future.successful(()))
-
         MockSubmitSelfEmploymentBsasService
           .submitSelfEmploymentBsas(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))))
@@ -136,7 +127,6 @@ class SubmitSelfEmploymentBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitSelfEmploymentBsasValidatorFactory,
       service = mockService,
-      nrsService = mockSubmitSelfEmploymentBsasNrsProxyService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,

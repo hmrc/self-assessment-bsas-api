@@ -31,21 +31,12 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String          = "AA123456A"
     val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
     // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
-    val nrsSuccess: JsValue = Json.parse(
-      s"""
-         |{
-         |  "nrSubmissionId":"2dd537bc-4244-4ebf-bac9-96321be13cdc",
-         |  "cadesTSignature":"30820b4f06092a864886f70111111111c0445c464",
-         |  "timestamp":""
-         |}
-         """.stripMargin
-    )
-    val responseBody: JsValue = Json.parse(
-      s"""
+
+    val responseBody: JsValue = Json.parse(s"""
          |{
          |  "links":[
          |    {
@@ -66,10 +57,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         .when(DownstreamStub.PUT, downstreamUrl)
         .withRequestBody(downstreamRequestValid)
         .thenReturn(OK, ignoredDownstreamResponse)
-    }
-
-    def stubNrsSuccess(): Unit = {
-      NrsStub.onSuccess(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", ACCEPTED, nrsSuccess)
     }
 
     def request(): WSRequest = {
@@ -96,6 +83,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
          |        "reason": "message"
          |      }
     """.stripMargin
+
   }
 
   private trait NonTysTest extends Test {
@@ -116,7 +104,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid foreignProperty request is made" in new NonTysTest {
         override def setupStubs(): Unit = {
-          stubNrsSuccess()
           stubDownstreamSuccess()
         }
 
@@ -128,7 +115,6 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
       "a valid request is made for TYS" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          stubNrsSuccess()
           stubDownstreamSuccess()
         }
 
@@ -139,24 +125,11 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
-      "any valid foreignProperty request is made despite a failed nrs call" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          NrsStub.onError(NrsStub.PUT, s"/mtd-api-nrs-proxy/$nino/itsa-annual-adjustment", INTERNAL_SERVER_ERROR, "An internal server error occurred")
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(mtdRequestValid))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
-        response.header("X-CorrelationId") should not be empty
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
-      }
     }
 
     "return error according to spec" when {
 
-      def requestBodyWithCountryCode(code: String): JsValue = Json.parse(
-        s"""
+      def requestBodyWithCountryCode(code: String): JsValue = Json.parse(s"""
            |{
            |  "nonFurnishedHolidayLet": [
            |    {
@@ -178,8 +151,8 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String = requestNino
-            override val calculationId: String = requestCalculationId
+            override val nino: String            = requestNino
+            override val calculationId: String   = requestCalculationId
             override val taxYear: Option[String] = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
@@ -195,19 +168,22 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("BAD_TAX_YEAR"), mtdRequestValid, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-24"), mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             mtdRequestNonFhlFull,
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
-          ("AA123456A",
+          (
+            "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             requestBodyWithCountryCode("FRANCE"),
@@ -264,4 +240,5 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }
