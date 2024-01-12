@@ -122,7 +122,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId") should not be empty
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
     }
