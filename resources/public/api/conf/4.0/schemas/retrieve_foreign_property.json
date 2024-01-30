@@ -105,14 +105,14 @@
                 "example": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
               },
               "startDate": {
-                "description": "The date the accounting period started.",
+                "description": "The date the submission period started.",
                 "type": "string",
-                "example": "2021-04-06"
+                "example": "2019-04-06"
               },
               "endDate": {
-                "description": "The date the accounting period ended.",
+                "description": "The date the submission period ended.",
                 "type": "string",
-                "example": "2021-07-05"
+                "example": "2019-07-05"
               },
               "receivedDateTime": {
                 "description": "The date and time data received.",
