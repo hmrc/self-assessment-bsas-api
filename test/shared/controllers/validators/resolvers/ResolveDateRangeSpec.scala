@@ -44,6 +44,13 @@ class ResolveDateRangeSpec extends UnitSpec {
         val result = resolveDateRange(validStart -> validEnd)
         result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validEnd)))
       }
+
+      "passed an end date equal to start date" in {
+        val validStart = "2023-06-21"
+        val validEnd = "2023-06-21"
+        val result = resolveDateRange(validEnd -> validStart)
+        result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validStart)))
+      }
     }
 
     "return an error" when {
@@ -62,12 +69,6 @@ class ResolveDateRangeSpec extends UnitSpec {
         result shouldBe Invalid(List(endBeforeStartDateError))
       }
 
-      "passed an end date equal to start date" in {
-        val validStart = "2023-06-21"
-        val validEnd = "2023-06-21"
-        val result = resolveDateRange(validEnd -> validStart)
-        result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validStart)))
-      }
     }
   }
 
