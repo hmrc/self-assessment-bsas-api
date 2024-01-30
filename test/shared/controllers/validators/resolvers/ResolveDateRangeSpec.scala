@@ -28,6 +28,9 @@ class ResolveDateRangeSpec extends UnitSpec {
   private val validStart = "2023-06-21"
   private val validEnd   = "2024-06-21"
 
+  private val sameValidStart = "2023-06-21"
+  private val sameValidEnd = "2023-06-21"
+
   // To be sure it's using the construction params...
   private val startDateFormatError    = StartDateFormatError.withPath("pathToStartDate")
   private val endDateFormatError      = EndDateFormatError.withPath("pathToEndDate")
@@ -46,10 +49,8 @@ class ResolveDateRangeSpec extends UnitSpec {
       }
 
       "passed an end date equal to start date" in {
-        val validStart = "2023-06-21"
-        val validEnd = "2023-06-21"
-        val result = resolveDateRange(validEnd -> validStart)
-        result shouldBe Valid(DateRange(LocalDate.parse(validStart), LocalDate.parse(validStart)))
+        val result = resolveDateRange(sameValidEnd -> sameValidStart)
+        result shouldBe Valid(DateRange(LocalDate.parse(sameValidStart), LocalDate.parse(sameValidEnd)))
       }
     }
 
