@@ -177,6 +177,17 @@ class TriggerBsasValidatorFactorySpec extends UnitSpec with MockBsasConfig {
       }
     }
 
+    "return a RuleEndBeforeStartDateError" when {
+      "the end date is equal to start date" in new SetUp {
+        val body: JsObject                       = triggerBsasRequestJson(startDate = "2022-05-07", endDate = "2022-05-07")
+        val expectedBody: TriggerBsasRequestBody = body.as[TriggerBsasRequestBody]
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, body).validateAndWrapResult()
+
+        result shouldBe Right(TriggerBsasRequestData(parsedNino, expectedBody))
+      }
+    }
+
     "return a RuleAccountingPeriodNotSupportedError" when {
       "the accounting period is before the minimum tax year" in new SetUp {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
