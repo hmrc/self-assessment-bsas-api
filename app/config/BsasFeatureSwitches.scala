@@ -23,8 +23,7 @@ import shared.config.{AppConfig, FeatureSwitches}
   */
 case class BsasFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  val isIfsEnabled: Boolean      = isEnabled("ifs")
-  val isIfsInProduction: Boolean = isReleasedInProduction("ifs")
+  val isStatefulEnabled: Boolean = isEnabled("stateful")
 
 }
 
