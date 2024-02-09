@@ -22,8 +22,7 @@ import shared.UnitSpec
 class ForeignPropertySpec extends UnitSpec {
 
   // Use simple case as formats for contents of income/expenses are tested elsewhere...
-  val json: JsValue = Json.parse(
-    """
+  val json: JsValue = Json.parse("""
       |{
       |  "countryCode": "FRA",
       |  "income": {
@@ -33,8 +32,7 @@ class ForeignPropertySpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  val minimalJson: JsValue = Json.parse(
-    """{
+  val minimalJson: JsValue = Json.parse("""{
       |  "countryCode": "FRA"
       |}""".stripMargin)
 
@@ -73,4 +71,5 @@ class ForeignPropertySpec extends UnitSpec {
       }
     }
   }
+
 }

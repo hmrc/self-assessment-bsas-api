@@ -16,9 +16,9 @@
 
 package v3.mocks.connectors
 
-import shared.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.SubmitUkPropertyBsasConnector
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
@@ -36,5 +36,7 @@ trait MockSubmitUkPropertyBsasConnector extends MockFactory {
         .submitPropertyBsas(_: SubmitUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

@@ -38,8 +38,8 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "reads" when {
     "passed mtd json" should {
       "return the corresponding model" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "premisesRunningCosts": 1.12,
             |  "repairsAndMaintenance": 2.12,
@@ -51,7 +51,8 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
             |  "other": 8.12,
             |  "consolidatedExpenses": 9.12
             |}
-            |""".stripMargin).as[ForeignPropertyExpenses] shouldBe model
+            |""".stripMargin)
+          .as[ForeignPropertyExpenses] shouldBe model
       }
     }
 
@@ -65,8 +66,7 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
   "writes" when {
     "passed a model" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe Json.parse(
-          """
+        Json.toJson(model) shouldBe Json.parse("""
             |{
             |  "premisesRunningCosts": 1.12,
             |  "repairsAndMaintenance": 2.12,
@@ -88,4 +88,5 @@ class ForeignPropertyExpensesSpec extends UnitSpec {
       }
     }
   }
+
 }

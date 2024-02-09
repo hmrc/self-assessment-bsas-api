@@ -29,4 +29,5 @@ class SummaryCalculationCountryLevelDetailSpec extends UnitSpec with RoundTripTe
     parsedSummaryCalculationCountryLevelDetail,
     summaryCalculationCountryLevelDetailMtdJson
   )(reads)
+
 }

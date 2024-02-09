@@ -692,4 +692,5 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       adjustments = Some(parsedNonFhlAdjustmentsSeq),
       adjustedSummaryCalculation = Some(parsedNonFhlSummaryCalculation)
     )
+
 }

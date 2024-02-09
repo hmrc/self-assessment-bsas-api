@@ -40,5 +40,7 @@ class RetrieveUkPropertyBsasValidatorFactory {
           ResolveCalculationId(calculationId),
           resolveTysTaxYear(taxYear)
         ).mapN(RetrieveUkPropertyBsasRequestData)
+
     }
+
 }

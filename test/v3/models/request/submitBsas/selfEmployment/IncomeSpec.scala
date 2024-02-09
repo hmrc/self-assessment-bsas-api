@@ -16,9 +16,9 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import shared.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import shared.UnitSpec
+import shared.models.domain.EmptyJsonBody
 import v3.fixtures.selfEmployment.IncomeFixture._
 
 class IncomeSpec extends UnitSpec {
@@ -68,4 +68,5 @@ class IncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

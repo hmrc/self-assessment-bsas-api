@@ -65,7 +65,7 @@ class TriggerBsasRulesValidator @Inject() (bsasConfig: BsasConfig) extends Rules
       validatedBusinessId,
       validatedDateRange,
       validatedTypeOfBusiness
-      ).mapN((_, _, _))
+    ).mapN((_, _, _))
       .andThen { case (_, dateRange, typeOfBusiness) => validateAccountingPeriodNotSupported(dateRange.endDate, typeOfBusiness) }
       .onSuccess(parsed)
   }

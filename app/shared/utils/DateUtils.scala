@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 
-package v3.fixtures.selfEmployment
+package shared.utils
 
-import play.api.libs.json.{JsValue, Json}
-import v3.models.request.submitBsas.selfEmployment.{Income, queryMap}
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDateTime, ZoneId}
+import java.util.Locale
 
-object IncomeFixture {
+object DateUtils {
 
-  val incomeModel: Income =
-    Income(
-      turnover = Some(1000.25),
-      other = Some(1000.50)
-    )
+  private val longDateTimeFormatGmt: DateTimeFormatter = DateTimeFormatter
+    .ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+    .withZone(ZoneId.of("GMT"))
 
-  def incomeJson(model: Income): JsValue = {
-    import model._
-
-    val fields: Map[String, Option[BigDecimal]] =
-      Map(
-        "turnover" -> turnover,
-        "other"    -> other
-      )
-
-    Json.toJsObject(queryMap(fields))
-  }
-
+  def longDateTimestampGmt(dateTime: LocalDateTime): String = longDateTimeFormatGmt.format(dateTime)
 }

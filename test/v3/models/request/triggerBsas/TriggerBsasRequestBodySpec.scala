@@ -35,4 +35,5 @@ class TriggerBsasRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

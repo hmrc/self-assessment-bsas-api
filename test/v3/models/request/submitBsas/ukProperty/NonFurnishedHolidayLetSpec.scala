@@ -22,8 +22,7 @@ import shared.UnitSpec
 class NonFurnishedHolidayLetSpec extends UnitSpec {
 
   // Use simple case as formats for contents of income/expenses are tested elsewhere...
-  val json: JsValue = Json.parse(
-    """
+  val json: JsValue = Json.parse("""
       |{
       |  "income": {
       |  },
@@ -66,4 +65,5 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       }
     }
   }
+
 }

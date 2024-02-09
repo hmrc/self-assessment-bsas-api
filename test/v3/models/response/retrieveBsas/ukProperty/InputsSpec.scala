@@ -16,9 +16,9 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import shared.models.utils.JsonErrorValidators
 import play.api.libs.json.JsResultException
 import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -30,13 +30,12 @@ class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
         val thrown: JsResultException = the[JsResultException] thrownBy downstreamInputsInvalidSourceJson.as[Inputs]
         thrown.errors
-          .map {
-            case (path, errors) => (path, errors.map(_.messages))
+          .map { case (path, errors) =>
+            (path, errors.map(_.messages))
           }
-          .map {
-            case (path, errors) =>
-              path.toString() shouldBe "/source"
-              errors.flatten.contains("error.expected.Source") shouldBe true
+          .map { case (path, errors) =>
+            path.toString() shouldBe "/source"
+            errors.flatten.contains("error.expected.Source") shouldBe true
           }
       }
     }

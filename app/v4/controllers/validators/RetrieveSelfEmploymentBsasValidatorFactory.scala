@@ -16,16 +16,16 @@
 
 package v4.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear}
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.ResolverSupport._
+import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear}
+import shared.models.errors.MtdError
 import v4.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
 import javax.inject.Singleton
-import shared.controllers.validators.resolvers.ResolverSupport._
 
 @Singleton
 class RetrieveSelfEmploymentBsasValidatorFactory {
@@ -41,5 +41,7 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
           ResolveCalculationId(calculationId),
           resolveTysTaxYear(taxYear)
         ).mapN(RetrieveSelfEmploymentBsasRequestData)
+
     }
+
 }

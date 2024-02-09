@@ -16,6 +16,7 @@
 
 package shared.definition
 
+import cats.data.Validated.Invalid
 import shared.config.AppConfig
 import shared.routing.Version
 import shared.utils.Logging
@@ -53,12 +54,19 @@ trait ApiDefinitionFactory extends Logging {
 
   val definition: Definition
 
-  protected def buildAPIStatus(version: Version): APIStatus =
+  protected def buildAPIStatus(version: Version): APIStatus = {
+    checkDeprecationConfigFor(version)
     APIStatus.parser
       .lift(appConfig.apiStatus(version))
       .getOrElse {
         logger.error("[ApiDefinition][buildApiStatus] no API Status found in config. Reverting to Alpha")
         APIStatus.ALPHA
       }
+  }
+
+  private def checkDeprecationConfigFor(version: Version): Unit = appConfig.deprecationFor(version) match {
+    case Invalid(error) => throw new Exception(error)
+    case _              => ()
+  }
 
 }

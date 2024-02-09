@@ -16,12 +16,12 @@
 
 package v3.models.response
 
-import shared.hateoas.Link
-import shared.hateoas.Method.GET
-import shared.models.domain.TaxYear
 import play.api.Configuration
 import shared.UnitSpec
 import shared.config.MockAppConfig
+import shared.hateoas.Link
+import shared.hateoas.Method.GET
+import shared.models.domain.TaxYear
 
 class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
 
@@ -31,15 +31,15 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
     val taxYear       = Some(TaxYear.fromMtd("2023-24"))
     val context       = "individuals/self-assessment/adjustable-summary"
 
-    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+    MockAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
   }
 
   class TysDisabledTest extends Test {
-    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
   }
 
   class TysEnabledTest extends Test {
-    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
   }
 
   "LinksFactory" should {

@@ -21,6 +21,7 @@ import shared.UnitSpec
 import v3.fixtures.ListBsasFixture
 
 class BusinessSourceSummarySpec extends UnitSpec with ListBsasFixture {
+
   "BusinessSourceSummary" when {
     "read from valid JSON" should {
       "return the expected model" in {
@@ -40,4 +41,5 @@ class BusinessSourceSummarySpec extends UnitSpec with ListBsasFixture {
       }
     }
   }
+
 }

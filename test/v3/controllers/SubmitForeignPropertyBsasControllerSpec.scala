@@ -16,6 +16,9 @@
 
 package v3.controllers
 
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Result
+import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -24,10 +27,6 @@ import shared.models.domain.{CalculationId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.Result
-import shared.config.MockAppConfig
-import shared.routing.Version3
 import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockSubmitForeignPropertyBsasValidatorFactory
 import v3.mocks.services._
@@ -187,7 +186,6 @@ class SubmitForeignPropertyBsasControllerSpec
         )
       )
 
-    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

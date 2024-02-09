@@ -21,7 +21,7 @@ import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
 import shared.hateoas.HateoasFactory
-import shared.routing.{Version, Version3}
+import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
 import v3.controllers.validators.SubmitUkPropertyBsasValidatorFactory
@@ -32,14 +32,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class SubmitUkPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
-                                                val lookupService: MtdIdLookupService,
-                                                validatorFactory: SubmitUkPropertyBsasValidatorFactory,
-                                                service: SubmitUkPropertyBsasService,
-                                                hateoasFactory: HateoasFactory,
-                                                auditService: AuditService,
-                                                cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+class SubmitUkPropertyBsasController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: SubmitUkPropertyBsasValidatorFactory,
+    service: SubmitUkPropertyBsasService,
+    hateoasFactory: HateoasFactory,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig, apiVersion: Version)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -47,7 +48,6 @@ class SubmitUkPropertyBsasController @Inject() (val authService: EnrolmentsAuthS
 
   def handleRequest(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val apiVersion: Version = Version.from(request, orElse = Version3)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)

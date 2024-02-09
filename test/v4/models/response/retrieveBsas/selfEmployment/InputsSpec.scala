@@ -16,9 +16,9 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import shared.models.utils.JsonErrorValidators
 import play.api.libs.json.{JsResultException, Json}
 import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 
 class InputsSpec extends UnitSpec with JsonErrorValidators {
@@ -34,13 +34,14 @@ class InputsSpec extends UnitSpec with JsonErrorValidators {
         a[JsResultException] should be thrownBy downstreamInputsInvalidSourceJson.as[Inputs]
 
         val thrown: JsResultException = the[JsResultException] thrownBy downstreamInputsInvalidSourceJson.as[Inputs]
-        thrown.errors.map {
-          case (path, errors) => (path, errors.map(_.messages))
-        }.map {
-          case (path, errors) =>
+        thrown.errors
+          .map { case (path, errors) =>
+            (path, errors.map(_.messages))
+          }
+          .map { case (path, errors) =>
             path.toString() shouldBe "/source"
             errors.flatten.contains("error.expected.Source") shouldBe true
-        }
+          }
       }
     }
   }

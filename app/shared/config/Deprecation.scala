@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,15 @@
  * limitations under the License.
  */
 
-package v3.fixtures.selfEmployment
+package shared.config
 
-import play.api.libs.json.{JsValue, Json}
-import v3.models.request.submitBsas.selfEmployment.{Income, queryMap}
+import java.time.LocalDateTime
 
-object IncomeFixture {
+sealed trait Deprecation
 
-  val incomeModel: Income =
-    Income(
-      turnover = Some(1000.25),
-      other = Some(1000.50)
-    )
+object Deprecation {
+  case object NotDeprecated extends Deprecation
 
-  def incomeJson(model: Income): JsValue = {
-    import model._
-
-    val fields: Map[String, Option[BigDecimal]] =
-      Map(
-        "turnover" -> turnover,
-        "other"    -> other
-      )
-
-    Json.toJsObject(queryMap(fields))
-  }
+  case class Deprecated(deprecatedOn: LocalDateTime, sunsetDate: Option[LocalDateTime]) extends Deprecation
 
 }

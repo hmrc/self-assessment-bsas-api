@@ -31,8 +31,8 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   "reads" when {
     "reading a simple non-fhl body" should {
       "return the expected non-fhl model" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "nonFurnishedHolidayLet": [
             |    {
@@ -40,20 +40,23 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
             |    }
             |  ]
             |}
-            |""".stripMargin).as[SubmitForeignPropertyBsasRequestBody] shouldBe nonFhlModel
+            |""".stripMargin)
+          .as[SubmitForeignPropertyBsasRequestBody] shouldBe nonFhlModel
       }
     }
 
     "reading a simple fhl body" should {
       "return the expected fhl model" in {
-        Json.parse(
-          """
+        Json
+          .parse(
+            """
             |{
             |  "foreignFhlEea": {
             |  }
             |}
             |""".stripMargin
-        ).as[SubmitForeignPropertyBsasRequestBody] shouldBe fhlModel
+          )
+          .as[SubmitForeignPropertyBsasRequestBody] shouldBe fhlModel
       }
     }
 
@@ -79,8 +82,7 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "writing a simple non-fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlModel) shouldBe Json.parse(
-          """
+        Json.toJson(nonFhlModel) shouldBe Json.parse("""
             |{
             |  "incomeSourceType": "15",
             |  "adjustments": [
@@ -125,4 +127,5 @@ class SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

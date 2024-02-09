@@ -16,8 +16,8 @@
 
 package v4.fixtures.selfEmployment
 
-import shared.models.domain.{Source, Status}
 import play.api.libs.json.{JsObject, JsValue, Json}
+import shared.models.domain.{Source, Status}
 import v4.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v4.models.response.retrieveBsas.selfEmployment._
 
@@ -537,7 +537,8 @@ object RetrieveSelfEmploymentBsasFixtures {
   def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
     val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
-    mtdRetrieveBsasResponseJson.as[JsObject] ++ Json.parse(s"""
+    mtdRetrieveBsasResponseJson.as[JsObject] ++ Json
+      .parse(s"""
       |{
       |  "links": [
       |    {
@@ -551,7 +552,8 @@ object RetrieveSelfEmploymentBsasFixtures {
       |    }
       |  ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+      .as[JsObject]
   }
 
   val metadataModel: Metadata = Metadata(
@@ -757,4 +759,5 @@ object RetrieveSelfEmploymentBsasFixtures {
       adjustments = Some(adjustmentsModel),
       adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
     )
+
 }

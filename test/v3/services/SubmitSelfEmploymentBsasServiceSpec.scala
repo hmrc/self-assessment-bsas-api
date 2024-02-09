@@ -17,7 +17,7 @@
 package v3.services
 
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{ CalculationId, Nino }
+import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec

@@ -16,17 +16,17 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear }
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import play.api.libs.json.JsValue
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.ResolverSupport._
+import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveNonEmptyJsonObject, ResolveTysTaxYear}
+import shared.models.errors.MtdError
 import v3.controllers.validators.SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
-import v3.models.request.submitBsas.selfEmployment.{ SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData }
+import v3.models.request.submitBsas.selfEmployment.{SubmitSelfEmploymentBsasRequestBody, SubmitSelfEmploymentBsasRequestData}
 
 import javax.inject.Singleton
-import shared.controllers.validators.resolvers.ResolverSupport._
 
 @Singleton
 class SubmitSelfEmploymentBsasValidatorFactory {
@@ -45,5 +45,7 @@ class SubmitSelfEmploymentBsasValidatorFactory {
           resolveTysTaxYear(taxYear),
           resolveJson(body)
         ).mapN(SubmitSelfEmploymentBsasRequestData) andThen validateBusinessRules
+
     }
+
 }

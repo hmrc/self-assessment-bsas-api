@@ -23,8 +23,10 @@ class SummaryCalculationAdditionsSpec extends UnitSpec with RoundTripTest {
 
   import SummaryCalculationAdditions._
 
-  testRoundTrip("Summary Calculation Additions",
+  testRoundTrip(
+    "Summary Calculation Additions",
     summaryCalculationAdditionsDesJson,
     parsedSummaryCalculationAdditions,
     summaryCalculationAdditionsMtdJson)(reads)
+
 }

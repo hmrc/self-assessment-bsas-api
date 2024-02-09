@@ -16,6 +16,9 @@
 
 package v4.controllers
 
+import play.api.libs.json.{JsObject, Json}
+import play.api.mvc.Result
+import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -23,10 +26,6 @@ import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.Result
-import shared.config.MockAppConfig
-import shared.routing.Version4
 import shared.utils.MockIdGenerator
 import v4.controllers.validators.MockRetrieveSelfEmploymentBsasValidatorFactory
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
@@ -112,8 +111,6 @@ class RetrieveSelfEmploymentBsasControllerSpec
     )
 
     protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId)(fakeGetRequest)
-
-    MockedAppConfig.isApiDeprecated(Version4) returns false
   }
 
 }

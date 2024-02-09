@@ -20,8 +20,8 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.UnitSpec
 
 class FHLExpensesSpec extends UnitSpec {
-  val json: JsValue = Json.parse(
-    """
+
+  val json: JsValue = Json.parse("""
       |{
       |  "premisesRunningCosts": 1.12,
       |  "repairsAndMaintenance": 2.12,
@@ -74,4 +74,5 @@ class FHLExpensesSpec extends UnitSpec {
       }
     }
   }
+
 }

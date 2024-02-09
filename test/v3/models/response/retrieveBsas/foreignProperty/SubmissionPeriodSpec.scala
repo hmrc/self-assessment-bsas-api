@@ -33,8 +33,9 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return a valid json" when {
       "a valid model is supplied" in {
-          parsedSubmissionPeriod.toJson shouldBe submissionPeriodMtdJson
+        parsedSubmissionPeriod.toJson shouldBe submissionPeriodMtdJson
       }
     }
   }
+
 }

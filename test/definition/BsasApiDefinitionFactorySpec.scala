@@ -29,19 +29,19 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   class Test extends MockHttpClient with MockAppConfig {
-    MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
+    MockAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
     val apiDefinitionFactory = new BsasApiDefinitionFactory(mockAppConfig)
   }
 
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockedAppConfig.apiStatus(Version3) returns "BETA"
-        MockedAppConfig.apiStatus(Version4) returns "BETA"
-        MockedAppConfig.endpointsEnabled(version = Version3).returns(true).anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(version = Version4).returns(true).anyNumberOfTimes()
+        MockAppConfig.apiStatus(Version3) returns "BETA"
+        MockAppConfig.apiStatus(Version4) returns "BETA"
+        MockAppConfig.endpointsEnabled(version = Version3).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(version = Version4).returns(true).anyNumberOfTimes()
 
-        MockedAppConfig.confidenceLevelCheckEnabled
+        MockAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
@@ -96,7 +96,7 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
     ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
       s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
         s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)

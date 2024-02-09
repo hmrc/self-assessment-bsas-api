@@ -17,7 +17,7 @@
 package v3.services
 
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{ CalculationId, Nino }
+import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -68,7 +68,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
             await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
-        })
+          })
       }
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
@@ -101,4 +101,5 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

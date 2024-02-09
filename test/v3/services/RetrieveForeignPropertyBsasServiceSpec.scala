@@ -17,7 +17,7 @@
 package v3.services
 
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{ CalculationId, Nino }
+import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -70,7 +70,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
             await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
-        })
+          })
       }
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
@@ -103,4 +103,5 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

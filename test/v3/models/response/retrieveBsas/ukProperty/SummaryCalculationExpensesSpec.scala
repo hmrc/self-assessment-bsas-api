@@ -30,6 +30,7 @@ class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators w
     summaryCalculationExpensesFhlModel,
     mtdSummaryCalculationExpensesFhlJson
   )(readsFhl)
+
   testRoundTrip(
     "Summary Calculation Expenses Non-FHL",
     downstreamSummaryCalculationExpensesJson,

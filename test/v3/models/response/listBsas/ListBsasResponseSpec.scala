@@ -16,13 +16,13 @@
 
 package v3.models.response.listBsas
 
-import shared.hateoas.Link
-import shared.hateoas.Method.{GET, POST}
-import shared.models.domain.TaxYear
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsObject, Json}
 import shared.UnitSpec
 import shared.config.MockAppConfig
+import shared.hateoas.Link
+import shared.hateoas.Method.{GET, POST}
+import shared.models.domain.TaxYear
 import v3.fixtures.ListBsasFixture
 import v3.models.domain.TypeOfBusiness
 import v3.models.domain.TypeOfBusiness._
@@ -67,15 +67,15 @@ class ListBsasResponseSpec extends UnitSpec with MockAppConfig with ListBsasFixt
       val context = "individuals/self-assessment/adjustable-summary"
       val taxYear = Some(TaxYear.fromMtd("2023-24"))
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+      MockAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "top level links" should {

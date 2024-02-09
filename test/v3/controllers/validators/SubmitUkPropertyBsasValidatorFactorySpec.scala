@@ -16,12 +16,12 @@
 
 package v3.controllers.validators
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
-import shared.models.utils.JsonErrorValidators
 import org.scalatest.Assertion
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import shared.UnitSpec
+import shared.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.errors._
+import shared.models.utils.JsonErrorValidators
 import v3.models.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
 import v3.models.request.submitBsas.ukProperty.{SubmitUKPropertyBsasRequestBody, SubmitUkPropertyBsasRequestData}
 

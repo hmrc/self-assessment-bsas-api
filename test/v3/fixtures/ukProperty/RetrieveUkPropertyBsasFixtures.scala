@@ -16,8 +16,8 @@
 
 package v3.fixtures.ukProperty
 
-import shared.models.domain.{Source, Status}
 import play.api.libs.json.{JsObject, JsValue, Json}
+import shared.models.domain.{Source, Status}
 import v3.models.domain.{IncomeSourceType, TypeOfBusiness}
 import v3.models.response.retrieveBsas.ukProperty._
 
@@ -552,7 +552,8 @@ object RetrieveUkPropertyBsasFixtures {
   def mtdRetrieveBsasReponseFhlJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
     val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
-    mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json.parse(s"""
+    mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json
+      .parse(s"""
       |{
       |  "links": [
       |    {
@@ -566,13 +567,15 @@ object RetrieveUkPropertyBsasFixtures {
       |    }
       |  ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+      .as[JsObject]
   }
 
   def mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
     val taxYearParam = taxYear.fold("")("?taxYear=" + _)
 
-    mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json.parse(s"""
+    mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json
+      .parse(s"""
       |{
       |  "links": [
       |    {
@@ -586,7 +589,8 @@ object RetrieveUkPropertyBsasFixtures {
       |    }
       |  ]
       |}
-      |""".stripMargin).as[JsObject]
+      |""".stripMargin)
+      .as[JsObject]
   }
 
   val metadataModel: Metadata = Metadata(
@@ -660,7 +664,7 @@ object RetrieveUkPropertyBsasFixtures {
     residentialFinancialCost = None,
     broughtFwdResidentialFinancialCost = None,
     other = Some(2.09),
-    travelCosts = Some(2.10),
+    travelCosts = Some(2.10)
   )
 
   val summaryCalculationExpensesNonFhlModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
@@ -673,13 +677,13 @@ object RetrieveUkPropertyBsasFixtures {
     residentialFinancialCost = Some(2.07),
     broughtFwdResidentialFinancialCost = Some(2.08),
     other = Some(2.09),
-    travelCosts = Some(2.10),
+    travelCosts = Some(2.10)
   )
 
   val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
     privateUseAdjustment = Some(5.01),
     balancingCharge = Some(5.02),
-    bpraBalancingCharge = Some(5.03),
+    bpraBalancingCharge = Some(5.03)
   )
 
   val summaryCalculationDeductionsFhlModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
@@ -841,4 +845,5 @@ object RetrieveUkPropertyBsasFixtures {
     adjustments = Some(adjustmentsFhlModel),
     adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhlModel)
   )
+
 }
