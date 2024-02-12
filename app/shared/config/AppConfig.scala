@@ -125,7 +125,7 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
 
   }
 
-  val apiDocumentationUrl: String =
+  def apiDocumentationUrl: String =
     config.getConfString(
       "api.documentation-url",
       defString = s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
