@@ -32,6 +32,8 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration) {
+  // API name
+//  val appName: String = config.getConfString("appName", defString = "self-assessment-bsas-api")
 
   // MTD ID Lookup Config
   def mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
@@ -86,6 +88,12 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     if (versionReleasedInProd && conf.hasPath(path)) config.getBoolean(path) else versionReleasedInProd
   }
 
+  def apiDocumentationUrl: String =
+    config.getConfString(
+      "api.documentation-url",
+      defString = s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+
+
   private val DATE_FORMATTER = new DateTimeFormatterBuilder()
     .append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     .parseDefaulting(ChronoField.HOUR_OF_DAY, 23)
@@ -124,12 +132,6 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     } else NotDeprecated.valid
 
   }
-
-  def apiDocumentationUrl: String =
-    config.getConfString(
-      "api.documentation-url",
-      defString = s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
-
 }
 
 case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)

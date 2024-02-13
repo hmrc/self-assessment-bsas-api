@@ -16,7 +16,9 @@
 
 package definition
 
+import cats.implicits.catsSyntaxValidatedId
 import shared.UnitSpec
+import shared.config.Deprecation.NotDeprecated
 import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.definition.APIStatus.BETA
 import shared.definition._
@@ -36,10 +38,11 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockAppConfig.apiStatus(Version3) returns "BETA"
-        MockAppConfig.apiStatus(Version4) returns "BETA"
-        MockAppConfig.endpointsEnabled(version = Version3).returns(true).anyNumberOfTimes()
-        MockAppConfig.endpointsEnabled(version = Version4).returns(true).anyNumberOfTimes()
+        Seq(Version3, Version4).foreach { version =>
+          MockAppConfig.apiStatus(version) returns "BETA"
+          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
+        }
 
         MockAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
