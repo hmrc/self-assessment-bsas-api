@@ -32,9 +32,6 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration) {
-  // API name
-//  val appName: String = config.getConfString("appName", defString = "self-assessment-bsas-api")
-
   // MTD ID Lookup Config
   def mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
