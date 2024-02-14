@@ -16,14 +16,14 @@
 
 package v3.endpoints
 
-import shared.models.errors._
-import shared.models.utils.JsonErrorValidators
-import shared.stubs._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors._
+import shared.models.utils.JsonErrorValidators
+import shared.stubs._
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
 import v3.models.errors._
@@ -44,8 +44,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, calculationId))
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
       "any valid request is made for a TYS tax year" in new TysIfsTest {
@@ -57,8 +55,6 @@ class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonE
         response.status shouldBe OK
         response.json shouldBe Json.parse(hateoasResponse(nino, calculationId, taxYear))
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
     }

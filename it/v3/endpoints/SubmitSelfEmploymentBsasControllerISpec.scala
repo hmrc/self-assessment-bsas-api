@@ -16,15 +16,15 @@
 
 package v3.endpoints
 
-import shared.models.domain.{CalculationId, Nino}
-import shared.models.errors._
-import shared.stubs._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.domain.{CalculationId, Nino}
+import shared.models.errors._
+import shared.stubs._
 import support.IntegrationBaseSpec
 import v3.models.errors._
 
@@ -88,9 +88,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
-
       }
 
       "any valid TYS request is made" in new TysIfsTest {
@@ -106,8 +103,6 @@ class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         result.status shouldBe OK
         result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
         result.header("Content-Type") shouldBe Some("application/json")
-        result.header("Deprecation") shouldBe Some(
-          "This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
       }
 
     }

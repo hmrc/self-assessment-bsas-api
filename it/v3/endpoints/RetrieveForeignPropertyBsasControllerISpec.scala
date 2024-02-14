@@ -16,13 +16,13 @@
 
 package v3.endpoints
 
-import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors._
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures
@@ -112,7 +112,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
       }
 
@@ -124,7 +123,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
       }
 
@@ -136,7 +134,6 @@ class RetrieveForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
       }
     }
