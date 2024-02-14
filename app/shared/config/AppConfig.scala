@@ -32,6 +32,9 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration) {
+  // API name
+  def appName: String = config.getString("appName")
+
   // MTD ID Lookup Config
   def mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
@@ -86,9 +89,9 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
   }
 
   def apiDocumentationUrl: String =
-    config.getConfString(
-      "api.documentation-url",
-      defString = s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api")
+    configuration
+      .get[Option[String]]("api.documentation-url")
+      .getOrElse(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/$appName")
 
 
   private val DATE_FORMATTER = new DateTimeFormatterBuilder()

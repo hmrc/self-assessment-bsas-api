@@ -63,15 +63,18 @@ class RequestHandlerSpec
   private val generatedCorrelationId = "generatedCorrelationId"
   MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
 
-  implicit val hc: HeaderCarrier                               = HeaderCarrier()
-  implicit val ctx: RequestContext                             = RequestContext.from(mockIdGenerator, endpointLogContext)
-  private val serviceCorrelationId                             = "serviceCorrelationId"
-  private val userDetails                                      = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
-  private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json")
-  implicit val userRequest: UserRequest[AnyContent]            = UserRequest[AnyContent](userDetails, fakeRequest)
-  implicit val appConfig: AppConfig                            = mockAppConfig
-  implicit val apiVersion: Version                             = Version(userRequest)
-  private val mockService                                      = mock[DummyService]
+  implicit val hc: HeaderCarrier   = HeaderCarrier()
+  implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+  private val serviceCorrelationId = "serviceCorrelationId"
+  private val userDetails          = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
+
+  implicit val userRequest: UserRequest[AnyContent] = {
+    val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json")
+    UserRequest[AnyContent](userDetails, fakeRequest)
+  }
+
+  implicit val appConfig: AppConfig = mockAppConfig
+  private val mockService           = mock[DummyService]
 
   private def service =
     (mockService.service(_: Input.type)(_: RequestContext, _: ExecutionContext)).expects(Input, *, *)
@@ -90,7 +93,7 @@ class RequestHandlerSpec
 
   def mockDeprecation(deprecationStatus: Deprecation): CallHandler[Validated[String, Deprecation]] =
     MockAppConfig
-      .deprecationFor(apiVersion)
+      .deprecationFor(Version(userRequest))
       .returns(deprecationStatus.valid)
       .anyNumberOfTimes()
 

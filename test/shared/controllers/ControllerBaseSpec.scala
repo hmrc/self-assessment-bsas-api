@@ -19,14 +19,13 @@ package shared.controllers
 import cats.implicits.catsSyntaxValidatedId
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{AnyContent, AnyContentAsEmpty, ControllerComponents, Result}
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
 import shared.UnitSpec
 import shared.config.Deprecation.NotDeprecated
-import shared.config.{AppConfig, MockAppConfig}
+import shared.config.MockAppConfig
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.auth.UserDetails
 import shared.models.domain.Nino
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
 import shared.routing.{Version, Version4}
@@ -46,9 +45,9 @@ class ControllerBaseSpec
     with ControllerSpecHateoasSupport
     with MockAppConfig {
 
-  implicit val apiVersion: Version = Version4
+  val apiVersion: Version = Version4
 
-  implicit lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withHeaders(HeaderNames.ACCEPT -> s"application/vnd.hmrc.${apiVersion.name}+json")
 
   lazy val cc: ControllerComponents = stubControllerComponents()
@@ -56,10 +55,6 @@ class ControllerBaseSpec
   lazy val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withHeaders(
     HeaderNames.AUTHORIZATION -> "Bearer Token"
   )
-
-  private val userDetails                           = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
-  implicit val userRequest: UserRequest[AnyContent] = UserRequest[AnyContent](userDetails, fakeRequest)
-  implicit val appConfig: AppConfig                 = mockAppConfig
 
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 }
