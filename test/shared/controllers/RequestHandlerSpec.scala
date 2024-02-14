@@ -25,7 +25,7 @@ import play.api.libs.json.{JsString, Json, OWrites}
 import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.{FakeRequest, ResultExtractors}
 import shared.UnitSpec
-import shared.config.Deprecation.NotDeprecated
+import shared.config.Deprecation.{Deprecated, NotDeprecated}
 import shared.config.{AppConfig, Deprecation, MockAppConfig}
 import shared.controllers.validators.Validator
 import shared.hateoas._
@@ -39,6 +39,7 @@ import shared.utils.MockIdGenerator
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 
+import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -59,9 +60,11 @@ class RequestHandlerSpec
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
 
-  implicit val hc: HeaderCarrier                    = HeaderCarrier()
-  implicit val ctx: RequestContext                  = RequestContext.from(mockIdGenerator, endpointLogContext)
-  private val generatedCorrelationId                           = "generatedCorrelationId"
+  private val generatedCorrelationId = "generatedCorrelationId"
+  MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+
+  implicit val hc: HeaderCarrier                               = HeaderCarrier()
+  implicit val ctx: RequestContext                             = RequestContext.from(mockIdGenerator, endpointLogContext)
   private val serviceCorrelationId                             = "serviceCorrelationId"
   private val userDetails                                      = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
   private val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json")
@@ -80,8 +83,6 @@ class RequestHandlerSpec
   implicit object HLinksFactory extends HateoasLinksFactory[Output.type, HData.type] {
     override def links(appConfig: AppConfig, data: HData.type): Seq[Link] = hateoaslinks
   }
-
-  MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
 
   trait DummyService {
     def service(input: Input.type)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Output.type]]
@@ -152,6 +153,65 @@ class RequestHandlerSpec
         contentAsJson(result) shouldBe successResponseJson ++ hateoaslinksJson
         header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
         status(result) shouldBe successCode
+      }
+
+      "a request is made to a deprecated version" must {
+        "return the correct response" when {
+          "deprecatedOn and sunsetDate exists" in {
+
+            val requestHandler = RequestHandler
+              .withValidator(successValidatorForRequest)
+              .withService(mockService.service)
+              .withPlainJsonResult(successCode)
+
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+
+            mockDeprecation(
+              Deprecated(
+                deprecatedOn = LocalDateTime.of(2023, 1, 17, 12, 0),
+                sunsetDate = Some(LocalDateTime.of(2024, 1, 17, 12, 0))
+              )
+            )
+
+            MockAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
+
+            val result = requestHandler.handleRequest()
+
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            header("Deprecation", result) shouldBe Some("Tue, 17 Jan 2023 12:00:00 GMT")
+            header("Sunset", result) shouldBe Some("Wed, 17 Jan 2024 12:00:00 GMT")
+            header("Link", result) shouldBe Some("http://someUrl")
+
+            status(result) shouldBe successCode
+          }
+
+          "only deprecatedOn exists" in {
+            val requestHandler = RequestHandler
+              .withValidator(successValidatorForRequest)
+              .withService(mockService.service)
+              .withPlainJsonResult(successCode)
+
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+
+            mockDeprecation(
+              Deprecated(
+                deprecatedOn = LocalDateTime.of(2023, 1, 17, 12, 0),
+                None
+              )
+            )
+            MockAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
+
+            val result = requestHandler.handleRequest()
+
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            header("Deprecation", result) shouldBe Some("Tue, 17 Jan 2023 12:00:00 GMT")
+            header("Sunset", result) shouldBe None
+            header("Link", result) shouldBe Some("http://someUrl")
+            status(result) shouldBe successCode
+          }
+        }
       }
     }
 

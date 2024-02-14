@@ -40,7 +40,7 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
                                        hateoasFactory: HateoasFactory,
                                        auditService: AuditService,
                                        cc: ControllerComponents,
-                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig, apiVersion: Version)
+                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -65,7 +65,7 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
             auditService,
             auditType = "TriggerBusinessSourceAdjustableSummary",
             transactionName = "trigger-business-source-adjustable-summary",
-            apiVersion = apiVersion,
+            apiVersion = Version(request),
             params = Map("nino" -> nino),
             requestBody = Some(request.body),
             includeResponse = true

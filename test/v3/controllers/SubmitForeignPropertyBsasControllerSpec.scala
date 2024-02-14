@@ -176,7 +176,7 @@ class SubmitForeignPropertyBsasControllerSpec
         auditType = "SubmitForeignPropertyAccountingAdjustments",
         transactionName = "submit-foreign-property-accounting-adjustments",
         detail = GenericAuditDetail(
-          versionNumber = "3.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> validNino, "calculationId" -> calculationId.calculationId),

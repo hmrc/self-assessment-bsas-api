@@ -140,7 +140,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         auditType = "SubmitSelfEmploymentAccountingAdjustments",
         transactionName = "submit-self-employment-accounting-adjustments",
         detail = GenericAuditDetail(
-          versionNumber = "3.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> validNino, "calculationId" -> calculationId.calculationId),

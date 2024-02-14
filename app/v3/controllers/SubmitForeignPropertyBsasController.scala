@@ -41,7 +41,7 @@ class SubmitForeignPropertyBsasController @Inject() (
     hateoasFactory: HateoasFactory,
     auditService: AuditService,
     cc: ControllerComponents,
-    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig, apiVersion: Version)
+    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -64,7 +64,7 @@ class SubmitForeignPropertyBsasController @Inject() (
             auditService,
             auditType = "SubmitForeignPropertyAccountingAdjustments",
             transactionName = "submit-foreign-property-accounting-adjustments",
-            apiVersion = apiVersion,
+            apiVersion = Version(request),
             params = Map("nino" -> nino, "calculationId" -> calculationId),
             requestBody = Some(request.body),
             includeResponse = true

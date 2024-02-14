@@ -166,7 +166,7 @@ class TriggerBsasControllerSpec
         auditType = "TriggerBusinessSourceAdjustableSummary",
         transactionName = "trigger-business-source-adjustable-summary",
         detail = GenericAuditDetail(
-          versionNumber = "3.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> validNino),
