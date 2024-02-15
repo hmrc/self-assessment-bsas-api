@@ -25,6 +25,8 @@ class AdjustmentsIncomeSpec extends UnitSpec with JsonErrorValidators with Round
   import AdjustmentsIncome._
 
   testRoundTrip("Adjustments Income FHL", downstreamAdjustmentsIncomeJson, adjustmentsIncomeFhlModel, mtdAdjustmentsIncomeFhlJson)(readsFhl)
-  testRoundTrip("Adjustments Income Non-FHL", downstreamAdjustmentsIncomeJson, adjustmentsIncomeNonFhlModel, mtdAdjustmentsIncomeNonFhlJson)(readsNonFhl)
+
+  testRoundTrip("Adjustments Income Non-FHL", downstreamAdjustmentsIncomeJson, adjustmentsIncomeNonFhlModel, mtdAdjustmentsIncomeNonFhlJson)(
+    readsNonFhl)
 
 }

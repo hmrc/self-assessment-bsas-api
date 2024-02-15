@@ -29,8 +29,7 @@ class FHLIncomeSpec extends UnitSpec {
     "passed mtd json" should {
       "return the corresponding model" in {
         Json
-          .parse(
-            """
+          .parse("""
               |{
               |   "totalRentsReceived": 123.12
               |}
@@ -50,8 +49,7 @@ class FHLIncomeSpec extends UnitSpec {
     "passed a model" should {
       "return the downstream JSON" in {
         Json.toJson(model) shouldBe
-          Json.parse(
-            """
+          Json.parse("""
               |{
               |   "rentReceived": 123.12
               |}
@@ -65,4 +63,5 @@ class FHLIncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

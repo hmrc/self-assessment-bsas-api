@@ -16,12 +16,12 @@
 
 package v3.controllers.validators
 
-import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
+import shared.controllers.validators.RulesValidator
+import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
+import shared.models.errors.MtdError
 import v3.models.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import v3.models.request.submitBsas.foreignProperty._
 

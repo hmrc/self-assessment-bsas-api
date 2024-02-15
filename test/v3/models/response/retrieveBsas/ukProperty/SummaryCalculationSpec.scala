@@ -24,22 +24,28 @@ class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with Roun
 
   import AdjustableSummaryCalculation.{readsFhl => readsFhlAdjustable, readsNonFhl => readsNonFhlAdjustable, writes => writesAdjustable}
 
-  testRoundTrip("Adjustable Summary Calculation FHL",
+  testRoundTrip(
+    "Adjustable Summary Calculation FHL",
     downstreamSummaryCalculationJson,
     adjustableSummaryCalculationFhlModel,
     mtdSummaryCalculationFhlJson)(readsFhlAdjustable)
-  testRoundTrip("Adjustable Summary Calculation Non-FHL",
+
+  testRoundTrip(
+    "Adjustable Summary Calculation Non-FHL",
     downstreamSummaryCalculationJson,
     adjustableSummaryCalculationNonFhlModel,
     mtdSummaryCalculationNonFhlJson)(readsNonFhlAdjustable)
 
   import AdjustedSummaryCalculation.{readsFhl => readsFhlAdjusted, readsNonFhl => readsNonFhlAdjusted, writes => writesAdjusted}
 
-  testRoundTrip("Adjusted Summary Calculation FHL",
+  testRoundTrip(
+    "Adjusted Summary Calculation FHL",
     downstreamSummaryCalculationJson,
     adjustedSummaryCalculationFhlModel,
     mtdSummaryCalculationFhlJson)(readsFhlAdjusted)
-  testRoundTrip("Adjusted Summary Calculation Non-FHL",
+
+  testRoundTrip(
+    "Adjusted Summary Calculation Non-FHL",
     downstreamSummaryCalculationJson,
     adjustedSummaryCalculationNonFhlModel,
     mtdSummaryCalculationNonFhlJson)(readsNonFhlAdjusted)

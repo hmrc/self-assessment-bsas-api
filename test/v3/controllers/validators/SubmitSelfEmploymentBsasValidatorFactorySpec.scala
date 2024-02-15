@@ -16,12 +16,12 @@
 
 package v3.controllers.validators
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
-import shared.models.utils.JsonErrorValidators
 import org.scalatest.Assertion
 import play.api.libs.json._
 import shared.UnitSpec
+import shared.models.domain.{CalculationId, Nino, TaxYear}
+import shared.models.errors._
+import shared.models.utils.JsonErrorValidators
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment._

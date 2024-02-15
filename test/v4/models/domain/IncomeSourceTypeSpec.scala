@@ -39,4 +39,5 @@ class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {
       IncomeSourceType.`15`.toTypeOfBusiness shouldBe TypeOfBusiness.`foreign-property`
     }
   }
+
 }

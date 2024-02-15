@@ -16,16 +16,15 @@
 
 package v3.controllers
 
+import play.api.Configuration
+import play.api.mvc.Result
+import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
 import shared.models.domain.{BusinessId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.Configuration
-import play.api.mvc.Result
-import shared.config.MockAppConfig
-import shared.routing.Version3
 import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockListBsasValidatorFactory
 import v3.fixtures.ListBsasFixture
@@ -53,13 +52,12 @@ class ListBsasControllerSpec
 
   private val typeOfBusiness = "self-employment"
   private val businessId     = "XAIS12345678901"
-  private val version        = Version3
 
   "list bsas" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -78,8 +76,8 @@ class ListBsasControllerSpec
       }
 
       "valid request with no taxYear path parameter" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         override def maybeTaxYear: Option[String] = None
 
@@ -198,7 +196,6 @@ class ListBsasControllerSpec
     protected def callController(): Future[Result] =
       controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
 
-    MockedAppConfig.isApiDeprecated(version) returns false
   }
 
 }

@@ -16,9 +16,9 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import shared.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import shared.UnitSpec
+import shared.models.domain.EmptyJsonBody
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
@@ -39,7 +39,8 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome).as[SubmitSelfEmploymentBsasRequestBody] shouldBe
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome)
+          .as[SubmitSelfEmploymentBsasRequestBody] shouldBe
           submitSelfEmploymentBsasRequestBodyModelWithoutIncome
       }
 
@@ -47,7 +48,6 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
         Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToIfs
       }
     }
-
 
     "no fields as supplied" should {
       "read to an empty SubmitSelfEmploymentBsasRequestBody object" in {
@@ -60,4 +60,5 @@ class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

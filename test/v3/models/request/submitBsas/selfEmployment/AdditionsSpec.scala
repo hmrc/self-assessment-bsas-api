@@ -16,9 +16,9 @@
 
 package v3.models.request.submitBsas.selfEmployment
 
-import shared.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import shared.UnitSpec
+import shared.models.domain.EmptyJsonBody
 import v3.fixtures.selfEmployment.AdditionsFixture._
 
 class AdditionsSpec extends UnitSpec {
@@ -84,7 +84,6 @@ class AdditionsSpec extends UnitSpec {
       }
     }
 
-
     "no fields as supplied" should {
       "read to an empty Additions object" in {
         additionsFromVendorJson(emptyAdditionsModel).as[Additions] shouldBe emptyAdditionsModel
@@ -95,4 +94,5 @@ class AdditionsSpec extends UnitSpec {
       }
     }
   }
+
 }

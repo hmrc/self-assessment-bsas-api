@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package v3.models.response.retrieveBsas.foreignProperty
+package shared.utils
 
 import shared.UnitSpec
-import shared.models.utils.JsonErrorValidators
-import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+import java.time.LocalDateTime
 
-  "reads" should {
-    "return a valid metadata model" when {
-      "a valid json with all fields are supplied" in {
-        metadataDesJson.as[Metadata] shouldBe parsedMetadata
-      }
-    }
-  }
+class DateUtilsSpec extends UnitSpec {
 
-  "writes" should {
-    "return a valid metadata json" when {
-      "a valid model is supplied" in {
-        parsedMetadata.toJson shouldBe metadataMtdJson
+  "longDateTimestampGmt" should {
+    "return Date/time in format [EEE, dd MMM yyyy HH:mm:ss z]" when {
+      "given a LocalDateTime" in {
+        val result = DateUtils.longDateTimestampGmt(
+          LocalDateTime.of(2023, 1, 17, 12, 0)
+        )
+        result shouldBe "Tue, 17 Jan 2023 12:00:00 GMT"
       }
     }
   }

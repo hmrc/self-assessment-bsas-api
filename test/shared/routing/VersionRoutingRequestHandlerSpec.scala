@@ -64,7 +64,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     "the handler is found" should {
       "use it" in new Test {
         val maybeAcceptHeader: Option[String] = None
-        MockedAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
 
         val result: Option[Handler] = requestHandler.routeRequest(buildRequest("/"))
         result shouldBe Some(DefaultHandler)
@@ -74,7 +74,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     "the handler isn't found" should {
       "try without the trailing slash" in new Test {
         val maybeAcceptHeader: Option[String] = None
-        MockedAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
 
         val result: Option[Handler] = requestHandler.routeRequest(buildRequest(""))
         result shouldBe Some(DefaultHandler)
@@ -95,7 +95,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     withClue("request ends with a trailing slash...") {
       new Test {
         val maybeAcceptHeader: Option[String] = Some(s"application/vnd.hmrc.$version+json")
-        MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
         val result: Option[Handler] = requestHandler.routeRequest(buildRequest(s"$path/"))
         result shouldBe Some(handler)
@@ -104,7 +104,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     withClue("request doesn't end with a trailing slash...") {
       new Test {
         val maybeAcceptHeader: Option[String] = Some(s"application/vnd.hmrc.$version+json")
-        MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
         val result: Option[Handler] = requestHandler.routeRequest(buildRequest(s"$path"))
         result shouldBe Some(handler)

@@ -21,8 +21,7 @@ import shared.UnitSpec
 
 class NonFHLExpensesSpec extends UnitSpec {
 
-  val json: JsValue = Json.parse(
-    """
+  val json: JsValue = Json.parse("""
       |{
       |  "premisesRunningCosts": 1.12,
       |  "repairsAndMaintenance": 2.12,
@@ -77,4 +76,5 @@ class NonFHLExpensesSpec extends UnitSpec {
       }
     }
   }
+
 }

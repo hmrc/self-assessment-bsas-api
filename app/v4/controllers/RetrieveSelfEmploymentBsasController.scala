@@ -16,12 +16,11 @@
 
 package v4.controllers
 
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.AppConfig
-import shared.routing.{Version, Version4}
 import shared.utils.{IdGenerator, Logging}
 import v4.controllers.validators.RetrieveSelfEmploymentBsasValidatorFactory
 import v4.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
@@ -46,7 +45,6 @@ class RetrieveSelfEmploymentBsasController @Inject() (val authService: Enrolment
 
   def handleRequest(nino: String, calculationId: String, taxYear: Option[String] = None): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val apiVersion: Version = Version.from(request, orElse = Version4)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, calculationId, taxYear)

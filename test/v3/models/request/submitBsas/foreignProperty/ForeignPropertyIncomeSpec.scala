@@ -30,8 +30,7 @@ class ForeignPropertyIncomeSpec extends UnitSpec {
     "passed mtd json" should {
       "return the corresponding model" in {
         Json
-          .parse(
-            """
+          .parse("""
               |{
               |   "totalRentsReceived": 1.12,
               |   "premiumsOfLeaseGrant": 2.12,
@@ -53,8 +52,7 @@ class ForeignPropertyIncomeSpec extends UnitSpec {
     "passed a model" should {
       "return the downstream JSON" in {
         Json.toJson(model) shouldBe
-          Json.parse(
-            """
+          Json.parse("""
               |{
               |   "rent": 1.12,
               |   "premiumsOfLeaseGrant": 2.12,
@@ -70,4 +68,5 @@ class ForeignPropertyIncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

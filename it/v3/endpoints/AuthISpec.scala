@@ -16,7 +16,6 @@
 
 package v3.endpoints
 
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
@@ -24,6 +23,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures.downstreamResponse
 import v3.models.domain.TypeOfBusiness
@@ -35,8 +35,8 @@ class AuthISpec extends IntegrationBaseSpec {
 
     val requestJson: JsObject = Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
-      "typeOfBusiness" -> TypeOfBusiness.`self-employment`.toString,
-      "businessId" -> "XAIS12345678901"
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "businessId"       -> "XAIS12345678901"
     )
 
     def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
@@ -120,4 +120,5 @@ class AuthISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

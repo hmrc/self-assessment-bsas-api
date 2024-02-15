@@ -16,8 +16,8 @@
 
 package v3.fixtures
 
-import shared.models.domain.{Nino, Status, TaxYear}
 import play.api.libs.json.{JsArray, JsValue, Json}
+import shared.models.domain.{Nino, Status, TaxYear}
 import v3.models.domain.TypeOfBusiness
 import v3.models.response.listBsas.{AccountingPeriod, BsasSummary, BusinessSourceSummary, ListBsasResponse}
 

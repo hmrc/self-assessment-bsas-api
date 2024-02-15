@@ -39,4 +39,5 @@ class TypeOfBusinessSpec extends UnitSpec with EnumJsonSpecSupport {
       TypeOfBusiness.`foreign-property`.asDownstreamValue shouldBe "15"
     }
   }
+
 }

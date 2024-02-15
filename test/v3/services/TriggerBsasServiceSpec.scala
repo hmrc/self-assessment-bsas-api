@@ -34,9 +34,9 @@ class TriggerBsasServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  val calculationId                 = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  val request: TriggerBsasRequestData   = TriggerBsasRequestData(nino, model)
-  val response: TriggerBsasResponse = TriggerBsasResponse(calculationId)
+  val calculationId                   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+  val request: TriggerBsasRequestData = TriggerBsasRequestData(nino, model)
+  val response: TriggerBsasResponse   = TriggerBsasResponse(calculationId)
 
   trait Test extends MockTriggerBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -89,4 +89,5 @@ class TriggerBsasServiceSpec extends ServiceSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

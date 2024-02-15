@@ -16,9 +16,9 @@
 
 package v3.mocks.connectors
 
-import shared.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.RetrieveUkPropertyBsasConnector
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
@@ -33,10 +33,12 @@ trait MockRetrieveUkPropertyBsasConnector extends MockFactory {
   object MockRetrievePropertyBsasConnector {
 
     def retrievePropertyBsas(
-                              requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
+        requestData: RetrieveUkPropertyBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]]] = {
       (mockConnector
         .retrieve(_: RetrieveUkPropertyBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

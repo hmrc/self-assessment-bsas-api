@@ -16,14 +16,13 @@
 
 package v3.models.response
 
-import shared.hateoas.HateoasFactory
-import shared.models.domain.TaxYear
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link}
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsValue, Json}
 import shared.UnitSpec
 import shared.config.MockAppConfig
+import shared.hateoas.Method.GET
+import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
+import shared.models.domain.TaxYear
 import v3.models.domain.TypeOfBusiness._
 
 class TriggerBsasResponseSpec extends UnitSpec {
@@ -78,15 +77,15 @@ class TriggerBsasResponseSpec extends UnitSpec {
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
       val context        = "individuals/self-assessment/adjustable-summary"
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+      MockAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "triggering a self employment BSAS" should {

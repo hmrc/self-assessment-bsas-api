@@ -41,4 +41,5 @@ class BsasSummarySpec extends UnitSpec with ListBsasFixture {
       }
     }
   }
+
 }

@@ -16,10 +16,10 @@
 
 package v3.mocks.services
 
-import shared.controllers.RequestContext
-import shared.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.RequestContext
+import shared.services.ServiceOutcome
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 import v3.services.TriggerBsasService

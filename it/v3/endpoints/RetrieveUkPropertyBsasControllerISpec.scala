@@ -16,13 +16,13 @@
 
 package v3.endpoints
 
-import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors._
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.models.domain.IncomeSourceType
@@ -31,7 +31,7 @@ import v3.models.errors._
 class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456B"
+    val nino          = "AA123456B"
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def downstreamUri: String
@@ -81,7 +81,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
       "valid request is made and Non-FHL is returned" in new NonTysTest {
@@ -95,7 +95,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
       "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
@@ -108,7 +108,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId, taxYear)
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
       "any valid Tax Year Specific request is made and Non-FHL is returned" in new TysIfsTest {
@@ -120,7 +120,6 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
 
         response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId, taxYear)
       }
@@ -130,7 +129,8 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
       "valid request is made but DES response has invalid type of business" in new NonTysTest {
 
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET,
+          DownstreamStub.onSuccess(
+            DownstreamStub.GET,
             downstreamUri,
             OK,
             downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
@@ -152,7 +152,7 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-          override val nino: String = requestNino
+          override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
 
           override def taxYear: Option[String] = taxYearString
@@ -219,4 +219,5 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

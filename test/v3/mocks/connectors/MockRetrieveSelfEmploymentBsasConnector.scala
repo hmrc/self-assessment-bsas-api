@@ -16,9 +16,9 @@
 
 package v3.mocks.connectors
 
-import shared.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.connectors.RetrieveSelfEmploymentBsasConnector
 import v3.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
@@ -33,10 +33,12 @@ trait MockRetrieveSelfEmploymentBsasConnector extends MockFactory {
   object MockRetrieveSelfEmploymentBsasConnector {
 
     def retrieveSelfEmploymentBsas(
-                                    requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
+        requestData: RetrieveSelfEmploymentBsasRequestData): CallHandler[Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]]] = {
       (mockConnector
         .retrieveSelfEmploymentBsas(_: RetrieveSelfEmploymentBsasRequestData)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

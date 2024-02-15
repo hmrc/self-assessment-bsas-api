@@ -16,6 +16,9 @@
 
 package v3.controllers
 
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Result
+import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -24,10 +27,6 @@ import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.Result
-import shared.config.MockAppConfig
-import shared.routing.Version3
 import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockTriggerBsasValidatorFactory
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
@@ -167,7 +166,7 @@ class TriggerBsasControllerSpec
         auditType = "TriggerBusinessSourceAdjustableSummary",
         transactionName = "trigger-business-source-adjustable-summary",
         detail = GenericAuditDetail(
-          versionNumber = "3.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> validNino),
@@ -177,7 +176,6 @@ class TriggerBsasControllerSpec
         )
       )
 
-    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

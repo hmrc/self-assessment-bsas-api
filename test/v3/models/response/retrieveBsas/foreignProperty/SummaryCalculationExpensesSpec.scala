@@ -23,8 +23,10 @@ class SummaryCalculationExpensesSpec extends UnitSpec with RoundTripTest {
 
   import SummaryCalculationExpenses._
 
-  testRoundTrip("Summary Calculation Expenses",
+  testRoundTrip(
+    "Summary Calculation Expenses",
     summaryCalculationExpensesDesJson,
     parsedSummaryCalculationExpenses,
     summaryCalculationExpensesMtdJson)(reads)
+
 }

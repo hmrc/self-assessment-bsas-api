@@ -16,10 +16,10 @@
 
 package v4.mocks.services
 
-import shared.controllers.RequestContext
-import shared.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.RequestContext
+import shared.services.ServiceOutcome
 import v4.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v4.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 import v4.services.RetrieveSelfEmploymentBsasService

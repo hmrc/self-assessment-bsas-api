@@ -31,13 +31,14 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
   "reads" when {
     "reading a simple non-fhl body" should {
       "return the expected non-fhl model" in {
-        Json.parse(
-          """
+        Json
+          .parse("""
             |{
             |  "nonFurnishedHolidayLet": {
             |  }
             |}
-            |""".stripMargin).as[SubmitUKPropertyBsasRequestBody] shouldBe nonFhlModel
+            |""".stripMargin)
+          .as[SubmitUKPropertyBsasRequestBody] shouldBe nonFhlModel
       }
     }
 
@@ -78,8 +79,7 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "writing a simple non-fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlModel) shouldBe Json.parse(
-          """
+        Json.toJson(nonFhlModel) shouldBe Json.parse("""
             |{
             |  "incomeSourceType": "02",
             |  "adjustments": {
@@ -121,4 +121,5 @@ class SubmitUKPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

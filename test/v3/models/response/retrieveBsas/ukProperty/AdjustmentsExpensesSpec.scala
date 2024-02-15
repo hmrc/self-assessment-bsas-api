@@ -25,6 +25,8 @@ class AdjustmentsExpensesSpec extends UnitSpec with JsonErrorValidators with Rou
   import AdjustmentsExpenses._
 
   testRoundTrip("Adjustment expenses FHL", downstreamAdjustmentsExpensesJson, adjustmentsExpensesFhlModel, mtdAdjustmentsExpensesFhlJson)(readsFhl)
-  testRoundTrip("Adjustment expenses Non-FHL", downstreamAdjustmentsExpensesJson, adjustmentsExpensesNonFhlModel, mtdAdjustmentsExpensesNonFhlJson)(readsNonFhl)
+
+  testRoundTrip("Adjustment expenses Non-FHL", downstreamAdjustmentsExpensesJson, adjustmentsExpensesNonFhlModel, mtdAdjustmentsExpensesNonFhlJson)(
+    readsNonFhl)
 
 }

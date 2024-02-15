@@ -16,9 +16,9 @@
 
 package v4.models.response.retrieveBsas.selfEmployment
 
-import shared.models.utils.JsonErrorValidators
 import play.api.libs.json.Json
 import shared.UnitSpec
+import shared.models.utils.JsonErrorValidators
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 
 class SummaryCalculationAccountingAdjustmentsSpec extends UnitSpec with JsonErrorValidators {
@@ -26,7 +26,8 @@ class SummaryCalculationAccountingAdjustmentsSpec extends UnitSpec with JsonErro
   "reads" should {
     "return a valid model" when {
       "passed valid JSON with periodId regex" in {
-        downstreamSummaryCalculationAccountingAdjustmentsJson.as[SummaryCalculationAccountingAdjustments] shouldBe summaryCalculationAccountingAdjustmentsModel
+        downstreamSummaryCalculationAccountingAdjustmentsJson
+          .as[SummaryCalculationAccountingAdjustments] shouldBe summaryCalculationAccountingAdjustmentsModel
       }
     }
   }

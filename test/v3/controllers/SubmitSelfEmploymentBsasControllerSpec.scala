@@ -16,6 +16,9 @@
 
 package v3.controllers
 
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Result
+import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -24,10 +27,6 @@ import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.Result
-import shared.config.MockAppConfig
-import shared.routing.Version3
 import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockSubmitSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
@@ -141,7 +140,7 @@ class SubmitSelfEmploymentBsasControllerSpec
         auditType = "SubmitSelfEmploymentAccountingAdjustments",
         transactionName = "submit-self-employment-accounting-adjustments",
         detail = GenericAuditDetail(
-          versionNumber = "3.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> validNino, "calculationId" -> calculationId.calculationId),
@@ -151,7 +150,6 @@ class SubmitSelfEmploymentBsasControllerSpec
         )
       )
 
-    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

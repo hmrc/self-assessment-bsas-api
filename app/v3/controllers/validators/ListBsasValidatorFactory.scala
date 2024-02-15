@@ -37,7 +37,7 @@ class ListBsasValidatorFactory {
   private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
     satisfiesMin(listMinimumTaxYear, RuleTaxYearNotSupportedError)
 
-  private val resolveBusinessId = ResolveBusinessId.resolver.resolveOptionally
+  private val resolveBusinessId     = ResolveBusinessId.resolver.resolveOptionally
   private val resolveTypeOfBusiness = ResolveTypeOfBusiness.resolver.resolveOptionally
 
   def validator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Validator[ListBsasRequestData] =

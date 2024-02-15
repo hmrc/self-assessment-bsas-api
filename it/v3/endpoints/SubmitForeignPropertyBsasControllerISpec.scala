@@ -16,13 +16,13 @@
 
 package v3.endpoints
 
-import shared.models.errors._
-import shared.stubs._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors._
+import shared.stubs._
 import support.IntegrationBaseSpec
 import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
 import v3.models.errors._
@@ -122,7 +122,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.json shouldBe responseBody
         response.header("X-CorrelationId") should not be empty
-        response.header("Deprecation") shouldBe Some("This endpoint is deprecated. See the API documentation: https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+
       }
 
     }

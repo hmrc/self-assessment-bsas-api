@@ -16,11 +16,11 @@
 
 package v3.controllers.validators
 
+import cats.data.Validated
+import cats.data.Validated.Invalid
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.Invalid
 import v3.models.errors.RuleBothExpensesError
 import v3.models.request.submitBsas.selfEmployment._
 

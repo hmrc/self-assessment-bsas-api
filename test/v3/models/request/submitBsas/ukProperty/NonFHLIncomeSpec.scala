@@ -22,8 +22,7 @@ import shared.UnitSpec
 class NonFHLIncomeSpec extends UnitSpec {
 
   val json: JsValue = Json
-    .parse(
-      """
+    .parse("""
         |{
         |   "totalRentsReceived": 1.12,
         |   "premiumsOfLeaseGrant": 2.12,
@@ -70,4 +69,5 @@ class NonFHLIncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -16,6 +16,7 @@
 
 package shared.config
 
+import cats.data.Validated
 import org.scalamock.handlers.{CallHandler, CallHandler0}
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration
@@ -25,8 +26,8 @@ trait MockAppConfig extends MockFactory {
 
   implicit val mockAppConfig: AppConfig = mock[AppConfig]
 
-  object MockedAppConfig {
-    // MTD ID Loopup Config
+  object MockAppConfig {
+    // MTD ID Lookup Config
     def mtdIdBaseUrl: CallHandler0[String] = (() => mockAppConfig.mtdIdBaseUrl: String).expects()
 
     // DES Config
@@ -58,9 +59,10 @@ trait MockAppConfig extends MockFactory {
     def featureSwitchConfig: CallHandler0[Configuration]         = (() => mockAppConfig.featureSwitchConfig: Configuration).expects()
     def apiGatewayContext: CallHandler0[String]                  = (() => mockAppConfig.apiGatewayContext: String).expects()
     def apiStatus(version: Version): CallHandler[String]         = (mockAppConfig.apiStatus: Version => String).expects(version)
-    def isApiDeprecated(version: Version): CallHandler[Boolean]  = (mockAppConfig.isApiDeprecated: Version => Boolean).expects(version)
     def endpointsEnabled(version: String): CallHandler[Boolean]  = (mockAppConfig.endpointsEnabled(_: String)).expects(version)
     def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: Version => Boolean).expects(version)
+    def deprecationFor(version: Version): CallHandler[Validated[String, Deprecation]] = (mockAppConfig.deprecationFor(_: Version)).expects(version)
+    def apiDocumentationUrl(): CallHandler[String]                                    = (() => mockAppConfig.apiDocumentationUrl: String).expects()
 
     def apiVersionReleasedInProduction(version: String): CallHandler[Boolean] =
       (mockAppConfig.apiVersionReleasedInProduction: String => Boolean).expects(version)

@@ -16,12 +16,11 @@
 
 package v3.controllers
 
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import shared.config.AppConfig
 import shared.controllers._
 import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.AppConfig
-import shared.routing.{Version, Version3}
 import shared.utils._
 import v3.controllers.validators.ListBsasValidatorFactory
 import v3.models.response.listBsas.ListBsasHateoasData
@@ -46,7 +45,6 @@ class ListBsasController @Inject() (val authService: EnrolmentsAuthService,
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val apiVersion: Version = Version.from(request, orElse = Version3)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, taxYear, typeOfBusiness, businessId)

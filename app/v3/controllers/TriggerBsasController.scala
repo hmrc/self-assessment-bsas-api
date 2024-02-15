@@ -16,13 +16,13 @@
 
 package v3.controllers
 
-import shared.controllers._
-import shared.hateoas.HateoasFactory
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
-import shared.routing.{Version, Version3}
+import shared.controllers._
+import shared.hateoas.HateoasFactory
+import shared.routing.Version
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
 import v3.controllers.validators.TriggerBsasValidatorFactory
 import v3.models.domain.TypeOfBusiness
@@ -49,7 +49,6 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
 
   def triggerBsas(nino: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val apiVersion: Version = Version.from(request, orElse = Version3)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, request.body)
@@ -66,7 +65,7 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
             auditService,
             auditType = "TriggerBusinessSourceAdjustableSummary",
             transactionName = "trigger-business-source-adjustable-summary",
-            apiVersion = apiVersion,
+            apiVersion = Version(request),
             params = Map("nino" -> nino),
             requestBody = Some(request.body),
             includeResponse = true

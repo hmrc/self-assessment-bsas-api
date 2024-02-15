@@ -21,8 +21,7 @@ import v3.models.request.submitBsas.foreignProperty._
 
 object SubmitForeignPropertyBsasFixtures {
 
-  val mtdRequestNonFhlFull: JsValue = Json.parse(
-    """
+  val mtdRequestNonFhlFull: JsValue = Json.parse("""
       |{
       |   "nonFurnishedHolidayLet":  [
       |       {
@@ -48,8 +47,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamRequestNonFhlFull: JsValue = Json.parse(
-    """
+  val downstreamRequestNonFhlFull: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "15",
       |   "adjustments":  [
@@ -103,8 +101,7 @@ object SubmitForeignPropertyBsasFixtures {
     foreignFhlEea = None
   )
 
-  val mtdRequestFhlFull: JsValue = Json.parse(
-    """
+  val mtdRequestFhlFull: JsValue = Json.parse("""
       |{
       |   "foreignFhlEea": {
       |      "income": {
@@ -124,8 +121,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamRequestFhlFull: JsValue = Json.parse(
-    """
+  val downstreamRequestFhlFull: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "03",
       |   "adjustments": {
@@ -169,8 +165,7 @@ object SubmitForeignPropertyBsasFixtures {
     )
   )
 
-  val mtdRequestValid: JsValue = Json.parse(
-    """
+  val mtdRequestValid: JsValue = Json.parse("""
       |{
       |   "foreignFhlEea": {
       |      "income": {
@@ -189,8 +184,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamRequestValid: JsValue = Json.parse(
-    """
+  val downstreamRequestValid: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "03",
       |   "adjustments": {
@@ -209,4 +203,5 @@ object SubmitForeignPropertyBsasFixtures {
       |   }
       |}
       |""".stripMargin)
+
 }

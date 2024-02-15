@@ -26,7 +26,6 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.Version3
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v4.controllers.validators.MockTriggerBsasValidatorFactory
@@ -167,7 +166,7 @@ class TriggerBsasControllerSpec
         auditType = "TriggerBusinessSourceAdjustableSummary",
         transactionName = "trigger-business-source-adjustable-summary",
         detail = GenericAuditDetail(
-          versionNumber = "3.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> validNino),
@@ -177,7 +176,6 @@ class TriggerBsasControllerSpec
         )
       )
 
-    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

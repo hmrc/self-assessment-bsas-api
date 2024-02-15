@@ -16,11 +16,11 @@
 
 package v3.connectors
 
+import org.scalamock.handlers.CallHandler
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{BusinessId, Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
-import org.scalamock.handlers.CallHandler
 import v3.fixtures.ListBsasFixture
 import v3.models.request.ListBsasRequestData
 import v3.models.response.listBsas.{BsasSummary, ListBsasResponse}

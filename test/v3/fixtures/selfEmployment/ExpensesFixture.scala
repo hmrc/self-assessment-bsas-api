@@ -46,21 +46,21 @@ object ExpensesFixture {
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
-        "costOfGoodsAllowable" -> costOfGoodsAllowable,
-        "paymentsToSubcontractorsAllowable" -> paymentsToSubcontractorsAllowable,
-        "wagesAndStaffCostsAllowable" -> wagesAndStaffCostsAllowable,
-        "carVanTravelExpensesAllowable" -> carVanTravelExpensesAllowable,
-        "premisesRunningCostsAllowable" -> premisesRunningCostsAllowable,
-        "maintenanceCostsAllowable" -> maintenanceCostsAllowable,
-        "adminCostsAllowable" -> adminCostsAllowable,
-        "advertisingCostsAllowable" -> advertisingCostsAllowable,
+        "costOfGoodsAllowable"                -> costOfGoodsAllowable,
+        "paymentsToSubcontractorsAllowable"   -> paymentsToSubcontractorsAllowable,
+        "wagesAndStaffCostsAllowable"         -> wagesAndStaffCostsAllowable,
+        "carVanTravelExpensesAllowable"       -> carVanTravelExpensesAllowable,
+        "premisesRunningCostsAllowable"       -> premisesRunningCostsAllowable,
+        "maintenanceCostsAllowable"           -> maintenanceCostsAllowable,
+        "adminCostsAllowable"                 -> adminCostsAllowable,
+        "advertisingCostsAllowable"           -> advertisingCostsAllowable,
         "businessEntertainmentCostsAllowable" -> businessEntertainmentCostsAllowable,
-        "interestOnBankOtherLoansAllowable" -> interestOnBankOtherLoansAllowable,
-        "financeChargesAllowable" -> financeChargesAllowable,
-        "irrecoverableDebtsAllowable" -> irrecoverableDebtsAllowable,
-        "professionalFeesAllowable" -> professionalFeesAllowable,
-        "depreciationAllowable" -> depreciationAllowable,
-        "otherExpensesAllowable" -> otherExpensesAllowable
+        "interestOnBankOtherLoansAllowable"   -> interestOnBankOtherLoansAllowable,
+        "financeChargesAllowable"             -> financeChargesAllowable,
+        "irrecoverableDebtsAllowable"         -> irrecoverableDebtsAllowable,
+        "professionalFeesAllowable"           -> professionalFeesAllowable,
+        "depreciationAllowable"               -> depreciationAllowable,
+        "otherExpensesAllowable"              -> otherExpensesAllowable
       )
 
     Json.toJsObject(queryMap(desFields))
@@ -71,23 +71,24 @@ object ExpensesFixture {
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(
-        "costOfGoodsAllowable" -> costOfGoodsAllowable,
-        "paymentsToSubcontractorsAllowable" -> paymentsToSubcontractorsAllowable,
-        "wagesAndStaffCostsAllowable" -> wagesAndStaffCostsAllowable,
-        "carVanTravelExpensesAllowable" -> carVanTravelExpensesAllowable,
-        "premisesRunningCostsAllowable" -> premisesRunningCostsAllowable,
-        "maintenanceCostsAllowable" -> maintenanceCostsAllowable,
-        "adminCostsAllowable" -> adminCostsAllowable,
-        "advertisingCostsAllowable" -> advertisingCostsAllowable,
+        "costOfGoodsAllowable"                -> costOfGoodsAllowable,
+        "paymentsToSubcontractorsAllowable"   -> paymentsToSubcontractorsAllowable,
+        "wagesAndStaffCostsAllowable"         -> wagesAndStaffCostsAllowable,
+        "carVanTravelExpensesAllowable"       -> carVanTravelExpensesAllowable,
+        "premisesRunningCostsAllowable"       -> premisesRunningCostsAllowable,
+        "maintenanceCostsAllowable"           -> maintenanceCostsAllowable,
+        "adminCostsAllowable"                 -> adminCostsAllowable,
+        "advertisingCostsAllowable"           -> advertisingCostsAllowable,
         "businessEntertainmentCostsAllowable" -> businessEntertainmentCostsAllowable,
-        "interestOnBankOtherLoansAllowable" -> interestOnBankOtherLoansAllowable,
-        "financeChargesAllowable" -> financeChargesAllowable,
-        "irrecoverableDebtsAllowable" -> irrecoverableDebtsAllowable,
-        "professionalFeesAllowable" -> professionalFeesAllowable,
-        "depreciationAllowable" -> depreciationAllowable,
-        "otherExpensesAllowable" -> otherExpensesAllowable
+        "interestOnBankOtherLoansAllowable"   -> interestOnBankOtherLoansAllowable,
+        "financeChargesAllowable"             -> financeChargesAllowable,
+        "irrecoverableDebtsAllowable"         -> irrecoverableDebtsAllowable,
+        "professionalFeesAllowable"           -> professionalFeesAllowable,
+        "depreciationAllowable"               -> depreciationAllowable,
+        "otherExpensesAllowable"              -> otherExpensesAllowable
       )
 
     Json.toJsObject(queryMap(vendorSuppliedFields))
   }
+
 }

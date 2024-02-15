@@ -16,6 +16,9 @@
 
 package v3.controllers
 
+import play.api.libs.json.{JsObject, Json}
+import play.api.mvc.Result
+import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -23,10 +26,6 @@ import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.Result
-import shared.config.MockAppConfig
-import shared.routing.Version3
 import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockRetrieveForeignPropertyBsasValidatorFactory
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
@@ -73,7 +72,8 @@ class RetrieveForeignPropertyBsasControllerSpec
           Future.successful(Right(ResponseWrapper(correlationId, parsedNonFhlRetrieveForeignPropertyBsasResponse)))
 
         MockHateoasFactory
-          .wrap(parsedNonFhlRetrieveForeignPropertyBsasResponse,
+          .wrap(
+            parsedNonFhlRetrieveForeignPropertyBsasResponse,
             RetrieveForeignPropertyHateoasData(validNino, calculationId.calculationId, None)) returns
           HateoasWrapper(parsedNonFhlRetrieveForeignPropertyBsasResponse, testHateoasLinks)
 
@@ -116,7 +116,6 @@ class RetrieveForeignPropertyBsasControllerSpec
     protected def callController(): Future[Result] =
       controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
 
-    MockedAppConfig.isApiDeprecated(Version3) returns false
   }
 
 }

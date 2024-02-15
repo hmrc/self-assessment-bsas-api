@@ -68,7 +68,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
               .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
             await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
-        })
+          })
       }
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
@@ -101,4 +101,5 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

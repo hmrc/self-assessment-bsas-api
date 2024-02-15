@@ -41,4 +41,5 @@ class AccountingPeriodSpec extends UnitSpec with ListBsasFixture {
       }
     }
   }
+
 }

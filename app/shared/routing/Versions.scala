@@ -23,8 +23,8 @@ import play.api.mvc.RequestHeader
 
 object Version {
 
-  def from(request: RequestHeader, orElse: Version): Version =
-    Versions.getFromRequest(request).getOrElse(orElse)
+  def apply(request: RequestHeader): Version =
+    Versions.getFromRequest(request).getOrElse(throw new Exception("Missing or unsupported version found in request accept header"))
 
   object VersionWrites extends Writes[Version] {
     def writes(version: Version): JsValue = version.asJson

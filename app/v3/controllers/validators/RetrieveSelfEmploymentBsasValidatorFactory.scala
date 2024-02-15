@@ -41,5 +41,7 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
           ResolveCalculationId(calculationId),
           resolveTysTaxYear(taxYear)
         ).mapN(RetrieveSelfEmploymentBsasRequestData)
+
     }
+
 }
