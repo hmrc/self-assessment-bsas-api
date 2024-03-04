@@ -298,7 +298,7 @@ class RequestHandlerSpec
 
       "a request is successful" when {
         "no response is to be audited" must {
-          "audit without the response" in {
+          "audit without the response" in new nonGTSTest{
             val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
             mockDeprecation(NotDeprecated)
@@ -315,7 +315,7 @@ class RequestHandlerSpec
         }
 
         "the response is to be audited" must {
-          "audit with the response" in {
+          "audit with the response" in new nonGTSTest{
             val requestHandler = basicRequestHandler.withAuditing(auditHandler(includeResponse = true))
 
             mockDeprecation(NotDeprecated)
@@ -333,7 +333,13 @@ class RequestHandlerSpec
       }
 
       "a request fails with validation errors" must {
-        "audit the failure" in {
+        "audit the failure" in new nonGTSTest{
+          val params = Map("param" -> "value")
+
+          val auditType = "type"
+          val txName = "txName"
+
+          val requestBody = Some(JsString("REQUEST BODY"))
           val requestHandler = basicErrorRequestHandler.withAuditing(auditHandler())
 
           mockDeprecation(NotDeprecated)
@@ -349,7 +355,13 @@ class RequestHandlerSpec
       }
 
       "a request fails with service errors" must {
-        "audit the failure" in {
+        "audit the failure" in new nonGTSTest{
+          val params = Map("param" -> "value")
+
+          val auditType = "type"
+          val txName = "txName"
+
+          val requestBody = Some(JsString("REQUEST BODY"))
           val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
           mockDeprecation(NotDeprecated)
@@ -367,5 +379,28 @@ class RequestHandlerSpec
       }
     }
   }
+  trait nonGTSTest extends MockIdGenerator {
+    private val generatedCorrelationId = "generatedCorrelationId"
+    MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
+    implicit val endpointLogContext: EndpointLogContext =
+      EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
+
+    implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+
+  }
+
+  trait GTSTest extends MockIdGenerator {
+    private val generatedCorrelationId = "generatedCorrelationId"
+    MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+
+    implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = Seq(("Gov-Test-Scenario", "REQUEST_CANNOT_BE_FULFILLED")))
+
+    implicit val endpointLogContext: EndpointLogContext =
+      EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
+
+    implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
 }
+}
+
