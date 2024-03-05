@@ -57,16 +57,10 @@ class RequestHandlerSpec
   private val successResponseJson = Json.obj("result" -> "SUCCESS!")
   private val successCode         = ACCEPTED
 
-  implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
-
   private val generatedCorrelationId = "generatedCorrelationId"
-  MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+  private val serviceCorrelationId   = "serviceCorrelationId"
 
-  implicit val hc: HeaderCarrier   = HeaderCarrier()
-  implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
-  private val serviceCorrelationId = "serviceCorrelationId"
-  private val userDetails          = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
+  private val userDetails = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
 
   implicit val userRequest: UserRequest[AnyContent] = {
     val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json")
@@ -105,6 +99,61 @@ class RequestHandlerSpec
     def validate: Validated[Seq[MtdError], Input.type] = Invalid(List(NinoFormatError))
   }
 
+  private def auditResult(headerCarrier: HeaderCarrier,
+                          response: Boolean,
+                          params: Map[String, String],
+                          auditType: String,
+                          txName: String,
+                          requestBody: Some[JsString],
+                          validator: Validator[Input.type],
+                          responseCode: Int) = {
+    val generatedCorrelationId = "generatedCorrelationId"
+    MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+
+    implicit val hc: HeaderCarrier = headerCarrier
+
+    implicit val endpointLogContext: EndpointLogContext =
+      EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
+
+    implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+
+    def auditHandler(includeResponse: Boolean = response): AuditHandler = AuditHandler(
+      mockAuditService,
+      auditType = auditType,
+      transactionName = txName,
+      apiVersion = Version3,
+      params = params,
+      requestBody = requestBody,
+      includeResponse = includeResponse
+    )
+
+    val basicRequestHandler = RequestHandler
+      .withValidator(validator)
+      .withService(mockService.service)
+      .withPlainJsonResult(responseCode)
+
+    basicRequestHandler.withAuditing(auditHandler())
+  }
+
+  private def verifyAudit(correlationId: String,
+                          auditResponse: AuditResponse,
+                          params: Map[String, String],
+                          auditType: String,
+                          txName: String,
+                          requestBody: Some[JsString]): CallHandler[Future[AuditResult]] =
+    MockedAuditService.verifyAuditEvent(
+      AuditEvent(
+        auditType = auditType,
+        transactionName = txName,
+        GenericAuditDetail(
+          userDetails,
+          params = params,
+          apiVersion = Version3.name,
+          requestBody = requestBody,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse)
+      ))
+
   "RequestHandler" when {
     "a request is successful" must {
       "return the correct response" in new nonGTSTest {
@@ -139,8 +188,8 @@ class RequestHandlerSpec
         header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
         status(result) shouldBe NO_CONTENT
       }
-    }
-      "wrap the response with hateoas links if required§" in {
+
+      "wrap the response with hateoas links if required§" in new nonGTSTest {
         val requestHandler = RequestHandler
           .withValidator(successValidatorForRequest)
           .withService(mockService.service)
@@ -160,7 +209,7 @@ class RequestHandlerSpec
 
       "a request is made to a deprecated version" must {
         "return the correct response" when {
-          "deprecatedOn and sunsetDate exists" in {
+          "deprecatedOn and sunsetDate exists" in new nonGTSTest {
 
             val requestHandler = RequestHandler
               .withValidator(successValidatorForRequest)
@@ -189,7 +238,7 @@ class RequestHandlerSpec
             status(result) shouldBe successCode
           }
 
-          "only deprecatedOn exists" in {
+          "only deprecatedOn exists" in new nonGTSTest {
             val requestHandler = RequestHandler
               .withValidator(successValidatorForRequest)
               .withService(mockService.service)
@@ -215,11 +264,11 @@ class RequestHandlerSpec
             status(result) shouldBe successCode
           }
         }
-
-
+      }
+    }
 
     "a request fails with validation errors" must {
-      "return the errors" in new nonGTSTest{
+      "return the errors" in new nonGTSTest {
         val requestHandler = RequestHandler
           .withValidator(singleErrorValidatorForRequest)
           .withService(mockService.service)
@@ -236,7 +285,7 @@ class RequestHandlerSpec
     }
 
     "a request fails with service errors" must {
-      "return the errors" in new nonGTSTest{
+      "return the errors" in new nonGTSTest {
         val requestHandler = RequestHandler
           .withValidator(successValidatorForRequest)
           .withService(mockService.service)
@@ -255,11 +304,24 @@ class RequestHandlerSpec
 
     "a request has a REQUEST_CANNOT_BE_FULFILLED gov-test-scenario heading" must {
       "return RULE_REQUEST_CANNOT_BE_FULFILLED" in new GTSTest {
+        val params    = Map("param" -> "value")
+        val auditType = "type"
+        val txName    = "txName"
 
-        val requestHandler = RequestHandler
-          .withValidator(successValidatorForRequest)
-          .withService(mockService.service)
-          .withPlainJsonResult(successCode)
+        val requestBody = Some(JsString("REQUEST BODY"))
+
+        val requestHandler = auditResult(
+          HeaderCarrier(otherHeaders = Seq(("Gov-Test-Scenario", "REQUEST_CANNOT_BE_FULFILLED"))),
+          response = true,
+          params,
+          auditType,
+          txName,
+          requestBody,
+          successValidatorForRequest,
+          successCode
+        )
+
+        mockDeprecation(NotDeprecated)
 
         val result = requestHandler.handleRequest()
 
@@ -268,7 +330,7 @@ class RequestHandlerSpec
           """
             |{
             |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
-            |  "message":"Custom (will vary depending on the actual error)"
+            |  "message":"Custom (will vary in production depending on the actual error)"
             |}
             |""".stripMargin
         )
@@ -276,149 +338,143 @@ class RequestHandlerSpec
     }
 
     "auditing is configured" when {
-          val params = Map("param" -> "value")
-          val auditType = "type"
-          val txName = "txName"
 
-          mockDeprecation(NotDeprecated)
+      "a request is successful" when {
+        "no response is to be audited" must {
+          "audit without the response" in new nonGTSTest {
+            val params    = Map("param" -> "value")
+            val auditType = "type"
+            val txName    = "txName"
 
-          val requestBody = Some(JsString("REQUEST BODY"))
+            val requestBody = Some(JsString("REQUEST BODY"))
 
-          def auditHandler(includeResponse: Boolean = false): AuditHandler = AuditHandler(
-            mockAuditService,
-            auditType = auditType,
-            transactionName = txName,
-            apiVersion = Version3,
-            params = params,
-            requestBody = requestBody,
-            includeResponse = includeResponse
-          )
+            val requestHandler =
+              auditResult(HeaderCarrier(), response = false, params, auditType, txName, requestBody, successValidatorForRequest, successCode)
 
-          val basicRequestHandler = RequestHandler
-            .withValidator(successValidatorForRequest)
-            .withService(mockService.service)
-            .withPlainJsonResult(successCode)
+            mockDeprecation(NotDeprecated)
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
-          val basicErrorRequestHandler = RequestHandler
-            .withValidator(singleErrorValidatorForRequest)
-            .withService(mockService.service)
-            .withPlainJsonResult(BAD_REQUEST)
+            val result = requestHandler.handleRequest()
 
-          def verifyAudit(correlationId: String, auditResponse: AuditResponse): CallHandler[Future[AuditResult]] =
-            MockedAuditService.verifyAuditEvent(
-              AuditEvent(
-                auditType = auditType,
-                transactionName = txName,
-                GenericAuditDetail(
-                  userDetails,
-                  params = params,
-                  apiVersion = Version3.name,
-                  requestBody = requestBody,
-                  `X-CorrelationId` = correlationId,
-                  auditResponse = auditResponse)
-              )
-            )
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            status(result) shouldBe successCode
 
-          "RequestHandler" when {
-            "auditing is configured" when {
+            verifyAudit(serviceCorrelationId, AuditResponse(successCode, Right(None)), params, auditType, txName, requestBody)
+          }
+        }
 
-              "a request is successful" when {
-                "no response is to be audited" must {
-                  "audit without the response" in new nonGTSTest {
-                    val requestHandler = basicRequestHandler.withAuditing(auditHandler())
+        "the response is to be audited" must {
+          "audit with the response" in new nonGTSTest {
+            val params    = Map("param" -> "value")
+            val auditType = "type"
+            val txName    = "txName"
 
-                    mockDeprecation(NotDeprecated)
-                    service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+            val requestBody = Some(JsString("REQUEST BODY"))
 
-                    val result = requestHandler.handleRequest()
+            val requestHandler =
+              auditResult(HeaderCarrier(), response = true, params, auditType, txName, requestBody, successValidatorForRequest, successCode)
 
-                    contentAsJson(result) shouldBe successResponseJson
-                    header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-                    status(result) shouldBe successCode
+            mockDeprecation(NotDeprecated)
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
-                    verifyAudit(serviceCorrelationId, AuditResponse(successCode, Right(None)))
-                  }
-                }
+            val result = requestHandler.handleRequest()
 
-                "the response is to be audited" must {
-                  "audit with the response" in new nonGTSTest {
-                    val requestHandler = basicRequestHandler.withAuditing(auditHandler(includeResponse = true))
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            status(result) shouldBe successCode
 
-                    mockDeprecation(NotDeprecated)
-                    service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
-
-                    val result = requestHandler.handleRequest()
-
-                    contentAsJson(result) shouldBe successResponseJson
-                    header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-                    status(result) shouldBe successCode
-
-                    verifyAudit(serviceCorrelationId, AuditResponse(successCode, Right(Some(successResponseJson))))
-                  }
-                }
-              }
-
-              "a request fails with validation errors" must {
-                "audit the failure" in new nonGTSTest {
-                  val requestHandler = basicErrorRequestHandler.withAuditing(auditHandler())
-
-                  mockDeprecation(NotDeprecated)
-
-                  val result = requestHandler.handleRequest()
-
-                  contentAsJson(result) shouldBe NinoFormatError.asJson
-                  header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
-                  status(result) shouldBe NinoFormatError.httpStatus
-
-                  verifyAudit(generatedCorrelationId, AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))))
-                }
-
-
-              "a request fails with service errors" must {
-                "audit the failure" in new nonGTSTest {
-                  val requestHandler = basicRequestHandler.withAuditing(auditHandler())
-
-                  mockDeprecation(NotDeprecated)
-
-                  service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))
-
-                  val result = requestHandler.handleRequest()
-
-                  contentAsJson(result) shouldBe NinoFormatError.asJson
-                  header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-                  status(result) shouldBe NinoFormatError.httpStatus
-
-                  verifyAudit(serviceCorrelationId, AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))))
-                }
-              }
-            }
+            verifyAudit(serviceCorrelationId, AuditResponse(successCode, Right(Some(successResponseJson))), params, auditType, txName, requestBody)
           }
         }
       }
-  trait nonGTSTest extends MockIdGenerator {
-    private val generatedCorrelationId = "generatedCorrelationId"
-    MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
-    implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    implicit val endpointLogContext: EndpointLogContext =
-      EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
+      "a request fails with validation errors" must {
+        "audit the failure" in new nonGTSTest {
+          val params    = Map("param" -> "value")
+          val auditType = "type"
+          val txName    = "txName"
 
-    implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+          val requestBody = Some(JsString("REQUEST BODY"))
 
+          val requestHandler =
+            auditResult(HeaderCarrier(), response = false, params, auditType, txName, requestBody, singleErrorValidatorForRequest, BAD_REQUEST)
+
+          mockDeprecation(NotDeprecated)
+
+          val result = requestHandler.handleRequest()
+
+          contentAsJson(result) shouldBe NinoFormatError.asJson
+          header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
+          status(result) shouldBe NinoFormatError.httpStatus
+
+          verifyAudit(
+            generatedCorrelationId,
+            AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))),
+            params,
+            auditType,
+            txName,
+            requestBody)
+        }
+      }
+
+      "a request fails with service errors" must {
+        "audit the failure" in new nonGTSTest {
+          val params = Map("param" -> "value")
+
+          val auditType = "type"
+          val txName    = "txName"
+
+          val requestBody = Some(JsString("REQUEST BODY"))
+
+          val requestHandler =
+            auditResult(HeaderCarrier(), response = false, params, auditType, txName, requestBody, successValidatorForRequest, BAD_REQUEST)
+
+          mockDeprecation(NotDeprecated)
+
+          service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))
+
+          val result = requestHandler.handleRequest()
+
+          contentAsJson(result) shouldBe NinoFormatError.asJson
+          header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+          status(result) shouldBe NinoFormatError.httpStatus
+
+          verifyAudit(
+            serviceCorrelationId,
+            AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))),
+            params,
+            auditType,
+            txName,
+            requestBody)
+        }
+      }
+    }
   }
 
-  trait GTSTest extends MockIdGenerator {
-    private val generatedCorrelationId = "generatedCorrelationId"
-    MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+}
 
-    implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = Seq(("Gov-Test-Scenario", "REQUEST_CANNOT_BE_FULFILLED")))
+trait nonGTSTest extends MockIdGenerator {
+  private val generatedCorrelationId = "generatedCorrelationId"
+  MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    implicit val endpointLogContext: EndpointLogContext =
-      EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
+  implicit val endpointLogContext: EndpointLogContext =
+    EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
 
-    implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+  implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
 
-  }
+}
 
+trait GTSTest extends MockIdGenerator {
+  private val generatedCorrelationId = "generatedCorrelationId"
+  MockIdGenerator.generateCorrelationId.returns(generatedCorrelationId).anyNumberOfTimes()
 
+  implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = Seq(("Gov-Test-Scenario", "REQUEST_CANNOT_BE_FULFILLED")))
 
+  implicit val endpointLogContext: EndpointLogContext =
+    EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
+
+  implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+
+}
