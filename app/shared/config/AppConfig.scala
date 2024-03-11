@@ -70,6 +70,8 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
   def apiGatewayContext: String                    = config.getString("api.gateway.context")
   def confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
 
+  def allowRequestCannotBeFulfilledHeader: Boolean = config.getBoolean("allow-request-cannot-be-fulfilled-header")
+
   def apiStatus(version: Version): String = config.getString(s"api.$version.status")
 
   def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
@@ -134,6 +136,7 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
   }
 }
 
+
 case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)
 
 object ConfidenceLevelConfig {
@@ -143,8 +146,10 @@ object ConfidenceLevelConfig {
     ConfidenceLevelConfig(
       confidenceLevel = ConfidenceLevel.fromInt(config.getInt("confidence-level")).getOrElse(ConfidenceLevel.L200),
       definitionEnabled = config.getBoolean("definition.enabled"),
-      authValidationEnabled = config.getBoolean("auth-validation.enabled")
+      authValidationEnabled = config.getBoolean("auth-validation.enabled"),
+//      allowRequestCannotBeFulfilledHeader = config.getBoolean("allow-request-cannot-be-fulfilled-header")
     )
   }
+
 
 }
