@@ -18,7 +18,7 @@ package routing
 
 import play.api.routing.Router
 import shared.config.AppConfig
-import shared.routing.{Version, Version3, Version4, VersionRoutingMap}
+import shared.routing.{Version, Version3, Version4, Version5, VersionRoutingMap}
 
 import javax.inject.{Inject, Singleton}
 
@@ -26,14 +26,16 @@ import javax.inject.{Inject, Singleton}
     appConfig: AppConfig,
     defaultRouter: Router,
     v3Router: v3.Routes,
-    v4Router: v4.Routes
+    v4Router: v4.Routes,
+    v5Router: v5.Routes
 ) extends VersionRoutingMap {
 
   /** Routes corresponding to available versions.
     */
   val map: Map[Version, Router] = Map(
     Version3 -> v3Router,
-    Version4 -> v4Router
+    Version4 -> v4Router,
+    Version5 -> v5Router
   )
 
 }

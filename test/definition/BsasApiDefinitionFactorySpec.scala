@@ -23,7 +23,7 @@ import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.definition.APIStatus.BETA
 import shared.definition._
 import shared.mocks.MockHttpClient
-import shared.routing.{Version3, Version4}
+import shared.routing.{Version3, Version4, Version5}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
@@ -38,7 +38,7 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        Seq(Version3, Version4).foreach { version =>
+        Seq(Version3, Version4, Version5).foreach { version =>
           MockAppConfig.apiStatus(version) returns "BETA"
           MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
           MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
@@ -80,6 +80,11 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
                 ),
                 APIVersion(
                   Version4,
+                  status = BETA,
+                  endpointsEnabled = true
+                ),
+                APIVersion(
+                  Version5,
                   status = BETA,
                   endpointsEnabled = true
                 )
