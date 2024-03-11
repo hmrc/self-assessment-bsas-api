@@ -70,8 +70,6 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
   def apiGatewayContext: String                    = config.getString("api.gateway.context")
   def confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
 
-  def allowRequestCannotBeFulfilledHeader: Boolean = config.getBoolean("allow-request-cannot-be-fulfilled-header")
-
   def apiStatus(version: Version): String = config.getString(s"api.$version.status")
 
   def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
@@ -81,6 +79,8 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
   def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
+
+  def allowRequestCannotBeFulfilledHeader: Boolean = config.getBoolean("allow-request-cannot-be-fulfilled-header")
 
   def endpointReleasedInProduction(version: String, name: String): Boolean = {
     val versionReleasedInProd = apiVersionReleasedInProduction(version)

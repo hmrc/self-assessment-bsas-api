@@ -40,7 +40,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class RequestHandlerSpec
@@ -147,55 +146,57 @@ class RequestHandlerSpec
         header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
         status(result) shouldBe NO_CONTENT
       }
+    }
 
-      "given a request with a RequestCannotBeFulfilled gov-test-scenario header" when {
-        "allowed in config" should {
-          "return RuleRequestCannotBeFulfilled error" in {
-            val requestHandler = RequestHandler
-              .withValidator(successValidatorForRequest)
-              .withService(mockService.service)
-              .withNoContentResult()
+    "given a request with a RequestCannotBeFulfilled gov-test-scenario header" when {
+      "allowed in config" should {
+        "return RuleRequestCannotBeFulfilled error" in {
+          val requestHandler = RequestHandler
+            .withValidator(successValidatorForRequest)
+            .withService(mockService.service)
+            .withNoContentResult()
 
-            MockedAppConfig.allowRequestCannotBeFulfilledHeader.returns(true).anyNumberOfTimes()
+          MockAppConfig.allowRequestCannotBeFulfilledHeader.returns(true).anyNumberOfTimes()
 
-            val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
+          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
 
-            val result = requestHandler.handleRequest()(ctx2, userRequest, mockAppConfig, ec)
+          val result = requestHandler.handleRequest()(ctx2, userRequest, ec,  mockAppConfig)
 
-            status(result) shouldBe 422
-            header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
-            contentAsJson(result) shouldBe Json.parse(
-              """
-                |{
-                |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
-                |  "message":"Custom (will vary in production depending on the actual error)"
-                |}
-                |""".stripMargin
-            )
-          }
+          status(result) shouldBe 422
+          header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
+          contentAsJson(result) shouldBe Json.parse(
+            """
+              |{
+              |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
+              |  "message":"Custom (will vary in production depending on the actual error)"
+              |}
+              |""".stripMargin
+          )
         }
-
-        "not allowed in config" should {
-          "return success response" in {
-            val requestHandler = RequestHandler
-              .withValidator(successValidatorForRequest)
-              .withService(mockService.service)
-              .withNoContentResult()
-
-            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
-            MockedAppConfig.allowRequestCannotBeFulfilledHeader.returns(false).anyNumberOfTimes()
-
-            val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
-
-            val result = requestHandler.handleRequest()(ctx2, userRequest, mockAppConfig, ec)
-
-            contentAsJson(result) shouldBe successResponseJson
-            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-            status(result) shouldBe successCode
-          }
-        }
-
       }
+
+      "not allowed in config" should {
+        "return success response" in {
+          val requestHandler = RequestHandler
+            .withValidator(successValidatorForRequest)
+            .withService(mockService.service)
+            .withPlainJsonResult(successCode)
+
+
+          service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+          MockAppConfig.allowRequestCannotBeFulfilledHeader.returns(false).anyNumberOfTimes()
+
+          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
+
+          val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
+
+          contentAsJson(result) shouldBe successResponseJson
+          header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+          status(result) shouldBe successCode
+        }
+      }
+
+    }
 
       "wrap the response with hateoas links if required§" in {
         val requestHandler = RequestHandler
@@ -273,7 +274,6 @@ class RequestHandlerSpec
           }
         }
       }
-    }
 
     "a request fails with validation errors" must {
       "return the errors" in {
@@ -308,7 +308,7 @@ class RequestHandlerSpec
         header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
         status(result) shouldBe NinoFormatError.httpStatus
       }
-    }
+    }}
 
     "auditing is configured" when {
       val params = Map("param" -> "value")
@@ -421,4 +421,3 @@ class RequestHandlerSpec
     }
   }
 
-}
