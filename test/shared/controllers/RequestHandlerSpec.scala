@@ -160,7 +160,7 @@ class RequestHandlerSpec
 
           val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
 
-          val result = requestHandler.handleRequest()(ctx2, userRequest, ec,  mockAppConfig)
+          val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
 
           status(result) shouldBe 422
           header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
@@ -198,82 +198,82 @@ class RequestHandlerSpec
 
     }
 
-      "wrap the response with hateoas links if required§" in {
-        val requestHandler = RequestHandler
-          .withValidator(successValidatorForRequest)
-          .withService(mockService.service)
-          .withHateoasResult(mockHateoasFactory)(HData, successCode)
+    "wrap the response with hateoas links if required§" in {
+      val requestHandler = RequestHandler
+        .withValidator(successValidatorForRequest)
+        .withService(mockService.service)
+        .withHateoasResult(mockHateoasFactory)(HData, successCode)
 
-        mockDeprecation(NotDeprecated)
-        service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+      mockDeprecation(NotDeprecated)
+      service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
-        MockHateoasFactory.wrap(Output, HData) returns HateoasWrapper(Output, hateoaslinks)
+      MockHateoasFactory.wrap(Output, HData) returns HateoasWrapper(Output, hateoaslinks)
 
-        val result = requestHandler.handleRequest()
+      val result = requestHandler.handleRequest()
 
-        contentAsJson(result) shouldBe successResponseJson ++ hateoaslinksJson
-        header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-        status(result) shouldBe successCode
-      }
+      contentAsJson(result) shouldBe successResponseJson ++ hateoaslinksJson
+      header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+      status(result) shouldBe successCode
+    }
 
-      "a request is made to a deprecated version" must {
-        "return the correct response" when {
-          "deprecatedOn and sunsetDate exists" in {
+    "a request is made to a deprecated version" must {
+      "return the correct response" when {
+        "deprecatedOn and sunsetDate exists" in {
 
-            val requestHandler = RequestHandler
-              .withValidator(successValidatorForRequest)
-              .withService(mockService.service)
-              .withPlainJsonResult(successCode)
+          val requestHandler = RequestHandler
+            .withValidator(successValidatorForRequest)
+            .withService(mockService.service)
+            .withPlainJsonResult(successCode)
 
-            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+          service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
-            mockDeprecation(
-              Deprecated(
-                deprecatedOn = LocalDateTime.of(2023, 1, 17, 12, 0),
-                sunsetDate = Some(LocalDateTime.of(2024, 1, 17, 12, 0))
-              )
+          mockDeprecation(
+            Deprecated(
+              deprecatedOn = LocalDateTime.of(2023, 1, 17, 12, 0),
+              sunsetDate = Some(LocalDateTime.of(2024, 1, 17, 12, 0))
             )
+          )
 
-            MockAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
+          MockAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
 
-            val result = requestHandler.handleRequest()
+          val result = requestHandler.handleRequest()
 
-            contentAsJson(result) shouldBe successResponseJson
-            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-            header("Deprecation", result) shouldBe Some("Tue, 17 Jan 2023 12:00:00 GMT")
-            header("Sunset", result) shouldBe Some("Wed, 17 Jan 2024 12:00:00 GMT")
-            header("Link", result) shouldBe Some("http://someUrl")
+          contentAsJson(result) shouldBe successResponseJson
+          header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+          header("Deprecation", result) shouldBe Some("Tue, 17 Jan 2023 12:00:00 GMT")
+          header("Sunset", result) shouldBe Some("Wed, 17 Jan 2024 12:00:00 GMT")
+          header("Link", result) shouldBe Some("http://someUrl")
 
-            status(result) shouldBe successCode
-          }
+          status(result) shouldBe successCode
+        }
 
-          "only deprecatedOn exists" in {
-            val requestHandler = RequestHandler
-              .withValidator(successValidatorForRequest)
-              .withService(mockService.service)
-              .withPlainJsonResult(successCode)
+        "only deprecatedOn exists" in {
+          val requestHandler = RequestHandler
+            .withValidator(successValidatorForRequest)
+            .withService(mockService.service)
+            .withPlainJsonResult(successCode)
 
-            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+          service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
-            mockDeprecation(
-              Deprecated(
-                deprecatedOn = LocalDateTime.of(2023, 1, 17, 12, 0),
-                None
-              )
+          mockDeprecation(
+            Deprecated(
+              deprecatedOn = LocalDateTime.of(2023, 1, 17, 12, 0),
+              None
             )
-            MockAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
+          )
+          MockAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
 
-            val result = requestHandler.handleRequest()
+          val result = requestHandler.handleRequest()
 
-            contentAsJson(result) shouldBe successResponseJson
-            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-            header("Deprecation", result) shouldBe Some("Tue, 17 Jan 2023 12:00:00 GMT")
-            header("Sunset", result) shouldBe None
-            header("Link", result) shouldBe Some("http://someUrl")
-            status(result) shouldBe successCode
-          }
+          contentAsJson(result) shouldBe successResponseJson
+          header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+          header("Deprecation", result) shouldBe Some("Tue, 17 Jan 2023 12:00:00 GMT")
+          header("Sunset", result) shouldBe None
+          header("Link", result) shouldBe Some("http://someUrl")
+          status(result) shouldBe successCode
         }
       }
+    }
 
     "a request fails with validation errors" must {
       "return the errors" in {
@@ -308,7 +308,7 @@ class RequestHandlerSpec
         header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
         status(result) shouldBe NinoFormatError.httpStatus
       }
-    }}
+    }
 
     "auditing is configured" when {
       val params = Map("param" -> "value")
@@ -343,7 +343,7 @@ class RequestHandlerSpec
 
       "a request is successful" when {
         "no response is to be audited" must {
-          "audit without the response" in  {
+          "audit without the response" in {
 
             val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
@@ -393,8 +393,7 @@ class RequestHandlerSpec
 
           verifyAudit(
             generatedCorrelationId,
-            AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))),
-)
+            AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))))
         }
       }
 
@@ -420,4 +419,5 @@ class RequestHandlerSpec
       }
     }
   }
+}
 
