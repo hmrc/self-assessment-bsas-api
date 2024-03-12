@@ -146,57 +146,6 @@ class RequestHandlerSpec
         header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
         status(result) shouldBe NO_CONTENT
       }
-    }
-
-    "given a request with a RequestCannotBeFulfilled gov-test-scenario header" when {
-      "allowed in config" should {
-        "return RuleRequestCannotBeFulfilled error" in {
-          val requestHandler = RequestHandler
-            .withValidator(successValidatorForRequest)
-            .withService(mockService.service)
-            .withNoContentResult()
-
-          MockAppConfig.allowRequestCannotBeFulfilledHeader.returns(true).anyNumberOfTimes()
-
-          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
-
-          val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
-
-          status(result) shouldBe 422
-          header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
-          contentAsJson(result) shouldBe Json.parse(
-            """
-              |{
-              |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
-              |  "message":"Custom (will vary in production depending on the actual error)"
-              |}
-              |""".stripMargin
-          )
-        }
-      }
-
-      "not allowed in config" should {
-        "return success response" in {
-          val requestHandler = RequestHandler
-            .withValidator(successValidatorForRequest)
-            .withService(mockService.service)
-            .withPlainJsonResult(successCode)
-
-
-          service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
-          MockAppConfig.allowRequestCannotBeFulfilledHeader.returns(false).anyNumberOfTimes()
-
-          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
-
-          val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
-
-          contentAsJson(result) shouldBe successResponseJson
-          header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
-          status(result) shouldBe successCode
-        }
-      }
-
-    }
 
     "wrap the response with hateoas links if required§" in {
       val requestHandler = RequestHandler
@@ -215,6 +164,58 @@ class RequestHandlerSpec
       header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
       status(result) shouldBe successCode
     }
+
+      "given a request with a RequestCannotBeFulfilled gov-test-scenario header" when {
+        "allowed in config" should {
+          "return RuleRequestCannotBeFulfilled error" in {
+            val requestHandler = RequestHandler
+              .withValidator(successValidatorForRequest)
+              .withService(mockService.service)
+              .withNoContentResult()
+
+            MockAppConfig.allowRequestCannotBeFulfilledHeader.returns(true).anyNumberOfTimes()
+            mockDeprecation(NotDeprecated)
+
+            val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
+
+            val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
+
+            status(result) shouldBe 422
+            header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
+            contentAsJson(result) shouldBe Json.parse(
+              """
+                |{
+                |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
+                |  "message":"Custom (will vary in production depending on the actual error)"
+                |}
+                |""".stripMargin
+            )
+          }
+        }
+
+        "not allowed in config" should {
+          "return success response" in {
+            val requestHandler = RequestHandler
+              .withValidator(successValidatorForRequest)
+              .withService(mockService.service)
+              .withPlainJsonResult(successCode)
+
+
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+            MockAppConfig.allowRequestCannotBeFulfilledHeader.returns(false).anyNumberOfTimes()
+            mockDeprecation(NotDeprecated)
+
+            val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
+
+            val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
+
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            status(result) shouldBe successCode
+          }
+        }
+
+      }
 
     "a request is made to a deprecated version" must {
       "return the correct response" when {
@@ -274,6 +275,7 @@ class RequestHandlerSpec
         }
       }
     }
+    }
 
     "a request fails with validation errors" must {
       "return the errors" in {
@@ -312,9 +314,10 @@ class RequestHandlerSpec
 
     "auditing is configured" when {
       val params = Map("param" -> "value")
-
       val auditType = "type"
       val txName = "txName"
+
+      mockDeprecation(NotDeprecated)
 
       val requestBody = Some(JsString("REQUEST BODY"))
 
@@ -333,25 +336,34 @@ class RequestHandlerSpec
         .withService(mockService.service)
         .withPlainJsonResult(successCode)
 
+      val basicErrorRequestHandler = RequestHandler
+        .withValidator(singleErrorValidatorForRequest)
+        .withService(mockService.service)
+        .withPlainJsonResult(BAD_REQUEST)
+
       def verifyAudit(correlationId: String, auditResponse: AuditResponse): CallHandler[Future[AuditResult]] =
         MockedAuditService.verifyAuditEvent(
           AuditEvent(
             auditType = auditType,
             transactionName = txName,
-            GenericAuditDetail(userDetails, params = params, apiVersion = Version3.name, requestBody = requestBody, `X-CorrelationId` = correlationId, auditResponse = auditResponse)
+            GenericAuditDetail(
+              userDetails,
+              params = params,
+              apiVersion = Version3.name,
+              requestBody = requestBody,
+              `X-CorrelationId` = correlationId,
+              auditResponse = auditResponse)
           ))
 
       "a request is successful" when {
         "no response is to be audited" must {
           "audit without the response" in {
-
             val requestHandler = basicRequestHandler.withAuditing(auditHandler())
 
             mockDeprecation(NotDeprecated)
             service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
             val result = requestHandler.handleRequest()
-
 
             contentAsJson(result) shouldBe successResponseJson
             header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
@@ -381,7 +393,7 @@ class RequestHandlerSpec
 
       "a request fails with validation errors" must {
         "audit the failure" in {
-          val requestHandler = basicRequestHandler.withAuditing(auditHandler())
+          val requestHandler = basicErrorRequestHandler.withAuditing(auditHandler())
 
           mockDeprecation(NotDeprecated)
 
