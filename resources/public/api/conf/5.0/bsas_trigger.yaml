@@ -1,0 +1,136 @@
+post:
+  summary: Trigger a Business Source Adjustable Summary
+  description: |
+    This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary of the 
+    income and expenditure for a specified business for a given accounting period. A Business Source Adjustable Summary 
+    must be generated before accounting adjustments are to be entered. A National Insurance number must be provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+     
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                    |
+    |----------------------------------|-----------------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates success response.                                                 |
+    | NO_ACCOUNTING_PERIOD             | Simulates the scenario where the supplied accounting period does not exist. |
+    | PERIODIC_DATA_INCOMPLETE         | Simulates the scenario where one or more periodic updates are missing for this accounting period. |
+    | ACCOUNTING_PERIOD_NOT_ENDED      | Simulates the scenario where the supplied accounting period has not ended.  |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                              |
+    | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                 |
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ./schemas/trigger_request.json
+        examples:
+          example-1:
+            description: Self-employment Trigger
+            value:
+              $ref: ./examples/trigger/trigger_se_request.json
+          example-2:
+            description: UK Property Non-FHL Trigger
+            value:
+              $ref: ./examples/trigger/trigger_non_fhl_request.json
+          example-3:
+            description: Foreign Property Trigger
+            value:
+              $ref: ./examples/trigger/trigger_foreign_property_request.json
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: ./common/headers.yaml#/components/parameters/correlationId
+        Deprecation:
+          $ref: ./common/headers.yaml#/components/parameters/deprecationHeader
+        Sunset:
+          $ref: ./common/headers.yaml#/components/parameters/sunsetHeader
+        Link:
+          $ref: ./common/headers.yaml#/components/parameters/linkHeader
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/trigger_response.json
+          examples:
+            example-1:
+              description: Self-employment example response
+              value:
+                $ref: ./examples/trigger/trigger_se_response.json
+            example-2:
+              description: UK Property example response
+              value:
+                $ref: ./examples/trigger/trigger_non_fhl_response.json
+            example-3:
+              description: Foreign Property example response
+              value:
+                $ref: ./examples/trigger/trigger_foreign_property_response.json
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            FORMAT_NINO:
+              $ref: ./common/errors.yaml#/components/examples/formatNino
+            FORMAT_START_DATE:
+              $ref: ./common/errors.yaml#/components/examples/formatStartDate
+            FORMAT_END_DATE:
+              $ref: ./common/errors.yaml#/components/examples/formatEndDate
+            FORMAT_TYPE_OF_BUSINESS:
+              $ref: ./common/errors.yaml#/components/examples/formatTypeOfBusiness
+            FORMAT_BUSINESS_ID:
+              $ref: ./common/errors.yaml#/components/examples/formatBusinessId
+            RULE_END_DATE_BEFORE_START_DATE:
+              $ref: ./common/errors.yaml#/components/examples/ruleEndDateBeforeStartDate
+            RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleAccountingPeriodNotSupported
+            RULE_ACCOUNTING_PERIOD_NOT_ENDED:
+              $ref: ./common/errors.yaml#/components/examples/ruleAccountingPeriodNotEnded
+            RULE_PERIODIC_DATA_INCOMPLETE:
+              $ref: ./common/errors.yaml#/components/examples/rulePeriodicDataIncomplete
+            RULE_NO_ACCOUNTING_PERIOD:
+              $ref: ./common/errors.yaml#/components/examples/ruleNoAccountingPeriod
+            RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: ./common/errors.yaml#/components/examples/invalidTaxYear
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: ./common/errors.yaml#/components/examples/TriggerNotFound
+
+

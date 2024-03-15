@@ -1,0 +1,152 @@
+get:
+  summary: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
+  description: |
+    This endpoint enables you to request a specific Business Source Adjustable Summary for a foreign property 
+    business EEA Furnished Holiday Letting (FHL) or a non-FHL foreign property business. A National Insurance number and
+    calculation ID must be provided. 
+    
+    Please note that the expense items 'residentialFinancialCost' and 'broughtFwdResidentialFinancialCost' under 
+    'adjustableSummaryCalculation' and 'adjustedSummaryCalculation' are not currently in use and will not be returned 
+    in a live environment. These fields will be removed in the near future.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+     
+    | Header Value (Gov-Test-Scenario)              | Scenario                                                                                                                                 |
+    | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+    | N/A - DEFAULT                                 | Simulates the scenario where no data is found.                                                                                           |
+    | FOREIGN_PROPERTY_FHL_PROFIT                   | Simulates success response with FHL foreign property and profit.                                                                         |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_PROFIT           | Simulates success response with FHL foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                    |
+    | FOREIGN_PROPERTY_FHL_LOSS                     | Simulates success response with FHL foreign property and loss.                                                                           |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_LOSS             | Simulates success response with FHL foreign property and loss. <br><br> See below for details on DYNAMIC scenarios.                      |
+    | FOREIGN_PROPERTY_NON_FHL_PROFIT               | Simulates success response with non FHL foreign property and profit.                                                                     |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_PROFIT       | Simulates success response with non FHL foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                |
+    | FOREIGN_PROPERTY_NON_FHL_LOSS                 | Simulates success response with non FHL foreign property and loss.                                                                       |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_LOSS         | Simulates success response with non FHL foreign property and loss.  <br><br> See below for details on DYNAMIC scenarios.                 |
+    | FOREIGN_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.                                                          |
+    | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED     | Simulates success response with FHL adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.    |
+    | FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses.                                                      |
+    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED | Simulates success response with non FHL adjusted summary and consolidated expenses. <br><br> See below for details on DYNAMIC scenarios. |
+    | FOREIGN_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
+    | DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE        | Simulates success response with FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.         |
+    | FOREIGN_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.                                                          |
+    | DYNAMIC_FOREIGN_NON_FHL_PROPERTY_ALLOWANCE    | Simulates success response with non FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.     |
+    | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                  |
+    | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid. <br><br> See below for details on DYNAMIC scenarios.                             |
+    | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                               |
+    | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded. <br><br> See below for details on DYNAMIC scenarios.                          |
+    | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.                                                                |
+    | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                                                                              |
+    | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                                                                              |
+    
+    In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
+      * metadata
+        * calculationId
+        * taxYear
+        * nino
+        * requestedDateTime
+        * adjustedDateTime
+      * inputs
+        * accountingPeriodStartDate
+        * accountingPeriodEndDate
+        * submissionPeriods
+          * startDate
+          * endDate
+          * receivedDateTime
+  
+      For tax years prior to 2023-24, when the tax year is not supplied, these values will be based on a tax year of 2022-23.
+
+
+
+  tags:
+    - Foreign property business
+
+  parameters:
+    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+    - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
+    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
+    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+    - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
+    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: ./common/headers.yaml#/components/parameters/correlationId
+        Deprecation:
+          $ref: ./common/headers.yaml#/components/parameters/deprecationHeader
+        Sunset:
+          $ref: ./common/headers.yaml#/components/parameters/sunsetHeader
+        Link:
+          $ref: ./common/headers.yaml#/components/parameters/linkHeader
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/retrieve_foreign_property.json
+          examples:
+            example-1:
+              description: Foreign Property EEA FHL
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_foreign_property_eeafhl.json
+            example-2:
+              description: Foreign Property Non FHL
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_foreign_property_nonfhl.json
+            example-3:
+              description: Foreign Property with Consolidated Expenses
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_foreign_property_consolidated.json
+            example-4:
+              description: Foreign Property with Property Allowance
+              value:
+                $ref: ./examples/retrieveBsas/retrieve_foreign_property_allowance.json
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            FORMAT_NINO:
+              $ref: ./common/errors.yaml#/components/examples/formatNino
+            FORMAT_TAX_YEAR:
+              $ref: ./common/errors.yaml#/components/examples/formatTaxYear
+            FORMAT_CALCULATION_ID:
+              $ref: ./common/errors.yaml#/components/examples/formatCalculationId
+            RULE_TYPE_OF_BUSINESS_INCORRECT:
+              $ref: ./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectForeign
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: ./common/errors.yaml#/components/examples/invalidTaxYear
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: ./schemas/error-response.yaml
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: ./common/errors.yaml#/components/examples/summaryNotFound

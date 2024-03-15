@@ -1,0 +1,10 @@
+{
+  "foreignFhlEea": {
+    "income": {
+      "totalRentsReceived": 1000.45
+    },
+    "expenses": {
+      "consolidatedExpenses": 1000.45
+    }
+  }
+}
