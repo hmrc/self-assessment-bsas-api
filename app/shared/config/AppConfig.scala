@@ -80,7 +80,8 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
 
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
 
-  def allowRequestCannotBeFulfilledHeader: Boolean = config.getBoolean("allow-request-cannot-be-fulfilled-header")
+  def allowRequestCannotBeFulfilledHeader(version: Version): Boolean =
+    config.getConfBool(s"api.$version.endpoints.allow-request-cannot-be-fulfilled-header", defBool = false)
 
   def endpointReleasedInProduction(version: String, name: String): Boolean = {
     val versionReleasedInProd = apiVersionReleasedInProduction(version)
@@ -94,7 +95,6 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     configuration
       .get[Option[String]]("api.documentation-url")
       .getOrElse(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/$appName")
-
 
   private val DATE_FORMATTER = new DateTimeFormatterBuilder()
     .append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -134,8 +134,8 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     } else NotDeprecated.valid
 
   }
-}
 
+}
 
 case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)
 
@@ -146,10 +146,8 @@ object ConfidenceLevelConfig {
     ConfidenceLevelConfig(
       confidenceLevel = ConfidenceLevel.fromInt(config.getInt("confidence-level")).getOrElse(ConfidenceLevel.L200),
       definitionEnabled = config.getBoolean("definition.enabled"),
-      authValidationEnabled = config.getBoolean("auth-validation.enabled"),
-//      allowRequestCannotBeFulfilledHeader = config.getBoolean("allow-request-cannot-be-fulfilled-header")
+      authValidationEnabled = config.getBoolean("auth-validation.enabled")
     )
   }
-
 
 }

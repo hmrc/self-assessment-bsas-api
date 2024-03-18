@@ -73,7 +73,8 @@ trait MockAppConfig extends MockFactory {
     def confidenceLevelCheckEnabled: CallHandler0[ConfidenceLevelConfig] =
       (() => mockAppConfig.confidenceLevelConfig).expects()
 
-    def allowRequestCannotBeFulfilledHeader: CallHandler0[Boolean] = (() => mockAppConfig.allowRequestCannotBeFulfilledHeader: Boolean).expects()
+    def allowRequestCannotBeFulfilledHeader(version: Version): CallHandler[Boolean] =
+      (mockAppConfig.allowRequestCannotBeFulfilledHeader: Version => Boolean).expects(version)
 
   }
 

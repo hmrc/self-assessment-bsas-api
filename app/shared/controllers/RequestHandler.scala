@@ -158,27 +158,28 @@ object RequestHandler {
           message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
             s"with correlationId : ${ctx.correlationId}")
 
-        val maybeGovTestScenario =
-          ctx.hc.otherHeaders.contains("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED") && appConfig.allowRequestCannotBeFulfilledHeader
+        val version = Version(request)
+        val allowGovTestScenario =
+          ctx.hc.otherHeaders.contains("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED") &&
+            appConfig.allowRequestCannotBeFulfilledHeader(version)
 
-          val result = if (maybeGovTestScenario) {
+        val result =
+          if (allowGovTestScenario)
             EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilled))))
-        } else {
+          else
             for {
-              parsedRequest <- EitherT.fromEither[Future](validator.validateAndWrapResult())
+              parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
               serviceResponse <- EitherT(service(parsedRequest))
-            } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) {
-              implicit ctx: RequestContext =>
-                handleSuccess(parsedRequest, serviceResponse)
+            } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
+              handleSuccess(parsedRequest, serviceResponse)
             }
-          }
 
-          result.leftMap { errorWrapper =>
-            doWithContext(ctx.withCorrelationId(errorWrapper.correlationId)) { implicit ctx: RequestContext =>
-              handleFailure(errorWrapper)
-            }
-          }.merge
-        }
+        result.leftMap { errorWrapper =>
+          doWithContext(ctx.withCorrelationId(errorWrapper.correlationId)) { implicit ctx: RequestContext =>
+            handleFailure(errorWrapper)
+          }
+        }.merge
+      }
 
       private def doWithContext[A](ctx: RequestContext)(f: RequestContext => A): A = f(ctx)
 
