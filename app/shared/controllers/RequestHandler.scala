@@ -27,7 +27,7 @@ import shared.config.AppConfig
 import shared.config.Deprecation.Deprecated
 import shared.controllers.validators.Validator
 import shared.hateoas.{HateoasData, HateoasFactory, HateoasLinksFactory, HateoasWrapper}
-import shared.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilled}
+import shared.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.Version
 import shared.services.ServiceOutcome
@@ -165,7 +165,7 @@ object RequestHandler {
 
         val result =
           if (allowGovTestScenario)
-            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilled))))
+            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilledError))))
           else
             for {
               parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())

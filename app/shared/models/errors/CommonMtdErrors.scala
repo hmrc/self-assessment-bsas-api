@@ -86,7 +86,7 @@ object InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The a
 object UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested resource could not be found", NOT_FOUND)
 
 // Common rule errors
-object RuleRequestCannotBeFulfilled
+object RuleRequestCannotBeFulfilledError
     extends MtdError("RULE_REQUEST_CANNOT_BE_FULFILLED", "Custom (will vary in production depending on the actual error)", 422)
 
 object RuleTaxYearNotSupportedError
