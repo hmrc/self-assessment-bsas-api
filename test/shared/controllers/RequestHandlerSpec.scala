@@ -113,6 +113,7 @@ class RequestHandlerSpec
   }
 
   "RequestHandler" when {
+
     "given a request" must {
       "return the correct response" in {
         val requestHandler = RequestHandler
@@ -165,6 +166,7 @@ class RequestHandlerSpec
         status(result) shouldBe successCode
       }
     }
+
     "given a request with a RequestCannotBeFulfilled gov-test-scenario header" when {
       "allowed in config" should {
         "return RuleRequestCannotBeFulfilled error" in {
@@ -184,11 +186,11 @@ class RequestHandlerSpec
           header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
           contentAsJson(result) shouldBe Json.parse(
             """
-                |{
-                |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
-                |  "message":"Custom (will vary in production depending on the actual error)"
-                |}
-                |""".stripMargin
+              |{
+              |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
+              |  "message":"Custom (will vary in production depending on the actual error)"
+              |}
+              |""".stripMargin
           )
         }
       }

@@ -38,6 +38,7 @@ get:
     | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.                                                                |
     | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                                                                              |
     | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                                                                              |
+    | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request could not be processed.                                                                         |
     
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       * metadata
@@ -112,7 +113,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             FORMAT_NINO:
               $ref: ./common/errors.yaml#/components/examples/formatNino
@@ -136,7 +137,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
               $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
@@ -146,7 +147,17 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             MATCHING_RESOURCE_NOT_FOUND:
               $ref: ./common/errors.yaml#/components/examples/summaryNotFound
+
+    "422":
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            RULE_REQUEST_CANNOT_BE_FULFILLED:
+              $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'
