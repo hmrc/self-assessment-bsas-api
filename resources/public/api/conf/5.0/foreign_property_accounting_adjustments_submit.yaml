@@ -22,6 +22,7 @@ post:
     | FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED             | Simulates the scenario where property income allowance was claimed but the adjustment was made to expenses. |
     | NOT_FOUND                                             | Simulates the scenario where no data is found.                                 |
     | TAX_YEAR_NOT_SUPPORTED                                | Simulates the scenario where the tax year is not supported.                    |
+    | REQUEST_CANNOT_BE_FULFILLED                           | Simulates the scenario where the request could not be processed.               |
 
   tags:
     - Foreign property business
@@ -89,7 +90,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             FORMAT_NINO:
               $ref: ./common/errors.yaml#/components/examples/formatNino
@@ -139,7 +140,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
               $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
@@ -149,7 +150,17 @@ post:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             MATCHING_RESOURCE_NOT_FOUND:
               $ref: ./common/errors.yaml#/components/examples/adjustmentNotFound
+
+    "422":
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            RULE_REQUEST_CANNOT_BE_FULFILLED:
+              $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'

@@ -27,7 +27,7 @@ import shared.config.AppConfig
 import shared.config.Deprecation.Deprecated
 import shared.controllers.validators.Validator
 import shared.hateoas.{HateoasData, HateoasFactory, HateoasLinksFactory, HateoasWrapper}
-import shared.models.errors.{ErrorWrapper, InternalError}
+import shared.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.Version
 import shared.services.ServiceOutcome
@@ -158,13 +158,21 @@ object RequestHandler {
           message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
             s"with correlationId : ${ctx.correlationId}")
 
+        val version = Version(request)
+        val allowGovTestScenario =
+          ctx.hc.otherHeaders.contains("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED") &&
+            appConfig.allowRequestCannotBeFulfilledHeader(version)
+
         val result =
-          for {
-            parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
-            serviceResponse <- EitherT(service(parsedRequest))
-          } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
-            handleSuccess(parsedRequest, serviceResponse)
-          }
+          if (allowGovTestScenario)
+            EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilledError))))
+          else
+            for {
+              parsedRequest   <- EitherT.fromEither[Future](validator.validateAndWrapResult())
+              serviceResponse <- EitherT(service(parsedRequest))
+            } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
+              handleSuccess(parsedRequest, serviceResponse)
+            }
 
         result.leftMap { errorWrapper =>
           doWithContext(ctx.withCorrelationId(errorWrapper.correlationId)) { implicit ctx: RequestContext =>

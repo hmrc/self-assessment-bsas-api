@@ -80,6 +80,9 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
 
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
 
+  def allowRequestCannotBeFulfilledHeader(version: Version): Boolean =
+    config.getBoolean(s"api.$version.endpoints.allow-request-cannot-be-fulfilled-header")
+
   def endpointReleasedInProduction(version: String, name: String): Boolean = {
     val versionReleasedInProd = apiVersionReleasedInProduction(version)
     val path                  = s"api.$version.endpoints.released-in-production.$name"
@@ -92,7 +95,6 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     configuration
       .get[Option[String]]("api.documentation-url")
       .getOrElse(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/$appName")
-
 
   private val DATE_FORMATTER = new DateTimeFormatterBuilder()
     .append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -132,6 +134,7 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     } else NotDeprecated.valid
 
   }
+
 }
 
 case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)

@@ -8,14 +8,15 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
     
-    | Header Value (Gov-Test-Scenario) | Scenario                                                                              |
-    |---------------------------------|----------------------------------------------------------------------------------------|
-    | N/A - DEFAULT                   | Simulate a successful response containing multiple business types.                     |
-    | SELF_EMPLOYMENT                 | Simulate a successful response containing a self-employment business.                  |
-    | UK_PROPERTY                     | Simulate a successful response containing UK FHL and non-FHL property businesses.      |
-    | FOREIGN_PROPERTY                | Simulate a successful response containing EEA FHL and foreign property businesses.     |
-    | NOT_FOUND                       | Simulates the scenario where no data is found.                                         |
-    | DYNAMIC                         | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                               |
+    |----------------------------------|----------------------------------------------------------------------------------------|
+    | N/A - DEFAULT               | Simulate a successful response containing multiple business types.                     |
+    | SELF_EMPLOYMENT             | Simulate a successful response containing a self-employment business.                  |
+    | UK_PROPERTY                 | Simulate a successful response containing UK FHL and non-FHL property businesses.      |
+    | FOREIGN_PROPERTY            | Simulate a successful response containing EEA FHL and foreign property businesses.     |
+    | NOT_FOUND                   | Simulates the scenario where no data is found.                                         |
+    | REQUEST_CANNOT_BE_FULFILLED | Simulates the scenario where the request could not be processed.                       |
+    | DYNAMIC                     | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
@@ -57,7 +58,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             FORMAT_NINO:
               $ref: ./common/errors.yaml#/components/examples/formatNino
@@ -79,7 +80,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
               $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
@@ -89,7 +90,17 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/error-response.yaml
+            $ref: ./schemas/error_response.yaml
           examples:
             MATCHING_RESOURCE_NOT_FOUND:
               $ref: ./common/errors.yaml#/components/examples/ListNotFound
+
+    "422":
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            RULE_REQUEST_CANNOT_BE_FULFILLED:
+              $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'
