@@ -38,7 +38,7 @@ get:
     | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.                                                                |
     | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                                                                              |
     | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                                                                              |
-    | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request could not be processed.                                                                         |
+    | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.            |
     
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       * metadata

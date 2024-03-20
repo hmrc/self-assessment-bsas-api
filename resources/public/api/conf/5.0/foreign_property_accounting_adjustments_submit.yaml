@@ -10,19 +10,19 @@ post:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
     
-    | Header Value (Gov-Test-Scenario)                      | Scenario                                                                       |
-    |-------------------------------------------------------|--------------------------------------------------------------------------------|
-    | N/A - DEFAULT                                         | Simulates success response.                                                    |
-    | TYPE_OF_BUSINESS_INCORRECT                            | Simulates the scenario where the calculation ID supplied does not relate to a foreign property business. |
-    | SUMMARY_STATUS_INVALID                                | Simulates the scenario where the summary is invalid and cannot be adjusted.    |
-    | SUMMARY_STATUS_SUPERSEDED                             | Simulates the scenario where the summary is superseded and cannot be adjusted. |
-    | ALREADY_ADJUSTED                                      | Simulates the scenario where the summary has already been adjusted.            |
-    | RESULTING_VALUE_NOT_PERMITTED                         | Simulates the scenario where one or more adjustments would result in a negative value that is not permitted. |
-    | FOREIGN_PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD | Simulates the scenario where the cumulative turnover amount exceeds the consolidated expenses threshold. |
-    | FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED             | Simulates the scenario where property income allowance was claimed but the adjustment was made to expenses. |
-    | NOT_FOUND                                             | Simulates the scenario where no data is found.                                 |
-    | TAX_YEAR_NOT_SUPPORTED                                | Simulates the scenario where the tax year is not supported.                    |
-    | REQUEST_CANNOT_BE_FULFILLED                           | Simulates the scenario where the request could not be processed.               |
+    | Header Value (Gov-Test-Scenario)                      | Scenario                                                                                                                     |
+    |-------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                                         | Simulates success response.                                                                                                  |
+    | TYPE_OF_BUSINESS_INCORRECT                            | Simulates the scenario where the calculation ID supplied does not relate to a foreign property business.                     |
+    | SUMMARY_STATUS_INVALID                                | Simulates the scenario where the summary is invalid and cannot be adjusted.                                                  |
+    | SUMMARY_STATUS_SUPERSEDED                             | Simulates the scenario where the summary is superseded and cannot be adjusted.                                               |
+    | ALREADY_ADJUSTED                                      | Simulates the scenario where the summary has already been adjusted.                                                          |
+    | RESULTING_VALUE_NOT_PERMITTED                         | Simulates the scenario where one or more adjustments would result in a negative value that is not permitted.                 |
+    | FOREIGN_PROPERTY_OVER_CONSOLIDATED_EXPENSES_THRESHOLD | Simulates the scenario where the cumulative turnover amount exceeds the consolidated expenses threshold.                     |
+    | FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED             | Simulates the scenario where property income allowance was claimed but the adjustment was made to expenses.                  |
+    | NOT_FOUND                                             | Simulates the scenario where no data is found.                                                                               |
+    | TAX_YEAR_NOT_SUPPORTED                                | Simulates the scenario where the tax year is not supported.                                                                  |
+    | REQUEST_CANNOT_BE_FULFILLED                           | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.|
 
   tags:
     - Foreign property business
