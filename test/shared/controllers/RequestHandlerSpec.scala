@@ -210,7 +210,7 @@ class RequestHandlerSpec
           MockAppConfig.allowRequestCannotBeFulfilledHeader(Version3).returns(false).anyNumberOfTimes()
           mockDeprecation(NotDeprecated)
 
-          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
+          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("gov-test-scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
 
           val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
 
