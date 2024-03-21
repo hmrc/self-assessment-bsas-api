@@ -66,13 +66,15 @@ class RequestHandlerSpec
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
 
+  private val versionHeader = HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json"
+
   implicit val hc: HeaderCarrier   = HeaderCarrier()
   implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
 
   private val userDetails = UserDetails("mtdId", "Individual", Some("agentReferenceNumber"))
 
   implicit val userRequest: UserRequest[AnyContent] = {
-    val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json")
+    val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(versionHeader)
     UserRequest[AnyContent](userDetails, fakeRequest)
   }
 
@@ -168,6 +170,12 @@ class RequestHandlerSpec
     }
 
     "given a request with a RequestCannotBeFulfilled gov-test-scenario header" when {
+      val gtsHeaders = List(
+        "gov-test-scenario" -> "REQUEST_CANNOT_BE_FULFILLED",
+        "Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED",
+        "GOV-TEST-SCENARIO" -> "REQUEST_CANNOT_BE_FULFILLED"
+      )
+
       "allowed in config" should {
         "return RuleRequestCannotBeFulfilled error" in {
           val requestHandler = RequestHandler
@@ -178,13 +186,7 @@ class RequestHandlerSpec
           MockAppConfig.allowRequestCannotBeFulfilledHeader(Version3).returns(true).anyNumberOfTimes()
           mockDeprecation(NotDeprecated)
 
-          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
-
-          val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
-
-          status(result) shouldBe 422
-          header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
-          contentAsJson(result) shouldBe Json.parse(
+          val expectedContent = Json.parse(
             """
               |{
               |  "code":"RULE_REQUEST_CANNOT_BE_FULFILLED",
@@ -192,6 +194,16 @@ class RequestHandlerSpec
               |}
               |""".stripMargin
           )
+
+          for (gtsHeader <- gtsHeaders) {
+
+            val userRequest2 = UserRequest[AnyContent](userDetails, FakeRequest().withHeaders(versionHeader, gtsHeader))
+            val result       = requestHandler.handleRequest()(ctx, userRequest2, implicitly[ExecutionContext], mockAppConfig)
+
+            status(result) shouldBe 422
+            header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
+            contentAsJson(result) shouldBe expectedContent
+          }
         }
       }
 
@@ -207,7 +219,7 @@ class RequestHandlerSpec
           MockAppConfig.allowRequestCannotBeFulfilledHeader(Version3).returns(false).anyNumberOfTimes()
           mockDeprecation(NotDeprecated)
 
-          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
+          val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("gov-test-scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
 
           val result = requestHandler.handleRequest()(ctx2, userRequest, ec, mockAppConfig)
 

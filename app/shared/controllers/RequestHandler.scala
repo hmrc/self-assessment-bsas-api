@@ -158,13 +158,8 @@ object RequestHandler {
           message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
             s"with correlationId : ${ctx.correlationId}")
 
-        val version = Version(request)
-        val allowGovTestScenario =
-          ctx.hc.otherHeaders.contains("Gov-Test-Scenario" -> "REQUEST_CANNOT_BE_FULFILLED") &&
-            appConfig.allowRequestCannotBeFulfilledHeader(version)
-
         val result =
-          if (allowGovTestScenario)
+          if (simulateRequestCannotBeFulfilled)
             EitherT[Future, ErrorWrapper, Result](Future.successful(Left(ErrorWrapper(ctx.correlationId, RuleRequestCannotBeFulfilledError))))
           else
             for {
@@ -180,6 +175,10 @@ object RequestHandler {
           }
         }.merge
       }
+
+      private def simulateRequestCannotBeFulfilled(implicit request: UserRequest[_], appConfig: AppConfig): Boolean =
+        request.headers.get("Gov-Test-Scenario").contains("REQUEST_CANNOT_BE_FULFILLED") &&
+          appConfig.allowRequestCannotBeFulfilledHeader(Version(request))
 
       private def doWithContext[A](ctx: RequestContext)(f: RequestContext => A): A = f(ctx)
 
