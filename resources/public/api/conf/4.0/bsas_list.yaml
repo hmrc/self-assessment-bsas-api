@@ -16,6 +16,7 @@ get:
     | FOREIGN_PROPERTY                | Simulate a successful response containing EEA FHL and foreign property businesses.     |
     | NOT_FOUND                       | Simulates the scenario where no data is found.                                         |
     | DYNAMIC                         | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
+    | STATEFUL                        | Performs a stateful retrieve.                                                          |
 
   parameters:
     - $ref: ./common/pathParameters.yaml#/components/parameters/nino
