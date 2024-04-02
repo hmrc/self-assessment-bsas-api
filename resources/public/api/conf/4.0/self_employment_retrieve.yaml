@@ -26,7 +26,7 @@ get:
     | DYNAMIC_SELF_EMPLOYMENT_STATUS_SUPERSEDED | Simulates success response with summary status superseded.                  <br/><br/> See below for details about DYNAMIC scenarios. |                       
     | NOT_SELF_EMPLOYMENT                       | Simulates the scenario where the calculationId is not a self-employment.                                                              |
     | TAX_YEAR_NOT_SUPPORTED                    | Simulates the scenario where the tax year is not supported.                                                                           |
-    | STATEFUL                                  | Performs a stateful retrieve.                                                                                                         |
+    {{#if (enabled 'sandbox.stateful-calculations')}} | STATEFUL | Performs a stateful retrieve. | {{/if}}
 
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
     - metadata

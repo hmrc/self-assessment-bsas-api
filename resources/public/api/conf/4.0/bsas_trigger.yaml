@@ -7,7 +7,7 @@ post:
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
-     
+    
     | Header Value (Gov-Test-Scenario) | Scenario                                                                    |
     |----------------------------------|-----------------------------------------------------------------------------|
     | N/A - DEFAULT                    | Simulates success response.                                                 |
@@ -16,7 +16,7 @@ post:
     | ACCOUNTING_PERIOD_NOT_ENDED      | Simulates the scenario where the supplied accounting period has not ended.  |
     | NOT_FOUND                        | Simulates the scenario where no data is found.                              |
     | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                 |
-    | STATEFUL                         | Performs a stateful trigger.                                                |
+    {{#if (enabled 'sandbox.stateful-calculations')}} | STATEFUL | Performs a stateful trigger. | {{/if}}
 
 
   parameters:

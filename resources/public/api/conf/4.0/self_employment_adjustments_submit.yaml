@@ -20,7 +20,7 @@ post:
     | TRADING_INCOME_ALLOWANCE_CLAIMED                     | Simulates the scenario where trading income allowance was claimed but the adjustment was made to expenses.  |
     | NOT_FOUND                                            | Simulates the scenario where no data is found.                                                              |
     | TAX_YEAR_NOT_SUPPORTED                               | Simulates the scenario where the tax year is not supported.                                                 |
-    | STATEFUL                                             | Performs a stateful submit.                                                                                 |
+    {{#if (enabled 'sandbox.stateful-calculations')}} | STATEFUL | Performs a stateful submit. | {{/if}}
 
   tags:
     - Self-employment business
