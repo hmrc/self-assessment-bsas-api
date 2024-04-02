@@ -22,7 +22,7 @@ post:
     | FOREIGN_PROPERTY_INCOME_ALLOWANCE_CLAIMED             | Simulates the scenario where property income allowance was claimed but the adjustment was made to expenses. |
     | NOT_FOUND                                             | Simulates the scenario where no data is found.                                                              |
     | TAX_YEAR_NOT_SUPPORTED                                | Simulates the scenario where the tax year is not supported.                                                 |
-    {{#if (enabled 'sandbox.stateful-calculations')}} | STATEFUL  | Performs a stateful submit. | # {{/if}}
+    {{#if (enabled 'sandbox.stateful-calculations')}} | STATEFUL  | Performs a stateful submit. | {{/if}}
 
   tags:
     - Foreign property business
