@@ -22,7 +22,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.domain.Nino
+import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
@@ -42,8 +42,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
     // downstream
     def downstreamUri: String
 
-    def downstreamTaxYear: Option[String]
-
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
@@ -51,7 +49,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
       buildRequest(mtdUri)
         .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
@@ -76,17 +74,15 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
   private trait NonTysTest extends Test {
     def taxYear: Option[String] = Some("2019-20")
 
-    def downstreamTaxYear: Option[String] = Some("2020")
-
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
   }
 
   private trait TysIfsTest extends Test {
     def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamTaxYear: Option[String] = Some("23-24")
+    def downstreamTaxYear: String = "23-24"
 
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
   }
 
   "Calling the list Bsas endpoint" should {
@@ -156,8 +152,11 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino), Some("2023-24"))
       }
 
-      "valid request is made without a tax year" in new TysIfsTest {
-        override val taxYear: Option[String] = None
+      "valid request is made without a tax year so that he current tax year is used" in new TysIfsTest {
+        private val currentTaxYear = TaxYear.now()
+
+        override val taxYear: Option[String]   = None
+        override def downstreamTaxYear: String = currentTaxYear.asTysDownstream
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -170,7 +169,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some("2023-24"))
+        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some(currentTaxYear.asMtd))
       }
     }
 

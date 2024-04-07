@@ -44,4 +44,4 @@ object HateoasWrapper {
 
 }
 
-case class HateoasWrapper[A](payload: A, links: Seq[Link])
+case class HateoasWrapper[+A](payload: A, links: Seq[Link])
