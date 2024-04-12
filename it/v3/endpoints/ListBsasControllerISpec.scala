@@ -158,7 +158,6 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         private val currentTaxYear = TaxYear.now()
 
         override val taxYear: Option[String]   = None
-        override def downstreamTaxYear: String = currentTaxYear.asTysDownstream
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
