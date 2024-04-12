@@ -49,7 +49,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
       buildRequest(mtdUri)
         .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
@@ -78,9 +78,11 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamTaxYear: String = "23-24"
+    private val mtdTaxYear: String        = TaxYear.now().asMtd
+    private val downstreamTaxYear: String = TaxYear.now().asTysDownstream
+
+    def taxYear: Option[String] = Some(mtdTaxYear)
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
   }
@@ -117,7 +119,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some("2023-24"))
+        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some("2024-25"))
       }
 
       "valid request is made with foreign property" in new NonTysTest {
@@ -149,7 +151,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino), Some("2023-24"))
+        response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino), Some("2024-25"))
       }
 
       "valid request is made without a tax year so that he current tax year is used" in new TysIfsTest {
