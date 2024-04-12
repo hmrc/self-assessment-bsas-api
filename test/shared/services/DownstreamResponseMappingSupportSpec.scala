@@ -16,12 +16,12 @@
 
 package shared.services
 
-import shared.controllers.EndpointLogContext
-import shared.models.errors._
-import shared.models.outcomes.ResponseWrapper
 import play.api.http.Status.BAD_REQUEST
 import play.api.libs.json.{Format, Json}
 import shared.UnitSpec
+import shared.controllers.EndpointLogContext
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
 import shared.utils.Logging
 
 class DownstreamResponseMappingSupportSpec extends UnitSpec {
@@ -67,6 +67,20 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
           mapping.mapDownstreamErrors(errorCodeMap)(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("UNKNOWN")))) shouldBe
             ErrorWrapper(correlationId, InternalError)
         }
+      }
+    }
+
+    "downstream returns DOWNSTREAM_UNABLE_TO_PROCESS" must {
+      "return RuleRequestCannotBeFulfilledError with a suitable message" in {
+        val result =
+          mapping.mapDownstreamErrors(errorCodeMap)(
+            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("DOWNSTREAM_UNABLE_TO_PROCESS")))
+          )
+
+        val expected =
+          ErrorWrapper(correlationId, RuleRequestCannotBeFulfilledError.withMessage("Unable to process the request"))
+
+        result shouldBe expected
       }
     }
 
