@@ -20,8 +20,37 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 trait TaxYearPropertyCheckSupport {
-  self : ScalaCheckDrivenPropertyChecks =>
+  self: ScalaCheckDrivenPropertyChecks =>
 
-  implicit val arbTaxYear: Arbitrary[TaxYear] = Arbitrary(Gen.choose(2010, 2050).map(TaxYear.starting))
+  // Based on the limitations of the various tax year formats:
+  private val minAllowed: TaxYear = TaxYear.starting(2000)
+  private val maxAllowed: TaxYear = TaxYear.starting(2098)
+
+  private def arbTaxYear(minStartYear: Int, maxStartYear: Int): Arbitrary[TaxYear] =
+    Arbitrary(Gen.choose(minStartYear, maxStartYear).map(TaxYear.starting))
+
+  protected final def arbTaxYearInRange(min: TaxYear, max: TaxYear): Arbitrary[TaxYear] =
+    arbTaxYear(min.startYear, max.startYear)
+
+  protected final def arbTaxYearInRangeExclusive(min: TaxYear, max: TaxYear): Arbitrary[TaxYear] =
+    arbTaxYear(min.startYear, max.startYear - 1)
+
+  def forTaxYearsInRange(min: TaxYear, max: TaxYear)(f: TaxYear => Unit): Unit = {
+    implicit val arbTaxYear: Arbitrary[TaxYear] = arbTaxYearInRange(min, max)
+
+    forAll { taxYear: TaxYear => f(taxYear) }
+  }
+
+  def forTaxYearsFrom(min: TaxYear)(f: TaxYear => Unit): Unit =
+    forTaxYearsInRange(min, maxAllowed)(f)
+
+  def forTaxYearsBefore(maxExclusive: TaxYear)(f: TaxYear => Unit): Unit = {
+    implicit val arbTaxYear: Arbitrary[TaxYear] = arbTaxYearInRangeExclusive(minAllowed, maxExclusive)
+
+    forAll { taxYear: TaxYear => f(taxYear) }
+  }
+
+  def forPreTysTaxYears(f: TaxYear => Unit): Unit =
+    forTaxYearsBefore(TaxYear.tysTaxYear)(f)
 
 }

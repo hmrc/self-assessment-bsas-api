@@ -22,7 +22,6 @@ import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
 
 import java.time.LocalDate
-import scala.math.Ordered.orderingToOrdered
 
 class TriggerSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
@@ -37,18 +36,14 @@ class TriggerSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wit
           """.stripMargin)
 
       "use Def1 for tax years from 2023-24" in {
-        forAll { taxYear: TaxYear =>
-          whenever(taxYear >= TaxYear.fromMtd("2023-24")) {
-            TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
-          }
+        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
+          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
         }
       }
 
-      "use Def1 for other tax years" in {
-        forAll { taxYear: TaxYear =>
-          whenever(taxYear < TaxYear.fromMtd("2023-24")) {
-            TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
-          }
+      "use Def1 for pre-TYS tax years" in {
+        forPreTysTaxYears { taxYear =>
+          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
         }
       }
     }

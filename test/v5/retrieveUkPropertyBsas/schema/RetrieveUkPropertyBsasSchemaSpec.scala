@@ -20,25 +20,19 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
 
-import scala.math.Ordered.orderingToOrdered
-
 class RetrieveUkPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
     "a tax year is present" must {
       "use Def1 for tax years from 2023-24" in {
-        forAll { taxYear: TaxYear =>
-          whenever(taxYear >= TaxYear.fromMtd("2023-24")) {
-            RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveUkPropertyBsasSchema.Def1
-          }
+        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
+          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveUkPropertyBsasSchema.Def1
         }
       }
 
-      "use Def1 for other tax years" in {
-        forAll { taxYear: TaxYear =>
-          whenever(taxYear < TaxYear.fromMtd("2023-24")) {
-            RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveUkPropertyBsasSchema.Def1
-          }
+      "use Def1 for pre-TYS tax years" in {
+        forPreTysTaxYears { taxYear =>
+          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveUkPropertyBsasSchema.Def1
         }
       }
     }

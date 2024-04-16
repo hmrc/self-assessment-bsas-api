@@ -20,25 +20,19 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
 
-import scala.math.Ordered.orderingToOrdered
-
 class SubmitSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
     "a tax year is present" must {
       "use Def1 for tax years from 2023-24" in {
-        forAll { taxYear: TaxYear =>
-          whenever(taxYear >= TaxYear.fromMtd("2023-24")) {
-            SubmitSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitSelfEmploymentBsasSchema.Def1
-          }
+        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
+          SubmitSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitSelfEmploymentBsasSchema.Def1
         }
       }
 
-      "use Def1 for other tax years" in {
-        forAll { taxYear: TaxYear =>
-          whenever(taxYear < TaxYear.fromMtd("2023-24")) {
-            SubmitSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitSelfEmploymentBsasSchema.Def1
-          }
+      "use Def1 for pre-TYS tax years" in {
+        forPreTysTaxYears{ taxYear =>
+          SubmitSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitSelfEmploymentBsasSchema.Def1
         }
       }
     }
