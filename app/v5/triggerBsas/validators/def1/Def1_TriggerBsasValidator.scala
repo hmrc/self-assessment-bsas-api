@@ -20,14 +20,18 @@ import cats.data.Validated
 import cats.implicits._
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject}
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolverSupport}
 import shared.models.errors.MtdError
 import v5.triggerBsas.models.TriggerBsasRequestData
 import v5.triggerBsas.models.def1.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 
+object Def1_TriggerBsasValidator extends ResolverSupport {
+  private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def1_TriggerBsasRequestBody]
+}
+
 class Def1_TriggerBsasValidator(rulesValidator: Def1_TriggerBsasRulesValidator)(nino: String, body: JsValue)
     extends Validator[TriggerBsasRequestData] {
-  private val resolveJson = new ResolveNonEmptyJsonObject[Def1_TriggerBsasRequestBody]()
+  import Def1_TriggerBsasValidator._
 
   def validate: Validated[Seq[MtdError], TriggerBsasRequestData] = {
     (

@@ -26,13 +26,15 @@ import v5.submitSelfEmploymentBsas.models.SubmitSelfEmploymentBsasRequestData
 import v5.submitSelfEmploymentBsas.models.def1.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v5.submitSelfEmploymentBsas.validators.SubmitSelfEmploymentBsasRulesValidator
 
-class Def1_SubmitSelfEmploymentBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
-    extends Validator[SubmitSelfEmploymentBsasRequestData]
-    with ResolverSupport {
-
-  private val resolveJson = new ResolveNonEmptyJsonObject[Def1_SubmitSelfEmploymentBsasRequestBody]()
+object Def1_SubmitSelfEmploymentBsasValidator extends ResolverSupport {
+  private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def1_SubmitSelfEmploymentBsasRequestBody]
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+}
+
+class Def1_SubmitSelfEmploymentBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+    extends Validator[SubmitSelfEmploymentBsasRequestData] {
+  import Def1_SubmitSelfEmploymentBsasValidator._
 
   def validate: Validated[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
     (

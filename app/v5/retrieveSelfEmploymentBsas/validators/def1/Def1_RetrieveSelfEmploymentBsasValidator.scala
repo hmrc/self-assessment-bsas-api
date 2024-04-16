@@ -25,10 +25,13 @@ import shared.models.errors.MtdError
 import v5.retrieveSelfEmploymentBsas.models.RetrieveSelfEmploymentBsasRequestData
 import v5.retrieveSelfEmploymentBsas.models.def1.Def1_RetrieveSelfEmploymentBsasRequestData
 
-class Def1_RetrieveSelfEmploymentBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
-    extends Validator[RetrieveSelfEmploymentBsasRequestData]
-    with ResolverSupport {
+object Def1_RetrieveSelfEmploymentBsasValidator extends ResolverSupport {
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+}
+
+class Def1_RetrieveSelfEmploymentBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
+    extends Validator[RetrieveSelfEmploymentBsasRequestData] {
+  import Def1_RetrieveSelfEmploymentBsasValidator._
 
   def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] =
     (

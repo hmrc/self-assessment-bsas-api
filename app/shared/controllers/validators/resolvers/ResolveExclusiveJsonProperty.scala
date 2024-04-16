@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package v5.controllers.validators.resolvers
+package shared.controllers.validators.resolvers
 
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
 import shared.models.errors.MtdError
-import v5.models.errors.RuleBothPropertiesSuppliedError
 
-class ResolveOnlyOneJsonProperty(fieldOneName: String, fieldTwoName: String) {
+class ResolveExclusiveJsonProperty(error: => MtdError, fieldNames: String*) extends ResolverSupport {
 
-  def apply(body: JsValue): Validated[Seq[MtdError], Unit] = {
-    if (List(fieldOneName, fieldTwoName).forall(field => (body \ field).isDefined)) {
-      Invalid(List(RuleBothPropertiesSuppliedError))
-    } else {
-      Valid(())
-    }
-  }
+  val validator: Validator[JsValue] =
+    satisfies(error)(body => numExclusiveFieldsPresentIn(body) <= 1)
+
+  private def numExclusiveFieldsPresentIn(body: JsValue) =
+    fieldNames.count(field => (body \ field).isDefined)
+
+  def resolver: Resolver[JsValue, JsValue] = resolveValid[JsValue] thenValidate validator
+
+  def apply(body: JsValue): Validated[Seq[MtdError], JsValue] = resolver(body)
 
 }

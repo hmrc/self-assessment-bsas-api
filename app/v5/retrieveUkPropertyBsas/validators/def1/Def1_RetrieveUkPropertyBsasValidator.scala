@@ -24,11 +24,13 @@ import shared.models.errors.MtdError
 import v5.retrieveUkPropertyBsas.models.RetrieveUkPropertyBsasRequestData
 import v5.retrieveUkPropertyBsas.models.def1.Def1_RetrieveUkPropertyBsasRequestData
 
-class Def1_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
-    extends Validator[RetrieveUkPropertyBsasRequestData]
-    with ResolverSupport {
-
+object Def1_RetrieveUkPropertyBsasValidator extends ResolverSupport {
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+}
+
+class Def1_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
+    extends Validator[RetrieveUkPropertyBsasRequestData] {
+  import Def1_RetrieveUkPropertyBsasValidator._
 
   def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] =
     (

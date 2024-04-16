@@ -249,6 +249,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       }
 
       "passed both fhl and non-fhl even if they are empty" in {
+        // Note: no other errors should be returned
         val body = Json.parse(
           s"""
                |{
@@ -260,15 +261,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
-          ErrorWrapper(
-            correlationId,
-            BadRequestError,
-            Some(
-              List(
-                RuleBothPropertiesSuppliedError,
-                RuleIncorrectOrEmptyBodyError.withPaths(List("/nonFurnishedHolidayLet", "/furnishedHolidayLet"))
-              ))
-          )
+          ErrorWrapper(correlationId, RuleBothPropertiesSuppliedError)
         )
       }
     }

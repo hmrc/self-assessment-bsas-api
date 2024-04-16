@@ -25,11 +25,13 @@ import shared.models.errors.MtdError
 import v5.retrieveForeignPropertyBsas.models.RetrieveForeignPropertyBsasRequestData
 import v5.retrieveForeignPropertyBsas.models.def1.Def1_RetrieveForeignPropertyBsasRequestData
 
-class Def1_RetrieveForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
-    extends Validator[RetrieveForeignPropertyBsasRequestData]
-    with ResolverSupport {
-
+object Def1_RetrieveForeignPropertyBsasValidator extends ResolverSupport {
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+}
+
+class Def1_RetrieveForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
+    extends Validator[RetrieveForeignPropertyBsasRequestData] {
+  import Def1_RetrieveForeignPropertyBsasValidator._
 
   def validate: Validated[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] =
     (

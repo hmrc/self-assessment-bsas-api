@@ -27,10 +27,7 @@ import v5.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v5.listBsas.models.ListBsasRequestData
 import v5.listBsas.models.def1.Def1_ListBsasRequestData
 
-class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
-    extends Validator[ListBsasRequestData]
-    with ResolverSupport {
-
+object Def1_ListBsasValidator extends ResolverSupport {
   private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
 
   private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
@@ -38,6 +35,11 @@ class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusine
 
   private val resolveBusinessId     = ResolveBusinessId.resolver.resolveOptionally
   private val resolveTypeOfBusiness = ResolveTypeOfBusiness.resolver.resolveOptionally
+}
+
+class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
+    extends Validator[ListBsasRequestData] {
+  import Def1_ListBsasValidator._
 
   def validate: Validated[Seq[MtdError], ListBsasRequestData] =
     (

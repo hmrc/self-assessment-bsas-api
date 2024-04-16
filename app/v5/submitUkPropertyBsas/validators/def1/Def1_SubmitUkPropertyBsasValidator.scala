@@ -22,28 +22,30 @@ import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
-import v5.controllers.validators.resolvers.ResolveOnlyOneJsonProperty
+import v5.models.errors.RuleBothPropertiesSuppliedError
 import v5.submitUkPropertyBsas.models.SubmitUkPropertyBsasRequestData
 import v5.submitUkPropertyBsas.models.def1.{Def1_SubmitUkPropertyBsasRequestBody, Def1_SubmitUkPropertyBsasRequestData}
 
-class Def1_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
-    extends Validator[SubmitUkPropertyBsasRequestData]
-    with ResolverSupport {
+object Def1_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
-  private val resolveJson = new ResolveNonEmptyJsonObject[Def1_SubmitUkPropertyBsasRequestBody]()
-
-  private val resolveOnlyOneJsonProperty = new ResolveOnlyOneJsonProperty("furnishedHolidayLet", "nonFurnishedHolidayLet")
+  private val resolveJson =
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "nonFurnishedHolidayLet").resolver thenResolve
+      ResolveNonEmptyJsonObject.resolver[Def1_SubmitUkPropertyBsasRequestBody]
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
 
+}
+
+class Def1_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+    extends Validator[SubmitUkPropertyBsasRequestData] {
+  import Def1_SubmitUkPropertyBsasValidator._
+
   def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
-    resolveOnlyOneJsonProperty(body).productR(
-      (
-        ResolveNino(nino),
-        ResolveCalculationId(calculationId),
-        resolveTysTaxYear(taxYear),
-        resolveJson(body)
-      ).mapN(Def1_SubmitUkPropertyBsasRequestData)
-    ) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
+    (
+      ResolveNino(nino),
+      ResolveCalculationId(calculationId),
+      resolveTysTaxYear(taxYear),
+      resolveJson(body)
+    ).mapN(Def1_SubmitUkPropertyBsasRequestData) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 
 }
