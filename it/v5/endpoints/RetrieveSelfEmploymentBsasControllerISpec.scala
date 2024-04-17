@@ -24,9 +24,9 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
-import v4.models.domain.IncomeSourceType
-import v4.models.errors._
+import v5.retrieveSelfEmploymentBsas.fixtures.def1.RetrieveSelfEmploymentBsasFixtures._
+import v5.models.domain.IncomeSourceType
+import v5.models.errors._
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 

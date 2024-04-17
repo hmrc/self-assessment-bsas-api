@@ -39,3 +39,10 @@ class ResolveNonEmptyJsonObject[T: OFormat: EmptinessChecker]()(implicit val rea
   def apply(data: JsValue): Validated[Seq[MtdError], T] = resolver(data)
 
 }
+
+object ResolveNonEmptyJsonObject extends ResolverSupport {
+
+  def resolver[T: OFormat: EmptinessChecker]: Resolver[JsValue, T] =
+    new ResolveNonEmptyJsonObject().resolver
+
+}
