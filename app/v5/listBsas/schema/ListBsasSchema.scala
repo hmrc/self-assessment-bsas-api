@@ -19,9 +19,9 @@ package v5.listBsas.schema
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
+import shared.schema.DownstreamReadable
 import v5.listBsas.models.{BsasSummary, ListBsasResponse}
 import v5.listBsas.models.def1.{Def1_BsasSummary, Def1_ListBsasResponse}
-import v5.schema.DownstreamReadable
 
 import scala.math.Ordered.orderingToOrdered
 
@@ -40,7 +40,7 @@ object ListBsasSchema {
     maybeTaxYear
       .map(ResolveTaxYear.resolver)
       .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
+      .getOrElse(schemaFor(TaxYear.currentTaxYear))
   }
 
   def schemaFor(taxYear: TaxYear): ListBsasSchema = {

@@ -17,7 +17,6 @@
 package v5.listBsas.models.def1
 
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
-import v5.hateoas.HateoasLinks
 import v5.listBsas.models.ListBsasResponse
 import v5.models.domain.TypeOfBusiness
 
@@ -31,9 +30,10 @@ case class Def1_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) ext
       businessSource.copy(summaries = businessSource.summaries.map(f))
     })
   }
+
 }
 
-object Def1_ListBsasResponse extends HateoasLinks {
+object Def1_ListBsasResponse {
 
   implicit def reads[I: Reads]: Reads[Def1_ListBsasResponse[I]] =
     implicitly[Reads[Seq[BusinessSource[I]]]].map(Def1_ListBsasResponse(_))

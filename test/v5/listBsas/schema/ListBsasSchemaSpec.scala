@@ -16,9 +16,12 @@
 
 package v5.listBsas.schema
 
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+
+import java.time.{Clock, LocalDate, ZoneOffset}
 
 class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
@@ -44,8 +47,18 @@ class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wi
     }
 
     "no tax year is present" must {
-      "use a default of Def1" in {
-        ListBsasSchema.schemaFor(None) shouldBe ListBsasSchema.Def1
+      def clockForTimeInYear(year: Int) =
+        Clock.fixed(LocalDate.of(year, 6, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
+
+      "use the same schema as for the current tax year" in {
+        implicit val arbYear: Arbitrary[Int] = Arbitrary(Gen.choose(min = 2000, max = 2099))
+
+        forAll { year: Int =>
+          implicit val clock: Clock = clockForTimeInYear(year)
+
+          ListBsasSchema.schemaFor(None) shouldBe
+            ListBsasSchema.schemaFor(Some(TaxYear.currentTaxYear.asMtd))
+        }
       }
     }
   }

@@ -18,7 +18,7 @@ package v5.triggerBsas.schema
 
 import play.api.libs.json.{JsValue, Reads}
 import shared.models.domain.TaxYear
-import v5.schema.DownstreamReadable
+import shared.schema.DownstreamReadable
 import v5.triggerBsas.models.TriggerBsasResponse
 import v5.triggerBsas.models.def1.Def1_TriggerBsasResponse
 
