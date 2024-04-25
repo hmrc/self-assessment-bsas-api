@@ -19,9 +19,9 @@ package v5.retrieveForeignPropertyBsas.schema
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
+import shared.schema.DownstreamReadable
 import v5.retrieveForeignPropertyBsas.models.RetrieveForeignPropertyBsasResponse
 import v5.retrieveForeignPropertyBsas.models.def1.Def1_RetrieveForeignPropertyBsasResponse
-import v5.schema.DownstreamReadable
 
 import scala.math.Ordered.orderingToOrdered
 

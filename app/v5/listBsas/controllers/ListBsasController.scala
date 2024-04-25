@@ -22,7 +22,7 @@ import shared.controllers._
 import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils._
-import v5.listBsas.models.{BsasSummary, ListBsasHateoasData, ListBsasRequestData, ListBsasResponse}
+import v5.listBsas.models.ListBsasHateoasData
 import v5.listBsas.schema.ListBsasSchema
 import v5.listBsas.services.ListBsasService
 import v5.listBsas.validators.ListBsasValidatorFactory
@@ -55,7 +55,7 @@ class ListBsasController @Inject() (val authService: EnrolmentsAuthService,
           .withValidator(validator)
           .withService(service.listBsas)
           .withResultCreator(
-            ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest: ListBsasRequestData, response: ListBsasResponse[BsasSummary]) =>
+            ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, response) =>
               ListBsasHateoasData(nino, response, Some(parsedRequest.taxYear))))
 
       requestHandler.handleRequest()

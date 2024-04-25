@@ -19,9 +19,9 @@ package v5.retrieveSelfEmploymentBsas.schema
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
+import shared.schema.DownstreamReadable
 import v5.retrieveSelfEmploymentBsas.models.RetrieveSelfEmploymentBsasResponse
 import v5.retrieveSelfEmploymentBsas.models.def1.Def1_RetrieveSelfEmploymentBsasResponse
-import v5.schema.DownstreamReadable
 
 import scala.math.Ordered.orderingToOrdered
 

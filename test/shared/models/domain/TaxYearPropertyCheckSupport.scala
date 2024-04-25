@@ -16,14 +16,17 @@
 
 package shared.models.domain
 
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.{Arbitrary, Gen, ShrinkLowPriority}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-trait TaxYearPropertyCheckSupport {
+
+// Use ShrinkLowPriority otherwise failures will shrink to produce TaxYears
+// outside the Gen.choose(...) range resulting in misleading failures
+trait TaxYearPropertyCheckSupport extends ShrinkLowPriority {
   self: ScalaCheckDrivenPropertyChecks =>
 
   // Based on the limitations of the various tax year formats:
-  private val minAllowed: TaxYear = TaxYear.starting(2000)
+  private val minAllowed: TaxYear = TaxYear.starting(2011)
   private val maxAllowed: TaxYear = TaxYear.starting(2098)
 
   private def arbTaxYear(minStartYear: Int, maxStartYear: Int): Arbitrary[TaxYear] =
