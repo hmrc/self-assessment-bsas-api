@@ -373,12 +373,14 @@ class Def1_SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with J
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/financialCosts", v)), "/nonFurnishedHolidayLet/0/expenses/financialCosts"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/professionalFees", v)), "/nonFurnishedHolidayLet/0/expenses/professionalFees"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/costOfServices", v)), "/nonFurnishedHolidayLet/0/expenses/costOfServices"),
-            (
-              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/other", v)), "/nonFurnishedHolidayLet/0/expenses/other"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts")
-          ).foreach((testWith _).tupled)
+          ).foreach { case (body, path) => testWith(body, path) }
+
+          List(
+            (
+              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
+              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost")).foreach { case (body, path) => testWith(body, path, min = "0") }
         }
 
         "consolidated expenses is invalid" when {
@@ -390,7 +392,7 @@ class Def1_SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with J
             (
               (v: JsNumber) => nonFhlBodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
               "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
-          ).foreach(p => (testWith _).tupled(p))
+          ).foreach { case (body, path) => testWith(body, path) }
         }
 
         "multiple fields are invalid" in {
@@ -413,22 +415,23 @@ class Def1_SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with J
           )
         }
 
-        def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
-          def doTest(value: JsNumber) = {
-            val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
+        def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+          s"for $expectedPath" when {
+            def doTest(value: JsNumber) = {
+              val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
 
-            result shouldBe Left(
-              ErrorWrapper(
-                correlationId,
-                ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99")
+              result shouldBe Left(
+                ErrorWrapper(
+                  correlationId,
+                  ValueFormatError.forPathAndRange(expectedPath, min, max)
+                )
               )
-            )
+            }
+
+            "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
+
+            "value is zero" in doTest(JsNumber(0))
           }
-
-          "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
-
-          "value is zero" in doTest(JsNumber(0))
-        }
       }
 
       "return RuleCountryCodeError" when {

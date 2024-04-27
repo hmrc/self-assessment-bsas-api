@@ -57,40 +57,41 @@ object Def1_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def1_Submi
     ).onSuccess(parsed)
   }
 
-  private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
+  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
+    ResolveParsedNumber(disallowZero = true)(value, path)
 
-  private def resolveAdjusted(path: String, value: Option[BigDecimal]) =
-    resolveAdjustment(value, path)
+  private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
+    ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
   private def validateFhl(fhl: FurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
     combine(
-      resolveAdjusted("/furnishedHolidayLet/income/totalRentsReceived", fhl.income.flatMap(_.totalRentsReceived)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/premisesRunningCosts", fhl.expenses.flatMap(_.premisesRunningCosts)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/repairsAndMaintenance", fhl.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/financialCosts", fhl.expenses.flatMap(_.financialCosts)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/professionalFees", fhl.expenses.flatMap(_.professionalFees)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/travelCosts", fhl.expenses.flatMap(_.travelCosts)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/costOfServices", fhl.expenses.flatMap(_.costOfServices)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/other", fhl.expenses.flatMap(_.other)),
-      resolveAdjusted("/furnishedHolidayLet/expenses/consolidatedExpenses", fhl.expenses.flatMap(_.consolidatedExpenses))
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/income/totalRentsReceived", fhl.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/premisesRunningCosts", fhl.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/repairsAndMaintenance", fhl.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/financialCosts", fhl.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/professionalFees", fhl.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/travelCosts", fhl.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/costOfServices", fhl.expenses.flatMap(_.costOfServices)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/other", fhl.expenses.flatMap(_.other)),
+      resolveMaybeNegativeNumber("/furnishedHolidayLet/expenses/consolidatedExpenses", fhl.expenses.flatMap(_.consolidatedExpenses))
     )
   }
 
   private def validateNonFhl(nonFhl: NonFurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
     combine(
-      resolveAdjusted("/nonFurnishedHolidayLet/income/totalRentsReceived", nonFhl.income.flatMap(_.totalRentsReceived)),
-      resolveAdjusted("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", nonFhl.income.flatMap(_.premiumsOfLeaseGrant)),
-      resolveAdjusted("/nonFurnishedHolidayLet/income/reversePremiums", nonFhl.income.flatMap(_.reversePremiums)),
-      resolveAdjusted("/nonFurnishedHolidayLet/income/otherPropertyIncome", nonFhl.income.flatMap(_.otherPropertyIncome)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/premisesRunningCosts", nonFhl.expenses.flatMap(_.premisesRunningCosts)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/repairsAndMaintenance", nonFhl.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/financialCosts", nonFhl.expenses.flatMap(_.financialCosts)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/professionalFees", nonFhl.expenses.flatMap(_.professionalFees)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/travelCosts", nonFhl.expenses.flatMap(_.travelCosts)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/costOfServices", nonFhl.expenses.flatMap(_.costOfServices)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", nonFhl.expenses.flatMap(_.residentialFinancialCost)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/other", nonFhl.expenses.flatMap(_.other)),
-      resolveAdjusted("/nonFurnishedHolidayLet/expenses/consolidatedExpenses", nonFhl.expenses.flatMap(_.consolidatedExpenses))
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/totalRentsReceived", nonFhl.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", nonFhl.income.flatMap(_.premiumsOfLeaseGrant)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/reversePremiums", nonFhl.income.flatMap(_.reversePremiums)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/otherPropertyIncome", nonFhl.income.flatMap(_.otherPropertyIncome)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/premisesRunningCosts", nonFhl.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/repairsAndMaintenance", nonFhl.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/financialCosts", nonFhl.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/professionalFees", nonFhl.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/travelCosts", nonFhl.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/costOfServices", nonFhl.expenses.flatMap(_.costOfServices)),
+      resolveNonNegativeNumber("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", nonFhl.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/other", nonFhl.expenses.flatMap(_.other)),
+      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/consolidatedExpenses", nonFhl.expenses.flatMap(_.consolidatedExpenses))
     )
   }
 

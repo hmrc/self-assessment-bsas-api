@@ -27,7 +27,8 @@ import v5.submitForeignPropertyBsas.models.def1._
 
 object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_SubmitForeignPropertyBsasRequestData] {
 
-  def validateBusinessRules(parsed: Def1_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def1_SubmitForeignPropertyBsasRequestData] = {
+  def validateBusinessRules(
+      parsed: Def1_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def1_SubmitForeignPropertyBsasRequestData] = {
     import parsed.body
 
     val (validatedForeignFhlEea, validatedForeignFhlEeaConsolidated) = body.foreignFhlEea match {
@@ -61,22 +62,23 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
     ).onSuccess(parsed)
   }
 
-  private val resolveAdjustment = ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
+  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
+    ResolveParsedNumber(disallowZero = true)(value, path)
 
-  private def resolveAdjusted(path: String, value: Option[BigDecimal]) =
-    resolveAdjustment(value, path)
+  private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
+    ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
   private def validateForeignFhlEea(foreignFhlEea: FhlEea): Validated[Seq[MtdError], Unit] =
     combine(
-      resolveAdjusted("/foreignFhlEea/income/totalRentsReceived", foreignFhlEea.income.flatMap(_.totalRentsReceived)),
-      resolveAdjusted("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts)),
-      resolveAdjusted("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveAdjusted("/foreignFhlEea/expenses/financialCosts", foreignFhlEea.expenses.flatMap(_.financialCosts)),
-      resolveAdjusted("/foreignFhlEea/expenses/professionalFees", foreignFhlEea.expenses.flatMap(_.professionalFees)),
-      resolveAdjusted("/foreignFhlEea/expenses/travelCosts", foreignFhlEea.expenses.flatMap(_.travelCosts)),
-      resolveAdjusted("/foreignFhlEea/expenses/costOfServices", foreignFhlEea.expenses.flatMap(_.costOfServices)),
-      resolveAdjusted("/foreignFhlEea/expenses/other", foreignFhlEea.expenses.flatMap(_.other)),
-      resolveAdjusted("/foreignFhlEea/expenses/consolidatedExpenses", foreignFhlEea.expenses.flatMap(_.consolidatedExpenses))
+      resolveMaybeNegativeNumber("/foreignFhlEea/income/totalRentsReceived", foreignFhlEea.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/financialCosts", foreignFhlEea.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/professionalFees", foreignFhlEea.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/travelCosts", foreignFhlEea.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/costOfServices", foreignFhlEea.expenses.flatMap(_.costOfServices)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/other", foreignFhlEea.expenses.flatMap(_.other)),
+      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/consolidatedExpenses", foreignFhlEea.expenses.flatMap(_.consolidatedExpenses))
     )
 
   private def validateForeignFhlEeaConsolidatedExpenses(foreignFhlEea: FhlEea): Validated[Seq[MtdError], Unit] = {
@@ -125,18 +127,18 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
 
     combine(
       ResolveParsedCountryCode(foreignProperty.countryCode, path("countryCode")),
-      resolveAdjusted(path("income/totalRentsReceived"), foreignProperty.income.flatMap(_.totalRentsReceived)),
-      resolveAdjusted(path("income/premiumsOfLeaseGrant"), foreignProperty.income.flatMap(_.premiumsOfLeaseGrant)),
-      resolveAdjusted(path("income/otherPropertyIncome"), foreignProperty.income.flatMap(_.otherPropertyIncome)),
-      resolveAdjusted(path("expenses/premisesRunningCosts"), foreignProperty.expenses.flatMap(_.premisesRunningCosts)),
-      resolveAdjusted(path("expenses/repairsAndMaintenance"), foreignProperty.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveAdjusted(path("expenses/financialCosts"), foreignProperty.expenses.flatMap(_.financialCosts)),
-      resolveAdjusted(path("expenses/professionalFees"), foreignProperty.expenses.flatMap(_.professionalFees)),
-      resolveAdjusted(path("expenses/travelCosts"), foreignProperty.expenses.flatMap(_.travelCosts)),
-      resolveAdjusted(path("expenses/costOfServices"), foreignProperty.expenses.flatMap(_.costOfServices)),
-      resolveAdjusted(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
-      resolveAdjusted(path("expenses/other"), foreignProperty.expenses.flatMap(_.other)),
-      resolveAdjusted(path("expenses/consolidatedExpenses"), foreignProperty.expenses.flatMap(_.consolidatedExpenses))
+      resolveMaybeNegativeNumber(path("income/totalRentsReceived"), foreignProperty.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber(path("income/premiumsOfLeaseGrant"), foreignProperty.income.flatMap(_.premiumsOfLeaseGrant)),
+      resolveMaybeNegativeNumber(path("income/otherPropertyIncome"), foreignProperty.income.flatMap(_.otherPropertyIncome)),
+      resolveMaybeNegativeNumber(path("expenses/premisesRunningCosts"), foreignProperty.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber(path("expenses/repairsAndMaintenance"), foreignProperty.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber(path("expenses/financialCosts"), foreignProperty.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber(path("expenses/professionalFees"), foreignProperty.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber(path("expenses/travelCosts"), foreignProperty.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber(path("expenses/costOfServices"), foreignProperty.expenses.flatMap(_.costOfServices)),
+      resolveNonNegativeNumber(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber(path("expenses/other"), foreignProperty.expenses.flatMap(_.other)),
+      resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), foreignProperty.expenses.flatMap(_.consolidatedExpenses))
     )
   }
 
