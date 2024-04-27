@@ -60,9 +60,9 @@
     "income": {
       "totalRentsReceived": 0.12
     },
-    "totalExpenses": 0.12,
+    "totalExpenses": -0.12,
     "expenses": {
-      "consolidatedExpenses": 0.12
+      "consolidatedExpenses": 0.89
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
