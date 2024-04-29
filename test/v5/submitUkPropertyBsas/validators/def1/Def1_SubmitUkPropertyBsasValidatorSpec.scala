@@ -337,10 +337,13 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           "/nonFurnishedHolidayLet/expenses/financialCosts",
           "/nonFurnishedHolidayLet/expenses/professionalFees",
           "/nonFurnishedHolidayLet/expenses/costOfServices",
-          "/nonFurnishedHolidayLet/expenses/residentialFinancialCost",
           "/nonFurnishedHolidayLet/expenses/other",
           "/nonFurnishedHolidayLet/expenses/travelCosts"
         ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path))
+
+        List(
+          "/nonFurnishedHolidayLet/expenses/residentialFinancialCost"
+        ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path, min = "0"))
       }
 
       "consolidated expenses is invalid" when {
@@ -371,22 +374,23 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
-        def doTest(value: JsNumber): Assertion = {
-          val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
+      def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+        s"for $expectedPath" when {
+          def doTest(value: JsNumber): Assertion = {
+            val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
 
-          result shouldBe Left(
-            ErrorWrapper(
-              correlationId,
-              ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99")
+            result shouldBe Left(
+              ErrorWrapper(
+                correlationId,
+                ValueFormatError.forPathAndRange(expectedPath, min, max)
+              )
             )
-          )
+          }
+
+          "value is out of range" in doTest(JsNumber(BigDecimal(max) + 0.01))
+
+          "value is zero" in doTest(JsNumber(0))
         }
-
-        "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
-
-        "value is zero" in doTest(JsNumber(0))
-      }
     }
 
     "return RuleBothExpensesSuppliedError" when {
