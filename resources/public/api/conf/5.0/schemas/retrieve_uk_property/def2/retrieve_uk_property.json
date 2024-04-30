@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "2024-25 Retrieve a UK property Business Source Adjustable Summary Response",
+  "title": "For TY 2024-25 and after",
   "description": "Retrieve a UK property Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
