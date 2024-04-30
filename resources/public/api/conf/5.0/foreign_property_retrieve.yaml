@@ -54,25 +54,25 @@ get:
           * startDate
           * endDate
           * receivedDateTime
-  
+    
       For tax years prior to 2023-24, when the tax year is not supplied, these values will be based on a tax year of 2022-23.
 
 
 
   tags:
-    - Foreign property business
+  - Foreign property business
 
   parameters:
-    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
-    - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
-    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
-    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
-    - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
-    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+  - $ref: ./common/pathParameters.yaml#/components/parameters/nino
+  - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
+  - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
+  - $ref: ./common/headers.yaml#/components/parameters/acceptJson
+  - $ref: ./common/headers.yaml#/components/parameters/authorizationReadScopeHeader
+  - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
 
   security:
-    - User-Restricted:
-        - read:self-assessment
+  - User-Restricted:
+    - read:self-assessment
 
   responses:
     200:
@@ -89,24 +89,42 @@ get:
       content:
         application/json:
           schema:
-            $ref: ./schemas/retrieve_foreign_property.json
+            oneOf:
+            - $ref: ./schemas/retrieve_foreign_property/def1/retrieve_foreign_property.json
+            - $ref: ./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json
           examples:
-            example-1:
+            PRE-TY-2023-24-Foreign-Property-EEA-FHL:
               description: Foreign Property EEA FHL
               value:
-                $ref: ./examples/retrieveBsas/retrieve_foreign_property_eeafhl.json
-            example-2:
+                $ref: ./examples/retrieveBsas/def1/retrieve_foreign_property_eeafhl.json
+            PRE-TY-2023-24-Foreign-Property-Non-FHL:
               description: Foreign Property Non FHL
               value:
-                $ref: ./examples/retrieveBsas/retrieve_foreign_property_nonfhl.json
-            example-3:
+                $ref: ./examples/retrieveBsas/def1/retrieve_foreign_property_nonfhl.json
+            PRE-TY-2023-24-Foreign-Property-Consolidated-Expenses:
               description: Foreign Property with Consolidated Expenses
               value:
-                $ref: ./examples/retrieveBsas/retrieve_foreign_property_consolidated.json
-            example-4:
+                $ref: ./examples/retrieveBsas/def1/retrieve_foreign_property_consolidated.json
+            PRE-TY-2023-24-Foreign-Property-with-Property-Allowance:
               description: Foreign Property with Property Allowance
               value:
-                $ref: ./examples/retrieveBsas/retrieve_foreign_property_allowance.json
+                $ref: ./examples/retrieveBsas/def1/retrieve_foreign_property_allowance.json
+            TY-2024-25-Foreign-Property-EEA-FHL:
+              description: Foreign Property EEA FHL
+              value:
+                $ref: ./examples/retrieveBsas/def2/retrieve_foreign_property_eeafhl.json
+            TY-2024-25-Foreign-Property-Non-FHL:
+              description: Foreign Property Non FHL
+              value:
+                $ref: ./examples/retrieveBsas/def2/retrieve_foreign_property_nonfhl.json
+            TY-2024-25-Foreign-Property-Consolidated-Expenses:
+              description: Foreign Property with Consolidated Expenses
+              value:
+                $ref: ./examples/retrieveBsas/def2/retrieve_foreign_property_consolidated.json
+            TY-2024-25-Foreign-Property-with-Property-Allowance:
+              description: Foreign Property with Property Allowance
+              value:
+                $ref: ./examples/retrieveBsas/def2/retrieve_foreign_property_allowance.json
 
     400:
       description: Bad request
