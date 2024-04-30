@@ -43,7 +43,9 @@ post:
     content:
       application/json:
         schema:
-          $ref: ./schemas/submit_uk_property_accounting_adjustments_request.json
+          oneOf:
+            - $ref: './schemas/submit_uk_property_accounting_adjustments/def1/request.json'
+            - $ref: './schemas/submit_uk_property_accounting_adjustments/def2/request.json'
         examples:
           example-1:
             description: UK Non-FHL Property with Full Expenses
