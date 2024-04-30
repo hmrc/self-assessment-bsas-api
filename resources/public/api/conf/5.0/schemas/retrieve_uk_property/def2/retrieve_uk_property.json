@@ -479,7 +479,7 @@
           }
         },
         "totalExpenses": {
-          "description": "The total expenses for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
           "example": "2000.50"
         },
@@ -488,32 +488,32 @@
           "description": "Object containing the expenses for UK property income sources.",
           "properties": {
             "consolidatedExpenses": {
-              "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "premisesRunningCosts": {
-              "description": "Rent, rates, insurance, ground rents etc. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "repairsAndMaintenance": {
-              "description": "Property repairs and maintenance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "financialCosts": {
-              "description": "Loan interest and other financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "professionalFees": {
-              "description": "Legal, management and other professional fees. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "costOfServices": {
-              "description": "Cost of services provided, including wages. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
@@ -528,12 +528,12 @@
               "example": "1000.45"
             },
             "other": {
-              "description": "Other allowable property expenses. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             },
             "travelCosts": {
-              "description": "Car, van and travel costs incurred in running a property business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "example": "1000.45"
             }
