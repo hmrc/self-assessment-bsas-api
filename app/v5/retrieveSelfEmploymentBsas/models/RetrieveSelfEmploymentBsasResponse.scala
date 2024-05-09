@@ -20,19 +20,17 @@ import play.api.libs.json._
 import shared.config.AppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
+import shared.utils.JsonWritesUtil
 import v5.hateoas.HateoasLinks
 import v5.models.domain.HasTypeOfBusiness
 import v5.retrieveSelfEmploymentBsas.models.def1.Def1_RetrieveSelfEmploymentBsasResponse
 
 trait RetrieveSelfEmploymentBsasResponse extends HasTypeOfBusiness
 
-object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
+object RetrieveSelfEmploymentBsasResponse extends HateoasLinks with JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = OWrites.apply[RetrieveSelfEmploymentBsasResponse] {
-    case a: Def1_RetrieveSelfEmploymentBsasResponse =>
-      implicitly[OWrites[Def1_RetrieveSelfEmploymentBsasResponse]].writes(a)
-
-    case a: RetrieveSelfEmploymentBsasResponse => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = writesFrom { case a: Def1_RetrieveSelfEmploymentBsasResponse =>
+    implicitly[OWrites[Def1_RetrieveSelfEmploymentBsasResponse]].writes(a)
   }
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory

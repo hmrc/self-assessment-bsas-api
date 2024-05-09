@@ -20,23 +20,22 @@ import play.api.libs.json._
 import shared.config.AppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
+import shared.utils.JsonWritesUtil
 import v5.models.domain.HasTypeOfBusiness
 import v5.retrieveForeignPropertyBsas.models.def1.Def1_RetrieveForeignPropertyBsasResponse
 import v5.retrieveUkPropertyBsas.models.RetrieveUkPropertyBsasResponse._
 
 trait RetrieveForeignPropertyBsasResponse extends HasTypeOfBusiness
 
-object RetrieveForeignPropertyBsasResponse {
+object RetrieveForeignPropertyBsasResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = OWrites.apply[RetrieveForeignPropertyBsasResponse] {
-    case a: Def1_RetrieveForeignPropertyBsasResponse =>
-      implicitly[OWrites[Def1_RetrieveForeignPropertyBsasResponse]].writes(a)
-
-    case a: RetrieveForeignPropertyBsasResponse => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = writesFrom { case a: Def1_RetrieveForeignPropertyBsasResponse =>
+    implicitly[OWrites[Def1_RetrieveForeignPropertyBsasResponse]].writes(a)
   }
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+      extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
       import data._
 
@@ -45,7 +44,9 @@ object RetrieveForeignPropertyBsasResponse {
         adjustForeignPropertyBsas(appConfig, nino, calculationId, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveForeignPropertyHateoasData(nino: String, calculationId: String, taxYear: Option[TaxYear]) extends HateoasData

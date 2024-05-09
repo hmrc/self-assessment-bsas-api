@@ -17,16 +17,15 @@
 package v5.submitForeignPropertyBsas.models
 
 import play.api.libs.json._
+import shared.utils.JsonWritesUtil
 import v5.submitForeignPropertyBsas.models.def1.Def1_SubmitForeignPropertyBsasRequestBody
 
 trait SubmitForeignPropertyBsasRequestBody
 
-object SubmitForeignPropertyBsasRequestBody {
+object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = OWrites.apply[SubmitForeignPropertyBsasRequestBody] {
-    case a: Def1_SubmitForeignPropertyBsasRequestBody => implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(a)
-
-    case a: SubmitForeignPropertyBsasRequestBody => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = writesFrom { case a: Def1_SubmitForeignPropertyBsasRequestBody =>
+    implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(a)
   }
 
 }

@@ -21,6 +21,7 @@ import play.api.libs.json.{OWrites, Writes}
 import shared.config.AppConfig
 import shared.hateoas.{HateoasData, HateoasListLinksFactory, Link}
 import shared.models.domain.TaxYear
+import shared.utils.JsonWritesUtil
 import v5.hateoas.HateoasLinks
 import v5.listBsas.models.def1.{Def1_BsasSummary, Def1_ListBsasResponse}
 import v5.models.domain.TypeOfBusiness
@@ -30,13 +31,10 @@ trait BsasSummary {
   def calculationId: String
 }
 
-object BsasSummary {
+object BsasSummary extends JsonWritesUtil {
 
-  implicit val writes: OWrites[BsasSummary] = OWrites.apply[BsasSummary] {
-    case a: Def1_BsasSummary =>
-      implicitly[OWrites[Def1_BsasSummary]].writes(a)
-
-    case a: BsasSummary => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[BsasSummary] = writesFrom { case a: Def1_BsasSummary =>
+    implicitly[OWrites[Def1_BsasSummary]].writes(a)
   }
 
 }
@@ -47,12 +45,10 @@ trait ListBsasResponse[+I] {
   def mapItems[B](f: I => B): ListBsasResponse[B]
 }
 
-object ListBsasResponse extends HateoasLinks {
+object ListBsasResponse extends HateoasLinks with JsonWritesUtil {
 
-  implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] = OWrites.apply[ListBsasResponse[I]] {
-    case a: Def1_ListBsasResponse[I] => implicitly[OWrites[Def1_ListBsasResponse[I]]].writes(a)
-
-    case a: ListBsasResponse[I] => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] = writesFrom { case a: Def1_ListBsasResponse[I] =>
+    implicitly[OWrites[Def1_ListBsasResponse[I]]].writes(a)
   }
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListBsasResponse, BsasSummary, ListBsasHateoasData] {
