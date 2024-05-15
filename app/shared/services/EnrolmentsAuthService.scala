@@ -60,11 +60,11 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
           }
         case _ =>
           logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
-          Future.successful(Left(ClientNotAuthorisedError))
+          Future.successful(Left(ClientOrAgentNotAuthorisedError))
       }
       .recoverWith {
-        case _: MissingBearerToken     => Future.successful(Left(ClientNotAuthorisedError))
-        case _: AuthorisationException => Future.successful(Left(ClientNotAuthorisedError))
+        case _: MissingBearerToken     => Future.successful(Left(ClientOrAgentNotAuthorisedError))
+        case _: AuthorisationException => Future.successful(Left(ClientOrAgentNotAuthorisedError))
         case error =>
           logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
           Future.successful(Left(InternalError))

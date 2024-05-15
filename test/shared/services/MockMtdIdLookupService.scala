@@ -16,12 +16,16 @@
 
 package shared.services
 
-import shared.connectors.MtdIdLookupOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.models.errors.MtdError
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
+
+object MockMtdIdLookupService{
+  type MtdIdServiceOutcome = Either[MtdError, String]
+}
 
 trait MockMtdIdLookupService extends MockFactory {
 
@@ -29,7 +33,7 @@ trait MockMtdIdLookupService extends MockFactory {
 
   object MockedMtdIdLookupService {
 
-    def lookup(nino: String): CallHandler[Future[MtdIdLookupOutcome]] = {
+    def lookup(nino: String): CallHandler[Future[MtdIdLookupService.Outcome]] = {
       (mockMtdIdLookupService
         .lookup(_: String)(_: HeaderCarrier, _: ExecutionContext))
         .expects(nino, *, *)
