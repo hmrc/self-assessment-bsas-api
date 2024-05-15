@@ -24,8 +24,17 @@ trait JsonWritesUtil {
     case JsObject(fields) =>
       JsObject(fields.flatMap {
         case (_, JsNull) => None
-        case other => Some(other)
+        case other       => Some(other)
       })
     case other => other.as[JsObject]
   }
+
+  def writesFrom[A](pf: PartialFunction[A, JsObject]): OWrites[A] = {
+    val f: A => JsObject = pf.orElse(a => throw new IllegalArgumentException(s"No writes defined for type ${a.getClass.getName}"))
+
+    OWrites.apply(f)
+  }
+
 }
+
+object JsonWritesUtil extends JsonWritesUtil

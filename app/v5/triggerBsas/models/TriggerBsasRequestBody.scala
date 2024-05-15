@@ -17,15 +17,15 @@
 package v5.triggerBsas.models
 
 import play.api.libs.json.OWrites
+import shared.utils.JsonWritesUtil
 import v5.triggerBsas.models.def1.Def1_TriggerBsasRequestBody
 
 trait TriggerBsasRequestBody
 
-object TriggerBsasRequestBody {
+object TriggerBsasRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[TriggerBsasRequestBody] = OWrites{
-    case a: Def1_TriggerBsasRequestBody => implicitly[OWrites[Def1_TriggerBsasRequestBody]].writes(a)
-    case a: TriggerBsasRequestBody => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[TriggerBsasRequestBody] = writesFrom { case a: Def1_TriggerBsasRequestBody =>
+    implicitly[OWrites[Def1_TriggerBsasRequestBody]].writes(a)
   }
 
 }

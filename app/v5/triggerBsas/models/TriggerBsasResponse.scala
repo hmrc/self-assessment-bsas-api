@@ -20,6 +20,7 @@ import play.api.libs.json.OWrites
 import shared.config.AppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
+import shared.utils.JsonWritesUtil
 import v5.hateoas.HateoasLinks
 import v5.models.domain.TypeOfBusiness
 import v5.triggerBsas.models.def1.Def1_TriggerBsasResponse
@@ -28,13 +29,10 @@ trait TriggerBsasResponse {
   val calculationId: String
 }
 
-object TriggerBsasResponse extends HateoasLinks {
+object TriggerBsasResponse extends HateoasLinks with JsonWritesUtil {
 
-  implicit val writes: OWrites[TriggerBsasResponse] = OWrites.apply[TriggerBsasResponse] {
-    case a: Def1_TriggerBsasResponse =>
-      implicitly[OWrites[Def1_TriggerBsasResponse]].writes(a)
-
-    case a: TriggerBsasResponse => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[TriggerBsasResponse] = writesFrom { case a: Def1_TriggerBsasResponse =>
+    implicitly[OWrites[Def1_TriggerBsasResponse]].writes(a)
   }
 
   implicit object TriggerHateoasFactory extends HateoasLinksFactory[TriggerBsasResponse, TriggerBsasHateoasData] {

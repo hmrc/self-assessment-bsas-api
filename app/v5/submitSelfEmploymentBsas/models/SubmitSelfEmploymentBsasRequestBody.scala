@@ -17,16 +17,15 @@
 package v5.submitSelfEmploymentBsas.models
 
 import play.api.libs.json.OWrites
+import shared.utils.JsonWritesUtil
 import v5.submitSelfEmploymentBsas.models.def1.Def1_SubmitSelfEmploymentBsasRequestBody
 
 trait SubmitSelfEmploymentBsasRequestBody
 
-object SubmitSelfEmploymentBsasRequestBody {
+object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = OWrites.apply[SubmitSelfEmploymentBsasRequestBody] {
-    case a: Def1_SubmitSelfEmploymentBsasRequestBody => implicitly[OWrites[Def1_SubmitSelfEmploymentBsasRequestBody]].writes(a)
-
-    case a: SubmitSelfEmploymentBsasRequestBody => throw new RuntimeException(s"No writes defined for type ${a.getClass.getName}")
+  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = writesFrom { case a: Def1_SubmitSelfEmploymentBsasRequestBody =>
+    implicitly[OWrites[Def1_SubmitSelfEmploymentBsasRequestBody]].writes(a)
   }
 
 }
