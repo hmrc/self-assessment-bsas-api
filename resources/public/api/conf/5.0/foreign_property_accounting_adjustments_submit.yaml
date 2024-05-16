@@ -80,7 +80,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: ./schemas/submit_foreign_property_accounting_adjustments_response.json
+            $ref: ./schemas/submit_foreign_property_accounting_adjustments/response.json
           examples:
             example:
               description: Foreign Property Response
