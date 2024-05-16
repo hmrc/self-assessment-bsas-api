@@ -66,15 +66,15 @@ get:
         X-CorrelationId:
           $ref: "./common/headers.yaml#/components/parameters/correlationId"
         Deprecation:
-          $ref: ./common/headers.yaml#/components/parameters/deprecationHeader
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
         Sunset:
-          $ref: ./common/headers.yaml#/components/parameters/sunsetHeader
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
         Link:
-          $ref: ./common/headers.yaml#/components/parameters/linkHeader
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
       content:
         application/json:
           schema:
-            $ref: "./schemas/retrieve_self_employment.json"
+            $ref: "./schemas/retrieve_self_employment/response.json"
           examples:
             "Full Expenses":
               description: Full Expenses
@@ -138,7 +138,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: './schemas/error_response.yaml'
+            $ref: "./schemas/error_response.yaml"
           examples:
             RULE_REQUEST_CANNOT_BE_FULFILLED:
-              $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'
+              $ref: "./common/errors.yaml#/components/examples/requestCannotBeFulfilled"

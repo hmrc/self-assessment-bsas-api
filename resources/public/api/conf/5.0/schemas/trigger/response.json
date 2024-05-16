@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "calculationId": {
-      "$ref": "definitions.json#/definitions/bsasId"
+      "$ref": "../definitions.json#/definitions/bsasId"
     },
     "links": {
       "type": "array",

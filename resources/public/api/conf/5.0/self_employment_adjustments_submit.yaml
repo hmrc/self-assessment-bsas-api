@@ -26,13 +26,13 @@ post:
     - Self-employment business
 
   parameters:
-    - $ref: ./common/pathParameters.yaml#/components/parameters/nino
-    - $ref: ./common/pathParameters.yaml#/components/parameters/calculationId
-    - $ref: ./common/queryParameters.yaml#/components/parameters/taxYearTys
-    - $ref: ./common/headers.yaml#/components/parameters/acceptJson
-    - $ref: ./common/headers.yaml#/components/parameters/contentTypeJson
-    - $ref: ./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader
-    - $ref: ./common/headers.yaml#/components/parameters/testScenarioHeader
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/calculationId"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/taxYearTys"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/contentTypeJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
 
   security:
     - User-Restricted:
@@ -42,107 +42,107 @@ post:
     content:
       application/json:
         schema:
-          $ref: ./schemas/submit_se_adjustments.json
+          $ref: "./schemas/submit_self_employment_accounting_adjustments/request.json"
         examples:
           adjustments_full:
             description: Full Expenses
             value:
-              $ref: ./examples/adjustments/submit_se_adjustments_full.json
+              $ref: "./examples/adjustments/submit_se_adjustments_full.json"
           adjustments_consolidated:
             description: Consolidated Expenses
             value:
-              $ref: ./examples/adjustments/submit_se_adjustments_consolidated.json
+              $ref: "./examples/adjustments/submit_se_adjustments_consolidated.json"
 
   responses:
     200:
       description: Success
       headers:
         X-CorrelationId:
-          $ref: ./common/headers.yaml#/components/parameters/correlationId
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
         Deprecation:
-          $ref: ./common/headers.yaml#/components/parameters/deprecationHeader
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
         Sunset:
-          $ref: ./common/headers.yaml#/components/parameters/sunsetHeader
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
         Link:
-          $ref: ./common/headers.yaml#/components/parameters/linkHeader
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
       content:
         application/json:
           schema:
-            $ref: ./schemas/submit_adjustments_response.json
+            $ref: "./schemas/submit_self_employment_accounting_adjustments/response.json"
           examples:
             example:
               description: Self Employment
               value:
-                $ref: ./examples/adjustments/submit_se_adjustment_response.json
+                $ref: "./examples/adjustments/submit_se_adjustment_response.json"
 
     400:
       description: Bad request
       content:
         application/json:
           schema:
-            $ref: ./schemas/error_response.yaml
+            $ref: "./schemas/error_response.yaml"
           examples:
             FORMAT_NINO:
-              $ref: ./common/errors.yaml#/components/examples/formatNino
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
             FORMAT_CALCULATION_ID:
-              $ref: ./common/errors.yaml#/components/examples/formatCalculationId
+              $ref: "./common/errors.yaml#/components/examples/formatCalculationId"
             FORMAT_VALUE:
-              $ref: ./common/errors.yaml#/components/examples/formatValue
+              $ref: "./common/errors.yaml#/components/examples/formatValue"
             RULE_BOTH_EXPENSES_SUPPLIED:
-              $ref: ./common/errors.yaml#/components/examples/ruleBothExpensesSupplied
+              $ref: "./common/errors.yaml#/components/examples/ruleBothExpensesSupplied"
             RULE_TYPE_OF_BUSINESS_INCORRECT:
-              $ref: ./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectForeign
+              $ref: "./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectForeign"
             RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
-              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted"
             RULE_SUMMARY_STATUS_INVALID:
-              $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusInvalid
+              $ref: "./common/errors.yaml#/components/examples/ruleSummaryStatusInvalid"
             RULE_SUMMARY_STATUS_SUPERSEDED:
-              $ref: ./common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded
+              $ref: "./common/errors.yaml#/components/examples/ruleSummaryStatusSuperseded"
             RULE_ALREADY_ADJUSTED:
-              $ref: ./common/errors.yaml#/components/examples/ruleAlreadyAdjusted
+              $ref: "./common/errors.yaml#/components/examples/ruleAlreadyAdjusted"
             RULE_RESULTING_VALUE_NOT_PERMITTED:
-              $ref: ./common/errors.yaml#/components/examples/ruleResultingValueNotPermitted
+              $ref: "./common/errors.yaml#/components/examples/ruleResultingValueNotPermitted"
             RULE_OVER_CONSOLIDATED_EXPENSES_THRESHOLD:
-              $ref: ./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold
+              $ref: "./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold"
             RULE_TRADING_INCOME_ALLOWANCE_CLAIMED:
-              $ref: ./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceClaimed
+              $ref: "./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceClaimed"
             RULE_TAX_YEAR_NOT_SUPPORTED:
-              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearNotSupported
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
             INVALID_TAX_YEAR_PARAMETER:
-              $ref: ./common/errors.yaml#/components/examples/invalidTaxYear
+              $ref: "./common/errors.yaml#/components/examples/invalidTaxYear"
             FORMAT_TAX_YEAR:
-              $ref: ./common/errors.yaml#/components/examples/formatTaxYear
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
             RULE_TAX_YEAR_RANGE_INVALID:
-              $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
             RULE_INCORRECT_GOV_TEST_SCENARIO:
-              $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 
     403:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: ./schemas/error_response.yaml
+            $ref: "./schemas/error_response.yaml"
           examples:
             CLIENT_OR_AGENT_NOT_AUTHORISED:
-              $ref: ./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
 
     404:
       description: Not Found
       content:
         application/json:
           schema:
-            $ref: ./schemas/error_response.yaml
+            $ref: "./schemas/error_response.yaml"
           examples:
             MATCHING_RESOURCE_NOT_FOUND:
-              $ref: ./common/errors.yaml#/components/examples/adjustmentNotFound
+              $ref: "./common/errors.yaml#/components/examples/adjustmentNotFound"
 
     "422":
       description: Unprocessable Entity
       content:
         application/json:
           schema:
-            $ref: './schemas/error_response.yaml'
+            $ref: "./schemas/error_response.yaml"
           examples:
             RULE_REQUEST_CANNOT_BE_FULFILLED:
-              $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'
+              $ref: "./common/errors.yaml#/components/examples/requestCannotBeFulfilled"

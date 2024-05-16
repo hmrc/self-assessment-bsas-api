@@ -68,7 +68,7 @@
           "premiumsOfLeaseGrant": 0.12,
           "otherPropertyIncome": 0.12
         },
-        "totalExpenses": 0.12,
+        "totalExpenses": -3000.87,
         "expenses": {
           "premisesRunningCosts": 0.12,
           "repairsAndMaintenance": 0.12,
