@@ -22,6 +22,10 @@ import play.api.libs.json.{JsObject, JsPath, Json, OWrites}
 case class MtdError(code: String, message: String, httpStatus: Int, paths: Option[Seq[String]] = None) {
   val asJson: JsObject = Json.toJson(this).as[JsObject]
 
+  /** Returns a copy of this error with the new message.
+    */
+  def withMessage(msg: String): MtdError = copy(message = msg)
+
   /** Returns a copy of this error with the path, replacing any that were already present.
     */
   def withPath(path: String): MtdError = copy(paths = Some(List(path)))

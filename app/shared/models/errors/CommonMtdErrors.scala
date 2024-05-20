@@ -87,7 +87,7 @@ object UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested reso
 
 // Common rule errors
 object RuleRequestCannotBeFulfilledError
-    extends MtdError("RULE_REQUEST_CANNOT_BE_FULFILLED", "Custom (will vary in production depending on the actual error)", 422)
+    extends MtdError("RULE_REQUEST_CANNOT_BE_FULFILLED", "Custom (will vary in production depending on the actual error)", UNPROCESSABLE_ENTITY)
 
 object RuleTaxYearNotSupportedError
     extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range", BAD_REQUEST)

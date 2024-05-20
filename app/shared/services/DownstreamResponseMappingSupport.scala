@@ -32,6 +32,9 @@ trait DownstreamResponseMappingSupport {
         logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No matching stub was found")
         RuleIncorrectGovTestScenarioError
 
+      case "DOWNSTREAM_UNABLE_TO_PROCESS" =>
+        RuleRequestCannotBeFulfilledError.withMessage("Unable to process the request")
+
       case code =>
         logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
         InternalError
