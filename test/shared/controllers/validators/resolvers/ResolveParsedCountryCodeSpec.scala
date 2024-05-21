@@ -49,6 +49,11 @@ class ResolveParsedCountryCodeSpec extends UnitSpec {
         }
       // @formatter:on
 
+    s"return valid for optional country code " in {
+      val result = ResolveParsedCountryCode(None, path = "path")
+      result shouldBe Valid("Not Provided")
+    }
+
     "return a CountryCodeFormatError for an invalid country code" in {
       val result = ResolveParsedCountryCode("notACountryCode", path = "path")
       result shouldBe Invalid(List(CountryCodeFormatError.withPath("path")))
