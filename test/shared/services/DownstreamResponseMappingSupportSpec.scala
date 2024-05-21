@@ -33,10 +33,12 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
   val correlationId = "someCorrelationId"
 
   val errorCodeMap: PartialFunction[String, MtdError] = {
-    case "ERR1"                 => Error1
-    case "ERR2"                 => Error2
-    case "DS"                   => InternalError
-    case "UNMATCHED_STUB_ERROR" => RuleIncorrectGovTestScenarioError
+    case "ERR1"                   => Error1
+    case "ERR2"                   => Error2
+    case "DS"                     => InternalError
+    case "UNMATCHED_STUB_ERROR"   => RuleIncorrectGovTestScenarioError
+    case "INVALID_CORRELATION_ID" => InternalError
+    case "INVALID_CORRELATIONID"  => InternalError
   }
 
   case class TestClass(field: Option[String])
@@ -71,10 +73,24 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
     }
 
     "downstream returns UNMATCHED_STUB_ERROR" must {
-      "return RuleIncorrectGovTestScenarioError" in {
+      "return INVALID_CORRELATION_ID error" in {
         mapping.mapDownstreamErrors(errorCodeMap)(
           ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("UNMATCHED_STUB_ERROR")))) shouldBe
           ErrorWrapper(correlationId, RuleIncorrectGovTestScenarioError)
+      }
+    }
+
+    "downstream returns INVALID_CORRELATION_ID or INVALID_CORRELATIONID" must {
+      "return InternalError for INVALID_CORRELATION_ID" in {
+        mapping.mapDownstreamErrors(errorCodeMap)(
+          ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("INVALID_CORRELATION_ID")))) shouldBe
+          ErrorWrapper(correlationId, InternalError)
+      }
+
+      "return InternalError for INVALID_CORRELATIONID" in {
+        mapping.mapDownstreamErrors(errorCodeMap)(
+          ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("INVALID_CORRELATIONID")))) shouldBe
+          ErrorWrapper(correlationId, InternalError)
       }
     }
 
