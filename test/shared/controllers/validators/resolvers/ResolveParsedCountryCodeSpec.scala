@@ -51,7 +51,7 @@ class ResolveParsedCountryCodeSpec extends UnitSpec {
 
     s"return valid for optional country code " in {
       val result = ResolveParsedCountryCode(None, path = "path")
-      result shouldBe Valid("Not Provided")
+      result shouldBe Valid(None)
     }
 
     "return a CountryCodeFormatError for an invalid country code" in {
