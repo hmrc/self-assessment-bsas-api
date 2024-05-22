@@ -16,12 +16,9 @@
 
 package shared
 
-import shared.models.errors.{DownstreamError, MtdError}
+import shared.models.errors.DownstreamError
 import shared.models.outcomes.ResponseWrapper
 
 package object connectors {
-
-  type MtdIdLookupOutcome = Either[MtdError, String]
-
   type DownstreamOutcome[A] = Either[ResponseWrapper[DownstreamError], ResponseWrapper[A]]
 }
