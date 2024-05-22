@@ -88,7 +88,7 @@ class AuthISpec extends IntegrationBaseSpec {
     }
   }
 
-    "MTD ID lookup succeeds but the user is authorised" should {
+    "MTD ID lookup succeeds and the user is authorised" should {
 
       "return 200" in new Test {
         override def setupStubs(): StubMapping = {
