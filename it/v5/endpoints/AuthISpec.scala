@@ -25,7 +25,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v5.triggerBsas.fixtures.def1.TriggerBsasRequestBodyFixtures.downstreamResponse
+import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.downstreamResponse
 import v5.models.domain.TypeOfBusiness
 
 class AuthISpec extends IntegrationBaseSpec {
