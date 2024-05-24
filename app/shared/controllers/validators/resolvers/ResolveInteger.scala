@@ -19,7 +19,7 @@ package shared.controllers.validators.resolvers
 import cats.data.Validated
 import shared.models.errors.{MtdError, ValueFormatError}
 
-case class ResolveInteger(min: Int = 0, max: Int = 99) extends ResolverSupport {
+case class ResolveInteger(min: Int, max: Int) extends ResolverSupport {
 
   def resolver(error: => MtdError): Resolver[Int, Int] =
     resolveValid[Int] thenValidate validator(error)
