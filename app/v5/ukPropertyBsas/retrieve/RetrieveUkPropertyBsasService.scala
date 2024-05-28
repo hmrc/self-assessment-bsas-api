@@ -19,7 +19,6 @@ package v5.ukPropertyBsas.retrieve
 import cats.data.EitherT
 import cats.implicits._
 import shared.controllers.RequestContext
-import shared.models
 import shared.models.errors._
 import shared.services.ServiceOutcome
 import v5.models.domain.TypeOfBusiness
@@ -40,12 +39,12 @@ class RetrieveUkPropertyBsasService @Inject() (connector: RetrieveUkPropertyBsas
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID"     -> models.errors.InternalError,
-      "INVALID_RETURN"            -> models.errors.InternalError,
-      "UNPROCESSABLE_ENTITY"      -> models.errors.InternalError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_RETURN"            -> InternalError,
+      "UNPROCESSABLE_ENTITY"      -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE"       -> models.errors.InternalError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(

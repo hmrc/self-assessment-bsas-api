@@ -18,7 +18,6 @@ package v5.selfEmploymentBsas.submit
 
 import cats.implicits._
 import shared.controllers.RequestContext
-import shared.models
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import v5.models.errors._
@@ -42,7 +41,7 @@ class SubmitSelfEmploymentBsasService @Inject() (connector: SubmitSelfEmployment
     val errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
       "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
-      "INVALID_PAYLOAD"               -> models.errors.InternalError,
+      "INVALID_PAYLOAD"               -> InternalError,
       "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
       "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
       "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
@@ -50,16 +49,16 @@ class SubmitSelfEmploymentBsasService @Inject() (connector: SubmitSelfEmployment
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
       "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
       "BVR_FAILURE_C15320"            -> RuleTradingIncomeAllowanceClaimed,
-      "BVR_FAILURE_C55503"            -> models.errors.InternalError,
-      "BVR_FAILURE_C55508"            -> models.errors.InternalError,
-      "BVR_FAILURE_C55509"            -> models.errors.InternalError,
-      "BVR_FAILURE_C559107"           -> models.errors.InternalError,
-      "BVR_FAILURE_C559103"           -> models.errors.InternalError,
-      "BVR_FAILURE_C559099"           -> models.errors.InternalError,
+      "BVR_FAILURE_C55503"            -> InternalError,
+      "BVR_FAILURE_C55508"            -> InternalError,
+      "BVR_FAILURE_C55509"            -> InternalError,
+      "BVR_FAILURE_C559107"           -> InternalError,
+      "BVR_FAILURE_C559103"           -> InternalError,
+      "BVR_FAILURE_C559099"           -> InternalError,
       "NO_DATA_FOUND"                 -> NotFoundError,
-      "INVALID_CORRELATIONID"         -> models.errors.InternalError,
-      "SERVER_ERROR"                  -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE"           -> models.errors.InternalError,
+      "INVALID_CORRELATIONID"         -> InternalError,
+      "SERVER_ERROR"                  -> InternalError,
+      "SERVICE_UNAVAILABLE"           -> InternalError,
       "RULE_TAX_YEAR_RANGE_INVALID"   -> RuleTaxYearRangeInvalidError
     )
 
