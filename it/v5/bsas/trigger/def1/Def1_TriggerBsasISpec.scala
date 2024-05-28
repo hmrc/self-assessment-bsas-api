@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.bsas.trigger
+package v5.bsas.trigger.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -28,92 +28,7 @@ import support.IntegrationBaseSpec
 import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
 import v5.models.errors._
 
-class TriggerBsasISpec extends IntegrationBaseSpec {
-
-  private trait Test {
-
-    val nino = "AA123456A"
-
-    def mtdTaxYear: String
-
-    def downstreamTaxYear: String
-
-    def downstreamUri: String
-
-    def setupStubs(): StubMapping
-
-    def triggerHateoasLink(hateoasLinkPath: String): String
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-    def uri: String = s"/$nino/trigger"
-
-    def errorBody(code: String): String =
-      s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "message"
-         |      }
-    """.stripMargin
-
-    def makeRequestBody(typeOfBusiness: String, tys: Boolean): JsObject = {
-
-      val startDate = if (tys) "2023-05-01" else "2019-01-01"
-
-      val endDate = if (tys) "2023-05-02" else "2022-10-31"
-
-      Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness"   -> typeOfBusiness,
-        "businessId"       -> "XAIS12345678901"
-      )
-    }
-
-    def responseBody(hateoasLinkPath: String): String =
-      s"""
-         |{
-         |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
-         |  "links":[
-         |    {
-         |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
-         |      "rel":"self",
-         |      "method":"GET"
-         |    }
-         |  ]
-         |}
-    """.stripMargin
-
-  }
-
-  private trait NonTysTest extends Test {
-    def mtdTaxYear: String = "2019-20"
-
-    def downstreamTaxYear: String = "2020"
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
-
-    def triggerHateoasLink(hateoasLinkPath: String): String =
-      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435"
-
-  }
-
-  private trait TysIfsTest extends Test {
-    def downstreamTaxYear: String = "23-24"
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
-
-    def triggerHateoasLink(hateoasLinkPath: String): String =
-      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435?taxYear=$mtdTaxYear"
-
-    def mtdTaxYear: String = "2023-24"
-  }
+class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
@@ -281,6 +196,91 @@ class TriggerBsasISpec extends IntegrationBaseSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+  }
+
+  private trait Test {
+
+    val nino = "AA123456A"
+
+    def mtdTaxYear: String
+
+    def downstreamTaxYear: String
+
+    def downstreamUri: String
+
+    def setupStubs(): StubMapping
+
+    def triggerHateoasLink(hateoasLinkPath: String): String
+
+    def request(): WSRequest = {
+      setupStubs()
+      buildRequest(uri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+    def uri: String = s"/$nino/trigger"
+
+    def errorBody(code: String): String =
+      s"""
+         |      {
+         |        "code": "$code",
+         |        "reason": "message"
+         |      }
+    """.stripMargin
+
+    def makeRequestBody(typeOfBusiness: String, tys: Boolean): JsObject = {
+
+      val startDate = if (tys) "2023-05-01" else "2019-01-01"
+
+      val endDate = if (tys) "2023-05-02" else "2022-10-31"
+
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+        "typeOfBusiness"   -> typeOfBusiness,
+        "businessId"       -> "XAIS12345678901"
+      )
+    }
+
+    def responseBody(hateoasLinkPath: String): String =
+      s"""
+         |{
+         |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
+         |  "links":[
+         |    {
+         |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
+         |      "rel":"self",
+         |      "method":"GET"
+         |    }
+         |  ]
+         |}
+    """.stripMargin
+
+  }
+
+  private trait NonTysTest extends Test {
+    def mtdTaxYear: String = "2019-20"
+
+    def downstreamTaxYear: String = "2020"
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+
+    def triggerHateoasLink(hateoasLinkPath: String): String =
+      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435"
+
+  }
+
+  private trait TysIfsTest extends Test {
+    def downstreamTaxYear: String = "23-24"
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
+
+    def triggerHateoasLink(hateoasLinkPath: String): String =
+      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435?taxYear=$mtdTaxYear"
+
+    def mtdTaxYear: String = "2023-24"
   }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.foreignPropertyBsas.retrieve
+package v5.foreignPropertyBsas.retrieve.def1
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -29,78 +29,7 @@ import v5.models.errors._
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures
 
-class RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
-
-  private trait Test {
-    val nino          = "AA123456B"
-    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
-    def taxYear: Option[String]
-
-    def mtdUrl: String
-
-    def downstreamUrl: String
-
-    def retrieveHateoasLink: String
-
-    def submitHateoasLink: String
-
-    def request: WSRequest = {
-      AuditStub.audit()
-      AuthStub.authorised()
-      MtdIdLookupStub.ninoFound(nino)
-      buildRequest(s"/$nino/foreign-property/$calculationId")
-        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-    def responseWithHateoas(response: JsValue): JsValue =
-      response.as[JsObject] ++ Json
-        .parse(s"""
-           |{
-           |  "links": [
-           |    {
-           |      "href": "$retrieveHateoasLink",
-           |      "method": "GET",
-           |      "rel": "self"
-           |    }, {
-           |      "href": "$submitHateoasLink",
-           |      "method": "POST",
-           |      "rel": "submit-foreign-property-accounting-adjustments"
-           |    }
-           |  ]
-           |}
-           |""".stripMargin)
-        .as[JsObject]
-
-  }
-
-  private trait NonTysTest extends Test {
-    def taxYear: Option[String] = None
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
-
-    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust"
-  }
-
-  private trait TysTest extends Test {
-    def taxYear: Option[String] = Some("2023-24")
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
-
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
-
-    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24"
-  }
+class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -226,6 +155,77 @@ class RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
+  }
+
+  private trait Test {
+    val nino          = "AA123456B"
+    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+    def taxYear: Option[String]
+
+    def mtdUrl: String
+
+    def downstreamUrl: String
+
+    def retrieveHateoasLink: String
+
+    def submitHateoasLink: String
+
+    def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      buildRequest(s"/$nino/foreign-property/$calculationId")
+        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+    def responseWithHateoas(response: JsValue): JsValue =
+      response.as[JsObject] ++ Json
+        .parse(s"""
+                  |{
+                  |  "links": [
+                  |    {
+                  |      "href": "$retrieveHateoasLink",
+                  |      "method": "GET",
+                  |      "rel": "self"
+                  |    }, {
+                  |      "href": "$submitHateoasLink",
+                  |      "method": "POST",
+                  |      "rel": "submit-foreign-property-accounting-adjustments"
+                  |    }
+                  |  ]
+                  |}
+                  |""".stripMargin)
+        .as[JsObject]
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: Option[String] = None
+
+    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
+
+    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust"
+  }
+
+  private trait TysTest extends Test {
+    def taxYear: Option[String] = Some("2023-24")
+
+    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
+
+    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24"
   }
 
 }

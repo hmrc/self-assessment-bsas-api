@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit
+package v5.ukPropertyBsas.submit.def1
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -28,7 +28,7 @@ import support.IntegrationBaseSpec
 import v5.models.errors._
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   val requestBodyJson: JsValue = validfhlInputJson
 

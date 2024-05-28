@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.selfEmploymentBsas.submit
+package v5.selfEmploymentBsas.submit.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -29,7 +29,7 @@ import support.IntegrationBaseSpec
 import v5.models.errors._
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
 
-class SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
+class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
   private trait Test {
 

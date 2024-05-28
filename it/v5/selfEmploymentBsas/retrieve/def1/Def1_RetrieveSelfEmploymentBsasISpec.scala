@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.selfEmploymentBsas.retrieve
+package v5.selfEmploymentBsas.retrieve.def1
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -28,7 +28,7 @@ import v5.models.domain.IncomeSourceType
 import v5.models.errors._
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 
-class RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
+class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
   override def servicesConfig: Map[String, Any] =
     super.servicesConfig +

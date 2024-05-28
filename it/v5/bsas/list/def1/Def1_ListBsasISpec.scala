@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.bsas.list
+package v5.bsas.list.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -29,61 +29,7 @@ import support.IntegrationBaseSpec
 import v5.bsas.list.def1.model.Def1_ListBsasFixtures
 import v5.models.errors.TypeOfBusinessFormatError
 
-class ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures {
-
-  private trait Test {
-    // common
-    val nino                           = "AA123456B"
-    val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String]     = Some("XAIS12345678910")
-
-    def taxYear: Option[String]
-
-    // downstream
-    def downstreamUri: String
-
-    def setupStubs(): StubMapping
-
-    def request: WSRequest = {
-      setupStubs()
-      buildRequest(mtdUri)
-        .addQueryStringParameters(mtdQueryParams: _*)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-    // mtd
-    def mtdUri: String = s"/$nino"
-
-    def mtdQueryParams: Seq[(String, String)] =
-      Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
-        .collect { case (k, Some(v)) =>
-          (k, v)
-        }
-
-    def errorBody(code: String): String =
-      s"""{
-         |  "code": "$code",
-         |  "reason": "error message"
-         |}""".stripMargin
-
-  }
-
-  private trait NonTysTest extends Test {
-    def taxYear: Option[String] = Some("2019-20")
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
-  }
-
-  private trait TysIfsTest extends Test {
-    def taxYear: Option[String] = Some("2023-24")
-
-    def downstreamTaxYear: String = "23-24"
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
-  }
+class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures {
 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -253,6 +199,60 @@ class ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures {
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
+  }
+
+  private trait Test {
+    // common
+    val nino                           = "AA123456B"
+    val typeOfBusiness: Option[String] = Some("self-employment")
+    val businessId: Option[String]     = Some("XAIS12345678910")
+
+    def taxYear: Option[String]
+
+    // downstream
+    def downstreamUri: String
+
+    def setupStubs(): StubMapping
+
+    def request: WSRequest = {
+      setupStubs()
+      buildRequest(mtdUri)
+        .addQueryStringParameters(mtdQueryParams: _*)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+    // mtd
+    def mtdUri: String = s"/$nino"
+
+    def mtdQueryParams: Seq[(String, String)] =
+      Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
+        .collect { case (k, Some(v)) =>
+          (k, v)
+        }
+
+    def errorBody(code: String): String =
+      s"""{
+         |  "code": "$code",
+         |  "reason": "error message"
+         |}""".stripMargin
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: Option[String] = Some("2019-20")
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: Option[String] = Some("2023-24")
+
+    def downstreamTaxYear: String = "23-24"
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
   }
 
 }

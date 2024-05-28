@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.retrieve
+package v5.ukPropertyBsas.retrieve.def1
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -28,45 +28,7 @@ import v5.models.domain.IncomeSourceType
 import v5.models.errors._
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
-class RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
-
-  private trait Test {
-    val nino          = "AA123456B"
-    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
-    def downstreamUri: String
-
-    def setupStubs(): Unit
-
-    def request: WSRequest = {
-      AuditStub.audit()
-      AuthStub.authorised()
-      MtdIdLookupStub.ninoFound(nino)
-      setupStubs()
-      buildRequest(uri)
-        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
-          (AUTHORIZATION, "Bearer 123")
-        )
-    }
-
-    def taxYear: Option[String] = None
-
-    def uri: String = s"/$nino/uk-property/$calculationId"
-  }
-
-  private trait NonTysTest extends Test {
-
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-  }
-
-  private trait TysIfsTest extends Test {
-
-    override def taxYear: Option[String] = Some("2023-24")
-
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
-  }
+class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -218,6 +180,44 @@ class RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
+  }
+
+  private trait Test {
+    val nino          = "AA123456B"
+    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+
+    def downstreamUri: String
+
+    def setupStubs(): Unit
+
+    def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      setupStubs()
+      buildRequest(uri)
+        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (AUTHORIZATION, "Bearer 123")
+        )
+    }
+
+    def taxYear: Option[String] = None
+
+    def uri: String = s"/$nino/uk-property/$calculationId"
+  }
+
+  private trait NonTysTest extends Test {
+
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+  }
+
+  private trait TysIfsTest extends Test {
+
+    override def taxYear: Option[String] = Some("2023-24")
+
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
 }

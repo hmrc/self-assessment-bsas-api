@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.foreignPropertyBsas.submit
+package v5.foreignPropertyBsas.submit.def1
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -27,78 +27,7 @@ import support.IntegrationBaseSpec
 import v5.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestNonFhlFull, mtdRequestValid}
 import v5.models.errors._
 
-class SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
-
-  private trait Test {
-
-    val nino: String          = "AA123456A"
-    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
-    // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
-    val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
-
-    val responseBody: JsValue = Json.parse(s"""
-         |{
-         |  "links":[
-         |    {
-         |      "href":"$retrieveHateoasLink",
-         |      "rel":"self",
-         |      "method":"GET"
-         |    }
-         |  ]
-         |}
-         |""".stripMargin)
-
-    def retrieveHateoasLink: String
-
-    def downstreamUrl: String
-
-    def stubDownstreamSuccess(): Unit = {
-      DownstreamStub
-        .when(DownstreamStub.PUT, downstreamUrl)
-        .withRequestBody(downstreamRequestValid)
-        .thenReturn(OK, ignoredDownstreamResponse)
-    }
-
-    def request(): WSRequest = {
-      AuditStub.audit()
-      AuthStub.authorised()
-      MtdIdLookupStub.ninoFound(nino)
-      setupStubs()
-      buildRequest(s"/$nino/foreign-property/$calculationId/adjust")
-        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-    def taxYear: Option[String] = None
-
-    def setupStubs(): Unit = ()
-
-    def errorBody(code: String): String =
-      s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "message"
-         |      }
-    """.stripMargin
-
-  }
-
-  private trait NonTysTest extends Test {
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
-  }
-
-  private trait TysIfsTest extends Test {
-    override def taxYear: Option[String] = Some("2023-24")
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
-
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
-  }
+class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
@@ -239,6 +168,77 @@ class SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+  }
+
+  private trait Test {
+
+    val nino: String          = "AA123456A"
+    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+    // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
+    val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
+
+    val responseBody: JsValue = Json.parse(s"""
+                                              |{
+                                              |  "links":[
+                                              |    {
+                                              |      "href":"$retrieveHateoasLink",
+                                              |      "rel":"self",
+                                              |      "method":"GET"
+                                              |    }
+                                              |  ]
+                                              |}
+                                              |""".stripMargin)
+
+    def retrieveHateoasLink: String
+
+    def downstreamUrl: String
+
+    def stubDownstreamSuccess(): Unit = {
+      DownstreamStub
+        .when(DownstreamStub.PUT, downstreamUrl)
+        .withRequestBody(downstreamRequestValid)
+        .thenReturn(OK, ignoredDownstreamResponse)
+    }
+
+    def request(): WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      setupStubs()
+      buildRequest(s"/$nino/foreign-property/$calculationId/adjust")
+        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+    def taxYear: Option[String] = None
+
+    def setupStubs(): Unit = ()
+
+    def errorBody(code: String): String =
+      s"""
+         |      {
+         |        "code": "$code",
+         |        "reason": "message"
+         |      }
+    """.stripMargin
+
+  }
+
+  private trait NonTysTest extends Test {
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
+  }
+
+  private trait TysIfsTest extends Test {
+    override def taxYear: Option[String] = Some("2023-24")
+
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+
+    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
   }
 
 }
