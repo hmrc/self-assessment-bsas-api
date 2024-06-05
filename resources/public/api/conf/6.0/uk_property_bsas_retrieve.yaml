@@ -1,0 +1,173 @@
+get:
+  summary: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
+  description: |
+    This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business 
+    Furnished Holiday Letting (FHL) or a Non FHL UK property. A National Insurance number and Calculation id must be 
+    provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+     
+    | Header Value (Gov-Test-Scenario)         | Scenario                                                                                                                                  |
+    |------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                            | Simulates the scenario where no data is found.                                                                                            |
+    | UK_PROPERTY_FHL_PROFIT                   | Simulates success response with UK property FHL and profit.                                                                               |
+    | DYNAMIC_UK_PROPERTY_FHL_PROFIT           | Simulates success response with uk property FHL and profit.<br><br> See below for details about dynamic scenarios.                        |
+    | UK_PROPERTY_FHL_LOSS                     | Simulates success response with UK property FHL and loss.                                                                                 |
+    | DYNAMIC_UK_PROPERTY_FHL_LOSS             | Simulates success response with uk property FHL and loss.<br><br> See below for details about dynamic scenarios.                          |
+    | UK_PROPERTY_NON_FHL_PROFIT               | Simulates success response with UK property Non FHL and profit.                                                                           |
+    | DYNAMIC_UK_PROPERTY_NON_FHL_PROFIT       | Simulates success response with uk property Non FHL and profit.<br><br> See below for details about dynamic scenarios.                    |
+    | UK_PROPERTY_NON_FHL_LOSS                 | Simulates success response with UK property Non FHL and loss.                                                                             |
+    | DYNAMIC_UK_PROPERTY_NON_FHL_LOSS         | Simulates success response with uk property Non FHL and loss.<br><br> See below for details about dynamic scenarios.                      |
+    | UK_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.                                                           |
+    | DYNAMIC_UK_PROPERTY_FHL_CONSOLIDATED     | Simulates success response with FHL adjusted summary and consolidated expenses.<br><br> See below for details about dynamic scenarios.    |
+    | UK_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses.                                                       |
+    | DYNAMIC_UK_PROPERTY_NON_FHL_CONSOLIDATED | Simulates success response with non FHL adjusted summary and consolidated expenses.<br><br> See below for details about dynamic scenarios.|
+    | UK_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.                                                               |
+    | DYNAMIC_UK_FHL_PROPERTY_ALLOWANCE        | Simulates success response with FHL adjusted summary and propertyAllowance.<br><br> See below for details about dynamic scenarios.        |
+    | UK_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.                                                           |
+    | DYNAMIC_UK_NON_FHL_PROPERTY_ALLOWANCE    | Simulates success response with non FHL adjusted summary and propertyAllowance.<br><br> See below for details about dynamic scenarios.    |
+    | UK_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                   |
+    | DYNAMIC_UK_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid.<br><br> See below for details about dynamic scenarios.                            |
+    | UK_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                                |
+    | DYNAMIC_UK_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded.<br><br> See below for details about dynamic scenarios.                         |
+    | NOT_UK_PROPERTY                          | Simulates the scenario where the calculationId is not a UK property.                                                                      |
+    | TAX_YEAR_NOT_SUPPORTED                   | Simulates the scenario where the tax year is not supported.                                                                               |
+    | NOT_FOUND                                | Simulates the scenario where no matching resource is found.                                                                               |
+    | REQUEST_CANNOT_BE_FULFILLED              | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.             |
+
+    In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
+      - metadata
+        - calculationId
+        - taxYear
+        - nino
+        - requestedDateTime
+        - adjustedDateTime
+      - inputs
+        - accountingPeriodStartDate
+        - accountingPeriodEndDate
+        - submissionPeriods
+          - startDate
+          - endDate
+
+  tags:
+    - UK property business
+
+  parameters:
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/calculationId"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/taxYearTys"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
+            - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
+          examples:
+            PRE-TY-2024-25-UK-FHL-Response:
+              description: UK FHL Response
+              value:
+                $ref: "./examples/retrieveBsas/def1/retrieve_uk_fhl_property.json"
+            PRE-TY-2024-25-UK-Non-FHL-Response:
+              description: UK Non-FHL Response
+              value:
+                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property.json"
+            PRE-TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
+              description: UK Non-FHL with Consolidated Expenses Response
+              value:
+                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property_consolidated.json"
+            PRE-TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
+              description: UK Non-FHL with Property Allowance Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_property_allowance.json"
+            TY-2024-25-UK-FHL-Response:
+              description: UK FHL Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_fhl_property.json"
+            TY-2024-25-UK-Non-FHL-Response:
+              description: UK Non-FHL Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property.json"
+            TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
+              description: UK Non-FHL with Consolidated Expenses Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_consolidated.json"
+            TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
+              description: UK Non-FHL with Property Allowance Response
+              value:
+                $ref: "./examples/retrieveBsas/retrieve_uk_non_fhl_property_property_allowance.json"
+
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            FORMAT_CALCULATION_ID:
+              $ref: "./common/errors.yaml#/components/examples/formatCalculationId"
+            RULE_TYPE_OF_BUSINESS_INCORRECT:
+              $ref: "./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectUk"
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: "./common/errors.yaml#/components/examples/invalidTaxYear"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/summaryNotFound"
+
+    "422":
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            RULE_REQUEST_CANNOT_BE_FULFILLED:
+              $ref: "./common/errors.yaml#/components/examples/requestCannotBeFulfilled"

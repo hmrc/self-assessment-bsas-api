@@ -1,0 +1,13 @@
+{
+  "nonFurnishedHolidayLet": {
+    "income": {
+      "totalRentsReceived": 1000.45,
+      "premiumsOfLeaseGrant": 1000.45,
+      "reversePremiums": 1000.45,
+      "otherPropertyIncome": 1000.45
+    },
+    "expenses": {
+      "consolidatedExpenses": 1000.45
+    }
+  }
+}
