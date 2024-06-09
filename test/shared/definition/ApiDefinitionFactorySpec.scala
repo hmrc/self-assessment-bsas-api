@@ -106,7 +106,7 @@ class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
             .anyNumberOfTimes()
 
           val exception: Exception = intercept[Exception] {
-            apiDefinitionFactory.checkBuildApiStatus(Version4)
+            apiDefinitionFactory.checkBuildApiStatus(Version3)
           }
 
           val exceptionMessage: String = exception.getMessage
