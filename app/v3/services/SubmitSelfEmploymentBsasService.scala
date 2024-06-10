@@ -16,20 +16,20 @@
 
 package v3.services
 
+import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
 import shared.models
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
-import cats.implicits._
 import v3.connectors.SubmitSelfEmploymentBsasConnector
-import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentBsasConnector) extends BaseService {
+class SubmitSelfEmploymentBsasService @Inject() (connector: SubmitSelfEmploymentBsasConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] = {
     val errors: Map[String, MtdError] = Map(
@@ -41,7 +41,7 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
       "ASC_ALREADY_ADJUSTED" -> RuleAlreadyAdjusted,
       "UNALLOWABLE_VALUE" -> RuleResultingValueNotPermitted,
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-      "BVR_FAILURE_C55316" -> RuleOverConsolidatedExpensesThreshold,
+      "BVR_FAILURE_C55316"            -> RuleOverConsolidatedExpensesThreshold,
       "BVR_FAILURE_C15320" -> RuleTradingIncomeAllowanceClaimed,
       "BVR_FAILURE_C55503" -> models.errors.InternalError,
       "BVR_FAILURE_C55508" -> models.errors.InternalError,
@@ -59,19 +59,20 @@ class SubmitSelfEmploymentBsasService @Inject()(connector: SubmitSelfEmploymentB
     val extraTysErrors =
       Map(
         "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-        "INVALID_TAX_YEAR" -> TaxYearFormatError,
-        "NOT_FOUND" -> NotFoundError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+        "NOT_FOUND"                      -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError
       )
 
     errors ++ extraTysErrors
   }
 
-  def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(implicit ctx: RequestContext,
-                                                                             ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+  def submitSelfEmploymentBsas(
+      request: SubmitSelfEmploymentBsasRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector
       .submitSelfEmploymentBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
+
 }

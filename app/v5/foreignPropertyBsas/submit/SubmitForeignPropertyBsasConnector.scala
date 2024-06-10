@@ -37,7 +37,7 @@ class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClient, val ap
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-    import request._
+    import request.{body, calculationId, nino, taxYear}
 
     val downstreamUri = taxYear match {
       case Some(ty) if ty.useTaxYearSpecificApi =>

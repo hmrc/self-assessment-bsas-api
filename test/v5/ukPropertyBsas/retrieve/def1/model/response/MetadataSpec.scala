@@ -16,15 +16,15 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
+import common.model.RoundTripTest
 import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
-import v5.models.RoundTripTest
-import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
+import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, parsedMetadata, mtdMetadataJson}
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
   import Metadata._
 
-  testRoundTrip("Metadata", downstreamMetadataJson, metadataModel, mtdMetadataJson)(reads)
+  testRoundTrip("Metadata", downstreamMetadataJson, parsedMetadata, mtdMetadataJson)(reads)
 
 }

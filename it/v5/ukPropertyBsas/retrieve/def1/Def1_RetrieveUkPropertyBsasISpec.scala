@@ -16,6 +16,7 @@
 
 package v5.ukPropertyBsas.retrieve.def1
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -24,8 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v5.models.domain.IncomeSourceType
-import v5.models.errors._
+import v5.common.model.IncomeSourceType
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
 class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
@@ -42,7 +42,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId)
+        response.json shouldBe mtdRetrieveBsasResponseFhlJson
 
       }
 
@@ -56,7 +56,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId)
+        response.json shouldBe mtdRetrieveBsasResponseNonFhlJson
 
       }
 
@@ -69,8 +69,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseFhlJsonWithHateoas(nino, calculationId, taxYear)
-
+        response.json shouldBe mtdRetrieveBsasResponseFhlJson
       }
 
       "any valid Tax Year Specific request is made and Non-FHL is returned" in new TysIfsTest {
@@ -83,7 +82,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
-        response.json shouldBe mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino, calculationId, taxYear)
+        response.json shouldBe mtdRetrieveBsasResponseNonFhlJson
       }
     }
 
@@ -128,7 +127,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         }
       }
 
-      val input = Seq(
+      val input = List(
         ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-24"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("2023-24"), BAD_REQUEST, CalculationIdFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-2024"), BAD_REQUEST, TaxYearFormatError),
@@ -162,7 +161,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         }
       }
 
-      val errors = Seq(
+      val errors = List(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
@@ -172,7 +171,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
@@ -196,7 +195,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
-        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123")

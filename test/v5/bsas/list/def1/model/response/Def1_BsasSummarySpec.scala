@@ -25,7 +25,7 @@ class Def1_BsasSummarySpec extends UnitSpec with Def1_ListBsasFixtures {
 
   "BsasSummary" when {
     "read from valid JSON" should {
-      "return the expected model" in {
+      "return the expected data object" in {
           val result: BsasSummary = bsasSummaryDownstreamJson.as[Def1_BsasSummary]
           result shouldBe bsasSummary
       }

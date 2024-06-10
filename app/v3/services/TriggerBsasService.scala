@@ -17,11 +17,11 @@
 package v3.services
 
 import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import v3.connectors.TriggerBsasConnector
-import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 

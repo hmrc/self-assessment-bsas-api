@@ -23,16 +23,16 @@ import RetrieveForeignPropertyBsasBodyFixtures._
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
-    "return a valid submission period model" when {
-      "a valid json with all fields are supplied" in {
+    "return the expected SubmissionPeriod" when {
+      "given a valid json object with all fields" in {
         submissionPeriodDesJson.as[SubmissionPeriods] shouldBe parsedSubmissionPeriod
       }
     }
   }
 
   "writes" should {
-    "return a valid json" when {
-      "a valid model is supplied" in {
+    "return the expected json object" when {
+      "given a valid SubmissionPeriod" in {
         parsedSubmissionPeriod.toJson shouldBe submissionPeriodMtdJson
       }
     }

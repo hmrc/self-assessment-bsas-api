@@ -16,13 +16,12 @@
 
 package v5.ukPropertyBsas.submit.def1.model.request
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import shared.UnitSpec
 
 class NonFHLIncomeSpec extends UnitSpec {
 
-  val json: JsValue = Json
-    .parse("""
+  private val json = Json.parse("""
         |{
         |   "totalRentsReceived": 1.12,
         |   "premiumsOfLeaseGrant": 2.12,
@@ -31,7 +30,7 @@ class NonFHLIncomeSpec extends UnitSpec {
         |}
         |""".stripMargin)
 
-  val model: NonFHLIncome =
+  private val nonFhlIncome =
     NonFHLIncome(
       totalRentsReceived = Some(1.12),
       premiumsOfLeaseGrant = Some(2.12),
@@ -39,33 +38,33 @@ class NonFHLIncomeSpec extends UnitSpec {
       otherPropertyIncome = Some(4.12)
     )
 
-  val emptyModel: NonFHLIncome = NonFHLIncome(None, None, None, None)
+  private val emptyNonFHLIncome = NonFHLIncome(None, None, None, None)
 
   "reads" when {
-    "passed mtd json" should {
-      "return the corresponding model" in {
+    "given MTD json" should {
+      "return the expected NonFHLIncome" in {
         json
-          .as[NonFHLIncome] shouldBe model
+          .as[NonFHLIncome] shouldBe nonFhlIncome
       }
     }
 
-    "passed an empty JSON" should {
-      "return an empty model" in {
-        JsObject.empty.as[NonFHLIncome] shouldBe emptyModel
+    "given an empty JSON object" should {
+      "return an empty NonFHLIncome" in {
+        JsObject.empty.as[NonFHLIncome] shouldBe emptyNonFHLIncome
       }
     }
   }
 
   "writes" when {
-    "passed a model" should {
+    "given a NonFHLIncome" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(nonFhlIncome) shouldBe json
       }
     }
 
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+    "given an empty NonFHLIncome" should {
+      "return an empty JSON object" in {
+        Json.toJson(emptyNonFHLIncome) shouldBe JsObject.empty
       }
     }
   }

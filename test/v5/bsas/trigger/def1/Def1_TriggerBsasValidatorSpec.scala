@@ -18,6 +18,7 @@ package v5.bsas.trigger.def1
 
 import cats.data.Validated
 import cats.data.Validated.Valid
+import common.errors.{RuleAccountingPeriodNotSupportedError, TypeOfBusinessFormatError}
 import config.MockBsasConfig
 import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.UnitSpec
@@ -25,8 +26,7 @@ import shared.models.domain.Nino
 import shared.models.errors._
 import v5.bsas.trigger.def1.model.request.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 import v5.bsas.trigger.model.TriggerBsasRequestData
-import v5.models.domain.TypeOfBusiness
-import v5.models.errors.{RuleAccountingPeriodNotSupportedError, TypeOfBusinessFormatError}
+import v5.common.model.TypeOfBusiness
 
 class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
 

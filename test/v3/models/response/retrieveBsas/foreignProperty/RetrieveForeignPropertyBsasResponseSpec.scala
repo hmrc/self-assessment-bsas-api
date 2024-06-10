@@ -16,6 +16,7 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
+import common.model.RoundTripTest
 import play.api.Configuration
 import shared.UnitSpec
 import shared.config.MockAppConfig

@@ -16,10 +16,9 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
-import v5.models.domain.{IncomeSourceType, TypeOfBusiness}
-import v5.ukPropertyBsas.retrieve.def1.model.response._
+import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 
 object RetrieveUkPropertyBsasFixtures {
 
@@ -549,51 +548,7 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasReponseFhlJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
-
-    mtdRetrieveBsasResponseFhlJson.as[JsObject] ++ Json
-      .parse(s"""
-      |{
-      |  "links": [
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId$taxYearParam",
-      |      "method": "GET",
-      |      "rel": "self"
-      |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust$taxYearParam",
-      |      "method": "POST",
-      |      "rel": "submit-uk-property-accounting-adjustments"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
-      .as[JsObject]
-  }
-
-  def mtdRetrieveBsasReponseNonFhlJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
-
-    mtdRetrieveBsasResponseNonFhlJson.as[JsObject] ++ Json
-      .parse(s"""
-      |{
-      |  "links": [
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId$taxYearParam",
-      |      "method": "GET",
-      |      "rel": "self"
-      |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calculationId/adjust$taxYearParam",
-      |      "method": "POST",
-      |      "rel": "submit-uk-property-accounting-adjustments"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
-      .as[JsObject]
-  }
-
-  val metadataModel: Metadata = Metadata(
+  val parsedMetadata: Metadata = Metadata(
     calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
     requestedDateTime = "2000-01-01T10:12:10Z",
     adjustedDateTime = Some("2000-01-01T10:12:10Z"),
@@ -602,7 +557,7 @@ object RetrieveUkPropertyBsasFixtures {
     summaryStatus = Status.`valid`
   )
 
-  val submissionPeriodWithPeriodIdModel: SubmissionPeriod = SubmissionPeriod(
+  val submissionPeriodWithPeriodId: SubmissionPeriod = SubmissionPeriod(
     periodId = Some("1234567890123456"),
     submissionId = None,
     startDate = now,
@@ -610,7 +565,7 @@ object RetrieveUkPropertyBsasFixtures {
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
 
-  val submissionPeriodWithSubmissionIdModel: SubmissionPeriod = SubmissionPeriod(
+  val submissionPeriodWithSubmissionId: SubmissionPeriod = SubmissionPeriod(
     periodId = None,
     submissionId = Some(s"${now}_$aYearFromNow"),
     startDate = now,
@@ -618,27 +573,27 @@ object RetrieveUkPropertyBsasFixtures {
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
 
-  val inputsFhlModel: Inputs = Inputs(
+  val inputsFhl: Inputs = Inputs(
     typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
+    submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
   )
 
-  val inputsNonFhlModel: Inputs = Inputs(
+  val inputsNonFhl: Inputs = Inputs(
     typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
+    submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
   )
 
-  val summaryCalculationIncomeFhlModel: SummaryCalculationIncome = SummaryCalculationIncome(
+  val summaryCalculationIncomeFhl: SummaryCalculationIncome = SummaryCalculationIncome(
     totalRentsReceived = Some(1.05),
     premiumsOfLeaseGrant = None,
     reversePremiums = None,
@@ -646,7 +601,7 @@ object RetrieveUkPropertyBsasFixtures {
     rarRentReceived = Some(1.06)
   )
 
-  val summaryCalculationIncomeNonFhlModel: SummaryCalculationIncome = SummaryCalculationIncome(
+  val summaryCalculationIncomeNonFhl: SummaryCalculationIncome = SummaryCalculationIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
@@ -654,7 +609,7 @@ object RetrieveUkPropertyBsasFixtures {
     rarRentReceived = Some(1.06)
   )
 
-  val summaryCalculationExpensesFhlModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
+  val summaryCalculationExpensesFhl: SummaryCalculationExpenses = SummaryCalculationExpenses(
     consolidatedExpenses = Some(2.01),
     premisesRunningCosts = Some(2.02),
     repairsAndMaintenance = Some(2.03),
@@ -667,7 +622,7 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.10)
   )
 
-  val summaryCalculationExpensesNonFhlModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
+  val summaryCalculationExpensesNonFhl: SummaryCalculationExpenses = SummaryCalculationExpenses(
     consolidatedExpenses = Some(2.01),
     premisesRunningCosts = Some(2.02),
     repairsAndMaintenance = Some(2.03),
@@ -680,13 +635,13 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.10)
   )
 
-  val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
+  val summaryCalculationAdditions: SummaryCalculationAdditions = SummaryCalculationAdditions(
     privateUseAdjustment = Some(5.01),
     balancingCharge = Some(5.02),
     bpraBalancingCharge = Some(5.03)
   )
 
-  val summaryCalculationDeductionsFhlModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
+  val summaryCalculationDeductionsFhl: SummaryCalculationDeductions = SummaryCalculationDeductions(
     zeroEmissionGoods = None,
     annualInvestmentAllowance = Some(6.02),
     costOfReplacingDomesticItems = None,
@@ -700,7 +655,7 @@ object RetrieveUkPropertyBsasFixtures {
     zeroEmissionsCarAllowance = Some(6.11)
   )
 
-  val summaryCalculationDeductionsNonFhlModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
+  val summaryCalculationDeductionsNonFhl: SummaryCalculationDeductions = SummaryCalculationDeductions(
     zeroEmissionGoods = Some(6.01),
     annualInvestmentAllowance = Some(6.02),
     costOfReplacingDomesticItems = Some(6.03),
@@ -714,51 +669,51 @@ object RetrieveUkPropertyBsasFixtures {
     zeroEmissionsCarAllowance = Some(6.11)
   )
 
-  val adjustableSummaryCalculationFhlModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
+  val adjustableSummaryCalculationFhl: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeFhlModel),
+    income = Some(summaryCalculationIncomeFhl),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesFhlModel),
+    expenses = Some(summaryCalculationExpensesFhl),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsFhlModel),
+    deductions = Some(summaryCalculationDeductionsFhl),
     taxableProfit = Some(7),
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val adjustableSummaryCalculationNonFhlModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
+  val adjustableSummaryCalculationNonFhl: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeNonFhlModel),
+    income = Some(summaryCalculationIncomeNonFhl),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesNonFhlModel),
+    expenses = Some(summaryCalculationExpensesNonFhl),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsNonFhlModel),
+    deductions = Some(summaryCalculationDeductionsNonFhl),
     taxableProfit = Some(7),
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val adjustmentsIncomeFhlModel: AdjustmentsIncome = AdjustmentsIncome(
+  val adjustmentsIncomeFhl: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(1.05),
     premiumsOfLeaseGrant = None,
     reversePremiums = None,
     otherPropertyIncome = None
   )
 
-  val adjustmentsIncomeNonFhlModel: AdjustmentsIncome = AdjustmentsIncome(
+  val adjustmentsIncomeNonFhl: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
     otherPropertyIncome = Some(1.04)
   )
 
-  val adjustmentsExpensesFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
+  val adjustmentsExpensesFhl: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(2.01),
     premisesRunningCosts = Some(2.02),
     repairsAndMaintenance = Some(2.03),
@@ -770,7 +725,7 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.09)
   )
 
-  val adjustmentsExpensesNonFhlModel: AdjustmentsExpenses = AdjustmentsExpenses(
+  val adjustmentsExpensesNonFhl: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(2.01),
     premisesRunningCosts = Some(2.02),
     repairsAndMaintenance = Some(2.03),
@@ -782,68 +737,72 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.09)
   )
 
-  val adjustmentsFhlModel: Adjustments = Adjustments(
-    income = Some(adjustmentsIncomeFhlModel),
-    expenses = Some(adjustmentsExpensesFhlModel)
+  val adjustmentsFhl: Adjustments = Adjustments(
+    income = Some(adjustmentsIncomeFhl),
+    expenses = Some(adjustmentsExpensesFhl)
   )
 
-  val adjustmentsNonFhlModel: Adjustments = Adjustments(
-    income = Some(adjustmentsIncomeNonFhlModel),
-    expenses = Some(adjustmentsExpensesNonFhlModel)
+  val adjustmentsNonFhl: Adjustments = Adjustments(
+    income = Some(adjustmentsIncomeNonFhl),
+    expenses = Some(adjustmentsExpensesNonFhl)
   )
 
-  val adjustedSummaryCalculationFhlModel: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
+  val adjustedSummaryCalculationFhl: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeFhlModel),
+    income = Some(summaryCalculationIncomeFhl),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesFhlModel),
+    expenses = Some(summaryCalculationExpensesFhl),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsFhlModel),
+    deductions = Some(summaryCalculationDeductionsFhl),
     taxableProfit = Some(7),
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val adjustedSummaryCalculationNonFhlModel: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
+  val adjustedSummaryCalculationNonFhl: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeNonFhlModel),
+    income = Some(summaryCalculationIncomeNonFhl),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesNonFhlModel),
+    expenses = Some(summaryCalculationExpensesNonFhl),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsNonFhlModel),
+    deductions = Some(summaryCalculationDeductionsNonFhl),
     taxableProfit = Some(7),
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val retrieveBsasResponseFhlModel: Def1_RetrieveUkPropertyBsasResponse = Def1_RetrieveUkPropertyBsasResponse(
-    metadata = metadataModel,
-    inputs = inputsFhlModel,
-    adjustableSummaryCalculation = adjustableSummaryCalculationFhlModel,
-    adjustments = Some(adjustmentsFhlModel),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhlModel)
+  val retrieveBsasResponseFhl: Def1_RetrieveUkPropertyBsasResponse = Def1_RetrieveUkPropertyBsasResponse(
+    metadata = parsedMetadata,
+    inputs = inputsFhl,
+    adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
+    adjustments = Some(adjustmentsFhl),
+    adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)
   )
 
-  val retrieveBsasResponseNonFhlModel: Def1_RetrieveUkPropertyBsasResponse = Def1_RetrieveUkPropertyBsasResponse(
-    metadata = metadataModel,
-    inputs = inputsNonFhlModel,
-    adjustableSummaryCalculation = adjustableSummaryCalculationNonFhlModel,
-    adjustments = Some(adjustmentsNonFhlModel),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationNonFhlModel)
+  val retrieveBsasResponseNonFhl: Def1_RetrieveUkPropertyBsasResponse = Def1_RetrieveUkPropertyBsasResponse(
+    metadata = parsedMetadata,
+    inputs = inputsNonFhl,
+    adjustableSummaryCalculation = adjustableSummaryCalculationNonFhl,
+    adjustments = Some(adjustmentsNonFhl),
+    adjustedSummaryCalculation = Some(adjustedSummaryCalculationNonFhl)
   )
 
-  def retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness: TypeOfBusiness): Def1_RetrieveUkPropertyBsasResponse = Def1_RetrieveUkPropertyBsasResponse(
-    metadata = metadataModel,
-    inputs = inputsFhlModel.copy(typeOfBusiness = typeOfBusiness),
-    adjustableSummaryCalculation = adjustableSummaryCalculationFhlModel,
-    adjustments = Some(adjustmentsFhlModel),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhlModel)
-  )
+  def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def1_RetrieveUkPropertyBsasResponse =
+    Def1_RetrieveUkPropertyBsasResponse(
+      metadata = parsedMetadata,
+      inputs = inputsFhl
+        /** EndMarker */
+        .copy(typeOfBusiness = typeOfBusiness)
+        .copy(typeOfBusiness = typeOfBusiness),
+      adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
+      adjustments = Some(adjustmentsFhl),
+      adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)
+    )
 
 }

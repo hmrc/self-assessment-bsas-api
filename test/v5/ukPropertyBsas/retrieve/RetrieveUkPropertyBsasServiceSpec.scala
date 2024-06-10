@@ -16,14 +16,14 @@
 
 package v5.ukPropertyBsas.retrieve
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.models.domain.TypeOfBusiness
-import v5.models.errors._
+import v5.common.model.TypeOfBusiness
 import v5.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 import v5.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
@@ -50,18 +50,18 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
       "a valid request is supplied" in new Test {
         MockRetrievePropertyBsasConnector
           .retrievePropertyBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhl))))
 
-        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
+        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponseFhl))
       }
     }
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
         import TypeOfBusiness._
-        Seq(`self-employment`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
+        List(`self-employment`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
-            val response: RetrieveUkPropertyBsasResponse = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
+            val response: RetrieveUkPropertyBsasResponse = retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness = typeOfBusiness)
 
             MockRetrievePropertyBsasConnector
               .retrievePropertyBsas(request)
@@ -81,7 +81,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
           await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVAlID_CORRELATIONID", InternalError),
@@ -92,7 +92,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("NOT_FOUND", NotFoundError),
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)

@@ -16,6 +16,7 @@
 
 package v3.controllers
 
+import common.errors._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -30,7 +31,6 @@ import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockRetrieveUkPropertyBsasValidatorFactory
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 import v3.mocks.services.MockRetrieveUkPropertyBsasService
-import v3.models.errors._
 import v3.models.request.retrieveBsas
 import v3.models.response.retrieveBsas.ukProperty.RetrieveUkPropertyHateoasData
 

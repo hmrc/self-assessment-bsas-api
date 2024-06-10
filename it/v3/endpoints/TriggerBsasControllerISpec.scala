@@ -17,6 +17,7 @@
 package v3.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
@@ -26,7 +27,6 @@ import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
-import v3.models.errors._
 
 class TriggerBsasControllerISpec extends IntegrationBaseSpec {
 

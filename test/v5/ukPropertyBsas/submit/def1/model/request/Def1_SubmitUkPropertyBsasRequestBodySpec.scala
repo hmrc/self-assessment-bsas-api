@@ -22,11 +22,11 @@ import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBo
 
 class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
-  val emptyModel: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(None, None)
+  private val emptyParsedRequestBody = Def1_SubmitUkPropertyBsasRequestBody(None, None)
 
-  val nonFhlModel: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
+  private val nonFhlParsedRequestBody = Def1_SubmitUkPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
 
-  val fhlModel: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None)))
+  private val fhlParsedRequestBody = Def1_SubmitUkPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None)))
 
   "reads" when {
     "reading a simple non-fhl body" should {
@@ -38,7 +38,7 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
             |  }
             |}
             |""".stripMargin)
-          .as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe nonFhlModel
+          .as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe nonFhlParsedRequestBody
       }
     }
 
@@ -53,25 +53,25 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
               |}
               |""".stripMargin
           )
-          .as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe fhlModel
+          .as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe fhlParsedRequestBody
       }
     }
 
     "reading a full non-fhl body" should {
       "return the expected non-fhl model" in {
-        mtdRequestNonFhlFull.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe requestNonFhlFullModel
+        mtdRequestNonFhlFull.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe requestNonFhlFull
       }
     }
 
     "reading a full fhl body" should {
       "return the expected fhl model" in {
-        mtdRequestFhlFull.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe requestFhlFullModel
+        mtdRequestFhlFull.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe requestFhlFull
       }
     }
 
     "reading an empty body" should {
       "return an empty model" in {
-        JsObject.empty.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe emptyModel
+        JsObject.empty.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe emptyParsedRequestBody
       }
     }
   }
@@ -79,7 +79,7 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "writing a simple non-fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlModel) shouldBe Json.parse("""
+        Json.toJson(nonFhlParsedRequestBody) shouldBe Json.parse("""
             |{
             |  "incomeSourceType": "02",
             |  "adjustments": {
@@ -91,7 +91,7 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
     "writing a simple fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(fhlModel) shouldBe Json.parse(
+        Json.toJson(fhlParsedRequestBody) shouldBe Json.parse(
           """
             |{
             |  "incomeSourceType": "04",
@@ -105,19 +105,19 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
     "writing a full non-fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(requestNonFhlFullModel) shouldBe downstreamRequestNonFhlFull
+        Json.toJson(requestNonFhlFull) shouldBe downstreamRequestNonFhlFull
       }
     }
 
     "writing a full fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(requestFhlFullModel) shouldBe downstreamRequestFhlFull
+        Json.toJson(requestFhlFull) shouldBe downstreamRequestFhlFull
       }
     }
 
     "passed an empty model" should {
       "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+        Json.toJson(emptyParsedRequestBody) shouldBe JsObject.empty
       }
     }
   }

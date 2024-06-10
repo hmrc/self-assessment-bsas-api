@@ -16,6 +16,7 @@
 
 package v3.services
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
@@ -24,7 +25,6 @@ import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.connectors.MockSubmitSelfEmploymentBsasConnector
-import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 
 import scala.concurrent.Future

@@ -16,13 +16,13 @@
 
 package v5.ukPropertyBsas.submit.def1.model.request
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import shared.UnitSpec
 
 class NonFurnishedHolidayLetSpec extends UnitSpec {
 
   // Use simple case as formats for contents of income/expenses are tested elsewhere...
-  val json: JsValue = Json.parse("""
+  private val json = Json.parse("""
       |{
       |  "income": {
       |  },
@@ -31,37 +31,37 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  val model: NonFurnishedHolidayLet = NonFurnishedHolidayLet(
+  private val nonFurnishedHolidayLet = NonFurnishedHolidayLet(
     Some(NonFHLIncome(None, None, None, None)),
     Some(NonFHLExpenses(None, None, None, None, None, None, None, None, None))
   )
 
-  val emptyModel: NonFurnishedHolidayLet = NonFurnishedHolidayLet(None, None)
+  private val emptyNonFurnishedHolidayLet = NonFurnishedHolidayLet(None, None)
 
   "reads" when {
-    "passed mtd json" should {
-      "return the corresponding model" in {
-        json.as[NonFurnishedHolidayLet] shouldBe model
+    "given MTD json" should {
+      "return the corresponding NonFurnishedHolidayLet" in {
+        json.as[NonFurnishedHolidayLet] shouldBe nonFurnishedHolidayLet
       }
     }
 
-    "passed an empty JSON" should {
-      "return an empty model" in {
-        JsObject.empty.as[NonFurnishedHolidayLet] shouldBe emptyModel
+    "given an empty JSON object" should {
+      "return an empty NonFurnishedHolidayLet" in {
+        JsObject.empty.as[NonFurnishedHolidayLet] shouldBe emptyNonFurnishedHolidayLet
       }
     }
   }
 
   "writes" when {
-    "passed a model" should {
+    "given a NonFurnishedHolidayLet" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(nonFurnishedHolidayLet) shouldBe json
       }
     }
 
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+    "given an empty NonFurnishedHolidayLet" should {
+      "return an empty JSON object" in {
+        Json.toJson(emptyNonFurnishedHolidayLet) shouldBe JsObject.empty
       }
     }
   }

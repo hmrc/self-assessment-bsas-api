@@ -18,7 +18,7 @@ package v5.bsas.trigger.def1.model.request
 
 import play.api.libs.json.{Json, OWrites, Reads}
 import v5.bsas.trigger.model.TriggerBsasRequestBody
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 
 /** @param typeOfBusiness
   *   reads "self-employment" etc from the vendor request, writes "01" etc to the downstream request.

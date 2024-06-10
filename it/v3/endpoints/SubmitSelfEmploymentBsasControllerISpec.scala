@@ -17,6 +17,7 @@
 package v3.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -26,7 +27,6 @@ import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.stubs._
 import support.IntegrationBaseSpec
-import v3.models.errors._
 
 class SubmitSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 

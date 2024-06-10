@@ -19,6 +19,7 @@ package v3.controllers.validators
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
+import common.errors.RuleAccountingPeriodNotSupportedError
 import config.BsasConfig
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
@@ -26,7 +27,6 @@ import shared.models.errors.MtdError
 import v3.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v3.models.domain.TypeOfBusiness
 import v3.models.domain.TypeOfBusiness.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
-import v3.models.errors.RuleAccountingPeriodNotSupportedError
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 
 import java.time.LocalDate

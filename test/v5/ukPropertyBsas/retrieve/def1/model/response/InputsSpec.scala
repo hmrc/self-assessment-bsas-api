@@ -16,10 +16,10 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
+import common.model.RoundTripTest
 import play.api.libs.json.JsResultException
 import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
-import v5.models.RoundTripTest
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
 class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -44,7 +44,7 @@ class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
   import Inputs._
 
-  testRoundTrip("Inputs FHL", downstreamInputsFhlJson, inputsFhlModel, mtdInputsFhlJson)(reads)
-  testRoundTrip("Inputs Non-FHL", downstreamInputsNonFhlJson, inputsNonFhlModel, mtdInputsNonFhlJson)(reads)
+  testRoundTrip("Inputs FHL", downstreamInputsFhlJson, inputsFhl, mtdInputsFhlJson)(reads)
+  testRoundTrip("Inputs Non-FHL", downstreamInputsNonFhlJson, inputsNonFhl, mtdInputsNonFhlJson)(reads)
 
 }

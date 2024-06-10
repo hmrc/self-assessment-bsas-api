@@ -16,10 +16,10 @@
 
 package v3.controllers.validators
 
+import common.errors._
 import shared.UnitSpec
 import shared.models.domain.{BusinessId, Nino, TaxYear}
 import shared.models.errors._
-import v3.models.errors.TypeOfBusinessFormatError
 import v3.models.request.ListBsasRequestData
 
 class ListBsasValidatorFactorySpec extends UnitSpec {

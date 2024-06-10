@@ -23,16 +23,16 @@ import RetrieveForeignPropertyBsasBodyFixtures._
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
-    "return a valid metadata model" when {
-      "a valid json with all fields are supplied" in {
+    "return the expected parsed object" when {
+      "given a valid json object with all fields" in {
         metadataDesJson.as[Metadata] shouldBe parsedMetadata
       }
     }
   }
 
   "writes" should {
-    "return a valid metadata json" when {
-      "a valid model is supplied" in {
+    "return the expected json" when {
+      "given a valid data object" in {
         parsedMetadata.toJson shouldBe metadataMtdJson
       }
     }

@@ -16,9 +16,9 @@
 
 package v5.foreignPropertyBsas.retrieve.def1.model.response
 
+import common.model.RoundTripTest
 import shared.UnitSpec
-import RetrieveForeignPropertyBsasBodyFixtures._
-import v5.models.RoundTripTest
+import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
 class SummaryCalculationExpensesSpec extends UnitSpec with RoundTripTest {
 

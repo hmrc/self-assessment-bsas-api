@@ -31,9 +31,10 @@ class SubmitForeignPropertyBsasValidatorFactory {
       nino: String,
       calculationId: String,
       taxYear: Option[String],
-      body: JsValue,
-      schema: SubmitForeignPropertyBsasSchema
+      body: JsValue
   ): Validator[SubmitForeignPropertyBsasRequestData] = {
+
+    val schema = SubmitForeignPropertyBsasSchema.schemaFor(taxYear)
 
     schema match {
       case Def1 => new Def1_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)

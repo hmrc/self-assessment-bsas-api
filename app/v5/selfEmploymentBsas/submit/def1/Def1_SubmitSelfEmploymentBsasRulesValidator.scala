@@ -18,10 +18,10 @@ package v5.selfEmploymentBsas.submit.def1
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
+import common.errors.RuleBothExpensesError
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v5.models.errors.RuleBothExpensesError
 import v5.selfEmploymentBsas.submit.def1.model.request.{Additions, Def1_SubmitSelfEmploymentBsasRequestData, Expenses, Income}
 
 object Def1_SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[Def1_SubmitSelfEmploymentBsasRequestData] {

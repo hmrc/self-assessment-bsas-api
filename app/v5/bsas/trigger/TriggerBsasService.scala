@@ -17,11 +17,11 @@
 package v5.bsas.trigger
 
 import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import v5.bsas.trigger.model.{TriggerBsasRequestData, TriggerBsasResponse}
-import v5.models.errors._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

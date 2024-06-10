@@ -18,11 +18,11 @@ package v5.ukPropertyBsas.submit.def1
 
 import cats.data.Validated
 import cats.implicits._
+import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
-import v5.models.errors.RuleBothPropertiesSuppliedError
 import v5.ukPropertyBsas.submit.def1.model.request.{Def1_SubmitUkPropertyBsasRequestBody, Def1_SubmitUkPropertyBsasRequestData}
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 

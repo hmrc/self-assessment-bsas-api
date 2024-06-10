@@ -26,7 +26,7 @@ class SummaryCalculationDeductionsSpec extends UnitSpec with JsonErrorValidators
   "reads" should {
     "return a valid model" when {
       "passed valid JSON with periodId regex" in {
-        downstreamSummaryCalculationDeductionsJson.as[SummaryCalculationDeductions] shouldBe summaryCalculationDeductionsModel
+        downstreamSummaryCalculationDeductionsJson.as[SummaryCalculationDeductions] shouldBe summaryCalculationDeductions
       }
     }
   }
@@ -34,7 +34,7 @@ class SummaryCalculationDeductionsSpec extends UnitSpec with JsonErrorValidators
   "writes" should {
     "return valid JSON" when {
       "passed a valid model with periodId" in {
-        Json.toJson(summaryCalculationDeductionsModel) shouldBe mtdSummaryCalculationDeductionsJson
+        Json.toJson(summaryCalculationDeductions) shouldBe mtdSummaryCalculationDeductionsJson
       }
     }
   }

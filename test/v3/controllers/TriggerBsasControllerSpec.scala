@@ -16,6 +16,7 @@
 
 package v3.controllers
 
+import common.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -32,7 +33,6 @@ import v3.controllers.validators.MockTriggerBsasValidatorFactory
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.services.MockTriggerBsasService
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasHateoasData
 

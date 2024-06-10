@@ -16,6 +16,7 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
+import common.model.RoundTripTest
 import play.api.Configuration
 import shared.UnitSpec
 import shared.config.MockAppConfig
@@ -32,14 +33,14 @@ class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidato
   testRoundTrip(
     testName = "Retrieve UK Property FHL",
     downstreamJson = downstreamRetrieveBsasFhlResponseJson,
-    model = retrieveBsasResponseFhlModel,
+    dataObject = retrieveBsasResponseFhlModel,
     mtdJson = mtdRetrieveBsasResponseFhlJson
   )(reads)
 
   testRoundTrip(
     testName = "Retrieve UK Property Non-FHL",
     downstreamJson = downstreamRetrieveBsasNonFhlResponseJson,
-    model = retrieveBsasResponseNonFhlModel,
+    dataObject = retrieveBsasResponseNonFhlModel,
     mtdJson = mtdRetrieveBsasResponseNonFhlJson
   )(reads)
 

@@ -22,16 +22,16 @@ import v5.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsa
 
 class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
-  val emptyModel: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, None)
+  private val parsedEmptyRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, None)
 
-  val nonFhlModel: Def1_SubmitForeignPropertyBsasRequestBody =
-    Def1_SubmitForeignPropertyBsasRequestBody(Some(Seq(ForeignProperty("FRA", None, None))), None)
+  private val parsedNonFhlRequestBody =
+    Def1_SubmitForeignPropertyBsasRequestBody(Some(List(ForeignProperty("FRA", None, None))), None)
 
-  val fhlModel: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, Some(FhlEea(None, None)))
+  private val parsedFhlRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, Some(FhlEea(None, None)))
 
   "reads" when {
-    "reading a simple non-fhl body" should {
-      "return the expected non-fhl model" in {
+    "given a simple non-fhl body" should {
+      "return the expected non-fhl data object" in {
         Json
           .parse("""
             |{
@@ -42,12 +42,12 @@ class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-          .as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe nonFhlModel
+          .as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe parsedNonFhlRequestBody
       }
     }
 
-    "reading a simple fhl body" should {
-      "return the expected fhl model" in {
+    "given a simple fhl body" should {
+      "return the expected fhl data object" in {
         Json
           .parse(
             """
@@ -57,33 +57,33 @@ class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
             |}
             |""".stripMargin
           )
-          .as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe fhlModel
+          .as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe parsedFhlRequestBody
       }
     }
 
-    "reading a full non-fhl body" should {
-      "return the expected non-fhl model" in {
-        mtdRequestNonFhlFull.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe requestNonFhlFullModel
+    "given a full non-fhl body" should {
+      "return the expected non-fhl data object" in {
+        mtdRequestNonFhlFull.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe requestNonFhlFull
       }
     }
 
-    "reading a full fhl body" should {
-      "return the expected fhl model" in {
-        mtdRequestFhlFull.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe requestFhlFullModel
+    "given a full fhl body" should {
+      "return the expected fhl data object" in {
+        mtdRequestFhlFull.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe requestFhlFull
       }
     }
 
-    "reading an empty body" should {
-      "return an empty model" in {
-        JsObject.empty.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe emptyModel
+    "given an empty body" should {
+      "return an empty data object" in {
+        JsObject.empty.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe parsedEmptyRequestBody
       }
     }
   }
 
   "writes" when {
-    "writing a simple non-fhl model" should {
+    "given a simple non-fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlModel) shouldBe Json.parse("""
+        Json.toJson(parsedNonFhlRequestBody) shouldBe Json.parse("""
             |{
             |  "incomeSourceType": "15",
             |  "adjustments": [
@@ -96,9 +96,9 @@ class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
 
-    "writing a simple fhl model" should {
+    "given a simple fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(fhlModel) shouldBe Json.parse(
+        Json.toJson(parsedFhlRequestBody) shouldBe Json.parse(
           """
             |{
             |  "incomeSourceType": "03",
@@ -110,21 +110,21 @@ class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
 
-    "writing a full non-fhl model" should {
+    "given a full non-fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(requestNonFhlFullModel) shouldBe downstreamRequestNonFhlFull
+        Json.toJson(requestNonFhlFull) shouldBe downstreamRequestNonFhlFull
       }
     }
 
-    "writing a full fhl model" should {
+    "given a full fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(requestFhlFullModel) shouldBe downstreamRequestFhlFull
+        Json.toJson(requestFhlFull) shouldBe downstreamRequestFhlFull
       }
     }
 
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+    "given an empty data object" should {
+      "return an empty JSON object" in {
+        Json.toJson(parsedEmptyRequestBody) shouldBe JsObject.empty
       }
     }
   }

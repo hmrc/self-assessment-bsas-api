@@ -69,7 +69,7 @@ class ListBsasServiceSpec extends ServiceSpec with Def1_ListBsasFixtures {
           await(service.listBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("NO_DATA_FOUND", NotFoundError),
         ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -79,7 +79,7 @@ class ListBsasServiceSpec extends ServiceSpec with Def1_ListBsasFixtures {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         ("INVALID_CORRELATION_ID", InternalError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_INCOMESOURCE_ID", BusinessIdFormatError),

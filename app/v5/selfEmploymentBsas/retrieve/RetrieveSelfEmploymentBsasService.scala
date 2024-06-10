@@ -21,11 +21,10 @@ import cats.implicits._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.ServiceOutcome
-import v5.models.domain.TypeOfBusiness
+import v5.common.BaseRetrieveBsasService
+import v5.common.model.TypeOfBusiness
 import v5.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
-import v5.services.BaseRetrieveBsasService
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -17,6 +17,7 @@
 package v5.bsas.trigger.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
@@ -26,7 +27,6 @@ import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
-import v5.models.errors._
 
 class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
 
@@ -34,12 +34,12 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
 
       List(
-        ("self-employment", "self-employment"),
-        ("uk-property-fhl", "uk-property"),
-        ("uk-property-non-fhl", "uk-property"),
-        ("foreign-property-fhl-eea", "foreign-property"),
-        ("foreign-property", "foreign-property")
-      ).foreach { case (typeOfBusiness, hateoasLinkPath) =>
+        "self-employment",
+        "uk-property-fhl",
+        "uk-property-non-fhl",
+        "foreign-property-fhl-eea",
+        "foreign-property"
+      ).foreach { typeOfBusiness =>
         s"any valid request is made with typeOfBusiness: $typeOfBusiness" in new NonTysTest {
 
           override def setupStubs(): StubMapping = {
@@ -50,9 +50,9 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
             DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
           }
 
-          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, false)))
+          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, tys = false)))
           result.status shouldBe OK
-          result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
+          result.json shouldBe Json.parse(responseBody)
           result.header("Content-Type") shouldBe Some("application/json")
         }
 
@@ -65,9 +65,9 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
             DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
           }
 
-          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, true)))
+          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, tys = true)))
           result.status shouldBe OK
-          result.json shouldBe Json.parse(responseBody(hateoasLinkPath))
+          result.json shouldBe Json.parse(responseBody)
           result.header("Content-Type") shouldBe Some("application/json")
         }
       }
@@ -104,7 +104,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
 
         val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
           paths = Some(
-            Seq(
+            List(
               "/accountingPeriod/endDate",
               "/businessId",
               "/typeOfBusiness"
@@ -146,7 +146,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
           "businessId"       -> "XAIS12345678901"
         )
 
-        val input = Seq(
+        val input = List(
           ("AA1123A", validRequestJson, BAD_REQUEST, NinoFormatError),
           ("AA123456A", missingFieldsRequestJson, BAD_REQUEST, missingFieldsError),
           ("AA123456A", startDateErrorRequestJson, BAD_REQUEST, StartDateFormatError),
@@ -170,13 +170,13 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.POST, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().post(makeRequestBody("self-employment", false)))
+            val response: WSResponse = await(request().post(makeRequestBody("self-employment", tys = false)))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
-        val errors = Seq(
+        val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ENDED", BAD_REQUEST, RuleAccountingPeriodNotEndedError),
           (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", BAD_REQUEST, RulePeriodicDataIncompleteError),
@@ -188,7 +188,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", INTERNAL_SERVER_ERROR, InternalError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
@@ -209,8 +209,6 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
     def downstreamUri: String
 
     def setupStubs(): StubMapping
-
-    def triggerHateoasLink(hateoasLinkPath: String): String
 
     def request(): WSRequest = {
       setupStubs()
@@ -244,17 +242,10 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
       )
     }
 
-    def responseBody(hateoasLinkPath: String): String =
-      s"""
+    val responseBody: String =
+      """
          |{
-         |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
-         |  "links":[
-         |    {
-         |      "href":"${triggerHateoasLink(hateoasLinkPath)}",
-         |      "rel":"self",
-         |      "method":"GET"
-         |    }
-         |  ]
+         |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435"
          |}
     """.stripMargin
 
@@ -267,18 +258,12 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
-    def triggerHateoasLink(hateoasLinkPath: String): String =
-      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435"
-
   }
 
   private trait TysIfsTest extends Test {
     def downstreamTaxYear: String = "23-24"
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
-
-    def triggerHateoasLink(hateoasLinkPath: String): String =
-      s"/individuals/self-assessment/adjustable-summary/$nino/$hateoasLinkPath/c75f40a6-a3df-4429-a697-471eeec46435?taxYear=$mtdTaxYear"
 
     def mtdTaxYear: String = "2023-24"
   }

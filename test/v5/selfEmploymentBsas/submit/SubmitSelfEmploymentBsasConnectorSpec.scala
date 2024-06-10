@@ -19,9 +19,9 @@ package v5.selfEmploymentBsas.submit
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture.additionsModel
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture.expensesModel
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.IncomeFixture.incomeModel
+import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture.additions
+import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture.expenses
+import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.IncomeFixture.income
 import v5.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v5.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
@@ -31,9 +31,9 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   val submitSelfEmploymentBsasRequestBodyModel: Def1_SubmitSelfEmploymentBsasRequestBody =
     Def1_SubmitSelfEmploymentBsasRequestBody(
-      income = Some(incomeModel),
-      additions = Some(additionsModel),
-      expenses = Some(expensesModel)
+      income = Some(income),
+      additions = Some(additions),
+      expenses = Some(expenses)
     )
 
   private val nino          = Nino("AA123456A")

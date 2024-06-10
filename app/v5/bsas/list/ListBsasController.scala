@@ -19,10 +19,8 @@ package v5.bsas.list
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
-import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils._
-import v5.bsas.list.model.response.ListBsasHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,13 +31,10 @@ class ListBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: ListBsasValidatorFactory,
     service: ListBsasService,
-    hateoasFactory: HateoasFactory,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
-)(implicit
-    ec: ExecutionContext,
-    appConfig: AppConfig
-) extends AuthorisedController(cc)
+)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -49,14 +44,13 @@ class ListBsasController @Inject() (
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, taxYear, typeOfBusiness, businessId, ListBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, taxYear, typeOfBusiness, businessId)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.listBsas)
-          .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, response) =>
-            ListBsasHateoasData(nino, response, Some(parsedRequest.taxYear))))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

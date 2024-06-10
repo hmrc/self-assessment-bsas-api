@@ -16,6 +16,7 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
+import common.model.RoundTripTest
 import play.api.libs.json.JsResultException
 import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators

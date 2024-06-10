@@ -21,14 +21,14 @@ import v5.selfEmploymentBsas.submit.def1.model.request.{Income, queryMap}
 
 object IncomeFixture {
 
-  val incomeModel: Income =
+  val income: Income =
     Income(
       turnover = Some(1000.25),
       other = Some(1000.50)
     )
 
-  def incomeJson(model: Income): JsValue = {
-    import model._
+  def incomeJson(income: Income): JsValue = {
+    import income._
 
     val fields: Map[String, Option[BigDecimal]] =
       Map(

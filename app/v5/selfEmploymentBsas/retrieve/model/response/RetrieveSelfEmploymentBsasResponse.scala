@@ -18,36 +18,16 @@ package v5.selfEmploymentBsas.retrieve.model.response
 
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.libs.json._
-import shared.config.AppConfig
-import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
-import shared.models.domain.TaxYear
 import shared.utils.JsonWritesUtil
-import v5.hateoas.HateoasLinks
-import v5.models.domain.HasTypeOfBusiness
+import v5.common.model.HasTypeOfBusiness
 import v5.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
 
 trait RetrieveSelfEmploymentBsasResponse extends HasTypeOfBusiness
 
-object RetrieveSelfEmploymentBsasResponse extends HateoasLinks with JsonWritesUtil {
+object RetrieveSelfEmploymentBsasResponse extends JsonWritesUtil {
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = writesFrom { case a: Def1_RetrieveSelfEmploymentBsasResponse =>
     implicitly[OWrites[Def1_RetrieveSelfEmploymentBsasResponse]].writes(a)
   }
 
-  implicit object RetrieveSelfAssessmentBsasHateoasFactory
-      extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfEmploymentBsasHateoasData] {
-
-    override def links(appConfig: AppConfig, data: RetrieveSelfEmploymentBsasHateoasData): Seq[Link] = {
-      import data._
-
-      Seq(
-        getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear),
-        adjustSelfEmploymentBsas(appConfig, nino, bsasId, taxYear)
-      )
-    }
-
-  }
-
 }
-
-case class RetrieveSelfEmploymentBsasHateoasData(nino: String, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

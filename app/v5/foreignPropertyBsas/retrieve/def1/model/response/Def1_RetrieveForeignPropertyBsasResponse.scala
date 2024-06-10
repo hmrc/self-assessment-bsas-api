@@ -17,8 +17,8 @@
 package v5.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json._
+import v5.common.model.TypeOfBusiness
 import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
-import v5.models.domain.TypeOfBusiness
 
 case class Def1_RetrieveForeignPropertyBsasResponse(
     metadata: Metadata,

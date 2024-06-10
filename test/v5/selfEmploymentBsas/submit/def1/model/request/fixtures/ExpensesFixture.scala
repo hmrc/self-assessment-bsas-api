@@ -21,7 +21,7 @@ import v5.selfEmploymentBsas.submit.def1.model.request.{Expenses, queryMap}
 
 object ExpensesFixture {
 
-  val expensesModel: Expenses =
+  val expenses: Expenses =
     Expenses(
       costOfGoodsAllowable = Some(2000.25),
       paymentsToSubcontractorsAllowable = Some(2000.50),
@@ -41,8 +41,8 @@ object ExpensesFixture {
       consolidatedExpenses = None
     )
 
-  def expensesToDesJson(model: Expenses): JsValue = {
-    import model._
+  def expensesToDesJson(expenses: Expenses): JsValue = {
+    import expenses._
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
@@ -66,8 +66,8 @@ object ExpensesFixture {
     Json.toJsObject(queryMap(desFields))
   }
 
-  def expensesFromMtdJson(model: Expenses): JsValue = {
-    import model._
+  def expensesFromMtdJson(expenses: Expenses): JsValue = {
+    import expenses._
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(

@@ -17,39 +17,17 @@
 package v5.bsas.trigger.model
 
 import play.api.libs.json.OWrites
-import shared.config.AppConfig
-import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
-import shared.models.domain.TaxYear
 import shared.utils.JsonWritesUtil
 import v5.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
-import v5.hateoas.HateoasLinks
-import v5.models.domain.TypeOfBusiness
 
 trait TriggerBsasResponse {
   val calculationId: String
 }
 
-object TriggerBsasResponse extends HateoasLinks with JsonWritesUtil {
+object TriggerBsasResponse extends JsonWritesUtil {
 
   implicit val writes: OWrites[TriggerBsasResponse] = writesFrom { case a: Def1_TriggerBsasResponse =>
     implicitly[OWrites[Def1_TriggerBsasResponse]].writes(a)
   }
 
-  implicit object TriggerHateoasFactory extends HateoasLinksFactory[TriggerBsasResponse, TriggerBsasHateoasData] {
-
-    override def links(appConfig: AppConfig, data: TriggerBsasHateoasData): Seq[Link] = {
-      import data._
-      import v5.models.domain.TypeOfBusiness._
-
-      data.typeOfBusiness match {
-        case `self-employment`                               => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))
-        case `uk-property-fhl` | `uk-property-non-fhl`       => Seq(getUkPropertyBsas(appConfig, nino, bsasId, taxYear))
-        case `foreign-property` | `foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, nino, bsasId, taxYear))
-      }
-    }
-
-  }
-
 }
-
-case class TriggerBsasHateoasData(nino: String, typeOfBusiness: TypeOfBusiness, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

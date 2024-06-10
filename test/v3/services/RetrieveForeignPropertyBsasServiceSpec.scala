@@ -16,6 +16,7 @@
 
 package v3.services
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
@@ -25,7 +26,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 import v3.mocks.connectors.MockRetrieveForeignPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors._
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 import v3.models.response.retrieveBsas.foreignProperty.RetrieveForeignPropertyBsasResponse
 

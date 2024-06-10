@@ -16,9 +16,9 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
+import common.model.RoundTripTest
 import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
-import v5.models.RoundTripTest
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -28,14 +28,14 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundT
   testRoundTrip(
     "Submission Period with valid periodId",
     downstreamSubmissionPeriodWithPeriodIdRegexJson,
-    submissionPeriodWithPeriodIdModel,
+    submissionPeriodWithPeriodId,
     mtdSubmissionPeriodWithPeriodIdJson
   )(reads)
 
   testRoundTrip(
     "Submission Period with submissionId",
     downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson,
-    submissionPeriodWithSubmissionIdModel,
+    submissionPeriodWithSubmissionId,
     mtdSubmissionPeriodWithSubmissionIdJson
   )(reads)
 

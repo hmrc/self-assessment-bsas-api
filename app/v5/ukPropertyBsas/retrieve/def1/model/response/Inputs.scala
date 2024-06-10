@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import shared.models.domain.Source
-import v5.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 
 case class Inputs(
                    typeOfBusiness: TypeOfBusiness,

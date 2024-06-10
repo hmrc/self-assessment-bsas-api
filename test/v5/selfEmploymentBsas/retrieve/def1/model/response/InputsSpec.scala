@@ -26,7 +26,7 @@ class InputsSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid model" when {
       "passed valid JSON" in {
-        downstreamInputsJson.as[Inputs] shouldBe inputsModel
+        downstreamInputsJson.as[Inputs] shouldBe parsedInputs
       }
     }
     "return an error" when {
@@ -49,7 +49,7 @@ class InputsSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model" in {
-        Json.toJson(inputsModel) shouldBe mtdInputsJson
+        Json.toJson(parsedInputs) shouldBe mtdInputsJson
       }
     }
   }

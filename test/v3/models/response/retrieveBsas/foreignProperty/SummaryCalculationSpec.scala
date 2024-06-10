@@ -16,6 +16,7 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
+import common.model.RoundTripTest
 import shared.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 

@@ -16,6 +16,7 @@
 
 package v3.controllers
 
+import common.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -31,7 +32,6 @@ import shared.utils.MockIdGenerator
 import v3.controllers.validators.MockSubmitSelfEmploymentBsasValidatorFactory
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 import v3.mocks.services._
-import v3.models.errors._
 import v3.models.request.submitBsas.selfEmployment.SubmitSelfEmploymentBsasRequestData
 import v3.models.response.SubmitSelfEmploymentBsasHateoasData
 

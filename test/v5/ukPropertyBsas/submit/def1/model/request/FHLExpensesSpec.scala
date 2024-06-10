@@ -21,7 +21,7 @@ import shared.UnitSpec
 
 class FHLExpensesSpec extends UnitSpec {
 
-  val json: JsValue = Json.parse("""
+  private val json: JsValue = Json.parse("""
       |{
       |  "premisesRunningCosts": 1.12,
       |  "repairsAndMaintenance": 2.12,
@@ -34,7 +34,7 @@ class FHLExpensesSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  val model: FHLExpenses = FHLExpenses(
+  private val fhlExpenses: FHLExpenses = FHLExpenses(
     premisesRunningCosts = Some(1.12),
     repairsAndMaintenance = Some(2.12),
     financialCosts = Some(3.12),
@@ -45,18 +45,18 @@ class FHLExpensesSpec extends UnitSpec {
     consolidatedExpenses = Some(8.12)
   )
 
-  val emptyModel: FHLExpenses = FHLExpenses(None, None, None, None, None, None, None, None)
+  private val emptyFhlExpenses = FHLExpenses(None, None, None, None, None, None, None, None)
 
   "reads" when {
     "passed mtd json" should {
       "return the corresponding model" in {
-        json.as[FHLExpenses] shouldBe model
+        json.as[FHLExpenses] shouldBe fhlExpenses
       }
     }
 
     "passed an empty JSON" should {
       "return an empty model" in {
-        JsObject.empty.as[FHLExpenses] shouldBe emptyModel
+        JsObject.empty.as[FHLExpenses] shouldBe emptyFhlExpenses
       }
     }
   }
@@ -64,13 +64,13 @@ class FHLExpensesSpec extends UnitSpec {
   "writes" when {
     "passed a model" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(fhlExpenses) shouldBe json
       }
     }
 
     "passed an empty model" should {
       "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+        Json.toJson(emptyFhlExpenses) shouldBe JsObject.empty
       }
     }
   }

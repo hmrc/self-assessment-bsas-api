@@ -67,7 +67,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFullModel: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(
+  val requestNonFhlFull: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(
     nonFurnishedHolidayLet = Some(
       NonFurnishedHolidayLet(
         income = Some(
@@ -92,7 +92,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     furnishedHolidayLet = None
   )
 
-  val nonFHLBody: Def1_SubmitUkPropertyBsasRequestBody = requestNonFhlFullModel
+  val nonFHLBody: Def1_SubmitUkPropertyBsasRequestBody = requestNonFhlFull
 
   val downstreamRequestNonFhlFull: JsValue = Json.parse("""
       |{
@@ -191,7 +191,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       "otherPropertyIncome"  -> 4.45
     ))
 
-  val requestFhlFullModel: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(
+  val requestFhlFull: Def1_SubmitUkPropertyBsasRequestBody = Def1_SubmitUkPropertyBsasRequestBody(
     nonFurnishedHolidayLet = None,
     furnishedHolidayLet = Some(
       FurnishedHolidayLet(
@@ -212,7 +212,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       ))
   )
 
-  val fhlBody: Def1_SubmitUkPropertyBsasRequestBody = requestFhlFullModel
+  val fhlBody: Def1_SubmitUkPropertyBsasRequestBody = requestFhlFull
 
   val downstreamRequestFhlFull: JsValue = Json.parse("""
       |{
@@ -247,22 +247,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       "nonFurnishedHolidayLet" ->
         (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
           expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
-  }
-
-  def hateoasResponse(nino: String, calcId: String, taxYear: Option[String] = None): String = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
-
-    s"""
-       |{
-       |  "links":[
-       |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/uk-property/$calcId$taxYearParam",
-       |      "rel":"self",
-       |      "method":"GET"
-       |    }
-       |  ]
-       |}
-    """.stripMargin
   }
 
 }

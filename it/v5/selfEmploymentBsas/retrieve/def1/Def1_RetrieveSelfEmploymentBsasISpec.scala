@@ -16,6 +16,7 @@
 
 package v5.selfEmploymentBsas.retrieve.def1
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -24,8 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v5.models.domain.IncomeSourceType
-import v5.models.errors._
+import v5.common.model.IncomeSourceType
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 
 class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
@@ -45,7 +45,7 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
+        response.json shouldBe mtdRetrieveBsasResponseJson
         response.header("Deprecation") shouldBe None
       }
 
@@ -58,7 +58,7 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId, taxYear)
+        response.json shouldBe mtdRetrieveBsasResponseJson
         response.header("Deprecation") shouldBe None
       }
     }

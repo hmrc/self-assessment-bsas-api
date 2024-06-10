@@ -24,17 +24,17 @@ import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsas
 class Def1_RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
-    "return a valid model" when {
+    "return the parsed data object" when {
       "passed valid JSON" in {
-        downstreamRetrieveBsasResponseJson.as[Def1_RetrieveSelfEmploymentBsasResponse] shouldBe retrieveBsasResponseModel
+        downstreamRetrieveBsasResponseJson.as[Def1_RetrieveSelfEmploymentBsasResponse] shouldBe retrieveBsasResponse
       }
     }
   }
 
   "writes" should {
     "return valid JSON" when {
-      "passed a valid model" in {
-        Json.toJson(retrieveBsasResponseModel) shouldBe mtdRetrieveBsasResponseJson
+      "passed a valid data object" in {
+        Json.toJson(retrieveBsasResponse) shouldBe mtdRetrieveBsasResponseJson
       }
     }
   }

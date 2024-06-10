@@ -19,10 +19,8 @@ package v5.ukPropertyBsas.retrieve
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
-import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,13 +31,10 @@ class RetrieveUkPropertyBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: RetrieveUkPropertyBsasValidatorFactory,
     service: RetrieveUkPropertyBsasService,
-    hateoasFactory: HateoasFactory,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
-)(implicit
-    ec: ExecutionContext,
-    appConfig: AppConfig
-) extends AuthorisedController(cc)
+)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    extends AuthorisedController(cc)
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -52,14 +47,13 @@ class RetrieveUkPropertyBsasController @Inject() (
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, calculationId, taxYear, RetrieveUkPropertyBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieve)
-          .withHateoasResultFrom(hateoasFactory)((parsedRequest, responseData) =>
-            RetrieveUkPropertyHateoasData(nino, calculationId, parsedRequest.taxYear))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

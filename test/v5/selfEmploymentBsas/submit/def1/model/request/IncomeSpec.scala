@@ -23,13 +23,13 @@ import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.IncomeFixture._
 
 class IncomeSpec extends UnitSpec {
 
-  val incomeModelWithoutOther: Income =
+  private val incomeWithoutOther: Income =
     Income(
       turnover = Some(1000.75),
       other = None
     )
 
-  val incomeModelEmpty: Income =
+  private val emptyIncome: Income =
     Income(
       turnover = None,
       other = None
@@ -38,33 +38,33 @@ class IncomeSpec extends UnitSpec {
   "Income" when {
     "read from valid JSON" should {
       "produce the expected Income object" in {
-        incomeJson(incomeModel).as[Income] shouldBe incomeModel
+        incomeJson(income).as[Income] shouldBe income
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(incomeModel) shouldBe incomeJson(incomeModel)
+        Json.toJson(income) shouldBe incomeJson(income)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        incomeJson(incomeModelWithoutOther).as[Income] shouldBe incomeModelWithoutOther
+        incomeJson(incomeWithoutOther).as[Income] shouldBe incomeWithoutOther
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(incomeModelWithoutOther) shouldBe incomeJson(incomeModelWithoutOther)
+        Json.toJson(incomeWithoutOther) shouldBe incomeJson(incomeWithoutOther)
       }
     }
 
     "no fields as supplied" should {
       "read to an empty Income object" in {
-        incomeJson(incomeModelEmpty).as[Income] shouldBe incomeModelEmpty
+        incomeJson(emptyIncome).as[Income] shouldBe emptyIncome
       }
 
       "write to empty JSON" in {
-        Json.toJson(incomeModelEmpty) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(emptyIncome) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

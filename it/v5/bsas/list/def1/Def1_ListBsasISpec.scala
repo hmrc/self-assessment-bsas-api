@@ -17,17 +17,17 @@
 package v5.bsas.list.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors.TypeOfBusinessFormatError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.domain.{Nino, TaxYear}
+import shared.models.domain.TaxYear
 import shared.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v5.bsas.list.def1.model.Def1_ListBsasFixtures
-import v5.models.errors.TypeOfBusinessFormatError
 
 class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures {
 
@@ -46,7 +46,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(Nino(nino))
+        response.json shouldBe summariesJs
 
       }
 
@@ -63,7 +63,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some("2023-24"))
+        response.json shouldBe summariesJs
       }
 
       "valid request is made with foreign property" in new NonTysTest {
@@ -79,7 +79,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino))
+        response.json shouldBe summariesForeignJs
       }
 
       "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysIfsTest {
@@ -95,10 +95,10 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONForeignWithHateoas(Nino(nino), Some("2023-24"))
+        response.json shouldBe summariesForeignJs
       }
 
-      "valid request is made without a tax year so that he current tax year is used" in new TysIfsTest {
+      "valid request is made without a tax year so that the current tax year is used" in new TysIfsTest {
         private val currentTaxYear = TaxYear.now()
 
         override val taxYear: Option[String]   = None
@@ -115,7 +115,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJSONWithHateoas(Nino(nino), Some(currentTaxYear.asMtd))
+        response.json shouldBe summariesJs
       }
     }
 
@@ -147,7 +147,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
         }
       }
 
-      val input = Seq(
+      val input = List(
         ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
@@ -224,11 +224,10 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
         )
     }
 
-    // mtd
-    def mtdUri: String = s"/$nino"
+    private def mtdUri: String = s"/$nino"
 
-    def mtdQueryParams: Seq[(String, String)] =
-      Seq("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
+    private def mtdQueryParams: Seq[(String, String)] =
+      List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
         .collect { case (k, Some(v)) =>
           (k, v)
         }

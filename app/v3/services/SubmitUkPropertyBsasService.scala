@@ -16,20 +16,20 @@
 
 package v3.services
 
+import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
 import shared.models
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
-import cats.implicits._
 import v3.connectors.SubmitUkPropertyBsasConnector
-import v3.models.errors._
 import v3.models.request.submitBsas.ukProperty.SubmitUkPropertyBsasRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConnector) extends BaseService {
+class SubmitUkPropertyBsasService @Inject() (connector: SubmitUkPropertyBsasConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] = {
     val errors = Map(
@@ -51,13 +51,13 @@ class SubmitUkPropertyBsasService @Inject()(connector: SubmitUkPropertyBsasConne
       "UNALLOWABLE_VALUE" -> RuleResultingValueNotPermitted,
       "ASC_ID_INVALID" -> RuleSummaryStatusInvalid,
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-      "SERVER_ERROR" -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE" -> models.errors.InternalError
+      "SERVER_ERROR"                  -> models.errors.InternalError,
+      "SERVICE_UNAVAILABLE"           -> models.errors.InternalError
     )
     val extraTysErrors = Map(
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "NOT_FOUND" -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+      "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError,
       "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError
     )
 

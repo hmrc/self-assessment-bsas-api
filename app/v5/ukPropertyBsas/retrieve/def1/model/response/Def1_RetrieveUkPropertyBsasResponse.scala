@@ -17,7 +17,7 @@
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json._
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
 case class Def1_RetrieveUkPropertyBsasResponse(

@@ -25,22 +25,22 @@ class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" when {
     "passed valid JSON" should {
-      "return a valid adjustableSummaryCalculationModel" in {
-        downstreamSummaryCalculationJson.as[AdjustableSummaryCalculation] shouldBe adjustableSummaryCalculationModel
+      "return a valid adjustableSummaryCalculation" in {
+        downstreamSummaryCalculationJson.as[AdjustableSummaryCalculation] shouldBe adjustableSummaryCalculation
       }
-      "return a valid adjustedSummaryCalculationModel" in {
-        downstreamSummaryCalculationJson.as[AdjustedSummaryCalculation] shouldBe adjustedSummaryCalculationModel
+      "return a valid adjustedSummaryCalculation" in {
+        downstreamSummaryCalculationJson.as[AdjustedSummaryCalculation] shouldBe adjustedSummaryCalculation
       }
     }
   }
 
   "writes" should {
     "return valid JSON" when {
-      "passed a valid adjustableSummaryCalculationModel" in {
-        Json.toJson(adjustableSummaryCalculationModel) shouldBe mtdSummaryCalculationJson
+      "passed a valid adjustableSummaryCalculation" in {
+        Json.toJson(adjustableSummaryCalculation) shouldBe mtdSummaryCalculationJson
       }
-      "passed a valid adjustedSummaryCalculationModel" in {
-        Json.toJson(adjustedSummaryCalculationModel) shouldBe mtdSummaryCalculationJson
+      "passed a valid adjustedSummaryCalculation" in {
+        Json.toJson(adjustedSummaryCalculation) shouldBe mtdSummaryCalculationJson
       }
     }
   }

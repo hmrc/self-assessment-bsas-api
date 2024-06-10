@@ -29,24 +29,24 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   private val nino          = Nino("AA123456A")
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  private val submitForeignPropertyBsasRequestBodyModel = Def1_SubmitForeignPropertyBsasRequestBody(None, None)
+  private val parsedSubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, None)
 
   trait Test {
     _: ConnectorTest =>
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def requestWith(taxYear: Option[TaxYear]): SubmitForeignPropertyBsasRequestData =
-      Def1_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, submitForeignPropertyBsasRequestBodyModel)
+      Def1_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, parsedSubmitForeignPropertyBsasRequestBody)
 
   }
 
   "submitBsas" must {
 
     "post a SubmitBsasRequest body and return the result for a request without a tax year" in new IfsTest with Test {
-      val request: SubmitForeignPropertyBsasRequestData = requestWith(taxYear = None)
-      val outcome                                       = Right(ResponseWrapper(correlationId, ()))
+      private val request = requestWith(taxYear = None)
+      private val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = submitForeignPropertyBsasRequestBodyModel)
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
@@ -54,10 +54,10 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     }
 
     "post a SubmitBsasRequest body and return the result for a pre-TYS tax year request" in new IfsTest with Test {
-      val request: SubmitForeignPropertyBsasRequestData = requestWith(Some(TaxYear.fromMtd("2022-23")))
-      val outcome                                       = Right(ResponseWrapper(correlationId, ()))
+      private val request = requestWith(Some(TaxYear.fromMtd("2022-23")))
+      private val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = submitForeignPropertyBsasRequestBodyModel)
+      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
@@ -65,12 +65,12 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     }
 
     "post a SubmitBsasRequest body and return the result for a post-TYS tax year request" in new TysIfsTest with Test {
-      val request: SubmitForeignPropertyBsasRequestData = requestWith(Some(TaxYear.fromMtd("2023-24")))
-      val outcome                                       = Right(ResponseWrapper(correlationId, ()))
+      private val request = requestWith(Some(TaxYear.fromMtd("2023-24")))
+      private val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId",
-        body = submitForeignPropertyBsasRequestBodyModel)
+        body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))

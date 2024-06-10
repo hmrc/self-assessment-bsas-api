@@ -18,10 +18,10 @@ package v4.controllers.validators.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import common.errors.TypeOfBusinessFormatError
 import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
 import v4.models.domain.TypeOfBusiness
-import v4.models.errors.TypeOfBusinessFormatError
 
 import scala.util.{Failure, Success, Try}
 

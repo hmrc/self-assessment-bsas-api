@@ -16,12 +16,12 @@
 
 package v5.ukPropertyBsas.submit.def1.model.request
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import shared.UnitSpec
 
 class NonFHLExpensesSpec extends UnitSpec {
 
-  val json: JsValue = Json.parse("""
+  private val json = Json.parse("""
       |{
       |  "premisesRunningCosts": 1.12,
       |  "repairsAndMaintenance": 2.12,
@@ -35,7 +35,7 @@ class NonFHLExpensesSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  val model: NonFHLExpenses = NonFHLExpenses(
+  private val nonFHLExpenses = NonFHLExpenses(
     premisesRunningCosts = Some(1.12),
     repairsAndMaintenance = Some(2.12),
     financialCosts = Some(3.12),
@@ -47,32 +47,32 @@ class NonFHLExpensesSpec extends UnitSpec {
     consolidatedExpenses = Some(9.12)
   )
 
-  val emptyModel: NonFHLExpenses = NonFHLExpenses(None, None, None, None, None, None, None, None, None)
+  private val emptyNonFHLExpenses = NonFHLExpenses(None, None, None, None, None, None, None, None, None)
 
   "reads" when {
-    "passed mtd json" should {
-      "return the corresponding model" in {
-        json.as[NonFHLExpenses] shouldBe model
+    "given MTD json" should {
+      "return the expected NonFHLExpenses" in {
+        json.as[NonFHLExpenses] shouldBe nonFHLExpenses
       }
     }
 
-    "passed an empty JSON" should {
-      "return an empty model" in {
-        JsObject.empty.as[NonFHLExpenses] shouldBe emptyModel
+    "given an empty JSON object" should {
+      "return an empty NonFHLExpenses" in {
+        JsObject.empty.as[NonFHLExpenses] shouldBe emptyNonFHLExpenses
       }
     }
   }
 
   "writes" when {
-    "passed a model" should {
+    "given a NonFHLExpenses" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(nonFHLExpenses) shouldBe json
       }
     }
 
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+    "given an empty NonFHLExpenses" should {
+      "return an empty JSON object" in {
+        Json.toJson(emptyNonFHLExpenses) shouldBe JsObject.empty
       }
     }
   }

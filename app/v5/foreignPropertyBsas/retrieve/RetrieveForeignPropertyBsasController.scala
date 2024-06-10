@@ -19,10 +19,8 @@ package v5.foreignPropertyBsas.retrieve
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
-import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,7 +31,6 @@ class RetrieveForeignPropertyBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: RetrieveForeignPropertyBsasValidatorFactory,
     service: RetrieveForeignPropertyBsasService,
-    hateoasFactory: HateoasFactory,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
 )(implicit ec: ExecutionContext, appConfig: AppConfig)
@@ -47,13 +44,13 @@ class RetrieveForeignPropertyBsasController @Inject() (
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, calculationId, taxYear, RetrieveForeignPropertyBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveForeignPropertyBsas)
-          .withHateoasResultFrom(hateoasFactory)((parsedRequest, _) => RetrieveForeignPropertyHateoasData(nino, calculationId, parsedRequest.taxYear))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

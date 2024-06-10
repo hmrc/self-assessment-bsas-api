@@ -20,23 +20,23 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
-import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-import v5.selfEmploymentBsas.submit.model.response.SubmitSelfEmploymentBsasHateoasData
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsAuthService,
-                                                    val lookupService: MtdIdLookupService,
-                                                    validatorFactory: SubmitSelfEmploymentBsasValidatorFactory,
-                                                    service: SubmitSelfEmploymentBsasService,
-                                                    hateoasFactory: HateoasFactory,
-                                                    auditService: AuditService,
-                                                    cc: ControllerComponents,
-                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+class SubmitSelfEmploymentBsasController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: SubmitSelfEmploymentBsasValidatorFactory,
+    service: SubmitSelfEmploymentBsasService,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator
+)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -49,15 +49,12 @@ class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsA
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body, SubmitSelfEmploymentBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.submitSelfEmploymentBsas)
-          .withHateoasResultFrom(hateoasFactory) { (parsedRequest, _) =>
-            SubmitSelfEmploymentBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
-          }
           .withAuditing(AuditHandler(
             auditService,
             auditType = "SubmitSelfEmploymentAccountingAdjustments",
@@ -67,6 +64,7 @@ class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsA
             requestBody = Some(request.body),
             includeResponse = true
           ))
+          .withNoContentResult(OK)
 
       requestHandler.handleRequest()
     }

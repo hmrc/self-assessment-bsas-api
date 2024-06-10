@@ -16,6 +16,7 @@
 
 package v4.controllers
 
+import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -30,7 +31,6 @@ import shared.utils.MockIdGenerator
 import v4.controllers.validators.MockRetrieveSelfEmploymentBsasValidatorFactory
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v4.mocks.services.MockRetrieveSelfEmploymentBsasService
-import v4.models.errors._
 import v4.models.request.retrieveBsas
 import v4.models.response.retrieveBsas.selfEmployment.RetrieveSelfAssessmentBsasHateoasData
 

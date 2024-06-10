@@ -21,8 +21,8 @@ import cats.implicits._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.ServiceOutcome
-import v5.models.domain.TypeOfBusiness
-import v5.services.BaseRetrieveBsasService
+import v5.common.BaseRetrieveBsasService
+import v5.common.model.TypeOfBusiness
 import v5.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 

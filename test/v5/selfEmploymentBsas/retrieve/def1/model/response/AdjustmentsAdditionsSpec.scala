@@ -26,7 +26,7 @@ class AdjustmentsAdditionsSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid model" when {
       "passed valid JSON" in {
-        downstreamAdjustmentsAdditionsJson.as[AdjustmentsAdditions] shouldBe adjustmentsAdditionsModel
+        downstreamAdjustmentsAdditionsJson.as[AdjustmentsAdditions] shouldBe adjustmentsAdditions
       }
     }
   }
@@ -34,7 +34,7 @@ class AdjustmentsAdditionsSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model" in {
-        Json.toJson(adjustmentsAdditionsModel) shouldBe mtdAdjustmentsAdditionsJson
+        Json.toJson(adjustmentsAdditions) shouldBe mtdAdjustmentsAdditionsJson
       }
     }
   }

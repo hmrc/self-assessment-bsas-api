@@ -26,10 +26,10 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid model" when {
       "passed valid JSON with periodId regex" in {
-        downstreamSubmissionPeriodWithPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithPeriodIdModel
+        downstreamSubmissionPeriodWithPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithPeriodId
       }
       "passed valid JSON with invalid periodId regex" in {
-        downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithSubmissionIdModel
+        downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson.as[SubmissionPeriod] shouldBe submissionPeriodWithSubmissionId
       }
     }
   }
@@ -37,10 +37,10 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model with periodId" in {
-        Json.toJson(submissionPeriodWithPeriodIdModel) shouldBe mtdSubmissionPeriodWithPeriodIdJson
+        Json.toJson(submissionPeriodWithPeriodId) shouldBe mtdSubmissionPeriodWithPeriodIdJson
       }
       "passed a valid model with submissionId" in {
-        Json.toJson(submissionPeriodWithSubmissionIdModel) shouldBe mtdSubmissionPeriodWithSubmissionIdJson
+        Json.toJson(submissionPeriodWithSubmissionId) shouldBe mtdSubmissionPeriodWithSubmissionIdJson
       }
     }
   }

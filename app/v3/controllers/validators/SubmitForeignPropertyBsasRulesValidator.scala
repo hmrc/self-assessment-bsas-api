@@ -19,10 +19,10 @@ package v3.controllers.validators
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
+import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v3.models.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import v3.models.request.submitBsas.foreignProperty._
 
 object SubmitForeignPropertyBsasRulesValidator extends RulesValidator[SubmitForeignPropertyBsasRequestData] {

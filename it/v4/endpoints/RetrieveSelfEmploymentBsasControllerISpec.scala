@@ -16,22 +16,22 @@
 
 package v4.endpoints
 
-import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors._
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v4.models.domain.IncomeSourceType
-import v4.models.errors._
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456A"
+    val nino          = "AA123456A"
     val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
     def request: WSRequest = {
@@ -96,7 +96,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     "return error response with status FORBIDDEN" when {
       "valid request is made but downstream response has invalid type of business" in new NonTysTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET,
+          DownstreamStub.onSuccess(
+            DownstreamStub.GET,
             downstreamUrl,
             OK,
             downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
@@ -118,7 +119,7 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-          override val nino: String = requestNino
+          override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
 
           override def taxYear: Option[String] = taxYearString
@@ -178,4 +179,5 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
       errors.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

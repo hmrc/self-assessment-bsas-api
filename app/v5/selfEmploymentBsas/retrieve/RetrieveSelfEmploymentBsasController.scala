@@ -19,10 +19,8 @@ package v5.selfEmploymentBsas.retrieve
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
-import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,7 +31,6 @@ class RetrieveSelfEmploymentBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: RetrieveSelfEmploymentBsasValidatorFactory,
     service: RetrieveSelfEmploymentBsasService,
-    hateoasFactory: HateoasFactory,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
 )(implicit ec: ExecutionContext, appConfig: AppConfig)
@@ -47,14 +44,13 @@ class RetrieveSelfEmploymentBsasController @Inject() (
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, calculationId, taxYear, RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveSelfEmploymentBsas)
-          .withHateoasResultFrom(hateoasFactory)((parsedRequest, _) =>
-            RetrieveSelfEmploymentBsasHateoasData(nino, calculationId, parsedRequest.taxYear))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

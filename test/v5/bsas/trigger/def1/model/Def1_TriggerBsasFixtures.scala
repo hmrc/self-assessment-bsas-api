@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v5.bsas.trigger.def1.model.request.{AccountingPeriod, Def1_TriggerBsasRequestBody}
 import v5.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 
 object Def1_TriggerBsasFixtures {
 
@@ -58,35 +58,11 @@ object Def1_TriggerBsasFixtures {
 
   val responseObj: Def1_TriggerBsasResponse = Def1_TriggerBsasResponse("c75f40a6-a3df-4429-a697-471eeec46435")
 
-  val response: JsValue = Json.parse("""{
-                                       |"calculationId" : "c75f40a6-a3df-4429-a697-471eeec46435"
-                                       |}""".stripMargin)
-
-  val hateoasResponseForSE: String => String = (nino: String) => s"""
-    |{
-    |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
-    |  "links":[
-    |    {
-    |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-    |      "rel":"self",
-    |      "method":"GET"
-    |    }
-    |  ]
-    |}
-    """.stripMargin
-
-  val hateoasResponseForProperty: String => String = (nino: String) => s"""
-    |{
-    |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435",
-    |  "links":[
-    |    {
-    |      "href":"/individuals/self-assessment/adjustable-summary/$nino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
-    |      "rel":"self",
-    |      "method":"GET"
-    |    }
-    |  ]
-    |}
-    """.stripMargin
+  val mtdResponseJs: JsValue = Json.parse(
+    """|{
+       |  "calculationId" : "c75f40a6-a3df-4429-a697-471eeec46435"
+       |}""".stripMargin
+  )
 
   val requestBody: JsValue = Json.parse("""
     |{
