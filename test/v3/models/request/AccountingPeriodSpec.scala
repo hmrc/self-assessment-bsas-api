@@ -17,7 +17,7 @@
 package v3.models.request
 
 import play.api.libs.json.{JsError, JsSuccess, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
 

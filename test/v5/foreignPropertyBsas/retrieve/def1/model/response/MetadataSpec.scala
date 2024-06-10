@@ -16,9 +16,9 @@
 
 package v5.foreignPropertyBsas.retrieve.def1.model.response
 
-import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
-import RetrieveForeignPropertyBsasBodyFixtures._
+import shared.utils.UnitSpec
+import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 

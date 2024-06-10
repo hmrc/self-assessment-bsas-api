@@ -17,7 +17,6 @@
 package shared.utils
 
 import play.api.libs.json.{Json, OWrites}
-import shared.UnitSpec
 
 object JsonWritesUtilSpec {
   trait D

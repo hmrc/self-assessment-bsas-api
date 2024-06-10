@@ -17,7 +17,7 @@
 package v3.models.response.listBsas
 
 import play.api.libs.json.{JsError, JsObject, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import v3.fixtures.ListBsasFixture
 
 class AccountingPeriodSpec extends UnitSpec with ListBsasFixture {

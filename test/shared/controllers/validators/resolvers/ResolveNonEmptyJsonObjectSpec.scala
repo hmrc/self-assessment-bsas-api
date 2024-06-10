@@ -19,10 +19,9 @@ package shared.controllers.validators.resolvers
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.{Json, OFormat}
 import shapeless.HNil
-import shared.UnitSpec
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.models.utils.JsonErrorValidators
-import shared.utils.EmptinessChecker
+import shared.utils.{EmptinessChecker, UnitSpec}
 
 class ResolveNonEmptyJsonObjectSpec extends UnitSpec with JsonErrorValidators {
 

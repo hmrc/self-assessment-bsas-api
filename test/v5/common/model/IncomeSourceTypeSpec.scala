@@ -16,7 +16,7 @@
 
 package v5.common.model
 
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
 import v5.common.model.IncomeSourceType._
 

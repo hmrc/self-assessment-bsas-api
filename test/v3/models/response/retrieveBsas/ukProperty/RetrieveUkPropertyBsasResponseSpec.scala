@@ -18,12 +18,12 @@ package v3.models.response.retrieveBsas.ukProperty
 
 import common.model.RoundTripTest
 import play.api.Configuration
-import shared.UnitSpec
 import shared.config.MockAppConfig
 import shared.hateoas.Method._
 import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {

@@ -18,10 +18,10 @@ package v3.controllers.validators
 
 import common.errors._
 import play.api.libs.json._
-import shared.UnitSpec
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
 
 class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonErrorValidators {

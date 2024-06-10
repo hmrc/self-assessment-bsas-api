@@ -18,12 +18,12 @@ package v3.models.response.retrieveBsas.selfEmployment
 
 import play.api.Configuration
 import play.api.libs.json.Json
-import shared.UnitSpec
 import shared.config.MockAppConfig
 import shared.hateoas.Method._
 import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {

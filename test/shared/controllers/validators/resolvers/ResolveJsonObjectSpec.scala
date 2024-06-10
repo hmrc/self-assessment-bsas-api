@@ -18,9 +18,9 @@ package shared.controllers.validators.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.{Json, Reads}
-import shared.UnitSpec
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 
 class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
 

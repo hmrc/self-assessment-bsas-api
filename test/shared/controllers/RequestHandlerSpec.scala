@@ -24,7 +24,6 @@ import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsString, Json, OWrites}
 import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.{FakeRequest, ResultExtractors}
-import shared.UnitSpec
 import shared.config.Deprecation.{Deprecated, NotDeprecated}
 import shared.config.{AppConfig, Deprecation, MockAppConfig}
 import shared.controllers.validators.Validator
@@ -35,7 +34,7 @@ import shared.models.errors.{ErrorWrapper, MtdError, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import shared.services.{MockAuditService, ServiceOutcome}
-import shared.utils.MockIdGenerator
+import shared.utils.{MockIdGenerator, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 

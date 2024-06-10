@@ -18,9 +18,9 @@ package shared.connectors
 
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, MimeTypes, Status}
-import shared.UnitSpec
 import shared.config.{DownstreamConfig, MockAppConfig}
 import shared.mocks.MockHttpClient
+import shared.utils.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}

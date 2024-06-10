@@ -17,7 +17,7 @@
 package v5.ukPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsObject, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {

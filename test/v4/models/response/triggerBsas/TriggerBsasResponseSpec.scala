@@ -18,11 +18,11 @@ package v4.models.response.triggerBsas
 
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsValue, Json}
-import shared.UnitSpec
 import shared.config.MockAppConfig
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
+import shared.utils.UnitSpec
 import v4.models.domain.TypeOfBusiness._
 
 class TriggerBsasResponseSpec extends UnitSpec {

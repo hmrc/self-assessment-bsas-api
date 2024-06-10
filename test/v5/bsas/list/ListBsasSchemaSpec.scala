@@ -18,8 +18,8 @@ package v5.bsas.list
 
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.utils.UnitSpec
 
 import java.time.{Clock, LocalDate, ZoneOffset}
 

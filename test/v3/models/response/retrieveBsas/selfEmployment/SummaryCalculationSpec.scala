@@ -17,8 +17,8 @@
 package v3.models.response.retrieveBsas.selfEmployment
 
 import play.api.libs.json.Json
-import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{adjustableSummaryCalculationModel, adjustedSummaryCalculationModel, downstreamSummaryCalculationJson, mtdSummaryCalculationJson}
 
 class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators {

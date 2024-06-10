@@ -17,8 +17,8 @@
 package v3.models.response.retrieveBsas.ukProperty
 
 import common.model.RoundTripTest
-import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
 class SummaryCalculationIncomeSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {

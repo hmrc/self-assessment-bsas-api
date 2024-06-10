@@ -17,8 +17,8 @@
 package v3.models.request.submitBsas.selfEmployment
 
 import play.api.libs.json.Json
-import shared.UnitSpec
 import shared.models.domain.EmptyJsonBody
+import shared.utils.UnitSpec
 import v3.fixtures.selfEmployment.SubmitSelfEmploymentBsasFixtures._
 
 class SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {

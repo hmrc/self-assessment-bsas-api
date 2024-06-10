@@ -17,8 +17,8 @@
 package v5.foreignPropertyBsas.retrieve
 
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.utils.UnitSpec
 
 class RetrieveForeignPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 

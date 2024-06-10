@@ -17,7 +17,7 @@
 package shared.config
 
 import play.api.Configuration
-import shared.UnitSpec
+import shared.utils.UnitSpec
 
 class FeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[FeatureSwitches] {
 

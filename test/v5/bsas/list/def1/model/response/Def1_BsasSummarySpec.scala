@@ -17,7 +17,7 @@
 package v5.bsas.list.def1.model.response
 
 import play.api.libs.json.{JsError, JsObject, JsResult, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import v5.bsas.list.def1.model.Def1_ListBsasFixtures
 import v5.bsas.list.model.response.BsasSummary
 

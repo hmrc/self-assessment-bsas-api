@@ -22,7 +22,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
-import shared.UnitSpec
 import shared.config.Deprecation.NotDeprecated
 import shared.config.MockAppConfig
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -30,7 +29,7 @@ import shared.models.domain.Nino
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
 import shared.routing.{Version, Version4}
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import shared.utils.MockIdGenerator
+import shared.utils.{MockIdGenerator, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future

@@ -17,8 +17,8 @@
 package shared.controllers.validators.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import shared.UnitSpec
 import shared.models.errors.TaxYearFormatError
+import shared.utils.UnitSpec
 
 class ResolveStringPatternSpec extends UnitSpec {
 

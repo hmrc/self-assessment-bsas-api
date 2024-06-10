@@ -17,9 +17,9 @@
 package shared.controllers.validators.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import shared.UnitSpec
 import shared.models.domain.DateRange
 import shared.models.errors.{EndDateFormatError, RuleEndBeforeStartDateError, StartDateFormatError}
+import shared.utils.UnitSpec
 
 import java.time.LocalDate
 
