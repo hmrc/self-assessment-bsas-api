@@ -16,12 +16,11 @@
 
 package v3.services
 
-import shared.controllers.RequestContext
-import shared.models
-import shared.models.errors._
-import shared.services.ServiceOutcome
 import cats.data.EitherT
 import cats.implicits._
+import shared.controllers.RequestContext
+import shared.models.errors._
+import shared.services.ServiceOutcome
 import v3.connectors.RetrieveUkPropertyBsasConnector
 import v3.models.domain.TypeOfBusiness
 import v3.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
@@ -31,33 +30,35 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasService @Inject()(connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {
+class RetrieveUkPropertyBsasService @Inject() (connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {
 
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`uk-property-fhl`, TypeOfBusiness.`uk-property-non-fhl`)
+
   private val errorMap: Map[String, MtdError] = {
 
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID" -> models.errors.InternalError,
-      "INVALID_RETURN" -> models.errors.InternalError,
-      "UNPROCESSABLE_ENTITY" -> models.errors.InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE" -> models.errors.InternalError
+      "INVALID_CALCULATION_ID"    -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_RETURN"            -> InternalError,
+      "UNPROCESSABLE_ENTITY"      -> InternalError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "NOT_FOUND" -> NotFoundError,
+      "INVALID_TAX_YEAR"       -> TaxYearFormatError,
+      "NOT_FOUND"              -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 
     errors ++ extraTysErrors
   }
 
-  def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit ctx: RequestContext,
-                                                           ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkPropertyBsasResponse]] = {
+  def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkPropertyBsasResponse]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
