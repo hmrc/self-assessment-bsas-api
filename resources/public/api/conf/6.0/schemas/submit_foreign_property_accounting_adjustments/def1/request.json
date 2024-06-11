@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "For TY 2023-24 and before",
+  "description": "Submit Foreign Property Accounting Adjustments Request",
+  "type": "object",
+  "properties": {
+    "nonFurnishedHolidayLet": {
+      "type": "array",
+      "description": "Array containing foreign Non-FHL adjustments.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "countryCode": {
+            "description": "A three-letter code that represents a country name. This must be an ISO 3166-1 Alpha-3 value. You can only adjust for a countryCode that is in your unadjusted summary calculation.",
+            "type": "string",
+            "example": "FRA"
+          },
+          "income": {
+            "type": "object",
+            "description": "Object containing the adjustments to income values.",
+            "properties": {
+              "totalRentsReceived": {
+                "description": "The adjustment to total property rental income. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "premiumsOfLeaseGrant": {
+                "description": "The adjustment to premiums received for the grant of a lease and other lump sums to possess a property. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.89"
+              },
+              "otherPropertyIncome": {
+                "description": "The adjustment to other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              }
+            },
+            "additionalProperties": false
+          },
+          "expenses": {
+            "type": "object",
+            "description": "Object containing the adjustments to expenses values.",
+            "properties": {
+              "consolidatedExpenses": {
+                "description": "The adjustment to the sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "premisesRunningCosts": {
+                "description": "The adjustment to rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "repairsAndMaintenance": {
+                "description": "The adjustment to property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "financialCosts": {
+                "description": "The adjustment to loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "professionalFees": {
+                "description": "The adjustment to legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "costOfServices": {
+                "description": "The adjustment to cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "residentialFinancialCost": {
+                "description": "The adjustment to the residential financial cost that can be deductible from rental income (tax relief). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "other": {
+                "description": "The adjustment to other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "travelCosts": {
+                "description": "The adjustment to car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "countryCode"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "foreignFhlEea": {
+      "type": "object",
+      "description": "Object holding FHL EEA adjustments.",
+      "properties": {
+        "income": {
+          "type": "object",
+          "description": "Object containing the adjustments to income values.",
+          "properties": {
+            "totalRentsReceived": {
+              "description": "The adjustment to total property rental income. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "expenses": {
+          "type": "object",
+          "description": "Object containing the adjustments to expenses values.",
+          "properties": {
+            "consolidatedExpenses": {
+              "description": "The adjustment to the sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "premisesRunningCosts": {
+              "description": "The adjustment to rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "repairsAndMaintenance": {
+              "description": "The adjustment to property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "financialCosts": {
+              "description": "The adjustment to loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "professionalFees": {
+              "description": "The adjustment to legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "costOfServices": {
+              "description": "The adjustment to cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "other": {
+              "description": "The adjustment to other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "travelCosts": {
+              "description": "The adjustment to car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
