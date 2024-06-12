@@ -16,6 +16,7 @@
 
 package v4.services
 
+import common.errors.RuleTypeOfBusinessIncorrectError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
@@ -25,7 +26,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v4.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v4.mocks.connectors.MockRetrieveSelfEmploymentBsasConnector
 import v4.models.domain.TypeOfBusiness
-import v4.models.errors._
 import v4.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 import v4.models.response.retrieveBsas.selfEmployment.RetrieveSelfEmploymentBsasResponse
 

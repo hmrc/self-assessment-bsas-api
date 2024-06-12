@@ -20,12 +20,9 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
-import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
-import v5.bsas.trigger.model.TriggerBsasHateoasData
-import v5.models.domain.TypeOfBusiness
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -36,7 +33,6 @@ class TriggerBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: TriggerBsasValidatorFactory,
     service: TriggerBsasService,
-    hateoasFactory: HateoasFactory,
     auditService: AuditService,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
@@ -53,16 +49,12 @@ class TriggerBsasController @Inject() (
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, request.body, TriggerSchema.schemaFor(request.body))
+      val validator = validatorFactory.validator(nino, request.body)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.triggerBsas)
-          .withHateoasResultFrom(hateoasFactory) { (parsedRequest, responseData) =>
-            val typeOfBusiness = TypeOfBusiness.parser(parsedRequest.body.typeOfBusiness)
-            TriggerBsasHateoasData(nino, typeOfBusiness, responseData.calculationId, Some(parsedRequest.taxYear))
-          }
           .withAuditing(AuditHandler(
             auditService,
             auditType = "TriggerBusinessSourceAdjustableSummary",
@@ -72,6 +64,7 @@ class TriggerBsasController @Inject() (
             requestBody = Some(request.body),
             includeResponse = true
           ))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

@@ -27,7 +27,7 @@ trait MockSubmitUkPropertyBsasValidatorFactory extends MockValidatorFactory[Subm
 
   def validator(): CallHandler[Validator[SubmitUkPropertyBsasRequestData]] =
     (mockSubmitUkPropertyBsasValidatorFactory
-      .validator(_: String, _: String, _: Option[String], _: JsValue, _: SubmitUkPropertyBsasSchema))
-      .expects(*, *, *, *, *)
+      .validator(_: String, _: String, _: Option[String], _: JsValue))
+      .expects(*, *, *, *)
 
 }

@@ -16,6 +16,7 @@
 
 package v5.foreignPropertyBsas.submit.def1
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -25,7 +26,6 @@ import shared.models.errors._
 import shared.stubs._
 import support.IntegrationBaseSpec
 import v5.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestNonFhlFull, mtdRequestValid}
-import v5.models.errors._
 
 class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
@@ -38,7 +38,6 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request().post(mtdRequestValid))
         response.status shouldBe OK
-        response.json shouldBe responseBody
         response.header("X-CorrelationId") should not be empty
       }
 
@@ -49,9 +48,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request().post(mtdRequestValid))
         response.status shouldBe OK
-        response.json shouldBe responseBody
         response.header("X-CorrelationId") should not be empty
-
       }
 
     }
@@ -90,7 +87,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(
+        val input = List(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, mtdRequestValid, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "BAD_CALC_ID", None, mtdRequestValid, BAD_REQUEST, CalculationIdFormatError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), mtdRequestValid, BAD_REQUEST, InvalidTaxYearParameterError),
@@ -103,21 +100,21 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
             None,
             mtdRequestNonFhlFull,
             BAD_REQUEST,
-            RuleBothExpensesError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/expenses")))),
+            RuleBothExpensesError.copy(paths = Some(List("/nonFurnishedHolidayLet/0/expenses")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
-            RuleCountryCodeError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode")))),
+            RuleCountryCodeError.copy(paths = Some(List("/nonFurnishedHolidayLet/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(Seq("/nonFurnishedHolidayLet/0/countryCode"))))
+            CountryCodeFormatError.copy(paths = Some(List("/nonFurnishedHolidayLet/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -135,7 +132,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        val errors = Seq(
+        val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
@@ -158,7 +155,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
@@ -177,20 +174,6 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
     // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
 
-    val responseBody: JsValue = Json.parse(s"""
-                                              |{
-                                              |  "links":[
-                                              |    {
-                                              |      "href":"$retrieveHateoasLink",
-                                              |      "rel":"self",
-                                              |      "method":"GET"
-                                              |    }
-                                              |  ]
-                                              |}
-                                              |""".stripMargin)
-
-    def retrieveHateoasLink: String
-
     def downstreamUrl: String
 
     def stubDownstreamSuccess(): Unit = {
@@ -206,7 +189,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(s"/$nino/foreign-property/$calculationId/adjust")
-        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -230,7 +213,6 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
   private trait NonTysTest extends Test {
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
   }
 
   private trait TysIfsTest extends Test {
@@ -238,7 +220,6 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
   }
 
 }

@@ -16,8 +16,9 @@
 
 package v3.models.response.retrieveBsas.ukProperty
 
-import shared.UnitSpec
+import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, metadataModel, mtdMetadataJson}
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {

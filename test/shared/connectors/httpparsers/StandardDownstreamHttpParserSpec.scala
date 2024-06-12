@@ -16,12 +16,12 @@
 
 package shared.connectors.httpparsers
 
+import play.api.http.Status._
+import play.api.libs.json.{JsValue, Json, Reads}
 import shared.connectors.DownstreamOutcome
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
-import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json, Reads}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 class StandardDownstreamHttpParserSpec extends UnitSpec {

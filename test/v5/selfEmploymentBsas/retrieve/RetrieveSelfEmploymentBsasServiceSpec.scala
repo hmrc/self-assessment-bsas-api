@@ -16,14 +16,14 @@
 
 package v5.selfEmploymentBsas.retrieve
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.models.domain.TypeOfBusiness
-import v5.models.errors._
+import v5.common.model.TypeOfBusiness
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 import v5.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 import v5.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
@@ -50,18 +50,18 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
       "a valid request is supplied" in new Test {
         MockRetrieveSelfEmploymentBsasConnector
           .retrieveSelfEmploymentBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponse))))
 
-        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))
+        await(service.retrieveSelfEmploymentBsas(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveBsasResponse))
       }
     }
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
         import TypeOfBusiness._
-        Seq(`uk-property-fhl`, `uk-property-non-fhl`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
+        List(`uk-property-fhl`, `uk-property-non-fhl`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
-            val response: RetrieveSelfEmploymentBsasResponse = retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness = typeOfBusiness)
+            val response: RetrieveSelfEmploymentBsasResponse = retrieveBsasResponseInvalidTypeOfBusinessDataObject(typeOfBusiness = typeOfBusiness)
 
             MockRetrieveSelfEmploymentBsasConnector
               .retrieveSelfEmploymentBsas(request)
@@ -81,7 +81,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
           await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_CORRELATIONID", InternalError),
@@ -92,7 +92,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("NOT_FOUND", NotFoundError),
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)

@@ -17,7 +17,7 @@
 package v3.models.request.triggerBsas
 
 import play.api.libs.json.Json
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 
 class TriggerBsasRequestBodySpec extends UnitSpec {

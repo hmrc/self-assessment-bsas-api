@@ -16,11 +16,11 @@
 
 package v4.services
 
+import common.errors.RuleTypeOfBusinessIncorrectError
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{BaseService, ServiceOutcome}
 import v4.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
-import v4.models.errors._
 
 trait BaseRetrieveBsasService extends BaseService {
   protected val supportedTypesOfBusiness: Set[TypeOfBusiness]

@@ -16,6 +16,7 @@
 
 package v4.controllers
 
+import common.errors.RulePeriodicDataIncompleteError
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -32,7 +33,6 @@ import v4.controllers.validators.MockTriggerBsasValidatorFactory
 import v4.fixtures.TriggerBsasRequestBodyFixtures._
 import v4.mocks.services.MockTriggerBsasService
 import v4.models.domain.TypeOfBusiness
-import v4.models.errors._
 import v4.models.request.triggerBsas.TriggerBsasRequestData
 import v4.models.response.triggerBsas.TriggerBsasHateoasData
 

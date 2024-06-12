@@ -16,6 +16,7 @@
 
 package v3.endpoints
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
@@ -26,7 +27,6 @@ import shared.models.utils.JsonErrorValidators
 import shared.stubs._
 import support.IntegrationBaseSpec
 import v3.fixtures.ukProperty.SubmitUKPropertyBsasRequestBodyFixtures._
-import v3.models.errors._
 
 class SubmitUkPropertyBsasControllerISpec extends IntegrationBaseSpec with JsonErrorValidators {
 

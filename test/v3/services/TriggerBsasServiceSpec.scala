@@ -16,6 +16,7 @@
 
 package v3.services
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.Nino
 import shared.models.errors._
@@ -24,7 +25,6 @@ import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.fixtures.TriggerBsasRequestBodyFixtures._
 import v3.mocks.connectors.MockTriggerBsasConnector
-import v3.models.errors._
 import v3.models.request.triggerBsas.TriggerBsasRequestData
 import v3.models.response.TriggerBsasResponse
 

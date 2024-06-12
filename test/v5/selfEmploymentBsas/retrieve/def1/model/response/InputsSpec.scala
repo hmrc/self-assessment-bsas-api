@@ -17,8 +17,8 @@
 package v5.selfEmploymentBsas.retrieve.def1.model.response
 
 import play.api.libs.json.{JsResultException, Json}
-import shared.UnitSpec
 import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 
 class InputsSpec extends UnitSpec with JsonErrorValidators {
@@ -26,7 +26,7 @@ class InputsSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return a valid model" when {
       "passed valid JSON" in {
-        downstreamInputsJson.as[Inputs] shouldBe inputsModel
+        downstreamInputsJson.as[Inputs] shouldBe parsedInputs
       }
     }
     "return an error" when {
@@ -49,7 +49,7 @@ class InputsSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model" in {
-        Json.toJson(inputsModel) shouldBe mtdInputsJson
+        Json.toJson(parsedInputs) shouldBe mtdInputsJson
       }
     }
   }

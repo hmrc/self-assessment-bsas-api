@@ -26,7 +26,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.downstreamResponse
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 
 class AuthISpec extends IntegrationBaseSpec {
 

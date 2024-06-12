@@ -26,6 +26,8 @@ trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRe
   val mockTriggerBsasValidatorFactory: TriggerBsasValidatorFactory = mock[TriggerBsasValidatorFactory]
 
   def validator(): CallHandler[Validator[TriggerBsasRequestData]] =
-    (mockTriggerBsasValidatorFactory.validator(_: String, _: JsValue, _: TriggerSchema)).expects(*, *, *)
+    (mockTriggerBsasValidatorFactory
+      .validator(_: String, _: JsValue))
+      .expects(*, *)
 
 }

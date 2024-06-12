@@ -16,23 +16,19 @@
 
 package v5.bsas.trigger
 
-import play.api.libs.json.{JsValue, Json}
+import common.errors._
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
 import v5.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
-import v5.bsas.trigger.model.TriggerBsasHateoasData
-import v5.models.domain.TypeOfBusiness
-import v5.models.errors._
+import v5.common.model.TypeOfBusiness
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,7 +40,6 @@ class TriggerBsasControllerSpec
     with MockMtdIdLookupService
     with MockTriggerBsasValidatorFactory
     with MockTriggerBsasService
-    with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
     with MockAppConfig {
@@ -59,34 +54,16 @@ class TriggerBsasControllerSpec
     triggerBsasRequestDataBody(typeOfBusiness = TypeOfBusiness.`uk-property-fhl`)
   )
 
-  val testHateoasLinkSE: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$validNino/self-employment/c75f40a6-a3df-4429-a697-471eeec46435",
-    method = GET,
-    rel = "self"
-  )
-
-  val testHateoasLinkProperty: Link = Link(
-    href = s"/individuals/self-assessment/adjustable-summary/$validNino/uk-property/c75f40a6-a3df-4429-a697-471eeec46435",
-    method = GET,
-    rel = "self"
-  )
-
   "triggerBsas" should {
     "return OK" when {
       "a valid request is supplied for business type self-employment" in new Test {
-        private val mtdResponseJson = Json.parse(hateoasResponseForSE(validNino))
+        private val mtdResponseJson = mtdResponseJs
 
         willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
           .triggerBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
-
-        MockHateoasFactory
-          .wrap(
-            responseObj,
-            TriggerBsasHateoasData(validNino, TypeOfBusiness.`self-employment`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
-          .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkSE)))
 
         runOkTestWithAudit(
           expectedStatus = OK,
@@ -99,19 +76,13 @@ class TriggerBsasControllerSpec
       "a valid request is supplied for business type uk-property" in new Test {
         override protected val requestBodyForController: JsValue = requestBodyForProperty
 
-        private val mtdResponseJson = Json.parse(hateoasResponseForProperty(validNino))
+        private val mtdResponseJson = mtdResponseJs
 
         willUseValidator(returningSuccess(requestForProperty))
 
         MockTriggerBsasService
           .triggerBsas(requestForProperty)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObj))))
-
-        MockHateoasFactory
-          .wrap(
-            responseObj,
-            TriggerBsasHateoasData(validNino, TypeOfBusiness.`uk-property-fhl`, responseObj.calculationId, Some(TaxYear.fromMtd("2020-21"))))
-          .returns(HateoasWrapper(responseObj, Seq(testHateoasLinkProperty)))
 
         runOkTestWithAudit(
           expectedStatus = OK,
@@ -148,7 +119,6 @@ class TriggerBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockTriggerBsasValidatorFactory,
       service = mockService,
-      hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

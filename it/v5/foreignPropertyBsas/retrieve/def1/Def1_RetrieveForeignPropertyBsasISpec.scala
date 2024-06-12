@@ -16,16 +16,16 @@
 
 package v5.foreignPropertyBsas.retrieve.def1
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{retrieveForeignPropertyBsasDesFhlJson, retrieveForeignPropertyBsasDesNonFhlJson, retrieveForeignPropertyBsasMtdFhlJson, retrieveForeignPropertyBsasMtdNonFhlJson}
-import v5.models.errors._
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures
 
@@ -38,7 +38,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
+        response.json shouldBe retrieveForeignPropertyBsasMtdNonFhlJson
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
@@ -49,7 +49,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdFhlJson)
+        response.json shouldBe retrieveForeignPropertyBsasMtdFhlJson
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
@@ -60,7 +60,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe responseWithHateoas(retrieveForeignPropertyBsasMtdNonFhlJson)
+        response.json shouldBe retrieveForeignPropertyBsasMtdNonFhlJson
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
@@ -108,7 +108,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
           response.header("Content-Type") shouldBe Some("application/json")
         }
 
-      val input = Seq(
+      val input = List(
         ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, BAD_REQUEST, NinoFormatError),
         ("AA123456A", "bad_calc_id", None, BAD_REQUEST, CalculationIdFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023"), BAD_REQUEST, TaxYearFormatError),
@@ -136,7 +136,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
           response.header("Content-Type") shouldBe Some("application/json")
         }
 
-      val errors = Seq(
+      val errors = List(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
@@ -147,7 +147,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
@@ -167,40 +167,17 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     def downstreamUrl: String
 
-    def retrieveHateoasLink: String
-
-    def submitHateoasLink: String
-
     def request: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       buildRequest(s"/$nino/foreign-property/$calculationId")
-        .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
-
-    def responseWithHateoas(response: JsValue): JsValue =
-      response.as[JsObject] ++ Json
-        .parse(s"""
-                  |{
-                  |  "links": [
-                  |    {
-                  |      "href": "$retrieveHateoasLink",
-                  |      "method": "GET",
-                  |      "rel": "self"
-                  |    }, {
-                  |      "href": "$submitHateoasLink",
-                  |      "method": "POST",
-                  |      "rel": "submit-foreign-property-accounting-adjustments"
-                  |    }
-                  |  ]
-                  |}
-                  |""".stripMargin)
-        .as[JsObject]
 
   }
 
@@ -211,9 +188,6 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId"
-
-    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust"
   }
 
   private trait TysTest extends Test {
@@ -223,9 +197,6 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
-    def retrieveHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId?taxYear=2023-24"
-
-    def submitHateoasLink: String = s"/individuals/self-assessment/adjustable-summary/$nino/foreign-property/$calculationId/adjust?taxYear=2023-24"
   }
 
 }

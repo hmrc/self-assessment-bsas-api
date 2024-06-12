@@ -16,12 +16,11 @@
 
 package v5.foreignPropertyBsas.submit
 
+import common.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
 import shared.models.errors._
@@ -29,8 +28,6 @@ import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v5.foreignPropertyBsas.submit.def1.model.request._
-import v5.foreignPropertyBsas.submit.model.response.SubmitForeignPropertyBsasHateoasData
-import v5.models.errors._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,7 +39,6 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitForeignPropertyBsasValidatorFactory
     with MockSubmitForeignPropertyBsasService
-    with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator
     with MockAppConfig {
@@ -50,9 +46,6 @@ class SubmitForeignPropertyBsasControllerSpec
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
   private val rawTaxYear    = "2023-24"
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
-
-  private val testHateoasLink =
-    Link(href = s"individuals/self-assessment/adjustable-summary/$validNino/foreign-property/$calculationId/adjust", method = GET, rel = "self")
 
   private val requestJson = Json.parse(
     """|{
@@ -101,18 +94,6 @@ class SubmitForeignPropertyBsasControllerSpec
   private val requestData =
     Def1_SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, Some(taxYear), requestBody)
 
-  val mtdResponseJson: JsValue = Json.parse(s"""
-       |{
-       |  "links":[
-       |    {
-       |      "href":"individuals/self-assessment/adjustable-summary/$validNino/foreign-property/$calculationId/adjust",
-       |      "rel":"self",
-       |      "method":"GET"
-       |    }
-       |  ]
-       |}
-       |""".stripMargin)
-
   "handleRequest" should {
     "return OK" when {
       "the request is valid" in new Test {
@@ -122,15 +103,11 @@ class SubmitForeignPropertyBsasControllerSpec
           .submitForeignPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockHateoasFactory
-          .wrap((), SubmitForeignPropertyBsasHateoasData(validNino, calculationId.calculationId, requestData.taxYear))
-          .returns(HateoasWrapper((), List(testHateoasLink)))
-
         runOkTestWithAudit(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeExpectedResponseBody = None,
           maybeAuditRequestBody = Some(requestJson),
-          maybeAuditResponseBody = Some(mtdResponseJson)
+          maybeAuditResponseBody = None
         )
       }
     }
@@ -160,7 +137,6 @@ class SubmitForeignPropertyBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitForeignPropertyBsasValidatorFactory,
       service = mockService,
-      hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

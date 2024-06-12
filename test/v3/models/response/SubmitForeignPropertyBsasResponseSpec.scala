@@ -17,11 +17,11 @@
 package v3.models.response
 
 import play.api.Configuration
-import shared.UnitSpec
 import shared.config.MockAppConfig
 import shared.hateoas.Link
 import shared.hateoas.Method.GET
 import shared.models.domain.TaxYear
+import shared.utils.UnitSpec
 
 class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig {
 

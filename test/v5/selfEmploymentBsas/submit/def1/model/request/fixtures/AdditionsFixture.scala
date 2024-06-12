@@ -21,7 +21,7 @@ import v5.selfEmploymentBsas.submit.def1.model.request.{Additions, queryMap}
 
 object AdditionsFixture {
 
-  val additionsModel: Additions =
+  val additions: Additions =
     Additions(
       costOfGoodsDisallowable = Some(3000.1),
       paymentsToSubcontractorsDisallowable = Some(3000.2),
@@ -40,8 +40,8 @@ object AdditionsFixture {
       otherExpensesDisallowable = Some(3000.8)
     )
 
-  def additionsToDesJson(model: Additions): JsValue = {
-    import model._
+  def additionsToDesJson(additions: Additions): JsValue = {
+    import additions._
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
@@ -65,8 +65,8 @@ object AdditionsFixture {
     Json.toJsObject(queryMap(desFields))
   }
 
-  def additionsFromVendorJson(model: Additions): JsValue = {
-    import model._
+  def additionsFromVendorJson(additions: Additions): JsValue = {
+    import additions._
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(

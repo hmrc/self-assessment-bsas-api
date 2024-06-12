@@ -27,13 +27,13 @@ import javax.inject.Singleton
 @Singleton
 class SubmitSelfEmploymentBsasValidatorFactory {
 
-  def validator(nino: String,
-                calculationId: String,
-                taxYear: Option[String],
-                body: JsValue,
-                schema: SubmitSelfEmploymentBsasSchema): Validator[SubmitSelfEmploymentBsasRequestData] =
+  def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitSelfEmploymentBsasRequestData] = {
+
+    val schema = SubmitSelfEmploymentBsasSchema.schemaFor(taxYear)
+
     schema match {
       case Def1 => new Def1_SubmitSelfEmploymentBsasValidator(nino, calculationId, taxYear, body)
     }
+  }
 
 }

@@ -17,7 +17,7 @@
 package v5.bsas.trigger.def1.model.response
 
 import play.api.libs.json.{JsError, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import v5.bsas.trigger.model.TriggerBsasResponse
 
 class Def1_TriggerBsasResponseSpec extends UnitSpec {

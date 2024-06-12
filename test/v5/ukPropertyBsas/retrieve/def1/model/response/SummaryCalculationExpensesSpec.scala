@@ -16,9 +16,9 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
-import shared.UnitSpec
+import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
-import v5.models.RoundTripTest
+import shared.utils.UnitSpec
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
 class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -28,14 +28,14 @@ class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators w
   testRoundTrip(
     "Summary Calculation Expenses FHL",
     downstreamSummaryCalculationExpensesJson,
-    summaryCalculationExpensesFhlModel,
+    summaryCalculationExpensesFhl,
     mtdSummaryCalculationExpensesFhlJson
   )(readsFhl)
 
   testRoundTrip(
     "Summary Calculation Expenses Non-FHL",
     downstreamSummaryCalculationExpensesJson,
-    summaryCalculationExpensesNonFhlModel,
+    summaryCalculationExpensesNonFhl,
     mtdSummaryCalculationExpensesNonFhlJson
   )(readsNonFhl)
 

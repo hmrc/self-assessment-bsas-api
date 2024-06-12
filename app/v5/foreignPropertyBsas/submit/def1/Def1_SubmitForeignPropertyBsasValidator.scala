@@ -18,13 +18,13 @@ package v5.foreignPropertyBsas.submit.validators.def1
 
 import cats.data.Validated
 import cats.implicits._
+import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
 import v5.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
 import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
-import v5.models.errors.RuleBothPropertiesSuppliedError
 
 object Def1_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 

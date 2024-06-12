@@ -16,6 +16,7 @@
 
 package v5.foreignPropertyBsas.submit
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
@@ -23,7 +24,6 @@ import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.foreignPropertyBsas.submit.def1.model.request._
-import v5.models.errors._
 
 import scala.concurrent.Future
 
@@ -87,7 +87,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
           await(service.submitForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_CORRELATIONID", InternalError),
@@ -110,7 +110,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("NOT_FOUND", NotFoundError),
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),

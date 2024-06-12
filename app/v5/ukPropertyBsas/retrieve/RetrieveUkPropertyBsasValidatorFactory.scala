@@ -26,12 +26,17 @@ import javax.inject.Singleton
 @Singleton
 class RetrieveUkPropertyBsasValidatorFactory {
 
-  def validator(nino: String,
-                calculationId: String,
-                taxYear: Option[String],
-                schema: RetrieveUkPropertyBsasSchema): Validator[RetrieveUkPropertyBsasRequestData] =
+  def validator(
+      nino: String,
+      calculationId: String,
+      taxYear: Option[String]
+  ): Validator[RetrieveUkPropertyBsasRequestData] = {
+
+    val schema = RetrieveUkPropertyBsasSchema.schemaFor(taxYear)
+
     schema match {
       case Def1 => new Def1_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
     }
+  }
 
 }

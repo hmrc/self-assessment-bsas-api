@@ -90,40 +90,6 @@
                   "title": "Adjusted Datetime",
                   "description": "The date and time this calculation was adjusted.",
                   "type": "string"
-                },
-                "links": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "description": "A list of endpoint links that indicate possible actions related to the current resource.",
-                    "properties": {
-                      "href": {
-                        "description": "The relative URL of the endpoint.",
-                        "type": "string",
-                        "example": "/individuals/self-assessment/adjustable-summary/AA999999A/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
-                      },
-                      "rel": {
-                        "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
-                        "type": "string",
-                        "enum": [
-                          "self"
-                        ]
-                      },
-                      "method": {
-                        "description": "The HTTP method type for the endpoint.",
-                        "type": "string",
-                        "enum": [
-                          "GET"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "href",
-                      "rel",
-                      "method"
-                    ],
-                    "additionalProperties": false
-                  }
                 }
               },
               "required": [
@@ -136,42 +102,6 @@
             }
           }
         },
-        "additionalProperties": false
-      }
-    },
-    "links": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
-        "properties": {
-          "href": {
-            "description": "The relative URL of the endpoint.",
-            "type": "string",
-            "example": "/individuals/self-assessment/adjustable-summary/AA999999A/trigger"
-          },
-          "rel": {
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
-            "type": "string",
-            "enum": [
-              "self",
-              "trigger-business-source-adjustable-summary"
-            ]
-          },
-          "method": {
-            "description": "The HTTP method type for the endpoint.",
-            "type": "string",
-            "enum": [
-              "GET",
-              "POST"
-            ]
-          }
-        },
-        "required": [
-          "href",
-          "rel",
-          "method"
-        ],
         "additionalProperties": false
       }
     }

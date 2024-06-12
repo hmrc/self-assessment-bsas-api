@@ -16,6 +16,7 @@
 
 package v3.endpoints
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -26,7 +27,6 @@ import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures._
 import v3.models.domain.IncomeSourceType
-import v3.models.errors._
 
 class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
 

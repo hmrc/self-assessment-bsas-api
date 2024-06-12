@@ -17,8 +17,8 @@
 package v5.selfEmploymentBsas.submit.def1.model.request
 
 import play.api.libs.json.Json
-import shared.UnitSpec
 import shared.models.domain.EmptyJsonBody
+import shared.utils.UnitSpec
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
 
 class Def1_SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
@@ -26,38 +26,38 @@ class Def1_SubmitSelfEmploymentBsasRequestBodySpec extends UnitSpec {
   "SubmitSelfEmploymentBsasRequestBody" when {
     "read from valid JSON" should {
       "produce the expected SubmitSelfEmploymentBsasRequestBody object" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModel).as[Def1_SubmitSelfEmploymentBsasRequestBody] shouldBe
-          submitSelfEmploymentBsasRequestBodyModel
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBody).as[Def1_SubmitSelfEmploymentBsasRequestBody] shouldBe
+          submitSelfEmploymentBsasRequestBody
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToIfs
+        Json.toJson(submitSelfEmploymentBsasRequestBody) shouldBe requestToIfs
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyModelWithoutIncome)
+        submitSelfEmploymentBsasRequestBodyDesJson(submitSelfEmploymentBsasRequestBodyWithoutIncome)
           .as[Def1_SubmitSelfEmploymentBsasRequestBody] shouldBe
-          submitSelfEmploymentBsasRequestBodyModelWithoutIncome
+          submitSelfEmploymentBsasRequestBodyWithoutIncome
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(submitSelfEmploymentBsasRequestBodyModel) shouldBe requestToIfs
+        Json.toJson(submitSelfEmploymentBsasRequestBody) shouldBe requestToIfs
       }
     }
 
     "no fields as supplied" should {
       "read to an empty SubmitSelfEmploymentBsasRequestBody object" in {
-        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBodyModel)
+        submitSelfEmploymentBsasRequestBodyDesJson(emptySubmitSelfEmploymentBsasRequestBody)
           .as[Def1_SubmitSelfEmploymentBsasRequestBody] shouldBe
-          emptySubmitSelfEmploymentBsasRequestBodyModel
+          emptySubmitSelfEmploymentBsasRequestBody
       }
 
       "write to empty JSON" in {
-        Json.toJson(emptySubmitSelfEmploymentBsasRequestBodyModel) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(emptySubmitSelfEmploymentBsasRequestBody) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

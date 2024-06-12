@@ -20,11 +20,9 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
-import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-import v5.ukPropertyBsas.submit.model.response.SubmitUkPropertyBsasHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -35,7 +33,6 @@ class SubmitUkPropertyBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: SubmitUkPropertyBsasValidatorFactory,
     service: SubmitUkPropertyBsasService,
-    hateoasFactory: HateoasFactory,
     auditService: AuditService,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
@@ -51,15 +48,12 @@ class SubmitUkPropertyBsasController @Inject() (
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body, SubmitUkPropertyBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.submitPropertyBsas)
-          .withHateoasResultFrom(hateoasFactory) { (parsedRequest, _) =>
-            SubmitUkPropertyBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
-          }
           .withAuditing(AuditHandler(
             auditService,
             auditType = "SubmitUKPropertyAccountingAdjustments",
@@ -69,6 +63,7 @@ class SubmitUkPropertyBsasController @Inject() (
             requestBody = Some(request.body),
             includeResponse = true
           ))
+          .withNoContentResult(OK)
 
       requestHandler.handleRequest()
     }

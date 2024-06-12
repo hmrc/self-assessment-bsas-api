@@ -16,22 +16,19 @@
 
 package v5.selfEmploymentBsas.submit
 
-import play.api.libs.json.{JsValue, Json}
+import common.errors._
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.models.errors._
 import v5.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestData
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.{hateoasResponse, mtdRequestJson, submitSelfEmploymentBsasRequestBodyModel}
-import v5.selfEmploymentBsas.submit.model.response.SubmitSelfEmploymentBsasHateoasData
+import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.{mtdRequestJson, submitSelfEmploymentBsasRequestBody}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,22 +40,12 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitSelfEmploymentBsasValidatorFactory
     with MockSubmitSelfEmploymentBsasService
-    with MockHateoasFactory
     with MockAuditService
     with MockIdGenerator
     with MockAppConfig {
 
-  private val calculationId   = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
-  private val requestData     = Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
-  private val mtdResponseJson = Json.parse(hateoasResponse(parsedNino, calculationId))
-
-  val testHateoasLinks: Seq[Link] = Seq(
-    Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$validNino/self-employment/$calculationId",
-      method = GET,
-      rel = "self"
-    )
-  )
+  private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
+  private val requestData   = Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, calculationId, None, submitSelfEmploymentBsasRequestBody)
 
   "submitSelfEmploymentBsas" should {
     "return OK" when {
@@ -69,15 +56,11 @@ class SubmitSelfEmploymentBsasControllerSpec
           .submitSelfEmploymentBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockHateoasFactory
-          .wrap((), SubmitSelfEmploymentBsasHateoasData(validNino, calculationId.calculationId, requestData.taxYear))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
         runOkTestWithAudit(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeExpectedResponseBody = None,
           maybeAuditRequestBody = Some(mtdRequestJson),
-          maybeAuditResponseBody = Some(mtdResponseJson)
+          maybeAuditResponseBody = None
         )
       }
     }
@@ -96,7 +79,7 @@ class SubmitSelfEmploymentBsasControllerSpec
       }
 
       "multiple errors occur for the customised errors" in new Test {
-        val errors = List(
+        private val errors = List(
           ValueFormatError.copy(paths = Some(List("turnover"))),
           RuleBothExpensesError.copy(paths = Some(List("expenses")))
         )
@@ -124,7 +107,6 @@ class SubmitSelfEmploymentBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitSelfEmploymentBsasValidatorFactory,
       service = mockService,
-      hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

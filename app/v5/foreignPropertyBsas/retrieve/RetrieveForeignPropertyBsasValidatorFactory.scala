@@ -29,9 +29,10 @@ class RetrieveForeignPropertyBsasValidatorFactory {
   def validator(
       nino: String,
       calculationId: String,
-      taxYear: Option[String],
-      schema: RetrieveForeignPropertyBsasSchema
+      taxYear: Option[String]
   ): Validator[RetrieveForeignPropertyBsasRequestData] = {
+
+    val schema = RetrieveForeignPropertyBsasSchema.schemaFor(taxYear)
 
     schema match {
       case Def1 => new Def1_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)

@@ -17,7 +17,7 @@
 package v5.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json.{JsValue, Json}
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 
@@ -491,7 +491,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
     source = "MTD-SA",
-    submissionPeriods = Seq(parsedSubmissionPeriod)
+    submissionPeriods = List(parsedSubmissionPeriod)
   )
 
   lazy val parsedNonFhlInputs: Inputs = Inputs(
@@ -501,7 +501,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
     source = "MTD-SA",
-    submissionPeriods = Seq(parsedSubmissionPeriod)
+    submissionPeriods = List(parsedSubmissionPeriod)
   )
 
   lazy val parsedFhlSummaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
@@ -601,7 +601,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     deductions = Some(parsedNonFhlSummaryCalculationDeductions),
     taxableProfit = Some(0.30),
     adjustedIncomeTaxLoss = Some(0.31),
-    countryLevelDetail = Some(Seq(parsedSummaryCalculationCountryLevelDetail))
+    countryLevelDetail = Some(List(parsedSummaryCalculationCountryLevelDetail))
   )
 
   lazy val parsedFhlAdjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(

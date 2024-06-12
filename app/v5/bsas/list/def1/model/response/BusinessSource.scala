@@ -19,7 +19,7 @@ package v5.bsas.list.def1.model.response
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import shared.models.domain.TaxYear
-import v5.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 
 case class BusinessSource[I](
     businessId: String,

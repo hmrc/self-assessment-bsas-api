@@ -16,21 +16,17 @@
 
 package v5.ukPropertyBsas.retrieve
 
-import play.api.libs.json.{JsObject, Json}
+import common.errors._
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.models.errors._
 import v5.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
-import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,64 +38,38 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveUkPropertyBsasValidatorFactory
     with MockRetrieveUkPropertyBsasService
-    with MockHateoasFactory
     with MockIdGenerator
     with MockAppConfig {
 
-  private val calculationId    = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
-  private val requestData      = Def1_RetrieveUkPropertyBsasRequestData(parsedNino, calculationId, taxYear = None)
-  private val testHateoasLinks = List(Link(href = "/some/link", method = GET, rel = "someRel"))
-
-  private val hateoasFhlResponse = mtdRetrieveBsasResponseFhlJson
-    .as[JsObject] ++ Json
-    .parse("""{
-      |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
-      |}
-      |""".stripMargin)
-    .as[JsObject]
-
-  private val hateoasNonFhlResponse = mtdRetrieveBsasResponseNonFhlJson
-    .as[JsObject] ++ Json
-    .parse("""{
-      |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
-      |}
-      |""".stripMargin)
-    .as[JsObject]
+  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
+  private val requestData   = Def1_RetrieveUkPropertyBsasRequestData(parsedNino, calculationId, taxYear = None)
 
   "retrieve" should {
-    "return successful hateoas response for fhl with status OK" when {
+    "return OK for FHL" when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
           .retrieveBsas(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))))
-
-        MockHateoasFactory
-          .wrap(retrieveBsasResponseFhlModel, RetrieveUkPropertyHateoasData(validNino, calculationId.calculationId, None))
-          .returns(HateoasWrapper(retrieveBsasResponseFhlModel, testHateoasLinks))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseFhl))))
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(hateoasFhlResponse)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseFhlJson)
         )
       }
     }
-    "return OK" when {
+    "return OK for non-FHL" when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
           .retrieveBsas(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhlModel))))
-
-        MockHateoasFactory
-          .wrap(retrieveBsasResponseNonFhlModel, RetrieveUkPropertyHateoasData(validNino, calculationId.calculationId, None))
-          .returns(HateoasWrapper(retrieveBsasResponseNonFhlModel, testHateoasLinks))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhl))))
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(hateoasNonFhlResponse)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseNonFhlJson)
         )
       }
     }
@@ -129,7 +99,6 @@ class RetrieveUkPropertyBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveUkPropertyBsasValidatorFactory,
       service = mockService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )

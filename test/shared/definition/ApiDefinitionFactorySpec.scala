@@ -17,12 +17,12 @@
 package shared.definition
 
 import cats.implicits.catsSyntaxValidatedId
-import shared.UnitSpec
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{AppConfig, ConfidenceLevelConfig, MockAppConfig}
 import shared.definition.APIStatus.{ALPHA, BETA}
 import shared.mocks.MockHttpClient
 import shared.routing.{Version, Version1, Version3, Version4}
+import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {

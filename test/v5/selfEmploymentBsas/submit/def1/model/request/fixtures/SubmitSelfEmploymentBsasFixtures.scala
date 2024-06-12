@@ -17,7 +17,6 @@
 package v5.selfEmploymentBsas.submit.def1.model.request.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import shared.models.domain.{CalculationId, Nino}
 import v5.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestBody
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture._
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture._
@@ -27,21 +26,21 @@ import scala.collection.mutable.ListBuffer
 
 object SubmitSelfEmploymentBsasFixtures {
 
-  val submitSelfEmploymentBsasRequestBodyModel: Def1_SubmitSelfEmploymentBsasRequestBody =
+  val submitSelfEmploymentBsasRequestBody: Def1_SubmitSelfEmploymentBsasRequestBody =
     Def1_SubmitSelfEmploymentBsasRequestBody(
-      income = Some(incomeModel),
-      additions = Some(additionsModel),
-      expenses = Some(expensesModel)
+      income = Some(income),
+      additions = Some(additions),
+      expenses = Some(expenses)
     )
 
-  val submitSelfEmploymentBsasRequestBodyModelWithoutIncome: Def1_SubmitSelfEmploymentBsasRequestBody =
+  val submitSelfEmploymentBsasRequestBodyWithoutIncome: Def1_SubmitSelfEmploymentBsasRequestBody =
     Def1_SubmitSelfEmploymentBsasRequestBody(
       income = None,
-      additions = Some(additionsModel),
-      expenses = Some(expensesModel)
+      additions = Some(additions),
+      expenses = Some(expenses)
     )
 
-  val emptySubmitSelfEmploymentBsasRequestBodyModel: Def1_SubmitSelfEmploymentBsasRequestBody =
+  val emptySubmitSelfEmploymentBsasRequestBody: Def1_SubmitSelfEmploymentBsasRequestBody =
     Def1_SubmitSelfEmploymentBsasRequestBody(
       income = None,
       additions = None,
@@ -284,8 +283,8 @@ object SubmitSelfEmploymentBsasFixtures {
        |}
        |""".stripMargin
 
-  def submitSelfEmploymentBsasRequestBodyDesJson(model: Def1_SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import model._
+  def submitSelfEmploymentBsasRequestBodyDesJson(dataObject: Def1_SubmitSelfEmploymentBsasRequestBody): JsValue = {
+    import dataObject._
 
     val jsObjects: ListBuffer[JsObject] = ListBuffer.empty[JsObject]
 
@@ -305,8 +304,8 @@ object SubmitSelfEmploymentBsasFixtures {
     json
   }
 
-  def submitSelfEmploymentBsasRequestBodyMtdJson(model: Def1_SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import model._
+  def submitSelfEmploymentBsasRequestBodyMtdJson(dataObject: Def1_SubmitSelfEmploymentBsasRequestBody): JsValue = {
+    import dataObject._
 
     val jsObjects: ListBuffer[JsObject] = ListBuffer.empty[JsObject]
 
@@ -324,22 +323,6 @@ object SubmitSelfEmploymentBsasFixtures {
 
     val json = jsObjects.fold(Json.parse("""{}""").as[JsObject])((a: JsObject, b: JsObject) => a ++ b)
     json
-  }
-
-  def hateoasResponse(nino: Nino, calcId: CalculationId, taxYear: Option[String] = None): String = {
-    val taxYearParam = taxYear.map("?taxYear=" + _).getOrElse("")
-
-    s"""
-       |{
-       |  "links":[
-       |    {
-       |      "href":"/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calcId$taxYearParam",
-       |      "rel":"self",
-       |      "method":"GET"
-       |    }
-       |  ]
-       |}
-    """.stripMargin
   }
 
 }

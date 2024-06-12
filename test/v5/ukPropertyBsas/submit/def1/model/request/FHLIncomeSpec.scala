@@ -17,38 +17,38 @@
 package v5.ukPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsObject, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 
 class FHLIncomeSpec extends UnitSpec {
 
-  val model: FHLIncome = FHLIncome(Some(123.12))
+  private val fhlIncome: FHLIncome = FHLIncome(Some(123.12))
 
-  val emptyModel: FHLIncome = FHLIncome(None)
+  private val emptyFhlIncome: FHLIncome = FHLIncome(None)
 
   "reads" when {
-    "passed mtd json" should {
-      "return the corresponding model" in {
+    "given MTD json" should {
+      "return the expected parsed object" in {
         Json
           .parse("""
               |{
               |   "totalRentsReceived": 123.12
               |}
               |""".stripMargin)
-          .as[FHLIncome] shouldBe model
+          .as[FHLIncome] shouldBe fhlIncome
       }
     }
 
-    "passed an empty JSON" should {
-      "return an empty model" in {
-        JsObject.empty.as[FHLIncome] shouldBe emptyModel
+    "given an empty JSON object" should {
+      "return an empty FHLIncome" in {
+        JsObject.empty.as[FHLIncome] shouldBe emptyFhlIncome
       }
     }
   }
 
   "writes" when {
-    "passed a model" should {
+    "given an FHLIncome object" should {
       "return the downstream JSON" in {
-        Json.toJson(model) shouldBe
+        Json.toJson(fhlIncome) shouldBe
           Json.parse("""
               |{
               |   "rentReceived": 123.12
@@ -57,9 +57,9 @@ class FHLIncomeSpec extends UnitSpec {
       }
     }
 
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+    "given an empty FHLIncome" should {
+      "return an empty JSON object" in {
+        Json.toJson(emptyFhlIncome) shouldBe JsObject.empty
       }
     }
   }

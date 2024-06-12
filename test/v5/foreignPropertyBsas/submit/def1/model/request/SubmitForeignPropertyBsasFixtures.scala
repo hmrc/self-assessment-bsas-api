@@ -73,9 +73,9 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFullModel: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
+  val requestNonFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
     nonFurnishedHolidayLet = Some(
-      Seq(
+      List(
         ForeignProperty(
           countryCode = "FRA",
           income = Some(
@@ -141,7 +141,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestFhlFullModel: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
+  val requestFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
     nonFurnishedHolidayLet = None,
     foreignFhlEea = Some(
       FhlEea(

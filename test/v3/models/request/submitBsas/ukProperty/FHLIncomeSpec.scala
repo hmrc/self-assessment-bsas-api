@@ -17,7 +17,7 @@
 package v3.models.request.submitBsas.ukProperty
 
 import play.api.libs.json.{JsObject, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 
 class FHLIncomeSpec extends UnitSpec {
 

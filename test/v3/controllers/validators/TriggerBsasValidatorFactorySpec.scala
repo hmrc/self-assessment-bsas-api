@@ -18,13 +18,13 @@ package v3.controllers.validators
 
 import cats.data.Validated
 import cats.data.Validated.Valid
+import common.errors._
 import config.MockBsasConfig
 import play.api.libs.json.{JsObject, JsValue, Json}
-import shared.UnitSpec
 import shared.models.domain.Nino
 import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.models.domain.TypeOfBusiness
-import v3.models.errors.{RuleAccountingPeriodNotSupportedError, TypeOfBusinessFormatError}
 import v3.models.request.triggerBsas.{TriggerBsasRequestBody, TriggerBsasRequestData}
 
 class TriggerBsasValidatorFactorySpec extends UnitSpec with MockBsasConfig {

@@ -16,12 +16,13 @@
 
 package v3.models.response.retrieveBsas.foreignProperty
 
+import common.model.RoundTripTest
 import play.api.Configuration
-import shared.UnitSpec
 import shared.config.MockAppConfig
 import shared.hateoas.Method.{GET, POST}
 import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
+import shared.utils.UnitSpec
 import v3.fixtures.foreignProperty.RetrieveForeignPropertyBsasBodyFixtures._
 
 class RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {

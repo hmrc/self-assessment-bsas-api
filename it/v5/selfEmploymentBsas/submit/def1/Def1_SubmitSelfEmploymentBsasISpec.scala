@@ -17,16 +17,15 @@
 package v5.selfEmploymentBsas.submit.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.stubs._
 import support.IntegrationBaseSpec
-import v5.models.errors._
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
 
 class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
@@ -53,10 +52,10 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "error message"
-         |      }
+         | {
+         |   "code": "$code",
+         |   "reason": "error message"
+         | }
     """.stripMargin
 
   }
@@ -85,8 +84,7 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId)))
-        result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Content-Type") shouldBe None
       }
 
       "any valid TYS request is made" in new TysIfsTest {
@@ -100,8 +98,7 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
         val result: WSResponse = await(request().post(requestBody))
         result.status shouldBe OK
-        result.json shouldBe Json.parse(hateoasResponse(Nino(nino), CalculationId(calculationId), Some("2023-24")))
-        result.header("Content-Type") shouldBe Some("application/json")
+        result.header("Content-Type") shouldBe None
       }
 
     }
@@ -126,9 +123,9 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(
+        val input = List(
           ("AA1234A", BAD_REQUEST, NinoFormatError, requestBody),
-          ("AA123456A", BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(Seq("/expenses"))), mtdRequestWithBothExpenses)
+          ("AA123456A", BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(List("/expenses"))), mtdRequestWithBothExpenses)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -150,7 +147,7 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        val errors = Seq(
+        val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
           (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", BAD_REQUEST, RuleSummaryStatusInvalid),
@@ -173,7 +170,7 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),

@@ -18,7 +18,7 @@ package v5.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v5.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 
 case class Inputs(businessId: String,
                   typeOfBusiness: TypeOfBusiness,

@@ -18,8 +18,7 @@ package v5.selfEmploymentBsas.retrieve.def1.model.response
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v5.hateoas.HateoasLinks
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
 case class Def1_RetrieveSelfEmploymentBsasResponse(
@@ -34,7 +33,7 @@ case class Def1_RetrieveSelfEmploymentBsasResponse(
 
 }
 
-object Def1_RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
+object Def1_RetrieveSelfEmploymentBsasResponse {
 
   implicit val reads: Reads[Def1_RetrieveSelfEmploymentBsasResponse] = (
     (JsPath \ "metadata").read[Metadata] and

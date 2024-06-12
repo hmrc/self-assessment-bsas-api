@@ -18,8 +18,8 @@ package v5.bsas.trigger
 
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import play.api.libs.json.{JsObject, Json}
-import shared.UnitSpec
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.utils.UnitSpec
 
 import java.time.LocalDate
 

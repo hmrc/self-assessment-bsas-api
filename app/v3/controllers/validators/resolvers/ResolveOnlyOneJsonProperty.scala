@@ -18,9 +18,9 @@ package v3.controllers.validators.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.models.errors.MtdError
-import v3.models.errors.RuleBothPropertiesSuppliedError
 
 class ResolveOnlyOneJsonProperty(fieldOneName: String, fieldTwoName: String) {
 

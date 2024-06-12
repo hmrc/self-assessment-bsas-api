@@ -37,7 +37,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "retrieve" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhlModel))
+      val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhl))
 
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         private val request     = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear = None)

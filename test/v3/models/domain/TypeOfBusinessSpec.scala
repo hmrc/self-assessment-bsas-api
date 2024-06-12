@@ -16,7 +16,7 @@
 
 package v3.models.domain
 
-import shared.UnitSpec
+import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
 import v3.models.domain.TypeOfBusiness._
 

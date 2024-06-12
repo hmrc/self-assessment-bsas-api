@@ -27,13 +27,18 @@ import javax.inject.Singleton
 @Singleton
 class SubmitUkPropertyBsasValidatorFactory {
 
-  def validator(nino: String,
-                calculationId: String,
-                taxYear: Option[String],
-                body: JsValue,
-                schema: SubmitUkPropertyBsasSchema): Validator[SubmitUkPropertyBsasRequestData] =
+  def validator(
+      nino: String,
+      calculationId: String,
+      taxYear: Option[String],
+      body: JsValue
+  ): Validator[SubmitUkPropertyBsasRequestData] = {
+
+    val schema = SubmitUkPropertyBsasSchema.schemaFor(taxYear)
+
     schema match {
       case Def1 => new Def1_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
     }
+  }
 
 }

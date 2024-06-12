@@ -16,6 +16,7 @@
 
 package v4.services
 
+import common.errors.{RuleAccountingPeriodNotEndedError, RuleNoAccountingPeriodError, RulePeriodicDataIncompleteError, TriggerNotFoundError}
 import shared.controllers.EndpointLogContext
 import shared.models.domain.Nino
 import shared.models.errors._
@@ -24,7 +25,6 @@ import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v4.fixtures.TriggerBsasRequestBodyFixtures._
 import v4.mocks.connectors.MockTriggerBsasConnector
-import v4.models.errors._
 import v4.models.request.triggerBsas.TriggerBsasRequestData
 import v4.models.response.triggerBsas.TriggerBsasResponse
 

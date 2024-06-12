@@ -16,61 +16,61 @@
 
 package v3.services
 
+import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
-import shared.models
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
-import cats.implicits._
 import v3.connectors.SubmitForeignPropertyBsasConnector
-import v3.models.errors._
 import v3.models.request.submitBsas.foreignProperty.SubmitForeignPropertyBsasRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitForeignPropertyBsasService @Inject()(connector: SubmitForeignPropertyBsasConnector) extends BaseService {
+class SubmitForeignPropertyBsasService @Inject() (connector: SubmitForeignPropertyBsasConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_CALCULATION_ID" -> CalculationIdFormatError,
-      "INVALID_CORRELATIONID" -> models.errors.InternalError,
-      "INVALID_PAYLOAD" -> models.errors.InternalError,
-      "BVR_FAILURE_C15320" -> models.errors.InternalError,
-      "BVR_FAILURE_C55508" -> models.errors.InternalError,
-      "BVR_FAILURE_C55509" -> models.errors.InternalError,
-      "BVR_FAILURE_C559107" -> RulePropertyIncomeAllowanceClaimed,
-      "BVR_FAILURE_C559103" -> RulePropertyIncomeAllowanceClaimed,
-      "BVR_FAILURE_C559099" -> RuleOverConsolidatedExpensesThreshold,
-      "BVR_FAILURE_C55503" -> models.errors.InternalError,
-      "BVR_FAILURE_C55316" -> models.errors.InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "ASC_ALREADY_SUPERSEDED" -> RuleSummaryStatusSuperseded,
-      "ASC_ALREADY_ADJUSTED" -> RuleAlreadyAdjusted,
-      "UNALLOWABLE_VALUE" -> RuleResultingValueNotPermitted,
-      "ASC_ID_INVALID" -> RuleSummaryStatusInvalid,
+      "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+      "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
+      "INVALID_CORRELATIONID"         -> InternalError,
+      "INVALID_PAYLOAD"               -> InternalError,
+      "BVR_FAILURE_C15320"            -> InternalError,
+      "BVR_FAILURE_C55508"            -> InternalError,
+      "BVR_FAILURE_C55509"            -> InternalError,
+      "BVR_FAILURE_C559107"           -> RulePropertyIncomeAllowanceClaimed,
+      "BVR_FAILURE_C559103"           -> RulePropertyIncomeAllowanceClaimed,
+      "BVR_FAILURE_C559099"           -> RuleOverConsolidatedExpensesThreshold,
+      "BVR_FAILURE_C55503"            -> InternalError,
+      "BVR_FAILURE_C55316"            -> InternalError,
+      "NO_DATA_FOUND"                 -> NotFoundError,
+      "ASC_ALREADY_SUPERSEDED"        -> RuleSummaryStatusSuperseded,
+      "ASC_ALREADY_ADJUSTED"          -> RuleAlreadyAdjusted,
+      "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
+      "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
-      "SERVER_ERROR" -> models.errors.InternalError,
-      "SERVICE_UNAVAILABLE" -> models.errors.InternalError,
+      "SERVER_ERROR"                  -> InternalError,
+      "SERVICE_UNAVAILABLE"           -> InternalError
     )
 
     val extraTysErrors =
       Map(
-        "INVALID_TAX_YEAR" -> TaxYearFormatError,
-        "NOT_FOUND" -> NotFoundError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+        "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+        "NOT_FOUND"                      -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError,
         "INCOME_SOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError
       )
 
     errors ++ extraTysErrors
   }
 
-  def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit ctx: RequestContext,
-                                                                               ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+  def submitForeignPropertyBsas(
+      request: SubmitForeignPropertyBsasRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector
       .submitForeignPropertyBsas(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
+
 }

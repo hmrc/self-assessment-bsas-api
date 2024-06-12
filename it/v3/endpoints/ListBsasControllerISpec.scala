@@ -17,6 +17,7 @@
 package v3.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -27,7 +28,6 @@ import shared.models.errors.{BusinessIdFormatError, InternalError, MtdError, Nin
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
-import v3.models.errors.TypeOfBusinessFormatError
 
 class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
 
@@ -157,7 +157,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
       "valid request is made without a tax year so that he current tax year is used" in new TysIfsTest {
         private val currentTaxYear = TaxYear.now()
 
-        override val taxYear: Option[String]   = None
+        override val taxYear: Option[String] = None
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

@@ -20,11 +20,10 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
-import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-import v5.foreignPropertyBsas.submit.model.response.SubmitForeignPropertyBsasHateoasData
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -34,7 +33,6 @@ class SubmitForeignPropertyBsasController @Inject() (
     val lookupService: MtdIdLookupService,
     validatorFactory: SubmitForeignPropertyBsasValidatorFactory,
     service: SubmitForeignPropertyBsasService,
-    hateoasFactory: HateoasFactory,
     auditService: AuditService,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
@@ -50,15 +48,12 @@ class SubmitForeignPropertyBsasController @Inject() (
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body, SubmitForeignPropertyBsasSchema.schemaFor(taxYear))
+      val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.submitForeignPropertyBsas)
-          .withHateoasResultFrom(hateoasFactory) { (parsedRequest, _) =>
-            SubmitForeignPropertyBsasHateoasData(nino, calculationId, parsedRequest.taxYear)
-          }
           .withAuditing(AuditHandler(
             auditService,
             auditType = "SubmitForeignPropertyAccountingAdjustments",
@@ -68,6 +63,7 @@ class SubmitForeignPropertyBsasController @Inject() (
             requestBody = Some(request.body),
             includeResponse = true
           ))
+          .withNoContentResult(OK)
 
       requestHandler.handleRequest()
     }

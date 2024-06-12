@@ -25,13 +25,18 @@ import javax.inject.Singleton
 @Singleton
 class ListBsasValidatorFactory {
 
-  def validator(nino: String,
-                taxYear: Option[String],
-                typeOfBusiness: Option[String],
-                businessId: Option[String],
-                schema: ListBsasSchema): Validator[ListBsasRequestData] =
+  def validator(
+      nino: String,
+      taxYear: Option[String],
+      typeOfBusiness: Option[String],
+      businessId: Option[String]
+  ): Validator[ListBsasRequestData] = {
+
+    val schema = ListBsasSchema.schemaFor(taxYear)
+
     schema match {
       case ListBsasSchema.Def1 => new Def1_ListBsasValidator(nino, taxYear, typeOfBusiness, businessId)
     }
+  }
 
 }

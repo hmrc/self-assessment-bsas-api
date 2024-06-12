@@ -17,13 +17,13 @@
 package v5.selfEmploymentBsas.submit.def1.model.request
 
 import play.api.libs.json.Json
-import shared.UnitSpec
 import shared.models.domain.EmptyJsonBody
+import shared.utils.UnitSpec
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture._
 
 class ExpensesSpec extends UnitSpec {
 
-  val expensesModelWithoutCosts: Expenses =
+  val expensesWithoutCosts: Expenses =
     Expenses(
       costOfGoodsAllowable = None,
       paymentsToSubcontractorsAllowable = Some(2000.50),
@@ -43,7 +43,7 @@ class ExpensesSpec extends UnitSpec {
       consolidatedExpenses = None
     )
 
-  val emptyExpensesModel: Expenses =
+  val emptyExpenses: Expenses =
     Expenses(
       costOfGoodsAllowable = None,
       paymentsToSubcontractorsAllowable = None,
@@ -66,33 +66,33 @@ class ExpensesSpec extends UnitSpec {
   "Expenses" when {
     "read from valid vendor JSON" should {
       "produce the expected Expenses object" in {
-        expensesFromMtdJson(expensesModel).as[Expenses] shouldBe expensesModel
+        expensesFromMtdJson(expenses).as[Expenses] shouldBe expenses
       }
     }
 
     "written to DES JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(expensesModel) shouldBe expensesToDesJson(expensesModel)
+        Json.toJson(expenses) shouldBe expensesToDesJson(expenses)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        expensesFromMtdJson(expensesModelWithoutCosts).as[Expenses] shouldBe expensesModelWithoutCosts
+        expensesFromMtdJson(expensesWithoutCosts).as[Expenses] shouldBe expensesWithoutCosts
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(expensesModelWithoutCosts) shouldBe expensesToDesJson(expensesModelWithoutCosts)
+        Json.toJson(expensesWithoutCosts) shouldBe expensesToDesJson(expensesWithoutCosts)
       }
     }
 
     "no fields as supplied" should {
       "read to an empty Expenses object" in {
-        expensesFromMtdJson(emptyExpensesModel).as[Expenses] shouldBe emptyExpensesModel
+        expensesFromMtdJson(emptyExpenses).as[Expenses] shouldBe emptyExpenses
       }
 
       "write to empty JSON" in {
-        Json.toJson(emptyExpensesModel) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(emptyExpenses) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

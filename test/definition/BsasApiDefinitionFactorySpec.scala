@@ -17,13 +17,13 @@
 package definition
 
 import cats.implicits.catsSyntaxValidatedId
-import shared.UnitSpec
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.definition.APIStatus.BETA
 import shared.definition._
 import shared.mocks.MockHttpClient
 import shared.routing.{Version3, Version4, Version5, Version6}
+import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
@@ -102,7 +102,7 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
   }
 
   "confidenceLevel" when {
-    Seq(
+    List(
       (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
       (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
       (false, ConfidenceLevel.L200, ConfidenceLevel.L50)

@@ -16,18 +16,18 @@
 
 package v5.submitUkPropertyBsas.services
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.models.errors._
 import v5.submitUkPropertyBsas.connectors.MockSubmitUkPropertyBsasConnector
+import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasService
+import v5.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestData
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
-import v5.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestData
-import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasService
 
 import scala.concurrent.Future
 
@@ -74,7 +74,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
           await(service.submitPropertyBsas(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
         "INVALID_CALCULATION_ID"        -> CalculationIdFormatError,
         "INVALID_CORRELATIONID"         -> InternalError,
@@ -97,7 +97,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
         "SERVICE_UNAVAILABLE"           -> InternalError
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         "INVALID_TAX_YEAR"               -> TaxYearFormatError,
         "NOT_FOUND"                      -> NotFoundError,
         "TAX_YEAR_NOT_SUPPORTED"         -> RuleTaxYearNotSupportedError,

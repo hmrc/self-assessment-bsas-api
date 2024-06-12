@@ -28,9 +28,13 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class TriggerBsasValidatorFactory @Inject() (implicit bsasConfig: BsasConfig) {
 
-  def validator(nino: String, body: JsValue, schema: TriggerSchema): Validator[TriggerBsasRequestData] =
+  def validator(nino: String, body: JsValue): Validator[TriggerBsasRequestData] = {
+
+    val schema = TriggerSchema.schemaFor(body)
+
     schema match {
       case Def1 => new Def1_TriggerBsasValidator(nino, body)
     }
+  }
 
 }

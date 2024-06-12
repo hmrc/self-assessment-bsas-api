@@ -18,7 +18,7 @@ package v5.bsas.list.def1.model.response
 
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
 import v5.bsas.list.model.response.ListBsasResponse
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 
 case class Def1_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) extends ListBsasResponse[I] {
 

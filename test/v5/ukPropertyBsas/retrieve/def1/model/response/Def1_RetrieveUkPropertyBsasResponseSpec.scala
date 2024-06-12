@@ -16,10 +16,9 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
-import shared.UnitSpec
+import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
-import v5.models.RoundTripTest
-
+import shared.utils.UnitSpec
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
 class Def1_RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -29,16 +28,15 @@ class Def1_RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
   testRoundTrip(
     testName = "Retrieve UK Property FHL",
     downstreamJson = downstreamRetrieveBsasFhlResponseJson,
-    model = retrieveBsasResponseFhlModel,
+    dataObject = retrieveBsasResponseFhl,
     mtdJson = mtdRetrieveBsasResponseFhlJson
   )(reads)
 
   testRoundTrip(
     testName = "Retrieve UK Property Non-FHL",
     downstreamJson = downstreamRetrieveBsasNonFhlResponseJson,
-    model = retrieveBsasResponseNonFhlModel,
+    dataObject = retrieveBsasResponseNonFhl,
     mtdJson = mtdRetrieveBsasResponseNonFhlJson
   )(reads)
-
 
 }

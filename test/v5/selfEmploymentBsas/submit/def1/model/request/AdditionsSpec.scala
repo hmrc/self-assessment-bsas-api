@@ -17,13 +17,13 @@
 package v5.selfEmploymentBsas.submit.def1.model.request
 
 import play.api.libs.json.Json
-import shared.UnitSpec
 import shared.models.domain.EmptyJsonBody
+import shared.utils.UnitSpec
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture._
 
 class AdditionsSpec extends UnitSpec {
 
-  val additionsModelWithoutCosts: Additions =
+  val additionsWithoutCosts: Additions =
     Additions(
       costOfGoodsDisallowable = None,
       paymentsToSubcontractorsDisallowable = Some(3000.2),
@@ -42,7 +42,7 @@ class AdditionsSpec extends UnitSpec {
       otherExpensesDisallowable = Some(3000.8)
     )
 
-  val emptyAdditionsModel: Additions =
+  val emptyAdditions: Additions =
     Additions(
       costOfGoodsDisallowable = None,
       paymentsToSubcontractorsDisallowable = None,
@@ -64,33 +64,33 @@ class AdditionsSpec extends UnitSpec {
   "Additions" when {
     "read from valid vendor JSON" should {
       "produce the expected Additions object" in {
-        additionsFromVendorJson(additionsModel).as[Additions] shouldBe additionsModel
+        additionsFromVendorJson(additions).as[Additions] shouldBe additions
       }
     }
 
     "written to DES JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(additionsModel) shouldBe additionsToDesJson(additionsModel)
+        Json.toJson(additions) shouldBe additionsToDesJson(additions)
       }
     }
 
     "some optional fields as not supplied" should {
       "read those fields as 'None'" in {
-        additionsFromVendorJson(additionsModelWithoutCosts).as[Additions] shouldBe additionsModelWithoutCosts
+        additionsFromVendorJson(additionsWithoutCosts).as[Additions] shouldBe additionsWithoutCosts
       }
 
       "not write those fields to JSON" in {
-        Json.toJson(additionsModelWithoutCosts) shouldBe additionsToDesJson(additionsModelWithoutCosts)
+        Json.toJson(additionsWithoutCosts) shouldBe additionsToDesJson(additionsWithoutCosts)
       }
     }
 
     "no fields as supplied" should {
       "read to an empty Additions object" in {
-        additionsFromVendorJson(emptyAdditionsModel).as[Additions] shouldBe emptyAdditionsModel
+        additionsFromVendorJson(emptyAdditions).as[Additions] shouldBe emptyAdditions
       }
 
       "write to empty JSON" in {
-        Json.toJson(emptyAdditionsModel) shouldBe Json.toJson(EmptyJsonBody)
+        Json.toJson(emptyAdditions) shouldBe Json.toJson(EmptyJsonBody)
       }
     }
   }

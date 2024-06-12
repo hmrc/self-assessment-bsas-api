@@ -20,7 +20,6 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
 import shared.models.domain.{BusinessId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -28,11 +27,10 @@ import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v5.bsas.list.def1.model.Def1_ListBsasFixtures
 import v5.bsas.list.def1.model.request.Def1_ListBsasRequestData
-import v5.bsas.list.def1.model.response.{BusinessSource, Def1_ListBsasResponse}
+import v5.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v5.bsas.list.model.request.ListBsasRequestData
-import v5.bsas.list.model.response.{BsasSummary, ListBsasHateoasData, ListBsasResponse}
-import v5.hateoas.HateoasLinks
-import v5.models.domain.TypeOfBusiness
+import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v5.common.model.TypeOfBusiness
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,9 +42,7 @@ class ListBsasControllerSpec
     with MockMtdIdLookupService
     with MockListBsasValidatorFactory
     with MockListBsasService
-    with MockHateoasFactory
     with MockAppConfig
-    with HateoasLinks
     with MockIdGenerator
     with Def1_ListBsasFixtures {
 
@@ -65,13 +61,9 @@ class ListBsasControllerSpec
           .listBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(validNino, response, Some(requestData.taxYear)))
-          .returns(responseWithHateoas)
-
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(parsedNino))
+          maybeExpectedResponseBody = Some(summariesJs)
         )
       }
 
@@ -87,13 +79,9 @@ class ListBsasControllerSpec
           .listBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        MockHateoasFactory
-          .wrapList(response, ListBsasHateoasData(validNino, response, Some(requestData.taxYear)))
-          .returns(responseWithHateoas)
-
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(summariesJSONWithHateoas(parsedNino))
+          maybeExpectedResponseBody = Some(summariesJs)
         )
       }
     }
@@ -125,7 +113,6 @@ class ListBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockListBsasValidatorFactory,
       service = mockListBsasService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -139,19 +126,7 @@ class ListBsasControllerSpec
 
     val response: ListBsasResponse[BsasSummary] = Def1_ListBsasResponse(
       List(
-        businessSourceSummary().copy(
-          typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-          summaries = List(
-            bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
-          )),
-        businessSourceSummary().copy(
-          typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-          summaries = List(
-            bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
-          )),
-        businessSourceSummary
-        /** EndMarker */
-        (),
+        businessSourceSummary(),
         businessSourceSummary().copy(
           typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
           summaries = List(
@@ -163,49 +138,6 @@ class ListBsasControllerSpec
             bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
           ))
       ))
-
-    def responseWithHateoas: HateoasWrapper[Def1_ListBsasResponse[HateoasWrapper[BsasSummary]]] =
-      HateoasWrapper(
-        Def1_ListBsasResponse(
-          Seq(
-            BusinessSource(
-              businessId = "000000000000210",
-              typeOfBusiness = TypeOfBusiness.`self-employment`,
-              accountingPeriod,
-              taxYear = TaxYear.fromMtd("2019-20"),
-              List(
-                HateoasWrapper(
-                  bsasSummary,
-                  List(getSelfEmploymentBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
-                ))
-            ),
-            BusinessSource(
-              businessId = "000000000000210",
-              typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
-              accountingPeriod,
-              taxYear = TaxYear.fromMtd("2019-20"),
-              List(
-                HateoasWrapper(
-                  bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
-                  List(getUkPropertyBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
-                )
-              )
-            ),
-            BusinessSource(
-              businessId = "000000000000210",
-              typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
-              accountingPeriod,
-              taxYear = TaxYear.fromMtd("2019-20"),
-              List(
-                HateoasWrapper(
-                  bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
-                  List(getUkPropertyBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
-                ))
-            )
-          )
-        ),
-        List(triggerBsas(mockAppConfig, validNino), listBsas(mockAppConfig, validNino, None))
-      )
 
     protected def callController(): Future[Result] =
       controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)

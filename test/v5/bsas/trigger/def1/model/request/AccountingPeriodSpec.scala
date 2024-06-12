@@ -17,7 +17,7 @@
 package v5.bsas.trigger.def1.model.request
 
 import play.api.libs.json.{JsError, JsSuccess, Json}
-import shared.UnitSpec
+import shared.utils.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
 
@@ -35,12 +35,12 @@ class AccountingPeriodSpec extends UnitSpec {
     |}
   """.stripMargin)
 
-  private val model = AccountingPeriod("2018-11-25", "2018-11-26")
+  private val accountingPeriod = AccountingPeriod("2018-11-25", "2018-11-26")
 
   "AccountingPeriod" when {
     "read from valid JSON" should {
       "return the expected AccountingPeriod object" in {
-        requestJson.validate[AccountingPeriod] shouldBe JsSuccess(model)
+        requestJson.validate[AccountingPeriod] shouldBe JsSuccess(accountingPeriod)
       }
     }
 
@@ -52,7 +52,7 @@ class AccountingPeriodSpec extends UnitSpec {
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+        Json.toJson(accountingPeriod) shouldBe requestJson
       }
     }
   }

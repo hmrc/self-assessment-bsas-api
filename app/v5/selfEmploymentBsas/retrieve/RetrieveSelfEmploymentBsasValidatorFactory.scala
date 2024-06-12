@@ -26,12 +26,17 @@ import javax.inject.Singleton
 @Singleton
 class RetrieveSelfEmploymentBsasValidatorFactory {
 
-  def validator(nino: String,
-                calculationId: String,
-                taxYear: Option[String],
-                schema: RetrieveSelfEmploymentBsasSchema): Validator[RetrieveSelfEmploymentBsasRequestData] =
+  def validator(
+      nino: String,
+      calculationId: String,
+      taxYear: Option[String]
+  ): Validator[RetrieveSelfEmploymentBsasRequestData] = {
+
+    val schema = RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear)
+
     schema match {
       case Def1 => new Def1_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
     }
+  }
 
 }

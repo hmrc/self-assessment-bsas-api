@@ -16,22 +16,19 @@
 
 package v5.ukPropertyBsas.submit
 
-import play.api.libs.json.{JsValue, Json}
+import common.errors._
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.models.errors._
 import v5.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestData
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
-import v5.ukPropertyBsas.submit.model.response.SubmitUkPropertyBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,7 +40,6 @@ class SubmitUkPropertyBsasControllerSpec
     with MockMtdIdLookupService
     with MockSubmitUkPropertyBsasValidatorFactory
     with MockSubmitUkPropertyBsasService
-    with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
     with MockAppConfig {
@@ -59,16 +55,6 @@ class SubmitUkPropertyBsasControllerSpec
     taxYear = Some(taxYear)
   )
 
-  val testHateoasLinks: Seq[Link] = Seq(
-    Link(
-      href = s"/individuals/self-assessment/adjustable-summary/$validNino/uk-property/$calculationId",
-      method = GET,
-      rel = "self"
-    )
-  )
-
-  private val mtdResponseJson = Json.parse(hateoasResponse(validNino, calculationId.calculationId))
-
   "submitUkPropertyBsas" should {
 
     "return OK" when {
@@ -79,15 +65,11 @@ class SubmitUkPropertyBsasControllerSpec
           .submitPropertyBsas(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockHateoasFactory
-          .wrap((), SubmitUkPropertyBsasHateoasData(validNino, calculationId.calculationId, Some(taxYear)))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
         runOkTestWithAudit(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeExpectedResponseBody = None,
           maybeAuditRequestBody = Some(validNonFHLInputJson),
-          maybeAuditResponseBody = Some(mtdResponseJson)
+          maybeAuditResponseBody = None
         )
       }
     }
@@ -124,7 +106,6 @@ class SubmitUkPropertyBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitUkPropertyBsasValidatorFactory,
       service = mockService,
-      hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

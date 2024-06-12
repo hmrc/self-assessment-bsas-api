@@ -17,13 +17,9 @@
 package v5.foreignPropertyBsas.retrieve.model.response
 
 import play.api.libs.json._
-import shared.config.AppConfig
-import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
-import shared.models.domain.TaxYear
 import shared.utils.JsonWritesUtil
+import v5.common.model.HasTypeOfBusiness
 import v5.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
-import v5.foreignPropertyBsas.submit.model.response.SubmitForeignPropertyBsasHateoasData._
-import v5.models.domain.HasTypeOfBusiness
 
 trait RetrieveForeignPropertyBsasResponse extends HasTypeOfBusiness
 
@@ -33,20 +29,4 @@ object RetrieveForeignPropertyBsasResponse extends JsonWritesUtil {
     implicitly[OWrites[Def1_RetrieveForeignPropertyBsasResponse]].writes(a)
   }
 
-  implicit object RetrieveSelfAssessmentBsasHateoasFactory
-      extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
-
-    override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
-      import data._
-
-      List(
-        getForeignPropertyBsas(appConfig, nino, calculationId, taxYear),
-        adjustForeignPropertyBsas(appConfig, nino, calculationId, taxYear)
-      )
-    }
-
-  }
-
 }
-
-case class RetrieveForeignPropertyHateoasData(nino: String, calculationId: String, taxYear: Option[TaxYear]) extends HateoasData

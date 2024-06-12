@@ -16,21 +16,17 @@
 
 package v5.selfEmploymentBsas.retrieve
 
-import play.api.libs.json.{JsObject, Json}
+import common.errors._
 import play.api.mvc.Result
 import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.models.errors._
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 import v5.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
-import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,21 +38,11 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveSelfEmploymentBsasValidatorFactory
     with MockRetrieveSelfEmploymentBsasService
-    with MockHateoasFactory
     with MockIdGenerator
     with MockAppConfig {
 
-  private val calculationId    = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
-  private val requestData      = Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, None)
-  private val testHateoasLinks = List(Link(href = "/some/link", method = GET, rel = "someRel"))
-
-  private val hateoasResponse = mtdRetrieveBsasResponseJson
-    .as[JsObject] ++ Json
-    .parse("""{
-      |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
-      |}
-      |""".stripMargin)
-    .as[JsObject]
+  private val calculationId = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
+  private val requestData   = Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, None)
 
   "retrieve" should {
     "return OK" when {
@@ -65,15 +51,11 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
         MockRetrieveSelfEmploymentBsasService
           .retrieveBsas(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseModel))))
-
-        MockHateoasFactory
-          .wrap(retrieveBsasResponseModel, RetrieveSelfEmploymentBsasHateoasData(validNino, calculationId.calculationId, None))
-          .returns(HateoasWrapper(retrieveBsasResponseModel, testHateoasLinks))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponse))))
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(hateoasResponse)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseJson)
         )
       }
     }
@@ -103,7 +85,6 @@ class RetrieveSelfEmploymentBsasControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveSelfEmploymentBsasValidatorFactory,
       service = mockService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )

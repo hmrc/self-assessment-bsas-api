@@ -16,15 +16,15 @@
 
 package v5.selfEmploymentBsas.submit
 
+import common.errors._
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.models.errors._
 import v5.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestData
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.submitSelfEmploymentBsasRequestBodyModel
+import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.submitSelfEmploymentBsasRequestBody
 import v5.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
 import scala.concurrent.Future
@@ -35,7 +35,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   val request: SubmitSelfEmploymentBsasRequestData =
-    Def1_SubmitSelfEmploymentBsasRequestData(nino, id, None, submitSelfEmploymentBsasRequestBodyModel)
+    Def1_SubmitSelfEmploymentBsasRequestData(nino, id, None, submitSelfEmploymentBsasRequestBody)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -67,7 +67,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
           await(service.submitSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val input = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_PAYLOAD", InternalError),
@@ -90,7 +90,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         ("INCOME_SOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("NOT_FOUND", NotFoundError),

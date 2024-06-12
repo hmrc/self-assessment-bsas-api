@@ -16,9 +16,9 @@
 
 package v3.controllers.validators
 
-import shared.UnitSpec
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.models.request.retrieveBsas.RetrieveForeignPropertyBsasRequestData
 
 class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {

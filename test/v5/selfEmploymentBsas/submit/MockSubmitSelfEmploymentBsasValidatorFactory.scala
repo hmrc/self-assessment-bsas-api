@@ -27,7 +27,7 @@ trait MockSubmitSelfEmploymentBsasValidatorFactory extends MockValidatorFactory[
 
   def validator(): CallHandler[Validator[SubmitSelfEmploymentBsasRequestData]] =
     (mockSubmitSelfEmploymentBsasValidatorFactory
-      .validator(_: String, _: String, _: Option[String], _: JsValue, _: SubmitSelfEmploymentBsasSchema))
-      .expects(*, *, *, *, *)
+      .validator(_: String, _: String, _: Option[String], _: JsValue))
+      .expects(*, *, *, *)
 
 }

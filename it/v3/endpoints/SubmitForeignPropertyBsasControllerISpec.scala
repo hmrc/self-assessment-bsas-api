@@ -16,6 +16,7 @@
 
 package v3.endpoints
 
+import common.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -25,7 +26,6 @@ import shared.models.errors._
 import shared.stubs._
 import support.IntegrationBaseSpec
 import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
-import v3.models.errors._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 

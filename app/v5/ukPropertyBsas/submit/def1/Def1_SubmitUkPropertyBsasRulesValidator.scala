@@ -18,10 +18,10 @@ package v5.ukPropertyBsas.submit.def1
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
+import common.errors.RuleBothExpensesError
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v5.models.errors.RuleBothExpensesError
 import v5.ukPropertyBsas.submit.def1.model.request._
 
 object Def1_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def1_SubmitUkPropertyBsasRequestData] {

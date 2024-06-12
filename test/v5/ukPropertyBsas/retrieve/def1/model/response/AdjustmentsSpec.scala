@@ -16,9 +16,9 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
-import shared.UnitSpec
+import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
-import v5.models.RoundTripTest
+import shared.utils.UnitSpec
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
 class AdjustmentsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
@@ -28,14 +28,14 @@ class AdjustmentsSpec extends UnitSpec with JsonErrorValidators with RoundTripTe
   testRoundTrip(
     "Adjustments FHL",
     downstreamAdjustmentsJson,
-    adjustmentsFhlModel,
+    adjustmentsFhl,
     mtdAdjustmentsFhlJson
   )(readsFhl)
 
   testRoundTrip(
     "Adjustments Non-FHL",
     downstreamAdjustmentsJson,
-    adjustmentsNonFhlModel,
+    adjustmentsNonFhl,
     mtdAdjustmentsNonFhlJson
   )(readsNonFhl)
 

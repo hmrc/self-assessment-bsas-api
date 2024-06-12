@@ -17,10 +17,10 @@
 package v5.bsas.list.def1.model
 
 import play.api.libs.json.{JsArray, JsValue, Json}
-import shared.models.domain.{Nino, Status, TaxYear}
+import shared.models.domain.{Status, TaxYear}
 import v5.bsas.list.def1.model.response.{AccountingPeriod, BusinessSource, Def1_BsasSummary, Def1_ListBsasResponse}
 import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
-import v5.models.domain.TypeOfBusiness
+import v5.common.model.TypeOfBusiness
 
 trait Def1_ListBsasFixtures {
 
@@ -252,7 +252,7 @@ trait Def1_ListBsasFixtures {
   )
 
   val listBsasDownstreamJsonMultiple: JsArray = JsArray(
-    Seq(
+    List(
       listBsasResponseDownstreamJsonSE,
       listBsasResponseDownstreamJsonUkFhl,
       listBsasResponseDownstreamJsonUkNonFhl
@@ -263,12 +263,10 @@ trait Def1_ListBsasFixtures {
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     accountingPeriod = accountingPeriod,
     taxYear = TaxYear.fromMtd(taxYear),
-    summaries = Seq(bsasSummary)
+    summaries = List(bsasSummary)
   )
 
-  def summariesJSONWithHateoas(nino: Nino, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
-
+  val summariesJs: JsValue =
     Json.parse(
       s"""
          |{
@@ -286,14 +284,7 @@ trait Def1_ListBsasFixtures {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
          |          "requestedDateTime": "2019-10-14T11:33:27Z",
          |          "summaryStatus": "valid",
-         |          "adjustedSummary": false,
-         |          "links": [
-         |            {
-         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4$taxYearParam",
-         |              "method": "GET",
-         |              "rel": "self"
-         |            }
-         |          ]
+         |          "adjustedSummary": false
          |        }
          |      ]
          |    },
@@ -310,14 +301,7 @@ trait Def1_ListBsasFixtures {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
          |          "requestedDateTime": "2019-10-14T11:33:27Z",
          |          "summaryStatus": "valid",
-         |          "adjustedSummary": false,
-         |          "links": [
-         |            {
-         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5$taxYearParam",
-         |              "method": "GET",
-         |              "rel": "self"
-         |            }
-         |          ]
+         |          "adjustedSummary": false
          |        }
          |      ]
          |    },
@@ -334,38 +318,16 @@ trait Def1_ListBsasFixtures {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
          |          "requestedDateTime": "2019-10-14T11:33:27Z",
          |          "summaryStatus": "valid",
-         |          "adjustedSummary": false,
-         |          "links": [
-         |            {
-         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/uk-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6$taxYearParam",
-         |              "method": "GET",
-         |              "rel": "self"
-         |            }
-         |          ]
+         |          "adjustedSummary": false
          |        }
          |      ]
-         |    }
-         |  ],
-         |  "links": [
-         |    {
-         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
-         |      "method": "POST",
-         |      "rel": "trigger-business-source-adjustable-summary"
-         |    },
-         |    {
-         |      "href": "/individuals/self-assessment/adjustable-summary/$nino$taxYearParam",
-         |      "method": "GET",
-         |      "rel": "self"
          |    }
          |  ]
          |}
     """.stripMargin
     )
-  }
 
-  def summariesJSONForeignWithHateoas(nino: Nino, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
-
+  val summariesForeignJs: JsValue =
     Json.parse(
       s"""
          |{
@@ -383,33 +345,13 @@ trait Def1_ListBsasFixtures {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
          |          "requestedDateTime": "2019-10-14T11:33:27Z",
          |          "summaryStatus": "valid",
-         |          "adjustedSummary": false,
-         |          "links": [
-         |            {
-         |              "href": "/individuals/self-assessment/adjustable-summary/$nino/foreign-property/717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4$taxYearParam",
-         |              "method": "GET",
-         |              "rel": "self"
-         |            }
-         |          ]
+         |          "adjustedSummary": false
          |        }
          |      ]
-         |    }
-         |  ],
-         |  "links": [
-         |    {
-         |      "href": "/individuals/self-assessment/adjustable-summary/$nino/trigger",
-         |      "method": "POST",
-         |      "rel": "trigger-business-source-adjustable-summary"
-         |    },
-         |    {
-         |      "href": "/individuals/self-assessment/adjustable-summary/$nino$taxYearParam",
-         |      "method": "GET",
-         |      "rel": "self"
          |    }
          |  ]
          |}
     """.stripMargin
     )
-  }
 
 }

@@ -16,11 +16,11 @@
 
 package v3.hateoas
 
-import shared.UnitSpec
 import shared.config.MockAppConfig
 import shared.hateoas.Method.{GET, POST}
 import shared.hateoas.{Link, Method}
 import shared.models.domain.TaxYear
+import shared.utils.UnitSpec
 import v3.hateoas.RelType._
 
 class HateoasLinksSpec extends UnitSpec with MockAppConfig {

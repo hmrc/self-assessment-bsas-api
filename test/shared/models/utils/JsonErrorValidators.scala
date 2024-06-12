@@ -17,7 +17,7 @@
 package shared.models.utils
 
 import play.api.libs.json._
-import shared.UnitSpec
+import shared.utils.UnitSpec
 
 trait JsonErrorValidators {
   _: UnitSpec =>

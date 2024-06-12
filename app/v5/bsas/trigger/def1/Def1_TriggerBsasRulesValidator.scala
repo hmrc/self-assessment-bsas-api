@@ -19,15 +19,15 @@ package v5.bsas.trigger.def1
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
+import common.errors.RuleAccountingPeriodNotSupportedError
 import config.BsasConfig
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
 import shared.models.errors.MtdError
 import v5.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
-import v5.controllers.validators.resolvers.ResolveTypeOfBusiness
-import v5.models.domain.TypeOfBusiness
-import v5.models.domain.TypeOfBusiness.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
-import v5.models.errors.RuleAccountingPeriodNotSupportedError
+import v5.common.model.TypeOfBusiness
+import v5.common.model.TypeOfBusiness.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
+import v5.common.resolvers.ResolveTypeOfBusiness
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

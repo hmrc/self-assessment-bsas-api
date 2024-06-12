@@ -16,9 +16,9 @@
 
 package v5.selfEmploymentBsas.retrieve.def1.model
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
-import v5.models.domain.{IncomeSourceType, TypeOfBusiness}
+import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 import v5.selfEmploymentBsas.retrieve.def1.model.response._
 import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
@@ -535,29 +535,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasReponseJsonWithHateoas(nino: String, calculationId: String, taxYear: Option[String] = None): JsValue = {
-    val taxYearParam = taxYear.fold("")("?taxYear=" + _)
-
-    mtdRetrieveBsasResponseJson.as[JsObject] ++ Json
-      .parse(s"""
-      |{
-      |  "links": [
-      |    {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId$taxYearParam",
-      |      "method": "GET",
-      |      "rel": "self"
-      |    }, {
-      |      "href": "/individuals/self-assessment/adjustable-summary/$nino/self-employment/$calculationId/adjust$taxYearParam",
-      |      "method": "POST",
-      |      "rel": "submit-self-employment-accounting-adjustments"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
-      .as[JsObject]
-  }
-
-  val metadataModel: Metadata = Metadata(
+  val parsedMetadata: Metadata = Metadata(
     calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
     requestedDateTime = "2000-01-01T10:12:10Z",
     adjustedDateTime = Some("2000-01-01T10:12:10Z"),
@@ -566,7 +544,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     summaryStatus = Status.`valid`
   )
 
-  val submissionPeriodWithPeriodIdModel: SubmissionPeriod = SubmissionPeriod(
+  val submissionPeriodWithPeriodId: SubmissionPeriod = SubmissionPeriod(
     periodId = Some("1234567890123456"),
     submissionId = None,
     startDate = now,
@@ -574,7 +552,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
 
-  val submissionPeriodWithSubmissionIdModel: SubmissionPeriod = SubmissionPeriod(
+  val submissionPeriodWithSubmissionId: SubmissionPeriod = SubmissionPeriod(
     periodId = None,
     submissionId = Some(s"${now}_$aYearFromNow"),
     startDate = now,
@@ -582,22 +560,22 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
 
-  val inputsModel: Inputs = Inputs(
+  val parsedInputs: Inputs = Inputs(
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = Seq(submissionPeriodWithPeriodIdModel, submissionPeriodWithSubmissionIdModel)
+    submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
   )
 
-  val summaryCalculationIncomeModel: SummaryCalculationIncome = SummaryCalculationIncome(
+  val summaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
     turnover = Some(1.01),
     other = Some(1.02)
   )
 
-  val summaryCalculationExpensesModel: SummaryCalculationExpenses = SummaryCalculationExpenses(
+  val summaryCalculationExpenses: SummaryCalculationExpenses = SummaryCalculationExpenses(
     consolidatedExpenses = Some(2.01),
     costOfGoodsAllowable = Some(2.02),
     paymentsToSubcontractorsAllowable = Some(2.03),
@@ -616,7 +594,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     businessEntertainmentCostsAllowable = Some(2.16)
   )
 
-  val summaryCalculationAdditionsModel: SummaryCalculationAdditions = SummaryCalculationAdditions(
+  val summaryCalculationAdditions: SummaryCalculationAdditions = SummaryCalculationAdditions(
     costOfGoodsDisallowable = Some(5.01),
     paymentsToSubcontractorsDisallowable = Some(5.02),
     wagesAndStaffCostsDisallowable = Some(5.03),
@@ -638,7 +616,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     goodsAndServicesOwnUse = Some(5.19)
   )
 
-  val summaryCalculationDeductionsModel: SummaryCalculationDeductions = SummaryCalculationDeductions(
+  val summaryCalculationDeductions: SummaryCalculationDeductions = SummaryCalculationDeductions(
     tradingAllowance = Some(6.01),
     annualInvestmentAllowance = Some(6.02),
     capitalAllowanceMainPool = Some(6.03),
@@ -655,36 +633,36 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     zeroEmissionsCarAllowance = Some(6.14)
   )
 
-  val summaryCalculationAccountingAdjustmentsModel: SummaryCalculationAccountingAdjustments = SummaryCalculationAccountingAdjustments(
+  val summaryCalculationAccountingAdjustments: SummaryCalculationAccountingAdjustments = SummaryCalculationAccountingAdjustments(
     basisAdjustment = Some(7.01),
     overlapReliefUsed = Some(7.02),
     accountingAdjustment = Some(7.03),
     averagingAdjustment = Some(7.04)
   )
 
-  val adjustableSummaryCalculationModel: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
+  val adjustableSummaryCalculation: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeModel),
+    income = Some(summaryCalculationIncome),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesModel),
+    expenses = Some(summaryCalculationExpenses),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsModel),
+    deductions = Some(summaryCalculationDeductions),
     totalAccountingAdjustments = Some(7),
-    accountingAdjustments = Some(summaryCalculationAccountingAdjustmentsModel),
+    accountingAdjustments = Some(summaryCalculationAccountingAdjustments),
     taxableProfit = Some(8),
     adjustedIncomeTaxLoss = Some(9)
   )
 
-  val adjustmentsIncomeModel: AdjustmentsIncome = AdjustmentsIncome(
+  val adjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(
     turnover = Some(1.01),
     other = Some(1.02)
   )
 
-  val adjustmentsExpensesModel: AdjustmentsExpenses = AdjustmentsExpenses(
+  val adjustmentsExpenses: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(2.01),
     costOfGoodsAllowable = Some(2.02),
     paymentsToSubcontractorsAllowable = Some(2.03),
@@ -703,7 +681,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     businessEntertainmentCostsAllowable = Some(2.16)
   )
 
-  val adjustmentsAdditionsModel: AdjustmentsAdditions = AdjustmentsAdditions(
+  val adjustmentsAdditions: AdjustmentsAdditions = AdjustmentsAdditions(
     costOfGoodsDisallowable = Some(3.01),
     paymentsToSubcontractorsDisallowable = Some(3.02),
     wagesAndStaffCostsDisallowable = Some(3.03),
@@ -721,44 +699,47 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
     businessEntertainmentCostsDisallowable = Some(3.15)
   )
 
-  val adjustmentsModel: Adjustments = Adjustments(
-    income = Some(adjustmentsIncomeModel),
-    expenses = Some(adjustmentsExpensesModel),
-    additions = Some(adjustmentsAdditionsModel)
+  val adjustments: Adjustments = Adjustments(
+    income = Some(adjustmentsIncome),
+    expenses = Some(adjustmentsExpenses),
+    additions = Some(adjustmentsAdditions)
   )
 
-  val adjustedSummaryCalculationModel: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
+  val adjustedSummaryCalculation: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeModel),
+    income = Some(summaryCalculationIncome),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesModel),
+    expenses = Some(summaryCalculationExpenses),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditionsModel),
+    additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsModel),
+    deductions = Some(summaryCalculationDeductions),
     totalAccountingAdjustments = Some(7),
-    accountingAdjustments = Some(summaryCalculationAccountingAdjustmentsModel),
+    accountingAdjustments = Some(summaryCalculationAccountingAdjustments),
     taxableProfit = Some(8),
     adjustedIncomeTaxLoss = Some(9)
   )
 
-  val retrieveBsasResponseModel: RetrieveSelfEmploymentBsasResponse = Def1_RetrieveSelfEmploymentBsasResponse(
-    metadata = metadataModel,
-    inputs = inputsModel,
-    adjustableSummaryCalculation = adjustableSummaryCalculationModel,
-    adjustments = Some(adjustmentsModel),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
+  val retrieveBsasResponse: RetrieveSelfEmploymentBsasResponse = Def1_RetrieveSelfEmploymentBsasResponse(
+    metadata = parsedMetadata,
+    inputs = parsedInputs,
+    adjustableSummaryCalculation = adjustableSummaryCalculation,
+    adjustments = Some(adjustments),
+    adjustedSummaryCalculation = Some(adjustedSummaryCalculation)
   )
 
-  def retrieveBsasResponseInvalidTypeOfBusinessModel(typeOfBusiness: TypeOfBusiness): RetrieveSelfEmploymentBsasResponse =
+  def retrieveBsasResponseInvalidTypeOfBusinessDataObject(typeOfBusiness: TypeOfBusiness): RetrieveSelfEmploymentBsasResponse =
     Def1_RetrieveSelfEmploymentBsasResponse(
-      metadata = metadataModel,
-      inputs = inputsModel.copy(typeOfBusiness = typeOfBusiness),
-      adjustableSummaryCalculation = adjustableSummaryCalculationModel,
-      adjustments = Some(adjustmentsModel),
-      adjustedSummaryCalculation = Some(adjustedSummaryCalculationModel)
+      metadata = parsedMetadata,
+      inputs = parsedInputs
+        /** EndMarker */
+        .copy(typeOfBusiness = typeOfBusiness)
+        .copy(typeOfBusiness = typeOfBusiness),
+      adjustableSummaryCalculation = adjustableSummaryCalculation,
+      adjustments = Some(adjustments),
+      adjustedSummaryCalculation = Some(adjustedSummaryCalculation)
     )
 
 }
