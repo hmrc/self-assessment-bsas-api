@@ -65,15 +65,6 @@ post:
           $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
         Link:
           $ref: "./common/headers.yaml#/components/parameters/linkHeader"
-      content:
-        application/json:
-          schema:
-            $ref: "./schemas/submit_self_employment_accounting_adjustments/response.json"
-          examples:
-            example:
-              description: Self Employment
-              value:
-                $ref: "./examples/adjustments/submit_se_adjustment_response.json"
 
     400:
       description: Bad request

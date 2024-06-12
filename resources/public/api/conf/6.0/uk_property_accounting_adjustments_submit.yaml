@@ -76,15 +76,6 @@ post:
           $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
         Link:
           $ref: "./common/headers.yaml#/components/parameters/linkHeader"
-      content:
-        application/json:
-          schema:
-            $ref: "./schemas/submit_uk_property_accounting_adjustments/response.json"
-          examples:
-            example-1x:
-              description: UK Property
-              value:
-                $ref: "./examples/adjustments/submit_uk_property_accounting_adjustments_response.json"
 
     400:
       description: Bad request
