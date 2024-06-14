@@ -18,26 +18,37 @@ package shared.controllers
 
 import com.typesafe.config.ConfigFactory
 import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAssets}
-import play.api.{Configuration, Environment}
 import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
 import play.api.mvc.Result
+import play.api.{Configuration, Environment}
 import shared.config.rewriters._
 import shared.config.{AppConfig, MockAppConfig}
 import shared.definition._
-import shared.routing.Version1
+import shared.routing.{Version, Versions}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig {
 
+  private val apiVersionName = s"$latestEnabledApiVersion.0"
+
+  protected val apiVersion: Version =
+    Versions
+      .getFrom(apiVersionName)
+      .getOrElse(fail(s"Matching Version object not found for $apiVersionName"))
+
   private val apiTitle = "Business Source Adjustable Summary (MTD)"
+
+  private val titleLineMatcher = """(.*title:.*)""".r
+  private val titleMatcher     = """^(\s*title:\s*".*?\s*\[test\sonly]).*$""".r
 
   "/file endpoint" should {
     "return a file" in new Test {
-      MockAppConfig.apiVersionReleasedInProduction("4.0").anyNumberOfTimes() returns true
-      MockAppConfig.endpointsEnabled("4.0").anyNumberOfTimes() returns true
+      MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
+      MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
       val response: Future[Result] = requestAsset("application.yaml")
       status(response) shouldBe OK
       await(response).body.contentLength.getOrElse(-99L) should be > 0L
@@ -47,29 +58,36 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
   "rewrite()" when {
     "the API version is disabled" should {
       "return the yaml with [test only] in the API title" in new Test {
-        MockAppConfig.apiVersionReleasedInProduction("4.0").anyNumberOfTimes() returns false
-        MockAppConfig.endpointsEnabled("4.0").anyNumberOfTimes() returns true
+        MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
+        MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset("application.yaml")
         status(response) shouldBe OK
 
         private val result = contentAsString(response)
-        result should include(s"""  title: "$apiTitle [test only]"""")
+
+        private val titleLine =
+          titleLineMatcher
+            .findFirstIn(result)
+            .getOrElse(fail("Couldn't match the API title line in application.yaml"))
+
+        titleLine should fullyMatch regex (titleMatcher)
 
         withClue("Only the title should have [test only] appended:") {
           numberOfTestOnlyOccurrences(result) shouldBe 1
         }
 
-        result should startWith("""openapi: "3.0.3"
+        result should startWith(s"""openapi: "3.0.3"
                                   |
                                   |info:
-                                  |  version: "4.0"""".stripMargin)
+                                  |  version: "$apiVersionName"""".stripMargin)
       }
     }
+
     "the API version is enabled" should {
       "return the yaml with the API title unchanged" in new Test {
-        MockAppConfig.apiVersionReleasedInProduction("4.0").anyNumberOfTimes() returns true
-        MockAppConfig.endpointsEnabled("4.0").anyNumberOfTimes() returns true
+        MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
+        MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset("application.yaml", accept = "text/plain")
         status(response) shouldBe OK
@@ -79,10 +97,10 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
         result should include(s"""  title: $apiTitle""")
         numberOfTestOnlyOccurrences(result) shouldBe 0
 
-        result should startWith("""openapi: "3.0.3"
+        result should startWith(s"""openapi: "3.0.3"
                                   |
                                   |info:
-                                  |  version: "4.0"""".stripMargin)
+                                  |  version: "$apiVersionName"""".stripMargin)
       }
     }
   }
@@ -93,7 +111,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
     protected def featureEnabled: Boolean = true
 
     protected def requestAsset(filename: String, accept: String = "text/yaml"): Future[Result] =
-      controller.asset("4.0", filename)(fakeGetRequest.withHeaders(ACCEPT -> accept))
+      controller.asset(apiVersionName, filename)(fakeGetRequest.withHeaders(ACCEPT -> accept))
 
     protected def numberOfTestOnlyOccurrences(str: String): Int = "\\[test only]".r.findAllIn(str).size
 
@@ -109,7 +127,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
           "description",
           "context",
           List("category"),
-          List(APIVersion(Version1, APIStatus.BETA, endpointsEnabled = true)),
+          List(APIVersion(apiVersion, APIStatus.BETA, endpointsEnabled = true)),
           None)
       )
 
@@ -138,6 +156,18 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     private val assets       = new RewriteableAssets(errorHandler, assetsMetadata, mock[Environment])
     protected val controller = new DocumentationController(apiFactory, docRewriters, assets, cc)
+  }
+
+  private def latestEnabledApiVersion: Int =
+    (99 to 1 by -1)
+      .find(num => realAppConfig.safeEndpointsEnabled(s"$num.0"))
+      .getOrElse(fail("Couldn't find an enabled API version in the config"))
+
+  private def realAppConfig: AppConfig = {
+    val conf           = ConfigFactory.load()
+    val configuration  = Configuration(conf)
+    val servicesConfig = new ServicesConfig(configuration)
+    new AppConfig(servicesConfig, configuration)
   }
 
 }

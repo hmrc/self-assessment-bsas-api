@@ -19,7 +19,7 @@ package v3.controllers
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockAppConfig
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.controllers.ControllerTestRunner
 import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
 import shared.models.domain.{BusinessId, TaxYear}
 import shared.models.errors._
@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListBsasControllerSpec
-    extends ControllerBaseSpec
+    extends V3ControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService

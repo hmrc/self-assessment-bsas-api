@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package config
+package v4.controllers
 
-import play.api.Configuration
-import shared.config.{AppConfig, FeatureSwitches}
+import shared.controllers.ControllerBaseSpec
+import shared.routing.{Version, Version4}
 
-/** API-specific feature switches.
-  */
-case class BsasFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
+abstract class V4ControllerSpec extends ControllerBaseSpec {
 
-  def isIfsEnabled: Boolean      = isEnabled("ifs")
-  def isIfsInProduction: Boolean = isReleasedInProduction("ifs")
+  protected val apiVersion: Version = Version4
 
-}
-
-object BsasFeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): BsasFeatureSwitches = BsasFeatureSwitches(appConfig.featureSwitchConfig)
 }
