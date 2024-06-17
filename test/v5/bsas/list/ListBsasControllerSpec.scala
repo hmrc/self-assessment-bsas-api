@@ -19,7 +19,7 @@ package v5.bsas.list
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockAppConfig
-import shared.controllers.ControllerTestRunner
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.{BusinessId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -30,14 +30,13 @@ import v5.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v5.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v5.bsas.list.model.request.ListBsasRequestData
 import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
-import v5.common.V5ControllerSpec
 import v5.common.model.TypeOfBusiness
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListBsasControllerSpec
-    extends V5ControllerSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService

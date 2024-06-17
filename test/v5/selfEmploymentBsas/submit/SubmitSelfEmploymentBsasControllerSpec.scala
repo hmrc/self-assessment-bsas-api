@@ -20,14 +20,13 @@ import common.errors._
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.config.MockAppConfig
-import shared.controllers.ControllerTestRunner
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.common.V5ControllerSpec
 import v5.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestData
 import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.{mtdRequestJson, submitSelfEmploymentBsasRequestBody}
 
@@ -35,7 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SubmitSelfEmploymentBsasControllerSpec
-    extends V5ControllerSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService

@@ -19,13 +19,12 @@ package v5.foreignPropertyBsas.retrieve
 import common.errors._
 import play.api.mvc.Result
 import shared.config.MockAppConfig
-import shared.controllers.ControllerTestRunner
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.CalculationId
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.common.V5ControllerSpec
 import v5.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
@@ -33,7 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasControllerSpec
-    extends V5ControllerSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService

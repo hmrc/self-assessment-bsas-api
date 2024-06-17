@@ -16,11 +16,10 @@
 
 package shared.controllers
 
-import shared.models.errors._
-import shared.services.{EnrolmentsAuthService, MockEnrolmentsAuthService, MockMtdIdLookupService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, Result}
-import shared.routing.{Version, Version1}
+import shared.models.errors._
+import shared.services.{EnrolmentsAuthService, MockEnrolmentsAuthService, MockMtdIdLookupService, MtdIdLookupService}
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
@@ -34,8 +33,6 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
   private val mtdId     = "X123567890"
   private val someError = MtdError("SOME_CODE", "A message", IM_A_TEAPOT)
-
-  protected val apiVersion: Version = Version1 // actual version not relevant here
 
   private val predicate: Predicate = Enrolment("HMRC-MTD-IT")
     .withIdentifier("MTDITID", mtdId)
@@ -93,4 +90,5 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
     lazy val target = new TestController()
   }
+
 }

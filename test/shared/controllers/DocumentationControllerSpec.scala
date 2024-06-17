@@ -35,7 +35,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
   private val apiVersionName = s"$latestEnabledApiVersion.0"
 
-  protected val apiVersion: Version =
+  override protected val apiVersion: Version =
     Versions
       .getFrom(apiVersionName)
       .getOrElse(fail(s"Matching Version object not found for $apiVersionName"))
@@ -71,7 +71,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
             .findFirstIn(result)
             .getOrElse(fail("Couldn't match the API title line in application.yaml"))
 
-        titleLine should fullyMatch regex (titleMatcher)
+        titleLine should fullyMatch regex titleMatcher
 
         withClue("Only the title should have [test only] appended:") {
           numberOfTestOnlyOccurrences(result) shouldBe 1
