@@ -27,14 +27,14 @@ import shared.config.MockAppConfig
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.Nino
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
-import shared.routing.{Version, Version4}
+import shared.routing.{Version, Version9}
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.{MockIdGenerator, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
-class ControllerBaseSpec
+abstract class ControllerBaseSpec
     extends UnitSpec
     with Status
     with MimeTypes
@@ -44,7 +44,7 @@ class ControllerBaseSpec
     with ControllerSpecHateoasSupport
     with MockAppConfig {
 
-  val apiVersion: Version = Version4
+  protected val apiVersion: Version = Version9
 
   lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withHeaders(HeaderNames.ACCEPT -> s"application/vnd.hmrc.${apiVersion.name}+json")
@@ -61,10 +61,9 @@ class ControllerBaseSpec
 trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator {
   _: ControllerBaseSpec =>
 
+  protected val correlationId    = "X-123"
   protected val validNino        = "AA123456A"
   protected val parsedNino: Nino = Nino(validNino)
-
-  protected val correlationId = "X-123"
 
   trait ControllerTest {
     protected val hc: HeaderCarrier = HeaderCarrier()
