@@ -17,7 +17,7 @@
 package v5.ukPropertyBsas.submit.def1.model.request
 
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import v5.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema
+import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
 case class Def1_SubmitUkPropertyBsasRequestData(
@@ -27,6 +27,6 @@ case class Def1_SubmitUkPropertyBsasRequestData(
     body: Def1_SubmitUkPropertyBsasRequestBody
 ) extends SubmitUkPropertyBsasRequestData {
 
-  override val schema: RetrieveUkPropertyBsasSchema = RetrieveUkPropertyBsasSchema.Def1
+  override val schema: SubmitUkPropertyBsasSchema = SubmitUkPropertyBsasSchema.Def1
 
 }

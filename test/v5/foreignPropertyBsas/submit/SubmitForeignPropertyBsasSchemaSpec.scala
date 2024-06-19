@@ -24,8 +24,13 @@ class SubmitForeignPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDriven
 
   "schema lookup" when {
     "a tax year is present" must {
-      "use Def1 for tax years from 2023-24" in {
-        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
+      "use Def2 for tax years from 2024-25" in {
+        forTaxYearsFrom(TaxYear.fromMtd("2024-25")) { taxYear =>
+          SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitForeignPropertyBsasSchema.Def2
+        }
+      }
+      "use Def1 for tax years before 2023-24" in {
+        forTaxYearsBefore(TaxYear.fromMtd("2023-24")) { taxYear =>
           SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitForeignPropertyBsasSchema.Def1
         }
       }

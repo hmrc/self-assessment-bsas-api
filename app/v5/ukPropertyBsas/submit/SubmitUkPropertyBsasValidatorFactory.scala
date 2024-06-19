@@ -18,8 +18,9 @@ package v5.ukPropertyBsas.submit
 
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema.Def1
+import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema.{Def1, Def2}
 import v5.ukPropertyBsas.submit.def1.Def1_SubmitUkPropertyBsasValidator
+import v5.ukPropertyBsas.submit.def2.Def2_SubmitUkPropertyBsasValidator
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -38,6 +39,7 @@ class SubmitUkPropertyBsasValidatorFactory {
 
     schema match {
       case Def1 => new Def1_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Def2 => new Def2_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
     }
   }
 

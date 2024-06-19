@@ -19,8 +19,9 @@ package v5.foreignPropertyBsas.submit
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import v5.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema._
+import v5.foreignPropertyBsas.submit.def1.Def1_SubmitForeignPropertyBsasValidator
+import v5.foreignPropertyBsas.submit.def2.Def2_SubmitForeignPropertyBsasValidator
 import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
-import v5.foreignPropertyBsas.submit.validators.def1.Def1_SubmitForeignPropertyBsasValidator
 
 import javax.inject.Singleton
 
@@ -38,6 +39,7 @@ class SubmitForeignPropertyBsasValidatorFactory {
 
     schema match {
       case Def1 => new Def1_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Def2 => new Def2_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
     }
 
   }

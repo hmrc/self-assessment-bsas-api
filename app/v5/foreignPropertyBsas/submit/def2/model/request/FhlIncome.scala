@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit.model.request
+package v5.foreignPropertyBsas.submit.def2.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-trait SubmitUkPropertyBsasRequestData {
-  def nino: Nino
-  def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
-  def body: SubmitUkPropertyBsasRequestBody
+case class FhlIncome(totalRentsReceived: Option[BigDecimal])
 
-  val schema: SubmitUkPropertyBsasSchema
+object FhlIncome {
+  implicit val reads: Reads[FhlIncome] = Json.reads[FhlIncome]
+
+  implicit val writes: OWrites[FhlIncome] =
+    (JsPath \ "rentAmount").writeNullable[BigDecimal].contramap((o: FhlIncome) => o.totalRentsReceived)
+
 }

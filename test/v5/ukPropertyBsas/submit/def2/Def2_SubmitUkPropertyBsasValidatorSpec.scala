@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit.def1
+package v5.ukPropertyBsas.submit.def2
 
 import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
 import org.scalatest.Assertion
@@ -23,9 +23,9 @@ import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v5.ukPropertyBsas.submit.def1.model.request.{Def1_SubmitUkPropertyBsasRequestBody, Def1_SubmitUkPropertyBsasRequestData}
+import v5.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
 
-class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
+class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
   private implicit val correlationId: String = "1234"
 
@@ -65,7 +65,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       )
       .as[JsObject]
 
-  private val parsedNonFhlBody = nonFhlBodyJson.as[Def1_SubmitUkPropertyBsasRequestBody]
+  private val parsedNonFhlBody = nonFhlBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
   private val nonFhlConsolidatedBodyJson =
     Json.parse(
@@ -85,7 +85,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       |}""".stripMargin
     )
 
-  private val parsedNonFhlConsolidatedBody = nonFhlConsolidatedBodyJson.as[Def1_SubmitUkPropertyBsasRequestBody]
+  private val parsedNonFhlConsolidatedBody = nonFhlConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
   private val fhlBodyJson =
     Json
@@ -111,7 +111,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       )
       .as[JsObject]
 
-  private val parsedFhlBody = fhlBodyJson.as[Def1_SubmitUkPropertyBsasRequestBody]
+  private val parsedFhlBody = fhlBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
   private val fhlConsolidatedBodyJson =
     Json.parse(
@@ -129,10 +129,10 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |""".stripMargin
     )
 
-  private val parsedFhlConsolidatedBody = fhlConsolidatedBodyJson.as[Def1_SubmitUkPropertyBsasRequestBody]
+  private val parsedFhlConsolidatedBody = fhlConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
   private def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue) =
-    new Def1_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
+    new Def2_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
 
   "running a validation" should {
     "return the parsed domain object" when {
@@ -141,7 +141,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, None, fhlBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedFhlBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedFhlBody)
         )
       }
 
@@ -149,7 +149,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, Some(validTaxYear), fhlBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear), parsedFhlBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear), parsedFhlBody)
         )
       }
 
@@ -157,7 +157,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, None, nonFhlBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlBody)
         )
       }
 
@@ -165,7 +165,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, None, fhlConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedFhlConsolidatedBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedFhlConsolidatedBody)
         )
       }
 
@@ -173,7 +173,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, None, nonFhlConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlConsolidatedBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlConsolidatedBody)
         )
       }
 
@@ -190,11 +190,11 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             |}
             |""".stripMargin
           )
-        val parsedMinimal = minimalJson.as[Def1_SubmitUkPropertyBsasRequestBody]
+        val parsedMinimal = minimalJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
         val result = validator(validNino, validCalculationId, None, minimalJson).validateAndWrapResult()
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimal)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimal)
         )
       }
 
@@ -211,11 +211,11 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
               |}
               |""".stripMargin
           )
-        val parsedMinimal = minimalJson.as[Def1_SubmitUkPropertyBsasRequestBody]
+        val parsedMinimal = minimalJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
         val result = validator(validNino, validCalculationId, None, minimalJson).validateAndWrapResult()
         result shouldBe Right(
-          Def1_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimal)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimal)
         )
       }
     }
@@ -343,7 +343,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
         List(
           "/nonFurnishedHolidayLet/expenses/residentialFinancialCost"
-        ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path, min = "-99999999999.99"))
+        ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path, min = "0"))
       }
 
       "consolidated expenses is invalid" when {

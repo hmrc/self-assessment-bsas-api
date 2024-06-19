@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit.model.request
+package v5.foreignPropertyBsas.submit.def2.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema
+import play.api.libs.json.{Json, OFormat}
 
-trait SubmitUkPropertyBsasRequestData {
-  def nino: Nino
-  def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
-  def body: SubmitUkPropertyBsasRequestBody
+case class FhlEea(income: Option[FhlIncome], expenses: Option[FhlEeaExpenses])
 
-  val schema: SubmitUkPropertyBsasSchema
+object FhlEea {
+  implicit val format: OFormat[FhlEea] = Json.format[FhlEea]
 }
