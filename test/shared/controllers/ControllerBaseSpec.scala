@@ -27,7 +27,7 @@ import shared.config.MockAppConfig
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.Nino
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
-import shared.routing.{Version, Version9}
+import shared.routing.Version
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.{MockIdGenerator, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -44,16 +44,16 @@ abstract class ControllerBaseSpec
     with ControllerSpecHateoasSupport
     with MockAppConfig {
 
-  protected val apiVersion: Version = Version9
+  protected val apiVersion: Version = Version("9.9")
 
-  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest().withHeaders(HeaderNames.ACCEPT -> s"application/vnd.hmrc.${apiVersion.name}+json")
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withHeaders(
+    HeaderNames.AUTHORIZATION -> "Bearer Token",
+    HeaderNames.ACCEPT -> s"application/vnd.hmrc.${apiVersion.name}+json"
+  )
 
   lazy val cc: ControllerComponents = stubControllerComponents()
 
-  lazy val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withHeaders(
-    HeaderNames.AUTHORIZATION -> "Bearer Token"
-  )
+  lazy val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest
 
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 }
