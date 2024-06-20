@@ -38,11 +38,8 @@ object SubmitForeignPropertyBsasSchema {
   }
 
   def schemaFor(taxYear: TaxYear): SubmitForeignPropertyBsasSchema = {
-    if (TaxYear.starting(2023) >= taxYear) {
-      Def1
-    } else {
-      Def2
-    }
+    if (taxYear <= TaxYear.starting(2023)) Def1
+    else Def2
   }
 
 }

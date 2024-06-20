@@ -17,7 +17,6 @@
 package v5.foreignPropertyBsas.submit.def2.model.request
 
 import play.api.libs.json.{JsValue, Json}
-import v5.foreignPropertyBsas.submit.def2.model.request._
 
 object SubmitForeignPropertyBsasFixtures {
 
@@ -39,6 +38,32 @@ object SubmitForeignPropertyBsasFixtures {
       |              "professionalFees": 8.12,
       |              "costOfServices": 9.12,
       |              "residentialFinancialCost": 10.12,
+      |              "other": 11.12,
+      |              "travelCosts": 12.12
+      |          }
+      |       }
+      |    ]
+      |}
+      |""".stripMargin)
+
+  val mtdRequestNonFhlValid: JsValue = Json.parse(
+    """
+      |{
+      |   "nonFurnishedHolidayLet":  [
+      |       {
+      |          "countryCode": "FRA",
+      |          "income": {
+      |              "totalRentsReceived": 1.12,
+      |              "premiumsOfLeaseGrant": 2.12,
+      |              "otherPropertyIncome": 3.12
+      |          },
+      |          "expenses": {
+      |              "premisesRunningCosts": 5.12,
+      |              "repairsAndMaintenance": 6.12,
+      |              "financialCosts": 7.12,
+      |              "professionalFees": 8.12,
+      |              "costOfServices": 9.12,
+      |              "residentialFinancialCost": -3000.93,
       |              "other": 11.12,
       |              "travelCosts": 12.12
       |          }

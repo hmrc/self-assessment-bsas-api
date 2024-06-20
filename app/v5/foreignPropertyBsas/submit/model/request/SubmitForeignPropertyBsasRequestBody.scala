@@ -19,13 +19,16 @@ package v5.foreignPropertyBsas.submit.model.request
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 import v5.foreignPropertyBsas.submit.def1.model.request.Def1_SubmitForeignPropertyBsasRequestBody
+import v5.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestBody
 
 trait SubmitForeignPropertyBsasRequestBody
 
 object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = writesFrom { case a: Def1_SubmitForeignPropertyBsasRequestBody =>
-    implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(a)
+  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = writesFrom { case def1: Def1_SubmitForeignPropertyBsasRequestBody =>
+    implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(def1)
+  case def2: Def2_SubmitForeignPropertyBsasRequestBody =>
+    implicitly[OWrites[Def2_SubmitForeignPropertyBsasRequestBody]].writes(def2)
   }
 
 }
