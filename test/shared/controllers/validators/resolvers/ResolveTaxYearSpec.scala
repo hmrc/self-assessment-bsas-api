@@ -39,6 +39,11 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
         val result: Validated[Seq[MtdError], Option[TaxYear]] = ResolveTaxYear(Option(validTaxYear))
         result shouldBe Valid(Some(TaxYear.fromMtd(validTaxYear)))
       }
+
+      "given an empty Option" in {
+        val result: Validated[Seq[MtdError], Option[TaxYear]] = ResolveTaxYear(None)
+        result shouldBe Valid(None)
+      }
     }
 
     "return an error" when {
@@ -83,6 +88,11 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
         val result: Validated[Seq[MtdError], Option[TaxYear]] = resolver(Option("2021-22"))
         result shouldBe Valid(Some(minimumTaxYear))
       }
+
+      "given an empty Option" in {
+        val result: Validated[Seq[MtdError], Option[TaxYear]] = resolver(None)
+        result shouldBe Valid(None)
+      }
     }
 
     "return RuleTaxYearNotSupportedError" when {
@@ -95,10 +105,23 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
 
   "ResolveTysTaxYear" should {
     "return no errors" when {
+
+      val validTaxYear = "2023-24"
+
       "given a valid tax year that's above or equal to TaxYear.tysTaxYear" in {
-        val validTaxYear = "2023-24"
         ResolveTysTaxYear(validTaxYear) shouldBe Valid(TaxYear.fromMtd(validTaxYear))
       }
+
+      "given a valid tax year in an Option" in {
+        val result: Validated[Seq[MtdError], Option[TaxYear]] = ResolveTysTaxYear(Option(validTaxYear))
+        result shouldBe Valid(Some(TaxYear.fromMtd(validTaxYear)))
+      }
+
+      "given an empty Option" in {
+        val result: Validated[Seq[MtdError], Option[TaxYear]] = ResolveTysTaxYear(None)
+        result shouldBe Valid(None)
+      }
+
     }
 
     "return an error" when {

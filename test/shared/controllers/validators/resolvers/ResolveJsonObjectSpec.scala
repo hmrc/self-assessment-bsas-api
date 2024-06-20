@@ -40,16 +40,14 @@ class ResolveJsonObjectSpec extends UnitSpec with JsonErrorValidators {
       }
     }
 
-    "return an error " when {
+    "return the expected error " when {
       "a required field is missing" in {
         val json = Json.parse("""{ "fieldOne" : "field one" }""")
 
         val result = resolve(json)
         result shouldBe Invalid(List(RuleIncorrectOrEmptyBodyError.withPath("/fieldTwo")))
       }
-
     }
-
   }
 
 }
