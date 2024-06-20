@@ -21,7 +21,7 @@ import play.api.http.Status._
 import play.api.mvc.Results._
 import play.api.mvc._
 import shared.models.errors._
-import shared.routing.Versions
+import shared.routing.Version
 import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -85,7 +85,7 @@ class ErrorHandler @Inject() (
     }
   }
 
-  private def versionIfSpecified(request: RequestHeader): String = Versions.getFromRequest(request).map(_.name).getOrElse("<unspecified>")
+  private def versionIfSpecified(request: RequestHeader): String = Version.getFromRequest(request).map(_.name).getOrElse("<unspecified>")
 
   override def onServerError(request: RequestHeader, ex: Throwable): Future[Result] = {
     implicit val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)

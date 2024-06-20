@@ -24,7 +24,7 @@ import play.api.{Configuration, Environment}
 import shared.config.rewriters._
 import shared.config.{AppConfig, MockAppConfig}
 import shared.definition._
-import shared.routing.{Version, Versions}
+import shared.routing.Version
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -35,10 +35,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
   private val apiVersionName = s"$latestEnabledApiVersion.0"
 
-  override protected val apiVersion: Version =
-    Versions
-      .getFrom(apiVersionName)
-      .getOrElse(fail(s"Matching Version object not found for $apiVersionName"))
+  override protected val apiVersion: Version = Version(apiVersionName)
 
   private val apiTitle = "Business Source Adjustable Summary (MTD)"
 

@@ -22,7 +22,7 @@ import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.definition.APIStatus.BETA
 import shared.definition._
 import shared.mocks.MockHttpClient
-import shared.routing.{Version3, Version4, Version5, Version6}
+import routing.Versions._
 import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 

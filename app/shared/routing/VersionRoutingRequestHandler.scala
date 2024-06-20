@@ -17,11 +17,12 @@
 package shared.routing
 
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
-import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader, Results}
+import play.api.mvc.Results.Status
+import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader}
 import play.api.routing.Router
 import play.core.DefaultWebCommands
 import shared.config.AppConfig
-import shared.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
+import shared.models.errors.{InvalidAcceptHeaderError, MtdError, UnsupportedVersionError}
 
 import javax.inject.{Inject, Singleton}
 
@@ -41,29 +42,25 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
       filters = filters.filters
     ) {
 
-  private val unsupportedVersionAction = action(Results.NotFound(UnsupportedVersionError.asJson))
-
-  private val invalidAcceptHeaderError = action(Results.NotAcceptable(InvalidAcceptHeaderError.asJson))
+  private def errorAction(error: MtdError) = action(Status(error.httpStatus)(error.asJson))
 
   override def routeRequest(request: RequestHeader): Option[Handler] = {
 
     def documentHandler: Option[Handler] = routeWith(versionRoutingMap.defaultRouter)(request)
 
     def apiHandler: Option[Handler] =
-      Versions.getFromRequest(request) match {
-        case Left(InvalidHeader)   => Some(invalidAcceptHeaderError)
-        case Left(VersionNotFound) => Some(unsupportedVersionAction)
+      Version.getFromRequest(request) match {
+        case Left(InvalidHeader) => Some(errorAction(InvalidAcceptHeaderError))
 
         case Right(version) =>
           versionRoutingMap.versionRouter(version) match {
-            case Some(versionRouter) if config.endpointsEnabled(version) =>
-              routeWith(versionRouter)(request)
-            case _ =>
-              Some(unsupportedVersionAction)
+            case Some(versionRouter) if config.endpointsEnabled(version) => routeWith(versionRouter)(request)
+            case _                                                       => Some(errorAction(UnsupportedVersionError))
           }
       }
 
     documentHandler orElse apiHandler
+
   }
 
   private def routeWith(router: Router)(request: RequestHeader): Option[Handler] =

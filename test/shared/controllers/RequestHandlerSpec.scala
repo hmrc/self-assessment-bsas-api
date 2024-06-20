@@ -32,7 +32,7 @@ import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditD
 import shared.models.auth.UserDetails
 import shared.models.errors.{ErrorWrapper, MtdError, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.Version
 import shared.services.{MockAuditService, ServiceOutcome}
 import shared.utils.{MockIdGenerator, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -65,7 +65,8 @@ class RequestHandlerSpec
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SomeController", endpointName = "someEndpoint")
 
-  private val versionHeader = HeaderNames.ACCEPT -> "application/vnd.hmrc.3.0+json"
+  private val version = Version("9.9")
+  private val versionHeader = HeaderNames.ACCEPT -> s"application/vnd.hmrc.${version.name}+json"
 
   implicit val hc: HeaderCarrier   = HeaderCarrier()
   implicit val ctx: RequestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
@@ -77,7 +78,6 @@ class RequestHandlerSpec
     UserRequest[AnyContent](userDetails, fakeRequest)
   }
 
-  implicit val appConfig: AppConfig = mockAppConfig
   private val mockService           = mock[DummyService]
 
   private def service =
@@ -182,7 +182,7 @@ class RequestHandlerSpec
             .withService(mockService.service)
             .withNoContentResult()
 
-          MockAppConfig.allowRequestCannotBeFulfilledHeader(Version3).returns(true).anyNumberOfTimes()
+          MockAppConfig.allowRequestCannotBeFulfilledHeader(version).returns(true).anyNumberOfTimes()
           mockDeprecation(NotDeprecated)
 
           val expectedContent = Json.parse(
@@ -215,7 +215,7 @@ class RequestHandlerSpec
 
           service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
 
-          MockAppConfig.allowRequestCannotBeFulfilledHeader(Version3).returns(false).anyNumberOfTimes()
+          MockAppConfig.allowRequestCannotBeFulfilledHeader(version).returns(false).anyNumberOfTimes()
           mockDeprecation(NotDeprecated)
 
           val ctx2: RequestContext = ctx.copy(hc = hc.copy(otherHeaders = List("gov-test-scenario" -> "REQUEST_CANNOT_BE_FULFILLED")))
@@ -336,7 +336,7 @@ class RequestHandlerSpec
         mockAuditService,
         auditType = auditType,
         transactionName = txName,
-        apiVersion = Version3,
+        apiVersion = version,
         params = params,
         requestBody = requestBody,
         includeResponse = includeResponse
@@ -360,7 +360,7 @@ class RequestHandlerSpec
             GenericAuditDetail(
               userDetails,
               params = params,
-              apiVersion = Version3.name,
+              apiVersion = version.name,
               requestBody = requestBody,
               `X-CorrelationId` = correlationId,
               auditResponse = auditResponse)

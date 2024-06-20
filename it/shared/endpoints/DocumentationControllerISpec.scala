@@ -22,7 +22,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
 import shared.config.AppConfig
-import shared.routing.{Version, Versions}
+import shared.routing.Version
 import support.IntegrationBaseSpec
 
 import scala.util.Try
@@ -34,9 +34,8 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
 
   private lazy val enabledVersions: Seq[Version] =
     (1 to 99).collect {
-      case num if config.safeEndpointsEnabled(s"$num.0") =>
-        Versions.getFrom(s"$num.0").toOption
-    }.flatten
+      case num if config.safeEndpointsEnabled(s"$num.0") => Version(s"$num.0")
+    }
 
   "GET /api/definition" should {
     "return a 200 with the correct response body" in {
