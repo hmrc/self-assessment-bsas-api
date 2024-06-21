@@ -16,20 +16,23 @@
 
 package shared.controllers
 
-import shared.utils.{IdGenerator, UnitSpec}
+import shared.utils.{MockIdGenerator, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
 
-class RequestContextSpec extends UnitSpec {
+class RequestContextSpec extends UnitSpec with MockIdGenerator {
 
-  private val idGenerator: IdGenerator = new IdGenerator
-  private val endpointLogContext       = EndpointLogContext("controllerName", "endpointName")
+  private val endpointLogContext = EndpointLogContext("controllerName", "endpointName")
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
+  private val expectedCorrelationId = "1234567890"
+
   "from" should {
     "return a RequestContext" in {
-      val result = RequestContext.from(idGenerator, endpointLogContext)
-      result shouldBe RequestContext(hc, result.correlationId, endpointLogContext)
+      MockedIdGenerator.generateCorrelationId.returns(expectedCorrelationId).anyNumberOfTimes()
+
+      val result = RequestContext.from(mockIdGenerator, endpointLogContext)
+      result shouldBe RequestContext(hc, expectedCorrelationId, endpointLogContext)
     }
   }
 
@@ -42,7 +45,9 @@ class RequestContextSpec extends UnitSpec {
 
   "withCorrelationId" should {
     "return a copy of the RequestContext with the new correlation ID" in {
-      val requestContext = RequestContext.from(idGenerator, endpointLogContext)
+      MockedIdGenerator.generateCorrelationId.returns("some-correlation-id").anyNumberOfTimes()
+      val requestContext = RequestContext.from(mockIdGenerator, endpointLogContext)
+
       val result         = requestContext.withCorrelationId("new-correlation-id")
       result shouldBe RequestContext(hc, "new-correlation-id", endpointLogContext)
     }

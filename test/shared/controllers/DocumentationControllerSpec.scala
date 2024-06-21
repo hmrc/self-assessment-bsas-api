@@ -23,7 +23,7 @@ import play.api.mvc.Result
 import play.api.{Configuration, Environment}
 import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
 import shared.config.rewriters._
-import shared.config.{AppConfig, MockAppConfig}
+import shared.config.{AppConfig, MockAppConfig, RealAppConfig}
 import shared.definition._
 import shared.routing.{Version, Versions}
 import uk.gov.hmrc.http.HeaderCarrier

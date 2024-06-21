@@ -21,7 +21,7 @@ import cats.data.Validated.{Invalid, Valid}
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import shared.config.Deprecation.Deprecated
-import shared.routing.{Version2, Version3, Version4, Version5}
+import shared.routing._
 import shared.utils.UnitSpec
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -29,127 +29,16 @@ import java.time.LocalDate
 
 class AppConfigSpec extends UnitSpec {
 
-  private val conf = ConfigFactory.parseString(
-    """
-      |  appName = "any-name-api"
-      |  appUrl = "http://localhost:9999"
-      |
-      |  api {
-      |    1.0 {
-      |      status = "RETIRED"
-      |      endpoints {
-      |        enabled = false
-      |        api-released-in-production = false
-      |        allow-request-cannot-be-fulfilled-header = false
-      |      }
-      |    }
-      |    
-      |    2.0 {
-      |      status = "DEPRECATED"
-      |      deprecatedOn = "2024-01-15"
-      |      sunsetDate = "2025-01-15"
-      |      endpoints {
-      |        enabled = true
-      |        api-released-in-production = true
-      |        allow-request-cannot-be-fulfilled-header = false
-      |      }
-      |    }
-      |
-      |    3.0 {
-      |      status = "DEPRECATED"
-      |      deprecatedOn = "2025-01-15"
-      |      sunsetDate = "2024-01-15"
-      |      endpoints {
-      |        enabled = true
-      |        api-released-in-production = true
-      |        allow-request-cannot-be-fulfilled-header = false
-      |      }
-      |    }
-      |    
-      |    4.0 {
-      |      status = "DEPRECATED"
-      |      deprecatedOn = "2024-01-15"
-      |      sunsetEnabled = false
-      |      endpoints {
-      |        enabled = true
-      |        api-released-in-production = true
-      |        allow-request-cannot-be-fulfilled-header = false
-      |      }
-      |    }
-      |
-      |    5.0 {
-      |      status = "DEPRECATED"
-      |      endpoints {
-      |        enabled = true
-      |        api-released-in-production = true
-      |        allow-request-cannot-be-fulfilled-header = false
-      |      }
-      |    }
-      |
-      |    6.0 {
-      |      status = "BETA"
-      |      endpoints {
-      |        enabled = true
-      |        api-released-in-production = true
-      |        allow-request-cannot-be-fulfilled-header = false
-      |
-      |        released-in-production {
-      |          create-something: true
-      |          amend-something: false
-      |        }
-      |      }
-      |    }
-      |  }
-      |
-      |  microservice {
-      |    services {
-      |      mtd-id-lookup {
-      |        host = localhost
-      |        port = 9769
-      |      }
-      |
-      |      des {
-      |        host = 127.0.0.1
-      |        port = 6666
-      |        env = Prod
-      |        token = DES-ABCD1234
-      |        environmentHeaders = ["Des-Accept", "Des-Gov-Test-Scenario", "Des-Content-Type"]
-      |      }
-      |
-      |      ifs {
-      |        enabled = true
-      |        host = 127.0.0.1
-      |        port = 7777
-      |        env = Prod
-      |        token = IFS-ABCD1234
-      |        environmentHeaders = ["IFS-Accept", "IFS-Gov-Test-Scenario", "IFS-Content-Type"]
-      |      }
-      |
-      |      tys-ifs {
-      |        host = 127.0.0.1
-      |        port = 8888
-      |        env = Prod
-      |        token = TYS-IFS-ABCD1234
-      |        environmentHeaders = ["TYS-IFS-Accept", "TYS-IFS-Gov-Test-Scenario", "TYS-IFS-Content-Type"]
-      |      }
-      |
-      |    }
-      |  }
-      |""".stripMargin
-  )
+  private val simpleAppConfig = appConfig(versionConf = "")
 
-  private val configuration  = Configuration(conf)
-  private val servicesConfig = new ServicesConfig(configuration)
-  private val appConfig      = new AppConfig(servicesConfig, configuration)
-
-  "appName" should {
+  "AppConfig" should {
     "return the API name" in {
-      val result = appConfig.appName
+      val result = simpleAppConfig.appName
       result shouldBe "any-name-api"
     }
 
     "return the MTD ID base URL" in {
-      val result = appConfig.mtdIdBaseUrl
+      val result = simpleAppConfig.mtdIdBaseUrl
       result shouldBe "http://localhost:9769"
     }
 
@@ -161,11 +50,11 @@ class AppConfigSpec extends UnitSpec {
           "Des-Content-Type"
         ))
 
-      appConfig.desBaseUrl shouldBe "http://127.0.0.1:6666"
-      appConfig.desEnv shouldBe "Prod"
-      appConfig.desToken shouldBe "DES-ABCD1234"
-      appConfig.desEnvironmentHeaders shouldBe expectedDesEnvHeaders
-      appConfig.desDownstreamConfig shouldBe DownstreamConfig(
+      simpleAppConfig.desBaseUrl shouldBe "http://127.0.0.1:6666"
+      simpleAppConfig.desEnv shouldBe "Prod"
+      simpleAppConfig.desToken shouldBe "DES-ABCD1234"
+      simpleAppConfig.desEnvironmentHeaders shouldBe expectedDesEnvHeaders
+      simpleAppConfig.desDownstreamConfig shouldBe DownstreamConfig(
         "http://127.0.0.1:6666",
         "Prod",
         "DES-ABCD1234",
@@ -181,12 +70,12 @@ class AppConfigSpec extends UnitSpec {
           "IFS-Content-Type"
         ))
 
-      appConfig.ifsEnabled shouldBe true
-      appConfig.ifsBaseUrl shouldBe "http://127.0.0.1:7777"
-      appConfig.ifsEnv shouldBe "Prod"
-      appConfig.ifsToken shouldBe "IFS-ABCD1234"
-      appConfig.ifsEnvironmentHeaders shouldBe expectedIfsEnvHeaders
-      appConfig.ifsDownstreamConfig shouldBe DownstreamConfig(
+      simpleAppConfig.ifsEnabled shouldBe true
+      simpleAppConfig.ifsBaseUrl shouldBe "http://127.0.0.1:7777"
+      simpleAppConfig.ifsEnv shouldBe "Prod"
+      simpleAppConfig.ifsToken shouldBe "IFS-ABCD1234"
+      simpleAppConfig.ifsEnvironmentHeaders shouldBe expectedIfsEnvHeaders
+      simpleAppConfig.ifsDownstreamConfig shouldBe DownstreamConfig(
         "http://127.0.0.1:7777",
         "Prod",
         "IFS-ABCD1234",
@@ -202,11 +91,11 @@ class AppConfigSpec extends UnitSpec {
           "TYS-IFS-Content-Type"
         ))
 
-      appConfig.tysIfsBaseUrl shouldBe "http://127.0.0.1:8888"
-      appConfig.tysIfsEnv shouldBe "Prod"
-      appConfig.tysIfsToken shouldBe "TYS-IFS-ABCD1234"
-      appConfig.tysIfsEnvironmentHeaders shouldBe expectedTysIfsEnvHeaders
-      appConfig.tysIfsDownstreamConfig shouldBe DownstreamConfig(
+      simpleAppConfig.tysIfsBaseUrl shouldBe "http://127.0.0.1:8888"
+      simpleAppConfig.tysIfsEnv shouldBe "Prod"
+      simpleAppConfig.tysIfsToken shouldBe "TYS-IFS-ABCD1234"
+      simpleAppConfig.tysIfsEnvironmentHeaders shouldBe expectedTysIfsEnvHeaders
+      simpleAppConfig.tysIfsDownstreamConfig shouldBe DownstreamConfig(
         "http://127.0.0.1:8888",
         "Prod",
         "TYS-IFS-ABCD1234",
@@ -218,14 +107,45 @@ class AppConfigSpec extends UnitSpec {
   "endpointsEnabled" when {
     "the API version is disabled" should {
       "return false" in {
-        val result = appConfig.endpointsEnabled("1.0")
+        val appConfigWithDisabledVersion = appConfig(
+          """
+            |    1.0 {
+            |      status = "RETIRED"
+            |      endpoints {
+            |        enabled = false
+            |        api-released-in-production = false
+            |        allow-request-cannot-be-fulfilled-header = false
+            |      }
+            |    }
+            |""".stripMargin
+        )
+
+        val result = appConfigWithDisabledVersion.endpointsEnabled("1.0")
         result shouldBe false
       }
     }
 
     "the API version is enabled" should {
       "return true" in {
-        val result = appConfig.endpointsEnabled("6.0")
+        val appConfigWithEnabledVersion = appConfig(
+          """
+            |    6.0 {
+            |      status = "BETA"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |
+            |        released-in-production {
+            |          create-something: true
+            |          amend-something: false
+            |        }
+            |      }
+            |    }
+            |
+            |""".stripMargin
+        )
+        val result = appConfigWithEnabledVersion.endpointsEnabled("6.0")
         result shouldBe true
       }
     }
@@ -234,21 +154,73 @@ class AppConfigSpec extends UnitSpec {
   "endpointReleasedInProduction" when {
     "the API version is enabled and the config specifies the endpoint status as true" should {
       "return true" in {
-        val result = appConfig.endpointReleasedInProduction("6.0", "create-something")
+        val appConfigWithReleasedVersion = appConfig(
+          """
+            |    6.0 {
+            |      status = "BETA"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |
+            |        released-in-production {
+            |          create-something: true
+            |          amend-something: false
+            |        }
+            |      }
+            |    }
+            |""".stripMargin
+        )
+        val result = appConfigWithReleasedVersion.endpointReleasedInProduction("6.0", "create-something")
         result shouldBe true
       }
     }
 
     "the API version is enabled and the config specifies the endpoint status as false" should {
       "return true" in {
-        val result = appConfig.endpointReleasedInProduction("6.0", "amend-something")
+        val appConfigWithDisabledEndpoint = appConfig(
+          """
+            |    6.0 {
+            |      status = "BETA"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |
+            |        released-in-production {
+            |          create-something: true
+            |          amend-something: false
+            |        }
+            |      }
+            |    }
+            |""".stripMargin
+        )
+        val result = appConfigWithDisabledEndpoint.endpointReleasedInProduction("6.0", "amend-something")
         result shouldBe false
       }
     }
 
     "the API version is enabled and the config doesn't specify the endpoint status" should {
       "return the value of endpointReleasedInProduction" in {
-        val result = appConfig.endpointReleasedInProduction("6.0", "delete-something")
+        val appConfigWithUnspecifiedEndpointStatus = appConfig(
+          """
+            |    6.0 {
+            |      status = "BETA"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |
+            |        released-in-production {
+            |          create-something: true
+            |          amend-something: false
+            |        }
+            |      }
+            |    }
+            |
+            |""".stripMargin
+        )
+        val result = appConfigWithUnspecifiedEndpointStatus.endpointReleasedInProduction("6.0", "delete-something")
         result shouldBe true
       }
     }
@@ -257,7 +229,22 @@ class AppConfigSpec extends UnitSpec {
   "deprecationFor" when {
     "the API version is deprecated and has deprecation info" should {
       "return the expected deprection info" in {
-        val result: Validated[String, Deprecation] = appConfig.deprecationFor(Version2)
+        val appConfigWithDeprecatedVersion = appConfig(
+          """
+            |    1.0 {
+            |      status = "DEPRECATED"
+            |      deprecatedOn = "2024-01-15"
+            |      sunsetDate = "2025-01-15"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |      }
+            |    }
+            |""".stripMargin
+        )
+
+        val result: Validated[String, Deprecation] = appConfigWithDeprecatedVersion.deprecationFor(Version1)
         result shouldBe Valid(
           Deprecated(
             deprecatedOn = LocalDate.parse("2024-01-15").plusDays(1).atStartOfDay.minusSeconds(1),
@@ -269,14 +256,43 @@ class AppConfigSpec extends UnitSpec {
 
     "the API version is deprecated but the deprecatedOn date is invalid" should {
       "return the expected message" in {
-        val result: Validated[String, Deprecation] = appConfig.deprecationFor(Version3)
-        result shouldBe Invalid("sunsetDate must be later than deprecatedOn date for a deprecated version 3.0")
+        val appConfigWithInvalidDeprecatedDate = appConfig(
+          """
+            |    1.0 {
+            |      status = "DEPRECATED"
+            |      deprecatedOn = "2025-01-15"
+            |      sunsetDate = "2024-01-15"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |      }
+            |    }
+            |""".stripMargin
+        )
+        val result: Validated[String, Deprecation] = appConfigWithInvalidDeprecatedDate.deprecationFor(Version1)
+        result shouldBe Invalid("sunsetDate must be later than deprecatedOn date for a deprecated version 1.0")
       }
     }
 
     "the API version is deprecated but sunsetDateEnabled is explicitly false" should {
       "return the deprection info with no sunset date" in {
-        val result: Validated[String, Deprecation] = appConfig.deprecationFor(Version4)
+        val appConfigWithNoSunsetDate = appConfig(
+          """
+            |    1.0 {
+            |      status = "DEPRECATED"
+            |      deprecatedOn = "2024-01-15"
+            |      sunsetEnabled = false
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |      }
+            |    }
+            |""".stripMargin
+        )
+
+        val result: Validated[String, Deprecation] = appConfigWithNoSunsetDate.deprecationFor(Version1)
         result shouldBe Valid(
           Deprecated(
             deprecatedOn = LocalDate.parse("2024-01-15").plusDays(1).atStartOfDay.minusSeconds(1),
@@ -287,10 +303,78 @@ class AppConfigSpec extends UnitSpec {
 
     "the API version is deprecated but there's no deprecatedOn date" should {
       "return the expected message" in {
-        val result: Validated[String, Deprecation] = appConfig.deprecationFor(Version5)
-        result shouldBe Invalid("deprecatedOn date is required for a deprecated version 5.0")
+        val appConfigWithNoDeprecatedDate = appConfig(
+          """
+            |    1.0 {
+            |      status = "DEPRECATED"
+            |      endpoints {
+            |        enabled = true
+            |        api-released-in-production = true
+            |        allow-request-cannot-be-fulfilled-header = false
+            |      }
+            |    }
+            |""".stripMargin
+        )
+
+        val result: Validated[String, Deprecation] = appConfigWithNoDeprecatedDate.deprecationFor(Version1)
+        result shouldBe Invalid("deprecatedOn date is required for a deprecated version 1.0")
       }
     }
+  }
+
+  private def appConfig(versionConf: String): AppConfig = {
+    val conf = ConfigFactory.parseString(
+      """
+        |  appName = "any-name-api"
+        |  appUrl = "http://localhost:9999"
+        |  
+        |  api {
+        |""".stripMargin ++
+
+        versionConf ++
+
+        """
+          |  }
+          |  
+          |  microservice {
+          |    services {
+          |      mtd-id-lookup {
+          |        host = localhost
+          |        port = 9769
+          |      }
+          |
+          |      des {
+          |        host = 127.0.0.1
+          |        port = 6666
+          |        env = Prod
+          |        token = DES-ABCD1234
+          |        environmentHeaders = ["Des-Accept", "Des-Gov-Test-Scenario", "Des-Content-Type"]
+          |      }
+          |
+          |      ifs {
+          |        enabled = true
+          |        host = 127.0.0.1
+          |        port = 7777
+          |        env = Prod
+          |        token = IFS-ABCD1234
+          |        environmentHeaders = ["IFS-Accept", "IFS-Gov-Test-Scenario", "IFS-Content-Type"]
+          |      }
+          |
+          |      tys-ifs {
+          |        host = 127.0.0.1
+          |        port = 8888
+          |        env = Prod
+          |        token = TYS-IFS-ABCD1234
+          |        environmentHeaders = ["TYS-IFS-Accept", "TYS-IFS-Gov-Test-Scenario", "TYS-IFS-Content-Type"]
+          |      }
+          |    }
+          |  }
+          |""".stripMargin
+    )
+
+    val configuration  = Configuration(conf)
+    val servicesConfig = new ServicesConfig(configuration)
+    new AppConfig(servicesConfig, configuration)
   }
 
 }

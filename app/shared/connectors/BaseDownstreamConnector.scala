@@ -125,7 +125,7 @@ trait BaseDownstreamConnector extends Logging {
     * @return
     *   filtered allowed passThroughHeaders
     */
-  protected def passThroughHeaders(
+  private[connectors] def passThroughHeaders(
       downstreamConfig: DownstreamConfig,
       additionalHeaders: Seq[(String, String)]
   )(implicit hc: HeaderCarrier): Seq[(String, String)] = {

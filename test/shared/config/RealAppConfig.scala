@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package shared.controllers
+package shared.config
 
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
-import shared.config.AppConfig
 import shared.utils.UnitSpec
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
