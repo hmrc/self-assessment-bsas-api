@@ -92,8 +92,8 @@ trait BaseDownstreamConnector extends Logging {
     }
 
     intent match {
-      case Some(intent) => doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader(intent)))
-      case None         => doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+      case Some(intent) => doPut(getBackendHeaders(uri, jsonContentTypeHeader, intentHeader(intent)))
+      case None         => doPut(getBackendHeaders(uri, jsonContentTypeHeader))
     }
   }
 

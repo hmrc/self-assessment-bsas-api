@@ -9,8 +9,8 @@ Place new items at the top, and auto-format the file...
 
 ## June 24 2024:  Shared code updates
 
-- Added methods and parameters that were required self-employment-business-api in
-  BaseDownstreamConnector, RequestHandlerBuilder, TaxYear and CommonMtdErrors.
+Added methods and parameters that were required self-employment-business-api in 
+BaseDownstreamConnector, RequestHandlerBuilder, TaxYear and CommonMtdErrors.
 
 ## June 20 2024:  Increased code coverage
 
@@ -19,9 +19,10 @@ coverage % quite so much.
 
 ## June 14 2024:  Shared test code
 
-- Updated the shared test code to work "as-is" for all APIs rather than just BSAS;
+
+Updated the shared test code to work "as-is" for all APIs rather than just BSAS;
 e.g. removed assumptions of which API versions are available, enabled etc.
 
 ## June 10 2024:  New changelog
 
-- Added the shared-code-changelog.md file.
+Added the shared-code-changelog.md file.
