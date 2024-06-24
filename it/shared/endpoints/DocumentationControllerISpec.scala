@@ -70,7 +70,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
         openAPI.getInfo.getVersion shouldBe version.name
 
         if (config.apiVersionReleasedInProduction(version.name)) {
-          openAPI.getInfo.getTitle.toLowerCase should not include ("[test only]")
+          openAPI.getInfo.getTitle.toLowerCase should not include "[test only]"
         } else {
           openAPI.getInfo.getTitle should include("[test only]")
         }

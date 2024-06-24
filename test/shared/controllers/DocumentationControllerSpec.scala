@@ -21,17 +21,17 @@ import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAsset
 import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
 import play.api.mvc.Result
 import play.api.{Configuration, Environment}
+import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
 import shared.config.rewriters._
-import shared.config.{AppConfig, MockAppConfig}
+import shared.config.{AppConfig, MockAppConfig, RealAppConfig}
 import shared.definition._
 import shared.routing.{Version, Versions}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig {
+class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig with RealAppConfig {
 
   private val apiVersionName = s"$latestEnabledApiVersion.0"
 
@@ -40,22 +40,80 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
       .getFrom(apiVersionName)
       .getOrElse(fail(s"Matching Version object not found for $apiVersionName"))
 
-  private val apiTitle = "Business Source Adjustable Summary (MTD)"
-
   private val titleLineMatcher = """(.*title:.*)""".r
   private val titleMatcher     = """^(\s*title:\s*".*?\s*\[test\sonly]).*$""".r
+
+  private val actualApplicationYaml: String = {
+    val loader = Thread.currentThread().getContextClassLoader
+    val stream = loader.getResourceAsStream(s"public/api/conf/${apiVersion.name}/application.yaml")
+    new String(stream.readAllBytes).trim
+  }
 
   "/file endpoint" should {
     "return a file" in new Test {
       MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
       MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+
       val response: Future[Result] = requestAsset("application.yaml")
       status(response) shouldBe OK
       await(response).body.contentLength.getOrElse(-99L) should be > 0L
     }
+
+    "return a 404" when {
+      "the requested asset doesn't exist" in new Test {
+        MockAppConfig.endpointReleasedInProduction(apiVersionName, "does-not-exist").anyNumberOfTimes() returns true
+
+        val response: Future[Result] = requestAsset("does-not-exist.yaml")
+        status(response) shouldBe NOT_FOUND
+      }
+
+      "the requested asset is a directory" in new Test {
+        val response: Future[Result] = requestAsset("examples")
+        status(response) shouldBe NOT_FOUND
+      }
+
+      "the requested asset doesn't form a canonical path" in new Test {
+        MockAppConfig.endpointReleasedInProduction(apiVersionName, "../does-not-exist").anyNumberOfTimes() returns true
+
+        val response: Future[Result] = requestAsset("../does-not-exist.yaml")
+        status(response) shouldBe NOT_FOUND
+      }
+
+    }
+
+    "return a 400 response" when {
+      "the requested asseet's URI encoding is wrong" in new Test {
+        val badlyEncodedAssetName = "applica\n\ntion"
+        MockAppConfig.endpointReleasedInProduction(apiVersionName, badlyEncodedAssetName).anyNumberOfTimes() returns true
+        MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+
+        val response: Future[Result] = requestAsset(s"$badlyEncodedAssetName.yaml")
+        status(response) shouldBe BAD_REQUEST
+      }
+    }
   }
 
   "rewrite()" when {
+    "the API version is enabled" should {
+      "return the yaml with the API title unchanged" in new Test {
+        MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
+        MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+
+        val response: Future[Result] = requestAsset("application.yaml", accept = "text/plain")
+        status(response) shouldBe OK
+
+        private val result = contentAsString(response)
+
+        result should include("""  title: """)
+        numberOfTestOnlyOccurrences(result) shouldBe 0
+
+        result should startWith(s"""openapi: "3.0.3"
+                                   |
+                                   |info:
+                                   |  version: "$apiVersionName"""".stripMargin)
+      }
+    }
+
     "the API version is disabled" should {
       "return the yaml with [test only] in the API title" in new Test {
         MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
@@ -84,23 +142,23 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
       }
     }
 
-    "the API version is enabled" should {
-      "return the yaml with the API title unchanged" in new Test {
-        MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
+    "the API version is disabled but there are no registered rewriters" should {
+      "return the yaml unmodified" in new Test {
+        override protected val docRewriters: DocumentationRewriters =
+          new DocumentationRewriters(null, null, null, null) {
+            override lazy val rewriteables: Seq[CheckAndRewrite] = Nil
+          }
+
+        MockAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
         MockAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+
+        actualApplicationYaml should not be empty
 
         val response: Future[Result] = requestAsset("application.yaml", accept = "text/plain")
         status(response) shouldBe OK
 
-        private val result = contentAsString(response)
-
-        result should include(s"""  title: $apiTitle""")
-        numberOfTestOnlyOccurrences(result) shouldBe 0
-
-        result should startWith(s"""openapi: "3.0.3"
-                                  |
-                                  |info:
-                                  |  version: "$apiVersionName"""".stripMargin)
+        val result: String = contentAsString(response)
+        result shouldBe actualApplicationYaml
       }
     }
   }
@@ -147,7 +205,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     private val errorHandler = new DefaultHttpErrorHandler()
 
-    private val docRewriters = new DocumentationRewriters(
+    protected val docRewriters = new DocumentationRewriters(
       new ApiVersionTitleRewriter(mockAppConfig),
       new EndpointSummaryRewriter(mockAppConfig),
       new EndpointSummaryGroupRewriter(mockAppConfig),
@@ -155,19 +213,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
     )
 
     private val assets       = new RewriteableAssets(errorHandler, assetsMetadata, mock[Environment])
-    protected val controller = new DocumentationController(apiFactory, docRewriters, assets, cc)
-  }
-
-  private def latestEnabledApiVersion: Int =
-    (99 to 1 by -1)
-      .find(num => realAppConfig.safeEndpointsEnabled(s"$num.0"))
-      .getOrElse(fail("Couldn't find an enabled API version in the config"))
-
-  private def realAppConfig: AppConfig = {
-    val conf           = ConfigFactory.load()
-    val configuration  = Configuration(conf)
-    val servicesConfig = new ServicesConfig(configuration)
-    new AppConfig(servicesConfig, configuration)
+    protected def controller = new DocumentationController(apiFactory, docRewriters, assets, cc)
   }
 
 }

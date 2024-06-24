@@ -22,8 +22,7 @@ import shared.utils.NestedJsonReads._
 
 class NestedJsonReadsSpec extends UnitSpec {
 
-  val firstOutput: JsValue = Json.parse(
-    """{
+  val firstOutput: JsValue = Json.parse("""{
       | "a" : {
       |   "b" : {
       |     "c" : "string"
@@ -33,8 +32,8 @@ class NestedJsonReadsSpec extends UnitSpec {
       |   }
       |  }
       |}""".stripMargin)
-  val secondOutput: JsValue = Json.parse(
-    """{
+
+  val secondOutput: JsValue = Json.parse("""{
       | "a" : {
       |   "b" : {
       |     "c" : "string"
@@ -44,14 +43,35 @@ class NestedJsonReadsSpec extends UnitSpec {
       |   }
       |  }
       |}""".stripMargin)
-  val thirdOutput: JsValue = Json.parse(
-    """{
+
+  val thirdOutput: JsValue = Json.parse("""{
       | "a" : {
       |   "b" : {
       |     "c" : "string"
       |   },
       |   "c" : {
       |     "e" : 2
+      |   }
+      |  }
+      |}""".stripMargin)
+
+  val fourthOutput: JsValue = Json.parse("""{
+      | "a" : {
+      |   "b" : {
+      |     "c" : "string"
+      |   },
+      |   "c" : {
+      |   }
+      |  }
+      |}""".stripMargin)
+
+  val jsonWithNull: JsValue = Json.parse("""{
+      | "a" : {
+      |   "b" : {
+      |     "c" : "string"
+      |   },
+      |   "c" : {
+      |     "e" : null
       |   }
       |  }
       |}""".stripMargin)
@@ -65,48 +85,44 @@ class NestedJsonReadsSpec extends UnitSpec {
   }
 
   "A missing path" should {
-
     "return a None" in {
       firstOutput.as[Test] shouldBe Test("string", None)
     }
   }
-  val fourthOutput: JsValue = Json.parse(
-    """{
-      | "a" : {
-      |   "b" : {
-      |     "c" : "string"
-      |   },
-      |   "c" : {
-      |   }
-      |  }
-      |}""".stripMargin)
 
   "With no missing sections" should {
-
     "return a full test as the second parameter" in {
       secondOutput.as[Test] shouldBe Test("string", Some("example"))
     }
   }
 
-  case class Test(param: String, param3: Option[String])
+  "With no missing sections and a null value" should {
+    "return a full test as the second parameter" in {
+      jsonWithNull.as[Test] shouldBe Test("string", None)
+    }
+  }
 
   "Path with an invalid data type" should {
-
     "return a None " in {
       thirdOutput.validate[Test] shouldBe a[JsError]
     }
   }
 
-  object Test {
-    implicit val reads: Reads[Test] = (
-      (JsPath \ "a" \ "b" \ "c").read[String] and
-        (__ \ "a" \ "c" \ "e").readNestedNullable[String]
-      ) (Test.apply _)
-  }
   "Empty path" should {
-
     "return a None " in {
       fourthOutput.validate[Test] shouldBe a[JsSuccess[_]]
     }
   }
+
+  case class Test(param: String, param3: Option[String])
+
+  object Test {
+
+    implicit val reads: Reads[Test] = (
+      (JsPath \ "a" \ "b" \ "c").read[String] and
+        (__ \ "a" \ "c" \ "e").readNestedNullable[String]
+    )(Test.apply _)
+
+  }
+
 }
