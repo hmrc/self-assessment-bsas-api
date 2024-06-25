@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.foreignPropertyBsas.submit.def1
+package v5.ukPropertyBsas.submit.def2
 
 import cats.data.Validated
 import cats.implicits._
@@ -23,28 +23,29 @@ import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
-import v5.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
-import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
+import v5.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
+import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
-object Def1_SubmitForeignPropertyBsasValidator extends ResolverSupport {
+object Def2_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "nonFurnishedHolidayLet").resolver thenResolve
-      ResolveNonEmptyJsonObject.resolver[Def1_SubmitForeignPropertyBsasRequestBody]
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "nonFurnishedHolidayLet").resolver thenResolve
+      ResolveNonEmptyJsonObject.resolver[Def2_SubmitUkPropertyBsasRequestBody]
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+
 }
 
-class Def1_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
-    extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def1_SubmitForeignPropertyBsasValidator._
+class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+    extends Validator[SubmitUkPropertyBsasRequestData] {
+  import Def2_SubmitUkPropertyBsasValidator._
 
-  def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
+  def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
       resolveTysTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_SubmitForeignPropertyBsasRequestData) andThen Def1_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def2_SubmitUkPropertyBsasRequestData) andThen Def2_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 
 }

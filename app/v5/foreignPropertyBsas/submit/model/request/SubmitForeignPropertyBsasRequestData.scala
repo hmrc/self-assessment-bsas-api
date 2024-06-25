@@ -17,7 +17,7 @@
 package v5.foreignPropertyBsas.submit.model.request
 
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import v5.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema
+import v5.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema
 
 trait SubmitForeignPropertyBsasRequestData {
   def nino: Nino
@@ -25,5 +25,5 @@ trait SubmitForeignPropertyBsasRequestData {
   def taxYear: Option[TaxYear]
   def body: SubmitForeignPropertyBsasRequestBody
 
-  val schema: RetrieveForeignPropertyBsasSchema
+  val schema: SubmitForeignPropertyBsasSchema
 }

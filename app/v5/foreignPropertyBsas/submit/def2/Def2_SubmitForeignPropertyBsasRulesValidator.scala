@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package v5.foreignPropertyBsas.submit.def1
+package v5.foreignPropertyBsas.submit.def2
 
 import cats.data.Validated
-import cats.data.Validated._
-import cats.implicits._
+import cats.data.Validated.Invalid
+import cats.implicits.toFoldableOps
 import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v5.foreignPropertyBsas.submit.def1.model.request._
+import v5.foreignPropertyBsas.submit.def2.model.request.{FhlEea, FhlEeaExpenses, ForeignProperty, ForeignPropertyExpenses}
+import v5.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestData
 
-object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_SubmitForeignPropertyBsasRequestData] {
+object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitForeignPropertyBsasRequestData] {
 
   def validateBusinessRules(
-      parsed: Def1_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def1_SubmitForeignPropertyBsasRequestData] = {
+      parsed: Def2_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def2_SubmitForeignPropertyBsasRequestData] = {
     import parsed.body
 
     val (validatedForeignFhlEea, validatedForeignFhlEeaConsolidated) = body.foreignFhlEea match {
@@ -61,6 +62,9 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
       validatedDuplicateCountryCode
     ).onSuccess(parsed)
   }
+
+  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
+    ResolveParsedNumber(disallowZero = true)(value, path)
 
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
@@ -133,7 +137,7 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
       resolveMaybeNegativeNumber(path("expenses/professionalFees"), foreignProperty.expenses.flatMap(_.professionalFees)),
       resolveMaybeNegativeNumber(path("expenses/travelCosts"), foreignProperty.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber(path("expenses/costOfServices"), foreignProperty.expenses.flatMap(_.costOfServices)),
-      resolveMaybeNegativeNumber(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
+      resolveNonNegativeNumber(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
       resolveMaybeNegativeNumber(path("expenses/other"), foreignProperty.expenses.flatMap(_.other)),
       resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), foreignProperty.expenses.flatMap(_.consolidatedExpenses))
     )

@@ -48,10 +48,7 @@ class SubmitUkPropertyBsasConnector @Inject() (val http: HttpClient, val appConf
           IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
       }
 
-    put(
-      body = request.body,
-      uri = downstreamUri
-    )
+    put(body, downstreamUri)
   }
 
 }

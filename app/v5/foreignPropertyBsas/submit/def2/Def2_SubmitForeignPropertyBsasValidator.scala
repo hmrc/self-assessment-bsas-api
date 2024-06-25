@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.foreignPropertyBsas.submit.def1
+package v5.foreignPropertyBsas.submit.def2
 
 import cats.data.Validated
 import cats.implicits._
@@ -23,21 +23,21 @@ import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
-import v5.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
+import v5.foreignPropertyBsas.submit.def2.model.request.{Def2_SubmitForeignPropertyBsasRequestBody, Def2_SubmitForeignPropertyBsasRequestData}
 import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
-object Def1_SubmitForeignPropertyBsasValidator extends ResolverSupport {
+object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
     new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "nonFurnishedHolidayLet").resolver thenResolve
-      ResolveNonEmptyJsonObject.resolver[Def1_SubmitForeignPropertyBsasRequestBody]
+      ResolveNonEmptyJsonObject.resolver[Def2_SubmitForeignPropertyBsasRequestBody]
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
 }
 
-class Def1_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def1_SubmitForeignPropertyBsasValidator._
+  import Def2_SubmitForeignPropertyBsasValidator._
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
     (
@@ -45,6 +45,6 @@ class Def1_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
       ResolveCalculationId(calculationId),
       resolveTysTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_SubmitForeignPropertyBsasRequestData) andThen Def1_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def2_SubmitForeignPropertyBsasRequestData) andThen Def2_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 
 }

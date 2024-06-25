@@ -26,6 +26,7 @@ sealed trait SubmitUkPropertyBsasSchema
 object SubmitUkPropertyBsasSchema {
 
   case object Def1 extends SubmitUkPropertyBsasSchema
+  case object Def2 extends SubmitUkPropertyBsasSchema
 
   private val defaultSchema = Def1
 
@@ -37,11 +38,8 @@ object SubmitUkPropertyBsasSchema {
   }
 
   def schemaFor(taxYear: TaxYear): SubmitUkPropertyBsasSchema = {
-    if (TaxYear.starting(2023) <= taxYear) {
-      Def1
-    } else {
-      defaultSchema
-    }
+    if (taxYear <= TaxYear.starting(2023)) Def1
+    else Def2
   }
 
 }

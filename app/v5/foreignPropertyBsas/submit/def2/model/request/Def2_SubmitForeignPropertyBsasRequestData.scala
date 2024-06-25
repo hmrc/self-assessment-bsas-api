@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit.model.request
+package v5.foreignPropertyBsas.submit.def2.model.request
 
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema
+import v5.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema
+import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
-trait SubmitUkPropertyBsasRequestData {
-  def nino: Nino
-  def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
-  def body: SubmitUkPropertyBsasRequestBody
+case class Def2_SubmitForeignPropertyBsasRequestData(
+    nino: Nino,
+    calculationId: CalculationId,
+    taxYear: Option[TaxYear],
+    body: Def2_SubmitForeignPropertyBsasRequestBody
+) extends SubmitForeignPropertyBsasRequestData {
 
-  val schema: SubmitUkPropertyBsasSchema
+  override val schema: SubmitForeignPropertyBsasSchema = SubmitForeignPropertyBsasSchema.Def2
+
 }

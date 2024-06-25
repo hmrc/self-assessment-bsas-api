@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit.def1
+package v5.ukPropertyBsas.submit.def2
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
@@ -22,11 +22,11 @@ import common.errors.RuleBothExpensesError
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v5.ukPropertyBsas.submit.def1.model.request._
+import v5.ukPropertyBsas.submit.def2.model.request._
 
-object Def1_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def1_SubmitUkPropertyBsasRequestData] {
+object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitUkPropertyBsasRequestData] {
 
-  def validateBusinessRules(parsed: Def1_SubmitUkPropertyBsasRequestData): Validated[Seq[MtdError], Def1_SubmitUkPropertyBsasRequestData] = {
+  def validateBusinessRules(parsed: Def2_SubmitUkPropertyBsasRequestData): Validated[Seq[MtdError], Def2_SubmitUkPropertyBsasRequestData] = {
     import parsed.body
 
     val (validatedFhl, validatedFhlConsolidated) = body.furnishedHolidayLet match {
@@ -57,6 +57,9 @@ object Def1_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def1_Submi
     ).onSuccess(parsed)
   }
 
+  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
+    ResolveParsedNumber(disallowZero = true)(value, path)
+
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
@@ -86,7 +89,7 @@ object Def1_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def1_Submi
       resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/professionalFees", nonFhl.expenses.flatMap(_.professionalFees)),
       resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/travelCosts", nonFhl.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/costOfServices", nonFhl.expenses.flatMap(_.costOfServices)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", nonFhl.expenses.flatMap(_.residentialFinancialCost)),
+      resolveNonNegativeNumber("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", nonFhl.expenses.flatMap(_.residentialFinancialCost)),
       resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/other", nonFhl.expenses.flatMap(_.other)),
       resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/consolidatedExpenses", nonFhl.expenses.flatMap(_.consolidatedExpenses))
     )
