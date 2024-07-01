@@ -17,32 +17,40 @@
 package shared.controllers.validators.resolvers
 
 import cats.data.Validated
-import play.api.libs.json.{JsValue, OFormat, Reads}
+import play.api.libs.json.{JsValue, OWrites, Reads}
 import shared.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import shared.utils.EmptinessChecker
+import shared.utils.{EmptinessChecker, Logging}
 import shared.utils.EmptyPathsResult._
 
-class ResolveNonEmptyJsonObject[T: OFormat: EmptinessChecker]()(implicit val reads: Reads[T]) extends ResolverSupport {
+class ResolveNonEmptyJsonObject[A: Reads: EmptinessChecker] extends ResolverSupport {
 
-  private val jsonResolver = new ResolveJsonObject[T].resolver
+  val resolver: Resolver[JsValue, A] = ResolveNonEmptyJsonObject.resolver
 
-  private val checkNonEmpty: Validator[T] = { data =>
+  def apply(data: JsValue): Validated[Seq[MtdError], A] = resolver(data)
+
+}
+
+object ResolveNonEmptyJsonObject extends ResolverSupport with Logging {
+
+  private def nonEmptyValidator[A: EmptinessChecker]: Validator[A] = { data =>
     EmptinessChecker.findEmptyPaths(data) match {
       case CompletelyEmpty   => Some(List(RuleIncorrectOrEmptyBodyError))
-      case EmptyPaths(paths) => Some(List(RuleIncorrectOrEmptyBodyError.withPaths(paths)))
+      case EmptyPaths(paths) =>
+
+        logger.warn(s"Request body failed validation with errors - Empty object or array: $paths")
+        Some(List(RuleIncorrectOrEmptyBodyError.withPaths(paths)))
       case NoEmptyPaths      => None
     }
   }
 
-  val resolver: Resolver[JsValue, T] = jsonResolver thenValidate checkNonEmpty
+  def resolver[A: Reads: EmptinessChecker]: Resolver[JsValue, A] = ResolveJsonObject.resolver thenValidate nonEmptyValidator
 
-  def apply(data: JsValue): Validated[Seq[MtdError], T] = resolver(data)
-
-}
-
-object ResolveNonEmptyJsonObject extends ResolverSupport {
-
-  def resolver[T: OFormat: EmptinessChecker]: Resolver[JsValue, T] =
-    new ResolveNonEmptyJsonObject().resolver
+  /** Gets a resolver that also validates for unexpected JSON fields
+    * @param symmetricWrites
+    *   this should be a OWrites instance that returns the data object back to the original JSON (typically this will be the Play macro-generated
+    *   OWrites, rather than the one used for writing downstream).
+    */
+  def strictResolver[A: Reads: EmptinessChecker](symmetricWrites: OWrites[A]): Resolver[JsValue, A] =
+    ResolveJsonObject.strictResolver(symmetricWrites) thenValidate nonEmptyValidator
 
 }
