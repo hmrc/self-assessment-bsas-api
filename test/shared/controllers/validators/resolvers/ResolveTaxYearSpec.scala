@@ -118,7 +118,6 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
         val result: Validated[Seq[MtdError], TaxYear] = resolver("2025-26")
         result shouldBe Valid(maximumTaxYear)
       }
-
     }
 
     "return RuleTaxYearNotSupportedError" when {
