@@ -7,9 +7,9 @@ For the Shared Code update steps, see: https://confluence.tools.tax.service.gov.
 
 Place new items at the top, and auto-format the file...
 
-## July 1 2024:  ResolveTaxYearMinMax
+## July 1 2024:  Additional TY resolvers
 
-Added ResolveTaxYearMinMax, from property-business-api.
+Added ResolveTaxYearMinMax & ResolveTaxYearMaximum, from property-business-api.
 
 ## June 24 2024:  Updates from self-employment-business-api
 
