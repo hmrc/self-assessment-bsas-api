@@ -112,6 +112,17 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
         val result: Validated[Seq[MtdError], TaxYear] = resolver("2024-25")
         result shouldBe Valid(maximumTaxYear)
       }
+
+      "given the maximum allowed tax year in an Option" in {
+        val result: Validated[Seq[MtdError], Option[TaxYear]] = resolver(Option("2024-25"))
+        result shouldBe Valid(Some(maximumTaxYear))
+      }
+
+      "given an empty Option" in {
+        val result: Validated[Seq[MtdError], Option[TaxYear]] = resolver(None)
+        result shouldBe Valid(None)
+      }
+
     }
 
     "return RuleTaxYearNotSupportedError" when {
