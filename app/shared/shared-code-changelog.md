@@ -7,14 +7,18 @@ For the Shared Code update steps, see: https://confluence.tools.tax.service.gov.
 
 Place new items at the top, and auto-format the file...
 
+## July 1 2024:  ResolveTaxYearMinMax
+
+Added ResolveTaxYearMinMax, from property-business-api.
+
 ## June 24 2024:  Updates from self-employment-business-api
 
-Minor changes and additions to BaseDownstreamConnector, RequestHandlerBuilder, 
+Minor changes and additions to BaseDownstreamConnector, RequestHandlerBuilder,
 TaxYear and CommonMtdErrors.
 
 ## June 20 2024:  Increased code coverage
 
-Increased the coverage so that introducing the shared code into other APIs won't 
+Increased the coverage so that introducing the shared code into other APIs won't
 reduce their coverage % quite so much.
 
 ## June 14 2024:  Shared test code
