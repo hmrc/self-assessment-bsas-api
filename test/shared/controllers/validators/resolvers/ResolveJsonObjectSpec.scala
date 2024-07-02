@@ -17,7 +17,7 @@
 package shared.controllers.validators.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import play.api.libs.json.{JsValue, Json, OWrites, Reads}
+import play.api.libs.json.{JsValue, Json, Reads}
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
@@ -27,7 +27,6 @@ class ResolveJsonObjectSpec extends UnitSpec with ResolverSupport with JsonError
   case class Foo(field1: String, field2: String)
 
   implicit val fooReads: Reads[Foo]    = Json.reads
-  val fooSymmetricWrites: OWrites[Foo] = Json.writes
 
   private def jsonObjectResolver(resolver: Resolver[JsValue, Foo]): Unit = {
     "return the parsed object" when {
@@ -62,7 +61,7 @@ class ResolveJsonObjectSpec extends UnitSpec with ResolverSupport with JsonError
   }
 
   "the strict resolver is used" must {
-    val resolver = ResolveJsonObject.strictResolver[Foo](fooSymmetricWrites)
+    val resolver = ResolveJsonObject.strictResolver[Foo]
 
     behave like jsonObjectResolver(resolver)
 

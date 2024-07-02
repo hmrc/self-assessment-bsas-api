@@ -33,11 +33,8 @@ object ResolveJsonObject extends ResolverSupport {
   def resolver[A: Reads]: Resolver[JsValue, A] = ResolveJsonObjectInternal.resolver.map(_._2)
 
   /** Gets a resolver that also validates for unexpected JSON fields
-    * @param symmetricWrites
-    *   this should be a OWrites instance that returns the data object back to the original JSON (typically this will be the Play macro-generated
-    *   OWrites, rather than the one used for writing downstream).
     */
-  def strictResolver[A: Reads](symmetricWrites: OWrites[A]): Resolver[JsValue, A] =
-    (ResolveJsonObjectInternal.resolver thenValidate UnexpectedJsonFieldsValidator.validator(symmetricWrites)).map(_._2)
+  def strictResolver[A: Reads: ExtraPathChecker]: Resolver[JsValue, A] =
+    (ResolveJsonObjectInternal.resolver thenValidate UnexpectedJsonFieldsValidator.validator).map(_._2)
 
 }

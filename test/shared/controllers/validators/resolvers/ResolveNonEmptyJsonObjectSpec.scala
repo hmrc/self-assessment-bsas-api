@@ -36,11 +36,10 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
 
   case class Foo(bar: Bar, bars: Option[Seq[Bar]] = None, baz: Option[Baz] = None, qux: Option[Qux] = None)
 
-  implicit val barFormat: Format[Bar]           = Json.format
-  implicit val bazFormat: Format[Baz]           = Json.format
-  implicit val quxFormat: Format[Qux]           = Json.format
-  implicit val fooReads: Reads[Foo]             = Json.reads
-  implicit val fooSymmetricWrites: OWrites[Foo] = Json.writes
+  implicit val barFormat: Reads[Bar] = Json.reads
+  implicit val bazFormat: Reads[Baz] = Json.reads
+  implicit val quxFormat: Reads[Qux] = Json.reads
+  implicit val fooReads: Reads[Foo]  = Json.reads
 
   private def jsonObjectResolver(resolver: Resolver[JsValue, Foo]): Unit = {
     "return the parsed object" when {
@@ -113,7 +112,7 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
     }
 
     "the strict resolver is used" must {
-      val resolver = ResolveNonEmptyJsonObject.strictResolver[Foo](fooSymmetricWrites)
+      val resolver = ResolveNonEmptyJsonObject.strictResolver[Foo]
 
       behave like jsonObjectResolver(resolver)
       behave like jsonObjectResolverWithEmptinessChecking(resolver)

@@ -16,20 +16,26 @@
 
 package shared.controllers.validators.resolvers
 
-import play.api.libs.json.{JsObject, Json, OWrites, Writes}
+import play.api.libs.json.{JsObject, Json}
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.utils.UnitSpec
 
 class UnexpectedJsonFieldsValidatorSpec extends UnitSpec {
 
-  case class Bar(a: Option[String], b: Option[String])
+  sealed trait SomeEnum
+
+  object SumEnum {
+    object X extends SomeEnum
+    object Y extends SomeEnum
+  }
+
+  case class Bar(a: Option[String] = None, b: Option[String] = None, e: Option[SomeEnum] = None)
 
   case class Foo(bar: Bar, bars: Option[Seq[Bar]] = None, bar2: Option[Bar] = None)
 
-  implicit val barWrites: Writes[Bar]  = Json.writes
-  implicit val fooWrites: OWrites[Foo] = Json.writes
+  implicit val someEnumChecker: ExtraPathChecker[SomeEnum] = ExtraPathChecker.primitive
 
-  val validator = new UnexpectedJsonFieldsValidator[Foo](fooWrites)
+  val validator = new UnexpectedJsonFieldsValidator[Foo]
 
   "UnexpectedJsonFieldsValidator" when {
     "there are no extra fields" must {
