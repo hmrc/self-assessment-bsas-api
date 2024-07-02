@@ -23,7 +23,6 @@ get:
     | UK_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded.                          |
     | NOT_UK_PROPERTY                  | Simulates the scenario where the calculationId is not a UK property.                |
     | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                         |
-    | NOT_FOUND                        | Simulates the scenario where no matching resource is found.                         |
 
   tags:
     - UK property business
