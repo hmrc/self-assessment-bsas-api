@@ -77,6 +77,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId)
+        response.header("Deprecation") should not be None
+
       }
       "valid request is made for TYS" in new TysIfsTest {
         override def setupStubs(): Unit = {
@@ -88,6 +90,8 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasReponseJsonWithHateoas(nino, calculationId, taxYear)
+        response.header("Deprecation") should not be None
+
       }
     }
 
