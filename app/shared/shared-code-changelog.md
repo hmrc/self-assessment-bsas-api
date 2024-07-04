@@ -9,7 +9,7 @@ Place new items at the top, and auto-format the file...
 
 ## July 4 2024: Added FlattenedGenericAuditDetail
 
-Added FlattenedGenericAuditDetail from self-assessment-individual-details- api.
+Added FlattenedGenericAuditDetail from self-assessment-individual-details-api.
 
 ## July 1 2024:  Additional TY resolvers
 
