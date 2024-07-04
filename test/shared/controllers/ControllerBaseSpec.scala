@@ -24,7 +24,7 @@ import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
 import shared.config.Deprecation.NotDeprecated
 import shared.config.MockAppConfig
-import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.audit.{AuditError, AuditEvent, AuditResponse}
 import shared.models.domain.Nino
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
 import shared.routing.{Version, Version9}
@@ -107,10 +107,10 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
     protected def callController(): Future[Result]
   }
 
-  trait AuditEventChecking {
+  trait AuditEventChecking[DETAIL] {
     _: ControllerTest =>
 
-    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail]
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[DETAIL]
 
     protected def runOkTestWithAudit(expectedStatus: Int,
                                      maybeExpectedResponseBody: Option[JsValue] = None,
