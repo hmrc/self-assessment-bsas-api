@@ -16,9 +16,9 @@
 
 package v5.bsas.list
 
+import config.MockBsasConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.{BusinessId, TaxYear}
 import shared.models.errors._
@@ -42,8 +42,8 @@ class ListBsasControllerSpec
     with MockMtdIdLookupService
     with MockListBsasValidatorFactory
     with MockListBsasService
-    with MockAppConfig
     with MockIdGenerator
+    with MockBsasConfig
     with Def1_ListBsasFixtures {
 
   private val typeOfBusiness = "self-employment"
@@ -54,6 +54,7 @@ class ListBsasControllerSpec
       "the request is valid" in new Test {
         MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
 
         willUseValidator(returningSuccess(requestData))
 
@@ -70,6 +71,7 @@ class ListBsasControllerSpec
       "valid request with no taxYear path parameter" in new Test {
         MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
 
         override def maybeTaxYear: Option[String] = None
 
@@ -89,11 +91,13 @@ class ListBsasControllerSpec
     "return the error as per spec" when {
 
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockListBsasService
@@ -114,7 +118,8 @@ class ListBsasControllerSpec
       validatorFactory = mockListBsasValidatorFactory,
       service = mockListBsasService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     val requestData: ListBsasRequestData = Def1_ListBsasRequestData(

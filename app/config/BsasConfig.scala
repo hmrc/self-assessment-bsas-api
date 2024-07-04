@@ -16,11 +16,13 @@
 
 package config
 
-import play.api.Configuration
+import com.typesafe.config.Config
+import play.api.{ConfigLoader, Configuration}
 import shared.config.FeatureSwitches
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
+import scala.util.Try
 
 /** Put API-specific config here...
   */
@@ -31,8 +33,40 @@ class BsasConfig @Inject() (config: ServicesConfig, configuration: Configuration
 
   def featureSwitches: FeatureSwitches = BsasFeatureSwitches(featureSwitchConfig)
 
+  def secondaryAgentEndpointsAccessControlConfig: SecondaryAgentEndpointsAccessControlConfig =
+    configuration.get[SecondaryAgentEndpointsAccessControlConfig](s"api.secondary-agent-endpoints-access-control")
+
   // V3 Trigger BSAS minimum dates
   def v3TriggerForeignBsasMinimumTaxYear: String    = config.getString("v3TriggerForeignBsasMinimumTaxYear")
   def v3TriggerNonForeignBsasMinimumTaxYear: String = config.getString("v3TriggerNonForeignBsasMinimumTaxYear")
+
+}
+
+case class SecondaryAgentEndpointsAccessControlConfig(listBsas: Boolean,
+                                                      triggerBsas: Boolean,
+                                                      retrieveSelfEmploymentBsas: Boolean,
+                                                      submitSelfEmploymentBsas: Boolean,
+                                                      retrieveUKPropertyBsas: Boolean,
+                                                      submitUKPropertyBsas: Boolean,
+                                                      retrieveForeignPropertyBsas: Boolean,
+                                                      submitForeignPropertyBsas: Boolean)
+
+object SecondaryAgentEndpointsAccessControlConfig {
+
+  implicit val configLoader: ConfigLoader[SecondaryAgentEndpointsAccessControlConfig] = (rootConfig: Config, path: String) => {
+    val config = rootConfig.getConfig(path)
+    SecondaryAgentEndpointsAccessControlConfig(
+      getBooleanOrDefaultToFalse(config, "listBsas"),
+      getBooleanOrDefaultToFalse(config, "triggerBsas"),
+      getBooleanOrDefaultToFalse(config, "retrieveSelfEmploymentBsas"),
+      getBooleanOrDefaultToFalse(config, "submitSelfEmploymentBsas"),
+      getBooleanOrDefaultToFalse(config, "retrieveUKPropertyBsas"),
+      getBooleanOrDefaultToFalse(config, "submitUKPropertyBsas"),
+      getBooleanOrDefaultToFalse(config, "retrieveForeignPropertyBsas"),
+      getBooleanOrDefaultToFalse(config, "submitForeignPropertyBsas")
+    )
+  }
+
+  private def getBooleanOrDefaultToFalse(config: Config, endpoint: String): Boolean = Try(config.getBoolean(endpoint)).getOrElse(false)
 
 }

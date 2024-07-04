@@ -16,7 +16,7 @@
 
 package config
 
-import org.scalamock.handlers.CallHandler
+import org.scalamock.handlers.{CallHandler, CallHandler0}
 import org.scalamock.scalatest.MockFactory
 
 trait MockBsasConfig extends MockFactory {
@@ -28,6 +28,11 @@ trait MockBsasConfig extends MockFactory {
     def v3TriggerForeignBsasMinimumTaxYear: CallHandler[String] = (() => mockBsasConfig.v3TriggerForeignBsasMinimumTaxYear).expects()
 
     def v3TriggerNonForeignBsasMinimumTaxYear: CallHandler[String] = (() => mockBsasConfig.v3TriggerNonForeignBsasMinimumTaxYear).expects()
+
+    def secondaryAgentEndpointsAccessControlConfig: CallHandler0[SecondaryAgentEndpointsAccessControlConfig] =
+      (() => mockBsasConfig.secondaryAgentEndpointsAccessControlConfig).expects()
+
+    val bsasSecondaryAgentConfig = SecondaryAgentEndpointsAccessControlConfig(true, false, false, false, false, false, false, false)
 
   }
 

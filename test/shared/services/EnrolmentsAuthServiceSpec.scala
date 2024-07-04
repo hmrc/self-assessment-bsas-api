@@ -20,9 +20,10 @@ import org.scalamock.handlers.CallHandler
 import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.models.auth.UserDetails
 import shared.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
+import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
-import uk.gov.hmrc.auth.core.retrieve.Retrieval
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -44,6 +45,14 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
       behave like authService(authValidationEnabled = false, inputPredicate)
     }
 
+    "Secondary Agent has permissions to access" should {
+      behave like authorisedSecondaryAgents(inputPredicate, false, inputPredicate, true)
+    }
+
+    "Secondary Agent does not have permissions to access" should {
+      behave like authorisedSecondaryAgents(inputPredicate, false, inputPredicate, false)
+    }
+
     def authService(authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit = {
       behave like authorisedIndividual(inputPredicate, authValidationEnabled, expectedPredicate)
       behave like authorisedOrganisation(inputPredicate, authValidationEnabled, expectedPredicate)
@@ -57,22 +66,24 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
     def authorisedIndividual(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit =
       "allow authorised individuals" in new Test {
+        val retrievalsResult = new ~(Some(Individual), Enrolments(Set.empty))
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup)
-          .returns(Future.successful(Some(AffinityGroup.Individual)))
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
+          .returns(Future.successful(retrievalsResult))
 
         await(target.authorised(inputPredicate)) shouldBe Right(UserDetails("", "Individual", None))
       }
 
     def authorisedOrganisation(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit =
       "allow authorised organisations" in new Test {
+        val retrievalsResult = new ~(Some(Organisation), Enrolments(Set.empty))
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup)
-          .returns(Future.successful(Some(AffinityGroup.Organisation)))
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
+          .returns(Future.successful(retrievalsResult))
 
         await(target.authorised(inputPredicate)) shouldBe Right(UserDetails("", "Organisation", None))
       }
@@ -88,12 +99,13 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
             )
           )
         )
+        val retrievalsResult = new ~(Some(Agent), Enrolments(Set.empty))
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup)
-          .returns(Future.successful(Some(AffinityGroup.Agent)))
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
+          .returns(Future.successful(retrievalsResult))
 
         MockedAuthConnector
           .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
@@ -115,12 +127,13 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
             )
           )
         )
+        val retrievalsResult = new ~(Some(Agent), Enrolments(Set.empty))
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup)
-          .returns(Future.successful(Some(AffinityGroup.Agent)))
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
+          .returns(Future.successful(retrievalsResult))
 
         MockedAuthConnector
           .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
@@ -130,12 +143,47 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
       }
 
+    def authorisedSecondaryAgents(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate, secondaryAgentAccessAllowed : Boolean): Unit =
+      "allow Secondary Agents authorisation" in new Test {
+        val arn = "123567890"
+        val enrolmentsWithArn: Enrolments = Enrolments(
+          Set(
+            Enrolment(
+              "HMRC-AS-AGENT",
+              Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)),
+              "Active"
+            )
+          )
+        )
+        val retrievalsResult = new ~(Some(Agent), Enrolments(Set.empty))
+
+        mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
+
+        MockedAuthConnector
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
+          .returns(Future.successful(retrievalsResult))
+
+        if (secondaryAgentAccessAllowed) {
+          MockedAuthConnector
+            .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
+            .returns(Future.successful(enrolmentsWithArn))
+
+          await(target.authorised(inputPredicate)) shouldBe Right(UserDetails("", "Agent", Some(arn)))
+        } else {
+          MockedAuthConnector
+            .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
+            .returns(Future.failed(FailedRelationship()))
+
+          await(target.authorised(inputPredicate)) shouldBe Left(ClientOrAgentNotAuthorisedError)
+        }
+      }
+
     def disallowWhenNotLoggedIn(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit =
       "disallow users that are not logged in" in new Test {
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup)
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
           .returns(Future.failed(MissingBearerToken()))
 
         await(target.authorised(inputPredicate)) shouldBe Left(ClientOrAgentNotAuthorisedError)
@@ -146,7 +194,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup)
+          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
           .returns(Future.failed(InsufficientEnrolments()))
 
         await(target.authorised(inputPredicate)) shouldBe Left(ClientOrAgentNotAuthorisedError)

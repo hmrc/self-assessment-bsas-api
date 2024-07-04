@@ -17,9 +17,9 @@
 package v5.ukPropertyBsas.submit
 
 import common.errors._
+import config.MockBsasConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
@@ -42,7 +42,7 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUkPropertyBsasService
     with MockIdGenerator
     with MockAuditService
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
   private val rawTaxYear    = "2023-24"
@@ -59,6 +59,7 @@ class SubmitUkPropertyBsasControllerSpec
 
     "return OK" when {
       "the request is valid" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitUkPropertyBsasService
@@ -77,18 +78,21 @@ class SubmitUkPropertyBsasControllerSpec
     "return parser errors as per spec" when {
 
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
 
       "multiple parser errors occur" in new Test {
         private val errors = List(CalculationIdFormatError, NinoFormatError)
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
     }
 
     "the service returns an error" in new Test {
+      MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
       willUseValidator(returningSuccess(requestData))
 
       MockSubmitUkPropertyBsasService
@@ -108,7 +112,8 @@ class SubmitUkPropertyBsasControllerSpec
       service = mockService,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected def callController(): Future[Result] =

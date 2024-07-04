@@ -27,6 +27,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.auth.core.retrieve.~
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,13 +46,15 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
       predicate
     }
 
-  def authorised(predicate: Predicate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuthOutcome] = {
+  def authorised(predicate: Predicate)(implicit
+                                       hc: HeaderCarrier,
+                                       ec: ExecutionContext): Future[AuthOutcome] = {
     authFunction
       .authorised(buildPredicate(predicate))
-      .retrieve(affinityGroup) {
-        case Some(Individual)   => Future.successful(Right(UserDetails("", "Individual", None)))
-        case Some(Organisation) => Future.successful(Right(UserDetails("", "Organisation", None)))
-        case Some(Agent) =>
+      .retrieve(affinityGroup and authorisedEnrolments) {
+        case Some(Individual) ~ _   => Future.successful(Right(UserDetails("", "Individual", None)))
+        case Some(Organisation) ~ _ => Future.successful(Right(UserDetails("", "Organisation", None)))
+        case Some(Agent) ~ _ =>
           retrieveAgentDetails().map {
             case arn @ Some(_) => Right(UserDetails("", "Agent", arn))
             case None =>

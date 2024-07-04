@@ -34,11 +34,17 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
     val nino          = "AA123456A"
     val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
 
-    def request: WSRequest = {
+    def request : WSRequest = request()
+
+    def request(authorisedAsSecondaryAgent: Boolean = false): WSRequest = {
       AuditStub.audit()
-      AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+      if (authorisedAsSecondaryAgent) {
+        AuthStub.authorisedAsSecondaryAgent()
+      } else {
+        AuthStub.authorised()
+      }
       buildRequest(uri)
         .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
@@ -177,6 +183,14 @@ class RetrieveSelfEmploymentBsasControllerISpec extends IntegrationBaseSpec {
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
       errors.foreach(args => (serviceErrorTest _).tupled(args))
+    }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
+        val response: WSResponse = await(request(authorisedAsSecondaryAgent = true).get())
+        response.status shouldBe OK
+      }
     }
   }
 

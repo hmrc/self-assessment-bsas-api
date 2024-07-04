@@ -17,9 +17,9 @@
 package v5.bsas.trigger
 
 import common.errors._
+import config.MockBsasConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.errors._
@@ -42,7 +42,7 @@ class TriggerBsasControllerSpec
     with MockTriggerBsasService
     with MockIdGenerator
     with MockAuditService
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val requestData = Def1_TriggerBsasRequestData(
     parsedNino,
@@ -59,6 +59,7 @@ class TriggerBsasControllerSpec
       "a valid request is supplied for business type self-employment" in new Test {
         private val mtdResponseJson = mtdResponseJs
 
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
@@ -78,6 +79,7 @@ class TriggerBsasControllerSpec
 
         private val mtdResponseJson = mtdResponseJs
 
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestForProperty))
 
         MockTriggerBsasService
@@ -96,11 +98,13 @@ class TriggerBsasControllerSpec
     "return the error as per spec" when {
 
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestBody))
       }
 
       "the service returns an error" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
@@ -121,7 +125,8 @@ class TriggerBsasControllerSpec
       service = mockService,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected val requestBodyForController: JsValue = requestBody

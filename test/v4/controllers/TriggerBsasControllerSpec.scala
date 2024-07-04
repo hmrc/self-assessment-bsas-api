@@ -17,9 +17,9 @@
 package v4.controllers
 
 import common.errors.RulePeriodicDataIncompleteError
+import config.MockBsasConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -49,7 +49,7 @@ class TriggerBsasControllerSpec
     with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val requestData = TriggerBsasRequestData(
     parsedNino,
@@ -78,6 +78,7 @@ class TriggerBsasControllerSpec
       "a valid request is supplied for business type self-employment" in new Test {
         private val mtdResponseJson = Json.parse(hateoasResponseForSE(validNino))
 
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
@@ -103,6 +104,7 @@ class TriggerBsasControllerSpec
 
         private val mtdResponseJson = Json.parse(hateoasResponseForProperty(validNino))
 
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestForProperty))
 
         MockTriggerBsasService
@@ -127,11 +129,13 @@ class TriggerBsasControllerSpec
     "return the error as per spec" when {
 
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestBody))
       }
 
       "the service returns an error" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockTriggerBsasService
@@ -153,7 +157,8 @@ class TriggerBsasControllerSpec
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected val requestBodyForController: JsValue = requestBody

@@ -16,6 +16,7 @@
 
 package v5.selfEmploymentBsas.retrieve
 
+import config.BsasConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
@@ -32,8 +33,8 @@ class RetrieveSelfEmploymentBsasController @Inject() (
     validatorFactory: RetrieveSelfEmploymentBsasValidatorFactory,
     service: RetrieveSelfEmploymentBsasService,
     cc: ControllerComponents,
-    val idGenerator: IdGenerator
-)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    val idGenerator: IdGenerator,
+    val bsasConfig: BsasConfig)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -41,7 +42,7 @@ class RetrieveSelfEmploymentBsasController @Inject() (
     EndpointLogContext(controllerName = "RetrieveSelfEmploymentBsasController", endpointName = "retrieve")
 
   def handleRequest(nino: String, calculationId: String, taxYear: Option[String] = None): Action[AnyContent] =
-    authorisedAction(nino).async { implicit request =>
+    authorisedAction(nino, bsasConfig.secondaryAgentEndpointsAccessControlConfig.retrieveSelfEmploymentBsas).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, calculationId, taxYear)

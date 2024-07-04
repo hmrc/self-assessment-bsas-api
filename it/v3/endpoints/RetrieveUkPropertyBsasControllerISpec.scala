@@ -38,11 +38,17 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): Unit
 
-    def request: WSRequest = {
+    def request: WSRequest = request()
+
+    def request(authorisedAsSecondaryAgent: Boolean = false): WSRequest = {
       AuditStub.audit()
-      AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+      if (authorisedAsSecondaryAgent) {
+        AuthStub.authorisedAsSecondaryAgent()
+      } else {
+        AuthStub.authorised()
+      }
       buildRequest(uri)
         .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
@@ -217,6 +223,16 @@ class RetrieveUkPropertyBsasControllerISpec extends IntegrationBaseSpec {
       )
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+    }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
+        }
+        val response: WSResponse = await(request(authorisedAsSecondaryAgent = true).get())
+        response.status shouldBe OK
+      }
     }
   }
 

@@ -165,6 +165,16 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        override def setupStubs(): Unit = {
+          stubDownstreamSuccess()
+        }
+        val response: WSResponse = await(request().post(requestBodyJson))
+        response.status shouldBe OK
+      }
+    }
   }
 
   private trait Test {
@@ -180,11 +190,15 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         .onSuccess(DownstreamStub.PUT, downstreamUri, OK)
     }
 
-    def request(): WSRequest = {
+    def request(authorisedAsSecondaryAgent: Boolean = false): WSRequest = {
       AuditStub.audit()
-      AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+      if (authorisedAsSecondaryAgent) {
+        AuthStub.authorisedAsSecondaryAgent()
+      } else {
+        AuthStub.authorised()
+      }
       buildRequest(s"/$nino/uk-property/$calculationId/adjust")
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(

@@ -17,9 +17,9 @@
 package v5.selfEmploymentBsas.submit
 
 import common.errors._
+import config.MockBsasConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.CalculationId
@@ -42,7 +42,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockSubmitSelfEmploymentBsasService
     with MockAuditService
     with MockIdGenerator
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
   private val requestData   = Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, calculationId, None, submitSelfEmploymentBsasRequestBody)
@@ -50,6 +50,7 @@ class SubmitSelfEmploymentBsasControllerSpec
   "submitSelfEmploymentBsas" should {
     "return OK" when {
       "the request is valid" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasService
@@ -68,12 +69,14 @@ class SubmitSelfEmploymentBsasControllerSpec
     "return the error as per spec" when {
 
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(mtdRequestJson))
       }
 
       "multiple parser errors occur" in new Test {
         private val errors = List(CalculationIdFormatError, NinoFormatError)
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(mtdRequestJson))
       }
@@ -84,11 +87,13 @@ class SubmitSelfEmploymentBsasControllerSpec
           RuleBothExpensesError.copy(paths = Some(List("expenses")))
         )
 
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(mtdRequestJson))
       }
 
       "the service returns an error" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitSelfEmploymentBsasService
@@ -109,7 +114,8 @@ class SubmitSelfEmploymentBsasControllerSpec
       service = mockService,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected def callController(): Future[Result] =

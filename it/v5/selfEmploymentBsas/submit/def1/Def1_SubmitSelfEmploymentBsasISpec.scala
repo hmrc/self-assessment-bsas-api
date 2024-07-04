@@ -181,6 +181,19 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorisedAsSecondaryAgent()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
+        }
+        val response: WSResponse = await(request().post(requestBody))
+        response.status shouldBe OK
+      }
+    }
   }
 
 }

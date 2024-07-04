@@ -16,6 +16,7 @@
 
 package v5.bsas.list
 
+import config.BsasConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
@@ -32,8 +33,8 @@ class ListBsasController @Inject() (
     validatorFactory: ListBsasValidatorFactory,
     service: ListBsasService,
     cc: ControllerComponents,
-    val idGenerator: IdGenerator
-)(implicit ec: ExecutionContext, appConfig: AppConfig)
+    val idGenerator: IdGenerator,
+    val bsasConfig: BsasConfig)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -41,7 +42,7 @@ class ListBsasController @Inject() (
     EndpointLogContext(controllerName = "ListBsasController", endpointName = "listBsas")
 
   def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
-    authorisedAction(nino).async { implicit request =>
+    authorisedAction(nino, bsasConfig.secondaryAgentEndpointsAccessControlConfig.listBsas).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, taxYear, typeOfBusiness, businessId)

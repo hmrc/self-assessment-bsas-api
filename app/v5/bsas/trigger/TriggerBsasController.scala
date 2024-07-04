@@ -16,6 +16,7 @@
 
 package v5.bsas.trigger
 
+import config.BsasConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
@@ -35,18 +36,15 @@ class TriggerBsasController @Inject() (
     service: TriggerBsasService,
     auditService: AuditService,
     cc: ControllerComponents,
-    val idGenerator: IdGenerator
-)(implicit
-    ec: ExecutionContext,
-    appConfig: AppConfig
-) extends AuthorisedController(cc)
+    val idGenerator: IdGenerator,
+    val bsasConfig: BsasConfig)(implicit ec: ExecutionContext, appConfig: AppConfig) extends AuthorisedController(cc)
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "TriggerBsasController", endpointName = "triggerBsas")
 
   def triggerBsas(nino: String): Action[JsValue] =
-    authorisedAction(nino).async(parse.json) { implicit request =>
+    authorisedAction(nino, bsasConfig.secondaryAgentEndpointsAccessControlConfig.triggerBsas).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, request.body)
