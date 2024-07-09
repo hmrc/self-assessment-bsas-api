@@ -99,8 +99,14 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec {
   "FlattenedGenericAuditDetailSpec" when {
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(flattenedGenericAuditDetailSuccess) shouldBe flattenedGenericAuditDetailJsonSuccess
-        Json.toJson(flattenedGenericAuditDetailErrors) shouldBe flattenedGenericAuditDetailJsonErrors
+        val result = Json.toJson(flattenedGenericAuditDetailSuccess)
+        result shouldBe flattenedGenericAuditDetailJsonSuccess
+      }
+    }
+    "written to JSON (error)" should {
+      "produce the expected JsObject" in {
+        val result = Json.toJson(flattenedGenericAuditDetailErrors)
+        result shouldBe flattenedGenericAuditDetailJsonErrors
       }
     }
 
