@@ -155,7 +155,7 @@ class SubmitForeignPropertyBsasControllerSpec
     }
   }
 
-  private trait Test extends ControllerTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new SubmitForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,

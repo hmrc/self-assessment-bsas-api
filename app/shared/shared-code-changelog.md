@@ -7,6 +7,7 @@ For the Shared Code update steps, see: https://confluence.tools.tax.service.gov.
 
 Place new items at the top, and auto-format the file...
 
+
 ## July 9 2024: Updates from individual-calculations-api
 
 Added the following functions from individual-calculations-api:
@@ -16,6 +17,11 @@ Added the following functions from individual-calculations-api:
 - JsonErrorValidators.testAllOptionalJsonFieldsExcept
 - JsonErrorValidators.testMandatoryJsonFields
 - JsonErrorValidators.testAllMandatoryJsonFieldsExcept
+
+## July 9 2024: Added FlattenedGenericAuditDetail
+
+Added FlattenedGenericAuditDetail from self-assessment-individual-details-api.
+
 
 ## July 1 2024:  Additional TY resolvers
 
