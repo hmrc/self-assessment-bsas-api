@@ -38,7 +38,7 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        Seq(Version3, Version4, Version5, Version6).foreach { version =>
+        List(Version3, Version4, Version5, Version6).foreach { version =>
           MockAppConfig.apiStatus(version) returns "BETA"
           MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
           MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
@@ -71,8 +71,8 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
               name = "Business Source Adjustable Summary (MTD)",
               description = "An API for providing business source adjustable summary data",
               context = "individuals/self-assessment/adjustable-summary",
-              categories = Seq("INCOME_TAX_MTD"),
-              versions = Seq(
+              categories = List("INCOME_TAX_MTD"),
+              versions = List(
                 APIVersion(
                   Version3,
                   status = BETA,
