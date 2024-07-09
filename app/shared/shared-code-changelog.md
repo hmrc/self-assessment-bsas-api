@@ -7,7 +7,7 @@ For the Shared Code update steps, see: https://confluence.tools.tax.service.gov.
 
 Place new items at the top, and auto-format the file...
 
-## July 4 2024: Added FlattenedGenericAuditDetail
+## July 9 2024: Added FlattenedGenericAuditDetail
 
 Added FlattenedGenericAuditDetail from self-assessment-individual-details-api.
 
