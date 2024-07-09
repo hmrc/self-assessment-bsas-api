@@ -58,7 +58,7 @@ object RequestHandler {
       errorHandling: ErrorHandling = ErrorHandling.Default,
       resultCreator: ResultCreator[Input, Output] = ResultCreator.noContent[Input, Output](),
       auditHandler: Option[AuditHandler] = None,
-      modelHandler: Option[Output => Output] = None
+      responseHandler: Option[Output => Output] = None
   ) extends RequestHandler {
 
     def handleRequest()(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: AppConfig): Future[Result] =
@@ -70,8 +70,8 @@ object RequestHandler {
     def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
-    def withResponseModifier(modelHandler: Output => Output): RequestHandlerBuilder[Input, Output] =
-      copy(modelHandler = Option(modelHandler))
+    def withResponseModifier(responseModifier: Output => Output): RequestHandlerBuilder[Input, Output] =
+      copy(responseHandler = Option(responseModifier))
 
     /** Shorthand for
       * {{{

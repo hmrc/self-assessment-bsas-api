@@ -124,7 +124,8 @@ trait JsonErrorValidators {
       val jsonWithoutProperty = json.as[JsObject].-(property)
 
       "not throw any errors" in {
-        jsonWithoutProperty.validate[A].isError shouldBe false
+        val result = jsonWithoutProperty.validate[A].isError
+        result shouldBe false
       }
 
       "exist in the sample json" in {
