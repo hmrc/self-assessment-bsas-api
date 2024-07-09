@@ -7,7 +7,7 @@ For the Shared Code update steps, see: https://confluence.tools.tax.service.gov.
 
 Place new items at the top, and auto-format the file...
 
-## July 9 2024: Updates from individuals-calculations-api
+## July 9 2024: Updates from individual-calculations-api
 
 Minor additions to RequestHandler and JsonErrorValidators
 
