@@ -16,21 +16,90 @@
 
 package shared.models.audit
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
+import shared.models.audit.AuditResponseFixture.{auditResponseModelWithBody, auditResponseModelWithErrors}
 import shared.models.audit.FlattenedGenericAuditDetail._
-import shared.models.audit.FlattenedGenericAuditDetailFixture.{flattenedGenericAuditDetailErrors, flattenedGenericAuditDetailJsonErrors, flattenedGenericAuditDetailJsonSuccess, flattenedGenericAuditDetailSuccess}
+import shared.models.auth.UserDetails
 import shared.utils.UnitSpec
 
 class FlattenedGenericAuditDetailSpec extends UnitSpec {
+
+  private val nino: String                         = "ZG903729C"
+  private val calculationId: String                = "calcId"
+  private val userType: String                     = "Agent"
+  private val agentReferenceNumber: Option[String] = Some("012345678")
+  private val userDetails: UserDetails = UserDetails(calculationId, userType, agentReferenceNumber)
+  private val pathParams: Map[String, String]      = Map("nino" -> nino, "calculationId" -> calculationId)
+  private val itsaStatuses: Option[JsValue]         = Some(Json.obj("field1" -> "value1"))
+  private val xCorrId                              = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  private val versionNumber: String                = "3.0"
+
+
+  private val flattenedGenericAuditDetailSuccess: FlattenedGenericAuditDetail =
+    FlattenedGenericAuditDetail(
+      versionNumber = Some(versionNumber),
+      userDetails = userDetails,
+      params = pathParams,
+      futureYears = None,
+      history = None,
+      itsaStatuses = itsaStatuses,
+      `X-CorrelationId` = xCorrId,
+      auditResponse = auditResponseModelWithBody)
+
+
+  private val flattenedGenericAuditDetailJsonSuccess: JsValue = Json.parse(
+    s"""
+       |{
+       |   "versionNumber": "$versionNumber",
+       |   "userType" : "$userType",
+       |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
+       |   "nino": "$nino",
+       |   "calculationId" : "$calculationId",
+       |   "field1":"value1",
+       |   "X-CorrelationId": "$xCorrId",
+       |   "outcome": "success",
+       |   "httpStatusCode": 200
+       |}
+     """.stripMargin
+  )
+
+  private val flattenedGenericAuditDetailErrors: FlattenedGenericAuditDetail =
+    FlattenedGenericAuditDetail(
+      versionNumber = Some(versionNumber),
+      userDetails = userDetails,
+      params = pathParams,
+      futureYears = None,
+      history = None,
+      itsaStatuses = itsaStatuses,
+      `X-CorrelationId` = xCorrId,
+      auditResponse = auditResponseModelWithErrors)
+
+
+  private val flattenedGenericAuditDetailJsonErrors: JsValue = Json.parse(
+    s"""
+       |{
+       |   "versionNumber": "$versionNumber",
+       |   "userType" : "$userType",
+       |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
+       |   "nino": "$nino",
+       |   "calculationId" : "$calculationId",
+       |   "field1":"value1",
+       |   "X-CorrelationId": "$xCorrId",
+       |   "outcome": "error",
+       |   "httpStatusCode": 400,
+       |   "errorCodes": [
+       |      "FORMAT_NINO",
+       |      "FORMAT_TAX_YEAR"
+       |   ]
+       |}
+     """.stripMargin
+  )
+
 
   "FlattenedGenericAuditDetailSpec" when {
     "written to JSON" should {
       "produce the expected JsObject" in {
         Json.toJson(flattenedGenericAuditDetailSuccess) shouldBe flattenedGenericAuditDetailJsonSuccess
-      }
-    }
-    "written to JSON (error)" should {
-      "produce the expected JsObject" in {
         Json.toJson(flattenedGenericAuditDetailErrors) shouldBe flattenedGenericAuditDetailJsonErrors
       }
     }
