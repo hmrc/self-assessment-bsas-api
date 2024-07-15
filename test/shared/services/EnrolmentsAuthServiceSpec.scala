@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import shared.config.{ConfidenceLevelConfig, MockAppConfig}
 import shared.models.auth.UserDetails
 import shared.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
-import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
+import uk.gov.hmrc.auth.core.AffinityGroup._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
   private def extraPredicatesAnd(predicate: Predicate) = predicate and
-    ((AffinityGroup.Individual and ConfidenceLevel.L200) or AffinityGroup.Organisation or AffinityGroup.Agent)
+    ((Individual and ConfidenceLevel.L200) or Organisation or (Agent and Enrolment("HMRC-AS-AGENT")))
 
   "calling .authorised" when {
     val inputPredicate = EmptyPredicate
@@ -46,11 +46,11 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
     }
 
     "Secondary Agent has permissions to access" should {
-      behave like authorisedSecondaryAgents(inputPredicate, false, inputPredicate, true)
+      behave like authorisedSecondaryAgents(inputPredicate, true, extraPredicatesAnd(inputPredicate), true)
     }
 
     "Secondary Agent does not have permissions to access" should {
-      behave like authorisedSecondaryAgents(inputPredicate, false, inputPredicate, false)
+      behave like authorisedSecondaryAgents(inputPredicate, true, extraPredicatesAnd(inputPredicate), false)
     }
 
     def authService(authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit = {
@@ -90,15 +90,15 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
     def authorisedAgentsMissingArn(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit = {
       "disallow agents that are missing an ARN" in new Test {
-        val enrolmentsWithoutArn: Enrolments = Enrolments(
-          Set(
-            Enrolment(
-              "HMRC-AS-AGENT",
-              Seq(EnrolmentIdentifier("SomeOtherIdentifier", "123567890")),
-              "Active"
-            )
-          )
-        )
+//        val enrolmentsWithoutArn: Enrolments = Enrolments(
+//          Set(
+//            Enrolment(
+//              "HMRC-AS-AGENT",
+//              Seq(EnrolmentIdentifier("SomeOtherIdentifier", "123567890")),
+//              "Active"
+//            )
+//          )
+//        )
         val retrievalsResult = new ~(Some(Agent), Enrolments(Set.empty))
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
@@ -107,9 +107,9 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
           .returns(Future.successful(retrievalsResult))
 
-        MockedAuthConnector
-          .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
-          .returns(Future.successful(enrolmentsWithoutArn))
+//        MockedAuthConnector
+//          .authorised(Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
+//          .returns(Future.successful(enrolmentsWithoutArn))
 
         await(target.authorised(inputPredicate)) shouldBe Left(InternalError)
       }
@@ -117,9 +117,16 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
     def authorisedAgents(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate): Unit =
       "allow authorised agents with ARN" in new Test {
+        val mtdId = "123567890"
         val arn = "123567890"
-        val enrolmentsWithArn: Enrolments = Enrolments(
+        val enrolments: Enrolments = Enrolments(
           Set(
+            Enrolment(
+              "HMRC-MTD-IT",
+              Seq(EnrolmentIdentifier("MTDITID", mtdId)),
+              "Active",
+              Some("mtd-it-auth")
+            ),
             Enrolment(
               "HMRC-AS-AGENT",
               Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)),
@@ -127,17 +134,13 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
             )
           )
         )
-        val retrievalsResult = new ~(Some(Agent), Enrolments(Set.empty))
+        val retrievalsResult = new ~(Some(Agent), enrolments)
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
           .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
           .returns(Future.successful(retrievalsResult))
-
-        MockedAuthConnector
-          .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
-          .returns(Future.successful(enrolmentsWithArn))
 
         await(target.authorised(inputPredicate)) shouldBe Right(UserDetails("", "Agent", Some(arn)))
 
@@ -145,9 +148,16 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
     def authorisedSecondaryAgents(inputPredicate: Predicate, authValidationEnabled: Boolean, expectedPredicate: Predicate, secondaryAgentAccessAllowed : Boolean): Unit =
       "allow Secondary Agents authorisation" in new Test {
+        val mtdId = "123567890"
         val arn = "123567890"
-        val enrolmentsWithArn: Enrolments = Enrolments(
+        val enrolments: Enrolments = Enrolments(
           Set(
+            Enrolment(
+              "HMRC-MTD-IT-SECONDARY",
+              Seq(EnrolmentIdentifier("MTDITID", mtdId)),
+              "Active",
+              Some("mtd-it-auth-secondary")
+            ),
             Enrolment(
               "HMRC-AS-AGENT",
               Seq(EnrolmentIdentifier("AgentReferenceNumber", arn)),
@@ -155,26 +165,22 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
             )
           )
         )
-        val retrievalsResult = new ~(Some(Agent), Enrolments(Set.empty))
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
-        MockedAuthConnector
-          .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
-          .returns(Future.successful(retrievalsResult))
-
         if (secondaryAgentAccessAllowed) {
+          val retrievalsResult = new ~(Some(Agent), enrolments)
           MockedAuthConnector
-            .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
-            .returns(Future.successful(enrolmentsWithArn))
+            .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
+            .returns(Future.successful(retrievalsResult))
 
-          await(target.authorised(inputPredicate)) shouldBe Right(UserDetails("", "Agent", Some(arn)))
+          await(target.authorised(inputPredicate, secondaryAgentAccessAllowed)) shouldBe Right(UserDetails("", "Agent", Some(arn)))
         } else {
           MockedAuthConnector
-            .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"), authorisedEnrolments)
+            .authorised(expectedPredicate, affinityGroup and authorisedEnrolments)
             .returns(Future.failed(FailedRelationship()))
 
-          await(target.authorised(inputPredicate)) shouldBe Left(ClientOrAgentNotAuthorisedError)
+          await(target.authorised(inputPredicate, secondaryAgentAccessAllowed)) shouldBe Left(ClientOrAgentNotAuthorisedError)
         }
       }
 

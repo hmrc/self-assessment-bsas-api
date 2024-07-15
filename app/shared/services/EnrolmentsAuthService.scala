@@ -24,10 +24,9 @@ import shared.utils.Logging
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,25 +40,29 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
 
   private def buildPredicate(predicate: Predicate): Predicate =
     if (appConfig.confidenceLevelConfig.authValidationEnabled) {
-      predicate and ((Individual and ConfidenceLevel.L200) or Organisation or Agent)
+      predicate and ((Individual and ConfidenceLevel.L200) or Organisation or (Agent and Enrolment("HMRC-AS-AGENT")))
     } else {
       predicate
     }
 
-  def authorised(predicate: Predicate)(implicit
-                                       hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[AuthOutcome] = {
+  def authorised(predicate: Predicate, secondaryAgentAccessAllowed: Boolean = false)(implicit
+                                                                                     hc: HeaderCarrier,
+                                                                                     ec: ExecutionContext): Future[AuthOutcome] = {
     authFunction
       .authorised(buildPredicate(predicate))
       .retrieve(affinityGroup and authorisedEnrolments) {
         case Some(Individual) ~ _   => Future.successful(Right(UserDetails("", "Individual", None)))
         case Some(Organisation) ~ _ => Future.successful(Right(UserDetails("", "Organisation", None)))
-        case Some(Agent) ~ _ =>
-          retrieveAgentDetails().map {
-            case arn @ Some(_) => Right(UserDetails("", "Agent", arn))
-            case None =>
-              logger.warn(s"[EnrolmentsAuthService][authorised] No AgentReferenceNumber defined on agent enrolment.")
-              Left(InternalError)
+        case Some(Agent) ~ authorisedEnrolments =>
+          if (isSecondaryAgent(authorisedEnrolments) && !secondaryAgentAccessAllowed) {
+            Future.successful(Left(ClientOrAgentNotAuthorisedError))
+          } else {
+            retrieveAgentDetails(authorisedEnrolments) match {
+              case arn @ Some(_) => Future.successful(Right(UserDetails("", "Agent", arn)))
+              case None =>
+                logger.warn(s"[EnrolmentsAuthService][authorised] No AgentReferenceNumber defined on agent enrolment.")
+                Future.successful(Left(InternalError))
+            }
           }
         case _ =>
           logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
@@ -74,18 +77,15 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
       }
   }
 
-  private def retrieveAgentDetails()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    def getAgentReferenceFrom(enrolments: Enrolments) =
-      enrolments
-        .getEnrolment("HMRC-AS-AGENT")
-        .flatMap(_.getIdentifier("AgentReferenceNumber"))
-        .map(_.value)
+  private def isSecondaryAgent(authorisedEnrolments: Enrolments): Boolean = {
+    authorisedEnrolments.getEnrolment("HMRC-MTD-IT-SECONDARY").isDefined
+  }
 
-    authFunction
-      .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"))
-      .retrieve(Retrievals.authorisedEnrolments) { enrolments =>
-        Future.successful(getAgentReferenceFrom(enrolments))
-      }
+  private def retrieveAgentDetails(authorisedEnrolments: Enrolments): Option[String] = {
+    authorisedEnrolments
+      .getEnrolment("HMRC-AS-AGENT")
+      .flatMap(_.getIdentifier("AgentReferenceNumber"))
+      .map(_.value)
   }
 
 }

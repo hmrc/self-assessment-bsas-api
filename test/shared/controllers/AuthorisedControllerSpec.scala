@@ -35,11 +35,11 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
   private val mtdId     = "X123567890"
   private val someError = MtdError("SOME_CODE", "A message", IM_A_TEAPOT)
 
-  private val primaryAgentPredicate: Predicate = Enrolment("HMRC-MTD-IT")
+  private val predicate: Predicate =
+    Enrolment("HMRC-MTD-IT")
     .withIdentifier("MTDITID", mtdId)
-    .withDelegatedAuthRule("mtd-it-auth")
-
-  private val secondaryAgentPredicate: Predicate = Enrolment("HMRC-MTD-IT-SECONDARY")
+    .withDelegatedAuthRule("mtd-it-auth") or
+    Enrolment("HMRC-MTD-IT-SECONDARY")
     .withIdentifier("MTDITID", mtdId)
     .withDelegatedAuthRule("mtd-it-auth-secondary")
 
@@ -60,7 +60,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
       "return a 200" in new Test {
         MockedMtdIdLookupService.lookup(nino) returns Future.successful(Right(mtdId))
 
-        MockedEnrolmentsAuthService.authorised(primaryAgentPredicate).returns(Future.successful(Right(UserDetails("", "Agent", Some("arn")))))
+        MockedEnrolmentsAuthService.authoriseAgent(predicate).returns(Future.successful(Right(UserDetails("", "Agent", Some("arn")))))
 
         private val result = target.action(nino)(fakeGetRequest)
         status(result) shouldBe OK
@@ -71,7 +71,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
       "return a 200" in new Test {
         MockedMtdIdLookupService.lookup(nino) returns Future.successful(Right(mtdId))
 
-        MockedEnrolmentsAuthService.authorised(secondaryAgentPredicate).returns(Future.successful(Right(UserDetails("", "Agent", Some("arn")))))
+        MockedEnrolmentsAuthService.authoriseAgent(predicate, secondaryAgentAccessAllowed = true).returns(Future.successful(Right(UserDetails("", "Agent", Some("arn")))))
 
         private val result = target.action(nino, secondaryAgentAccessAllowed = true)(fakeGetRequest)
         status(result) shouldBe OK
@@ -82,7 +82,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
       "return a 403" in new Test {
         MockedMtdIdLookupService.lookup(nino) returns Future.successful(Right(mtdId))
 
-        MockedEnrolmentsAuthService.authorised(primaryAgentPredicate).returns(Future.successful(Left(ClientOrAgentNotAuthorisedError)))
+        MockedEnrolmentsAuthService.authoriseAgent(predicate).returns(Future.successful(Left(ClientOrAgentNotAuthorisedError)))
 
         private val result = target.action(nino)(fakeGetRequest)
         status(result) shouldBe FORBIDDEN
@@ -93,7 +93,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
       "return that error (with its status code)" in new Test {
         MockedMtdIdLookupService.lookup(nino) returns Future.successful(Right(mtdId))
 
-        MockedEnrolmentsAuthService.authorised(primaryAgentPredicate) returns Future.successful(Left(someError))
+        MockedEnrolmentsAuthService.authoriseAgent(predicate) returns Future.successful(Left(someError))
 
         val result: Future[Result] = target.action(nino)(fakeGetRequest)
         status(result) shouldBe someError.httpStatus

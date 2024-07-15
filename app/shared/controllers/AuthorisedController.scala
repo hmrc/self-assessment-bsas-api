@@ -41,20 +41,17 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
     override protected def executionContext: ExecutionContext = cc.executionContext
 
     def predicate(mtdId: String): Predicate = {
-      if (secondaryAgentAccessAllowed) {
-          Enrolment("HMRC-MTD-IT-SECONDARY")
-            .withIdentifier("MTDITID", mtdId)
-            .withDelegatedAuthRule("mtd-it-auth-secondary")
-      } else {
         Enrolment("HMRC-MTD-IT")
           .withIdentifier("MTDITID", mtdId)
-          .withDelegatedAuthRule("mtd-it-auth")
-      }
+          .withDelegatedAuthRule("mtd-it-auth") or
+        Enrolment("HMRC-MTD-IT-SECONDARY")
+            .withIdentifier("MTDITID", mtdId)
+            .withDelegatedAuthRule("mtd-it-auth-secondary")
     }
 
     def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
         headerCarrier: HeaderCarrier): Future[Result] = {
-      authService.authorised(predicate(mtdId)).flatMap[Result] {
+      authService.authorised(predicate(mtdId), secondaryAgentAccessAllowed).flatMap[Result] {
         case Right(userDetails) => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
         case Left(mtdError)     => errorResponse(mtdError)
       }
