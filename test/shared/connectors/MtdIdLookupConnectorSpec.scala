@@ -17,6 +17,7 @@
 package shared.connectors
 
 import shared.config.MockAppConfig
+import shared.connectors.MtdIdLookupConnector.Outcome
 import shared.mocks.MockHttpClient
 
 import scala.concurrent.Future
@@ -43,7 +44,9 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
           .get[MtdIdLookupConnector.Outcome](s"$baseUrl/mtd-identifier-lookup/nino/$nino", dummyHeaderCarrierConfig)
           .returns(Future.successful(Right(mtdId)))
 
-        await(connector.getMtdId(nino)) shouldBe Right(mtdId)
+        val result: Outcome = await(connector.getMtdId(nino))
+
+        result shouldBe Right(mtdId)
       }
     }
 
@@ -58,7 +61,9 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(Left(MtdIdLookupConnector.Error(statusCode))))
 
-        await(connector.getMtdId(nino)) shouldBe Left(MtdIdLookupConnector.Error(statusCode))
+        val result: Outcome = await(connector.getMtdId(nino))
+
+        result shouldBe Left(MtdIdLookupConnector.Error(statusCode))
       }
     }
   }
