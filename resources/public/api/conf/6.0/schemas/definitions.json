@@ -61,7 +61,7 @@
         "foreign-property"
       ]
     },
-    "typeOfBusinessw": {
+    "typeOfBusiness": {
       "title": "typeOfBusiness",
       "description": "The type of business the summary calculation is for.",
       "type": "string",
