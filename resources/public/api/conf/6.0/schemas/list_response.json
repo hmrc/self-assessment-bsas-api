@@ -19,7 +19,7 @@
         ],
         "properties": {
           "typeOfBusiness": {
-            "$ref": "definitions.json#/definitions/typeOfBusiness"
+            "$ref": "definitions.json#/definitions/typeOfBusinessWithFHL"
           },
           "businessId": {
             "$ref": "definitions.json#/definitions/businessId"

@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "For TY 2023-24 and before",
+  "description": "Trigger a Business Source Adjustable Summary (BSAS)",
+  "type": "object",
+  "properties": {
+    "accountingPeriod": {
+      "type": "object",
+      "title": "The accounting period",
+      "description": "The duration of the business income source operations to be included in the tax year submission. The earliest tax year to which the accounting period can be assigned is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "description": "The date the accounting period started.",
+          "example": "2019-04-06"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "\t\nThe date the accounting period ended. The accounting period must end in the tax year to which it is assigned. For Making Tax Digital (MTD) submissions, the earliest tax year in which an accounting period can end is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.",
+          "example": "2020-04-05"
+        }
+      },
+      "required": [
+        "startDate",
+        "endDate"
+      ],
+      "additionalProperties": false
+    },
+    "typeOfBusiness": {
+      "$ref": "../../definitions.json#/definitions/typeOfBusinessWithFHL"
+    },
+    "businessId": {
+      "$ref": "../../definitions.json#/definitions/businessId"
+    }
+  },
+  "required": [
+    "accountingPeriod",
+    "typeOfBusiness",
+    "businessId"
+  ],
+  "additionalProperties": false
+}
+
