@@ -41,7 +41,7 @@ components:
         pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
       required: false
 
-    typeOfBusinessOptional:
+    typeOfBusinessWithFHLOptional:
       name: typeOfBusiness
       in: query
       description: The type of business the summary calculation is for.

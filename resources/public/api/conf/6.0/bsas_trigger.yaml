@@ -33,20 +33,34 @@ post:
     content:
       application/json:
         schema:
-          $ref: "./schemas/trigger/request.json"
+          oneOf:
+            - $ref: "./schemas/trigger/def1/request.json"
+            - $ref: "./schemas/trigger/def2/request.json"
         examples:
-          example-1:
-            description: Self-employment Trigger
+          PRE-TY-2024-25-Self-Employment:
+            description: Self-employment Trigger for TY 2023-24 and before
             value:
-              $ref: "./examples/trigger/trigger_se_request.json"
-          example-2:
-            description: UK Property Non-FHL Trigger
+              $ref: "./examples/trigger/def1/trigger_se_request.json"
+          TY-2024-25-Self-Employment:
+            description: Self-employment Trigger for TY 2024-25 and after
             value:
-              $ref: "./examples/trigger/trigger_non_fhl_request.json"
-          example-3:
-            description: Foreign Property Trigger
+              $ref: "./examples/trigger/def2/trigger_se_request.json"
+          PRE-TY-2024-25-UK-Property-NON-FHL:
+            description: UK Property Non-FHL Trigger for TY 2023-24 and before
             value:
-              $ref: "./examples/trigger/trigger_foreign_property_request.json"
+              $ref: "./examples/trigger/def1/trigger_non_fhl_request.json"
+          TY-2024-25-UK-Property:
+            description: UK Property Trigger for TY 2024-25 and after
+            value:
+              $ref: "./examples/trigger/def2/trigger_uk_property_request.json"
+          PRE-TY-2024-25-Foreign-Property-Income-Response:
+            description: Foreign Property Trigger for TY 2023-24 and before
+            value:
+              $ref: "./examples/trigger/def1/trigger_foreign_property_request.json"
+          TY-2024-25-Foreign-Property-Income-Response:
+            description: Foreign Property Trigger for TY 2024-25 and after
+            value:
+              $ref: "./examples/trigger/def2/trigger_foreign_property_request.json"
 
   responses:
     200:
@@ -65,19 +79,30 @@ post:
           schema:
             $ref: "./schemas/trigger/response.json"
           examples:
-            example-1:
+            PRE-TY-2024-25-Self-Employment-Response:
               description: Self-employment example response
               value:
-                $ref: "./examples/trigger/trigger_se_response.json"
-            example-2:
+                $ref: "./examples/trigger/def1/trigger_se_response.json"
+            TY-2024-25-Self-Employment-Response:
+              description: Self-employment example response
+              value:
+                $ref: "./examples/trigger/def2/trigger_se_response.json"
+            PRE-TY-2024-25-UK-NON-FHL-Response:
+              description: UK Non Fhl Property example response
+              value:
+                $ref: "./examples/trigger/def1/trigger_non_fhl_response.json"
+            TY-2024-25-UK-Property-Response:
               description: UK Property example response
               value:
-                $ref: "./examples/trigger/trigger_non_fhl_response.json"
-            example-3:
+                $ref: "./examples/trigger/def2/trigger_uk_property_response.json"
+            PRE-TY-2024-25-Foreign-Property-Income-Response:
               description: Foreign Property example response
               value:
-                $ref: "./examples/trigger/trigger_foreign_property_response.json"
-
+                $ref: "./examples/trigger/def1/trigger_foreign_property_response.json"
+            TY-2024-25-FOREIGN-PROPERTY-INCOME-Response:
+              description: Foreign Property example response
+              value:
+                $ref: "./examples/trigger/def2/trigger_foreign_property_response.json"
     400:
       description: Bad request
       content:
