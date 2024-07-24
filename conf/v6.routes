@@ -1,6 +1,6 @@
 GET         /:nino                                        v5.bsas.list.ListBsasController.listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
 
-POST        /:nino/trigger                                v5.bsas.trigger.TriggerBsasController.triggerBsas(nino: String)
+POST        /:nino/trigger                                v6.bsas.trigger.TriggerBsasController.triggerBsas(nino: String)
 
 GET         /:nino/self-employment/:calculationId         v5.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasController.handleRequest(nino:String, calculationId: String, taxYear: Option[String])
 POST        /:nino/self-employment/:calculationId/adjust  v5.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String])
