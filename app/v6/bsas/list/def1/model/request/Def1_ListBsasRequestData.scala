@@ -17,9 +17,9 @@
 package v6.bsas.list.def1.model.request
 
 import shared.models.domain.{BusinessId, Nino, TaxYear}
-import v5.bsas.list.ListBsasSchema
-import v5.bsas.list.ListBsasSchema.Def1
-import v5.bsas.list.model.request.ListBsasRequestData
+import v6.bsas.list.ListBsasSchema
+import v6.bsas.list.ListBsasSchema.Def1
+import v6.bsas.list.model.request.ListBsasRequestData
 
 case class Def1_ListBsasRequestData(
     nino: Nino,

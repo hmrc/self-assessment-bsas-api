@@ -19,7 +19,7 @@ package v6.bsas.list.def1.model.response
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.models.domain.Status
-import v5.bsas.list.model.response.BsasSummary
+import v6.bsas.list.model.response.BsasSummary
 
 case class Def1_BsasSummary(
     calculationId: String,
