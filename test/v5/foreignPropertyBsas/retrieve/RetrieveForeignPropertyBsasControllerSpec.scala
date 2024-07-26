@@ -17,8 +17,8 @@
 package v5.foreignPropertyBsas.retrieve
 
 import common.errors._
+import config.MockBsasConfig
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.CalculationId
 import shared.models.errors._
@@ -39,7 +39,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockRetrieveForeignPropertyBsasValidatorFactory
     with MockRetrieveForeignPropertyBsasService
     with MockIdGenerator
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
@@ -49,6 +49,7 @@ class RetrieveForeignPropertyBsasControllerSpec
   "retrieve" should {
     "return OK" when {
       "the request is valid" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveForeignPropertyBsasService.retrieveBsas(requestData) returns
@@ -63,11 +64,13 @@ class RetrieveForeignPropertyBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveForeignPropertyBsasService.retrieveBsas(requestData) returns Future.successful(
@@ -86,7 +89,8 @@ class RetrieveForeignPropertyBsasControllerSpec
       validatorFactory = mockRetrieveForeignPropertyBsasValidatorFactory,
       service = mockService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected def callController(): Future[Result] =

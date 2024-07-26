@@ -199,6 +199,21 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorisedAsSecondaryAgent()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
+        }
+
+        val response: WSResponse = await(request.get())
+        response.status shouldBe OK
+      }
+    }
   }
 
   private trait Test {

@@ -17,9 +17,9 @@
 package v3.controllers
 
 import common.errors._
+import config.MockBsasConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -48,7 +48,7 @@ class SubmitUkPropertyBsasControllerSpec
     with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
   private val rawTaxYear    = "2023-24"
@@ -75,6 +75,7 @@ class SubmitUkPropertyBsasControllerSpec
 
     "return OK" when {
       "the request is valid" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockSubmitUkPropertyBsasService
@@ -97,18 +98,21 @@ class SubmitUkPropertyBsasControllerSpec
     "return parser errors as per spec" when {
 
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
 
       "multiple parser errors occur" in new Test {
         private val errors = List(CalculationIdFormatError, NinoFormatError)
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningErrors(errors))
         runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(validNonFHLInputJson))
       }
     }
 
     "the service returns an error" in new Test {
+      MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
       willUseValidator(returningSuccess(requestData))
 
       MockSubmitUkPropertyBsasService
@@ -129,7 +133,8 @@ class SubmitUkPropertyBsasControllerSpec
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected def callController(): Future[Result] =

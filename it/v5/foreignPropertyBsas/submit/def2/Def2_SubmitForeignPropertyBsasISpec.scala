@@ -176,6 +176,16 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        override def setupStubs(): Unit = {
+          stubDownstreamSuccess()
+        }
+        val response: WSResponse = await(request(authorisedAsSecondaryAgent = true).post(mtdRequestValid))
+        response.status shouldBe OK
+      }
+    }
   }
 
   private trait Test {
@@ -194,11 +204,15 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
         .thenReturn(OK, ignoredDownstreamResponse)
     }
 
-    def request(): WSRequest = {
+    def request(authorisedAsSecondaryAgent: Boolean = false): WSRequest = {
       AuditStub.audit()
-      AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+      if (authorisedAsSecondaryAgent) {
+        AuthStub.authorisedAsSecondaryAgent()
+      } else {
+        AuthStub.authorised()
+      }
       buildRequest(s"/$nino/foreign-property/$calculationId/adjust")
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(

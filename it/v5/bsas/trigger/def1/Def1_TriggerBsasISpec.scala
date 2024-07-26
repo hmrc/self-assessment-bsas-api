@@ -196,6 +196,19 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorisedAsSecondaryAgent()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
+        }
+        val response: WSResponse = await(request().post(makeRequestBody("self-employment", false)))
+        response.status shouldBe OK
+      }
+    }
   }
 
   private trait Test {

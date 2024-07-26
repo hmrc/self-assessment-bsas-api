@@ -16,6 +16,7 @@
 
 package v5.foreignPropertyBsas.submit
 
+import config.BsasConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
@@ -35,17 +36,14 @@ class SubmitForeignPropertyBsasController @Inject() (
     service: SubmitForeignPropertyBsasService,
     auditService: AuditService,
     cc: ControllerComponents,
-    val idGenerator: IdGenerator
-)(implicit
-    ec: ExecutionContext,
-    appConfig: AppConfig
-) extends AuthorisedController(cc) {
+    val idGenerator: IdGenerator,
+    val bsasConfig: BsasConfig)(implicit ec: ExecutionContext, appConfig: AppConfig) extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitForeignPropertyBsasController", endpointName = "SubmitForeignPropertyBsas")
 
   def handleRequest(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
-    authorisedAction(nino).async(parse.json) { implicit request =>
+    authorisedAction(nino, bsasConfig.secondaryAgentEndpointsAccessControlConfig.submitForeignPropertyBsas).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)

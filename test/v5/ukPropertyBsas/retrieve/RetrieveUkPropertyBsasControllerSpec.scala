@@ -17,8 +17,8 @@
 package v5.ukPropertyBsas.retrieve
 
 import common.errors._
+import config.MockBsasConfig
 import play.api.mvc.Result
-import shared.config.MockAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.CalculationId
 import shared.models.errors._
@@ -39,7 +39,7 @@ class RetrieveUkPropertyBsasControllerSpec
     with MockRetrieveUkPropertyBsasValidatorFactory
     with MockRetrieveUkPropertyBsasService
     with MockIdGenerator
-    with MockAppConfig {
+    with MockBsasConfig {
 
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
   private val requestData   = Def1_RetrieveUkPropertyBsasRequestData(parsedNino, calculationId, taxYear = None)
@@ -47,6 +47,7 @@ class RetrieveUkPropertyBsasControllerSpec
   "retrieve" should {
     "return OK for FHL" when {
       "the request is valid" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
@@ -61,6 +62,7 @@ class RetrieveUkPropertyBsasControllerSpec
     }
     "return OK for non-FHL" when {
       "the request is valid" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
@@ -76,11 +78,13 @@ class RetrieveUkPropertyBsasControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
       "the service returns an error" in new Test {
+        MockedBsasConfig.secondaryAgentEndpointsAccessControlConfig.returns(MockedBsasConfig.bsasSecondaryAgentConfig)
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
@@ -100,7 +104,8 @@ class RetrieveUkPropertyBsasControllerSpec
       validatorFactory = mockRetrieveUkPropertyBsasValidatorFactory,
       service = mockService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      bsasConfig = mockBsasConfig
     )
 
     protected def callController(): Future[Result] = controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)

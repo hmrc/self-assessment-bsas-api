@@ -179,6 +179,16 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
+
+    "return success (200) for Secondary Agent" when {
+      "Secondary Agent ia allowed access to the endpoint" in new NonTysTest {
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
+        }
+        val response: WSResponse = await(request(authorisedAsSecondaryAgent = true).get())
+        response.status shouldBe OK
+      }
+    }
   }
 
   private trait Test {
@@ -189,11 +199,17 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
     def setupStubs(): Unit
 
-    def request: WSRequest = {
+    def request : WSRequest = request()
+
+    def request(authorisedAsSecondaryAgent: Boolean = false): WSRequest = {
       AuditStub.audit()
-      AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+      if (authorisedAsSecondaryAgent) {
+        AuthStub.authorisedAsSecondaryAgent()
+      } else {
+        AuthStub.authorised()
+      }
       buildRequest(uri)
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
