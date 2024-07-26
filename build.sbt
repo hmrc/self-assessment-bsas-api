@@ -16,6 +16,7 @@
 
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings}
+import org.scalafmt.sbt.ScalafmtPlugin
 
 lazy val ItTest = config("it") extend Test
 
@@ -27,6 +28,7 @@ lazy val microservice = Project(appName, file("."))
     retrieveManaged                 := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
     scalaVersion                    := "2.13.12",
+    scalafmtOnCompile := true,
     scalacOptions ++= List(
       "-language:higherKinds",
       "-Xlint:-byname-implicit",
