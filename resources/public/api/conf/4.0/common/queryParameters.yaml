@@ -22,9 +22,23 @@ components:
       description: |
         The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
         For example, 2023-25 is not valid.
-        
+
         <p style="font-weight:bold">For periodIds for tax years 2023-24 and onwards, taxYear is mandatory and a 404 is returned if not provided. 
         It must not be provided for a periodId relating to an earlier tax year.</p>
+      schema:
+        type: string
+        example: 2023-24
+        pattern: ^\d{4}-\d{2}$
+      required: false
+
+    taxYearTysList:
+      name: taxYear
+      in: query
+      description: |
+        The tax year to which the data applies in the format YYYY-YY. The range must not be greater than a single year.
+        For example, 2023-25 is not valid.
+
+        <p><span style="font-weight:bold">Note: </span>If no tax year is specified, the endpoint retrieves data for the current tax year. An earlier tax year can be specified using the `taxYear` parameter. The endpoint returns a 404 if you attempt to retrieve data for a year with no matching BSAS calculation.</p>
       schema:
         type: string
         example: 2023-24
