@@ -21,8 +21,8 @@ import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v5.bsas.list.model.request.ListBsasRequestData
-import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.request.ListBsasRequestData
+import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

@@ -17,8 +17,8 @@
 package v6.bsas.list
 
 import shared.controllers.validators.Validator
-import v5.bsas.list.def1.Def1_ListBsasValidator
-import v5.bsas.list.model.request.ListBsasRequestData
+import v6.bsas.list.def1.Def1_ListBsasValidator
+import v6.bsas.list.model.request.ListBsasRequestData
 
 import javax.inject.Singleton
 

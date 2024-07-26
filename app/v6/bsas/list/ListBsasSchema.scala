@@ -20,8 +20,8 @@ import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
 import shared.schema.DownstreamReadable
-import v5.bsas.list.def1.model.response.{Def1_BsasSummary, Def1_ListBsasResponse}
-import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.def1.model.response.{Def1_BsasSummary, Def1_ListBsasResponse}
+import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
 
 import scala.math.Ordered.orderingToOrdered
 
