@@ -18,7 +18,7 @@ package v6.bsas.list.def2.model.request
 
 import shared.models.domain.{BusinessId, Nino, TaxYear}
 import v6.bsas.list.ListBsasSchema
-import v6.bsas.list.ListBsasSchema.Def1
+import v6.bsas.list.ListBsasSchema.Def2
 import v6.bsas.list.model.request.ListBsasRequestData
 
 case class Def2_ListBsasRequestData(
@@ -28,5 +28,5 @@ case class Def2_ListBsasRequestData(
     incomeSourceType: Option[String]
 ) extends ListBsasRequestData {
 
-  override val schema: ListBsasSchema = Def1
+  override val schema: ListBsasSchema = Def2
 }

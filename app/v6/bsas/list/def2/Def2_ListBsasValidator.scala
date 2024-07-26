@@ -23,7 +23,7 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import shared.models.domain.TaxYear
 import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
-import v6.bsas.list.def1.model.request.Def2_ListBsasRequestData
+import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.common.resolvers.ResolveTypeOfBusiness
 

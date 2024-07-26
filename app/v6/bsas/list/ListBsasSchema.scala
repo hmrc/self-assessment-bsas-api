@@ -21,6 +21,7 @@ import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
 import shared.schema.DownstreamReadable
 import v6.bsas.list.def1.model.response.{Def1_BsasSummary, Def1_ListBsasResponse}
+import v6.bsas.list.def2.model.response.{Def2_BsasSummary, Def2_ListBsasResponse}
 import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
 
 import scala.math.Ordered.orderingToOrdered
@@ -34,7 +35,10 @@ object ListBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def1_ListBsasResponse.reads
   }
 
-  private val defaultSchema = Def1
+  case object Def2 extends ListBsasSchema {
+    type DownstreamResp = Def2_ListBsasResponse[Def2_BsasSummary]
+    val connectorReads: Reads[DownstreamResp] = Def2_ListBsasResponse.reads
+  }
 
   def schemaFor(maybeTaxYear: Option[String]): ListBsasSchema = {
     maybeTaxYear
@@ -44,10 +48,11 @@ object ListBsasSchema {
   }
 
   def schemaFor(taxYear: TaxYear): ListBsasSchema = {
-    if (TaxYear.starting(2023) <= taxYear) {
+    if (taxYear <= TaxYear.starting(2023)) {
       Def1
-    } else {
-      defaultSchema
+    }
+    else {
+      Def2
     }
   }
 
