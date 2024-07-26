@@ -23,11 +23,11 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import shared.models.domain.TaxYear
 import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
-import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
+import v6.bsas.list.def1.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.common.resolvers.ResolveTypeOfBusiness
 
-object Def1_ListBsasValidator extends ResolverSupport {
+object Def2_ListBsasValidator extends ResolverSupport {
   private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
 
   private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
@@ -37,9 +37,9 @@ object Def1_ListBsasValidator extends ResolverSupport {
   private val resolveTypeOfBusiness = ResolveTypeOfBusiness.resolver.resolveOptionally
 }
 
-class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
+class Def2_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
     extends Validator[ListBsasRequestData] {
-  import Def1_ListBsasValidator._
+  import Def2_ListBsasValidator._
 
   def validate: Validated[Seq[MtdError], ListBsasRequestData] =
     (
@@ -47,6 +47,6 @@ class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusine
       resolveTaxYear(taxYear),
       resolveBusinessId(businessId),
       resolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
-    ).mapN(Def1_ListBsasRequestData)
+    ).mapN(Def2_ListBsasRequestData)
 
 }

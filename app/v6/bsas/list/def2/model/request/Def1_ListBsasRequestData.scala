@@ -21,7 +21,7 @@ import v6.bsas.list.ListBsasSchema
 import v6.bsas.list.ListBsasSchema.Def1
 import v6.bsas.list.model.request.ListBsasRequestData
 
-case class Def1_ListBsasRequestData(
+case class Def2_ListBsasRequestData(
     nino: Nino,
     taxYear: TaxYear,
     incomeSourceId: Option[BusinessId],

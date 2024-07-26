@@ -20,23 +20,23 @@ import play.api.libs.json.{Json, OWrites, Reads, Writes}
 import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusiness
 
-case class Def1_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) extends ListBsasResponse[I] {
+case class Def2_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) extends ListBsasResponse[I] {
 
   override def typeOfBusinessFor[A >: I](item: A): Option[TypeOfBusiness] =
     businessSources.find(_.summaries.contains(item)).map(_.typeOfBusiness)
 
   override def mapItems[B](f: I => B): ListBsasResponse[B] = {
-    Def1_ListBsasResponse(businessSources.map { businessSource =>
+    Def2_ListBsasResponse(businessSources.map { businessSource =>
       businessSource.copy(summaries = businessSource.summaries.map(f))
     })
   }
 
 }
 
-object Def1_ListBsasResponse {
+object Def2_ListBsasResponse {
 
-  implicit def reads[I: Reads]: Reads[Def1_ListBsasResponse[I]] =
-    implicitly[Reads[Seq[BusinessSource[I]]]].map(Def1_ListBsasResponse(_))
+  implicit def reads[I: Reads]: Reads[Def2_ListBsasResponse[I]] =
+    implicitly[Reads[Seq[BusinessSource[I]]]].map(Def2_ListBsasResponse(_))
 
-  implicit def writes[I: Writes]: OWrites[Def1_ListBsasResponse[I]] = Json.writes[Def1_ListBsasResponse[I]]
+  implicit def writes[I: Writes]: OWrites[Def2_ListBsasResponse[I]] = Json.writes[Def2_ListBsasResponse[I]]
 }

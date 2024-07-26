@@ -21,7 +21,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.models.domain.Status
 import v6.bsas.list.model.response.BsasSummary
 
-case class Def1_BsasSummary(
+case class Def2_BsasSummary(
     calculationId: String,
     requestedDateTime: String,
     summaryStatus: Status,
@@ -29,15 +29,15 @@ case class Def1_BsasSummary(
     adjustedDateTime: Option[String]
 ) extends BsasSummary
 
-object Def1_BsasSummary {
+object Def2_BsasSummary {
 
-  implicit val reads: Reads[Def1_BsasSummary] = (
+  implicit val reads: Reads[Def2_BsasSummary] = (
     (JsPath \ "calculationId").read[String] and
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean] and
       (JsPath \ "adjustedDateTime").readNullable[String]
-  )(Def1_BsasSummary.apply _)
+  )(Def2_BsasSummary.apply _)
 
-  implicit val writes: OWrites[Def1_BsasSummary] = Json.writes[Def1_BsasSummary]
+  implicit val writes: OWrites[Def2_BsasSummary] = Json.writes[Def2_BsasSummary]
 }
