@@ -25,22 +25,22 @@ class AccountingPeriodSpec extends UnitSpec with Def1_ListBsasFixtures {
   "AccountingPeriod" when {
     "read from valid JSON" should {
       "return the expected object" in {
-          val result = accountingPeriodDownstreamJson.as[AccountingPeriod]
-          result shouldBe accountingPeriod
+        val result = accountingPeriodDownstreamJson.as[AccountingPeriod]
+        result shouldBe accountingPeriod
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-          val result = JsObject.empty.validate[AccountingPeriod]
-          result shouldBe a[JsError]
+        val result = JsObject.empty.validate[AccountingPeriod]
+        result shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "return the expected JSON" in {
-          val result = Json.toJson(accountingPeriod)
-          result shouldBe accountingPeriodJson
+        val result = Json.toJson(accountingPeriod)
+        result shouldBe accountingPeriodJson
       }
     }
   }

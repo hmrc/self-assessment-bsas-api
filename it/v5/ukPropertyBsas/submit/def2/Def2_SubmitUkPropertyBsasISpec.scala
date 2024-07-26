@@ -30,7 +30,7 @@ import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBo
 
 class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  val requestBodyJson: JsValue = validfhlInputJson
+  val requestBodyJson: JsValue       = validfhlInputJson
   val nonFHLRequestBodyJson: JsValue = validNonFHLInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {

@@ -25,7 +25,7 @@ case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIn
 object ForeignProperty {
 
   implicit val emptinessChecker: EmptinessChecker[ForeignProperty] = EmptinessChecker.use { body =>
-    "income" -> body.income ::
+    "income"     -> body.income ::
       "expenses" -> body.expenses :: HNil
   }
 

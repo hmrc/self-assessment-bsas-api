@@ -26,7 +26,12 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.stubs._
 import support.IntegrationBaseSpec
-import v5.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestNonFhlFull, mtdRequestNonFhlValid, mtdRequestValid}
+import v5.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
+  downstreamRequestValid,
+  mtdRequestNonFhlFull,
+  mtdRequestNonFhlValid,
+  mtdRequestValid
+}
 
 class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 

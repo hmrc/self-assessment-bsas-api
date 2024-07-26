@@ -20,18 +20,18 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class SummaryCalculationDeductions(
-                                         zeroEmissionGoods: Option[BigDecimal],
-                                         annualInvestmentAllowance: Option[BigDecimal],
-                                         costOfReplacingDomesticItems: Option[BigDecimal],
-                                         businessPremisesRenovationAllowance: Option[BigDecimal],
-                                         propertyAllowance: Option[BigDecimal],
-                                         otherCapitalAllowance: Option[BigDecimal],
-                                         rarReliefClaimed: Option[BigDecimal],
-                                         electricChargePointAllowance: Option[BigDecimal],
-                                         structuredBuildingAllowance: Option[BigDecimal],
-                                         enhancedStructuredBuildingAllowance: Option[BigDecimal],
-                                         zeroEmissionsCarAllowance: Option[BigDecimal],
-                                       )
+    zeroEmissionGoods: Option[BigDecimal],
+    annualInvestmentAllowance: Option[BigDecimal],
+    costOfReplacingDomesticItems: Option[BigDecimal],
+    businessPremisesRenovationAllowance: Option[BigDecimal],
+    propertyAllowance: Option[BigDecimal],
+    otherCapitalAllowance: Option[BigDecimal],
+    rarReliefClaimed: Option[BigDecimal],
+    electricChargePointAllowance: Option[BigDecimal],
+    structuredBuildingAllowance: Option[BigDecimal],
+    enhancedStructuredBuildingAllowance: Option[BigDecimal],
+    zeroEmissionsCarAllowance: Option[BigDecimal]
+)
 
 object SummaryCalculationDeductions {
 
@@ -47,7 +47,7 @@ object SummaryCalculationDeductions {
       Reads.pure(None) and
       Reads.pure(None) and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-    ) (SummaryCalculationDeductions.apply _)
+  )(SummaryCalculationDeductions.apply _)
 
   val readsNonFhl: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "zeroEmissionsGoodsVehicleAllowance").readNullable[BigDecimal] and
@@ -61,7 +61,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "structuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "enhancedStructuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-    ) (SummaryCalculationDeductions.apply _)
+  )(SummaryCalculationDeductions.apply _)
 
   implicit val writes: OWrites[SummaryCalculationDeductions] = Json.writes[SummaryCalculationDeductions]
 }

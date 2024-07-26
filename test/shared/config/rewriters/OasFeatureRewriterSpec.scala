@@ -30,8 +30,6 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
       "oasFeature.released-in-production" -> oasFeatureReleasedInProd
     )
 
-
-
     val rewriter = new OasFeatureRewriter()
     rewriter.rewriteOasFeature.asTuple
   }

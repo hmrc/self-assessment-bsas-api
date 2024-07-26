@@ -25,12 +25,12 @@ import v3.hateoas.HateoasLinks
 import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 
 case class RetrieveUkPropertyBsasResponse(
-                                           metadata: Metadata,
-                                           inputs: Inputs,
-                                           adjustableSummaryCalculation: AdjustableSummaryCalculation,
-                                           adjustments: Option[Adjustments],
-                                           adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
-                                         ) extends HasTypeOfBusiness {
+    metadata: Metadata,
+    inputs: Inputs,
+    adjustableSummaryCalculation: AdjustableSummaryCalculation,
+    adjustments: Option[Adjustments],
+    adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
+) extends HasTypeOfBusiness {
   override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
 }
 
@@ -39,7 +39,7 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks {
   implicit val reads: Reads[RetrieveUkPropertyBsasResponse] = (json: JsValue) =>
     for {
       metadata <- (json \ "metadata").validate[Metadata]
-      inputs <- (json \ "inputs").validate[Inputs]
+      inputs   <- (json \ "inputs").validate[Inputs]
       isFhl = inputs.typeOfBusiness == TypeOfBusiness.`uk-property-fhl`
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation")
         .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsNonFhl)
@@ -59,7 +59,8 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks {
   implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = Json.writes[RetrieveUkPropertyBsasResponse]
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
+      extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveUkPropertyHateoasData): Seq[Link] = {
       import data._
 
@@ -68,7 +69,9 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks {
         adjustUkPropertyBsas(appConfig, nino, calculationId, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveUkPropertyHateoasData(nino: String, calculationId: String, taxYear: Option[TaxYear]) extends HateoasData

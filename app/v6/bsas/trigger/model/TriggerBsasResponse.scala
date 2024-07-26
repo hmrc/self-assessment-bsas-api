@@ -29,7 +29,7 @@ object TriggerBsasResponse extends JsonWritesUtil {
 
   implicit val writes: OWrites[TriggerBsasResponse] = writesFrom {
     case def1: Def1_TriggerBsasResponse =>
-    implicitly[OWrites[Def1_TriggerBsasResponse]].writes(def1)
+      implicitly[OWrites[Def1_TriggerBsasResponse]].writes(def1)
     case def2: Def2_TriggerBsasResponse =>
       implicitly[OWrites[Def2_TriggerBsasResponse]].writes(def2)
   }

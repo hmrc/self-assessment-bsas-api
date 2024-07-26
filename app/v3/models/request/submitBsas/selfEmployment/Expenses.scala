@@ -37,8 +37,9 @@ case class Expenses(costOfGoodsAllowable: Option[BigDecimal],
 
   val hasOnlyConsolidatedExpenses = this match {
     case Expenses(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, Some(_)) => true
-    case _ => false
+    case _                                                                                                           => false
   }
+
 }
 
 object Expenses {

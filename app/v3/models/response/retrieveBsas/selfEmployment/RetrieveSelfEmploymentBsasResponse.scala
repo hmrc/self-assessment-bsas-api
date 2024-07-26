@@ -26,12 +26,12 @@ import v3.hateoas.HateoasLinks
 import v3.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 
 case class RetrieveSelfEmploymentBsasResponse(
-                                               metadata: Metadata,
-                                               inputs: Inputs,
-                                               adjustableSummaryCalculation: AdjustableSummaryCalculation,
-                                               adjustments: Option[Adjustments],
-                                               adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
-                                             ) extends HasTypeOfBusiness {
+    metadata: Metadata,
+    inputs: Inputs,
+    adjustableSummaryCalculation: AdjustableSummaryCalculation,
+    adjustments: Option[Adjustments],
+    adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
+) extends HasTypeOfBusiness {
   override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
 }
 
@@ -43,12 +43,13 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
       (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
       (JsPath \ "adjustments").readNullable[Adjustments] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustedSummaryCalculation]
-    ) (RetrieveSelfEmploymentBsasResponse.apply _)
+  )(RetrieveSelfEmploymentBsasResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = Json.writes[RetrieveSelfEmploymentBsasResponse]
 
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
-    extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
+      extends HateoasLinksFactory[RetrieveSelfEmploymentBsasResponse, RetrieveSelfAssessmentBsasHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentBsasHateoasData): Seq[Link] = {
       import data._
 
@@ -57,7 +58,9 @@ object RetrieveSelfEmploymentBsasResponse extends HateoasLinks {
         adjustSelfEmploymentBsas(appConfig, nino, bsasId, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveSelfAssessmentBsasHateoasData(nino: String, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

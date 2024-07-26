@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.ukProperty
 
-import shared.models.domain.{ CalculationId, Nino, TaxYear }
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 
@@ -28,6 +28,7 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
   implicit val reads: Reads[SubmitUKPropertyBsasRequestBody] = Json.reads[SubmitUKPropertyBsasRequestBody]
 
   implicit val writes: OWrites[SubmitUKPropertyBsasRequestBody] = new OWrites[SubmitUKPropertyBsasRequestBody] {
+
     override def writes(o: SubmitUKPropertyBsasRequestBody): JsObject = {
       writeIfPresent(o.nonFurnishedHolidayLet, incomeSourceType = "02")
         .orElse(writeIfPresent(o.furnishedHolidayLet, incomeSourceType = "04"))
@@ -38,5 +39,7 @@ object SubmitUKPropertyBsasRequestBody extends JsonWritesUtil {
       oa.map { a =>
         Json.obj("incomeSourceType" -> incomeSourceType, "adjustments" -> a)
       }
+
   }
+
 }

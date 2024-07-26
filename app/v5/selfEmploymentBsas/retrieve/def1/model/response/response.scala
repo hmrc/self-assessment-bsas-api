@@ -22,7 +22,8 @@ import play.api.libs.json._
 
 package object response {
 
-  private type SummaryCalculationReads = FunctionalBuilder[Reads]#CanBuild14[Option[BigDecimal],
+  private type SummaryCalculationReads = FunctionalBuilder[Reads]#CanBuild14[
+    Option[BigDecimal],
     Option[SummaryCalculationIncome],
     Option[BigDecimal],
     Option[SummaryCalculationExpenses],
@@ -52,6 +53,5 @@ package object response {
       (JsPath \ "selfEmploymentAccountingAdjustments").readNullable[SummaryCalculationAccountingAdjustments] and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
-
 
 }

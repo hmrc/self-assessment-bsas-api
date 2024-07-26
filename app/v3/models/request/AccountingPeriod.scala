@@ -16,7 +16,7 @@
 
 package v3.models.request
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{Json, OFormat}
 
 case class AccountingPeriod(startDate: String, endDate: String)
 

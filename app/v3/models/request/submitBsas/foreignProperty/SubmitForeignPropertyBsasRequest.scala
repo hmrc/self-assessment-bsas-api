@@ -16,7 +16,7 @@
 
 package v3.models.request.submitBsas.foreignProperty
 
-import shared.models.domain.{ CalculationId, Nino, TaxYear }
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 
@@ -31,6 +31,7 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
   implicit val reads: Reads[SubmitForeignPropertyBsasRequestBody] = Json.reads[SubmitForeignPropertyBsasRequestBody]
 
   implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = new OWrites[SubmitForeignPropertyBsasRequestBody] {
+
     override def writes(o: SubmitForeignPropertyBsasRequestBody): JsObject = {
       writeIfPresent(o.nonFurnishedHolidayLet, incomeSourceType = "15")
         .orElse(writeIfPresent(o.foreignFhlEea, incomeSourceType = "03"))
@@ -41,5 +42,7 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
       oa.map { a =>
         Json.obj("incomeSourceType" -> incomeSourceType, "adjustments" -> a)
       }
+
   }
+
 }

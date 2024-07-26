@@ -50,6 +50,7 @@ class TriggerBsasControllerSpec
     parsedNino,
     triggerBsasRequestDataBody()
   )
+
   private val requestDataDef2 = Def2_TriggerBsasRequestData(
     parsedNino,
     triggerBsasRequestDataBodyDef2()

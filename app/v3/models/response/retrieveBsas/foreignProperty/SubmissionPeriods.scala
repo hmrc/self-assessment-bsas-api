@@ -22,10 +22,11 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class SubmissionPeriods(submissionId: String, startDate: String, endDate: String, receivedDateTime: String)
 
 object SubmissionPeriods {
+
   implicit val reads: Reads[SubmissionPeriods] = ((JsPath \ "periodId").read[String] and
     (JsPath \ "startDate").read[String] and
     (JsPath \ "endDate").read[String] and
-    (JsPath \ "receivedDateTime").read[String]) (SubmissionPeriods.apply _)
+    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriods.apply _)
 
   implicit val writes: OWrites[SubmissionPeriods] = Json.writes[SubmissionPeriods]
 }

@@ -28,12 +28,11 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec {
   private val calculationId: String                = "calcId"
   private val userType: String                     = "Agent"
   private val agentReferenceNumber: Option[String] = Some("012345678")
-  private val userDetails: UserDetails = UserDetails(calculationId, userType, agentReferenceNumber)
+  private val userDetails: UserDetails             = UserDetails(calculationId, userType, agentReferenceNumber)
   private val pathParams: Map[String, String]      = Map("nino" -> nino, "calculationId" -> calculationId)
-  private val itsaStatuses: Option[JsValue]         = Some(Json.obj("field1" -> "value1"))
+  private val itsaStatuses: Option[JsValue]        = Some(Json.obj("field1" -> "value1"))
   private val xCorrId                              = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
   private val versionNumber: String                = "3.0"
-
 
   private val flattenedGenericAuditDetailSuccess: FlattenedGenericAuditDetail =
     FlattenedGenericAuditDetail(
@@ -44,8 +43,8 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec {
       history = None,
       itsaStatuses = itsaStatuses,
       `X-CorrelationId` = xCorrId,
-      auditResponse = auditResponseModelWithBody)
-
+      auditResponse = auditResponseModelWithBody
+    )
 
   private val flattenedGenericAuditDetailJsonSuccess: JsValue = Json.parse(
     s"""
@@ -72,8 +71,8 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec {
       history = None,
       itsaStatuses = itsaStatuses,
       `X-CorrelationId` = xCorrId,
-      auditResponse = auditResponseModelWithErrors)
-
+      auditResponse = auditResponseModelWithErrors
+    )
 
   private val flattenedGenericAuditDetailJsonErrors: JsValue = Json.parse(
     s"""
@@ -95,7 +94,6 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec {
      """.stripMargin
   )
 
-
   "FlattenedGenericAuditDetailSpec" when {
     "written to JSON" should {
       "produce the expected JsObject" in {
@@ -111,4 +109,5 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec {
     }
 
   }
+
 }

@@ -25,10 +25,11 @@ trait SubmitForeignPropertyBsasRequestBody
 
 object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = writesFrom { case def1: Def1_SubmitForeignPropertyBsasRequestBody =>
-    implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(def1)
-  case def2: Def2_SubmitForeignPropertyBsasRequestBody =>
-    implicitly[OWrites[Def2_SubmitForeignPropertyBsasRequestBody]].writes(def2)
+  implicit val writes: OWrites[SubmitForeignPropertyBsasRequestBody] = writesFrom {
+    case def1: Def1_SubmitForeignPropertyBsasRequestBody =>
+      implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(def1)
+    case def2: Def2_SubmitForeignPropertyBsasRequestBody =>
+      implicitly[OWrites[Def2_SubmitForeignPropertyBsasRequestBody]].writes(def2)
   }
 
 }

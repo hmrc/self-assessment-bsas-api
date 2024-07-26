@@ -52,4 +52,5 @@ object TypeOfBusiness {
   case object `foreign-property` extends TypeOfBusiness {
     val asDownstreamValue: String = "15"
   }
+
 }

@@ -29,6 +29,7 @@ case class Inputs(businessId: String,
                   submissionPeriods: Seq[SubmissionPeriods])
 
 object Inputs {
+
   implicit val reads: Reads[Inputs] = (
     (JsPath \ "incomeSourceId").read[String] and
       (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
@@ -37,7 +38,7 @@ object Inputs {
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[String] and
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriods]]
-    ) (Inputs.apply _)
+  )(Inputs.apply _)
 
   implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
 }
