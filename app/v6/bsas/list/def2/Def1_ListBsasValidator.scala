@@ -23,9 +23,9 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import shared.models.domain.TaxYear
 import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
-import v5.bsas.list.def1.model.request.Def1_ListBsasRequestData
-import v5.bsas.list.model.request.ListBsasRequestData
-import v5.common.resolvers.ResolveTypeOfBusiness
+import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
+import v6.bsas.list.model.request.ListBsasRequestData
+import v6.common.resolvers.ResolveTypeOfBusiness
 
 object Def1_ListBsasValidator extends ResolverSupport {
   private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
