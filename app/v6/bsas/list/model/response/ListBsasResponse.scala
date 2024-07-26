@@ -20,7 +20,7 @@ import cats.Functor
 import play.api.libs.json.{OWrites, Writes}
 import shared.utils.JsonWritesUtil
 import v6.bsas.list.def1.model.response.{Def1_BsasSummary, Def1_ListBsasResponse}
-import v6.common.model.TypeOfBusiness
+import v6.common.model.TypeOfBusinessWithFHL
 
 trait BsasSummary {
   def calculationId: String
@@ -35,7 +35,7 @@ object BsasSummary extends JsonWritesUtil {
 }
 
 trait ListBsasResponse[+I] {
-  def typeOfBusinessFor[A >: I](item: A): Option[TypeOfBusiness]
+  def typeOfBusinessFor[A >: I](item: A): Option[TypeOfBusinessWithFHL]
 
   def mapItems[B](f: I => B): ListBsasResponse[B]
 }
