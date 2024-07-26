@@ -19,7 +19,7 @@ package v6.bsas.list.def1.model.response
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import shared.models.domain.TaxYear
-import v6.common.model.{IncomeSourceType, TypeOfBusinessWithFHL}
+import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class BusinessSource[I](
     businessId: String,
@@ -34,7 +34,7 @@ object BusinessSource {
   implicit def reads[I: Reads]: Reads[BusinessSource[I]] =
     (
       (JsPath \ "incomeSourceId").read[String] and
-        (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusinessWithFHL) and
+        (JsPath \ "incomeSourceType").read[IncomeSourceTypeWithFHL].map(_.toTypeOfBusiness) and
         JsPath.read[AccountingPeriod] and
         (JsPath \ "taxYear").read[Int].map(TaxYear.fromDownstreamInt) and
         (JsPath \ "ascCalculations").read[Seq[I]]
