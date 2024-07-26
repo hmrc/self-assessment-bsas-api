@@ -380,7 +380,9 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           List(
             (
               (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost")).foreach { case (body, path) => testWith(body, path, min = "-99999999999.99") }
+              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost")).foreach { case (body, path) =>
+            testWith(body, path, min = "-99999999999.99")
+          }
         }
 
         "consolidated expenses is invalid" when {

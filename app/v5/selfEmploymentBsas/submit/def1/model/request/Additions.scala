@@ -36,8 +36,9 @@ case class Additions(costOfGoodsDisallowable: Option[BigDecimal],
 
   val nonEmpty: Boolean = this match {
     case Additions(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None) => false
-    case _ => true
+    case _                                                                                                   => true
   }
+
 }
 
 object Additions {

@@ -25,7 +25,12 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{retrieveForeignPropertyBsasDesFhlJson, retrieveForeignPropertyBsasDesNonFhlJson, retrieveForeignPropertyBsasMtdFhlJson, retrieveForeignPropertyBsasMtdNonFhlJson}
+import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
+  retrieveForeignPropertyBsasDesFhlJson,
+  retrieveForeignPropertyBsasDesNonFhlJson,
+  retrieveForeignPropertyBsasMtdFhlJson,
+  retrieveForeignPropertyBsasMtdNonFhlJson
+}
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures
 

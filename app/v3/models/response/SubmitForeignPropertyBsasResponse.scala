@@ -25,6 +25,7 @@ import v3.hateoas.HateoasLinks
 object SubmitForeignPropertyBsasResponse extends HateoasLinks {
 
   implicit object SubmitForeignPropertyAdjustmentHateoasFactory extends HateoasLinksFactory[Unit, SubmitForeignPropertyBsasHateoasData] {
+
     override def links(appConfig: AppConfig, data: SubmitForeignPropertyBsasHateoasData): Seq[Link] = {
       import data._
 
@@ -32,7 +33,9 @@ object SubmitForeignPropertyBsasResponse extends HateoasLinks {
         getForeignPropertyBsas(appConfig, nino, bsasId, taxYear)
       )
     }
+
   }
+
 }
 
 case class SubmitForeignPropertyBsasHateoasData(nino: String, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

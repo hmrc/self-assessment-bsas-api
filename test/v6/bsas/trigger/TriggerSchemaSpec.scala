@@ -41,8 +41,8 @@ class TriggerSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wit
         }
       }
       "use Def1 for tax year 2023-24" in {
-          val taxYear = TaxYear.fromMtd("2023-24")
-          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
+        val taxYear = TaxYear.fromMtd("2023-24")
+        TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
       }
 
       "use Def2 for tax years from 2024-25" in {

@@ -24,8 +24,7 @@ import v6.bsas.trigger.def2.model.response.Def2_TriggerBsasResponse
 
 object Def2_TriggerBsasFixtures {
 
-  val mtdJson: JsValue = Json.parse(
-    """
+  val mtdJson: JsValue = Json.parse("""
       |{
       |  "accountingPeriod" : {
       |     "startDate" : "2018-11-25",
@@ -36,8 +35,7 @@ object Def2_TriggerBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamJson: JsValue = Json.parse(
-    """
+  val downstreamJson: JsValue = Json.parse("""
       |{
       |   "incomeSourceType" : "01",
       |   "incomeSourceId" : "anId",
@@ -66,8 +64,7 @@ object Def2_TriggerBsasFixtures {
        |}""".stripMargin
   )
 
-  val requestBody: JsValue = Json.parse(
-    """
+  val requestBody: JsValue = Json.parse("""
       |{
       |  "accountingPeriod": {
       |    "startDate": "2019-05-05",
@@ -78,8 +75,7 @@ object Def2_TriggerBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestBodyForProperty: JsValue = Json.parse(
-    """
+  val requestBodyForProperty: JsValue = Json.parse("""
       |{
       |  "accountingPeriod": {
       |    "startDate": "2019-05-05",
@@ -197,15 +193,15 @@ object Def2_TriggerBsasFixtures {
     AnyContentAsJson(
       Json.obj(
         "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness" -> typeOfBusiness,
-        "businessId" -> businessId)
+        "typeOfBusiness"   -> typeOfBusiness,
+        "businessId"       -> businessId)
     )
   }
 
   def triggerBsasRequestDataBodyDef2(startDate: String = "2019-05-05",
-                                 endDate: String = "2020-05-06",
-                                 typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
-                                 businessId: String = "XAIS12345678901"): Def2_TriggerBsasRequestBody = {
+                                     endDate: String = "2020-05-06",
+                                     typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
+                                     businessId: String = "XAIS12345678901"): Def2_TriggerBsasRequestBody = {
     Def2_TriggerBsasRequestBody(
       AccountingPeriod(startDate, endDate),
       typeOfBusiness = typeOfBusiness.toString,

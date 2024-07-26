@@ -24,7 +24,11 @@ import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{downstreamRetrieveBsasResponseJson, mtdRetrieveBsasResponseJson, retrieveBsasResponseModel}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
+  downstreamRetrieveBsasResponseJson,
+  mtdRetrieveBsasResponseJson,
+  retrieveBsasResponseModel
+}
 
 class RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators {
 

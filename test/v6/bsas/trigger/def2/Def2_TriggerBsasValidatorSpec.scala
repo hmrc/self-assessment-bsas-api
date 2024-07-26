@@ -32,7 +32,7 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
 
   private implicit val correlationId: String = "1234"
 
-  private val validNino = "AA123456A"
+  private val validNino  = "AA123456A"
   private val parsedNino = Nino(validNino)
 
   private def validator(nino: String, body: JsValue) = new Def2_TriggerBsasValidator(nino, body)
@@ -43,8 +43,8 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
                                      businessId: String = "XAIS12345678901"): JsObject = {
     Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-      "typeOfBusiness" -> typeOfBusiness,
-      "businessId" -> businessId
+      "typeOfBusiness"   -> typeOfBusiness,
+      "businessId"       -> businessId
     )
   }
 
@@ -61,7 +61,7 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
         "foreign-property"
       ).foreach { typeOfBusiness =>
         s"$typeOfBusiness is supplied" in new SetUp {
-          val body: JsObject = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness)
+          val body: JsObject                            = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness)
           val expectedBody: Def2_TriggerBsasRequestBody = body.as[Def2_TriggerBsasRequestBody]
 
           val result: Validated[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
@@ -152,7 +152,7 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
       }
 
       "mandatory fields are missing" in new SetUp {
-        val requestJs: JsObject = Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
+        val requestJs: JsObject                                  = Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
         val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, requestJs).validateAndWrapResult()
 
         result shouldBe Left(
@@ -174,7 +174,7 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
 
     "return a RuleEndBeforeStartDateError" when {
       "the end date is equal to start date" in new SetUp {
-        val body: JsObject = triggerBsasRequestJson(startDate = "2022-05-07", endDate = "2022-05-07")
+        val body: JsObject                            = triggerBsasRequestJson(startDate = "2022-05-07", endDate = "2022-05-07")
         val expectedBody: Def2_TriggerBsasRequestBody = body.as[Def2_TriggerBsasRequestBody]
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, body).validateAndWrapResult()
@@ -219,7 +219,7 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
           (TypeOfBusiness.`foreign-property`, "2021-04-06")
         ).foreach { case (typeOfBusiness, endDate) =>
           s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in new SetUp {
-            private val body = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
+            private val body         = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
             private val expectedBody = body.as[Def2_TriggerBsasRequestBody]
 
             val result: Validated[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate

@@ -21,16 +21,14 @@ import shared.utils.UnitSpec
 
 class AccountingPeriodSpec extends UnitSpec {
 
-  private val requestJson = Json.parse(
-    """
+  private val requestJson = Json.parse("""
       |{
       |  "startDate" : "2018-11-25",
       |  "endDate" : "2018-11-26"
       |}
   """.stripMargin)
 
-  private val invalidJson = Json.parse(
-    """
+  private val invalidJson = Json.parse("""
       |{
       |  "startDate" : 4,
       |  "endDate" : true

@@ -19,7 +19,11 @@ package v3.models.response.retrieveBsas.selfEmployment
 import play.api.libs.json.Json
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{adjustmentsAdditionsModel, downstreamAdjustmentsAdditionsJson, mtdAdjustmentsAdditionsJson}
+import v3.fixtures.selfEmployment.RetrieveSelfEmploymentBsasFixtures.{
+  adjustmentsAdditionsModel,
+  downstreamAdjustmentsAdditionsJson,
+  mtdAdjustmentsAdditionsJson
+}
 
 class AdjustmentsAdditionsSpec extends UnitSpec with JsonErrorValidators {
 

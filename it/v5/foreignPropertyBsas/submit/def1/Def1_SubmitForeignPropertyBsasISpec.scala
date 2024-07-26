@@ -25,7 +25,11 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs._
 import support.IntegrationBaseSpec
-import v5.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestNonFhlFull, mtdRequestValid}
+import v5.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{
+  downstreamRequestValid,
+  mtdRequestNonFhlFull,
+  mtdRequestValid
+}
 
 class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 

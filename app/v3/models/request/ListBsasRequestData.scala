@@ -16,6 +16,6 @@
 
 package v3.models.request
 
-import shared.models.domain.{ BusinessId, Nino, TaxYear }
+import shared.models.domain.{BusinessId, Nino, TaxYear}
 
 case class ListBsasRequestData(nino: Nino, taxYear: TaxYear, incomeSourceId: Option[BusinessId], incomeSourceType: Option[String])

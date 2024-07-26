@@ -31,7 +31,7 @@ class SubmitSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenP
       }
 
       "use Def1 for pre-TYS tax years" in {
-        forPreTysTaxYears{ taxYear =>
+        forPreTysTaxYears { taxYear =>
           SubmitSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitSelfEmploymentBsasSchema.Def1
         }
       }

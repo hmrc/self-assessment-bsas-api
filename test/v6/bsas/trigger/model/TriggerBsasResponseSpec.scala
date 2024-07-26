@@ -68,8 +68,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
     "read from valid JSON" should {
       "return the expected TriggerBsasResponse object" in {
         Json
-          .parse(
-            """
+          .parse("""
               |{
               |   "metadata" : {
               |       "calculationId" : "anId"
@@ -83,8 +82,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
     "read from invalid JSON" should {
       "return a JsError" in {
         Json
-          .parse(
-            """
+          .parse("""
               |{
               |   "calculationId" : 3
               |}
@@ -95,8 +93,7 @@ class TriggerBsasResponseSpec extends UnitSpec {
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(triggerBsasResponseDef2) shouldBe Json.parse(
-          """
+        Json.toJson(triggerBsasResponseDef2) shouldBe Json.parse("""
             |{
             |   "calculationId" : "anId"
             |}

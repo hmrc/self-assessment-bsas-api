@@ -25,4 +25,5 @@ object FhlIncome {
 
   implicit val writes: OWrites[FhlIncome] =
     (JsPath \ "rentAmount").writeNullable[BigDecimal].contramap((o: FhlIncome) => o.totalRentsReceived)
+
 }

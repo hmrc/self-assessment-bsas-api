@@ -34,17 +34,20 @@ object TriggerBsasResponse extends HateoasLinks {
     (JsPath \ "metadata" \ "calculationId").read[String].map(TriggerBsasResponse.apply)
 
   implicit object TriggerHateoasFactory extends HateoasLinksFactory[TriggerBsasResponse, TriggerBsasHateoasData] {
+
     override def links(appConfig: AppConfig, data: TriggerBsasHateoasData): Seq[Link] = {
       import data._
       import v3.models.domain.TypeOfBusiness._
 
       data.typeOfBusiness match {
-        case `self-employment` => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))
-        case `uk-property-fhl` | `uk-property-non-fhl` => Seq(getUkPropertyBsas(appConfig, nino, bsasId, taxYear))
+        case `self-employment`                               => Seq(getSelfEmploymentBsas(appConfig, nino, bsasId, taxYear))
+        case `uk-property-fhl` | `uk-property-non-fhl`       => Seq(getUkPropertyBsas(appConfig, nino, bsasId, taxYear))
         case `foreign-property` | `foreign-property-fhl-eea` => Seq(getForeignPropertyBsas(appConfig, nino, bsasId, taxYear))
       }
     }
+
   }
+
 }
 
 case class TriggerBsasHateoasData(nino: String, typeOfBusiness: TypeOfBusiness, bsasId: String, taxYear: Option[TaxYear]) extends HateoasData

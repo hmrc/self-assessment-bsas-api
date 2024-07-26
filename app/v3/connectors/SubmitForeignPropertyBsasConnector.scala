@@ -28,11 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit hc: HeaderCarrier,
-                                                                               ec: ExecutionContext,
-                                                                               correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
@@ -47,4 +48,5 @@ class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClient, val app
 
     put(body, downstreamUri)
   }
+
 }

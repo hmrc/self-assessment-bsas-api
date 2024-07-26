@@ -72,18 +72,20 @@ trait JsonErrorValidators {
 
   }
 
-  def testJsonFields[A](json: JsValue)(mandatoryFields: Seq[String], optionalFields: Seq[String], modelName: Option[String] = None)(
-    implicit rds: Reads[A]): Unit = {
+  def testJsonFields[A](json: JsValue)(mandatoryFields: Seq[String], optionalFields: Seq[String], modelName: Option[String] = None)(implicit
+      rds: Reads[A]): Unit = {
     s"For data model ${modelName.fold("")(modelName => s"- $modelName")}" when {
       mandatoryFields.foreach(property => testMandatoryFields(json)(property))
       optionalFields.foreach(property => testOptionalFields(json)(property))
     }
   }
+
   def testAllOptionalJsonFieldsExcept[A: Reads](json: JsValue)(exceptMandatoryFields: String*): Unit = {
     val optionalFields = json.as[JsObject].fields.map(_._1).filterNot(field => exceptMandatoryFields.contains(field))
 
     testJsonFields(json)(exceptMandatoryFields, optionalFields.toSeq)
   }
+
   def testOptionalJsonFields[A: Reads](json: JsValue): Unit =
     testAllOptionalJsonFieldsExcept(json)()
 

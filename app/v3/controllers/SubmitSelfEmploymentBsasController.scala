@@ -33,15 +33,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class SubmitSelfEmploymentBsasController @Inject() (
-    val authService: EnrolmentsAuthService,
-    val lookupService: MtdIdLookupService,
-    validatorFactory: SubmitSelfEmploymentBsasValidatorFactory,
-    service: SubmitSelfEmploymentBsasService,
-    hateoasFactory: HateoasFactory,
-    auditService: AuditService,
-    cc: ControllerComponents,
-    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+class SubmitSelfEmploymentBsasController @Inject() (val authService: EnrolmentsAuthService,
+                                                    val lookupService: MtdIdLookupService,
+                                                    validatorFactory: SubmitSelfEmploymentBsasValidatorFactory,
+                                                    service: SubmitSelfEmploymentBsasService,
+                                                    hateoasFactory: HateoasFactory,
+                                                    auditService: AuditService,
+                                                    cc: ControllerComponents,
+                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =

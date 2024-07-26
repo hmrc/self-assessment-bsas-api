@@ -28,8 +28,8 @@ trait TriggerBsasRequestBody {
 object TriggerBsasRequestBody extends JsonWritesUtil {
 
   implicit val writes: OWrites[TriggerBsasRequestBody] = writesFrom {
-    case def1 : Def1_TriggerBsasRequestBody => implicitly[OWrites[Def1_TriggerBsasRequestBody]].writes(def1)
-    case def2 : Def2_TriggerBsasRequestBody => implicitly[OWrites[Def2_TriggerBsasRequestBody]].writes(def2)
+    case def1: Def1_TriggerBsasRequestBody => implicitly[OWrites[Def1_TriggerBsasRequestBody]].writes(def1)
+    case def2: Def2_TriggerBsasRequestBody => implicitly[OWrites[Def2_TriggerBsasRequestBody]].writes(def2)
   }
 
 }

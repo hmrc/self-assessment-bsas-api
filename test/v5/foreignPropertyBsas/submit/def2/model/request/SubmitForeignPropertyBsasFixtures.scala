@@ -46,8 +46,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val mtdRequestNonFhlValid: JsValue = Json.parse(
-    """
+  val mtdRequestNonFhlValid: JsValue = Json.parse("""
       |{
       |   "nonFurnishedHolidayLet":  [
       |       {

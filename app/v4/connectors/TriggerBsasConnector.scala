@@ -31,9 +31,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class TriggerBsasConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def triggerBsas(request: TriggerBsasRequestData)(implicit
-                                                   hc: HeaderCarrier,
-                                                   ec: ExecutionContext,
-                                                   correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
     import request._
 
@@ -49,4 +49,3 @@ class TriggerBsasConnector @Inject() (val http: HttpClient, val appConfig: AppCo
   }
 
 }
-

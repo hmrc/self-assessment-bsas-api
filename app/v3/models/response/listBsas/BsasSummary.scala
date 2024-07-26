@@ -27,13 +27,14 @@ case class BsasSummary(calculationId: String,
                        adjustedDateTime: Option[String])
 
 object BsasSummary {
+
   implicit val reads: Reads[BsasSummary] = (
     (JsPath \ "calculationId").read[String] and
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean] and
       (JsPath \ "adjustedDateTime").readNullable[String]
-    ) (BsasSummary.apply _)
+  )(BsasSummary.apply _)
 
   implicit val writes: OWrites[BsasSummary] = Json.writes[BsasSummary]
 }

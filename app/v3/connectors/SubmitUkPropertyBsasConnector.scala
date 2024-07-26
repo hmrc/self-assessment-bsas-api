@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class SubmitUkPropertyBsasConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def submitPropertyBsas(request: SubmitUkPropertyBsasRequestData)(implicit
-                                                                   hc: HeaderCarrier,
-                                                                   ec: ExecutionContext,
-                                                                   correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 
@@ -53,4 +53,5 @@ class SubmitUkPropertyBsasConnector @Inject()(val http: HttpClient, val appConfi
       uri = downstreamUri
     )
   }
+
 }

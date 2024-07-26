@@ -32,7 +32,9 @@ object SubmitUkPropertyBsasHateoasData extends HateoasLinks {
 
       Seq(getUkPropertyBsas(appConfig, nino, calculationId, taxYear))
     }
+
   }
+
 }
 
 case class SubmitUkPropertyBsasHateoasData(nino: String, calculationId: String, taxYear: Option[TaxYear]) extends HateoasData

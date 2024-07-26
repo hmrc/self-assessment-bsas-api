@@ -23,14 +23,14 @@ import play.api.libs.json._
 import v4.models.domain.{IncomeSourceType, TypeOfBusiness}
 
 case class Inputs(
-                   typeOfBusiness: TypeOfBusiness,
-                   businessId: String,
-                   businessName: Option[String],
-                   accountingPeriodStartDate: String,
-                   accountingPeriodEndDate: String,
-                   source: Source,
-                   submissionPeriods: Seq[SubmissionPeriod]
-                 )
+    typeOfBusiness: TypeOfBusiness,
+    businessId: String,
+    businessName: Option[String],
+    accountingPeriodStartDate: String,
+    accountingPeriodEndDate: String,
+    source: Source,
+    submissionPeriods: Seq[SubmissionPeriod]
+)
 
 object Inputs {
 
@@ -42,7 +42,7 @@ object Inputs {
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[Source] and
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
-    ) (Inputs.apply _)
+  )(Inputs.apply _)
 
   implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
 }

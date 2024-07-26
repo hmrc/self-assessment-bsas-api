@@ -19,12 +19,12 @@ package v3.models.response.retrieveBsas.ukProperty
 import play.api.libs.json._
 
 case class SubmissionPeriod(
-                             periodId: Option[String],
-                             submissionId: Option[String],
-                             startDate: String,
-                             endDate: String,
-                             receivedDateTime: String,
-                           )
+    periodId: Option[String],
+    submissionId: Option[String],
+    startDate: String,
+    endDate: String,
+    receivedDateTime: String
+)
 
 object SubmissionPeriod {
 
@@ -32,10 +32,10 @@ object SubmissionPeriod {
 
   implicit val reads: Reads[SubmissionPeriod] = (json: JsValue) => {
     for {
-      startDate <- (json \ "startDate").validate[String]
-      endDate <- (json \ "endDate").validate[String]
+      startDate        <- (json \ "startDate").validate[String]
+      endDate          <- (json \ "endDate").validate[String]
       receivedDateTime <- (json \ "receivedDateTime").validate[String]
-      id <- (json \ "periodId").validate[String]
+      id               <- (json \ "periodId").validate[String]
       (periodId, submissionId) = {
         if (id.matches(periodIdRegex)) {
           (Some(id), None)
@@ -44,7 +44,8 @@ object SubmissionPeriod {
         }
       }
     } yield {
-      SubmissionPeriod(periodId = periodId,
+      SubmissionPeriod(
+        periodId = periodId,
         submissionId = submissionId,
         startDate = startDate,
         endDate = endDate,
