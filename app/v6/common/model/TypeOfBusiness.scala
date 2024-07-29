@@ -19,7 +19,7 @@ package v6.common.model
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-trait TypeOfBusiness {
+sealed trait TypeOfBusiness {
   def asDownstreamValue: String
 }
 

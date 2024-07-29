@@ -19,7 +19,7 @@ package v6.common.model
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-sealed trait TypeOfBusinessWithFHL extends TypeOfBusiness
+sealed trait TypeOfBusinessWithFHL
 
 trait HasTypeOfBusinessWithFHL {
   def typeOfBusiness: TypeOfBusinessWithFHL
