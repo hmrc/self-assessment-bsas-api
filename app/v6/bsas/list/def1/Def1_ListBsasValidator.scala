@@ -33,7 +33,7 @@ object Def1_ListBsasValidator extends ResolverSupport {
   private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
     satisfiesMin(listMinimumTaxYear, RuleTaxYearNotSupportedError)
 
-  private val resolveBusinessId     = ResolveBusinessId.resolver.resolveOptionally
+  private val resolveBusinessId            = ResolveBusinessId.resolver.resolveOptionally
   private val resolveTypeOfBusinessWithFHL = ResolveTypeOfBusinessWithFHL.resolver.resolveOptionally
 }
 

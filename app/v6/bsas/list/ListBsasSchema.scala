@@ -50,8 +50,7 @@ object ListBsasSchema {
   def schemaFor(taxYear: TaxYear): ListBsasSchema = {
     if (taxYear <= TaxYear.starting(2023)) {
       Def1
-    }
-    else {
+    } else {
       Def2
     }
   }

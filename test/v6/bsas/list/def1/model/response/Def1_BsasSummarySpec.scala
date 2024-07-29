@@ -26,22 +26,22 @@ class Def1_BsasSummarySpec extends UnitSpec with Def1_ListBsasFixtures {
   "BsasSummary" when {
     "read from valid JSON" should {
       "return the expected data object" in {
-          val result: BsasSummary = bsasSummaryDownstreamJson.as[Def1_BsasSummary]
-          result shouldBe bsasSummary
+        val result: BsasSummary = bsasSummaryDownstreamJson.as[Def1_BsasSummary]
+        result shouldBe bsasSummary
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-          val result: JsResult[BsasSummary] = JsObject.empty.validate[Def1_BsasSummary]
-          result shouldBe a[JsError]
+        val result: JsResult[BsasSummary] = JsObject.empty.validate[Def1_BsasSummary]
+        result shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "return the expected JSON" in {
-          val result = Json.toJson(bsasSummary)
-          result shouldBe bsasSummaryJson
+        val result = Json.toJson(bsasSummary)
+        result shouldBe bsasSummaryJson
       }
     }
   }

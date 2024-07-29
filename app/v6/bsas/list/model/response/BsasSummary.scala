@@ -26,8 +26,10 @@ trait BsasSummary {
 }
 
 object BsasSummary extends JsonWritesUtil {
-  implicit val writes: OWrites[BsasSummary] = writesFrom{
+
+  implicit val writes: OWrites[BsasSummary] = writesFrom {
     case def1: Def1_BsasSummary => implicitly[OWrites[Def1_BsasSummary]].writes(def1)
     case def2: Def2_BsasSummary => implicitly[OWrites[Def2_BsasSummary]].writes(def2)
   }
+
 }
