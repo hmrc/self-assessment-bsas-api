@@ -20,7 +20,7 @@ import play.api.libs.json.{JsArray, JsValue, Json}
 import shared.models.domain.{Status, TaxYear}
 import v6.bsas.list.def1.model.response.{AccountingPeriod, BusinessSource, Def1_BsasSummary, Def1_ListBsasResponse}
 import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
-import v6.common.model.TypeOfBusiness
+import v6.common.model.TypeOfBusinessWithFHL
 
 trait Def1_ListBsasFixtures {
 
@@ -260,7 +260,7 @@ trait Def1_ListBsasFixtures {
 
   def businessSourceSummary(taxYear: String = "2019-20"): BusinessSource[Def1_BsasSummary] = BusinessSource(
     businessId = "000000000000210",
-    typeOfBusiness = TypeOfBusiness.`self-employment`,
+    typeOfBusiness = TypeOfBusinessWithFHL.`self-employment`,
     accountingPeriod = accountingPeriod,
     taxYear = TaxYear.fromMtd(taxYear),
     summaries = List(bsasSummary)
