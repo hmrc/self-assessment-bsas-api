@@ -9,5 +9,5 @@ GET         /:nino/uk-property/:calculationId             v5.ukPropertyBsas.retr
 POST        /:nino/uk-property/:calculationId/adjust      v5.ukPropertyBsas.submit.SubmitUkPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear: Option[String])
 
 GET         /:nino/foreign-property/:calculationId        v5.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
-POST        /:nino/foreign-property/:calculationId/adjust v5.foreignPropertyBsas.submit.SubmitForeignPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear:Option[String])
+POST        /:nino/foreign-property/:calculationId/adjust v6.foreignPropertyBsas.submit.SubmitForeignPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear:Option[String])
 
