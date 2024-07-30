@@ -28,7 +28,7 @@ import v6.bsas.list.model.request.ListBsasRequestData
 import v6.common.resolvers.ResolveTypeOfBusiness
 
 object Def2_ListBsasValidator extends ResolverSupport {
-  private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
+  private val listMinimumTaxYear = TaxYear.fromMtd("2025-26")
 
   private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
     satisfiesMin(listMinimumTaxYear, RuleTaxYearNotSupportedError)
