@@ -35,7 +35,7 @@ post:
         schema:
           oneOf:
             - $ref: "./schemas/trigger/def1/request.json"
-            - $ref: "./schemas/trigger/def3/request.json"
+            - $ref: "./schemas/trigger/def2/request.json"
         examples:
           PRE-TY-2024-25-Self-Employment:
             description: Self-employment Trigger for TY 2023-24 and before
@@ -44,7 +44,7 @@ post:
           TY-2024-25-Self-Employment:
             description: Self-employment Trigger for TY 2024-25 and after
             value:
-              $ref: "./examples/trigger/def3/trigger_se_request.json"
+              $ref: "./examples/trigger/def2/trigger_se_request.json"
           PRE-TY-2024-25-UK-Property-NON-FHL:
             description: UK Property Non-FHL Trigger for TY 2023-24 and before
             value:
@@ -52,7 +52,7 @@ post:
           TY-2024-25-UK-Property:
             description: UK Property Trigger for TY 2024-25 and after
             value:
-              $ref: "./examples/trigger/def3/trigger_uk_property_request.json"
+              $ref: "./examples/trigger/def2/trigger_uk_property_request.json"
           PRE-TY-2024-25-Foreign-Property-Income-Response:
             description: Foreign Property Trigger for TY 2023-24 and before
             value:
@@ -60,7 +60,7 @@ post:
           TY-2024-25-Foreign-Property-Income-Response:
             description: Foreign Property Trigger for TY 2024-25 and after
             value:
-              $ref: "./examples/trigger/def3/trigger_foreign_property_request.json"
+              $ref: "./examples/trigger/def2/trigger_foreign_property_request.json"
 
   responses:
     200:
@@ -86,7 +86,7 @@ post:
             TY-2024-25-Self-Employment-Response:
               description: Self-employment example response
               value:
-                $ref: "./examples/trigger/def3/trigger_se_response.json"
+                $ref: "./examples/trigger/def2/trigger_se_response.json"
             PRE-TY-2024-25-UK-NON-FHL-Response:
               description: UK Non Fhl Property example response
               value:
@@ -94,7 +94,7 @@ post:
             TY-2024-25-UK-Property-Response:
               description: UK Property example response
               value:
-                $ref: "./examples/trigger/def3/trigger_uk_property_response.json"
+                $ref: "./examples/trigger/def2/trigger_uk_property_response.json"
             PRE-TY-2024-25-Foreign-Property-Income-Response:
               description: Foreign Property example response
               value:
@@ -102,7 +102,7 @@ post:
             TY-2024-25-FOREIGN-PROPERTY-INCOME-Response:
               description: Foreign Property example response
               value:
-                $ref: "./examples/trigger/def3/trigger_foreign_property_response.json"
+                $ref: "./examples/trigger/def2/trigger_foreign_property_response.json"
     400:
       description: Bad request
       content:
