@@ -23,7 +23,7 @@ import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v6.foreignPropertyBsas.submit.def2.model.request._
+import v6.foreignPropertyBsas.submit.def3.model.request._
 
 import scala.concurrent.Future
 
@@ -33,7 +33,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   private val foreignPropertyBody =
-    Def2_SubmitForeignPropertyBsasRequestBody(
+    Def3_SubmitForeignPropertyBsasRequestBody(
       foreignProperty = Some(
         List(ForeignProperty(
           "FRA",
@@ -53,7 +53,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         )))
     )
 
-  private val request = Def2_SubmitForeignPropertyBsasRequestData(nino, id, None, foreignPropertyBody)
+  private val request = Def3_SubmitForeignPropertyBsasRequestData(nino, id, None, foreignPropertyBody)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

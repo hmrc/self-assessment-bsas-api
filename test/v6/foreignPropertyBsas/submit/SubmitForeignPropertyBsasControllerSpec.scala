@@ -27,7 +27,7 @@ import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v6.foreignPropertyBsas.submit.def2.model.request._
+import v6.foreignPropertyBsas.submit.def3.model.request._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -88,11 +88,11 @@ class SubmitForeignPropertyBsasControllerSpec
         ))
     )
 
-  val requestBody: Def2_SubmitForeignPropertyBsasRequestBody =
-    Def2_SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)))
+  val requestBody: Def3_SubmitForeignPropertyBsasRequestBody =
+    Def3_SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)))
 
   private val requestData =
-    Def2_SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, Some(taxYear), requestBody)
+    Def3_SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, Some(taxYear), requestBody)
 
   "handleRequest" should {
     "return OK" when {

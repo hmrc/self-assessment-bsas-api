@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2.model.request
+package v6.foreignPropertyBsas.submit.def3.model.request
 
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestBody
 
-case class Def2_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet: Option[Seq[ForeignProperty]],
-    foreignFhlEea: Option[FhlEea]
+case class Def3_SubmitForeignPropertyBsasRequestBody(
+    foreignProperty: Option[Seq[ForeignProperty]]
 ) extends SubmitForeignPropertyBsasRequestBody
 
-object Def2_SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
-  implicit val reads: Reads[Def2_SubmitForeignPropertyBsasRequestBody] = Json.reads
+object Def3_SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
+  implicit val reads: Reads[Def3_SubmitForeignPropertyBsasRequestBody] = Json.reads
 
-  implicit val writes: OWrites[Def2_SubmitForeignPropertyBsasRequestBody] = new OWrites[Def2_SubmitForeignPropertyBsasRequestBody] {
+  implicit val writes: OWrites[Def3_SubmitForeignPropertyBsasRequestBody] = new OWrites[Def3_SubmitForeignPropertyBsasRequestBody] {
 
-    override def writes(o: Def2_SubmitForeignPropertyBsasRequestBody): JsObject = {
-      writeIfPresent(o.nonFurnishedHolidayLet, incomeSourceType = "15")
-        .orElse(writeIfPresent(o.foreignFhlEea, incomeSourceType = "03"))
+    override def writes(o: Def3_SubmitForeignPropertyBsasRequestBody): JsObject = {
+      writeIfPresent(o.foreignProperty, incomeSourceType = "15")
         .getOrElse(JsObject.empty)
     }
 

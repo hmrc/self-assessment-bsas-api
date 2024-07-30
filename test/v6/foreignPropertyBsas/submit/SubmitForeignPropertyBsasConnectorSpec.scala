@@ -19,7 +19,7 @@ package v6.foreignPropertyBsas.submit
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v6.foreignPropertyBsas.submit.def2.model.request.{Def2_SubmitForeignPropertyBsasRequestBody, Def2_SubmitForeignPropertyBsasRequestData}
+import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
 import scala.concurrent.Future
@@ -29,14 +29,14 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   private val nino          = Nino("AA123456A")
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  private val parsedSubmitForeignPropertyBsasRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None)
+  private val parsedSubmitForeignPropertyBsasRequestBody = Def3_SubmitForeignPropertyBsasRequestBody(None)
 
   trait Test {
     _: ConnectorTest =>
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def requestWith(taxYear: Option[TaxYear]): SubmitForeignPropertyBsasRequestData =
-      Def2_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, parsedSubmitForeignPropertyBsasRequestBody)
+      Def3_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, parsedSubmitForeignPropertyBsasRequestBody)
 
   }
 

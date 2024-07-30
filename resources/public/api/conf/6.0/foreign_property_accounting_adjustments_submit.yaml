@@ -46,7 +46,7 @@ post:
         schema:
           oneOf:
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def1/request.json'
-            - $ref: './schemas/submit_foreign_property_accounting_adjustments/def2/request.json'
+            - $ref: './schemas/submit_foreign_property_accounting_adjustments/def3/request.json'
         examples:
           example-1:
             description: Foreign Property EEA FHL

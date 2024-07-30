@@ -27,6 +27,7 @@ object SubmitForeignPropertyBsasSchema {
 
   case object Def1 extends SubmitForeignPropertyBsasSchema
   case object Def2 extends SubmitForeignPropertyBsasSchema
+  case object Def3 extends SubmitForeignPropertyBsasSchema
 
   private val defaultSchema = Def1
 
@@ -39,7 +40,8 @@ object SubmitForeignPropertyBsasSchema {
 
   def schemaFor(taxYear: TaxYear): SubmitForeignPropertyBsasSchema = {
     if (taxYear <= TaxYear.starting(2023)) Def1
-    else Def2
+    else if (taxYear == TaxYear.starting(2024)) Def2
+    else Def3
   }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2.model.request
+package v6.foreignPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsValue, Json}
 
@@ -38,31 +38,6 @@ object SubmitForeignPropertyBsasFixtures {
       |              "professionalFees": 8.12,
       |              "costOfServices": 9.12,
       |              "residentialFinancialCost": 10.12,
-      |              "other": 11.12,
-      |              "travelCosts": 12.12
-      |          }
-      |       }
-      |    ]
-      |}
-      |""".stripMargin)
-
-  val mtdRequestNonFhlValid: JsValue = Json.parse("""
-      |{
-      |   "nonFurnishedHolidayLet":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "totalRentsReceived": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": -3000.93,
       |              "other": 11.12,
       |              "travelCosts": 12.12
       |          }
@@ -98,7 +73,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFull: Def2_SubmitForeignPropertyBsasRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(
+  val requestNonFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
     nonFurnishedHolidayLet = Some(
       List(
         ForeignProperty(
@@ -166,7 +141,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestFhlFull: Def2_SubmitForeignPropertyBsasRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(
+  val requestFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
     nonFurnishedHolidayLet = None,
     foreignFhlEea = Some(
       FhlEea(

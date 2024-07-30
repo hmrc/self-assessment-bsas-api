@@ -20,6 +20,7 @@ import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 import v6.foreignPropertyBsas.submit.def1.model.request.Def1_SubmitForeignPropertyBsasRequestBody
 import v6.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestBody
+import v6.foreignPropertyBsas.submit.def3.model.request.Def3_SubmitForeignPropertyBsasRequestBody
 
 trait SubmitForeignPropertyBsasRequestBody
 
@@ -30,6 +31,8 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
       implicitly[OWrites[Def1_SubmitForeignPropertyBsasRequestBody]].writes(def1)
     case def2: Def2_SubmitForeignPropertyBsasRequestBody =>
       implicitly[OWrites[Def2_SubmitForeignPropertyBsasRequestBody]].writes(def2)
+    case def3: Def3_SubmitForeignPropertyBsasRequestBody =>
+      implicitly[OWrites[Def3_SubmitForeignPropertyBsasRequestBody]].writes(def3)
   }
 
 }

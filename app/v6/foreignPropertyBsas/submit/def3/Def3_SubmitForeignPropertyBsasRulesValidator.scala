@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2
+package v6.foreignPropertyBsas.submit.def3
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
@@ -23,30 +23,19 @@ import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v6.foreignPropertyBsas.submit.def2.model.request._
+import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestData, ForeignProperty, ForeignPropertyExpenses}
 
-object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitForeignPropertyBsasRequestData] {
+object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_SubmitForeignPropertyBsasRequestData] {
 
   def validateBusinessRules(
-      parsed: Def2_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def2_SubmitForeignPropertyBsasRequestData] = {
+      parsed: Def3_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def3_SubmitForeignPropertyBsasRequestData] = {
     import parsed.body
 
-    val (validatedForeignFhlEea, validatedForeignFhlEeaConsolidated) = body.foreignFhlEea match {
-      case Some(fhlEea) =>
-        (
-          validateForeignFhlEea(fhlEea),
-          validateForeignFhlEeaConsolidatedExpenses(fhlEea)
-        )
-
-      case None =>
-        (valid, valid)
-    }
-
-    val (validatedNonFurnishedHolidayLets, validatedDuplicateCountryCode) = body.nonFurnishedHolidayLet match {
+    val (validatedForeignProperties, validatedDuplicateCountryCode) = body.foreignProperty match {
       case Some(foreignProperties) =>
         val foreignPropertiesWithIndex = foreignProperties.zipWithIndex.toList
         (
-          validateNonFurnishedHolidayLets(foreignPropertiesWithIndex),
+          validateForeignProperties(foreignPropertiesWithIndex),
           duplicateCountryCodeValidation(foreignPropertiesWithIndex)
         )
 
@@ -55,9 +44,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
     }
 
     combine(
-      validatedForeignFhlEea,
-      validatedForeignFhlEeaConsolidated,
-      validatedNonFurnishedHolidayLets,
+      validatedForeignProperties,
       validatedDuplicateCountryCode
     ).onSuccess(parsed)
   }
@@ -68,34 +55,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
-  private def validateForeignFhlEea(foreignFhlEea: FhlEea): Validated[Seq[MtdError], Unit] =
-    combine(
-      resolveMaybeNegativeNumber("/foreignFhlEea/income/totalRentsReceived", foreignFhlEea.income.flatMap(_.totalRentsReceived)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/premisesRunningCosts", foreignFhlEea.expenses.flatMap(_.premisesRunningCosts)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/repairsAndMaintenance", foreignFhlEea.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/financialCosts", foreignFhlEea.expenses.flatMap(_.financialCosts)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/professionalFees", foreignFhlEea.expenses.flatMap(_.professionalFees)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/travelCosts", foreignFhlEea.expenses.flatMap(_.travelCosts)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/costOfServices", foreignFhlEea.expenses.flatMap(_.costOfServices)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/other", foreignFhlEea.expenses.flatMap(_.other)),
-      resolveMaybeNegativeNumber("/foreignFhlEea/expenses/consolidatedExpenses", foreignFhlEea.expenses.flatMap(_.consolidatedExpenses))
-    )
-
-  private def validateForeignFhlEeaConsolidatedExpenses(foreignFhlEea: FhlEea): Validated[Seq[MtdError], Unit] = {
-    foreignFhlEea.expenses
-      .collect {
-        case expenses if expenses.consolidatedExpenses.isDefined =>
-          expenses match {
-            case FhlEeaExpenses(None, None, None, None, None, None, None, Some(_)) =>
-              valid
-            case _ =>
-              Invalid(List(RuleBothExpensesError.copy(paths = Some(List("/foreignFhlEea/expenses")))))
-          }
-      }
-      .getOrElse(valid)
-  }
-
-  private def validateNonFurnishedHolidayLets(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
+  private def validateForeignProperties(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
     foreignProperties.traverse_ { case (foreignProperty, i) =>
       validateForeignProperty(foreignProperty, i)
         .combine(validateForeignPropertyConsolidatedExpenses(foreignProperty, i))
@@ -106,7 +66,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
     val duplicateErrors = {
       foreignProperties
         .map { case (entry, idx) =>
-          (entry.countryCode, s"/nonFurnishedHolidayLet/$idx/countryCode")
+          (entry.countryCode, s"/foreignProperty/$idx/countryCode")
         }
         .groupBy(_._1)
         .collect {
@@ -123,7 +83,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
 
   private def validateForeignProperty(foreignProperty: ForeignProperty, index: Int): Validated[Seq[MtdError], Unit] = {
 
-    def path(suffix: String) = s"/nonFurnishedHolidayLet/$index/$suffix"
+    def path(suffix: String) = s"/foreignProperty/$index/$suffix"
 
     combine(
       ResolveParsedCountryCode(foreignProperty.countryCode, path("countryCode")),
@@ -151,7 +111,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
             case ForeignPropertyExpenses(None, None, None, None, None, None, _, None, Some(_)) =>
               valid
             case _ =>
-              Invalid(List(RuleBothExpensesError.copy(paths = Some(List(s"/nonFurnishedHolidayLet/$index/expenses")))))
+              Invalid(List(RuleBothExpensesError.copy(paths = Some(List(s"/foreignProperty/$index/expenses")))))
           }
       }
       .getOrElse(valid)

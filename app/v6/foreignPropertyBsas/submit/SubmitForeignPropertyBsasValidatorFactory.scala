@@ -21,6 +21,7 @@ import shared.controllers.validators.Validator
 import v6.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema._
 import v6.foreignPropertyBsas.submit.def1.Def1_SubmitForeignPropertyBsasValidator
 import v6.foreignPropertyBsas.submit.def2.Def2_SubmitForeignPropertyBsasValidator
+import v6.foreignPropertyBsas.submit.def3.Def3_SubmitForeignPropertyBsasValidator
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -40,6 +41,7 @@ class SubmitForeignPropertyBsasValidatorFactory {
     schema match {
       case Def1 => new Def1_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Def2 => new Def2_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Def3 => new Def3_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
     }
 
   }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2
+package v6.foreignPropertyBsas.submit.def3
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -26,14 +26,14 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.stubs._
 import support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
+import v6.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
   mtdRequestForeignPropertyFull,
   mtdRequestForeignPropertyInvalidResidentialCost,
   mtdRequestForeignPropertyValid
 }
 
-class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
@@ -86,33 +86,33 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
         val input = List(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, mtdRequestForeignPropertyValid, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "BAD_CALC_ID", Some("2024-25"), mtdRequestForeignPropertyValid, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "BAD_CALC_ID", Some("2025-26"), mtdRequestForeignPropertyValid, BAD_REQUEST, CalculationIdFormatError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            Some("2024-25"),
+            Some("2025-26"),
             mtdRequestForeignPropertyFull,
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/0/expenses")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            Some("2024-25"),
+            Some("2025-26"),
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            Some("2024-25"),
+            Some("2025-26"),
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
             CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            Some("2024-25"),
+            Some("2025-26"),
             mtdRequestForeignPropertyInvalidResidentialCost,
             BAD_REQUEST,
             ValueFormatError.copy(
@@ -215,9 +215,9 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
   }
 
   private trait TysIfsTest extends Test {
-    override def taxYear: Option[String] = Some("2024-25")
+    override def taxYear: Option[String] = Some("2025-26")
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino/$calculationId"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
 
   }
 

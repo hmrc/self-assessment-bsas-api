@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2.model.request
+package v6.foreignPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsObject, Json}
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures._
+import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures._
 
-class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
+class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
-  private val parsedEmptyRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None, None)
+  private val parsedEmptyRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, None)
 
   private val parsedNonFhlRequestBody =
-    Def2_SubmitForeignPropertyBsasRequestBody(Some(List(ForeignProperty("FRA", None, None))), None)
+    Def1_SubmitForeignPropertyBsasRequestBody(Some(List(ForeignProperty("FRA", None, None))), None)
 
-  private val parsedFhlRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None, Some(FhlEea(None, None)))
+  private val parsedFhlRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(None, Some(FhlEea(None, None)))
 
   "reads" when {
     "given a simple non-fhl body" should {
@@ -42,7 +42,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-          .as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedNonFhlRequestBody
+          .as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe parsedNonFhlRequestBody
       }
     }
 
@@ -57,25 +57,25 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
             |}
             |""".stripMargin
           )
-          .as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedFhlRequestBody
+          .as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe parsedFhlRequestBody
       }
     }
 
     "given a full non-fhl body" should {
       "return the expected non-fhl data object" in {
-        mtdRequestNonFhlFull.as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe requestNonFhlFull
+        mtdRequestNonFhlFull.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe requestNonFhlFull
       }
     }
 
     "given a full fhl body" should {
       "return the expected fhl data object" in {
-        mtdRequestFhlFull.as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe requestFhlFull
+        mtdRequestFhlFull.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe requestFhlFull
       }
     }
 
     "given an empty body" should {
       "return an empty data object" in {
-        JsObject.empty.as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedEmptyRequestBody
+        JsObject.empty.as[Def1_SubmitForeignPropertyBsasRequestBody] shouldBe parsedEmptyRequestBody
       }
     }
   }

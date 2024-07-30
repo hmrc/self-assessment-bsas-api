@@ -14,31 +14,27 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2
+package v6.foreignPropertyBsas.submit.def3
 
 import cats.data.Validated
 import cats.implicits._
-import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
-import v6.foreignPropertyBsas.submit.def2.model.request
-import v6.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestData
+import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
-object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
+object Def3_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
-  private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "nonFurnishedHolidayLet").resolver thenResolve
-      ResolveNonEmptyJsonObject.resolver[request.Def2_SubmitForeignPropertyBsasRequestBody]
+  private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def3_SubmitForeignPropertyBsasRequestBody]
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
 }
 
-class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def2_SubmitForeignPropertyBsasValidator._
+  import Def3_SubmitForeignPropertyBsasValidator._
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
     (
@@ -46,6 +42,6 @@ class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
       ResolveCalculationId(calculationId),
       resolveTysTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def2_SubmitForeignPropertyBsasRequestData) andThen Def2_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def3_SubmitForeignPropertyBsasRequestData) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 
 }
