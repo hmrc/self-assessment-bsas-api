@@ -50,7 +50,7 @@ object TriggerSchema {
       .getOrElse(defaultSchema)
 
   def schemaFor(taxYear: TaxYear): TriggerSchema = {
-    if (taxYear <= TaxYear.starting(2023)) Def1
+    if (taxYear <= TaxYear.starting(2024)) Def1
     else Def2
   }
 
