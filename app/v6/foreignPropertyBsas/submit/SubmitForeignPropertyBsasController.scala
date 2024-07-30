@@ -47,8 +47,6 @@ class SubmitForeignPropertyBsasController @Inject() (
   def handleRequest(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-      println("kritika" + taxYear)
-      println("kritika" + request.body)
       val validator = validatorFactory.validator(nino, calculationId, taxYear, request.body)
 
       val requestHandler =
