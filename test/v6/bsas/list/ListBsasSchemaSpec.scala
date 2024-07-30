@@ -16,20 +16,23 @@
 
 package v6.bsas.list
 
-import org.scalacheck.{Arbitrary, Gen}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
 import shared.utils.UnitSpec
-
-import java.time.{Clock, LocalDate, ZoneOffset}
 
 class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
     "a tax year is present" must {
-      "use Def1 for tax years from 2023-24" in {
-        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
+      "use Def1 for tax years before 2025-26" in {
+        forTaxYearsBefore(TaxYear.fromMtd("2025-26")) { taxYear =>
           ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe ListBsasSchema.Def1
+        }
+      }
+
+      "use Def2 for tax years from 2025-26" in {
+        forTaxYearsFrom(TaxYear.fromMtd("2025-26")) { taxYear =>
+          ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe ListBsasSchema.Def2
         }
       }
 
@@ -41,25 +44,18 @@ class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wi
     }
 
     "the tax year is present but not valid" must {
-      "use a default of Def1" in {
+      "use Def1 for a tax year that is invalid" in {
         ListBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe ListBsasSchema.Def1
       }
     }
 
     "no tax year is present" must {
-      def clockForTimeInYear(year: Int): Clock =
-        Clock.fixed(LocalDate.of(year, 6, 1).atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
 
       "use the same schema as for the current tax year" in {
-        implicit val arbYear: Arbitrary[Int] = Arbitrary(Gen.choose(min = 2000, max = 2099))
-
-        forAll { year: Int =>
-          implicit val clock: Clock = clockForTimeInYear(year)
-
-          ListBsasSchema.schemaFor(None) shouldBe
-            ListBsasSchema.schemaFor(Some(TaxYear.currentTaxYear.asMtd))
-        }
+        ListBsasSchema.schemaFor(None) shouldBe
+          ListBsasSchema.schemaFor(Some("2024-25"))
       }
+
     }
   }
 

@@ -30,7 +30,7 @@ import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
-import v6.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
+import v6.common.model.TypeOfBusinessWithFHL
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
