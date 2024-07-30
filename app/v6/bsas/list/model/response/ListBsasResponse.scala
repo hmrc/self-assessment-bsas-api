@@ -16,18 +16,12 @@
 
 package v6.bsas.list.model.response
 
-import cats.Functor
 import play.api.libs.json.{OWrites, Writes}
 import shared.utils.JsonWritesUtil
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
-import v6.common.model.TypeOfBusiness
 
-trait ListBsasResponse[+I] {
-  def typeOfBusinessFor[A >: I](item: A): Option[TypeOfBusiness]
-
-  def mapItems[B](f: I => B): ListBsasResponse[B]
-}
+trait ListBsasResponse[+I]
 
 object ListBsasResponse extends JsonWritesUtil {
 
@@ -36,10 +30,6 @@ object ListBsasResponse extends JsonWritesUtil {
       implicitly[OWrites[Def1_ListBsasResponse[I]]].writes(def1)
     case def2: Def2_ListBsasResponse[I] =>
       implicitly[OWrites[Def2_ListBsasResponse[I]]].writes(def2)
-  }
-
-  implicit object ResponseFunctor extends Functor[ListBsasResponse] {
-    override def map[A, B](fa: ListBsasResponse[A])(f: A => B): ListBsasResponse[B] = fa.mapItems(f)
   }
 
 }

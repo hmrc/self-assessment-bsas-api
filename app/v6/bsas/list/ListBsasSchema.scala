@@ -40,6 +40,7 @@ object ListBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_ListBsasResponse.reads
   }
 
+  // TODO: Check if tests for it
   def schemaFor(maybeTaxYear: Option[String]): ListBsasSchema = {
     maybeTaxYear
       .map(ResolveTaxYear.resolver)
@@ -47,8 +48,9 @@ object ListBsasSchema {
       .getOrElse(schemaFor(TaxYear.currentTaxYear))
   }
 
+  // TODO: Write tests for this
   def schemaFor(taxYear: TaxYear): ListBsasSchema = {
-    if (taxYear <= TaxYear.starting(2023)) {
+    if (taxYear < TaxYear.fromMtd("2025-26")) {
       Def1
     } else {
       Def2

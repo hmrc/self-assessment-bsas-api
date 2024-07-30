@@ -18,20 +18,8 @@ package v6.bsas.list.def1.model.response
 
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
 import v6.bsas.list.model.response.ListBsasResponse
-import v6.common.model.TypeOfBusinessWithFHL
 
-case class Def1_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) extends ListBsasResponse[I] {
-
-  override def typeOfBusinessFor[A >: I](item: A): Option[TypeOfBusinessWithFHL] =
-    businessSources.find(_.summaries.contains(item)).map(_.typeOfBusiness)
-
-  override def mapItems[B](f: I => B): ListBsasResponse[B] = {
-    Def1_ListBsasResponse(businessSources.map { businessSource =>
-      businessSource.copy(summaries = businessSource.summaries.map(f))
-    })
-  }
-
-}
+case class Def1_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) extends ListBsasResponse[I]
 
 object Def1_ListBsasResponse {
 

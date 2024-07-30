@@ -19,7 +19,9 @@ package v6.common.model
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-sealed trait TypeOfBusinessWithFHL
+sealed trait TypeOfBusinessWithFHL {
+  def asDownstreamValue: String
+}
 
 trait HasTypeOfBusinessWithFHL {
   def typeOfBusiness: TypeOfBusinessWithFHL

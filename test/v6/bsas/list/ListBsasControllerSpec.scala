@@ -30,7 +30,7 @@ import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
-import v6.common.model.TypeOfBusiness
+import v6.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -128,12 +128,12 @@ class ListBsasControllerSpec
       List(
         businessSourceSummary(),
         businessSourceSummary().copy(
-          typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+          typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-fhl`,
           summaries = List(
             bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
           )),
         businessSourceSummary().copy(
-          typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+          typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-non-fhl`,
           summaries = List(
             bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
           ))
