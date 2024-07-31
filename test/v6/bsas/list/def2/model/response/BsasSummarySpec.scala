@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package v6.bsas.list.def1.model.response
+package v6.bsas.list.def2.model.response
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import shared.utils.UnitSpec
-import v6.bsas.list.def1.model.Def1_ListBsasFixtures
+import v6.bsas.list.def2.model.Def2_ListBsasFixtures
 
-class Def1_BsasSummarySpec extends UnitSpec with Def1_ListBsasFixtures {
+class BsasSummarySpec extends UnitSpec with Def2_ListBsasFixtures {
 
   "BsasSummary" when {
     "read from valid JSON" should {
       "return the expected data object" in {
-        val result = bsasSummaryDownstreamJson.as[Def1_BsasSummary]
+        val result = bsasSummaryDownstreamJson.as[BsasSummary]
         result shouldBe bsasSummary
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        val result = JsObject.empty.validate[Def1_BsasSummary]
+        val result = JsObject.empty.validate[BsasSummary]
         result shouldBe a[JsError]
       }
     }

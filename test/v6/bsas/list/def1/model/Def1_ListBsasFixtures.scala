@@ -18,7 +18,7 @@ package v6.bsas.list.def1.model
 
 import play.api.libs.json.{JsArray, JsValue, Json}
 import shared.models.domain.{Status, TaxYear}
-import v6.bsas.list.def1.model.response.{AccountingPeriod, BusinessSource, Def1_BsasSummary, Def1_ListBsasResponse}
+import v6.bsas.list.def1.model.response.{AccountingPeriod, BusinessSource, BsasSummary, Def1_ListBsasResponse}
 import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusinessWithFHL
 
@@ -35,7 +35,7 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  val bsasSummary: Def1_BsasSummary = Def1_BsasSummary(
+  val bsasSummary: BsasSummary = BsasSummary(
     calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
     requestedDateTime = "2019-10-14T11:33:27Z",
     summaryStatus = Status.`valid`,

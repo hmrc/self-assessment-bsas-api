@@ -26,7 +26,7 @@ case class BusinessSource(
     typeOfBusiness: TypeOfBusinessWithFHL,
     accountingPeriod: AccountingPeriod,
     taxYear: TaxYear,
-    summaries: Seq[Def1_BsasSummary]
+    summaries: Seq[BsasSummary]
 )
 
 object BusinessSource {
@@ -37,7 +37,7 @@ object BusinessSource {
         (JsPath \ "incomeSourceType").read[IncomeSourceTypeWithFHL].map(_.toTypeOfBusiness) and
         JsPath.read[AccountingPeriod] and
         (JsPath \ "taxYear").read[Int].map(TaxYear.fromDownstreamInt) and
-        (JsPath \ "ascCalculations").read[Seq[Def1_BsasSummary]]
+        (JsPath \ "ascCalculations").read[Seq[BsasSummary]]
     )(BusinessSource(_, _, _, _, _))
 
   implicit val writes: OWrites[BusinessSource] = Json.writes[BusinessSource]

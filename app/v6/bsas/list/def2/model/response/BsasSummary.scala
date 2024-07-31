@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.models.domain.Status
 
-case class Def2_BsasSummary(
+case class BsasSummary(
     calculationId: String,
     requestedDateTime: String,
     summaryStatus: Status,
@@ -28,15 +28,15 @@ case class Def2_BsasSummary(
     adjustedDateTime: Option[String]
 )
 
-object Def2_BsasSummary {
+object BsasSummary {
 
-  implicit val reads: Reads[Def2_BsasSummary] = (
+  implicit val reads: Reads[BsasSummary] = (
     (JsPath \ "calculationId").read[String] and
       (JsPath \ "requestedDateTime").read[String] and
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean] and
       (JsPath \ "adjustedDateTime").readNullable[String]
-  )(Def2_BsasSummary.apply _)
+  )(BsasSummary.apply _)
 
-  implicit val writes: OWrites[Def2_BsasSummary] = Json.writes[Def2_BsasSummary]
+  implicit val writes: OWrites[BsasSummary] = Json.writes[BsasSummary]
 }

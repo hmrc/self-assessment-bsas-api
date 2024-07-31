@@ -1,4 +1,3 @@
-
 package shared.stubs
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
