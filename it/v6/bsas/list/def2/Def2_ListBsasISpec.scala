@@ -33,24 +33,8 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs
-
-      }
-
-      "valid request is made with a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+      "valid request is made" in new ValidTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -66,7 +50,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         response.json shouldBe summariesJs
       }
 
-      "valid request is made with foreign property" in new NonTysTest {
+      "valid request is made with foreign property" in new ValidTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -82,23 +66,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         response.json shouldBe summariesForeignJs
       }
 
-      "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysIfsTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesForeignJs
-      }
-
-      "valid request is made without a tax year so that the current tax year is used" in new TysIfsTest {
+      "valid request is made without a tax year so that the current tax year is used" in new ValidTest {
         private val currentTaxYear = TaxYear.now()
 
         override val taxYear: Option[String] = None
@@ -128,7 +96,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
                               requestBusinessId: Option[String],
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
+        s"validation fails with ${expectedBody.code} error" in new ValidTest {
 
           override val nino: String = requestNino
           override val taxYear: Option[String] = Some(requestTaxYear)
@@ -162,7 +130,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
     "downstream service error" when {
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new ValidTest {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -241,16 +209,10 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
 
   }
 
-  private trait NonTysTest extends Test {
-    def taxYear: Option[String] = Some("2019-20")
+  private trait ValidTest extends Test {
+    def taxYear: Option[String] = Some("2025-26")
 
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
-  }
-
-  private trait TysIfsTest extends Test {
-    def taxYear: Option[String] = Some("2023-24")
-
-    def downstreamTaxYear: String = "23-24"
+    def downstreamTaxYear: String = "25-26"
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
   }
