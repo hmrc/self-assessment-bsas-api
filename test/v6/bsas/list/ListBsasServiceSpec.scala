@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v6.bsas.list.def1.model.Def1_ListBsasFixtures
 import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 
 import scala.concurrent.Future
 
@@ -47,8 +47,8 @@ class ListBsasServiceSpec extends ServiceSpec with Def1_ListBsasFixtures {
   private val incomeSourceIdentifier = "IncomeSourceType"
   private val identifierValue        = BusinessId("01")
 
-  val request: ListBsasRequestData            = Def1_ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
-  val response: ListBsasResponse[BsasSummary] = listBsasResponse
+  val request: ListBsasRequestData = Def1_ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
+  val response: ListBsasResponse   = listBsasResponse
 
   trait Test extends MockListBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

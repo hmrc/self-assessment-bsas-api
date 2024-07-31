@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v6.bsas.list.model.request.ListBsasRequestData
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +31,7 @@ trait MockListBsasService extends MockFactory {
 
   object MockListBsasService {
 
-    def listBsas(requestData: ListBsasRequestData): CallHandler[Future[ServiceOutcome[ListBsasResponse[BsasSummary]]]] = {
+    def listBsas(requestData: ListBsasRequestData): CallHandler[Future[ServiceOutcome[ListBsasResponse]]] = {
       (mockListBsasService
         .listBsas(_: ListBsasRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

@@ -19,7 +19,7 @@ package v6.bsas.list.def2.model
 import play.api.libs.json.{JsArray, JsValue, Json}
 import shared.models.domain.{Status, TaxYear}
 import v6.bsas.list.def2.model.response.{AccountingPeriod, BusinessSource, Def2_BsasSummary, Def2_ListBsasResponse}
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusiness
 
 trait Def2_ListBsasFixtures {
@@ -163,7 +163,7 @@ trait Def2_ListBsasFixtures {
     """.stripMargin
   )
 
-  val listBsasResponse: ListBsasResponse[BsasSummary] = Def2_ListBsasResponse(List(businessSourceSummary()))
+  val listBsasResponse: ListBsasResponse = Def2_ListBsasResponse(List(businessSourceSummary()))
 
   val listBsasResponseJson: JsValue = Json.parse(
     """
@@ -216,7 +216,7 @@ trait Def2_ListBsasFixtures {
       listBsasResponseDownstreamJsonSE
     ))
 
-  def businessSourceSummary(taxYear: String = "2019-20"): BusinessSource[Def2_BsasSummary] = BusinessSource(
+  def businessSourceSummary(taxYear: String = "2019-20"): BusinessSource = BusinessSource(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     accountingPeriod = accountingPeriod,

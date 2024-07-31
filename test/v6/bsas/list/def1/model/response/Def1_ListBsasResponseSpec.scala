@@ -26,14 +26,14 @@ class Def1_ListBsasResponseSpec extends UnitSpec with MockAppConfig with Def1_Li
   "ListBsasResponse" when {
     "read from valid JSON" should {
       "return the expected object" in {
-        val result = listBsasResponseDownstreamJson.as[Def1_ListBsasResponse[Def1_BsasSummary]]
+        val result = listBsasResponseDownstreamJson.as[Def1_ListBsasResponse]
         result shouldBe listBsasResponse
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        val result = JsObject.empty.validate[Def1_ListBsasResponse[Def1_BsasSummary]]
+        val result = JsObject.empty.validate[Def1_ListBsasResponse]
         result shouldBe a[JsError]
       }
     }

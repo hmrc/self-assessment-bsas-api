@@ -29,7 +29,7 @@ import v6.bsas.list.def1.model.Def1_ListBsasFixtures
 import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.model.request.ListBsasRequestData
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusinessWithFHL
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -124,7 +124,7 @@ class ListBsasControllerSpec
       incomeSourceType = Some(typeOfBusiness)
     )
 
-    val response: ListBsasResponse[BsasSummary] = Def1_ListBsasResponse(
+    val response: ListBsasResponse = Def1_ListBsasResponse(
       List(
         businessSourceSummary(),
         businessSourceSummary().copy(

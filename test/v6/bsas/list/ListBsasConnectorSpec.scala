@@ -24,7 +24,7 @@ import shared.models.outcomes.ResponseWrapper
 import v6.bsas.list.def1.model.Def1_ListBsasFixtures
 import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 
 import scala.concurrent.Future
 
@@ -55,7 +55,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
         val outcome = Right(ResponseWrapper(correlationId, listBsasResponse))
         stubHttpResponse(outcome)
 
-        val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] = await(connector.listBsas(request))
+        val result: DownstreamOutcome[ListBsasResponse] = await(connector.listBsas(request))
         result shouldBe outcome
       }
     }
@@ -82,7 +82,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
 
       stubHttpResponse(outcome)
 
-      val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] =
+      val result: DownstreamOutcome[ListBsasResponse] =
         await(connector.listBsas(request))
       result shouldBe outcome
     }
@@ -93,7 +93,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
 
       stubTysHttpResponse(outcome)
 
-      val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] =
+      val result: DownstreamOutcome[ListBsasResponse] =
         await(connector.listBsas(request))
       result shouldBe outcome
     }
@@ -110,8 +110,8 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
       new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
-        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
-    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
@@ -119,8 +119,8 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
     }
 
     protected def stubTysHttpResponse(
-        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
-    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         parameters = downstreamQueryParams
