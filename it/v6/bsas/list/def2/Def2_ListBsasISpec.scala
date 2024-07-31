@@ -23,17 +23,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.domain.TaxYear
-import shared.models.errors.{
-  BusinessIdFormatError,
-  InternalError,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError
-}
+import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v6.bsas.list.def2.model.Def2_ListBsasFixtures
@@ -76,11 +66,6 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
       }
 
       "valid request is made without a tax year so that the current tax year is used" in new ValidTest {
-        private val currentTaxYear = TaxYear.now()
-
-        override val taxYear: Option[String] = None
-
-        override def downstreamTaxYear: String = currentTaxYear.asTysDownstream
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
