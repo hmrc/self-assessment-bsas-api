@@ -27,9 +27,9 @@ import shared.models.domain.TaxYear
 import shared.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v5.bsas.list.def1.model.Def1_ListBsasFixtures
+import v6.bsas.list.def2.model.Def2_ListBsasFixtures
 
-class Def2_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures {
+class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures {
 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -220,7 +220,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
       buildRequest(mtdUri)
         .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
