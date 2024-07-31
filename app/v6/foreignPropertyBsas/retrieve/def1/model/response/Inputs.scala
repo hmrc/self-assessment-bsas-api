@@ -17,7 +17,7 @@
 package v6.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
 import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class Inputs(businessId: String,
@@ -44,28 +44,15 @@ object Inputs {
 
   //implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
 
-  implicit val writes: OWrites[Inputs] = (
-    Json.obj(
-      "incomeSourceId"
+  implicit val writes: OWrites[Inputs] = new OWrites[Inputs] {
+    override def writes(o: Inputs): JsObject = Json.obj(
+      "businessId"      -> o.businessId,
+      "typeOfBusiness"  -> o.typeOfBusiness,
+      "businessName"    -> o.businessName,
+      "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
+      "accountingPeriodEndDate" -> o.accountingPeriodEndDate,
+      "source"        ->o.source,
+      "submissionPeriods"   -> o.submissionPeriods
     )
-
-    (JsPath \ "incomeSourceId").write[String] and
-      (JsPath \ "incomeSourceType").write[IncomeSourceTypeWithFHL].map(_.toTypeOfBusiness) and
-      (JsPath \ "incomeSourceName").writeNullable[String] and
-      (JsPath \ "accountingPeriodStartDate").write[String] and
-      (JsPath \ "accountingPeriodEndDate").write[String] and
-      (JsPath \ "source").write[String] and
-      (JsPath \ "submissionPeriods").write[Seq[SubmissionPeriods]]
-    )(Inputs.apply _)
-
-
-  /*implicit val writes: OWrites[Inputs] = (requestBody: Def2_TriggerBsasRequestBody) => {
-    val typeOfBusiness = TypeOfBusiness.parser(requestBody.typeOfBusiness)
-    Json.obj(
-      "incomeSourceType"          -> typeOfBusiness.asDownstreamValue,
-      "incomeSourceId"            -> requestBody.businessId,
-      "accountingPeriodStartDate" -> requestBody.accountingPeriod.startDate,
-      "accountingPeriodEndDate"   -> requestBody.accountingPeriod.endDate
-    )
-  }*/
+  }
 }
