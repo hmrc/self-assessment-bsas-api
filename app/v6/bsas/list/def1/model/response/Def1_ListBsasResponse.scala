@@ -16,15 +16,15 @@
 
 package v6.bsas.list.def1.model.response
 
-import play.api.libs.json.{Json, OWrites, Reads, Writes}
+import play.api.libs.json.{Json, OWrites, Reads}
 import v6.bsas.list.model.response.ListBsasResponse
 
-case class Def1_ListBsasResponse[I](businessSources: Seq[BusinessSource[I]]) extends ListBsasResponse[I]
+case class Def1_ListBsasResponse(businessSources: Seq[BusinessSource]) extends ListBsasResponse
 
 object Def1_ListBsasResponse {
 
-  implicit def reads[I: Reads]: Reads[Def1_ListBsasResponse[I]] =
-    implicitly[Reads[Seq[BusinessSource[I]]]].map(Def1_ListBsasResponse(_))
+  implicit val reads: Reads[Def1_ListBsasResponse] =
+    implicitly[Reads[Seq[BusinessSource]]].map(Def1_ListBsasResponse(_))
 
-  implicit def writes[I: Writes]: OWrites[Def1_ListBsasResponse[I]] = Json.writes[Def1_ListBsasResponse[I]]
+  implicit val writes: OWrites[Def1_ListBsasResponse] = Json.writes[Def1_ListBsasResponse]
 }

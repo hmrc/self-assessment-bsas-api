@@ -19,7 +19,6 @@ package v6.bsas.list.def1.model.response
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.models.domain.Status
-import v6.bsas.list.model.response.BsasSummary
 
 case class Def1_BsasSummary(
     calculationId: String,
@@ -27,7 +26,7 @@ case class Def1_BsasSummary(
     summaryStatus: Status,
     adjustedSummary: Boolean,
     adjustedDateTime: Option[String]
-) extends BsasSummary
+)
 
 object Def1_BsasSummary {
 

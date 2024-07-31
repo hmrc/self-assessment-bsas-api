@@ -21,24 +21,24 @@ import play.api.libs.json._
 import shared.models.domain.TaxYear
 import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
-case class BusinessSource[I](
+case class BusinessSource(
     businessId: String,
     typeOfBusiness: TypeOfBusinessWithFHL,
     accountingPeriod: AccountingPeriod,
     taxYear: TaxYear,
-    summaries: Seq[I]
+    summaries: Seq[Def1_BsasSummary]
 )
 
 object BusinessSource {
 
-  implicit def reads[I: Reads]: Reads[BusinessSource[I]] =
+  implicit val reads: Reads[BusinessSource] =
     (
       (JsPath \ "incomeSourceId").read[String] and
         (JsPath \ "incomeSourceType").read[IncomeSourceTypeWithFHL].map(_.toTypeOfBusiness) and
         JsPath.read[AccountingPeriod] and
         (JsPath \ "taxYear").read[Int].map(TaxYear.fromDownstreamInt) and
-        (JsPath \ "ascCalculations").read[Seq[I]]
+        (JsPath \ "ascCalculations").read[Seq[Def1_BsasSummary]]
     )(BusinessSource(_, _, _, _, _))
 
-  implicit def writes[I: Writes]: OWrites[BusinessSource[I]] = Json.writes[BusinessSource[I]]
+  implicit val writes: OWrites[BusinessSource] = Json.writes[BusinessSource]
 }

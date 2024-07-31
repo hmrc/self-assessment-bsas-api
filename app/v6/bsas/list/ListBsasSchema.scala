@@ -20,23 +20,23 @@ import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
 import shared.schema.DownstreamReadable
-import v6.bsas.list.def1.model.response.{Def1_BsasSummary, Def1_ListBsasResponse}
-import v6.bsas.list.def2.model.response.{Def2_BsasSummary, Def2_ListBsasResponse}
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
+import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
+import v6.bsas.list.model.response.ListBsasResponse
 
 import scala.math.Ordered.orderingToOrdered
 
-sealed trait ListBsasSchema extends DownstreamReadable[ListBsasResponse[BsasSummary]]
+sealed trait ListBsasSchema extends DownstreamReadable[ListBsasResponse]
 
 object ListBsasSchema {
 
   case object Def1 extends ListBsasSchema {
-    type DownstreamResp = Def1_ListBsasResponse[Def1_BsasSummary]
+    type DownstreamResp = Def1_ListBsasResponse
     val connectorReads: Reads[DownstreamResp] = Def1_ListBsasResponse.reads
   }
 
   case object Def2 extends ListBsasSchema {
-    type DownstreamResp = Def2_ListBsasResponse[Def2_BsasSummary]
+    type DownstreamResp = Def2_ListBsasResponse
     val connectorReads: Reads[DownstreamResp] = Def2_ListBsasResponse.reads
   }
 

@@ -24,7 +24,16 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.domain.TaxYear
-import shared.models.errors.{BusinessIdFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import shared.models.errors.{
+  BusinessIdFormatError,
+  InternalError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError
+}
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v6.bsas.list.def2.model.Def2_ListBsasFixtures
@@ -98,10 +107,10 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new ValidTest {
 
-          override val nino: String = requestNino
-          override val taxYear: Option[String] = Some(requestTaxYear)
+          override val nino: String                   = requestNino
+          override val taxYear: Option[String]        = Some(requestTaxYear)
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
-          override val businessId: Option[String] = requestBusinessId
+          override val businessId: Option[String]     = requestBusinessId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -172,9 +181,9 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
 
   private trait Test {
     // common
-    val nino = "AA123456B"
+    val nino                           = "AA123456B"
     val typeOfBusiness: Option[String] = Some("self-employment")
-    val businessId: Option[String] = Some("XAIS12345678910")
+    val businessId: Option[String]     = Some("XAIS12345678910")
 
     def taxYear: Option[String]
 

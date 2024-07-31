@@ -21,7 +21,7 @@ import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import v6.bsas.list.model.request.ListBsasRequestData
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +34,7 @@ class ListBsasService @Inject() (connector: ListBsasConnector) extends BaseServi
   )(implicit
       ctx: RequestContext,
       ec: ExecutionContext
-  ): Future[ServiceOutcome[ListBsasResponse[BsasSummary]]] = {
+  ): Future[ServiceOutcome[ListBsasResponse]] = {
 
     connector
       .listBsas(request)

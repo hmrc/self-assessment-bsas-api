@@ -16,20 +16,20 @@
 
 package v6.bsas.list.model.response
 
-import play.api.libs.json.{OWrites, Writes}
+import play.api.libs.json.OWrites
 import shared.utils.JsonWritesUtil
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
 
-trait ListBsasResponse[+I]
+trait ListBsasResponse
 
 object ListBsasResponse extends JsonWritesUtil {
 
-  implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] = writesFrom {
-    case def1: Def1_ListBsasResponse[I] =>
-      implicitly[OWrites[Def1_ListBsasResponse[I]]].writes(def1)
-    case def2: Def2_ListBsasResponse[I] =>
-      implicitly[OWrites[Def2_ListBsasResponse[I]]].writes(def2)
+  implicit val writes: OWrites[ListBsasResponse] = writesFrom {
+    case def1: Def1_ListBsasResponse =>
+      implicitly[OWrites[Def1_ListBsasResponse]].writes(def1)
+    case def2: Def2_ListBsasResponse =>
+      implicitly[OWrites[Def2_ListBsasResponse]].writes(def2)
   }
 
 }
