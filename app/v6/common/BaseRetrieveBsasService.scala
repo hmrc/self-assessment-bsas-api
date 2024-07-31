@@ -20,13 +20,13 @@ import common.errors._
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{BaseService, ServiceOutcome}
-import v6.common.model.{HasTypeOfBusinessWithFHL, TypeOfBusinessWithFHL}
+import v6.common.model.HasIncomeSourceType
 
 trait BaseRetrieveBsasService extends BaseService {
-  protected val supportedTypesOfBusiness: Set[TypeOfBusinessWithFHL]
+  protected val supportedIncomeSourceType: Set[String]
 
-  final protected def validateTypeOfBusiness[T <: HasTypeOfBusinessWithFHL](responseWrapper: ResponseWrapper[T]): ServiceOutcome[T] =
-    if (supportedTypesOfBusiness.contains(responseWrapper.responseData.typeOfBusiness)) {
+  final protected def validateTypeOfBusiness[T <: HasIncomeSourceType](responseWrapper: ResponseWrapper[T]): ServiceOutcome[T] =
+    if (supportedIncomeSourceType.contains(responseWrapper.responseData.incomeSourceType)) {
       Right(responseWrapper)
     } else {
       Left(ErrorWrapper(responseWrapper.correlationId, RuleTypeOfBusinessIncorrectError, None))

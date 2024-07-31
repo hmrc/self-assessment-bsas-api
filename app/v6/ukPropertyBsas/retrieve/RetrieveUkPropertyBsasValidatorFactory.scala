@@ -17,8 +17,9 @@
 package v6.ukPropertyBsas.retrieve
 
 import shared.controllers.validators.Validator
-import v6.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema.Def1
+import v6.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema.{Def1, Def2}
 import v6.ukPropertyBsas.retrieve.def1.Def1_RetrieveUkPropertyBsasValidator
+import v6.ukPropertyBsas.retrieve.def2.Def2_RetrieveUkPropertyBsasValidator
 import v6.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -36,6 +37,7 @@ class RetrieveUkPropertyBsasValidatorFactory {
 
     schema match {
       case Def1 => new Def1_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
+      case Def2 => new Def2_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
     }
   }
 

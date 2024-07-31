@@ -37,7 +37,7 @@ object Inputs {
 
   implicit val reads: Reads[Inputs] = (
     (JsPath \ "incomeSourceType").read[String] and
-    (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
+      (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
       (JsPath \ "incomeSourceId").read[String] and
       (JsPath \ "incomeSourceName").readNullable[String] and
       (JsPath \ "accountingPeriodStartDate").read[String] and

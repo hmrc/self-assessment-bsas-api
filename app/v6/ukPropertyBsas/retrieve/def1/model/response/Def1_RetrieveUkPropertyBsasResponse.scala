@@ -17,7 +17,7 @@
 package v6.ukPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json._
-import v6.common.model.TypeOfBusiness
+import v6.common.model.TypeOfBusinessWithFHL
 import v6.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
 case class Def1_RetrieveUkPropertyBsasResponse(
@@ -27,7 +27,7 @@ case class Def1_RetrieveUkPropertyBsasResponse(
     adjustments: Option[Adjustments],
     adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
 ) extends RetrieveUkPropertyBsasResponse {
-  override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
+  override def incomeSourceType: String = inputs.incomeSourceType
 }
 
 object Def1_RetrieveUkPropertyBsasResponse {
@@ -36,7 +36,7 @@ object Def1_RetrieveUkPropertyBsasResponse {
     for {
       metadata <- (json \ "metadata").validate[Metadata]
       inputs   <- (json \ "inputs").validate[Inputs]
-      isFhl = inputs.typeOfBusiness == TypeOfBusiness.`uk-property-fhl`
+      isFhl = inputs.incomeSourceType == TypeOfBusinessWithFHL.`uk-property-fhl`.asDownstreamValue
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation")
         .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsNonFhl)
       adjustments <- (json \ "adjustments").validateOpt[Adjustments](if (isFhl) Adjustments.readsFhl else Adjustments.readsNonFhl)
