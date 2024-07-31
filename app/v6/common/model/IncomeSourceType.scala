@@ -23,6 +23,10 @@ sealed trait IncomeSourceType {
   def toTypeOfBusiness: TypeOfBusiness
 }
 
+trait HasIncomeSourceType {
+  def incomeSourceType: String
+}
+
 //noinspection ScalaStyle
 object IncomeSourceType {
 
