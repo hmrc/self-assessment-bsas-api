@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def1.model.response
+package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
-class MetadataSpec extends UnitSpec with JsonErrorValidators {
+class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
-    "return the expected parsed object" when {
+    "return the expected SubmissionPeriod" when {
       "given a valid json object with all fields" in {
-        metadataDesJson.as[Metadata] shouldBe parsedMetadata
+        submissionPeriodDesJson.as[SubmissionPeriods] shouldBe parsedSubmissionPeriod
       }
     }
   }
 
   "writes" should {
-    "return the expected json" when {
-      "given a valid data object" in {
-        parsedMetadata.toJson shouldBe metadataMtdJson
+    "return the expected json object" when {
+      "given a valid SubmissionPeriod" in {
+        parsedSubmissionPeriod.toJson shouldBe submissionPeriodMtdJson
       }
     }
   }

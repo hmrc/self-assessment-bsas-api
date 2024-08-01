@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def1.model.response
+package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
-class Def1_RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {
+class Def2_RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTripTest {
 
-  import Def1_RetrieveForeignPropertyBsasResponse._
+  import Def2_RetrieveForeignPropertyBsasResponse._
 
-  testRoundTrip(
+  /*testRoundTrip(
     "Retrieve Foreign Property Bsas Response FHL",
     retrieveForeignPropertyBsasDesFhlJson,
     parsedFhlRetrieveForeignPropertyBsasResponse,
     retrieveForeignPropertyBsasMtdFhlJson
-  )(reads)
+  )(reads)*/
 
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response Non-FHL",

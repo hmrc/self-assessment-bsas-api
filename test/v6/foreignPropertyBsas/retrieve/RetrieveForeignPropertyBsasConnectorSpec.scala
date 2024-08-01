@@ -19,10 +19,10 @@ package v6.foreignPropertyBsas.retrieve
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v5.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
-import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
-import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
-import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
+import v6.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
+import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
+import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 
@@ -51,12 +51,12 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       }
 
       "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+        def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
         val request: RetrieveForeignPropertyBsasRequestData =
           Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), Some(taxYear))
 
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId") returns Future.successful(outcome)
+        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome

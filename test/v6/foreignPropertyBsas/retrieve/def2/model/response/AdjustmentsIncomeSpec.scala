@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def1.model.response
+package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
-class SummaryCalculationDeductionsSpec extends UnitSpec with RoundTripTest {
+class AdjustmentsIncomeSpec extends UnitSpec with RoundTripTest {
 
-  import SummaryCalculationDeductions._
-
-  testRoundTrip(
-    "Summary Calculation Deductions FHL",
-    summaryCalculationDeductionsDesJson,
-    parsedFhlSummaryCalculationDeductions,
-    summaryCalculationDeductionsMtdFhlJson)(readsFhl)
+  import AdjustmentsIncome._
 
   testRoundTrip(
-    "Adjustments Non-FHL",
-    summaryCalculationDeductionsDesJson,
-    parsedNonFhlSummaryCalculationDeductions,
-    summaryCalculationDeductionsMtdNonFhlJson)(readsNonFhl)
+    "Adjustments Income FHL",
+    adjustmentsIncomeDesFhlJson,
+    parsedFhlAdjustmentsIncome,
+    adjustmentsIncomeMtdFhlJson
+  )(readsFhl)
+
+  testRoundTrip(
+    "Adjustments Income Non-FHL",
+    adjustmentsIncomeDesNonFhlJson,
+    parsedNonFhlAdjustmentsIncome,
+    adjustmentsIncomeMtdNonFhlJson
+  )(readsNonFhl)
 
 }

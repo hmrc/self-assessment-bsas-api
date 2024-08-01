@@ -23,11 +23,10 @@ import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.common.model.TypeOfBusiness
-import v5.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
-import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
-import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
-import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
+import v6.foreignPropertyBsas.retrieve.def2.model.request.Def2_RetrieveForeignPropertyBsasRequestData
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
+import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
 import scala.concurrent.Future
 
@@ -36,7 +35,8 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  val request: RetrieveForeignPropertyBsasRequestData = Def1_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
+  val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
+  // val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = Some(TaxYear.fromMtd("2025-26")))
 
   val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponse
 
@@ -60,10 +60,9 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
-        import TypeOfBusiness._
-        List(`self-employment`, `uk-property-fhl`, `uk-property-non-fhl`).foreach(typeOfBusiness =>
-          s"return an error for $typeOfBusiness" in new Test {
-            val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponseWith(typeOfBusiness)
+        List("self-employment", "uk-property-fhl", "uk-property-non-fhl", "foreign-property", "uk-property").foreach(incomeSourceType =>
+          s"return an error for $incomeSourceType" in new Test {
+            val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponseWith(incomeSourceType.toString)
 
             MockRetrieveForeignPropertyBsasConnector
               .retrieveForeignPropertyBsas(request)

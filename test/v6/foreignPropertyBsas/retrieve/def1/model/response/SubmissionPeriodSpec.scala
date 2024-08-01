@@ -18,7 +18,7 @@ package v6.foreignPropertyBsas.retrieve.def1.model.response
 
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
 

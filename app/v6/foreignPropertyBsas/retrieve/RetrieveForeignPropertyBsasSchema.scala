@@ -33,10 +33,12 @@ object RetrieveForeignPropertyBsasSchema {
     type DownstreamResp = Def1_RetrieveForeignPropertyBsasResponse
     val connectorReads: Reads[DownstreamResp] = Def1_RetrieveForeignPropertyBsasResponse.reads
   }
+
   case object Def2 extends RetrieveForeignPropertyBsasSchema {
     type DownstreamResp = Def2_RetrieveForeignPropertyBsasResponse
     val connectorReads: Reads[DownstreamResp] = Def2_RetrieveForeignPropertyBsasResponse.reads
   }
+
   private val defaultSchema = Def1
 
   def schemaFor(maybeTaxYear: Option[String]): RetrieveForeignPropertyBsasSchema = {
@@ -50,4 +52,5 @@ object RetrieveForeignPropertyBsasSchema {
     if (taxYear <= TaxYear.starting(2024)) Def1
     else Def2
   }
+
 }

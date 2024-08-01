@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveForeignPropertyBsasService @Inject() (connector: RetrieveForeignPropertyBsasConnector) extends BaseRetrieveBsasService {
 
-  //protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`foreign-property`, TypeOfBusinessWithFHL.`foreign-property-fhl-eea`)
+  // protected val supportedTypesOfBusiness: Set[TypeOfBusiness] = Set(TypeOfBusiness.`foreign-property`, TypeOfBusinessWithFHL.`foreign-property-fhl-eea`)
   protected val supportedIncomeSourceType: Set[String] = Set(IncomeSourceType.`15`.toString, IncomeSourceTypeWithFHL.`03`.toString)
 
   private val errorMap: Map[String, MtdError] = {

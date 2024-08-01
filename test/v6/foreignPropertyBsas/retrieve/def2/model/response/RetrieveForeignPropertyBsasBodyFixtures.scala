@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def1.model.response
+package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.json.{JsValue, Json}
-import v6.common.model.TypeOfBusinessWithFHL
 
 object RetrieveForeignPropertyBsasBodyFixtures {
 
@@ -43,17 +42,17 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  lazy val inputsDesFhlJson: JsValue = Json.parse(
+  /*lazy val inputsDesFhlJson: JsValue = Json.parse(
     s"""{
        |  "incomeSourceId": "000000000000210",
-       |  "incomeSourceType": "03",
+       |  "incomeSourceType": "15",
        |  "incomeSourceName": "Business Name",
        |  "accountingPeriodStartDate": "2019-04-06",
        |  "accountingPeriodEndDate": "2020-04-05",
        |  "source": "MTD-SA",
        |  "submissionPeriods": [$submissionPeriodDesJson]
        |}""".stripMargin
-  )
+  )*/
 
   lazy val inputsDesNonFhlJson: JsValue = Json.parse(
     s"""{
@@ -206,7 +205,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasDesFhlJson: JsValue = Json.parse(
+  /*lazy val retrieveForeignPropertyBsasDesFhlJson: JsValue = Json.parse(
     s"""{
        |  "metadata": $metadataDesJson,
        |  "inputs": $inputsDesFhlJson,
@@ -214,7 +213,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "adjustments": $adjustmentsDesFhlJson,
        |  "adjustedSummaryCalculation": $summaryCalculationDesFhlJson
        |}""".stripMargin
-  )
+  )*/
 
   lazy val retrieveForeignPropertyBsasDesNonFhlJson: JsValue = Json.parse(
     s"""{
@@ -248,7 +247,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  lazy val inputsMtdFhlJson: JsValue = Json.parse(
+  /*lazy val inputsMtdFhlJson: JsValue = Json.parse(
     s"""{
        |  "businessId": "000000000000210",
        |  "typeOfBusiness": "foreign-property-fhl-eea",
@@ -258,12 +257,11 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "source": "MTD-SA",
        |  "submissionPeriods": [$submissionPeriodMtdJson]
        |}""".stripMargin
-  )
+  )*/
 
   lazy val inputsMtdNonFhlJson: JsValue = Json.parse(
     s"""{
        |  "businessId": "000000000000210",
-       |  "typeOfBusiness": "foreign-property",
        |  "businessName": "Business Name",
        |  "accountingPeriodStartDate": "2019-04-06",
        |  "accountingPeriodEndDate": "2020-04-05",
@@ -446,7 +444,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasMtdFhlJson: JsValue = Json.parse(
+  /*lazy val retrieveForeignPropertyBsasMtdFhlJson: JsValue = Json.parse(
     s"""{
        |  "metadata": $metadataMtdJson,
        |  "inputs": $inputsMtdFhlJson,
@@ -454,7 +452,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "adjustments": $adjustmentsMtdFhlJson,
        |  "adjustedSummaryCalculation": $summaryCalculationMtdFhlJson
        |}""".stripMargin
-  )
+  )*/
 
   lazy val retrieveForeignPropertyBsasMtdNonFhlJson: JsValue = Json.parse(
     s"""{
@@ -486,27 +484,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   /*lazy val parsedFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",
-    typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`,
-    businessName = Some("Business Name"),
-    accountingPeriodStartDate = "2019-04-06",
-    accountingPeriodEndDate = "2020-04-05",
-    source = "MTD-SA",
-    submissionPeriods = List(parsedSubmissionPeriod)
-  )*/
-  lazy val parsedFhlInputs: Inputs = Inputs(
-    businessId = "000000000000210",
+    // typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`, typeOfBusiness = TypeOfBusiness.`foreign-property` ,
     incomeSourceType = "03",
-    typeOfBusiness = TypeOfBusinessWithFHL.`foreign-property-fhl-eea`,
-    businessName = Some("Business Name"),
-    accountingPeriodStartDate = "2019-04-06",
-    accountingPeriodEndDate = "2020-04-05",
-    source = "MTD-SA",
-    submissionPeriods = List(parsedSubmissionPeriod)
-  )
-
-  /*lazy val parsedNonFhlInputs: Inputs = Inputs(
-    businessId = "000000000000210",
-    typeOfBusiness = TypeOfBusiness.`foreign-property`,
     businessName = Some("Business Name"),
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
@@ -517,7 +496,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   lazy val parsedNonFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",
     incomeSourceType = "15",
-    typeOfBusiness = TypeOfBusinessWithFHL.`foreign-property`,
     businessName = Some("Business Name"),
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
@@ -688,15 +666,15 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     expenses = None
   )
 
-  lazy val parsedFhlRetrieveForeignPropertyBsasResponse: Def1_RetrieveForeignPropertyBsasResponse = Def1_RetrieveForeignPropertyBsasResponse(
+  /*lazy val parsedFhlRetrieveForeignPropertyBsasResponse: Def2_RetrieveForeignPropertyBsasResponse = Def2_RetrieveForeignPropertyBsasResponse(
     metadata = parsedMetadata,
     inputs = parsedFhlInputs,
     adjustableSummaryCalculation = parsedFhlsummaryCalculation,
     adjustments = Some(parsedFhlAdjustments),
     adjustedSummaryCalculation = Some(parsedFhlsummaryCalculation)
-  )
+  )*/
 
-  lazy val parsedNonFhlRetrieveForeignPropertyBsasResponse: Def1_RetrieveForeignPropertyBsasResponse = Def1_RetrieveForeignPropertyBsasResponse(
+  lazy val parsedNonFhlRetrieveForeignPropertyBsasResponse: Def2_RetrieveForeignPropertyBsasResponse = Def2_RetrieveForeignPropertyBsasResponse(
     metadata = parsedMetadata,
     inputs = parsedNonFhlInputs,
     adjustableSummaryCalculation = parsedNonFhlSummaryCalculation,
@@ -704,10 +682,10 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     adjustedSummaryCalculation = Some(parsedNonFhlSummaryCalculation)
   )
 
-  def parsedNonFhlRetrieveForeignPropertyBsasResponseWith(typeOfBusinessWithFHL: TypeOfBusinessWithFHL): Def1_RetrieveForeignPropertyBsasResponse =
-    Def1_RetrieveForeignPropertyBsasResponse(
+  def parsedNonFhlRetrieveForeignPropertyBsasResponseWith(incomeSourceType: String): Def2_RetrieveForeignPropertyBsasResponse =
+    Def2_RetrieveForeignPropertyBsasResponse(
       metadata = parsedMetadata,
-      inputs = parsedNonFhlInputs.copy(typeOfBusiness = typeOfBusinessWithFHL),
+      inputs = parsedNonFhlInputs.copy(incomeSourceType = incomeSourceType),
       adjustableSummaryCalculation = parsedNonFhlSummaryCalculation,
       adjustments = Some(parsedNonFhlAdjustmentsSeq),
       adjustedSummaryCalculation = Some(parsedNonFhlSummaryCalculation)

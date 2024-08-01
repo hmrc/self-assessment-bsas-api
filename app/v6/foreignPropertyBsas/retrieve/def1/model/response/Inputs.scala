@@ -42,17 +42,20 @@ object Inputs {
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriods]]
   )(Inputs.apply _)
 
-  //implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
+  // implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
 
   implicit val writes: OWrites[Inputs] = new OWrites[Inputs] {
+
     override def writes(o: Inputs): JsObject = Json.obj(
-      "businessId"      -> o.businessId,
-      "typeOfBusiness"  -> o.typeOfBusiness,
-      "businessName"    -> o.businessName,
+      "businessId"                -> o.businessId,
+      "typeOfBusiness"            -> o.typeOfBusiness,
+      "businessName"              -> o.businessName,
       "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
-      "accountingPeriodEndDate" -> o.accountingPeriodEndDate,
-      "source"        ->o.source,
-      "submissionPeriods"   -> o.submissionPeriods
+      "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
+      "source"                    -> o.source,
+      "submissionPeriods"         -> o.submissionPeriods
     )
+
   }
+
 }

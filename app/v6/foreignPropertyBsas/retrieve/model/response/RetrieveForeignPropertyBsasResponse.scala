@@ -25,10 +25,12 @@ import v6.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignP
 trait RetrieveForeignPropertyBsasResponse extends HasIncomeSourceType
 
 object RetrieveForeignPropertyBsasResponse extends JsonWritesUtil {
+
   implicit val writes: OWrites[RetrieveForeignPropertyBsasResponse] = writesFrom {
     case def1: Def1_RetrieveForeignPropertyBsasResponse =>
       implicitly[OWrites[Def1_RetrieveForeignPropertyBsasResponse]].writes(def1)
     case def2: Def2_RetrieveForeignPropertyBsasResponse =>
       implicitly[OWrites[Def2_RetrieveForeignPropertyBsasResponse]].writes(def2)
   }
+
 }

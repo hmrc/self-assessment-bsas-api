@@ -29,7 +29,7 @@ case class Def2_RetrieveForeignPropertyBsasResponse(
 ) extends RetrieveForeignPropertyBsasResponse {
 
   override def incomeSourceType: String = inputs.incomeSourceType
-  //override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
+  // override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
 
 }
 

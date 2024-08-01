@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def1.model.response
+package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 

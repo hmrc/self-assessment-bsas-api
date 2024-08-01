@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def2
+package v6.foreignPropertyBsas.retrieve.def1
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -24,18 +24,18 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
-  // retrieveForeignPropertyBsasDesFhlJson,
+import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
+  retrieveForeignPropertyBsasDesFhlJson,
   retrieveForeignPropertyBsasDesNonFhlJson,
-  // retrieveForeignPropertyBsasMtdFhlJson,
+  retrieveForeignPropertyBsasMtdFhlJson,
   retrieveForeignPropertyBsasMtdNonFhlJson
 }
 
-class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
+class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
-      /*"valid request is made and Non-fhl is returned" in new NonTysTest {
+      "valid request is made and Non-fhl is returned" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
 
         val response: WSResponse = await(request.get())
@@ -44,9 +44,9 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
-      }*/
+      }
 
-      /*"valid request is made and fhl is returned" in new NonTysTest {
+      "valid request is made and fhl is returned" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson)
 
         val response: WSResponse = await(request.get())
@@ -55,7 +55,7 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
-      }*/
+      }
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
@@ -128,7 +128,7 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
            |}""".stripMargin
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit =
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysTest {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
           DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
           val response: WSResponse = await(request.get())
@@ -176,28 +176,28 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       buildRequest(s"/$nino/foreign-property/$calculationId")
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
 
   }
 
-  /*private trait NonTysTest extends Test {
+  private trait NonTysTest extends Test {
     def taxYear: Option[String] = None
 
     def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
 
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
-  }*/
+  }
 
   private trait TysTest extends Test {
-    def taxYear: Option[String] = Some("2025-26")
+    def taxYear: Option[String] = Some("2023-24")
 
     def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
   }
 

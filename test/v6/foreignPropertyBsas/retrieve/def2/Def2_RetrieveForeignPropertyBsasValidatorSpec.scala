@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.retrieve.def1
+package v6.foreignPropertyBsas.retrieve.def2
 
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
+import v6.foreignPropertyBsas.retrieve.def2.model.request.Def2_RetrieveForeignPropertyBsasRequestData
 
-class Def1_RetrieveForeignPropertyBsasValidatorSpec extends UnitSpec {
+class Def2_RetrieveForeignPropertyBsasValidatorSpec extends UnitSpec {
 
   private implicit val correlationId: String = "1234"
 
@@ -34,7 +34,7 @@ class Def1_RetrieveForeignPropertyBsasValidatorSpec extends UnitSpec {
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
   private def validator(nino: String, calculationId: String, taxYear: Option[String]) =
-    new Def1_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
+    new Def2_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
 
   "validator" should {
     "return the parsed domain object" when {
@@ -42,7 +42,7 @@ class Def1_RetrieveForeignPropertyBsasValidatorSpec extends UnitSpec {
         val result = validator(validNino, validCalculationId, None).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_RetrieveForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None)
+          Def2_RetrieveForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None)
         )
       }
 
@@ -50,7 +50,7 @@ class Def1_RetrieveForeignPropertyBsasValidatorSpec extends UnitSpec {
         val result = validator(validNino, validCalculationId, Some(validTaxYear)).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_RetrieveForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
+          Def2_RetrieveForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
         )
       }
     }
