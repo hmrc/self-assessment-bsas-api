@@ -6,7 +6,7 @@
   "properties": {
     "foreignProperty": {
       "type": "array",
-      "description": "Array containing foreign Non-FHL adjustments.",
+      "description": "Array containing foreign property adjustments.",
       "items": {
         "type": "object",
         "properties": {
