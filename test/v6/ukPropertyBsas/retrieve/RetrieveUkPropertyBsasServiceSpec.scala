@@ -16,14 +16,14 @@
 
 package v6.ukPropertyBsas.retrieve
 
-import common.errors._
+import common.errors.RuleTypeOfBusinessIncorrectError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v6.common.model.TypeOfBusiness
+import v6.common.model.TypeOfBusinessWithFHL.`foreign-property-fhl-eea`
 import v6.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 import v6.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
@@ -58,7 +58,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
-        import TypeOfBusiness._
+        import v6.common.model.TypeOfBusiness._
         List(`self-employment`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
             val response: RetrieveUkPropertyBsasResponse = retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness = typeOfBusiness)

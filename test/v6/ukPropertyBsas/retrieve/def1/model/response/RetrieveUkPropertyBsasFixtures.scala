@@ -18,7 +18,7 @@ package v6.ukPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
-import v6.common.model.{IncomeSourceType, TypeOfBusiness}
+import v6.common.model.{IncomeSourceType, TypeOfBusiness, TypeOfBusinessWithFHL}
 
 object RetrieveUkPropertyBsasFixtures {
 
@@ -91,7 +91,7 @@ object RetrieveUkPropertyBsasFixtures {
   val downstreamInputsInvalidSourceJson: JsValue = Json.parse(
     s"""
       |{
-      |  "incomeSourceType": "01",
+      |  "incomeSourceType": "02",
       |  "incomeSourceId": "XAIS12345678910",
       |  "incomeSourceName": "Business Name",
       |  "accountingPeriodStartDate": "$now",
@@ -298,6 +298,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsFhlJson: JsValue = Json.parse(
     s"""
        |{
+       |  "incomeSourceType": "04",
        |  "typeOfBusiness": "uk-property-fhl",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
@@ -312,6 +313,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsNonFhlJson: JsValue = Json.parse(
     s"""
        |{
+       |  "incomeSourceType": "02",
        |  "typeOfBusiness": "uk-property-non-fhl",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
@@ -574,7 +576,8 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+    incomeSourceType = "04",
+    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-fhl`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
@@ -584,7 +587,8 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsNonFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+    incomeSourceType = "02",
+    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-non-fhl`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,

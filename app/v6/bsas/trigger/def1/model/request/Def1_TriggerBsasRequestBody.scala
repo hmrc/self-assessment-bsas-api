@@ -18,7 +18,7 @@ package v6.bsas.trigger.def1.model.request
 
 import play.api.libs.json.{Json, OWrites, Reads}
 import v6.bsas.trigger.model.TriggerBsasRequestBody
-import v6.common.model.TypeOfBusinessWithFHL
+import v6.common.model.TypeOfBusiness
 
 /** @param typeOfBusiness
   *   reads "self-employment" etc from the vendor request, writes "01" etc to the downstream request.
@@ -34,7 +34,7 @@ object Def1_TriggerBsasRequestBody {
   implicit val reads: Reads[Def1_TriggerBsasRequestBody] = Json.reads[Def1_TriggerBsasRequestBody]
 
   implicit val writes: OWrites[Def1_TriggerBsasRequestBody] = (requestBody: Def1_TriggerBsasRequestBody) => {
-    val typeOfBusiness = TypeOfBusinessWithFHL.parser(requestBody.typeOfBusiness)
+    val typeOfBusiness = TypeOfBusiness.parser(requestBody.typeOfBusiness)
     Json.obj(
       "incomeSourceType"          -> typeOfBusiness.asDownstreamValue,
       "incomeSourceId"            -> requestBody.businessId,

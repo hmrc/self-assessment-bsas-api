@@ -24,9 +24,9 @@ class RetrieveUkPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPro
 
   "schema lookup" when {
     "a tax year is present" must {
-      "use Def1 for tax years from 2023-24" in {
-        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
-          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveUkPropertyBsasSchema.Def1
+      "use Def2 for tax years from 2025-26" in {
+        forTaxYearsFrom(TaxYear.fromMtd("2025-26")) { taxYear =>
+          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveUkPropertyBsasSchema.Def2
         }
       }
 

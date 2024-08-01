@@ -24,7 +24,7 @@ class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[IncomeSourceType](
     ("01", `01`),
-    ("02", `02`),
+    ("02", IncomeSourceTypeWithFHL.`02`),
     ("15", `15`)
   )
 

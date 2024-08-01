@@ -23,6 +23,8 @@ import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixt
 
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
+  import SubmissionPeriod._
+
   testRoundTrip(
     "Submission Period with valid periodId",
     downstreamSubmissionPeriodWithPeriodIdRegexJson,

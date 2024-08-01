@@ -23,20 +23,16 @@ import v6.common.model.TypeOfBusinessWithFHL._
 class TypeOfBusinessWithFHLSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[TypeOfBusinessWithFHL](
-    ("self-employment", `self-employment`),
     ("uk-property-fhl", `uk-property-fhl`),
     ("uk-property-non-fhl", `uk-property-non-fhl`),
-    ("foreign-property-fhl-eea", `foreign-property-fhl-eea`),
-    ("foreign-property", `foreign-property`)
+    ("foreign-property-fhl-eea", `foreign-property-fhl-eea`)
   )
 
   "toIdentifierValue" should {
     "return the correct identifier value" in {
-      TypeOfBusinessWithFHL.`self-employment`.asDownstreamValue shouldBe "01"
       TypeOfBusinessWithFHL.`uk-property-non-fhl`.asDownstreamValue shouldBe "02"
       TypeOfBusinessWithFHL.`uk-property-fhl`.asDownstreamValue shouldBe "04"
       TypeOfBusinessWithFHL.`foreign-property-fhl-eea`.asDownstreamValue shouldBe "03"
-      TypeOfBusinessWithFHL.`foreign-property`.asDownstreamValue shouldBe "15"
     }
   }
 

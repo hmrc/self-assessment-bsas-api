@@ -91,7 +91,7 @@ object RetrieveUkPropertyBsasFixtures {
   val downstreamInputsInvalidSourceJson: JsValue = Json.parse(
     s"""
       |{
-      |  "incomeSourceType": "01",
+      |  "incomeSourceType": "02",
       |  "incomeSourceId": "XAIS12345678910",
       |  "incomeSourceName": "Business Name",
       |  "accountingPeriodStartDate": "$now",
@@ -298,7 +298,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "typeOfBusiness": "uk-property-fhl",
+       |  "incomeSourceType": "04",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
        |  "accountingPeriodStartDate": "$now",
@@ -312,7 +312,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsNonFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "typeOfBusiness": "uk-property-non-fhl",
+       |  "incomeSourceType": "02",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
        |  "accountingPeriodStartDate": "$now",
@@ -574,7 +574,7 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+    incomeSourceType = "04",
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
@@ -584,7 +584,7 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsNonFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+    incomeSourceType = "02",
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
@@ -796,10 +796,7 @@ object RetrieveUkPropertyBsasFixtures {
   def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def2_RetrieveUkPropertyBsasResponse =
     Def2_RetrieveUkPropertyBsasResponse(
       metadata = parsedMetadata,
-      inputs = inputsFhl
-        /** EndMarker */
-        .copy(typeOfBusiness = typeOfBusiness)
-        .copy(typeOfBusiness = typeOfBusiness),
+      inputs = inputsFhl,
       adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
       adjustments = Some(adjustmentsFhl),
       adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)

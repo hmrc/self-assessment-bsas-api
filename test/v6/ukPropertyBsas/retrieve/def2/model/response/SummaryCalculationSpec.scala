@@ -23,6 +23,8 @@ import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixt
 
 class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
+  import AdjustableSummaryCalculation.{readsFhl => readsFhlAdjustable, readsNonFhl => readsNonFhlAdjustable}
+
   testRoundTrip(
     "Adjustable Summary Calculation FHL",
     downstreamSummaryCalculationJson,
@@ -36,6 +38,8 @@ class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with Roun
     adjustableSummaryCalculationNonFhl,
     mtdSummaryCalculationNonFhlJson
   )(readsNonFhlAdjustable)
+
+  import AdjustedSummaryCalculation.{readsFhl => readsFhlAdjusted, readsNonFhl => readsNonFhlAdjusted}
 
   testRoundTrip(
     "Adjusted Summary Calculation FHL",

@@ -23,6 +23,8 @@ import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixt
 
 class SummaryCalculationAdditionsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
+  import SummaryCalculationAdditions._
+
   testRoundTrip(
     "Summary Calculation Additions",
     downstreamSummaryCalculationAdditionsJson,

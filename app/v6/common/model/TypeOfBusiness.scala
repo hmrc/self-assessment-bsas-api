@@ -23,13 +23,9 @@ sealed trait TypeOfBusiness {
   def asDownstreamValue: String
 }
 
-trait HasTypeOfBusiness {
-  def typeOfBusiness: TypeOfBusiness
-}
-
-//noinspection ScalaStyle
 object TypeOfBusiness {
-  val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
+
+  def parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
 
   case object `self-employment` extends TypeOfBusiness {
     val asDownstreamValue: String = "01"
@@ -39,10 +35,36 @@ object TypeOfBusiness {
     val asDownstreamValue: String = "02"
   }
 
-  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
-
   case object `foreign-property` extends TypeOfBusiness {
     val asDownstreamValue: String = "15"
   }
 
+  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
+}
+
+sealed trait TypeOfBusinessWithFHL extends TypeOfBusiness
+
+object TypeOfBusinessWithFHL {
+
+  case object `uk-property-fhl` extends TypeOfBusinessWithFHL {
+    val asDownstreamValue: String = "04"
+  }
+
+  case object `uk-property-non-fhl` extends TypeOfBusinessWithFHL {
+    val asDownstreamValue: String = "02"
+  }
+
+  case object `foreign-property-fhl-eea` extends TypeOfBusinessWithFHL {
+    val asDownstreamValue: String = "03"
+  }
+
+  implicit val format: Format[TypeOfBusinessWithFHL] = Enums.format[TypeOfBusinessWithFHL]
+}
+
+trait HasTypeOfBusiness {
+  def typeOfBusiness: TypeOfBusiness
+}
+
+trait HasTypeOfBusinessWithFHL {
+  def typeOfBusiness: TypeOfBusinessWithFHL
 }
