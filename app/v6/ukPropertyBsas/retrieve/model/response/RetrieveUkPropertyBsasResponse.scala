@@ -20,13 +20,17 @@ import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 import v6.common.model.HasIncomeSourceType
 import v6.ukPropertyBsas.retrieve.def1.model.response.Def1_RetrieveUkPropertyBsasResponse
+import v6.ukPropertyBsas.retrieve.def2.model.response.Def2_RetrieveUkPropertyBsasResponse
 
 trait RetrieveUkPropertyBsasResponse extends HasIncomeSourceType
 
 object RetrieveUkPropertyBsasResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = writesFrom { case a: Def1_RetrieveUkPropertyBsasResponse =>
-    implicitly[OWrites[Def1_RetrieveUkPropertyBsasResponse]].writes(a)
+  implicit val writes: OWrites[RetrieveUkPropertyBsasResponse] = writesFrom {
+    case def1: Def1_RetrieveUkPropertyBsasResponse =>
+      implicitly[OWrites[Def1_RetrieveUkPropertyBsasResponse]].writes(def1)
+    case def2: Def2_RetrieveUkPropertyBsasResponse =>
+      implicitly[OWrites[Def2_RetrieveUkPropertyBsasResponse]].writes(def2)
   }
 
 }
