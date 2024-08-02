@@ -20,13 +20,15 @@ import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear, ResolverSupport}
-import shared.models.errors.MtdError
+import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYearMinMax, ResolverSupport}
+import shared.models.domain.TaxYear
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
 import v5.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 
 object Def1_RetrieveForeignPropertyBsasValidator extends ResolverSupport {
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
+  private val resolveTaxYear = ResolveTaxYearMinMax(minMaxTaxYears, minError = InvalidTaxYearParameterError).resolver.resolveOptionally
 }
 
 class Def1_RetrieveForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
@@ -37,7 +39,7 @@ class Def1_RetrieveForeignPropertyBsasValidator(nino: String, calculationId: Str
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear)
+      resolveTaxYear(taxYear)
     ).mapN(Def1_RetrieveForeignPropertyBsasRequestData)
 
 }

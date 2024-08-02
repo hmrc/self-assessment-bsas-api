@@ -174,6 +174,16 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
       }
     }
 
+    "return RuleTaxYearNotSupportedError" when {
+      "given endDate is after 2025-04-05" in new SetUp {
+        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
+          validator(validNino, triggerBsasRequestJson(endDate = "2025-05-07")).validateAndWrapResult()
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
+        )
+      }
+    }
+
     "return a RuleEndBeforeStartDateError" when {
       "the end date is equal to start date" in new SetUp {
         val body: JsObject                            = triggerBsasRequestJson(startDate = "2022-05-07", endDate = "2022-05-07")
