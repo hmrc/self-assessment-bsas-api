@@ -33,7 +33,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
   "Calling the list Bsas endpoint" should {
     "return a valid response with status OK" when {
 
-      "valid request is made" in new ValidTest {
+      "valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -49,7 +49,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         response.json shouldBe summariesJs
       }
 
-      "valid request is made with foreign property" in new ValidTest {
+      "valid request is made with foreign property" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -65,7 +65,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         response.json shouldBe summariesForeignJs
       }
 
-      "valid request is made without a tax year so that the current tax year is used" in new ValidTest {
+      "valid request is made without a tax year so that the current tax year is used" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -90,7 +90,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
                               requestBusinessId: Option[String],
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new ValidTest {
+        s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String                   = requestNino
           override val taxYear: Option[String]        = Some(requestTaxYear)
@@ -111,12 +111,12 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
       }
 
       val input = List(
-        ("AA1123A", "2019-20", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
+        ("AA1123A", "2025-26", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, NinoFormatError),
         ("AA123456A", "20177", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2019-20", Some("self-employment"), Some("X0IS00"), BAD_REQUEST, BusinessIdFormatError),
-        ("AA123456A", "2019-20", Some("self-employments-or-not"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError),
-        ("AA123456A", "2019-21", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError)
+        ("AA123456A", "2025-26", Some("self-employment"), Some("X0IS00"), BAD_REQUEST, BusinessIdFormatError),
+        ("AA123456A", "2025-27", Some("self-employment"), Some("X0IS00000000210"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
+        ("AA123456A", "2025-26", Some("uk-property-fhl"), Some("X0IS00000000210"), BAD_REQUEST, TypeOfBusinessFormatError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -124,7 +124,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
     "downstream service error" when {
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new ValidTest {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -170,12 +170,14 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String]     = Some("XAIS12345678910")
 
-    def taxYear: Option[String]
-
-    // downstream
-    def downstreamUri: String
-
+    def taxYear: Option[String] = Some("2025-26")
+    
     def setupStubs(): StubMapping
+    
+    // downstream
+    private def downstreamTaxYear: String = "25-26"
+
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
 
     def request: WSRequest = {
       setupStubs()
@@ -201,14 +203,6 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
          |  "reason": "error message"
          |}""".stripMargin
 
-  }
-
-  private trait ValidTest extends Test {
-    def taxYear: Option[String] = Some("2025-26")
-
-    def downstreamTaxYear: String = "25-26"
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$downstreamTaxYear/$nino"
   }
 
 }
