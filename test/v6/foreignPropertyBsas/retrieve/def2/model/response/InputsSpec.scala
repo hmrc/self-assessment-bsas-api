@@ -23,5 +23,5 @@ import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
 class InputsSpec extends UnitSpec with RoundTripTest {
   import Inputs._
 
-  testRoundTrip("Inputs Non-FHL", inputsDesNonFhlJson, parsedNonFhlInputs, inputsMtdNonFhlJson)(reads)
+  testRoundTrip("Inputs ", inputsDesNonFhlJson, parsedNonFhlInputs, inputsMtdNonFhlJson)(reads)
 }

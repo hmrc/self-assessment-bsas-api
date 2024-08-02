@@ -25,10 +25,10 @@ class AdjustmentsExpensesSpec extends UnitSpec with RoundTripTest {
   import AdjustmentsExpenses._
 
   testRoundTrip(
-    "Adjustments Non-FHL",
+    "Adjustments Expenses",
     adjustmentsExpensesDesJson,
     parsedNonFhlAdjustmentsExpenses,
     adjustmentsExpensesMtdNonFhlJson
-  )(readsNonFhl)
+  )(reads)
 
 }

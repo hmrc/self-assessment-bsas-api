@@ -25,7 +25,7 @@ case class AdjustmentsIncome(totalRentsReceived: Option[BigDecimal],
 
 object AdjustmentsIncome {
 
-  val readsNonFhl: Reads[AdjustmentsIncome] = (
+  val reads: Reads[AdjustmentsIncome] = (
     (JsPath \ "rentReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]

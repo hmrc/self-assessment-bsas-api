@@ -26,14 +26,14 @@ case class Adjustments(countryLevelDetail: Option[Seq[Adjustments]],
 
 object Adjustments {
 
-  val readsNonFhl: Reads[Adjustments] = (
+  val reads: Reads[Adjustments] = (
     Reads.pure(None) and
       (JsPath \ "countryCode").readNullable[String] and
-      (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsNonFhl) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsNonFhl)
+      (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
   )(Adjustments.apply _)
 
-  val readsNonFhlSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, readsNonFhl)
+  val readsNonFhlSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, reads)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

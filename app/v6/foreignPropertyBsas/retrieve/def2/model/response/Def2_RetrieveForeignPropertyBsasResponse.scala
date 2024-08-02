@@ -39,13 +39,13 @@ object Def2_RetrieveForeignPropertyBsasResponse {
       inputs   <- (json \ "inputs").validate[Inputs]
 
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation](
-        SummaryCalculation.readsNonFhl
+        SummaryCalculation.reads
       )
 
       adjustments <- nonFhlAdjustmentsReads(json)
 
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation](
-        SummaryCalculation.readsNonFhl
+        SummaryCalculation.reads
       )
     } yield Def2_RetrieveForeignPropertyBsasResponse(
       metadata = metadata,
