@@ -171,9 +171,9 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
     val businessId: Option[String]     = Some("XAIS12345678910")
 
     def taxYear: Option[String] = Some("2025-26")
-    
+
     def setupStubs(): StubMapping
-    
+
     // downstream
     private def downstreamTaxYear: String = "25-26"
 

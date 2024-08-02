@@ -38,7 +38,6 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
         "uk-property",
         "foreign-property"
       ).foreach { typeOfBusiness =>
-
         s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
 
           override def setupStubs(): StubMapping = {
@@ -231,7 +230,6 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
     """.stripMargin
 
   }
-
 
   private trait TysIfsTest extends Test {
     def downstreamTaxYear: String = "25-26"
