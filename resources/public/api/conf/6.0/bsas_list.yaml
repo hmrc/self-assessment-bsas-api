@@ -50,10 +50,14 @@ get:
               - $ref: "./schemas/list/def1/list_response.json"
               - $ref: "./schemas/list/def2/list_response.json"
           examples:
-            example-response:
+            "For TY 2023-24 and before":
               description: Example Response
               value:
-                $ref: "./examples/list/list_response.json"
+                $ref: "./examples/list/def1/list_response.json"
+            "For TY 2024-25 and after":
+              description: Example Response
+              value:
+                $ref: "./examples/list/def2/list_response.json"
 
     400:
       description: Bad request
