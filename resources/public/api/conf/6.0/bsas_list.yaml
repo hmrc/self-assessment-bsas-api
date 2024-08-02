@@ -21,7 +21,7 @@ get:
   parameters:
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
     - $ref: "./common/queryParameters.yaml#/components/parameters/taxYearTysList"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/typeOfBusinessWithFHLOptional"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/typeOfBusinessOptional"
     - $ref: "./common/queryParameters.yaml#/components/parameters/businessIdOptional"
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
@@ -46,7 +46,9 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/list_response.json"
+            oneOf:
+              - $ref: "./schemas/list/def1/list_response.json"
+              - $ref: "./schemas/list/def2/list_response.json"
           examples:
             example-response:
               description: Example Response
