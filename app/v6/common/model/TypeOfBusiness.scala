@@ -21,6 +21,7 @@ import shared.utils.enums.Enums
 
 sealed trait TypeOfBusiness {
   def asDownstreamValue: String
+
 }
 
 object TypeOfBusiness {

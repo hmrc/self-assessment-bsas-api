@@ -797,12 +797,11 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedSummaryCalculation = Some(adjustedSummaryCalculationNonFhl)
   )
 
-  def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def1_RetrieveUkPropertyBsasResponse =
+  def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness: Def1_RetrieveUkPropertyBsasResponse =
     Def1_RetrieveUkPropertyBsasResponse(
       metadata = parsedMetadata,
       inputs = inputsFhl
         /** EndMarker */
-        .copy(typeOfBusiness = typeOfBusiness)
         .copy(typeOfBusiness = typeOfBusiness),
       adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
       adjustments = Some(adjustmentsFhl),

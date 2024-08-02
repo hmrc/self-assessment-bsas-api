@@ -27,7 +27,7 @@ case class Def2_RetrieveUkPropertyBsasResponse(
     adjustments: Option[Adjustments],
     adjustedSummaryCalculation: Option[AdjustedSummaryCalculation]
 ) extends RetrieveUkPropertyBsasResponse {
-  override def incomeSourceType: String = inputs.incomeSourceType
+  override def typeOfBusiness: TypeOfBusinessWithFHL = inputs.typeOfBusiness
 }
 
 object Def2_RetrieveUkPropertyBsasResponse {
@@ -36,7 +36,7 @@ object Def2_RetrieveUkPropertyBsasResponse {
     for {
       metadata <- (json \ "metadata").validate[Metadata]
       inputs   <- (json \ "inputs").validate[Inputs]
-      isFhl = inputs.incomeSourceType == TypeOfBusinessWithFHL.`uk-property-fhl`.asDownstreamValue
+      isFhl = inputs.typeOfBusiness == TypeOfBusinessWithFHL.`uk-property-fhl`
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation")
         .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsNonFhl)
       adjustments <- (json \ "adjustments").validateOpt[Adjustments](if (isFhl) Adjustments.readsFhl else Adjustments.readsNonFhl)
