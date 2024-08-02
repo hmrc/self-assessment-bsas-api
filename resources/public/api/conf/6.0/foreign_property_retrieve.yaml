@@ -101,11 +101,11 @@ get:
             - $ref: "./schemas/retrieve_foreign_property/def1/retrieve_foreign_property.json"
             - $ref: "./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json"
           examples:
-            PRE-TY-2023-24-Foreign-Property-EEA-FHL:
+            PRE-TY-2024-25-Foreign-Property-EEA-FHL:
               description: Foreign Property EEA FHL
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_foreign_property_eeafhl.json"
-            PRE-TY-2023-24-Foreign-Property-Non-FHL:
+            PRE-TY-2024-25-Foreign-Property-Non-FHL:
               description: Foreign Property Non FHL
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_foreign_property_nonfhl.json"
@@ -113,23 +113,19 @@ get:
               description: Foreign Property with Consolidated Expenses
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_foreign_property_consolidated.json"
-            PRE-TY-2023-24-Foreign-Property-with-Property-Allowance:
+            PRE-TY-2024-25-Foreign-Property-with-Property-Allowance:
               description: Foreign Property with Property Allowance
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_foreign_property_allowance.json"
-            TY-2024-25-Foreign-Property-EEA-FHL:
-              description: Foreign Property EEA FHL
+            TY-2025-26-Foreign-Property:
+              description: Foreign Property
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_foreign_property_eeafhl.json"
-            TY-2024-25-Foreign-Property-Non-FHL:
-              description: Foreign Property Non FHL
-              value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_foreign_property_nonfhl.json"
-            TY-2024-25-Foreign-Property-Consolidated-Expenses:
+                $ref: "./examples/retrieveBsas/def2/retrieve_foreign_property.json"
+            TY-2025-26-Foreign-Property-Consolidated-Expenses:
               description: Foreign Property with Consolidated Expenses
               value:
                 $ref: "./examples/retrieveBsas/def2/retrieve_foreign_property_consolidated.json"
-            TY-2024-25-Foreign-Property-with-Property-Allowance:
+            TY-2025-26-Foreign-Property-with-Property-Allowance:
               description: Foreign Property with Property Allowance
               value:
                 $ref: "./examples/retrieveBsas/def2/retrieve_foreign_property_allowance.json"
