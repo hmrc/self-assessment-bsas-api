@@ -9,7 +9,6 @@
   },
   "inputs": {
     "businessId": "XAIS12345678910",
-    "typeOfBusiness": "foreign-property",
     "businessName": "My foreign property business",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",

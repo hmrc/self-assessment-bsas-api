@@ -35,6 +35,14 @@ get:
     | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid. <br><br> See below for details on DYNAMIC scenarios.                             |
     | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                               |
     | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded. <br><br> See below for details on DYNAMIC scenarios.                          |
+    | FOREIGN_PROPERTY_PROFIT                       | Simulates success response foreign property and profit.                                                                                  |
+    | DYNAMIC_FOREIGN_PROPERTY_PROFIT               | Simulates success response foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                             |
+    | FOREIGN_PROPERTY_LOSS                         | Simulates success response foreign property and loss.                                                                                    |
+    | DYNAMIC_FOREIGN_PROPERTY_LOSS                 | Simulates success response foreign property and loss. <br><br> See below for details on DYNAMIC scenarios.                               |
+    | FOREIGN_PROPERTY_CONSOLIDATED                 | Simulates success response adjusted summary and consolidated expenses.                                                                   |
+    | DYNAMIC_FOREIGN_PROPERTY_CONSOLIDATED         | Simulates success response adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.             |
+    | FOREIGN_PROPERTY_ALLOWANCE                    | Simulates success response adjusted summary and propertyAllowance.                                                                       |
+    | DYNAMIC_FOREIGN_PROPERTY_ALLOWANCE            | Simulates success response adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.                  |
     | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.                                                                |
     | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                                                                              |
     | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                                                                              |
