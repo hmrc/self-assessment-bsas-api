@@ -91,38 +91,38 @@ get:
               - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
           examples:
-            PRE-TY-2024-25-UK-FHL-Response:
+            PRE-TY-2025-26-UK-FHL-Response:
               description: UK FHL Response
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_uk_fhl_property.json"
-            PRE-TY-2024-25-UK-Non-FHL-Response:
+            PRE-TY-2025-26-UK-Non-FHL-Response:
               description: UK Non-FHL Response
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property.json"
-            PRE-TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
+            PRE-TY-2025-26-UK-Non-FHL-Consolidated-Expenses-Response:
               description: UK Non-FHL with Consolidated Expenses Response
               value:
                 $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property_consolidated.json"
-            PRE-TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
+            PRE-TY-2025-26-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_property_allowance.json"
-            TY-2024-25-UK-FHL-Response:
+                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property_property_allowance.json"
+            TY-2025-26-UK-FHL-Response:
               description: UK FHL Response
               value:
                 $ref: "./examples/retrieveBsas/def2/retrieve_uk_fhl_property.json"
-            TY-2024-25-UK-Non-FHL-Response:
+            TY-2025-26-UK-Non-FHL-Response:
               description: UK Non-FHL Response
               value:
                 $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property.json"
-            TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
+            TY-2025-26-UK-Non-FHL-Consolidated-Expenses-Response:
               description: UK Non-FHL with Consolidated Expenses Response
               value:
                 $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_consolidated.json"
-            TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
+            TY-2025-26-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_property_allowance.json"
 
 
     400:
