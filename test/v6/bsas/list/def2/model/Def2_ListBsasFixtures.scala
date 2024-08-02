@@ -18,7 +18,7 @@ package v6.bsas.list.def2.model
 
 import play.api.libs.json.{JsArray, JsValue, Json}
 import shared.models.domain.{Status, TaxYear}
-import v6.bsas.list.def2.model.response.{AccountingPeriod, BusinessSource, BsasSummary, Def2_ListBsasResponse}
+import v6.bsas.list.def2.model.response.{AccountingPeriod, BsasSummary, BusinessSource, Def2_ListBsasResponse}
 import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusiness
 
@@ -28,7 +28,7 @@ trait Def2_ListBsasFixtures {
     """
       |{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |  "requestedDateTime": "2019-10-14T11:33:27Z",
+      |  "requestedDateTime": "2025-01-02T12:00:00Z",
       |  "status": "valid",
       |  "adjusted": false
       |}
@@ -37,7 +37,7 @@ trait Def2_ListBsasFixtures {
 
   val bsasSummary: BsasSummary = BsasSummary(
     calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-    requestedDateTime = "2019-10-14T11:33:27Z",
+    requestedDateTime = "2025-01-02T12:00:00Z",
     summaryStatus = Status.`valid`,
     adjustedSummary = false,
     adjustedDateTime = None
@@ -47,7 +47,7 @@ trait Def2_ListBsasFixtures {
     """
       |{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |  "requestedDateTime": "2019-10-14T11:33:27Z",
+      |  "requestedDateTime": "2025-01-02T12:00:00Z",
       |  "summaryStatus": "valid",
       |  "adjustedSummary": false
       |}
@@ -57,22 +57,22 @@ trait Def2_ListBsasFixtures {
   val accountingPeriodDownstreamJson: JsValue = Json.parse(
     """
       |{
-      |  "accountingStartDate": "2018-10-11",
-      |  "accountingEndDate": "2019-10-10"
+      |  "accountingStartDate": "2025-01-01",
+      |  "accountingEndDate": "2026-01-01"
       |}
     """.stripMargin
   )
 
   val accountingPeriod: AccountingPeriod = AccountingPeriod(
-    startDate = "2018-10-11",
-    endDate = "2019-10-10"
+    startDate = "2025-01-01",
+    endDate = "2026-01-01"
   )
 
   val accountingPeriodJson: JsValue = Json.parse(
     """
       |{
-      |  "startDate": "2018-10-11",
-      |  "endDate": "2019-10-10"
+      |  "startDate": "2025-01-01",
+      |  "endDate": "2026-01-01"
       |}
     """.stripMargin
   )
@@ -82,13 +82,13 @@ trait Def2_ListBsasFixtures {
       |{
       |  "incomeSourceId": "000000000000210",
       |  "incomeSourceType": "01",
-      |  "accountingStartDate": "2018-10-11",
-      |  "accountingEndDate": "2019-10-10",
-      |  "taxYear": 2020,
+      |  "accountingStartDate": "2025-01-01",
+      |  "accountingEndDate": "2026-01-01",
+      |  "taxYear": 2026,
       |  "ascCalculations": [
       |    {
       |      "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |      "requestedDateTime": "2019-10-14T11:33:27Z",
+      |      "requestedDateTime": "2025-01-02T12:00:00Z",
       |      "status": "valid",
       |      "adjusted": false
       |    }
@@ -103,14 +103,14 @@ trait Def2_ListBsasFixtures {
       |  "businessId": "000000000000210",
       |  "typeOfBusiness": "self-employment",
       |  "accountingPeriod": {
-      |    "startDate": "2018-10-11",
-      |    "endDate": "2019-10-10"
+      |    "startDate": "2025-01-01",
+      |    "endDate": "2026-01-01"
       |  },
-      |  "taxYear": "2019-20",
+      |  "taxYear": "2025-26",
       |  "summaries": [
       |    {
       |      "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |      "requestedDateTime": "2019-10-14T11:33:27Z",
+      |      "requestedDateTime": "2025-01-02T12:00:00Z",
       |      "summaryStatus": "valid",
       |      "adjustedSummary": false
       |    }
@@ -125,13 +125,13 @@ trait Def2_ListBsasFixtures {
       |  {
       |    "incomeSourceId": "000000000000210",
       |    "incomeSourceType": "01",
-      |    "accountingStartDate": "2018-10-11",
-      |    "accountingEndDate": "2019-10-10",
-      |    "taxYear": 2020,
+      |    "accountingStartDate": "2025-01-01",
+      |    "accountingEndDate": "2026-01-01",
+      |    "taxYear": 2026,
       |    "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |        "requestedDateTime": "2019-10-14T11:33:27Z",
+      |        "requestedDateTime": "2025-01-02T12:00:00Z",
       |        "status": "valid",
       |        "adjusted": false
       |      }
@@ -147,13 +147,13 @@ trait Def2_ListBsasFixtures {
       |  {
       |    "incomeSourceId": "000000000000210",
       |    "incomeSourceType": "15",
-      |    "accountingStartDate": "2018-10-11",
-      |    "accountingEndDate": "2019-10-10",
-      |    "taxYear": 2020,
+      |    "accountingStartDate": "2025-01-01",
+      |    "accountingEndDate": "2026-01-01",
+      |    "taxYear": 2026,
       |    "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |        "requestedDateTime": "2019-10-14T11:33:27Z",
+      |        "requestedDateTime": "2025-01-02T12:00:00Z",
       |        "status": "valid",
       |        "adjusted": false
       |      }
@@ -173,14 +173,14 @@ trait Def2_ListBsasFixtures {
       |      "businessId": "000000000000210",
       |      "typeOfBusiness": "self-employment",
       |      "accountingPeriod": {
-      |        "startDate": "2018-10-11",
-      |        "endDate": "2019-10-10"
+      |        "startDate": "2025-01-01",
+      |        "endDate": "2026-01-01"
       |      },
-      |      "taxYear": "2019-20",
+      |      "taxYear": "2025-26",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |          "requestedDateTime": "2019-10-14T11:33:27Z",
+      |          "requestedDateTime": "2025-01-02T12:00:00Z",
       |          "summaryStatus": "valid",
       |          "adjustedSummary": false
       |        }
@@ -196,13 +196,13 @@ trait Def2_ListBsasFixtures {
       |{
       |  "incomeSourceType": "01",
       |  "incomeSourceId": "000000000000210",
-      |  "taxYear": 2020,
-      |  "accountingStartDate": "2018-10-11",
-      |  "accountingEndDate": "2019-10-10",
+      |  "taxYear": 2026,
+      |  "accountingStartDate": "2025-01-01",
+      |  "accountingEndDate": "2026-01-01",
       |  "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-      |        "requestedDateTime": "2019-10-14T11:33:27Z",
+      |        "requestedDateTime": "2025-01-02T12:00:00Z",
       |        "status": "valid",
       |        "adjusted": false
       |      }
@@ -216,7 +216,7 @@ trait Def2_ListBsasFixtures {
       listBsasResponseDownstreamJsonSE
     ))
 
-  def businessSourceSummary(taxYear: String = "2019-20"): BusinessSource = BusinessSource(
+  def businessSourceSummary(taxYear: String = "2025-26"): BusinessSource = BusinessSource(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusiness.`self-employment`,
     accountingPeriod = accountingPeriod,
@@ -233,14 +233,14 @@ trait Def2_ListBsasFixtures {
          |      "businessId": "000000000000210",
          |      "typeOfBusiness": "self-employment",
          |      "accountingPeriod": {
-         |        "startDate": "2018-10-11",
-         |        "endDate": "2019-10-10"
+         |        "startDate": "2025-01-01",
+         |        "endDate": "2026-01-01"
          |      },
-         |      "taxYear": "2019-20",
+         |      "taxYear": "2025-26",
          |      "summaries": [
          |        {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-         |          "requestedDateTime": "2019-10-14T11:33:27Z",
+         |          "requestedDateTime": "2025-01-02T12:00:00Z",
          |          "summaryStatus": "valid",
          |          "adjustedSummary": false
          |        }
@@ -259,15 +259,15 @@ trait Def2_ListBsasFixtures {
          |    {
          |      "typeOfBusiness": "foreign-property",
          |      "businessId": "000000000000210",
-         |      "taxYear": "2019-20",
+         |      "taxYear": "2025-26",
          |      "accountingPeriod": {
-         |        "startDate": "2018-10-11",
-         |        "endDate": "2019-10-10"
+         |        "startDate": "2025-01-01",
+         |        "endDate": "2026-01-01"
          |      },
          |      "summaries": [
          |        {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
-         |          "requestedDateTime": "2019-10-14T11:33:27Z",
+         |          "requestedDateTime": "2025-01-02T12:00:00Z",
          |          "summaryStatus": "valid",
          |          "adjustedSummary": false
          |        }
