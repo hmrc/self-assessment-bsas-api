@@ -50,11 +50,11 @@ get:
               - $ref: "./schemas/list/def1/list_response.json"
               - $ref: "./schemas/list/def2/list_response.json"
           examples:
-            "For TY 2023-24 and before":
+            "For TY 2024-25 and before":
               description: Example Response
               value:
                 $ref: "./examples/list/def1/list_response.json"
-            "For TY 2024-25 and after":
+            "For TY 2025-26 and after":
               description: Example Response
               value:
                 $ref: "./examples/list/def2/list_response.json"
