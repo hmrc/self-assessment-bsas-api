@@ -18,7 +18,7 @@ package v6.ukPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
-import v6.common.model.{IncomeSourceType, TypeOfBusiness, TypeOfBusinessWithFHL}
+import v6.common.model.{IncomeSourceType, TypeOfBusiness}
 
 object RetrieveUkPropertyBsasFixtures {
 
@@ -298,7 +298,6 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "typeOfBusiness": "uk-property-fhl",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
        |  "accountingPeriodStartDate": "$now",
@@ -312,7 +311,6 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsNonFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "typeOfBusiness": "uk-property-non-fhl",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
        |  "accountingPeriodStartDate": "$now",
@@ -574,7 +572,7 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-fhl`,
+    incomeSourceType = "04",
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
@@ -584,7 +582,7 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsNonFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-non-fhl`,
+    incomeSourceType = "02",
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,

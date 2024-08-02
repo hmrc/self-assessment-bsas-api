@@ -21,18 +21,18 @@ import cats.data.Validated.{Invalid, Valid}
 import common.errors.TypeOfBusinessFormatError
 import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
-import v6.common.model.TypeOfBusiness
+import v6.common.model.TypeOfBusinessWithFHL
 
 import scala.util.{Failure, Success, Try}
 
 object ResolveTypeOfBusinessWithFHL extends ResolverSupport {
 
-  val resolver: Resolver[String, TypeOfBusiness] = value =>
-    Try(TypeOfBusiness.parser(value)) match {
+  val resolver: Resolver[String, TypeOfBusinessWithFHL] = value =>
+    Try(TypeOfBusinessWithFHL.parser(value)) match {
       case Failure(_)              => Invalid(List(TypeOfBusinessFormatError))
       case Success(typeOfBusiness) => Valid(typeOfBusiness)
     }
 
-  def apply(value: String): Validated[Seq[MtdError], TypeOfBusiness] = resolver(value)
+  def apply(value: String): Validated[Seq[MtdError], TypeOfBusinessWithFHL] = resolver(value)
 
 }

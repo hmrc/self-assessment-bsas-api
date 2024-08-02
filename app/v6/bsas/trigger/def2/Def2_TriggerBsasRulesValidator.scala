@@ -27,7 +27,6 @@ import shared.models.errors.MtdError
 import v6.bsas.trigger.def2.model.request.Def2_TriggerBsasRequestData
 import v6.common.model.TypeOfBusiness
 import v6.common.model.TypeOfBusiness.{`foreign-property`, `self-employment`, `uk-property`}
-import v6.common.model.TypeOfBusinessWithFHL.{`foreign-property-fhl-eea`, `uk-property-fhl`, `uk-property-non-fhl`}
 import v6.common.resolvers.ResolveTypeOfBusiness
 
 import java.time.LocalDate
@@ -72,9 +71,9 @@ class Def2_TriggerBsasRulesValidator(implicit bsasConfig: BsasConfig) extends Ru
   private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusiness): Validated[Seq[MtdError], Unit] = {
 
     val earliestDate: LocalDate = typeOfBusiness match {
-      case `self-employment` | `uk-property` | `uk-property-fhl` | `uk-property-non-fhl` =>
+      case `self-employment` | `uk-property` =>
         selfEmploymentAndUkPropertyEarliestEndDate
-      case `foreign-property` | `foreign-property-fhl-eea` =>
+      case `foreign-property` =>
         foreignPropertyEarliestEndDate
     }
 

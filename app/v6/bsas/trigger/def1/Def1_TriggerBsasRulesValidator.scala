@@ -25,9 +25,14 @@ import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
 import shared.models.errors.MtdError
 import v6.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
-import v6.common.model.TypeOfBusiness
-import v6.common.model.TypeOfBusiness.{`foreign-property`, `self-employment`, `uk-property`}
-import v6.common.model.TypeOfBusinessWithFHL.{`foreign-property-fhl-eea`, `uk-property-fhl`, `uk-property-non-fhl`}
+import v6.common.model.TypeOfBusinessWithFHL
+import v6.common.model.TypeOfBusinessWithFHL.{
+  `foreign-property-fhl-eea`,
+  `foreign-property`,
+  `self-employment`,
+  `uk-property-fhl`,
+  `uk-property-non-fhl`
+}
 import v6.common.resolvers.ResolveTypeOfBusinessWithFHL
 
 import java.time.LocalDate
@@ -69,10 +74,10 @@ class Def1_TriggerBsasRulesValidator(implicit bsasConfig: BsasConfig) extends Ru
       .onSuccess(parsed)
   }
 
-  private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusiness): Validated[Seq[MtdError], Unit] = {
+  private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusinessWithFHL): Validated[Seq[MtdError], Unit] = {
 
     val earliestDate: LocalDate = typeOfBusiness match {
-      case `self-employment` | `uk-property` | `uk-property-fhl` | `uk-property-non-fhl` =>
+      case `self-employment` | `uk-property-fhl` | `uk-property-non-fhl` =>
         selfEmploymentAndUkPropertyEarliestEndDate
       case `foreign-property-fhl-eea` | `foreign-property` =>
         foreignPropertyEarliestEndDate

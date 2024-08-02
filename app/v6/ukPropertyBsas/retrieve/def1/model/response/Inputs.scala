@@ -20,11 +20,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import shared.models.domain.Source
-import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusiness}
+import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class Inputs(
     incomeSourceType: String,
-    typeOfBusiness: TypeOfBusiness,
+    typeOfBusiness: TypeOfBusinessWithFHL,
     businessId: String,
     businessName: Option[String],
     accountingPeriodStartDate: String,
@@ -46,5 +46,17 @@ object Inputs {
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
   )(Inputs.apply _)
 
-  implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
+  // implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
+
+  implicit val writes: OWrites[Inputs] = (o: Inputs) =>
+    Json.obj(
+      "typeOfBusiness"            -> o.typeOfBusiness,
+      "businessId"                -> o.businessId,
+      "businessName"              -> o.businessName,
+      "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
+      "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
+      "source"                    -> o.source,
+      "submissionPeriods"         -> o.submissionPeriods
+    )
+
 }

@@ -18,7 +18,7 @@ package v6.ukPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
-import v6.common.model.{IncomeSourceType, TypeOfBusiness, TypeOfBusinessWithFHL}
+import v6.common.model.{IncomeSourceType, TypeOfBusinessWithFHL}
 
 object RetrieveUkPropertyBsasFixtures {
 
@@ -298,7 +298,6 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "incomeSourceType": "04",
        |  "typeOfBusiness": "uk-property-fhl",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
@@ -313,7 +312,6 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsNonFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "incomeSourceType": "02",
        |  "typeOfBusiness": "uk-property-non-fhl",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
@@ -797,12 +795,12 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedSummaryCalculation = Some(adjustedSummaryCalculationNonFhl)
   )
 
-  def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness: Def1_RetrieveUkPropertyBsasResponse =
+  def retrieveBsasResponseInvalidIncomeSourceType(incomeSourceType: String): Def1_RetrieveUkPropertyBsasResponse =
     Def1_RetrieveUkPropertyBsasResponse(
       metadata = parsedMetadata,
       inputs = inputsFhl
         /** EndMarker */
-        .copy(typeOfBusiness = typeOfBusiness),
+        .copy(incomeSourceType = incomeSourceType),
       adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
       adjustments = Some(adjustmentsFhl),
       adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)

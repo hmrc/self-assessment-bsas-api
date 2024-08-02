@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v6.bsas.trigger.def1.model.request.{AccountingPeriod, Def1_TriggerBsasRequestBody}
 import v6.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
-import v6.common.model.TypeOfBusiness
+import v6.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
 
 object Def1_TriggerBsasFixtures {
 
@@ -187,7 +187,7 @@ object Def1_TriggerBsasFixtures {
 
   def triggerBsasRawDataBody(startDate: String = "2019-05-05",
                              endDate: String = "2020-05-06",
-                             typeOfBusiness: String = TypeOfBusiness.`self-employment`.toString,
+                             typeOfBusiness: String = TypeOfBusinessWithFHL.`self-employment`.toString,
                              businessId: String = "XAIS12345678901"): AnyContentAsJson = {
 
     AnyContentAsJson(
@@ -200,7 +200,7 @@ object Def1_TriggerBsasFixtures {
 
   def triggerBsasRequestDataBody(startDate: String = "2019-05-05",
                                  endDate: String = "2020-05-06",
-                                 typeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`,
+                                 typeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`self-employment`,
                                  businessId: String = "XAIS12345678901"): Def1_TriggerBsasRequestBody = {
     Def1_TriggerBsasRequestBody(
       AccountingPeriod(startDate, endDate),

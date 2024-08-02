@@ -22,7 +22,7 @@ import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.ServiceOutcome
 import v6.common.BaseRetrieveBsasService
-import v6.common.model.TypeOfBusinessWithFHL
+import v6.common.model.{IncomeSourceType, IncomeSourceTypeWithFHL}
 import v6.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 import v6.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
@@ -32,9 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveUkPropertyBsasService @Inject() (connector: RetrieveUkPropertyBsasConnector) extends BaseRetrieveBsasService {
 
-  protected val supportedTypesOfBusiness: Set[TypeOfBusinessWithFHL] =
-    Set(TypeOfBusinessWithFHL.`uk-property-fhl`, TypeOfBusinessWithFHL.`uk-property-non-fhl`)
-  // protected val supportedIncomeSourceType: Set[String] = Set(IncomeSourceTypeWithFHL.`04`.toString, IncomeSourceType.`02`.toString)
+  protected val supportedIncomeSourceType: Set[String] = Set(IncomeSourceTypeWithFHL.`04`.toString, IncomeSourceType.`02`.toString)
 
   private val errorMap: Map[String, MtdError] = {
 

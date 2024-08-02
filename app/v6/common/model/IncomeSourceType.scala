@@ -44,29 +44,3 @@ object IncomeSourceType {
 
   implicit val format: json.Format[IncomeSourceType] = Enums.format[IncomeSourceType]
 }
-
-sealed trait IncomeSourceTypeWithFHL extends IncomeSourceType {
-  def toTypeOfBusiness: TypeOfBusinessWithFHL
-}
-
-trait HasIncomeSourceTypeWithFHL {
-  def incomeSourceType: String
-}
-
-//noinspection ScalaStyle
-object IncomeSourceTypeWithFHL {
-
-  case object `02` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`uk-property-non-fhl`
-  }
-
-  case object `03` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`foreign-property-fhl-eea`
-  }
-
-  case object `04` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`uk-property-fhl`
-  }
-
-  implicit val format: json.Format[IncomeSourceTypeWithFHL] = Enums.format[IncomeSourceTypeWithFHL]
-}

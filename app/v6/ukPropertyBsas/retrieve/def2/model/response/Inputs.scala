@@ -20,10 +20,9 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import shared.models.domain.Source
-import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class Inputs(
-    typeOfBusiness: TypeOfBusinessWithFHL,
+    incomeSourceType: String,
     businessId: String,
     businessName: Option[String],
     accountingPeriodStartDate: String,
@@ -35,7 +34,7 @@ case class Inputs(
 object Inputs {
 
   implicit val reads: Reads[Inputs] = (
-    (JsPath \ "incomeSourceType").read[IncomeSourceTypeWithFHL].map(_.toTypeOfBusiness) and
+    (JsPath \ "incomeSourceType").read[String] and
       (JsPath \ "incomeSourceId").read[String] and
       (JsPath \ "incomeSourceName").readNullable[String] and
       (JsPath \ "accountingPeriodStartDate").read[String] and
@@ -44,16 +43,14 @@ object Inputs {
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
   )(Inputs.apply _)
 
-  implicit val writes: Writes[Inputs] = (
-    (JsPath \ "incomeSourceId").write[String] and
-      (JsPath \ "incomeSourceName").writeNullable[String] and
-      (JsPath \ "accountingPeriodStartDate").write[String] and
-      (JsPath \ "accountingPeriodEndDate").write[String] and
-      (JsPath \ "source").write[Source] and
-      (JsPath \ "submissionPeriods").write[Seq[SubmissionPeriod]]
-  )(unlift(Inputs.unapply) andThen {
-    case (_, businessId, businessName, accountingPeriodStartDate, accountingPeriodEndDate, source, submissionPeriods) =>
-      (businessId, businessName, accountingPeriodStartDate, accountingPeriodEndDate, source, submissionPeriods)
-  })
+  implicit val writes: OWrites[Inputs] = (o: Inputs) =>
+    Json.obj(
+      "businessId"                -> o.businessId,
+      "businessName"              -> o.businessName,
+      "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
+      "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
+      "source"                    -> o.source,
+      "submissionPeriods"         -> o.submissionPeriods
+    )
 
 }
