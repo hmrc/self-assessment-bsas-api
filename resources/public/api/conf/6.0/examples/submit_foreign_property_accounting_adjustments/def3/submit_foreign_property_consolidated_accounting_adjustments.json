@@ -1,0 +1,15 @@
+{
+  "foreignProperty": [
+    {
+      "countryCode": "FRA",
+      "income": {
+        "totalRentsReceived": 1000.45,
+        "premiumsOfLeaseGrant": -99.99,
+        "otherPropertyIncome": 1000.00
+      },
+      "expenses": {
+        "consolidatedExpenses": 999.99
+      }
+    }
+  ]
+}

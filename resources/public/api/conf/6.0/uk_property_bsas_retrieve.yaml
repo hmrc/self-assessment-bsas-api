@@ -114,7 +114,7 @@ get:
             TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_property_allowance.json"
 
 
     400:
