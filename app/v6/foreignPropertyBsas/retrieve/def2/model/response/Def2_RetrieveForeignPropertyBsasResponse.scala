@@ -17,7 +17,6 @@
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.json._
-
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
 case class Def2_RetrieveForeignPropertyBsasResponse(
@@ -29,7 +28,6 @@ case class Def2_RetrieveForeignPropertyBsasResponse(
 ) extends RetrieveForeignPropertyBsasResponse {
 
   override def incomeSourceType: String = inputs.incomeSourceType
-  // override def typeOfBusiness: TypeOfBusiness = inputs.typeOfBusiness
 
 }
 
@@ -57,9 +55,6 @@ object Def2_RetrieveForeignPropertyBsasResponse {
       adjustedSummaryCalculation = adjustedSummaryCalculation
     )
 
-  /*private def fhlEeaAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
-    (json \ "adjustments").validateOpt[Adjustments](Adjustments.readsNonFhl)*/
-
   private def nonFhlAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments")
       .validateOpt[Seq[Adjustments]](Adjustments.readsNonFhlSeq)
@@ -67,27 +62,5 @@ object Def2_RetrieveForeignPropertyBsasResponse {
       .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
 
   implicit val writes: OWrites[Def2_RetrieveForeignPropertyBsasResponse] = Json.writes[Def2_RetrieveForeignPropertyBsasResponse]
-
-  /*implicit val writes: OWrites[Def2_RetrieveForeignPropertyBsasResponse] = (json: JsValue) =>
-    for {
-      metadata <- (json \ "metadata").validate[Metadata]
-      inputs   <- (json \ "inputs").validate[Inputs]
-
-      adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation](
-        SummaryCalculation.readsNonFhl
-      )
-
-      adjustments <- nonFhlAdjustmentsReads(json)
-
-      adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation](
-        SummaryCalculation.readsNonFhl
-      )
-    } yield Def2_RetrieveForeignPropertyBsasResponse(
-      metadata = metadata,
-      inputs = inputs,
-      adjustableSummaryCalculation = adjustableSummaryCalculation,
-      adjustments = adjustments,
-      adjustedSummaryCalculation = adjustedSummaryCalculation
-    )*/
 
 }

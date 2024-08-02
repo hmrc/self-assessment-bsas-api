@@ -71,7 +71,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     /*"return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
-        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
+        checkTypeOfBusinessIncorrectWith(Def1_RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
       }
 
       "Downstream response is self employment" in {
@@ -176,7 +176,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       buildRequest(s"/$nino/foreign-property/$calculationId")
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }

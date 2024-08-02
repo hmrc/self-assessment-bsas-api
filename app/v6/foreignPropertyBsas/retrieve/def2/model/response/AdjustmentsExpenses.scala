@@ -33,18 +33,6 @@ case class AdjustmentsExpenses(
 
 object AdjustmentsExpenses {
 
-  val readsFhl: Reads[AdjustmentsExpenses] = (
-    (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
-      (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
-      (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and
-      (JsPath \ "financialCosts").readNullable[BigDecimal] and
-      (JsPath \ "professionalFees").readNullable[BigDecimal] and
-      (JsPath \ "costOfServices").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      (JsPath \ "other").readNullable[BigDecimal] and
-      (JsPath \ "travelCosts").readNullable[BigDecimal]
-  )(AdjustmentsExpenses.apply _)
-
   val readsNonFhl: Reads[AdjustmentsExpenses] = (
     (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
       (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and

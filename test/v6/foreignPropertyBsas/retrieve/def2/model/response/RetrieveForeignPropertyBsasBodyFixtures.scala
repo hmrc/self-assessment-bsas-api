@@ -42,18 +42,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
-  /*lazy val inputsDesFhlJson: JsValue = Json.parse(
-    s"""{
-       |  "incomeSourceId": "000000000000210",
-       |  "incomeSourceType": "15",
-       |  "incomeSourceName": "Business Name",
-       |  "accountingPeriodStartDate": "2019-04-06",
-       |  "accountingPeriodEndDate": "2020-04-05",
-       |  "source": "MTD-SA",
-       |  "submissionPeriods": [$submissionPeriodDesJson]
-       |}""".stripMargin
-  )*/
-
   lazy val inputsDesNonFhlJson: JsValue = Json.parse(
     s"""{
        |  "incomeSourceId": "000000000000210",
@@ -205,16 +193,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  /*lazy val retrieveForeignPropertyBsasDesFhlJson: JsValue = Json.parse(
-    s"""{
-       |  "metadata": $metadataDesJson,
-       |  "inputs": $inputsDesFhlJson,
-       |  "adjustableSummaryCalculation": $summaryCalculationDesFhlJson,
-       |  "adjustments": $adjustmentsDesFhlJson,
-       |  "adjustedSummaryCalculation": $summaryCalculationDesFhlJson
-       |}""".stripMargin
-  )*/
-
   lazy val retrieveForeignPropertyBsasDesNonFhlJson: JsValue = Json.parse(
     s"""{
        |  "metadata": $metadataDesJson,
@@ -246,18 +224,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "receivedDateTime": "2019-02-15T09:35:04.843Z"
       |}""".stripMargin
   )
-
-  /*lazy val inputsMtdFhlJson: JsValue = Json.parse(
-    s"""{
-       |  "businessId": "000000000000210",
-       |  "typeOfBusiness": "foreign-property-fhl-eea",
-       |  "businessName": "Business Name",
-       |  "accountingPeriodStartDate": "2019-04-06",
-       |  "accountingPeriodEndDate": "2020-04-05",
-       |  "source": "MTD-SA",
-       |  "submissionPeriods": [$submissionPeriodMtdJson]
-       |}""".stripMargin
-  )*/
 
   lazy val inputsMtdNonFhlJson: JsValue = Json.parse(
     s"""{
@@ -444,16 +410,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  /*lazy val retrieveForeignPropertyBsasMtdFhlJson: JsValue = Json.parse(
-    s"""{
-       |  "metadata": $metadataMtdJson,
-       |  "inputs": $inputsMtdFhlJson,
-       |  "adjustableSummaryCalculation": $summaryCalculationMtdFhlJson,
-       |  "adjustments": $adjustmentsMtdFhlJson,
-       |  "adjustedSummaryCalculation": $summaryCalculationMtdFhlJson
-       |}""".stripMargin
-  )*/
-
   lazy val retrieveForeignPropertyBsasMtdNonFhlJson: JsValue = Json.parse(
     s"""{
        |  "metadata": $metadataMtdJson,
@@ -481,17 +437,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     endDate = "2020-04-05",
     receivedDateTime = "2019-02-15T09:35:04.843Z"
   )
-
-  /*lazy val parsedFhlInputs: Inputs = Inputs(
-    businessId = "000000000000210",
-    // typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`, typeOfBusiness = TypeOfBusiness.`foreign-property` ,
-    incomeSourceType = "03",
-    businessName = Some("Business Name"),
-    accountingPeriodStartDate = "2019-04-06",
-    accountingPeriodEndDate = "2020-04-05",
-    source = "MTD-SA",
-    submissionPeriods = List(parsedSubmissionPeriod)
-  )*/
 
   lazy val parsedNonFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",
@@ -665,14 +610,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     income = None,
     expenses = None
   )
-
-  /*lazy val parsedFhlRetrieveForeignPropertyBsasResponse: Def2_RetrieveForeignPropertyBsasResponse = Def2_RetrieveForeignPropertyBsasResponse(
-    metadata = parsedMetadata,
-    inputs = parsedFhlInputs,
-    adjustableSummaryCalculation = parsedFhlsummaryCalculation,
-    adjustments = Some(parsedFhlAdjustments),
-    adjustedSummaryCalculation = Some(parsedFhlsummaryCalculation)
-  )*/
 
   lazy val parsedNonFhlRetrieveForeignPropertyBsasResponse: Def2_RetrieveForeignPropertyBsasResponse = Def2_RetrieveForeignPropertyBsasResponse(
     metadata = parsedMetadata,

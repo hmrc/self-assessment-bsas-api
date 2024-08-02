@@ -484,15 +484,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     receivedDateTime = "2019-02-15T09:35:04.843Z"
   )
 
-  /*lazy val parsedFhlInputs: Inputs = Inputs(
-    businessId = "000000000000210",
-    typeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`,
-    businessName = Some("Business Name"),
-    accountingPeriodStartDate = "2019-04-06",
-    accountingPeriodEndDate = "2020-04-05",
-    source = "MTD-SA",
-    submissionPeriods = List(parsedSubmissionPeriod)
-  )*/
   lazy val parsedFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",
     incomeSourceType = "03",
@@ -503,16 +494,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     source = "MTD-SA",
     submissionPeriods = List(parsedSubmissionPeriod)
   )
-
-  /*lazy val parsedNonFhlInputs: Inputs = Inputs(
-    businessId = "000000000000210",
-    typeOfBusiness = TypeOfBusiness.`foreign-property`,
-    businessName = Some("Business Name"),
-    accountingPeriodStartDate = "2019-04-06",
-    accountingPeriodEndDate = "2020-04-05",
-    source = "MTD-SA",
-    submissionPeriods = List(parsedSubmissionPeriod)
-  )*/
 
   lazy val parsedNonFhlInputs: Inputs = Inputs(
     businessId = "000000000000210",

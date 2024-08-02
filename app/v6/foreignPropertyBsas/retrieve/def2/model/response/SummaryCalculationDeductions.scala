@@ -30,17 +30,6 @@ case class SummaryCalculationDeductions(annualInvestmentAllowance: Option[BigDec
 
 object SummaryCalculationDeductions {
 
-  val readsFhl: Reads[SummaryCalculationDeductions] = (
-    (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      Reads.pure(None) and
-      (JsPath \ "propertyAllowance").readNullable[BigDecimal] and
-      (JsPath \ "otherCapitalAllowance").readNullable[BigDecimal] and
-      (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-  )(SummaryCalculationDeductions.apply _)
-
   val readsNonFhl: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
       (JsPath \ "costOfReplacingDomesticItems").readNullable[BigDecimal] and

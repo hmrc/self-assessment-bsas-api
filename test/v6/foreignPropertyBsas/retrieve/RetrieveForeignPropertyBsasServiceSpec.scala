@@ -36,7 +36,6 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
-  // val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = Some(TaxYear.fromMtd("2025-26")))
 
   val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponse
 

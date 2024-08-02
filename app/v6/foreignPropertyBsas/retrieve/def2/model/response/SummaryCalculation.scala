@@ -35,22 +35,6 @@ case class SummaryCalculation(totalIncome: Option[BigDecimal],
 
 object SummaryCalculation {
 
-  val readsFhl: Reads[SummaryCalculation] = (
-    (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsFhl) and
-      (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses] and
-      (JsPath \ "netProfit").readNullable[BigDecimal] and
-      (JsPath \ "netLoss").readNullable[BigDecimal] and
-      (JsPath \ "totalAdditions").readNullable[BigDecimal] and
-      (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
-      (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsFhl) and
-      (JsPath \ "taxableProfit").readNullable[BigDecimal] and
-      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal] and
-      Reads.pure(None)
-  )(SummaryCalculation.apply _)
-
   val readsNonFhl: Reads[SummaryCalculation] = (
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
       (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsNonFhl) and

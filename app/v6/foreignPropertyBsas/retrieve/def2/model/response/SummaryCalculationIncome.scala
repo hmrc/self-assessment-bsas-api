@@ -25,12 +25,6 @@ case class SummaryCalculationIncome(totalRentsReceived: Option[BigDecimal],
 
 object SummaryCalculationIncome {
 
-  val readsFhl: Reads[SummaryCalculationIncome] = (
-    (JsPath \ "rent").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      Reads.pure(None)
-  )(SummaryCalculationIncome.apply _)
-
   val readsNonFhl: Reads[SummaryCalculationIncome] = (
     (JsPath \ "rent").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and

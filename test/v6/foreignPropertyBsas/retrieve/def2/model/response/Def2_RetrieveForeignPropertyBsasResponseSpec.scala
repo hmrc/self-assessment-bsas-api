@@ -24,13 +24,6 @@ class Def2_RetrieveForeignPropertyBsasResponseSpec extends UnitSpec with RoundTr
 
   import Def2_RetrieveForeignPropertyBsasResponse._
 
-  /*testRoundTrip(
-    "Retrieve Foreign Property Bsas Response FHL",
-    retrieveForeignPropertyBsasDesFhlJson,
-    parsedFhlRetrieveForeignPropertyBsasResponse,
-    retrieveForeignPropertyBsasMtdFhlJson
-  )(reads)*/
-
   testRoundTrip(
     "Retrieve Foreign Property Bsas Response Non-FHL",
     retrieveForeignPropertyBsasDesNonFhlJson,

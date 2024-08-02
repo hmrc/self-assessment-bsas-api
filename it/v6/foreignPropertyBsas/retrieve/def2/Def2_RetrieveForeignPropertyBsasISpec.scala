@@ -25,9 +25,7 @@ import shared.models.errors._
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
-  // retrieveForeignPropertyBsasDesFhlJson,
   retrieveForeignPropertyBsasDesNonFhlJson,
-  // retrieveForeignPropertyBsasMtdFhlJson,
   retrieveForeignPropertyBsasMtdNonFhlJson
 }
 
@@ -35,27 +33,6 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
-      /*"valid request is made and Non-fhl is returned" in new NonTysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
-
-        val response: WSResponse = await(request.get())
-
-        response.json shouldBe retrieveForeignPropertyBsasMtdNonFhlJson
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-
-      }*/
-
-      /*"valid request is made and fhl is returned" in new NonTysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson)
-
-        val response: WSResponse = await(request.get())
-
-        response.json shouldBe retrieveForeignPropertyBsasMtdFhlJson
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-
-      }*/
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
         DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
@@ -68,27 +45,6 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
       }
     }
-
-    /*"return error response with status BAD_REQUEST" when {
-      "Downstream response is UK property" in {
-        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
-      }
-
-      "Downstream response is self employment" in {
-        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson)
-      }
-
-      def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =
-        new NonTysTest {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponse)
-
-          val response: WSResponse = await(request.get())
-
-          response.json shouldBe RuleTypeOfBusinessIncorrectError.asJson
-          response.status shouldBe BAD_REQUEST
-          response.header("Content-Type") shouldBe Some("application/json")
-        }
-    }*/
 
     "return error according to spec" when {
       def validationErrorTest(requestNino: String,
@@ -182,15 +138,6 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     }
 
   }
-
-  /*private trait NonTysTest extends Test {
-    def taxYear: Option[String] = None
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-  }*/
 
   private trait TysTest extends Test {
     def taxYear: Option[String] = Some("2025-26")

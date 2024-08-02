@@ -17,7 +17,7 @@
 package v6.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsObject, JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class Inputs(businessId: String,
@@ -42,11 +42,8 @@ object Inputs {
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriods]]
   )(Inputs.apply _)
 
-  // implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
-
-  implicit val writes: OWrites[Inputs] = new OWrites[Inputs] {
-
-    override def writes(o: Inputs): JsObject = Json.obj(
+  implicit val writes: OWrites[Inputs] = (o: Inputs) =>
+    Json.obj(
       "businessId"                -> o.businessId,
       "typeOfBusiness"            -> o.typeOfBusiness,
       "businessName"              -> o.businessName,
@@ -55,7 +52,5 @@ object Inputs {
       "source"                    -> o.source,
       "submissionPeriods"         -> o.submissionPeriods
     )
-
-  }
 
 }
