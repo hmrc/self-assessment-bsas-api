@@ -20,9 +20,9 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.utils.UnitSpec
 import v6.ukPropertyBsas.submit.def3.model.request
 
-class FHLExpensesSpec extends UnitSpec {
+class ExpensesSpec extends UnitSpec {
 
-  private val json: JsValue = Json.parse("""
+  private val expensesJson: JsValue = Json.parse("""
       |{
       |  "premisesRunningCosts": 1.12,
       |  "repairsAndMaintenance": 2.12,
@@ -31,11 +31,11 @@ class FHLExpensesSpec extends UnitSpec {
       |  "costOfServices": 6.12,
       |  "travelCosts": 5.12,
       |  "other": 7.12,
-      |  "consolidatedExpenses": 8.12
+      |  "residentialFinancialCost": 8.12
       |}
       |""".stripMargin)
 
-  private val fhlExpenses: request.FHLExpenses = FHLExpenses(
+  private val expenses: request.Expenses = Expenses(
     premisesRunningCosts = Some(1.12),
     repairsAndMaintenance = Some(2.12),
     financialCosts = Some(3.12),
@@ -43,21 +43,44 @@ class FHLExpensesSpec extends UnitSpec {
     travelCosts = Some(5.12),
     costOfServices = Some(6.12),
     other = Some(7.12),
+    residentialFinancialCost = Some(8.12),
+    consolidatedExpenses = None
+  )
+
+  private val consolidatedExpensesJson: JsValue = Json.parse("""
+      |{
+      |  "consolidatedExpenses": 8.12
+      |}
+      |""".stripMargin)
+
+  private val consolidatedExpenses: request.Expenses = Expenses(
+    premisesRunningCosts = None,
+    repairsAndMaintenance = None,
+    financialCosts = None,
+    professionalFees = None,
+    travelCosts = None,
+    costOfServices = None,
+    other = None,
+    residentialFinancialCost = None,
     consolidatedExpenses = Some(8.12)
   )
 
-  private val emptyFhlExpenses = FHLExpenses(None, None, None, None, None, None, None, None)
+  private val emptyExpenses = Expenses(None, None, None, None, None, None, None, None, None)
 
   "reads" when {
     "passed mtd json" should {
       "return the corresponding model" in {
-        json.as[request.FHLExpenses] shouldBe fhlExpenses
+        expensesJson.as[request.Expenses] shouldBe expenses
+      }
+
+      "return the corresponding model with only consolidated expenses" in {
+        consolidatedExpensesJson.as[request.Expenses] shouldBe consolidatedExpenses
       }
     }
 
     "passed an empty JSON" should {
       "return an empty model" in {
-        JsObject.empty.as[request.FHLExpenses] shouldBe emptyFhlExpenses
+        JsObject.empty.as[request.Expenses] shouldBe emptyExpenses
       }
     }
   }
@@ -65,13 +88,13 @@ class FHLExpensesSpec extends UnitSpec {
   "writes" when {
     "passed a model" should {
       "return the downstream JSON" in {
-        Json.toJson(fhlExpenses) shouldBe json
+        Json.toJson(expenses) shouldBe expensesJson
       }
     }
 
     "passed an empty model" should {
       "return an empty JSON" in {
-        Json.toJson(emptyFhlExpenses) shouldBe JsObject.empty
+        Json.toJson(emptyExpenses) shouldBe JsObject.empty
       }
     }
   }

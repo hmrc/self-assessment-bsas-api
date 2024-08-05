@@ -20,11 +20,11 @@ import play.api.libs.json.{JsObject, Json}
 import shared.utils.UnitSpec
 import v6.ukPropertyBsas.submit.def3.model.request
 
-class FHLIncomeSpec extends UnitSpec {
+class IncomeSpec extends UnitSpec {
 
-  private val fhlIncome: request.FHLIncome = FHLIncome(Some(123.12))
+  private val income: request.Income = Income(Some(123.12), Some(123.12), Some(123.12), Some(123.12))
 
-  private val emptyFhlIncome: request.FHLIncome = FHLIncome(None)
+  private val emptyIncome: request.Income = Income(None, None, None, None)
 
   "reads" when {
     "given MTD json" should {
@@ -32,16 +32,19 @@ class FHLIncomeSpec extends UnitSpec {
         Json
           .parse("""
               |{
-              |   "totalRentsReceived": 123.12
+              |   "totalRentsReceived": 123.12,
+              |   "premiumsOfLeaseGrant": 123.12,
+              |   "reversePremiums": 123.12,
+              |   "otherPropertyIncome": 123.12
               |}
               |""".stripMargin)
-          .as[request.FHLIncome] shouldBe fhlIncome
+          .as[request.Income] shouldBe income
       }
     }
 
     "given an empty JSON object" should {
       "return an empty FHLIncome" in {
-        JsObject.empty.as[request.FHLIncome] shouldBe emptyFhlIncome
+        JsObject.empty.as[request.Income] shouldBe emptyIncome
       }
     }
   }
@@ -49,18 +52,22 @@ class FHLIncomeSpec extends UnitSpec {
   "writes" when {
     "given an FHLIncome object" should {
       "return the downstream JSON" in {
-        Json.toJson(fhlIncome) shouldBe
-          Json.parse("""
-              |{
-              |   "rentReceived": 123.12
-              |}
-              |""".stripMargin)
+        Json.toJson(income) shouldBe
+          Json
+            .parse("""
+                |{
+                |   "totalRentsReceived": 123.12,
+                |   "premiumsOfLeaseGrant": 123.12,
+                |   "reversePremiums": 123.12,
+                |   "otherPropertyIncome": 123.12
+                |}
+                |""".stripMargin)
       }
     }
 
     "given an empty FHLIncome" should {
       "return an empty JSON object" in {
-        Json.toJson(emptyFhlIncome) shouldBe JsObject.empty
+        Json.toJson(emptyIncome) shouldBe JsObject.empty
       }
     }
   }

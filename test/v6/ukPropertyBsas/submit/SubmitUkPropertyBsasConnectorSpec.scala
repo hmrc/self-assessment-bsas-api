@@ -37,7 +37,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       nino = nino,
       calculationId = calculationId,
       taxYear = taxYear.map(TaxYear.fromMtd),
-      body = fhlBody
+      body = requestFullParsed
     )
   }
 
@@ -57,7 +57,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new IfsTest with Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
         val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-        willPut(url = url, body = fhlBody) returns Future.successful(outcome)
+        willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(nonTysRequest))
         result shouldBe outcome
@@ -66,7 +66,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the TYS scenario" in new TysIfsTest with Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
         val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
-        willPut(url = url, body = fhlBody) returns Future.successful(outcome)
+        willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(tysRequest))
         result shouldBe outcome

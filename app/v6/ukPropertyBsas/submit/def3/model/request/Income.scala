@@ -16,10 +16,18 @@
 
 package v6.ukPropertyBsas.submit.def3.model.request
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 
-case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
+case class Income(
+    totalRentsReceived: Option[BigDecimal],
+    premiumsOfLeaseGrant: Option[BigDecimal],
+    reversePremiums: Option[BigDecimal],
+    otherPropertyIncome: Option[BigDecimal]
+)
 
-object FurnishedHolidayLet {
-  implicit val format: OFormat[FurnishedHolidayLet] = Json.format[FurnishedHolidayLet]
+object Income {
+  implicit val reads: Reads[Income] = Json.reads[Income]
+
+  implicit val writes: OWrites[Income] = Json.writes[Income]
+
 }

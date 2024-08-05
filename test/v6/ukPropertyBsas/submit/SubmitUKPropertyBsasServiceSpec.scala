@@ -38,7 +38,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
     nino = nino,
     calculationId = calculationId,
     taxYear = None,
-    body = fhlBody
+    body = requestFullParsed
   )
 
   trait Test extends MockSubmitUkPropertyBsasConnector {

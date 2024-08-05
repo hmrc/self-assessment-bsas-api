@@ -22,30 +22,13 @@ import SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def3_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
-  private val emptyParsedRequestBody = Def3_SubmitUkPropertyBsasRequestBody(None)
-
-  private val fhlParsedRequestBody = Def3_SubmitUkPropertyBsasRequestBody(furnishedHolidayLet = Some(FurnishedHolidayLet(None, None)))
+  private val emptyParsedRequestBody = Def3_SubmitUkPropertyBsasRequestBody(None, None)
 
   "reads" when {
 
-    "reading a simple fhl body" should {
-      "return the expected fhl model" in {
-        Json
-          .parse(
-            """
-              |{
-              |  "furnishedHolidayLet": {
-              |  }
-              |}
-              |""".stripMargin
-          )
-          .as[Def3_SubmitUkPropertyBsasRequestBody] shouldBe fhlParsedRequestBody
-      }
-    }
-
-    "reading a full fhl body" should {
-      "return the expected fhl model" in {
-        mtdRequestFhlFull.as[Def3_SubmitUkPropertyBsasRequestBody] shouldBe requestFhlFull
+    "reading a full request body" should {
+      "return the expected request model" in {
+        fullRequestJson.as[Def3_SubmitUkPropertyBsasRequestBody] shouldBe requestFullParsed
       }
     }
 
@@ -57,22 +40,15 @@ class Def3_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
   }
 
   "writes" when {
-    "writing a simple fhl model" should {
+    "writing a simple request model" should {
       "return the downstream JSON" in {
-        Json.toJson(fhlParsedRequestBody) shouldBe Json.parse(
-          """
-            |{
-            |  "incomeSourceType": "04",
-            |  "adjustments":{}
-            |}
-            |""".stripMargin
-        )
+        Json.toJson(requestFullParsed) shouldBe fullDownStreamRequest
       }
     }
 
     "writing a full fhl model" should {
       "return the downstream JSON" in {
-        Json.toJson(requestFhlFull) shouldBe downstreamRequestFhlFull
+        Json.toJson(requestFullParsed) shouldBe downstreamRequestFull
       }
     }
 

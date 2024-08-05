@@ -51,7 +51,7 @@ class SubmitUkPropertyBsasControllerSpec
   private val requestData = Def3_SubmitUkPropertyBsasRequestData(
     nino = parsedNino,
     calculationId = calculationId,
-    body = fhlBody,
+    body = requestFullParsed,
     taxYear = Some(taxYear)
   )
 
@@ -68,7 +68,7 @@ class SubmitUkPropertyBsasControllerSpec
         runOkTestWithAudit(
           expectedStatus = OK,
           maybeExpectedResponseBody = None,
-          maybeAuditRequestBody = Some(validfhlInputJson),
+          maybeAuditRequestBody = Some(fullRequestJson),
           maybeAuditResponseBody = None
         )
       }
@@ -78,13 +78,13 @@ class SubmitUkPropertyBsasControllerSpec
 
       "the parser validation fails" in new Test {
         willUseValidator(returning(NinoFormatError))
-        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validfhlInputJson))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(fullRequestJson))
       }
 
       "multiple parser errors occur" in new Test {
         private val errors = List(CalculationIdFormatError, NinoFormatError)
         willUseValidator(returningErrors(errors))
-        runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(validfhlInputJson))
+        runMultipleErrorsTestWithAudit(errors, maybeAuditRequestBody = Some(fullRequestJson))
       }
     }
 
@@ -95,7 +95,7 @@ class SubmitUkPropertyBsasControllerSpec
         .submitPropertyBsas(requestData)
         .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleOverConsolidatedExpensesThreshold))))
 
-      runErrorTestWithAudit(RuleOverConsolidatedExpensesThreshold, maybeAuditRequestBody = Some(validfhlInputJson))
+      runErrorTestWithAudit(RuleOverConsolidatedExpensesThreshold, maybeAuditRequestBody = Some(fullRequestJson))
     }
   }
 
@@ -112,7 +112,7 @@ class SubmitUkPropertyBsasControllerSpec
     )
 
     protected def callController(): Future[Result] =
-      controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(validfhlInputJson))
+      controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(fullRequestJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
