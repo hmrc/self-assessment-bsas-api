@@ -1,9 +1,11 @@
 get:
   summary: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
   description: |
-    This endpoint enables you to request a specific Business Source Adjustable Summary for a foreign property 
-    business EEA Furnished Holiday Letting (FHL) or a non-FHL foreign property business. A National Insurance number and
-    calculation ID must be provided. 
+    This endpoint enables you to provide accounting adjustments against a Business Source Accounting Summary specified by its calculation ID.
+    The calculation ID quoted must be for a UK property business, and it must not have been adjusted previously.
+    Data should be submitted for a single property business. A National Insurance number and calculation ID must be provided.
+    
+    Note: this endpoint only supports submissions up to tax year 2024-25.
     
     Please note that the expense items 'residentialFinancialCost' and 'broughtFwdResidentialFinancialCost' under 
     'adjustableSummaryCalculation' and 'adjustedSummaryCalculation' are not currently in use and will not be returned 
