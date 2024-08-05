@@ -2,7 +2,7 @@ post:
   summary: Submit Foreign Property Accounting Adjustments
   description: |
     This endpoint enables you to provide accounting adjustments against a Business Source Accounting Summary specified by its calculation ID.
-    The calculation ID quoted must be for a UK property business, and it must not have been adjusted previously.
+    The calculation ID quoted must be for a Foreign property business, and it must not have been adjusted previously.
     Data should be submitted for a single property business. A National Insurance number and calculation ID must be provided.
     
     Note: this endpoint only supports submissions up to tax year 2024-25.
