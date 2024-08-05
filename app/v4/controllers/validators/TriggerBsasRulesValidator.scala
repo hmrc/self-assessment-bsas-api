@@ -23,7 +23,7 @@ import common.errors.RuleAccountingPeriodNotSupportedError
 import config.BsasConfig
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
-import shared.models.errors.MtdError
+import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import v4.controllers.validators.resolvers.ResolveTypeOfBusiness
 import v4.models.domain.TypeOfBusiness
 import v4.models.domain.TypeOfBusiness.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
@@ -48,6 +48,11 @@ class TriggerBsasRulesValidator @Inject() (bsasConfig: BsasConfig) extends Rules
 
   private lazy val selfEmploymentAndUkPropertyEarliestEndDate: LocalDate = LocalDate.parse(
     s"${bsasConfig.v3TriggerNonForeignBsasMinimumTaxYear.dropRight(3)}-04-06",
+    DateTimeFormatter.ISO_LOCAL_DATE
+  )
+
+  private lazy val maximumEndDate: LocalDate = LocalDate.parse(
+    "2025-04-05",
     DateTimeFormatter.ISO_LOCAL_DATE
   )
 
@@ -79,10 +84,14 @@ class TriggerBsasRulesValidator @Inject() (bsasConfig: BsasConfig) extends Rules
         foreignPropertyEarliestEndDate
     }
 
-    if (endDate.isBefore(earliestDate))
+    if (endDate.isBefore(earliestDate)) {
       Invalid(List(RuleAccountingPeriodNotSupportedError))
-    else
+    } else if (endDate.isAfter(maximumEndDate)) {
+      Invalid(List(RuleTaxYearNotSupportedError))
+    } else {
       valid
+    }
+
   }
 
 }

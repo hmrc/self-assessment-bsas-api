@@ -96,6 +96,15 @@ class RetrieveUkPropertyBsasValidatorFactorySpec extends UnitSpec {
       }
     }
 
+    "return RuleTaxYearNotSupportedError" when {
+      "given a tax year after 2024-25" in {
+        val result = validator(validNino, validCalculationId, Some("2025-26")).validateAndWrapResult()
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
+        )
+      }
+    }
+
     "return TaxYearFormatError" when {
       "passed an incorrectly formatted taxYear" in {
         val result = validator(validNino, validCalculationId, Some("202324")).validateAndWrapResult()

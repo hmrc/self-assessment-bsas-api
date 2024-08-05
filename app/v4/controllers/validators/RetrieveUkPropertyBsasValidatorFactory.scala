@@ -17,11 +17,12 @@
 package v4.controllers.validators
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.catsSyntaxTuple3Semigroupal
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.ResolverSupport._
-import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear}
-import shared.models.errors.MtdError
+import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYearMinMax}
+import shared.models.domain.TaxYear
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
 import v4.models.request.retrieveBsas.RetrieveUkPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -29,7 +30,8 @@ import javax.inject.Singleton
 @Singleton
 class RetrieveUkPropertyBsasValidatorFactory {
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
+  private val resolveTaxYear = ResolveTaxYearMinMax(minMaxTaxYears, minError = InvalidTaxYearParameterError).resolver.resolveOptionally
 
   def validator(nino: String, calculationId: String, taxYear: Option[String]): Validator[RetrieveUkPropertyBsasRequestData] =
     new Validator[RetrieveUkPropertyBsasRequestData] {
@@ -38,7 +40,7 @@ class RetrieveUkPropertyBsasValidatorFactory {
         (
           ResolveNino(nino),
           ResolveCalculationId(calculationId),
-          resolveTysTaxYear(taxYear)
+          resolveTaxYear(taxYear)
         ).mapN(RetrieveUkPropertyBsasRequestData)
 
     }

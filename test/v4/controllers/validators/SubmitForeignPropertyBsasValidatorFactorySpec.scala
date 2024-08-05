@@ -252,6 +252,15 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec with JsonEr
       }
     }
 
+    "return RuleTaxYearNotSupportedError" when {
+      "given a tax year after 2024-25" in {
+        val result = validator(validNino, validCalculationId, Some("2025-26"), fhlBodyJson).validateAndWrapResult()
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
+        )
+      }
+    }
+
     "return TaxYearFormatError" when {
       "passed a badly formatted tax year" in {
         val result = validator(validNino, validCalculationId, Some("not-a-tax-year"), fhlBodyJson).validateAndWrapResult()
