@@ -46,6 +46,7 @@ post:
           oneOf:
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def1/request.json"
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def2/request.json"
+            - $ref: "./schemas/submit_uk_property_accounting_adjustments/def3/request.json"
         examples:
           example-1:
             description: UK Non-FHL Property with Full Expenses
@@ -62,7 +63,15 @@ post:
           example-4:
             description: UK FHL Property with Consolidated Expenses
             value:
-              $ref: "./examples/adjustments/submit_uk_fhl_property_accounting_adjustments_consolidated_request.json"
+             $ref: "./examples/adjustments/submit_uk_fhl_property_accounting_adjustments_consolidated_request.json"
+          example-5:
+            description: UK Property with Full Expenses
+            value:
+              $ref: "./examples/adjustments/submit_uk_property_accounting_adjustments_full_request.json"
+          example-6:
+            description: UK Property with Consolidated Expenses
+            value:
+             $ref: "./examples/adjustments/submit_uk_property_accounting_adjustments_consolidated_request.json"
 
   responses:
     200:
