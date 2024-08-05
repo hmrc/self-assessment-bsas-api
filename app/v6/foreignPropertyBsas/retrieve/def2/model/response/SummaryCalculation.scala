@@ -35,7 +35,7 @@ case class SummaryCalculation(totalIncome: Option[BigDecimal],
 
 object SummaryCalculation {
 
-  val reads: Reads[SummaryCalculation] = (
+  implicit val reads: Reads[SummaryCalculation] = (
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
       (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.reads) and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and

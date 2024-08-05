@@ -30,7 +30,7 @@ case class SummaryCalculationDeductions(annualInvestmentAllowance: Option[BigDec
 
 object SummaryCalculationDeductions {
 
-  val reads: Reads[SummaryCalculationDeductions] = (
+  implicit val reads: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
       (JsPath \ "costOfReplacingDomesticItems").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsGoodsVehicleAllowance").readNullable[BigDecimal] and

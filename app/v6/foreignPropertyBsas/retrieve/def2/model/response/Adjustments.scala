@@ -26,7 +26,7 @@ case class Adjustments(countryLevelDetail: Option[Seq[Adjustments]],
 
 object Adjustments {
 
-  val reads: Reads[Adjustments] = (
+  implicit val reads: Reads[Adjustments] = (
     Reads.pure(None) and
       (JsPath \ "countryCode").readNullable[String] and
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and

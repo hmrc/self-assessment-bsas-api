@@ -18,6 +18,7 @@ package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import shared.utils.JsonWritesUtil
 
 case class Inputs(businessId: String,
                   incomeSourceType: String,
@@ -27,7 +28,7 @@ case class Inputs(businessId: String,
                   source: String,
                   submissionPeriods: Seq[SubmissionPeriods])
 
-object Inputs {
+object Inputs extends JsonWritesUtil {
 
   implicit val reads: Reads[Inputs] = (
     (JsPath \ "incomeSourceId").read[String] and
@@ -40,13 +41,14 @@ object Inputs {
   )(Inputs.apply _)
 
   implicit val writes: OWrites[Inputs] = (o: Inputs) =>
-    Json.obj(
-      "businessId"                -> o.businessId,
-      "businessName"              -> o.businessName,
-      "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
-      "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
-      "source"                    -> o.source,
-      "submissionPeriods"         -> o.submissionPeriods
-    )
+    filterNull(
+      Json.obj(
+        "businessId"                -> o.businessId,
+        "businessName"              -> o.businessName,
+        "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
+        "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
+        "source"                    -> o.source,
+        "submissionPeriods"         -> o.submissionPeriods
+      ))
 
 }
