@@ -30,6 +30,8 @@ import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignProper
   retrieveForeignPropertyBsasMtdFhlJson,
   retrieveForeignPropertyBsasMtdNonFhlJson
 }
+/*import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
+import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures*/
 
 class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
@@ -68,6 +70,27 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
       }
     }
+
+    /*"return error response with status BAD_REQUEST" when {
+      "Downstream response is UK property" in {
+        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
+      }
+
+      "Downstream response is self employment" in {
+        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson)
+      }
+
+      def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =
+        new NonTysTest {
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponse)
+
+          val response: WSResponse = await(request.get())
+
+          response.json shouldBe RuleTypeOfBusinessIncorrectError.asJson
+          response.status shouldBe BAD_REQUEST
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
+    }*/
 
     "return error according to spec" when {
       def validationErrorTest(requestNino: String,

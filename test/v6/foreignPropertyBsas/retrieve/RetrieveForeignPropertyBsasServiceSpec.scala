@@ -59,7 +59,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
-        List("self-employment", "uk-property-fhl", "uk-property-non-fhl", "foreign-property", "uk-property").foreach(incomeSourceType =>
+        List("01", "02", "04").foreach(incomeSourceType =>
           s"return an error for $incomeSourceType" in new Test {
             val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponseWith(incomeSourceType.toString)
 

@@ -33,7 +33,5 @@ object Adjustments {
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
   )(Adjustments.apply _)
 
-  val readsNonFhlSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, reads)
-
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

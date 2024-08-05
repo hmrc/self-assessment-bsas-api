@@ -37,7 +37,7 @@ object SummaryCalculation {
 
   implicit val reads: Reads[SummaryCalculation] = (
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.reads) and
+      (JsPath \ "income").readNullable[SummaryCalculationIncome] and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
       (JsPath \ "expenses").readNullable[SummaryCalculationExpenses] and
       (JsPath \ "netProfit").readNullable[BigDecimal] and
@@ -45,7 +45,7 @@ object SummaryCalculation {
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and
       (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.reads) and
+      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions] and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal] and
       (JsPath \ "countryLevelDetail").readNullable[Seq[SummaryCalculationCountryLevelDetail]]
