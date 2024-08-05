@@ -1,0 +1,16 @@
+{
+  "furnishedHolidayLet": {
+    "income": {
+      "totalRentsReceived": 1000.45
+    },
+    "expenses": {
+      "premisesRunningCosts": -10.25,
+      "repairsAndMaintenance": 888.78,
+      "financialCosts": 10.25,
+      "professionalFees": 54.45,
+      "costOfServices": -100.5,
+      "other": -103.78,
+      "travelCosts": 20.45
+    }
+  }
+}
