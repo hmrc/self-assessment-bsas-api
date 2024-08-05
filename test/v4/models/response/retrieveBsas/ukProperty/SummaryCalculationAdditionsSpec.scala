@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-package routing
+package v4.models.response.retrieveBsas.ukProperty
 
-import play.api.routing.Router
-import shared.config.AppConfig
-import shared.routing._
+import common.model.RoundTripTest
+import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
+import v4.fixtures.ukProperty.RetrieveUkPropertyBsasFixtures._
 
-import javax.inject.{Inject, Singleton}
+class SummaryCalculationAdditionsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-@Singleton case class BsasVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
-    defaultRouter: Router,
-    v4Router: v4.Routes,
-    v5Router: v5.Routes,
-    v6Router: v6.Routes
-) extends VersionRoutingMap {
+  import SummaryCalculationAdditions._
 
-  /** Routes corresponding to available versions.
-    */
-  val map: Map[Version, Router] = Map(
-    Version4 -> v4Router,
-    Version5 -> v5Router,
-    Version6 -> v6Router
-  )
+  testRoundTrip(
+    "Summary Calculation Additions",
+    downstreamSummaryCalculationAdditionsJson,
+    summaryCalculationAdditionsModel,
+    mtdSummaryCalculationAdditionsJson)(reads)
 
 }

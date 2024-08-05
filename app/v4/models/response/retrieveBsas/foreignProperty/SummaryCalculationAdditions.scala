@@ -14,28 +14,14 @@
  * limitations under the License.
  */
 
-package routing
+package v4.models.response.retrieveBsas.foreignProperty
 
-import play.api.routing.Router
-import shared.config.AppConfig
-import shared.routing._
+import play.api.libs.json.{Json, OWrites, Reads}
 
-import javax.inject.{Inject, Singleton}
+case class SummaryCalculationAdditions(privateUseAdjustment: Option[BigDecimal], balancingCharge: Option[BigDecimal])
 
-@Singleton case class BsasVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
-    defaultRouter: Router,
-    v4Router: v4.Routes,
-    v5Router: v5.Routes,
-    v6Router: v6.Routes
-) extends VersionRoutingMap {
+object SummaryCalculationAdditions {
+  implicit val reads: Reads[SummaryCalculationAdditions] = Json.reads[SummaryCalculationAdditions]
 
-  /** Routes corresponding to available versions.
-    */
-  val map: Map[Version, Router] = Map(
-    Version4 -> v4Router,
-    Version5 -> v5Router,
-    Version6 -> v6Router
-  )
-
+  implicit val writes: OWrites[SummaryCalculationAdditions] = Json.writes[SummaryCalculationAdditions]
 }

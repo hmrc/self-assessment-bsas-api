@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package routing
+package v4.models.request.submitBsas.foreignProperty
 
-import play.api.routing.Router
-import shared.config.AppConfig
-import shared.routing._
+import play.api.libs.json.{Format, Json}
+import shapeless.HNil
+import shared.utils.EmptinessChecker
 
-import javax.inject.{Inject, Singleton}
+case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses])
 
-@Singleton case class BsasVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
-    defaultRouter: Router,
-    v4Router: v4.Routes,
-    v5Router: v5.Routes,
-    v6Router: v6.Routes
-) extends VersionRoutingMap {
+object ForeignProperty {
 
-  /** Routes corresponding to available versions.
-    */
-  val map: Map[Version, Router] = Map(
-    Version4 -> v4Router,
-    Version5 -> v5Router,
-    Version6 -> v6Router
-  )
+  implicit val emptinessChecker: EmptinessChecker[ForeignProperty] = EmptinessChecker.use { body =>
+    "income"     -> body.income ::
+      "expenses" -> body.expenses :: HNil
+  }
 
+  implicit val format: Format[ForeignProperty] = Json.format[ForeignProperty]
 }

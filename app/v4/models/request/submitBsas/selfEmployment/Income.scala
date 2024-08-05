@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-package routing
+package v4.models.request.submitBsas.selfEmployment
 
-import play.api.routing.Router
-import shared.config.AppConfig
-import shared.routing._
+import play.api.libs.json.{Json, OFormat}
 
-import javax.inject.{Inject, Singleton}
+case class Income(turnover: Option[BigDecimal], other: Option[BigDecimal])
 
-@Singleton case class BsasVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
-    defaultRouter: Router,
-    v4Router: v4.Routes,
-    v5Router: v5.Routes,
-    v6Router: v6.Routes
-) extends VersionRoutingMap {
-
-  /** Routes corresponding to available versions.
-    */
-  val map: Map[Version, Router] = Map(
-    Version4 -> v4Router,
-    Version5 -> v5Router,
-    Version6 -> v6Router
-  )
-
+object Income {
+  implicit val format: OFormat[Income] = Json.format[Income]
 }

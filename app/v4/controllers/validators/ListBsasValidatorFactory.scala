@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
-package v5.bsas.list.def1
+package v4.controllers.validators
 
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYearMinMax, ResolverSupport}
+import shared.controllers.validators.resolvers.ResolverSupport._
+import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYearMinMax}
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
-import v5.bsas.list.def1.model.request.Def1_ListBsasRequestData
-import v5.bsas.list.model.request.ListBsasRequestData
-import v5.common.resolvers.ResolveTypeOfBusiness
+import v4.controllers.validators.resolvers.ResolveTypeOfBusiness
+import v4.models.request.ListBsasRequestData
 
-object Def1_ListBsasValidator extends ResolverSupport {
+import javax.inject.Singleton
+
+@Singleton
+class ListBsasValidatorFactory {
+
   private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.fromMtd("2019-20"), TaxYear.ending(2025))
   private val resolveTaxYear                     = ResolveTaxYearMinMax(minMaxTaxYears).resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
 
   private val resolveBusinessId     = ResolveBusinessId.resolver.resolveOptionally
   private val resolveTypeOfBusiness = ResolveTypeOfBusiness.resolver.resolveOptionally
-}
 
-class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
-    extends Validator[ListBsasRequestData] {
-  import Def1_ListBsasValidator._
+  def validator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Validator[ListBsasRequestData] =
+    new Validator[ListBsasRequestData] {
 
-  def validate: Validated[Seq[MtdError], ListBsasRequestData] =
-    (
-      ResolveNino(nino),
-      resolveTaxYear(taxYear),
-      resolveBusinessId(businessId),
-      resolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
-    ).mapN(Def1_ListBsasRequestData)
+      def validate: Validated[Seq[MtdError], ListBsasRequestData] =
+        (
+          ResolveNino(nino),
+          resolveTaxYear(taxYear),
+          resolveBusinessId(businessId),
+          resolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
+        ).mapN(ListBsasRequestData)
+
+    }
 
 }
