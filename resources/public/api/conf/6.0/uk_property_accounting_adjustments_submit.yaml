@@ -48,44 +48,32 @@ post:
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def2/request.json"
             - $ref: "./schemas/submit_uk_property_accounting_adjustments/def3/request.json"
         examples:
-          "TY 2023-24 and before, example-1":
+          example-1:
             description: UK Non-FHL Property with Full Expenses
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def1/submit_uk_non_fhl_property_accounting_adjustments_full_request.json"
-          "TY 2023-24 and before, example-2":
+          example-2:
             description: UK Non-FHL Property with Consolidated Expenses
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def1/submit_uk_non_fhl_property_accounting_adjustments_consolidated_request.json"
-          "TY 2023-24 and before, example-3":
+          example-3:
             description: UK FHL Property with Full Expenses
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def1/submit_uk_fhl_property_accounting_adjustments_full_request.json"
-          "TY 2023-24 and before, example-4":
+          example-4:
             description: UK FHL Property with Consolidated Expenses
             value:
              $ref: "./examples/submit_uk_property_accounting_adjustments/def1/submit_uk_fhl_property_accounting_adjustments_consolidated_request.json"
-          "TY 2024-25, example-1":
-            description: UK Non-FHL Property with Full Expenses
+          example-5:
+            description: TY-2024-25 - UK Non-FHL Property with Full Expenses with non-negative residential financial cost
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def2/submit_uk_non_fhl_property_accounting_adjustments_full_request.json"
-          "TY 2024-25, example-2":
-            description: UK Non-FHL Property with Consolidated Expenses
-            value:
-              $ref: "./examples/submit_uk_property_accounting_adjustments/def2/submit_uk_non_fhl_property_accounting_adjustments_consolidated_request.json"
-          "TY 2024-25, example-3":
-            description: UK FHL Property with Full Expenses
-            value:
-              $ref: "./examples/submit_uk_property_accounting_adjustments/def2/submit_uk_fhl_property_accounting_adjustments_full_request.json"
-          "TY 2024-25, example-4":
-            description: UK FHL Property with Consolidated Expenses
-            value:
-             $ref: "./examples/submit_uk_property_accounting_adjustments/def2/submit_uk_fhl_property_accounting_adjustments_consolidated_request.json"
-          "TY 2025-26 and after, example-1":
-            description: UK Property with Full Expenses
+          example-6:
+            description: TY-2025-26 and after - UK Property with Full Expenses
             value:
               $ref: "./examples/submit_uk_property_accounting_adjustments/def3/submit_uk_property_accounting_adjustments_full_request.json"
-          "TY 2025-26 and after, example-2":
-            description: UK Property with Consolidated Expenses
+          example-7:
+            description: TY-2025-26 and after - UK Property with Consolidated Expenses
             value:
              $ref: "./examples/submit_uk_property_accounting_adjustments/def3/submit_uk_property_accounting_adjustments_consolidated_request.json"
 

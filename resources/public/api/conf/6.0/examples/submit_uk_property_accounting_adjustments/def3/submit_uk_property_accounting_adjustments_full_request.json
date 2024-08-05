@@ -6,13 +6,13 @@
     "otherPropertyIncome": 1000.45
   },
   "expenses": {
-    "premisesRunningCosts": -10.25,
-    "repairsAndMaintenance": 888.78,
-    "financialCosts": 10.25,
-    "professionalFees": 54.45,
-    "costOfServices": -10.5,
-    "residentialFinancialCost": -130.32,
-    "other": -10.78,
-    "travelCosts": 20.45
+    "premisesRunningCosts": 1000.45,
+    "repairsAndMaintenance": 1000.45,
+    "financialCosts": 1000.45,
+    "professionalFees": 1000.45,
+    "costOfServices": 1000.45,
+    "residentialFinancialCost": 1000.45,
+    "other": 1000.45,
+    "travelCosts": 1000.45
   }
 }
