@@ -28,6 +28,9 @@ import shared.utils.MockIdGenerator
 import v6.bsas.list.def1.model.Def1_ListBsasFixtures
 import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
+import v6.bsas.list.def2.model.Def2_ListBsasFixtures
+import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
+import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusinessWithFHL
@@ -51,7 +54,7 @@ class ListBsasControllerSpec
 
   "list bsas" should {
     "return OK" when {
-      "the request is valid" in new Test {
+      "the request is valid with FHL" in new Def1_Test {
         MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
@@ -67,7 +70,23 @@ class ListBsasControllerSpec
         )
       }
 
-      "valid request with no taxYear path parameter" in new Test {
+      "the request is valid" in new Def2_Test {
+        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+
+        willUseValidator(returningSuccess(requestData))
+
+        MockListBsasService
+          .listBsas(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(summariesJs)
+        )
+      }
+
+      "valid request with no taxYear path parameter" in new Def1_Test {
         MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
         MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
@@ -88,12 +107,12 @@ class ListBsasControllerSpec
 
     "return the error as per spec" when {
 
-      "the parser validation fails" in new Test {
+      "the parser validation fails" in new Def1_Test {
         willUseValidator(returning(NinoFormatError))
         runErrorTest(expectedError = NinoFormatError)
       }
 
-      "the service returns an error" in new Test {
+      "the service returns an error" in new Def1_Test {
         willUseValidator(returningSuccess(requestData))
 
         MockListBsasService
@@ -105,7 +124,7 @@ class ListBsasControllerSpec
     }
   }
 
-  private trait Test extends ControllerTest {
+  private trait Def1_Test extends ControllerTest {
     def maybeTaxYear: Option[String] = Some("2019-20")
 
     val controller = new ListBsasController(
@@ -142,6 +161,20 @@ class ListBsasControllerSpec
     protected def callController(): Future[Result] =
       controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
 
+  }
+
+  private trait Def2_Test extends Def1_Test with Def2_ListBsasFixtures {
+    override def maybeTaxYear: Option[String] = Some("2025-26")
+
+    override val requestData: ListBsasRequestData = Def2_ListBsasRequestData(
+      nino = parsedNino,
+      taxYear = TaxYear.fromMtd("2025-26"),
+      incomeSourceId = Some(BusinessId(businessId)),
+      incomeSourceType = Some(typeOfBusiness)
+    )
+
+    override val response: ListBsasResponse = Def2_ListBsasResponse(
+      List(businessSourceSummary()))
   }
 
 }
