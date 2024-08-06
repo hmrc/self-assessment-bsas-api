@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "For TY 2025-26 and after",
+  "title": "For TY 2024-25 and after",
   "description": "Retrieve a Foreign property Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
@@ -61,6 +61,14 @@
           "type": "string",
           "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
           "example": "XAIS12345678910"
+        },
+        "typeOfBusiness": {
+          "type": "string",
+          "enum": [
+            "foreign-property-fhl-eea",
+            "foreign-property"
+          ],
+          "description": "The type of business the calculation summary is for."
         },
         "businessName": {
           "description": "The name of the business.",
