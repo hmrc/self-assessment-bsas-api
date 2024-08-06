@@ -29,15 +29,7 @@ case class SummaryCalculationIncome(
 
 object SummaryCalculationIncome {
 
-  val readsFhl: Reads[SummaryCalculationIncome] = (
-    (JsPath \ "rentReceived").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      Reads.pure(None) and
-      Reads.pure(None) and
-      (JsPath \ "rarRentReceived").readNullable[BigDecimal]
-  )(SummaryCalculationIncome.apply _)
-
-  val readsNonFhl: Reads[SummaryCalculationIncome] = (
+  val reads: Reads[SummaryCalculationIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and

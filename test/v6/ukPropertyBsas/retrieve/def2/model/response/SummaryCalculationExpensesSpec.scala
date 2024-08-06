@@ -26,17 +26,10 @@ class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators w
   import SummaryCalculationExpenses._
 
   testRoundTrip(
-    "Summary Calculation Expenses FHL",
+    "Summary Calculation Expenses",
     downstreamSummaryCalculationExpensesJson,
-    summaryCalculationExpensesFhl,
-    mtdSummaryCalculationExpensesFhlJson
-  )(readsFhl)
-
-  testRoundTrip(
-    "Summary Calculation Expenses Non-FHL",
-    downstreamSummaryCalculationExpensesJson,
-    summaryCalculationExpensesNonFhl,
-    mtdSummaryCalculationExpensesNonFhlJson
-  )(readsNonFhl)
+    summaryCalculationExpenses,
+    mtdSummaryCalculationExpensesJson
+  )(reads)
 
 }

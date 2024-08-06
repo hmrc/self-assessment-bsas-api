@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import v6.bsas.trigger.def1.model.request.{AccountingPeriod, Def1_TriggerBsasRequestBody}
 import v6.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
-import v6.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
+import v6.common.model.TypeOfBusinessWithFHL
 
 object Def1_TriggerBsasFixtures {
 
@@ -46,13 +46,13 @@ object Def1_TriggerBsasFixtures {
 
   val triggerBsasRequestBody: Def1_TriggerBsasRequestBody = Def1_TriggerBsasRequestBody(
     AccountingPeriod("2018-11-25", "2018-11-26"),
-    TypeOfBusiness.`self-employment`.toString,
+    TypeOfBusinessWithFHL.`self-employment`.toString,
     "anId"
   )
 
   val tysTriggerBsasRequestBody: Def1_TriggerBsasRequestBody = Def1_TriggerBsasRequestBody(
     AccountingPeriod("2023-05-01", "2023-05-02"),
-    TypeOfBusiness.`self-employment`.toString,
+    TypeOfBusinessWithFHL.`self-employment`.toString,
     "anId"
   )
 

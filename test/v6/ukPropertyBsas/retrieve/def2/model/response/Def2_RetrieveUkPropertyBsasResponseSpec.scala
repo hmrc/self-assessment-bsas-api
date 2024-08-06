@@ -26,17 +26,10 @@ class Def2_RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
   import Def2_RetrieveUkPropertyBsasResponse._
 
   testRoundTrip(
-    testName = "Retrieve UK Property FHL",
-    downstreamJson = downstreamRetrieveBsasFhlResponseJson,
-    dataObject = retrieveBsasResponseFhl,
-    mtdJson = mtdRetrieveBsasResponseFhlJson
-  )(reads)
-
-  testRoundTrip(
-    testName = "Retrieve UK Property Non-FHL",
-    downstreamJson = downstreamRetrieveBsasNonFhlResponseJson,
-    dataObject = retrieveBsasResponseNonFhl,
-    mtdJson = mtdRetrieveBsasResponseNonFhlJson
+    testName = "Retrieve UK Property",
+    downstreamJson = downstreamRetrieveBsasResponseJson,
+    dataObject = retrieveBsasResponse,
+    mtdJson = mtdRetrieveBsasResponseJson
   )(reads)
 
 }

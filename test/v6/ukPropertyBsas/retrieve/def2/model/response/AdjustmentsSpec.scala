@@ -26,17 +26,10 @@ class AdjustmentsSpec extends UnitSpec with JsonErrorValidators with RoundTripTe
   import Adjustments._
 
   testRoundTrip(
-    "Adjustments FHL",
+    "Adjustments",
     downstreamAdjustmentsJson,
-    adjustmentsFhl,
-    mtdAdjustmentsFhlJson
-  )(readsFhl)
-
-  testRoundTrip(
-    "Adjustments Non-FHL",
-    downstreamAdjustmentsJson,
-    adjustmentsNonFhl,
-    mtdAdjustmentsNonFhlJson
-  )(readsNonFhl)
+    adjustments,
+    mtdAdjustmentsJson
+  )(reads)
 
 }

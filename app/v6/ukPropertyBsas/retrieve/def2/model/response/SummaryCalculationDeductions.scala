@@ -35,21 +35,7 @@ case class SummaryCalculationDeductions(
 
 object SummaryCalculationDeductions {
 
-  val readsFhl: Reads[SummaryCalculationDeductions] = (
-    Reads.pure(None) and
-      (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      (JsPath \ "businessPremisesRenovationAllowance").readNullable[BigDecimal] and
-      (JsPath \ "propertyAllowance").readNullable[BigDecimal] and
-      (JsPath \ "otherCapitalAllowance").readNullable[BigDecimal] and
-      (JsPath \ "rarReliefClaimed").readNullable[BigDecimal] and
-      (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
-      Reads.pure(None) and
-      Reads.pure(None) and
-      (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-  )(SummaryCalculationDeductions.apply _)
-
-  val readsNonFhl: Reads[SummaryCalculationDeductions] = (
+  val reads: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "zeroEmissionsGoodsVehicleAllowance").readNullable[BigDecimal] and
       (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
       (JsPath \ "costOfReplacingDomesticItems").readNullable[BigDecimal] and

@@ -17,7 +17,6 @@
 package v6.ukPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.json._
-import v6.common.model.TypeOfBusinessWithFHL
 import v6.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
 case class Def2_RetrieveUkPropertyBsasResponse(
@@ -36,12 +35,11 @@ object Def2_RetrieveUkPropertyBsasResponse {
     for {
       metadata <- (json \ "metadata").validate[Metadata]
       inputs   <- (json \ "inputs").validate[Inputs]
-      isFhl = inputs.incomeSourceType == TypeOfBusinessWithFHL.`uk-property-fhl`.asDownstreamValue
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation")
-        .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsNonFhl)
-      adjustments <- (json \ "adjustments").validateOpt[Adjustments](if (isFhl) Adjustments.readsFhl else Adjustments.readsNonFhl)
+        .validate[AdjustableSummaryCalculation](AdjustableSummaryCalculation.reads)
+      adjustments <- (json \ "adjustments").validateOpt[Adjustments](Adjustments.reads)
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation")
-        .validateOpt[AdjustedSummaryCalculation](if (isFhl) AdjustedSummaryCalculation.readsFhl else AdjustedSummaryCalculation.readsNonFhl)
+        .validateOpt[AdjustedSummaryCalculation](AdjustedSummaryCalculation.reads)
     } yield {
       Def2_RetrieveUkPropertyBsasResponse(
         metadata = metadata,

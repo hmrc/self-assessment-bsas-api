@@ -36,31 +36,17 @@ package object response {
     Option[BigDecimal],
     Option[BigDecimal]]
 
-  val summaryCalculationReadsFhl: SummaryCalculationReads =
+  val summaryCalculationReads: SummaryCalculationReads =
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsFhl) and
+      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.reads) and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses](SummaryCalculationExpenses.readsFhl) and
+      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses](SummaryCalculationExpenses.reads) and
       (JsPath \ "netProfit").readNullable[BigDecimal] and
       (JsPath \ "netLoss").readNullable[BigDecimal] and
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and
       (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsFhl) and
-      (JsPath \ "taxableProfit").readNullable[BigDecimal] and
-      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
-
-  val summaryCalculationReadsNonFhl: SummaryCalculationReads =
-    (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsNonFhl) and
-      (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses](SummaryCalculationExpenses.readsNonFhl) and
-      (JsPath \ "netProfit").readNullable[BigDecimal] and
-      (JsPath \ "netLoss").readNullable[BigDecimal] and
-      (JsPath \ "totalAdditions").readNullable[BigDecimal] and
-      (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
-      (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsNonFhl) and
+      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.reads) and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
 

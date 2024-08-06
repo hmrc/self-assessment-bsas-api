@@ -23,16 +23,20 @@ import v6.common.model.IncomeSourceTypeWithFHL._
 class IncomeSourceTypeWithFHLSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[IncomeSourceTypeWithFHL](
+    ("01", `01`),
     ("02", `02`),
     ("04", `04`),
-    ("03", `03`)
+    ("03", `03`),
+    ("15", `15`)
   )
 
   "toIdentifierValue" should {
     "return the correct identifier value" in {
+      IncomeSourceTypeWithFHL.`01`.toTypeOfBusiness shouldBe TypeOfBusinessWithFHL.`self-employment`
       IncomeSourceTypeWithFHL.`02`.toTypeOfBusiness shouldBe TypeOfBusinessWithFHL.`uk-property-non-fhl`
       IncomeSourceTypeWithFHL.`04`.toTypeOfBusiness shouldBe TypeOfBusinessWithFHL.`uk-property-fhl`
       IncomeSourceTypeWithFHL.`03`.toTypeOfBusiness shouldBe TypeOfBusinessWithFHL.`foreign-property-fhl-eea`
+      IncomeSourceTypeWithFHL.`15`.toTypeOfBusiness shouldBe TypeOfBusinessWithFHL.`foreign-property`
     }
   }
 

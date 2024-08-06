@@ -26,14 +26,9 @@ case class Adjustments(
 
 object Adjustments {
 
-  val readsFhl: Reads[Adjustments] = (
-    (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl)
-  )(Adjustments.apply _)
-
-  implicit val readsNonFhl: Reads[Adjustments] = (
-    (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsNonFhl) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsNonFhl)
+  implicit val reads: Reads[Adjustments] = (
+    (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
   )(Adjustments.apply _)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]

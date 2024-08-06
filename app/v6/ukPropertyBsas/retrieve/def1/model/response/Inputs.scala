@@ -46,8 +46,6 @@ object Inputs {
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
   )(Inputs.apply _)
 
-  // implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
-
   implicit val writes: OWrites[Inputs] = (o: Inputs) =>
     Json.obj(
       "typeOfBusiness"            -> o.typeOfBusiness,

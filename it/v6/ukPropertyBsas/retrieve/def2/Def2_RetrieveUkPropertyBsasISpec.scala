@@ -32,49 +32,23 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "valid request is made and FHL is returned" in new TysIfsTest {
+      "valid request is made" in new TysIfsTest {
 
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasResponseJson)
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseFhlJson
+        response.json shouldBe mtdRetrieveBsasResponseJson
 
       }
 
-      "valid request is made and Non-FHL is returned" in new TysIfsTest {
-
+      "any valid Tax Year Specific request is made" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasNonFhlResponseJson)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseNonFhlJson
-
-      }
-
-      "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseFhlJson
-      }
-
-      "any valid Tax Year Specific request is made and Non-FHL is returned" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasNonFhlResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasResponseJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -82,7 +56,7 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
-        response.json shouldBe mtdRetrieveBsasResponseNonFhlJson
+        response.json shouldBe mtdRetrieveBsasResponseJson
       }
     }
 

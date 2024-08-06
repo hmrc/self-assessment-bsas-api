@@ -74,7 +74,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamInputsNonFhlJson: JsValue = Json.parse(
+  val downstreamInputsJson: JsValue = Json.parse(
     s"""
       |{
       |  "incomeSourceType": "02",
@@ -230,20 +230,10 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamRetrieveBsasFhlResponseJson: JsValue = Json.parse(s"""
+  val downstreamRetrieveBsasResponseJson: JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
-       |  "inputs": $downstreamInputsFhlJson,
-       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
-       |  "adjustments": $downstreamAdjustmentsJson,
-       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
-       |}
-       |""".stripMargin)
-
-  val downstreamRetrieveBsasNonFhlResponseJson: JsValue = Json.parse(s"""
-       |{
-       |  "metadata": $downstreamMetadataJson,
-       |  "inputs": $downstreamInputsNonFhlJson,
+       |  "inputs": $downstreamInputsJson,
        |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
        |  "adjustments": $downstreamAdjustmentsJson,
        |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
@@ -308,7 +298,7 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdInputsNonFhlJson: JsValue = Json.parse(
+  val mtdInputsJson: JsValue = Json.parse(
     s"""
        |{
        |  "businessId": "XAIS12345678910",
@@ -330,7 +320,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val mtdSummaryCalculationIncomeNonFhlJson: JsValue = Json.parse(
+  val mtdSummaryCalculationIncomeJson: JsValue = Json.parse(
     """
       |{
       |  "totalRentsReceived": 1.01,
@@ -357,7 +347,7 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdSummaryCalculationExpensesNonFhlJson: JsValue = Json.parse(
+  val mtdSummaryCalculationExpensesJson: JsValue = Json.parse(
     """
        |{
        |  "consolidatedExpenses": 2.01,
@@ -398,7 +388,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val mtdSummaryCalculationDeductionsNonFhlJson: JsValue = Json.parse(
+  val mtdSummaryCalculationDeductionsJson: JsValue = Json.parse(
     """
       |{
       |  "zeroEmissionGoods": 6.01,
@@ -435,19 +425,19 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdSummaryCalculationNonFhlJson: JsValue = Json.parse(
+  val mtdSummaryCalculationJson: JsValue = Json.parse(
     s"""
        |{
        |  "totalIncome": 1,
-       |  "income": $mtdSummaryCalculationIncomeNonFhlJson,
+       |  "income": $mtdSummaryCalculationIncomeJson,
        |  "totalExpenses": 2,
-       |  "expenses": $mtdSummaryCalculationExpensesNonFhlJson,
+       |  "expenses": $mtdSummaryCalculationExpensesJson,
        |  "netProfit": 3,
        |  "netLoss": 4,
        |  "totalAdditions": 5,
        |  "additions": $mtdSummaryCalculationAdditionsJson,
        |  "totalDeductions": 6,
-       |  "deductions": $mtdSummaryCalculationDeductionsNonFhlJson,
+       |  "deductions": $mtdSummaryCalculationDeductionsJson,
        |  "taxableProfit": 7,
        |  "adjustedIncomeTaxLoss": 8
        |}
@@ -462,7 +452,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val mtdAdjustmentsIncomeNonFhlJson: JsValue = Json.parse(
+  val mtdAdjustmentsIncomeJson: JsValue = Json.parse(
     """
       |{
       |  "totalRentsReceived": 1.01,
@@ -513,35 +503,23 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdAdjustmentsNonFhlJson: JsValue = Json.parse(
+  val mtdAdjustmentsJson: JsValue = Json.parse(
     s"""
        |{
-       |  "income": $mtdAdjustmentsIncomeNonFhlJson,
+       |  "income": $mtdAdjustmentsIncomeJson,
        |  "expenses": $mtdAdjustmentsExpensesNonFhlJson
        |}
        |""".stripMargin
   )
 
-  val mtdRetrieveBsasResponseFhlJson: JsValue = Json.parse(
+  val mtdRetrieveBsasResponseJson: JsValue = Json.parse(
     s"""
        |{
        |  "metadata": $mtdMetadataJson,
-       |  "inputs": $mtdInputsFhlJson,
-       |  "adjustableSummaryCalculation": $mtdSummaryCalculationFhlJson,
-       |  "adjustments": $mtdAdjustmentsFhlJson,
-       |  "adjustedSummaryCalculation": $mtdSummaryCalculationFhlJson
-       |}
-       |""".stripMargin
-  )
-
-  val mtdRetrieveBsasResponseNonFhlJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "metadata": $mtdMetadataJson,
-       |  "inputs": $mtdInputsNonFhlJson,
-       |  "adjustableSummaryCalculation": $mtdSummaryCalculationNonFhlJson,
-       |  "adjustments": $mtdAdjustmentsNonFhlJson,
-       |  "adjustedSummaryCalculation": $mtdSummaryCalculationNonFhlJson
+       |  "inputs": $mtdInputsJson,
+       |  "adjustableSummaryCalculation": $mtdSummaryCalculationJson,
+       |  "adjustments": $mtdAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $mtdSummaryCalculationJson
        |}
        |""".stripMargin
   )
@@ -581,7 +559,7 @@ object RetrieveUkPropertyBsasFixtures {
     submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
   )
 
-  val inputsNonFhl: Inputs = Inputs(
+  val inputs: Inputs = Inputs(
     incomeSourceType = "02",
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
@@ -599,7 +577,7 @@ object RetrieveUkPropertyBsasFixtures {
     rarRentReceived = Some(1.06)
   )
 
-  val summaryCalculationIncomeNonFhl: SummaryCalculationIncome = SummaryCalculationIncome(
+  val summaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
@@ -620,7 +598,7 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.10)
   )
 
-  val summaryCalculationExpensesNonFhl: SummaryCalculationExpenses = SummaryCalculationExpenses(
+  val summaryCalculationExpenses: SummaryCalculationExpenses = SummaryCalculationExpenses(
     consolidatedExpenses = Some(2.01),
     premisesRunningCosts = Some(2.02),
     repairsAndMaintenance = Some(2.03),
@@ -653,7 +631,7 @@ object RetrieveUkPropertyBsasFixtures {
     zeroEmissionsCarAllowance = Some(6.11)
   )
 
-  val summaryCalculationDeductionsNonFhl: SummaryCalculationDeductions = SummaryCalculationDeductions(
+  val summaryCalculationDeductions: SummaryCalculationDeductions = SummaryCalculationDeductions(
     zeroEmissionGoods = Some(6.01),
     annualInvestmentAllowance = Some(6.02),
     costOfReplacingDomesticItems = Some(6.03),
@@ -682,17 +660,17 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val adjustableSummaryCalculationNonFhl: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
+  val adjustableSummaryCalculation: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeNonFhl),
+    income = Some(summaryCalculationIncome),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesNonFhl),
+    expenses = Some(summaryCalculationExpenses),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
     additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsNonFhl),
+    deductions = Some(summaryCalculationDeductions),
     taxableProfit = Some(7),
     adjustedIncomeTaxLoss = Some(8)
   )
@@ -704,7 +682,7 @@ object RetrieveUkPropertyBsasFixtures {
     otherPropertyIncome = None
   )
 
-  val adjustmentsIncomeNonFhl: AdjustmentsIncome = AdjustmentsIncome(
+  val adjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
@@ -740,8 +718,8 @@ object RetrieveUkPropertyBsasFixtures {
     expenses = Some(adjustmentsExpensesFhl)
   )
 
-  val adjustmentsNonFhl: Adjustments = Adjustments(
-    income = Some(adjustmentsIncomeNonFhl),
+  val adjustments: Adjustments = Adjustments(
+    income = Some(adjustmentsIncome),
     expenses = Some(adjustmentsExpensesNonFhl)
   )
 
@@ -760,35 +738,27 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val adjustedSummaryCalculationNonFhl: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
+  val adjustedSummaryCalculation: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
     totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeNonFhl),
+    income = Some(summaryCalculationIncome),
     totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesNonFhl),
+    expenses = Some(summaryCalculationExpenses),
     netProfit = Some(3),
     netLoss = Some(4),
     totalAdditions = Some(5),
     additions = Some(summaryCalculationAdditions),
     totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsNonFhl),
+    deductions = Some(summaryCalculationDeductions),
     taxableProfit = Some(7),
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val retrieveBsasResponseFhl: Def2_RetrieveUkPropertyBsasResponse = Def2_RetrieveUkPropertyBsasResponse(
+  val retrieveBsasResponse: Def2_RetrieveUkPropertyBsasResponse = Def2_RetrieveUkPropertyBsasResponse(
     metadata = parsedMetadata,
-    inputs = inputsFhl,
-    adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
-    adjustments = Some(adjustmentsFhl),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)
-  )
-
-  val retrieveBsasResponseNonFhl: Def2_RetrieveUkPropertyBsasResponse = Def2_RetrieveUkPropertyBsasResponse(
-    metadata = parsedMetadata,
-    inputs = inputsNonFhl,
-    adjustableSummaryCalculation = adjustableSummaryCalculationNonFhl,
-    adjustments = Some(adjustmentsNonFhl),
-    adjustedSummaryCalculation = Some(adjustedSummaryCalculationNonFhl)
+    inputs = inputs,
+    adjustableSummaryCalculation = adjustableSummaryCalculation,
+    adjustments = Some(adjustments),
+    adjustedSummaryCalculation = Some(adjustedSummaryCalculation)
   )
 
   def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def2_RetrieveUkPropertyBsasResponse =

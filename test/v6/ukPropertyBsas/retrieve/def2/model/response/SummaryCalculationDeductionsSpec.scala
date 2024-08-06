@@ -26,17 +26,10 @@ class SummaryCalculationDeductionsSpec extends UnitSpec with JsonErrorValidators
   import SummaryCalculationDeductions._
 
   testRoundTrip(
-    "Summary Calculation Deductions FHL",
+    "Summary Calculation Deductions",
     downstreamSummaryCalculationDeductionsJson,
-    summaryCalculationDeductionsFhl,
-    mtdSummaryCalculationDeductionsFhlJson
-  )(readsFhl)
-
-  testRoundTrip(
-    "Summary Calculation Deductions Non-FHL",
-    downstreamSummaryCalculationDeductionsJson,
-    summaryCalculationDeductionsNonFhl,
-    mtdSummaryCalculationDeductionsNonFhlJson
-  )(readsNonFhl)
+    summaryCalculationDeductions,
+    mtdSummaryCalculationDeductionsJson
+  )(reads)
 
 }

@@ -56,7 +56,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
     }
 
     "return error response" when {
-      "downstream returns a success response with invalid type of business" should {
+      "downstream returns a success response with invalid IncomeSourceType" should {
         List("01", "03", "05").foreach(incomeSourceType =>
           s"return an error for $incomeSourceType" in new Test {
             val response: RetrieveUkPropertyBsasResponse = retrieveBsasResponseInvalidIncomeSourceType(incomeSourceType = incomeSourceType)
