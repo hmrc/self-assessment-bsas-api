@@ -58,7 +58,7 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |""".stripMargin
     )
 
-  private val invalidNonFhlConsolidatedBodyJson =
+  private val invalidDef2NonFhlConsolidatedBodyJson =
     Json.parse(
       """
         |{
@@ -186,8 +186,8 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "an invalid non-fhl consolidated expenses request is supplied" in {
-        val result = validator(validNino, validCalculationId, None, invalidNonFhlConsolidatedBodyJson).validateAndWrapResult()
+      "an invalid non-fhl consolidated expenses request is supplied for a previous schema" in {
+        val result = validator(validNino, validCalculationId, None, invalidDef2NonFhlConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
