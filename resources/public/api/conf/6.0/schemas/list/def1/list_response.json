@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "List Business Source Adjustable Summaries Response",
+  "title": "For TY 2024-25 and before",
   "description": "List Business Source Adjustable Summaries Response",
   "type": "object",
   "properties": {
@@ -19,10 +19,10 @@
         ],
         "properties": {
           "typeOfBusiness": {
-            "$ref": "definitions.json#/definitions/typeOfBusinessWithFHL"
+            "$ref": "../../definitions.json#/definitions/typeOfBusinessWithFHL"
           },
           "businessId": {
-            "$ref": "definitions.json#/definitions/businessId"
+            "$ref": "../../definitions.json#/definitions/businessId"
           },
           "accountingPeriod": {
             "type": "object",
