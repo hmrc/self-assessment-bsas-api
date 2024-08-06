@@ -26,7 +26,7 @@ import shared.models.errors._
 import shared.utils.UnitSpec
 import v6.bsas.trigger.def1.model.request.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 import v6.bsas.trigger.model.TriggerBsasRequestData
-import v6.common.model.TypeOfBusinessWithFHL
+import v6.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
 
 class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
 
@@ -216,11 +216,11 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     "return no errors" when {
       "passed the correct Accounting Period dates for each Type of Business" when {
         List(
-          (TypeOfBusinessWithFHL.`self-employment`, "2019-04-06"),
+          (TypeOfBusiness.`self-employment`, "2019-04-06"),
           (TypeOfBusinessWithFHL.`uk-property-fhl`, "2019-04-06"),
           (TypeOfBusinessWithFHL.`uk-property-non-fhl`, "2019-04-06"),
           (TypeOfBusinessWithFHL.`foreign-property-fhl-eea`, "2021-04-06"),
-          (TypeOfBusinessWithFHL.`foreign-property`, "2021-04-06")
+          (TypeOfBusiness.`foreign-property`, "2021-04-06")
         ).foreach { case (typeOfBusiness, endDate) =>
           s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in new SetUp {
             private val body         = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
@@ -235,11 +235,11 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
       "return RuleAccountingPeriodNotSupported" when {
         "passed incorrect Accounting Period dates for each Type of Business" when {
           List(
-            (TypeOfBusinessWithFHL.`self-employment`, "2019-04-05"),
+            (TypeOfBusiness.`self-employment`, "2019-04-05"),
             (TypeOfBusinessWithFHL.`uk-property-fhl`, "2019-04-05"),
             (TypeOfBusinessWithFHL.`uk-property-non-fhl`, "2019-04-05"),
             (TypeOfBusinessWithFHL.`foreign-property-fhl-eea`, "2021-04-05"),
-            (TypeOfBusinessWithFHL.`foreign-property`, "2021-04-05")
+            (TypeOfBusiness.`foreign-property`, "2021-04-05")
           ).foreach { case (typeOfBusiness, endDate) =>
             s"typeOfBusiness is $typeOfBusiness and endDate is before the earliest allowed end date" in new SetUp {
               private val body = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)

@@ -26,7 +26,7 @@ import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRa
 import shared.models.errors.MtdError
 import v6.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v6.common.model.TypeOfBusinessWithFHL
-import TypeOfBusinessWithFHL.{`foreign-property-fhl-eea`, `foreign-property`, `self-employment`, `uk-property-fhl`, `uk-property-non-fhl`}
+import v6.common.model.TypeOfBusinessWithFHL._
 import v6.common.resolvers.ResolveTypeOfBusinessWithFHL
 
 import java.time.LocalDate

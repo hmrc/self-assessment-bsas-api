@@ -7,7 +7,7 @@ get:
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
-     
+    
     | Header Value (Gov-Test-Scenario)         | Scenario                                                                                                                                  |
     |------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
     | N/A - DEFAULT                            | Simulates the scenario where no data is found.                                                                                            |
@@ -31,6 +31,14 @@ get:
     | DYNAMIC_UK_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid.<br><br> See below for details about dynamic scenarios.                            |
     | UK_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                                |
     | DYNAMIC_UK_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded.<br><br> See below for details about dynamic scenarios.                         |
+    | UK_PROPERTY_PROFIT                       | Simulates success response with uk property and profit.                                                                                   |
+    | DYNAMIC_UK_PROPERTY_PROFIT               | Simulates success response with uk property and profit.<br><br> See below for details about dynamic scenarios.                            |
+    | UK_PROPERTY_LOSS                         | Simulates success response with uk property and loss.                                                                                     |
+    | DYNAMIC_UK_PROPERTY_LOSS                 | Simulates success response with uk property and loss.<br><br> See below for details about dynamic scenarios.                              |
+    | UK_PROPERTY_CONSOLIDATED                 | Simulates success response with adjusted summary and consolidated expenses.                                                               |
+    | DYNAMIC_UK_PROPERTY_CONSOLIDATED         | Simulates success response with adjusted summary and consolidated expenses.<br><br> See below for details about dynamic scenarios.        |
+    | UK_PROPERTY_ALLOWANCE                    | Simulates success response with adjusted summary and propertyAllowance.                                                                   |
+    | DYNAMIC_UK_PROPERTY_ALLOWANCE            | Simulates success response with adjusted summary and propertyAllowance.<br><br> See below for details about dynamic scenarios.            |
     | NOT_UK_PROPERTY                          | Simulates the scenario where the calculationId is not a UK property.                                                                      |
     | TAX_YEAR_NOT_SUPPORTED                   | Simulates the scenario where the tax year is not supported.                                                                               |
     | REQUEST_CANNOT_BE_FULFILLED              | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.             |
@@ -80,8 +88,9 @@ get:
         application/json:
           schema:
             oneOf:
-            - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
-            - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
+              - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
+              - $ref: "./schemas/retrieve_uk_property/def1a/retrieve_uk_property.json"
+              - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
           examples:
             PRE-TY-2024-25-UK-FHL-Response:
               description: UK FHL Response
@@ -98,23 +107,35 @@ get:
             PRE-TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property_property_allowance.json"
             TY-2024-25-UK-FHL-Response:
               description: UK FHL Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_fhl_property.json"
+                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_fhl_property.json"
             TY-2024-25-UK-Non-FHL-Response:
               description: UK Non-FHL Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property.json"
+                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_non_fhl_property.json"
             TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
               description: UK Non-FHL with Consolidated Expenses Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_consolidated.json"
+                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_non_fhl_property_consolidated.json"
             TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_non_fhl_property_property_allowance.json"
+            TY-2025-26-UK-Property-Response:
+              description: UK Property Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_property.json"
+            TY-2025-26-UK-Property-Consolidated-Expenses-Response:
+              description: UK Property with Consolidated Expenses Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_property_consolidated.json"
+            TY-2025-26-UK-Property-With-Property-Allowance-Response:
+              description: UK Property with Property Allowance Response
+              value:
+                $ref: "./examples/retrieveBsas/def2/retrieve_uk_property_allowance.json"
 
 
     400:
