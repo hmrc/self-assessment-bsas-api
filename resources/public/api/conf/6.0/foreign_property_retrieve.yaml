@@ -1,5 +1,4 @@
 get:
-  summary: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
   description: |
     This endpoint enables you to request a specific Business Source Adjustable Summary for a foreign property 
     business EEA Furnished Holiday Letting (FHL) or a non-FHL foreign property business. A National Insurance number and
@@ -12,41 +11,39 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
      
-    | Header Value (Gov-Test-Scenario)              | Scenario                                                                                                                                 |
-    | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-    | N/A - DEFAULT                                 | Simulates the scenario where no data is found.                                                                                           |
-    | FOREIGN_PROPERTY_FHL_PROFIT                   | Simulates success response with FHL foreign property and profit.                                                                         |
-    | DYNAMIC_FOREIGN_PROPERTY_FHL_PROFIT           | Simulates success response with FHL foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                    |
-    | FOREIGN_PROPERTY_FHL_LOSS                     | Simulates success response with FHL foreign property and loss.                                                                           |
-    | DYNAMIC_FOREIGN_PROPERTY_FHL_LOSS             | Simulates success response with FHL foreign property and loss. <br><br> See below for details on DYNAMIC scenarios.                      |
-    | FOREIGN_PROPERTY_NON_FHL_PROFIT               | Simulates success response with non FHL foreign property and profit.                                                                     |
-    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_PROFIT       | Simulates success response with non FHL foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                |
-    | FOREIGN_PROPERTY_NON_FHL_LOSS                 | Simulates success response with non FHL foreign property and loss.                                                                       |
-    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_LOSS         | Simulates success response with non FHL foreign property and loss.  <br><br> See below for details on DYNAMIC scenarios.                 |
-    | FOREIGN_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.                                                          |
-    | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED     | Simulates success response with FHL adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.    |
-    | FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses.                                                      |
-    | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED | Simulates success response with non FHL adjusted summary and consolidated expenses. <br><br> See below for details on DYNAMIC scenarios. |
-    | FOREIGN_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
-    | DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE        | Simulates success response with FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.         |
-    | FOREIGN_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.                                                          |
-    | DYNAMIC_FOREIGN_NON_FHL_PROPERTY_ALLOWANCE    | Simulates success response with non FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.     |
-    | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                  |
-    | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid. <br><br> See below for details on DYNAMIC scenarios.                             |
-    | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                               |
-    | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded. <br><br> See below for details on DYNAMIC scenarios.                          |
-    | FOREIGN_PROPERTY_PROFIT                       | Simulates success response foreign property and profit.                                                                                  |
-    | DYNAMIC_FOREIGN_PROPERTY_PROFIT               | Simulates success response foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                             |
-    | FOREIGN_PROPERTY_LOSS                         | Simulates success response foreign property and loss.                                                                                    |
-    | DYNAMIC_FOREIGN_PROPERTY_LOSS                 | Simulates success response foreign property and loss. <br><br> See below for details on DYNAMIC scenarios.                               |
-    | FOREIGN_PROPERTY_CONSOLIDATED                 | Simulates success response adjusted summary and consolidated expenses.                                                                   |
-    | DYNAMIC_FOREIGN_PROPERTY_CONSOLIDATED         | Simulates success response adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.             |
-    | FOREIGN_PROPERTY_ALLOWANCE                    | Simulates success response adjusted summary and propertyAllowance.                                                                       |
-    | DYNAMIC_FOREIGN_PROPERTY_ALLOWANCE            | Simulates success response adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.                  |
-    | NOT_FOREIGN_PROPERTY                          | Simulates the scenario where the calculationId is not a foreign property.                                                                |
-    | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                                                                              |
-    | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                                                                              |
-    | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.            |
+    |  Tax Year                    | Header Value (Gov-Test-Scenario)              | Scenario                                                                                                                                 |
+    | -----------------------------| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+    | All                          | N/A - DEFAULT                                 | Simulates the scenario where no data is found.                                                                                           |
+    | ALL                          | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                  |
+    | ALL                          | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid. <br><br> See below for details on DYNAMIC scenarios.                             |
+    | ALL                          | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                               |
+    | ALL                          | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded. <br><br> See below for details on DYNAMIC scenarios.                          | 
+    | ALL                          | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.            |
+    | ALL                          | STATEFUL                                      | Performs a stateful retrieve.                                                                                                            |
+    | 2025-26 onwards              | FOREIGN_PROPERTY_PROFIT                       | Simulates success response foreign property and profit.                                                                                  |
+    | 2025-26 onwards              | DYNAMIC_FOREIGN_PROPERTY_PROFIT               | Simulates success response foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                             |
+    | 2025-26 onwards              | FOREIGN_PROPERTY_LOSS                         | Simulates success response FHL foreign property and loss.                                                                                |
+    | 2025-26 onwards              | DYNAMIC_FOREIGN_PROPERTY_LOSS                 | Simulates success response foreign property and loss. <br><br> See below for details on DYNAMIC scenarios.                               |
+    | 2025-26 onwards              | FOREIGN_PROPERTY_CONSOLIDATED                 | Simulates success response adjusted summary and consolidated expenses.                                                                   |
+    | 2025-26 onwards              | DYNAMIC_FOREIGN_PROPERTY_CONSOLIDATED         | Simulates success response adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.             |
+    | 2025-26 onwards              | FOREIGN_PROPERTY_ALLOWANCE                    | Simulates success response adjusted summary and propertyAllowance.                                                                       |
+    | 2025-26 onwards              | DYNAMIC_FOREIGN_PROPERTY_ALLOWANCE            | Simulates success response adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.                  |    
+    | Before 2025-26               | FOREIGN_PROPERTY_FHL_PROFIT                   | Simulates success response with FHL foreign property and profit.                                                                         |
+    | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_FHL_PROFIT           | Simulates success response with FHL foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                    |
+    | Before 2025-26               | FOREIGN_PROPERTY_FHL_LOSS                     | Simulates success response with FHL foreign property and loss.                                                                           |
+    | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_FHL_LOSS             | Simulates success response with FHL foreign property and loss.  <br><br> See below for details on DYNAMIC scenarios.                     |    
+    | Before 2025-26               | FOREIGN_PROPERTY_NON_FHL_PROFIT               | Simulates success response with non FHL foreign property and profit.                                                                     |
+    | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_PROFIT       | Simulates success response with non FHL foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                |
+    | Before 2025-26               | FOREIGN_PROPERTY_NON_FHL_LOSS                 | Simulates success response with non FHL foreign property and loss.                                                                       |
+    | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_LOSS         | Simulates success response with non FHL foreign property and loss.  <br><br> See below for details on DYNAMIC scenarios.                 |    
+    | Before 2025-26               | FOREIGN_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.                                                          |
+    | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED     | Simulates success response with FHL adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.    |
+    | Before 2025-26               | FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses.                                                      |
+    | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_NON_FHL_CONSOLIDATED | Simulates success response with non FHL adjusted summary and consolidated expenses. <br><br> See below for details on DYNAMIC scenarios. |    
+    | Before 2025-26               | FOREIGN_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
+    | Before 2025-26               | DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE        | Simulates success response with FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.         |
+    | Before 2025-26               | FOREIGN_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.                                                          |
+    | Before 2025-26               | DYNAMIC_FOREIGN_NON_FHL_PROPERTY_ALLOWANCE    | Simulates success response with non FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.     |
     
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       * metadata
@@ -67,6 +64,7 @@ get:
 
 
 
+  summary: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
   tags:
   - Foreign property business
 
