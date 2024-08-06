@@ -207,7 +207,6 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           "/expenses/financialCosts",
           "/expenses/professionalFees",
           "/expenses/costOfServices",
-          "/expenses/other",
           "/expenses/travelCosts"
         ).foreach(path => testWith(fullRequestJson.update(path, _), path))
       }
@@ -216,6 +215,13 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         List(
           "/expenses/consolidatedExpenses"
         ).foreach(path => testWith(consolidatedBodyJson.update(path, _), path))
+      }
+
+      "non negative fields have negative values" when {
+        List(
+          "/expenses/residentialFinancialCost",
+          "/expenses/other"
+        ).foreach(path => testWith(consolidatedBodyJson.update(path, _), path, min = "0"))
       }
 
       "multiple fields are invalid" in {

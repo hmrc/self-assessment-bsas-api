@@ -62,9 +62,10 @@ object Def3_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def3_Submi
       resolveMaybeNegativeNumber("/expenses/financialCosts", expenses.financialCosts),
       resolveMaybeNegativeNumber("/expenses/professionalFees", expenses.professionalFees),
       resolveMaybeNegativeNumber("/expenses/travelCosts", expenses.travelCosts),
+      resolveMaybeNegativeNumber("/expenses/consolidatedExpenses", expenses.consolidatedExpenses),
       resolveMaybeNegativeNumber("/expenses/costOfServices", expenses.costOfServices),
-      resolveMaybeNegativeNumber("/expenses/other", expenses.other),
-      resolveMaybeNegativeNumber("/expenses/consolidatedExpenses", expenses.consolidatedExpenses)
+      ResolveParsedNumber(disallowZero = true)(expenses.residentialFinancialCost, "/expenses/residentialFinancialCost"),
+      ResolveParsedNumber(disallowZero = true)(expenses.other, "/expenses/other")
     )
   }
 

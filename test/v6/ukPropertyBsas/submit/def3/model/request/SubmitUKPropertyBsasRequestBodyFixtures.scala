@@ -34,8 +34,8 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |    "financialCosts": 10.25,
       |    "professionalFees": 54.45,
       |    "costOfServices": -10.50,
-      |    "residentialFinancialCost": -130.32,
-      |    "other": -10.78,
+      |    "residentialFinancialCost": 130.32,
+      |    "other": 10.78,
       |    "travelCosts": 20.45
       | }
       |}
@@ -58,8 +58,8 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |      "financialCosts": 10.25,
       |      "professionalFees": 54.45,
       |      "costOfServices": -10.50,
-      |      "residentialFinancialCost": -130.32,
-      |      "other": -10.78,
+      |      "residentialFinancialCost": 130.32,
+      |      "other": 10.78,
       |      "travelCosts": 20.45
       |     }
       |  }
@@ -83,8 +83,8 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
         financialCosts = Some(10.25),
         professionalFees = Some(54.45),
         costOfServices = Some(-10.50),
-        residentialFinancialCost = Some(-130.32),
-        other = Some(-10.78),
+        residentialFinancialCost = Some(130.32),
+        other = Some(10.78),
         travelCosts = Some(20.45),
         consolidatedExpenses = None
       ))
@@ -106,8 +106,8 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |     "financialCosts": 10.25,
       |     "professionalFees": 54.45,
       |     "costOfServices": -10.50,
-      |     "residentialFinancialCost": -130.32,
-      |     "other": -10.78,
+      |     "residentialFinancialCost": 130.32,
+      |     "other": 10.78,
       |     "travelCosts": 20.45
       |     }
       |  }
