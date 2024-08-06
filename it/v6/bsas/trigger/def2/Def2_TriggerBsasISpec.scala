@@ -211,9 +211,9 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
     def makeRequestBody(typeOfBusiness: String): JsObject = {
 
-      val startDate = "2024-05-01"
+      val startDate = "2025-05-01"
 
-      val endDate = "2024-05-02"
+      val endDate = "2025-05-02"
 
       Json.obj(
         "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
@@ -232,9 +232,9 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait TysIfsTest extends Test {
-    def downstreamTaxYear: String = "24-25"
+    def downstreamTaxYear: String = "25-26"
 
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino"
 
   }
 
