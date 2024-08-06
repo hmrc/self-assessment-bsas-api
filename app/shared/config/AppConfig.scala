@@ -38,11 +38,12 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
   // MTD ID Lookup Config
   def mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
-  private def downstreamConfig(serviceName: String) = {
+  private def serviceKeyFor(serviceName: String) = s"microservice.services.$serviceName"
 
+  private def downstreamConfig(serviceName: String) = {
     val baseUrl = config.baseUrl(serviceName)
 
-    val serviceKey = s"microservice.services.$serviceName"
+    val serviceKey = serviceKeyFor(serviceName)
 
     val env                = config.getString(s"$serviceKey.env")
     val token              = config.getString(s"$serviceKey.token")
@@ -51,9 +52,29 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     DownstreamConfig(baseUrl, env, token, environmentHeaders)
   }
 
+  private def simpleDownstreamConfig(serviceName: String) = {
+    val baseUrl = config.baseUrl(serviceName)
+
+    val serviceKey = serviceKeyFor(serviceName)
+
+    val env                = config.getString(s"$serviceKey.env")
+    val environmentHeaders = configuration.getOptional[Seq[String]](s"$serviceKey.environmentHeaders")
+
+    SimpleDownstreamConfig(baseUrl, env, environmentHeaders)
+  }
+
+  def hipAuthConfig: ClientAuthConfig = {
+    val clientId     = config.getString("hip-auth.clientId")
+    val clientSecret = config.getString("hip-auth.clientSecret")
+
+    ClientAuthConfig(clientId, clientSecret)
+  }
+
   def desDownstreamConfig: DownstreamConfig    = downstreamConfig("des")
   def ifsDownstreamConfig: DownstreamConfig    = downstreamConfig("ifs")
   def tysIfsDownstreamConfig: DownstreamConfig = downstreamConfig("tys-ifs")
+
+  def hipIfsDownstreamConfig: SimpleDownstreamConfig = simpleDownstreamConfig("ifs")
 
   // API Config
   def apiGatewayContext: String                    = config.getString("api.gateway.context")
