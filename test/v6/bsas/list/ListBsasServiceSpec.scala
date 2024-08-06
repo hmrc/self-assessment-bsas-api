@@ -35,20 +35,21 @@ import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v6.bsas.list.def1.model.Def1_ListBsasFixtures
 import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
+import v6.bsas.list.def2.model.Def2_ListBsasFixtures
+import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
-import v6.bsas.list.model.response.ListBsasResponse
 
 import scala.concurrent.Future
 
-class ListBsasServiceSpec extends ServiceSpec with Def1_ListBsasFixtures {
+class ListBsasServiceSpec extends ServiceSpec {
 
   private val nino                   = Nino("AA123456A")
   private val taxYear                = TaxYear.fromMtd("2019-20")
   private val incomeSourceIdentifier = "IncomeSourceType"
   private val identifierValue        = BusinessId("01")
 
-  val request: ListBsasRequestData = Def1_ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
-  val response: ListBsasResponse   = listBsasResponse
+  val fhlRequest: ListBsasRequestData = Def1_ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
+  val request: ListBsasRequestData = Def2_ListBsasRequestData(nino, TaxYear.fromMtd("2025-26"), Some(identifierValue), Some(incomeSourceIdentifier))
 
   trait Test extends MockListBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -58,26 +59,34 @@ class ListBsasServiceSpec extends ServiceSpec with Def1_ListBsasFixtures {
   }
 
   "ListBsas" should {
-    "return a valid response" when {
-      "a valid request is supplied" in new Test {
+    "return a valid response with" when {
+      "a valid request is supplied with FHL" in new Test with Def1_ListBsasFixtures {
+        MockListBsasConnector
+          .listBsas(fhlRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, listBsasResponse))))
+
+        await(service.listBsas(fhlRequest)) shouldBe Right(ResponseWrapper(correlationId, listBsasResponse))
+      }
+
+      "a valid request is supplied" in new Test with Def2_ListBsasFixtures {
         MockListBsasConnector
           .listBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, listBsasResponse))))
 
-        await(service.listBsas(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        await(service.listBsas(request)) shouldBe Right(ResponseWrapper(correlationId, listBsasResponse))
       }
     }
 
     "return error response" when {
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-        s"$downstreamErrorCode is returned from the service" in new Test {
+        s"$downstreamErrorCode is returned from the service" in new Test with Def1_ListBsasFixtures {
 
           MockListBsasConnector
-            .listBsas(request)
+            .listBsas(fhlRequest)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          await(service.listBsas(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+          await(service.listBsas(fhlRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val errors = List(

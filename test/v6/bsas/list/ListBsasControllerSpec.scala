@@ -173,8 +173,7 @@ class ListBsasControllerSpec
       incomeSourceType = Some(typeOfBusiness)
     )
 
-    override val response: ListBsasResponse = Def2_ListBsasResponse(
-      List(businessSourceSummary()))
+    override val response: ListBsasResponse = Def2_ListBsasResponse(List(businessSourceSummary()))
   }
 
 }
