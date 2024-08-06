@@ -17,6 +17,7 @@
 package v3.controllers
 
 import common.errors._
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -168,7 +169,13 @@ class SubmitForeignPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    override protected def callController(): Future[Result] =
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+
+    protected def callController(): Future[Result] =
       controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =

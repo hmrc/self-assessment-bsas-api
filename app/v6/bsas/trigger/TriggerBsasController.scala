@@ -16,6 +16,7 @@
 
 package v6.bsas.trigger
 
+import config.BsasFeatureSwitches
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
@@ -41,6 +42,11 @@ class TriggerBsasController @Inject() (
     appConfig: AppConfig
 ) extends AuthorisedController(cc)
     with Logging {
+
+  val endpointName = "trigger-bsas"
+
+  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
+    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "TriggerBsasController", endpointName = "triggerBsas")

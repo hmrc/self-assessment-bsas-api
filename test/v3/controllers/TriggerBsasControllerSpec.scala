@@ -17,6 +17,7 @@
 package v3.controllers
 
 import common.errors._
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -157,6 +158,12 @@ class TriggerBsasControllerSpec
     )
 
     protected val requestBodyForController: JsValue = requestBody
+
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.triggerBsas(validNino)(fakePostRequest(requestBodyForController))

@@ -16,6 +16,7 @@
 
 package v3.controllers
 
+import config.BsasFeatureSwitches
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
@@ -32,15 +33,22 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class SubmitUkPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
-                                                val lookupService: MtdIdLookupService,
-                                                validatorFactory: SubmitUkPropertyBsasValidatorFactory,
-                                                service: SubmitUkPropertyBsasService,
-                                                hateoasFactory: HateoasFactory,
-                                                auditService: AuditService,
-                                                cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+class SubmitUkPropertyBsasController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: SubmitUkPropertyBsasValidatorFactory,
+    service: SubmitUkPropertyBsasService,
+    hateoasFactory: HateoasFactory,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator
+)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
+
+  val endpointName = "submit-uk-property-bsas"
+
+  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
+    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitUkPropertyBsasController", endpointName = "submitUkPropertyBsas")
