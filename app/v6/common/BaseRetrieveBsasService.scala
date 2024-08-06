@@ -23,7 +23,7 @@ import shared.services.{BaseService, ServiceOutcome}
 import v6.common.model.HasIncomeSourceType
 
 trait BaseRetrieveBsasService extends BaseService {
-  // protected val supportedTypesOfBusiness: Set[TypeOfBusiness]
+
   protected val supportedIncomeSourceType: Set[String]
 
   final protected def validateTypeOfBusiness[T <: HasIncomeSourceType](responseWrapper: ResponseWrapper[T]): ServiceOutcome[T] =

@@ -17,7 +17,9 @@
 package v6.ukPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json.{JsValue, Json}
-import v6.common.model.IncomeSourceType
+import shared.models.domain.{Source, Status}
+import v6.common.model.{IncomeSourceType, TypeOfBusinessWithFHL}
+
 
 object RetrieveUkPropertyBsasFixtures {
 
@@ -90,7 +92,7 @@ object RetrieveUkPropertyBsasFixtures {
   val downstreamInputsInvalidSourceJson: JsValue = Json.parse(
     s"""
       |{
-      |  "incomeSourceType": "01",
+      |  "incomeSourceType": "02",
       |  "incomeSourceId": "XAIS12345678910",
       |  "incomeSourceName": "Business Name",
       |  "accountingPeriodStartDate": "$now",
@@ -547,7 +549,8 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  /*val parsedMetadata: Metadata = Metadata(
+
+  val parsedMetadata: Metadata = Metadata(
     calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
     requestedDateTime = "2000-01-01T10:12:10Z",
     adjustedDateTime = Some("2000-01-01T10:12:10Z"),
@@ -573,7 +576,8 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusiness.`uk-property-fhl`,
+    incomeSourceType = "04",
+    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-fhl`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
@@ -583,7 +587,8 @@ object RetrieveUkPropertyBsasFixtures {
   )
 
   val inputsNonFhl: Inputs = Inputs(
-    typeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`,
+    incomeSourceType = "02",
+    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-non-fhl`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
@@ -792,16 +797,15 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedSummaryCalculation = Some(adjustedSummaryCalculationNonFhl)
   )
 
-  def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def1_RetrieveUkPropertyBsasResponse =
+  def retrieveBsasResponseInvalidIncomeSourceType(incomeSourceType: String): Def1_RetrieveUkPropertyBsasResponse =
     Def1_RetrieveUkPropertyBsasResponse(
       metadata = parsedMetadata,
       inputs = inputsFhl
         /** EndMarker */
-        .copy(typeOfBusiness = typeOfBusiness)
-        .copy(typeOfBusiness = typeOfBusiness),
+        .copy(incomeSourceType = incomeSourceType),
       adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
       adjustments = Some(adjustmentsFhl),
       adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)
-    )*/
+    )
 
 }

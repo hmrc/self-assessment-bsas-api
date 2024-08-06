@@ -39,10 +39,10 @@ object TypeOfBusiness {
     val asDownstreamValue: String = "02"
   }
 
-  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
-
   case object `foreign-property` extends TypeOfBusiness {
     val asDownstreamValue: String = "15"
   }
+
+  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
 
 }

@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    "requestedDateTime": "2020-12-05T16:19:44Z",
+    "adjustedDateTime": "2020-12-05T16:19:44Z",
+    "nino": "AA999999A",
+    "taxYear": "2019-20",
+    "summaryStatus": "valid"
+  },
+  "inputs": {
+    "businessId": "XAIS12345678910",
+    "typeOfBusiness": "foreign-property-fhl-eea",
+    "businessName": "My foreign property business",
+    "accountingPeriodStartDate": "2019-04-06",
+    "accountingPeriodEndDate": "2020-04-05",
+    "source": "MTD-SA",
+    "submissionPeriods": [
+      {
+        "submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+        "startDate": "2019-04-06",
+        "endDate": "2020-04-05",
+        "receivedDateTime": "2019-02-15T09:35:04.843Z"
+      }
+    ]
+  },
+  "adjustableSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "totalRentsReceived": 0.12
+    },
+    "totalExpenses": 0.12,
+    "expenses": {
+      "consolidatedExpenses": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "privateUseAdjustment": 0.12,
+      "balancingCharge": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "annualInvestmentAllowance": 0.12,
+      "otherCapitalAllowance": 0.12,
+      "electricChargePointAllowance": 0.12,
+      "zeroEmissionsCarAllowance": 0.12
+    },
+    "taxableProfit": 12500
+  },
+  "adjustments": {
+    "income": {
+      "totalRentsReceived": -99999999999.99
+    },
+    "expenses": {
+      "consolidatedExpenses": 0.12
+    }
+  },
+  "adjustedSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "totalRentsReceived": 0.12
+    },
+    "totalExpenses": -0.12,
+    "expenses": {
+      "consolidatedExpenses": 0.89
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "privateUseAdjustment": 0.12,
+      "balancingCharge": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "annualInvestmentAllowance": 0.12,
+      "otherCapitalAllowance": 0.12,
+      "electricChargePointAllowance": 0.12,
+      "zeroEmissionsCarAllowance": 0.12
+    },
+    "taxableProfit": 2500
+  }
+}
