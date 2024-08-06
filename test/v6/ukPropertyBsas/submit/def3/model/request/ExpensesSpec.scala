@@ -47,34 +47,12 @@ class ExpensesSpec extends UnitSpec {
     consolidatedExpenses = None
   )
 
-  private val consolidatedExpensesJson: JsValue = Json.parse("""
-      |{
-      |  "consolidatedExpenses": 8.12
-      |}
-      |""".stripMargin)
-
-  private val consolidatedExpenses: request.Expenses = Expenses(
-    premisesRunningCosts = None,
-    repairsAndMaintenance = None,
-    financialCosts = None,
-    professionalFees = None,
-    travelCosts = None,
-    costOfServices = None,
-    other = None,
-    residentialFinancialCost = None,
-    consolidatedExpenses = Some(8.12)
-  )
-
   private val emptyExpenses = Expenses(None, None, None, None, None, None, None, None, None)
 
   "reads" when {
     "passed mtd json" should {
       "return the corresponding model" in {
         expensesJson.as[request.Expenses] shouldBe expenses
-      }
-
-      "return the corresponding model with only consolidated expenses" in {
-        consolidatedExpensesJson.as[request.Expenses] shouldBe consolidatedExpenses
       }
     }
 

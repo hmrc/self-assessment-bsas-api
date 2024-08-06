@@ -46,12 +46,6 @@ class Def3_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
 
-    "writing a full fhl model" should {
-      "return the downstream JSON" in {
-        Json.toJson(requestFullParsed) shouldBe downstreamRequestFull
-      }
-    }
-
     "passed an empty model" should {
       "return an empty JSON" in {
         Json.toJson(emptyParsedRequestBody) shouldBe JsObject.empty

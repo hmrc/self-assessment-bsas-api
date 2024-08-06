@@ -26,7 +26,7 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.stubs._
 import support.IntegrationBaseSpec
-import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v6.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
@@ -187,7 +187,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       buildRequest(s"/$nino/uk-property/$calculationId/adjust")
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

@@ -90,28 +90,4 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       ))
   )
 
-  val downstreamRequestFull: JsValue = Json.parse("""
-      |{
-      |  "incomeSourceType": "02",
-      |  "adjustments": {
-      |  "income": {
-      |     "totalRentsReceived": 1000.45,
-      |     "premiumsOfLeaseGrant": 1000.45,
-      |     "reversePremiums": 1000.45,
-      |     "otherPropertyIncome": 1000.45
-      |  },
-      |  "expenses": {
-      |     "premisesRunningCosts": -10.25,
-      |     "repairsAndMaintenance": 888.78,
-      |     "financialCosts": 10.25,
-      |     "professionalFees": 54.45,
-      |     "costOfServices": -10.50,
-      |     "residentialFinancialCost": 130.32,
-      |     "other": 10.78,
-      |     "travelCosts": 20.45
-      |     }
-      |  }
-      |}
-      |""".stripMargin)
-
 }

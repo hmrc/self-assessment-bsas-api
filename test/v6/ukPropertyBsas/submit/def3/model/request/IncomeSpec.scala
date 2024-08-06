@@ -22,7 +22,13 @@ import v6.ukPropertyBsas.submit.def3.model.request
 
 class IncomeSpec extends UnitSpec {
 
-  private val income: request.Income = Income(Some(123.12), Some(123.12), Some(123.12), Some(123.12))
+  private val income: request.Income =
+    Income(
+      totalRentsReceived = Some(45.12),
+      premiumsOfLeaseGrant = Some(-5.3242),
+      reversePremiums = Some(11.00),
+      otherPropertyIncome = Some(123.12)
+    )
 
   private val emptyIncome: request.Income = Income(None, None, None, None)
 
@@ -32,9 +38,9 @@ class IncomeSpec extends UnitSpec {
         Json
           .parse("""
               |{
-              |   "totalRentsReceived": 123.12,
-              |   "premiumsOfLeaseGrant": 123.12,
-              |   "reversePremiums": 123.12,
+              |   "totalRentsReceived": 45.12,
+              |   "premiumsOfLeaseGrant": -5.3242,
+              |   "reversePremiums": 11.00,
               |   "otherPropertyIncome": 123.12
               |}
               |""".stripMargin)
@@ -43,7 +49,7 @@ class IncomeSpec extends UnitSpec {
     }
 
     "given an empty JSON object" should {
-      "return an empty FHLIncome" in {
+      "return an empty Income" in {
         JsObject.empty.as[request.Income] shouldBe emptyIncome
       }
     }
@@ -56,9 +62,9 @@ class IncomeSpec extends UnitSpec {
           Json
             .parse("""
                 |{
-                |   "totalRentsReceived": 123.12,
-                |   "premiumsOfLeaseGrant": 123.12,
-                |   "reversePremiums": 123.12,
+                |   "totalRentsReceived": 45.12,
+                |   "premiumsOfLeaseGrant": -5.3242,
+                |   "reversePremiums": 11.00,
                 |   "otherPropertyIncome": 123.12
                 |}
                 |""".stripMargin)

@@ -221,7 +221,7 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         List(
           "/expenses/residentialFinancialCost",
           "/expenses/other"
-        ).foreach(path => testWith(consolidatedBodyJson.update(path, _), path, min = "0"))
+        ).foreach(path => testWith(fullRequestJson.update(path, _), path, min = "0"))
       }
 
       "multiple fields are invalid" in {
