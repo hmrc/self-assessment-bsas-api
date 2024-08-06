@@ -16,9 +16,10 @@
 
 package v6.foreignPropertyBsas.retrieve.def1
 
+import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
@@ -30,8 +31,8 @@ import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignProper
   retrieveForeignPropertyBsasMtdFhlJson,
   retrieveForeignPropertyBsasMtdNonFhlJson
 }
-/*import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
-import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures*/
+import v6.selfEmploymentBsas.retieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasFixtures
+import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures
 
 class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
@@ -71,7 +72,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       }
     }
 
-    /*"return error response with status BAD_REQUEST" when {
+    "return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
         checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
       }
@@ -90,7 +91,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
           response.status shouldBe BAD_REQUEST
           response.header("Content-Type") shouldBe Some("application/json")
         }
-    }*/
+    }
 
     "return error according to spec" when {
       def validationErrorTest(requestNino: String,

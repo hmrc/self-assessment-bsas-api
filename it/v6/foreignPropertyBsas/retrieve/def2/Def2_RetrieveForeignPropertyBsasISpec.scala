@@ -16,9 +16,10 @@
 
 package v6.foreignPropertyBsas.retrieve.def2
 
+import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
@@ -28,6 +29,8 @@ import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
   retrieveForeignPropertyBsasDesNonFhlJson,
   retrieveForeignPropertyBsasMtdNonFhlJson
 }
+import v6.selfEmploymentBsas.retieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasFixtures
+import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
 
 class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
@@ -46,17 +49,17 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       }
     }
 
-    /*"return error response with status BAD_REQUEST" when {
+    "return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
         checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
       }
 
       "Downstream response is self employment" in {
-        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson)
+        checkTypeOfBusinessIncorrectWith(Def2_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson)
       }
 
       def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =
-        new NonTysTest {
+        new TysTest {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponse)
 
           val response: WSResponse = await(request.get())
@@ -65,7 +68,7 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
           response.status shouldBe BAD_REQUEST
           response.header("Content-Type") shouldBe Some("application/json")
         }
-    }*/
+    }
 
     "return error according to spec" when {
       def validationErrorTest(requestNino: String,
