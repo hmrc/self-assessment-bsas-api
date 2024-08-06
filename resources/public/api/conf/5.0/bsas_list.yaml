@@ -1,9 +1,9 @@
 get:
   summary: List Business Source Adjustable Summaries
   description: |
-    This endpoint allows the user to generate a list of Business Source Adjustable Summaries for a given tax year. A 
-    filter can be set to return the summaries for a single business or business type. The National Insurance number must
-    be provided.
+    This endpoint enables you to generate a list of Business Source Adjustable Summaries for a given tax year. A filter can be set to return the summaries for a single business or business type. A National Insurance number must be provided.
+    
+    Note: this endpoint only supports submissions up to tax year 2024-25.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  

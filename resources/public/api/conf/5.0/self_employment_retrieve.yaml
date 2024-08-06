@@ -1,8 +1,9 @@
 get:
   summary: Retrieve a Self-Employment Business Source Adjustable Summary (BSAS)
   description: |
-    This endpoint allows the user to request a specific Business Source Adjustable Summary. 
-    A National Insurance number and Calculation id must be provided.
+    This endpoint enables you to request a specific Business Source Adjustable Summary. A National Insurance number and calculation ID must be provided.
+    
+    Note: this endpoint only supports submissions up to tax year 2024-25.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.     

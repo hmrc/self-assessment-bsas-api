@@ -1,15 +1,15 @@
-GET         /:nino                                        v3.controllers.ListBsasController.listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
+GET         /:nino                                        v4.controllers.ListBsasController.listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
 
 POST        /:nino/trigger                                v4.controllers.TriggerBsasController.triggerBsas(nino: String)
 
-GET         /:nino/uk-property/:calculationId             v3.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
+GET         /:nino/uk-property/:calculationId             v4.controllers.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
 
-POST        /:nino/uk-property/:calculationId/adjust      v3.controllers.SubmitUkPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear: Option[String])
+POST        /:nino/uk-property/:calculationId/adjust      v4.controllers.SubmitUkPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear: Option[String])
 
 GET         /:nino/self-employment/:calculationId         v4.controllers.RetrieveSelfEmploymentBsasController.handleRequest(nino:String, calculationId: String, taxYear: Option[String])
 
-POST        /:nino/self-employment/:calculationId/adjust  v3.controllers.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String])
+POST        /:nino/self-employment/:calculationId/adjust  v4.controllers.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String])
 
-POST        /:nino/foreign-property/:calculationId/adjust v3.controllers.SubmitForeignPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear:Option[String])
+POST        /:nino/foreign-property/:calculationId/adjust v4.controllers.SubmitForeignPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear:Option[String])
 
-GET         /:nino/foreign-property/:calculationId        v3.controllers.RetrieveForeignPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
+GET         /:nino/foreign-property/:calculationId        v4.controllers.RetrieveForeignPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])

@@ -88,6 +88,13 @@ class Def1_ListBsasValidatorSpec extends UnitSpec {
         )
       }
 
+      "given a tax year after 2024-25" in {
+        val result = validator(validNino, Some("2025-26"), None, None).validateAndWrapResult()
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
+        )
+      }
+
       "an invalid type of business is provided" in {
         val result = validator(validNino, Some(validTaxYear), Some("not-a-type-of-business"), None).validateAndWrapResult()
         result shouldBe Left(
