@@ -387,7 +387,7 @@ object RetrieveUkPropertyBsasFixtures {
       |}
       |""".stripMargin
   )
-
+  
   val mtdSummaryCalculationDeductionsJson: JsValue = Json.parse(
     """
       |{
