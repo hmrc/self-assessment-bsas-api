@@ -51,7 +51,7 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     "return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
-        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
+        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasResponseJson)
       }
 
       "Downstream response is self employment" in {
