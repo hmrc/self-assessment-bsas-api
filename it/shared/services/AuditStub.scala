@@ -1,4 +1,4 @@
-package shared.stubs
+package shared.services
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.NO_CONTENT

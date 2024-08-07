@@ -25,7 +25,7 @@ import shared.utils.UnitSpec
 class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
 
   private def setupCheckAndRewrite(oasFeatureEnabled: Boolean, oasFeatureReleasedInProd: Boolean): (CheckRewrite, Rewriter) = {
-    MockAppConfig.featureSwitchConfig returns Configuration(
+    MockedAppConfig.featureSwitchConfig returns Configuration(
       "oasFeature.enabled"                -> oasFeatureEnabled,
       "oasFeature.released-in-production" -> oasFeatureReleasedInProd
     )

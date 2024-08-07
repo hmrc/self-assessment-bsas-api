@@ -796,10 +796,7 @@ object RetrieveUkPropertyBsasFixtures {
   def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def1_RetrieveUkPropertyBsasResponse =
     Def1_RetrieveUkPropertyBsasResponse(
       metadata = parsedMetadata,
-      inputs = inputsFhl
-        /** EndMarker */
-        .copy(typeOfBusiness = typeOfBusiness)
-        .copy(typeOfBusiness = typeOfBusiness),
+      inputs = inputsFhl.copy(typeOfBusiness = typeOfBusiness),
       adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
       adjustments = Some(adjustmentsFhl),
       adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)

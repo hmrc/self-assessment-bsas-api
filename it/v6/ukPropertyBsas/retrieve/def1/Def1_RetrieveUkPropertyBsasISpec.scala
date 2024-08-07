@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v6.common.model.IncomeSourceType
 import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._

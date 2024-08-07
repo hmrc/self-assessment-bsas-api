@@ -1,4 +1,4 @@
-package shared.stubs
+package shared.services
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.OK
@@ -11,7 +11,7 @@ object MtdIdLookupStub extends WireMockMethods {
 
   def ninoFound(nino: String): StubMapping =
     when(method = GET, uri = lookupUrl(nino))
-      .thenReturn(status = OK, body = Json.obj("mtdbsa" -> "12345678"))
+      .thenReturn(status = OK, body = Json.obj("mtdbsa" -> "1234567890"))
 
   def error(nino: String, status: Int): StubMapping =
     when(method = GET, uri = lookupUrl(nino))

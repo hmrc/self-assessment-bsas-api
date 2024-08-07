@@ -16,6 +16,7 @@
 
 package v3.controllers
 
+import config.BsasFeatureSwitches
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
@@ -30,15 +31,22 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveForeignPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
-                                                       val lookupService: MtdIdLookupService,
-                                                       validatorFactory: RetrieveForeignPropertyBsasValidatorFactory,
-                                                       service: RetrieveForeignPropertyBsasService,
-                                                       hateoasFactory: HateoasFactory,
-                                                       cc: ControllerComponents,
-                                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+class RetrieveForeignPropertyBsasController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: RetrieveForeignPropertyBsasValidatorFactory,
+    service: RetrieveForeignPropertyBsasService,
+    hateoasFactory: HateoasFactory,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator
+)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with Logging {
+
+  val endpointName = "retrieve-foreign-property-bsas"
+
+  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
+    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveForeignPropertyBsasController", endpointName = "retrieve")
