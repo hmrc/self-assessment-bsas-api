@@ -34,7 +34,7 @@ import shared.models.errors.{
   RuleTaxYearRangeInvalidError,
   TaxYearFormatError
 }
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
 
@@ -59,7 +59,7 @@ class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
         .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 

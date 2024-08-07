@@ -23,16 +23,16 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
-import shared.stubs._
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
+    val nino          = "AA123456A"
+    val calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
-    val nino: String          = "AA123456A"
-    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
     // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
 
@@ -68,7 +68,7 @@ class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
         .withQueryStringParameters(taxYear.map(ty => Seq("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 
