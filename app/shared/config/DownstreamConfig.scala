@@ -22,3 +22,11 @@ case class DownstreamConfig(
     token: String,
     environmentHeaders: Option[Seq[String]]
 )
+
+case class SimpleDownstreamConfig(
+    baseUrl: String,
+    env: String,
+    environmentHeaders: Option[Seq[String]]
+)
+
+case class ClientAuthConfig(clientId: String, clientSecret: String)

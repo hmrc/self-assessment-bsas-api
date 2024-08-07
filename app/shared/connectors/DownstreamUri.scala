@@ -16,12 +16,25 @@
 
 package shared.connectors
 
-sealed trait DownstreamUri[+Resp] {
-  val value: String
-}
+import shared.config.{AppConfig, DownstreamConfig}
+
+case class DownstreamUri[+Resp](
+    path: String,
+    strategy: DownstreamStrategy
+)
 
 object DownstreamUri {
-  final case class DesUri[Resp](value: String)                extends DownstreamUri[Resp]
-  final case class IfsUri[Resp](value: String)                extends DownstreamUri[Resp]
-  final case class TaxYearSpecificIfsUri[Resp](value: String) extends DownstreamUri[Resp]
+
+  private def withStandardStrategy[Resp](path: String, config: DownstreamConfig) =
+    DownstreamUri(path, DownstreamStrategy.standardStrategy(config))
+
+  def DesUri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
+    withStandardStrategy(value, appConfig.desDownstreamConfig)
+
+  def IfsUri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
+    withStandardStrategy(value, appConfig.ifsDownstreamConfig)
+
+  def TaxYearSpecificIfsUri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
+    withStandardStrategy(value, appConfig.tysIfsDownstreamConfig)
+
 }
