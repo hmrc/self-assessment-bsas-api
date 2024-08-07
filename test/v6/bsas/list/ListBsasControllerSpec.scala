@@ -55,8 +55,8 @@ class ListBsasControllerSpec
   "list bsas" should {
     "return OK" when {
       "the request is valid with FHL" in new Def1_Test {
-        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -71,8 +71,8 @@ class ListBsasControllerSpec
       }
 
       "the request is valid" in new Def2_Test {
-        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -87,8 +87,8 @@ class ListBsasControllerSpec
       }
 
       "valid request with no taxYear path parameter" in new Def1_Test {
-        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         override def maybeTaxYear: Option[String] = None
 
@@ -157,6 +157,12 @@ class ListBsasControllerSpec
             bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
           ))
       ))
+
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
