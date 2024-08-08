@@ -16,7 +16,6 @@
 
 package v3.controllers
 
-import config.BsasFeatureSwitches
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers._
@@ -42,9 +41,6 @@ class ListBsasController @Inject() (val authService: EnrolmentsAuthService,
     with Logging {
 
   val endpointName = "list-bsas"
-
-  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
-    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListBsasController", endpointName = "listBsas")

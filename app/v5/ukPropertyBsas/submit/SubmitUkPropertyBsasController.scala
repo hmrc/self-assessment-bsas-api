@@ -16,7 +16,6 @@
 
 package v5.ukPropertyBsas.submit
 
-import config.BsasFeatureSwitches
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
@@ -43,9 +42,6 @@ class SubmitUkPropertyBsasController @Inject() (
 ) extends AuthorisedController(cc) {
 
   val endpointName = "submit-uk-property-bsas"
-
-  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
-    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitUkPropertyBsasController", endpointName = "submitUkPropertyBsas")

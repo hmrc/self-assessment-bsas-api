@@ -17,7 +17,7 @@
 package shared.controllers
 
 import play.api.mvc._
-import shared.config.AppConfig
+import shared.config.{AppConfig, ConfigFeatureSwitches}
 import shared.models.auth.UserDetails
 import shared.models.errors.MtdError
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
@@ -38,7 +38,7 @@ abstract class AuthorisedController(
 
   val endpointName: String
 
-  protected def supportingAgentsAccessControlEnabled: Boolean
+  lazy val supportingAgentsAccessControlEnabled: Boolean = ConfigFeatureSwitches().supportingAgentsAccessControlEnabled
 
   lazy private val endpointAllowsSupportingAgents: Boolean = {
     supportingAgentsAccessControlEnabled &&

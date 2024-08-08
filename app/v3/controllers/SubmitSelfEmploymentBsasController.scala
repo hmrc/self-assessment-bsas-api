@@ -16,7 +16,6 @@
 
 package v3.controllers
 
-import config.BsasFeatureSwitches
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.AppConfig
@@ -47,9 +46,6 @@ class SubmitSelfEmploymentBsasController @Inject() (
     extends AuthorisedController(cc) {
 
   val endpointName = "submit-self-employment-bsas"
-
-  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
-    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
