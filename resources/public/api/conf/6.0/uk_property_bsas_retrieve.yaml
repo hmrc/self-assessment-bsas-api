@@ -8,40 +8,47 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
-    | Header Value (Gov-Test-Scenario)         | Scenario                                                                                                                                  |
-    |------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-    | N/A - DEFAULT                            | Simulates the scenario where no data is found.                                                                                            |
-    | UK_PROPERTY_FHL_PROFIT                   | Simulates success response with UK property FHL and profit.                                                                               |
-    | DYNAMIC_UK_PROPERTY_FHL_PROFIT           | Simulates success response with uk property FHL and profit.<br><br> See below for details about dynamic scenarios.                        |
-    | UK_PROPERTY_FHL_LOSS                     | Simulates success response with UK property FHL and loss.                                                                                 |
-    | DYNAMIC_UK_PROPERTY_FHL_LOSS             | Simulates success response with uk property FHL and loss.<br><br> See below for details about dynamic scenarios.                          |
-    | UK_PROPERTY_NON_FHL_PROFIT               | Simulates success response with UK property Non FHL and profit.                                                                           |
-    | DYNAMIC_UK_PROPERTY_NON_FHL_PROFIT       | Simulates success response with uk property Non FHL and profit.<br><br> See below for details about dynamic scenarios.                    |
-    | UK_PROPERTY_NON_FHL_LOSS                 | Simulates success response with UK property Non FHL and loss.                                                                             |
-    | DYNAMIC_UK_PROPERTY_NON_FHL_LOSS         | Simulates success response with uk property Non FHL and loss.<br><br> See below for details about dynamic scenarios.                      |
-    | UK_PROPERTY_FHL_CONSOLIDATED             | Simulates success response with FHL adjusted summary and consolidated expenses.                                                           |
-    | DYNAMIC_UK_PROPERTY_FHL_CONSOLIDATED     | Simulates success response with FHL adjusted summary and consolidated expenses.<br><br> See below for details about dynamic scenarios.    |
-    | UK_PROPERTY_NON_FHL_CONSOLIDATED         | Simulates success response with non FHL adjusted summary and consolidated expenses.                                                       |
-    | DYNAMIC_UK_PROPERTY_NON_FHL_CONSOLIDATED | Simulates success response with non FHL adjusted summary and consolidated expenses.<br><br> See below for details about dynamic scenarios.|
-    | UK_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.                                                               |
-    | DYNAMIC_UK_FHL_PROPERTY_ALLOWANCE        | Simulates success response with FHL adjusted summary and propertyAllowance.<br><br> See below for details about dynamic scenarios.        |
-    | UK_NON_FHL_PROPERTY_ALLOWANCE            | Simulates success response with non FHL adjusted summary and propertyAllowance.                                                           |
-    | DYNAMIC_UK_NON_FHL_PROPERTY_ALLOWANCE    | Simulates success response with non FHL adjusted summary and propertyAllowance.<br><br> See below for details about dynamic scenarios.    |
-    | UK_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                   |
-    | DYNAMIC_UK_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid.<br><br> See below for details about dynamic scenarios.                            |
-    | UK_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                                |
-    | DYNAMIC_UK_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded.<br><br> See below for details about dynamic scenarios.                         |
-    | UK_PROPERTY_PROFIT                       | Simulates success response with uk property and profit.                                                                                   |
-    | DYNAMIC_UK_PROPERTY_PROFIT               | Simulates success response with uk property and profit.<br><br> See below for details about dynamic scenarios.                            |
-    | UK_PROPERTY_LOSS                         | Simulates success response with uk property and loss.                                                                                     |
-    | DYNAMIC_UK_PROPERTY_LOSS                 | Simulates success response with uk property and loss.<br><br> See below for details about dynamic scenarios.                              |
-    | UK_PROPERTY_CONSOLIDATED                 | Simulates success response with adjusted summary and consolidated expenses.                                                               |
-    | DYNAMIC_UK_PROPERTY_CONSOLIDATED         | Simulates success response with adjusted summary and consolidated expenses.<br><br> See below for details about dynamic scenarios.        |
-    | UK_PROPERTY_ALLOWANCE                    | Simulates success response with adjusted summary and propertyAllowance.                                                                   |
-    | DYNAMIC_UK_PROPERTY_ALLOWANCE            | Simulates success response with adjusted summary and propertyAllowance.<br><br> See below for details about dynamic scenarios.            |
-    | NOT_UK_PROPERTY                          | Simulates the scenario where the calculationId is not a UK property.                                                                      |
-    | TAX_YEAR_NOT_SUPPORTED                   | Simulates the scenario where the tax year is not supported.                                                                               |
-    | REQUEST_CANNOT_BE_FULFILLED              | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.             |
+    |  Tax Year                    | Header Value (Gov-Test-Scenario)                | Scenario                                                                                                                                  |
+    | -----------------------------|-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+    | All                          | N/A - DEFAULT                                   |  Simulates the scenario where no data is found.                                                                                           |
+    | All                          | TAX_YEAR_NOT_SUPPORTED                          |  Simulates the scenario where the tax year is not supported.                                                                              |
+    | All                          | REQUEST_CANNOT_BE_FULFILLED                     |  Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors             |
+    | All                          | UK_PROPERTY_STATUS_INVALID                      |  Simulates success response with summary status invalid.                                                                                  |
+    | All                          | DYNAMIC_UK_PROPERTY_STATUS_INVALID              |  Simulates success response with summary status invalid. See below for details about dynamic scenarios.                                   |
+    | All                          | UK_PROPERTY_STATUS_SUPERSEDED                   |  Simulates success response with summary status superseded.                                                                               |
+    | All                          | DYNAMIC_UK_PROPERTY_STATUS_SUPERSEDED           |  Simulates success response with summary status superseded. See below for details about dynamic scenarios.                                |
+    | All                          | NOT_UK_PROPERTY                                 |  Simulates the scenario where the calculationId is not a UK property.                                                                     |
+    | All                          | STATEFUL                                        |  Performs a stateful retrieve.                                                                                                            |
+    | 2025-26 onwards              | UK_PROPERTY_PROFIT                              |  Simulates success response with uk property and profit.                                                                                  |
+    | 2025-26 onwards              | DYNAMIC_UK_PROPERTY_PROFIT                      |  Simulates success response with uk property and profit. onwards See below for details about dynamic scenarios.                           |
+    | 2025-26 onwards              | UK_PROPERTY_LOSS                                |  Simulates success response with uk property and loss.                                                                                    |
+    | 2025-26 onwards              | DYNAMIC_UK_PROPERTY_LOSS                        |  Simulates success response with uk property and loss. onwards See below for details about dynamic scenarios.                             |
+    | 2025-26 onwards              | UK_PROPERTY_CONSOLIDATED                        |  Simulates success response with adjusted summary and consolidated expenses.                                                              |
+    | 2025-26 onwards              | DYNAMIC_UK_PROPERTY_CONSOLIDATED                |  Simulates success response with adjusted summary and consolidated expenses. onwards See below for details about dynamic scenarios.       |
+    | 2025-26 onwards              | UK_PROPERTY_ALLOWANCE                           |  Simulates success response with adjusted summary and propertyAllowance.                                                                  |
+    | 2025-26 onwards              | DYNAMIC_UK_PROPERTY_ALLOWANCE                   |  Simulates success response with adjusted summary and propertyAllowance. onwards See below for details about dynamic scenarios.           |
+    | 2025-26 onwards              | UK_PROPERTY_STATUS_INVALID                      |  Simulates success response with summary status invalid. onwards                                                                          |
+    | 2025-26 onwards              | DYNAMIC_UK_PROPERTY_STATUS_INVALID              |  Simulates success response with summary status invalid. onwards See below for details about dynamic scenarios.                           |
+    | 2025-26 onwards              | UK_PROPERTY_STATUS_SUPERSEDED                   |  Simulates success response with summary status superseded. onwards                                                                       |
+    | 2025-26 onwards              | DYNAMIC_UK_PROPERTY_STATUS_SUPERSEDED           |  Simulates success response with summary status superseded. onwards See below for details about dynamic scenarios.                        |
+    | Before 2025-26               | UK_PROPERTY_FHL_PROFIT                          |  Simulates success response with uk property FHL and profit.                                                                              |
+    | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_PROFIT                  |  Simulates success response with uk property FHL and profit. See below for details about dynamic scenarios.                               |
+    | Before 2025-26               | UK_PROPERTY_FHL_LOSS                            |  Simulates success response with uk property FHL and loss.                                                                                |
+    | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_LOSS                    |  Simulates success response with uk property FHL and loss. See below for details about dynamic scenarios.                                 |
+    | Before 2025-26               | UK_PROPERTY_NON_FHL_PROFIT                      |  Simulates success response with uk property Non FHL and profit.                                                                          |
+    | Before 2025-26               | DYNAMIC_UK_PROPERTY_NON_FHL_PROFIT              |  Simulates success response with uk property Non FHL and profit. See below for details about dynamic scenarios.                           |
+    | Before 2025-26               | UK_PROPERTY_NON_FHL_LOSS                        |  Simulates success response with uk property Non FHL and loss.                                                                            |
+    | Before 2025-26               | DYNAMIC_UK_PROPERTY_NON_FHL_LOSS                |  Simulates success response with uk property Non FHL and loss. See below for details about dynamic scenarios.                             |
+    | Before 2025-26               | UK_PROPERTY_FHL_CONSOLIDATED                    |  Simulates success response with FHL adjusted summary and consolidated expenses.                                                          |
+    | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_CONSOLIDATED            |  Simulates success response with FHL adjusted summary and consolidated expenses.See below for details about dynamic scenarios.            |
+    | Before 2025-26               | UK_PROPERTY_NON_FHL_CONSOLIDATED                |  Simulates success response with non FHL adjusted summary and consolidated expenses.                                                      |
+    | Before 2025-26               | DYNAMIC_UK_PROPERTY_NON_FHL_CONSOLIDATED        |  Simulates success response with non FHL adjusted summary and consolidated expenses.See below for details about dynamic scenarios.        |
+    | Before 2025-26               | UK_FHL_PROPERTY_ALLOWANCE                       |  Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
+    | Before 2025-26               | DYNAMIC_UK_FHL_PROPERTY_ALLOWANCE               |  Simulates success response with FHL adjusted summary and propertyAllowance. See below for details about dynamic scenarios.               |
+    | Before 2025-26               | UK_NON_FHL_PROPERTY_ALLOWANCE                   |  Simulates success response with non FHL adjusted summary and propertyAllowance.                                                          |
+    | Before 2025-26               | DYNAMIC_UK_NON_FHL_PROPERTY_ALLOWANCE           |  Simulates success response with non FHL adjusted summary and propertyAllowance.See below for details about dynamic scenarios.            |
+
+
 
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       - metadata
@@ -95,47 +102,47 @@ get:
             PRE-TY-2024-25-UK-FHL-Response:
               description: UK FHL Response
               value:
-                $ref: "./examples/retrieveBsas/def1/retrieve_uk_fhl_property.json"
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_fhl_property.json"
             PRE-TY-2024-25-UK-Non-FHL-Response:
               description: UK Non-FHL Response
               value:
-                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property.json"
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_non_fhl_property.json"
             PRE-TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
               description: UK Non-FHL with Consolidated Expenses Response
               value:
-                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property_consolidated.json"
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_non_fhl_property_consolidated.json"
             PRE-TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/def1/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_non_fhl_property_property_allowance.json"
             TY-2024-25-UK-FHL-Response:
               description: UK FHL Response
               value:
-                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_fhl_property.json"
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_fhl_property.json"
             TY-2024-25-UK-Non-FHL-Response:
               description: UK Non-FHL Response
               value:
-                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_non_fhl_property.json"
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_non_fhl_property.json"
             TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
               description: UK Non-FHL with Consolidated Expenses Response
               value:
-                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_non_fhl_property_consolidated.json"
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_non_fhl_property_consolidated.json"
             TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
               description: UK Non-FHL with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/def1a/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_non_fhl_property_property_allowance.json"
             TY-2025-26-UK-Property-Response:
               description: UK Property Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_property.json"
+                $ref: "./examples/retrieve_uk_property/def2/retrieve_uk_property.json"
             TY-2025-26-UK-Property-Consolidated-Expenses-Response:
               description: UK Property with Consolidated Expenses Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_property_consolidated.json"
+                $ref: "./examples/retrieve_uk_property/def2/retrieve_uk_property_consolidated.json"
             TY-2025-26-UK-Property-With-Property-Allowance-Response:
               description: UK Property with Property Allowance Response
               value:
-                $ref: "./examples/retrieveBsas/def2/retrieve_uk_property_allowance.json"
+                $ref: "./examples/retrieve_uk_property/def2/retrieve_uk_property_allowance.json"
 
 
     400:
