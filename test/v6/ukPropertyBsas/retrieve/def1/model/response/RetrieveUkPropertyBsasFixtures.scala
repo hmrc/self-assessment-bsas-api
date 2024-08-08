@@ -20,7 +20,6 @@ import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
 import v6.common.model.{IncomeSourceType, TypeOfBusinessWithFHL}
 
-
 object RetrieveUkPropertyBsasFixtures {
 
   private val now          = "2019-04-06"
@@ -548,7 +547,6 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin
   )
-
 
   val parsedMetadata: Metadata = Metadata(
     calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",

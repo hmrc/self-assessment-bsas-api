@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.{BadRequestError, _}
 import shared.models.utils.JsonErrorValidators
-import shared.stubs._
+import shared.services._
 import support.IntegrationBaseSpec
 import v6.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.fullRequestJson
 
