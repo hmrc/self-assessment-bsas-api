@@ -17,6 +17,7 @@
 package auth
 
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthSupportingAgentsAllowedISpec
 import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures
 import v6.common.model.TypeOfBusiness
@@ -29,17 +30,19 @@ class BsasAuthSupportingAgentsAllowedISpec extends AuthSupportingAgentsAllowedIS
 
   val mtdUrl = s"/$nino/trigger"
 
-  val maybeRequestJson: Option[JsValue] = Some(
-    Json.obj(
-      "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
-      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
-      "businessId"       -> "XAIS12345678901"
-    ))
+  def sendMtdRequest(request: WSRequest): WSResponse = await(request.post(requestJson))
 
   val downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
   val maybeDownstreamResponseJson: Option[JsValue] = Some(
     Json.parse(Def1_TriggerBsasFixtures.downstreamResponse)
   )
+
+  private val requestJson =
+    Json.obj(
+      "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
+      "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
+      "businessId"       -> "XAIS12345678901"
+    )
 
 }

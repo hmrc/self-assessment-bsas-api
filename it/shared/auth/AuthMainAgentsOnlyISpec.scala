@@ -20,9 +20,9 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
     */
   protected val supportingAgentsNotAllowedEndpoint: String
 
-  protected val mtdUrl: String
+  protected def sendMtdRequest(request: WSRequest): WSResponse
 
-  protected val maybeRequestJson: Option[JsValue]
+  protected val mtdUrl: String
 
   protected val downstreamUri: String
 
@@ -58,7 +58,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
             .thenReturn(downstreamSuccessStatus, maybeDownstreamResponseJson)
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request())
         response.status shouldBe expectedMtdSuccessStatus
       }
     }
@@ -74,7 +74,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedForPrimaryAgentEnrolment()
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request())
 
         response.status shouldBe FORBIDDEN
         response.body should include(ClientOrAgentNotAuthorisedError.message)
@@ -93,7 +93,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedNotLoggedIn()
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request())
         response.status shouldBe FORBIDDEN
       }
     }
@@ -107,7 +107,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedOther()
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request())
         response.status shouldBe FORBIDDEN
         response.body should include(ClientOrAgentNotAuthorisedError.message)
       }
@@ -121,7 +121,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.error(nino, INTERNAL_SERVER_ERROR)
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request())
         response.status shouldBe INTERNAL_SERVER_ERROR
         response.body should include(InternalError.message)
       }
@@ -135,7 +135,7 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.error(nino, FORBIDDEN)
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request())
         response.status shouldBe FORBIDDEN
         response.body should include(ClientOrAgentNotAuthorisedError.message)
       }
@@ -146,15 +146,8 @@ abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def sendMtdRequest(): WSResponse =
-      await(
-        maybeRequestJson match {
-          case Some(json) => request.post(json)
-          case None       => request.post("")
-        }
-      )
-
-    private def request: WSRequest = {
+    protected def request(): WSRequest = {
+      AuthStub.resetAll()
       setupStubs()
       buildRequest(mtdUrl)
         .withHttpHeaders(

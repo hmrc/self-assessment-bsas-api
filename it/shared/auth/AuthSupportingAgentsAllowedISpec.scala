@@ -19,9 +19,9 @@ abstract class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
     */
   protected val supportingAgentsAllowedEndpoint: String
 
-  protected val mtdUrl: String
+  protected def sendMtdRequest(request: WSRequest): WSResponse
 
-  protected val maybeRequestJson: Option[JsValue]
+  protected val mtdUrl: String
 
   protected val downstreamUri: String
 
@@ -57,7 +57,7 @@ abstract class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
             .thenReturn(downstreamSuccessStatus, maybeDownstreamResponseJson)
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request)
         response.status shouldBe expectedMtdSuccessStatus
       }
     }
@@ -77,7 +77,7 @@ abstract class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
             .thenReturn(downstreamSuccessStatus, maybeDownstreamResponseJson)
         }
 
-        val response: WSResponse = sendMtdRequest()
+        val response: WSResponse = sendMtdRequest(request)
         response.status shouldBe expectedMtdSuccessStatus
       }
     }
@@ -87,15 +87,8 @@ abstract class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def sendMtdRequest(): WSResponse =
-      await(
-        maybeRequestJson match {
-          case Some(json) => request.post(json)
-          case None       => request.post("")
-        }
-      )
-
-    private def request: WSRequest = {
+    protected def request: WSRequest = {
+      AuthStub.resetAll()
       setupStubs()
       buildRequest(mtdUrl)
         .withHttpHeaders(
