@@ -1,37 +1,37 @@
-/*
- * Copyright 2022 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package auth
+package shared.auth
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.OK
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures
-import v6.common.model.TypeOfBusiness
 
-class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
+abstract class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
 
-  private val callingApiVersion = "6.0"
+  /** The API's latest version, e.g. "1.0".
+    */
+  protected val callingApiVersion: String
 
-  private val supportingAgentsAllowedEndpoint = "trigger-bsas"
+  /** As the IT supplies the "supported" config below, this can be any endpoint IF there's no actual "supporting agents allowed" endpoint in the API.
+    */
+  protected val supportingAgentsAllowedEndpoint: String
+
+  protected val mtdUrl: String
+
+  protected val maybeRequestJson: Option[JsValue]
+
+  protected val downstreamUri: String
+
+  protected val maybeDownstreamResponseJson: Option[JsValue]
+
+  protected val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.POST
+
+  protected val downstreamSuccessStatus: Int = OK
+
+  protected val expectedMtdSuccessStatus: Int = OK
 
   /** One endpoint where supporting agents are allowed.
     */
@@ -40,17 +40,7 @@ class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
       s"api.supporting-agent-endpoints.$supportingAgentsAllowedEndpoint" -> "true"
     ) ++ super.servicesConfig
 
-  private val nino = "AA123456A"
-
-  private val mtdUrl = s"/$nino/trigger"
-
-  private val requestJson = Json.obj(
-    "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
-    "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
-    "businessId"       -> "XAIS12345678901"
-  )
-
-  private val downstreamResponse: JsValue = Json.parse(Def1_TriggerBsasFixtures.downstreamResponse)
+  protected val nino = "AA123456A"
 
   "Calling an endpoint that allows supporting agents" when {
     "the client is the primary agent" should {
@@ -63,12 +53,12 @@ class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
           AuthStub.authorisedWithPrimaryAgentEnrolment()
 
           DownstreamStub
-            .when(DownstreamStub.POST, downstreamUri)
-            .thenReturn(OK, downstreamResponse)
+            .when(downstreamHttpMethod, downstreamUri)
+            .thenReturn(downstreamSuccessStatus, maybeDownstreamResponseJson)
         }
 
         val response: WSResponse = sendMtdRequest()
-        response.status shouldBe OK
+        response.status shouldBe expectedMtdSuccessStatus
       }
     }
 
@@ -83,21 +73,27 @@ class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
           AuthStub.authorisedWithSupportingAgentEnrolment()
 
           DownstreamStub
-            .when(DownstreamStub.POST, downstreamUri)
-            .thenReturn(OK, downstreamResponse)
+            .when(downstreamHttpMethod, downstreamUri)
+            .thenReturn(downstreamSuccessStatus, maybeDownstreamResponseJson)
         }
 
         val response: WSResponse = sendMtdRequest()
-        response.status shouldBe OK
+        response.status shouldBe expectedMtdSuccessStatus
       }
     }
   }
 
-  private trait Test {
+  protected trait Test {
 
     def setupStubs(): StubMapping
 
-    def sendMtdRequest(): WSResponse = await(request.post(requestJson))
+    def sendMtdRequest(): WSResponse =
+      await(
+        maybeRequestJson match {
+          case Some(json) => request.post(json)
+          case None       => request.post("")
+        }
+      )
 
     private def request: WSRequest = {
       setupStubs()
@@ -108,7 +104,6 @@ class AuthSupportingAgentsAllowedISpec extends IntegrationBaseSpec {
         )
     }
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
   }
 
 }
