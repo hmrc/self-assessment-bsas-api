@@ -14,12 +14,12 @@ get:
     |  Tax Year                    | Header Value (Gov-Test-Scenario)              | Scenario                                                                                                                                 |
     | -----------------------------| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
     | All                          | N/A - DEFAULT                                 | Simulates the scenario where no data is found.                                                                                           |
-    | ALL                          | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                  |
-    | ALL                          | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid. <br><br> See below for details on DYNAMIC scenarios.                             |
-    | ALL                          | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                               |
-    | ALL                          | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded. <br><br> See below for details on DYNAMIC scenarios.                          | 
-    | ALL                          | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.            |
-    | ALL                          | STATEFUL                                      | Performs a stateful retrieve.                                                                                                            |
+    | All                          | FOREIGN_PROPERTY_STATUS_INVALID               | Simulates success response with summary status invalid.                                                                                  |
+    | All                          | DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID       | Simulates success response with summary status invalid. <br><br> See below for details on DYNAMIC scenarios.                             |
+    | All                          | FOREIGN_PROPERTY_STATUS_SUPERSEDED            | Simulates success response with summary status superseded.                                                                               |
+    | All                          | DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED    | Simulates success response with summary status superseded. <br><br> See below for details on DYNAMIC scenarios.                          | 
+    | All                          | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.            |
+    | All                          | STATEFUL                                      | Performs a stateful retrieve.                                                                                                            |
     | 2025-26 onwards              | FOREIGN_PROPERTY_PROFIT                       | Simulates success response foreign property and profit.                                                                                  |
     | 2025-26 onwards              | DYNAMIC_FOREIGN_PROPERTY_PROFIT               | Simulates success response foreign property and profit. <br><br> See below for details on DYNAMIC scenarios.                             |
     | 2025-26 onwards              | FOREIGN_PROPERTY_LOSS                         | Simulates success response FHL foreign property and loss.                                                                                |
@@ -96,8 +96,8 @@ get:
         application/json:
           schema:
             oneOf:
-            - $ref: "./schemas/retrieve_foreign_property/def1/retrieve_foreign_property_nonfhl.json"
-            - $ref: "./schemas/retrieve_foreign_property/def1a/retrieve_foreign_property_nonfhl.json"
+            - $ref: "./schemas/retrieve_foreign_property/def1/retrieve_foreign_property.json"
+            - $ref: "./schemas/retrieve_foreign_property/def1a/retrieve_foreign_property.json"
             - $ref: "./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json"
           examples:
             PRE-TY-2023-24-Foreign-Property-EEA-FHL:
