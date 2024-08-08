@@ -16,6 +16,7 @@
 
 package v6.ukPropertyBsas.retrieve
 
+import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
 import v6.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema.{Def1, Def2}
 import v6.ukPropertyBsas.retrieve.def1.Def1_RetrieveUkPropertyBsasValidator
@@ -33,11 +34,10 @@ class RetrieveUkPropertyBsasValidatorFactory {
       taxYear: Option[String]
   ): Validator[RetrieveUkPropertyBsasRequestData] = {
 
-    val schema = RetrieveUkPropertyBsasSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
-      case Def2 => new Def2_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
+    RetrieveUkPropertyBsasSchema.schemaFor(taxYear) match {
+      case Valid(Def1)     => new Def1_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
+      case Valid(Def2)     => new Def2_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
 
