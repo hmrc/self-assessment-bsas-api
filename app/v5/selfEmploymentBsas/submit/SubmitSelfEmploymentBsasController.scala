@@ -39,6 +39,8 @@ class SubmitSelfEmploymentBsasController @Inject() (
 )(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName = "submit-self-employment-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "SubmitSelfEmploymentBsasController",

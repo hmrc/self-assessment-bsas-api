@@ -44,6 +44,8 @@ class TriggerBsasController @Inject() (val authService: EnrolmentsAuthService,
     extends AuthorisedController(cc)
     with Logging {
 
+  val endpointName = "trigger-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "TriggerBsasController", endpointName = "triggerBsas")
 

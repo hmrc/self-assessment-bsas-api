@@ -37,6 +37,8 @@ class RetrieveSelfEmploymentBsasController @Inject() (
     extends AuthorisedController(cc)
     with Logging {
 
+  val endpointName = "retrieve-self-employment-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveSelfEmploymentBsasController", endpointName = "retrieve")
 

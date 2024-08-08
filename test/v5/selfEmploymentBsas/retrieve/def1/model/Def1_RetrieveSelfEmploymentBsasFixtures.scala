@@ -733,10 +733,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
   def retrieveBsasResponseInvalidTypeOfBusinessDataObject(typeOfBusiness: TypeOfBusiness): RetrieveSelfEmploymentBsasResponse =
     Def1_RetrieveSelfEmploymentBsasResponse(
       metadata = parsedMetadata,
-      inputs = parsedInputs
-        /** EndMarker */
-        .copy(typeOfBusiness = typeOfBusiness)
-        .copy(typeOfBusiness = typeOfBusiness),
+      inputs = parsedInputs.copy(typeOfBusiness = typeOfBusiness),
       adjustableSummaryCalculation = adjustableSummaryCalculation,
       adjustments = Some(adjustments),
       adjustedSummaryCalculation = Some(adjustedSummaryCalculation)
