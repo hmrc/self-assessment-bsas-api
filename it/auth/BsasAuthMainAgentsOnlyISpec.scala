@@ -17,11 +17,11 @@
 package auth
 
 import play.api.libs.json.{JsValue, Json}
-import shared.auth.AuthPrimaryAgentsOnlyISpec
+import shared.auth.AuthMainAgentsOnlyISpec
 import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures
 import v6.common.model.TypeOfBusiness
 
-class BsasAuthPrimaryAgentsOnlyISpec extends AuthPrimaryAgentsOnlyISpec {
+class BsasAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
   val callingApiVersion = "6.0"
 

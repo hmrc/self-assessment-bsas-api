@@ -10,7 +10,7 @@ import shared.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 
-abstract class AuthPrimaryAgentsOnlyISpec extends IntegrationBaseSpec {
+abstract class AuthMainAgentsOnlyISpec extends IntegrationBaseSpec {
 
   /** The API's latest version, e.g. "1.0".
     */
