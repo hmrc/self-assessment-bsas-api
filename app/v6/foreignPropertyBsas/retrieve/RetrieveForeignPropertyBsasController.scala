@@ -16,7 +16,6 @@
 
 package v6.foreignPropertyBsas.retrieve
 
-import config.BsasFeatureSwitches
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.AppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
@@ -39,9 +38,6 @@ class RetrieveForeignPropertyBsasController @Inject() (
     with Logging {
 
   val endpointName = "retrieve-foreign-property-bsas"
-
-  lazy protected val supportingAgentsAccessControlEnabled: Boolean =
-    BsasFeatureSwitches().supportingAgentsAccessControlEnabled
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveForeignPropertyBsasController", endpointName = "retrieve")
