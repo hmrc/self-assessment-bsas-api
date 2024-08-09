@@ -16,9 +16,11 @@
 
 package v6.bsas.trigger
 
+import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import play.api.libs.json.{JsObject, Json}
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.models.errors.{EndDateFormatError, RuleIncorrectOrEmptyBodyError}
 import shared.utils.UnitSpec
 
 import java.time.LocalDate
@@ -35,35 +37,27 @@ class TriggerSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wit
           |}
           """.stripMargin)
 
-      "use Def1 for pre-TYS tax years" in {
-        forPreTysTaxYears { taxYear =>
-          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
+      "use Def1 for tax years before 2025-26" in {
+        forTaxYearsBefore(TaxYear.fromMtd("2025-26")) { taxYear =>
+          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe Valid(TriggerSchema.Def1)
         }
-      }
-      "use Def1 for tax year 2023-24" in {
-        val taxYear = TaxYear.fromMtd("2023-24")
-        TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
-      }
-      "use Def1 for tax year 2024-25" in {
-        val taxYear = TaxYear.fromMtd("2024-25")
-        TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def1
       }
 
       "use Def2 for tax years from 2025-26" in {
         forTaxYearsFrom(TaxYear.fromMtd("2025-26")) { taxYear =>
-          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe TriggerSchema.Def2
+          TriggerSchema.schemaFor(body(taxYear.endDate)) shouldBe Valid(TriggerSchema.Def2)
         }
       }
     }
 
     "An endDate is not in the body" must {
-      "use a default of Def1" in {
-        TriggerSchema.schemaFor(JsObject.empty) shouldBe TriggerSchema.Def1
+      "return a RuleIncorrectOrEmptyBodyError" in {
+        TriggerSchema.schemaFor(JsObject.empty) shouldBe Invalid(Seq(RuleIncorrectOrEmptyBodyError.withPath("/accountingPeriod/endDate")))
       }
     }
 
     "An invalid endDate is in the body" must {
-      "use a default of Def1" in {
+      "return a EndDateFormatError" in {
         val body = Json.parse(s"""
                                                      |{
                                                      |  "accountingPeriod": {
@@ -72,7 +66,7 @@ class TriggerSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wit
                                                      |}
           """.stripMargin)
 
-        TriggerSchema.schemaFor(body) shouldBe TriggerSchema.Def1
+        TriggerSchema.schemaFor(body) shouldBe Invalid(Seq(EndDateFormatError))
       }
     }
 

@@ -87,6 +87,27 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
         val input = List(
           ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, mtdRequestForeignPropertyValid, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "BAD_CALC_ID", Some("2025-26"), mtdRequestForeignPropertyValid, BAD_REQUEST, CalculationIdFormatError),
+          (
+            "AA123456A",
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            Some("2022-23"),
+            mtdRequestForeignPropertyValid,
+            BAD_REQUEST,
+            InvalidTaxYearParameterError),
+          (
+            "AA123456A",
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            Some("BAD_TAX_YEAR"),
+            mtdRequestForeignPropertyValid,
+            BAD_REQUEST,
+            TaxYearFormatError),
+          (
+            "AA123456A",
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            Some("2022-24"),
+            mtdRequestForeignPropertyValid,
+            BAD_REQUEST,
+            RuleTaxYearRangeInvalidError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",

@@ -16,6 +16,7 @@
 
 package v6.ukPropertyBsas.submit
 
+import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import v6.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema._
@@ -36,14 +37,13 @@ class SubmitUkPropertyBsasValidatorFactory {
       body: JsValue
   ): Validator[SubmitUkPropertyBsasRequestData] = {
 
-    val schema = SubmitUkPropertyBsasSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
-      case Def2 => new Def2_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
-      case Def3 => new Def3_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
-
+    SubmitUkPropertyBsasSchema.schemaFor(taxYear) match {
+      case Valid(Def1)     => new Def1_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def2)     => new Def2_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def3)     => new Def3_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
+
   }
 
 }

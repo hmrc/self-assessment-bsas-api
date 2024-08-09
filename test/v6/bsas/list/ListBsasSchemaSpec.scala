@@ -16,46 +16,49 @@
 
 package v6.bsas.list
 
+import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport, TaxYearTestSupport}
+import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.utils.UnitSpec
 
-class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
+class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport with TaxYearTestSupport {
 
   "schema lookup" when {
     "a tax year is present" must {
       "use Def1 for tax years before 2025-26" in {
         forTaxYearsBefore(TaxYear.fromMtd("2025-26")) { taxYear =>
-          ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe ListBsasSchema.Def1
+          ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(ListBsasSchema.Def1)
         }
       }
 
       "use Def2 for tax years from 2025-26" in {
         forTaxYearsFrom(TaxYear.fromMtd("2025-26")) { taxYear =>
-          ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe ListBsasSchema.Def2
+          ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(ListBsasSchema.Def2)
         }
-      }
-
-      "use Def1 for pre-TYS tax years" in {
-        forPreTysTaxYears { taxYear =>
-          ListBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe ListBsasSchema.Def1
-        }
-      }
-    }
-
-    "the tax year is present but not valid" must {
-      "use Def1 for a tax year that is invalid" in {
-        ListBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe ListBsasSchema.Def1
       }
     }
 
     "no tax year is present" must {
-
       "use the same schema as for the current tax year" in {
-        ListBsasSchema.schemaFor(None) shouldBe
-          ListBsasSchema.schemaFor(Some("2024-25"))
+        ListBsasSchema.schemaFor(None)(clockAtTimeInTaxYear(TaxYear.fromMtd("2024-25"))) shouldBe Valid(ListBsasSchema.Def1)
+        ListBsasSchema.schemaFor(None)(clockAtTimeInTaxYear(TaxYear.fromMtd("2025-26"))) shouldBe Valid(ListBsasSchema.Def2)
       }
 
+    }
+
+    "the tax year is present but not valid" when {
+      "the tax year format is invalid" must {
+        "return a TaxYearFormatError" in {
+          ListBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe Invalid(Seq(TaxYearFormatError))
+        }
+      }
+
+      "the tax year range is invalid" must {
+        "return a RuleTaxYearRangeInvalidError" in {
+          ListBsasSchema.schemaFor(Some("2020-99")) shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+        }
+      }
     }
   }
 

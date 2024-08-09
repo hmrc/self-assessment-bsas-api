@@ -16,44 +16,55 @@
 
 package v6.foreignPropertyBsas.submit
 
+import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.models.errors.{InvalidTaxYearParameterError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.utils.UnitSpec
 
 class SubmitForeignPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
     "a tax year is present" must {
-      "use Def1 for tax years before 2023-24" in {
-        forTaxYearsBefore(TaxYear.fromMtd("2023-24")) { taxYear =>
-          SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitForeignPropertyBsasSchema.Def1
-        }
-      }
-      "use Def1 for pre-TYS tax years" in {
+      "disallow a tax year parameter for pre-TYS tax years and return InvalidTaxYearParameterError" in {
         forPreTysTaxYears { taxYear =>
-          SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitForeignPropertyBsasSchema.Def1
+          SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Invalid(Seq(InvalidTaxYearParameterError))
         }
       }
 
-      "use Def2 for tax years from 2024-25" in {
+      "use Def1 for tax year 2023-24" in {
+        val taxYear = TaxYear.fromMtd("2023-24")
+        SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(SubmitForeignPropertyBsasSchema.Def1)
+      }
+
+      "use Def2 for tax year 2024-25" in {
         val taxYear = TaxYear.fromMtd("2024-25")
-        SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitForeignPropertyBsasSchema.Def2
+        SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(SubmitForeignPropertyBsasSchema.Def2)
       }
-      "use Def3 for tax years from 2025-26" in {
+
+      "use Def3 for tax years 2025-26 onwards" in {
         val taxYear = TaxYear.fromMtd("2025-26")
-        SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe SubmitForeignPropertyBsasSchema.Def3
+        SubmitForeignPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(SubmitForeignPropertyBsasSchema.Def3)
       }
     }
 
-    "the tax year is present but not valid" must {
-      "use a default of Def1" in {
-        SubmitForeignPropertyBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe SubmitForeignPropertyBsasSchema.Def1
+    "no tax year is present (pre-TYS case)" must {
+      "use Def1" in {
+        SubmitForeignPropertyBsasSchema.schemaFor(None) shouldBe Valid(SubmitForeignPropertyBsasSchema.Def1)
       }
     }
 
-    "no tax year is present" must {
-      "use a default of Def1" in {
-        SubmitForeignPropertyBsasSchema.schemaFor(None) shouldBe SubmitForeignPropertyBsasSchema.Def1
+    "the tax year is present but not valid" when {
+      "the tax year format is invalid" must {
+        "return a TaxYearFormatError" in {
+          SubmitForeignPropertyBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe Invalid(Seq(TaxYearFormatError))
+        }
+      }
+
+      "the tax year range is invalid" must {
+        "return a RuleTaxYearRangeInvalidError" in {
+          SubmitForeignPropertyBsasSchema.schemaFor(Some("2020-99")) shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+        }
       }
     }
   }

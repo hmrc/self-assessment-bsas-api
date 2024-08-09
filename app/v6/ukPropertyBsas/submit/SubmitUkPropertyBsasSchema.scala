@@ -16,8 +16,11 @@
 
 package v6.ukPropertyBsas.submit
 
+import cats.data.Validated
+import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
 
 import scala.math.Ordered.orderingToOrdered
 
@@ -29,19 +32,19 @@ object SubmitUkPropertyBsasSchema {
   case object Def2 extends SubmitUkPropertyBsasSchema
   case object Def3 extends SubmitUkPropertyBsasSchema
 
-  private val defaultSchema = Def1
+  private val preTysSchema = Def1
 
-  def schemaFor(maybeTaxYear: Option[String]): SubmitUkPropertyBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
-  }
+  def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], SubmitUkPropertyBsasSchema] =
+    maybeTaxYear match {
+      case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
+      case None                => Valid(preTysSchema)
+    }
 
-  def schemaFor(taxYear: TaxYear): SubmitUkPropertyBsasSchema = {
-    if (taxYear <= TaxYear.starting(2023)) Def1
-    else if (taxYear == TaxYear.starting(2024)) Def2
-    else Def3
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], SubmitUkPropertyBsasSchema] = {
+    if (taxYear < TaxYear.tysTaxYear) Invalid(Seq(InvalidTaxYearParameterError))
+    else if (taxYear == TaxYear.starting(2023)) Valid(Def1)
+    else if (taxYear == TaxYear.starting(2024)) Valid(Def2)
+    else Valid(Def3)
   }
 
 }

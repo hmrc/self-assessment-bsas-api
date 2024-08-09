@@ -22,7 +22,7 @@ import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors.{BadRequestError, _}
+import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
 import support.IntegrationBaseSpec
@@ -67,6 +67,9 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         val input = List(
           ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2025-26"), fullRequestJson, BAD_REQUEST, NinoFormatError),
           ("AA123456A", "041f7e4d87b9", Some("2025-26"), fullRequestJson, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-23"), fullRequestJson, BAD_REQUEST, InvalidTaxYearParameterError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), fullRequestJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-24"), fullRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
@@ -82,45 +85,19 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
             fullRequestJson.update("/expenses/consolidatedExpenses", JsNumber(1.23)),
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/expenses")))
-          )
+          ),
+          (
+            "AA123456A",
+            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            Some("2025-26"),
+            fullRequestJson.update("/expenses/residentialFinancialCost", JsNumber(-1.523)),
+            BAD_REQUEST,
+            ValueFormatError.copy(
+              message = "The value must be between 0 and 99999999999.99",
+              paths = Some(List("/expenses/residentialFinancialCost"))
+            ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
-      }
-
-      "tax year validation errors" when {
-        def validationErrorTest(requestNino: String,
-                                requestCalculationId: String,
-                                requestTaxYear: Option[String],
-                                requestBody: JsValue,
-                                expectedStatus: Int,
-                                expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
-
-            override val nino: String            = requestNino
-            override val calculationId: String   = requestCalculationId
-            override val taxYear: Option[String] = requestTaxYear
-
-            val response: WSResponse = await(request().post(requestBody))
-            response.status shouldBe expectedStatus
-            response.json shouldBe BadRequestError.toJson
-              .as[JsObject]
-              .deepMerge(
-                Json.obj(
-                  "errors" ->
-                    ErrorWrapper(
-                      "correlationId",
-                      BadRequestError,
-                      Some(List(expectedBody, RuleIncorrectOrEmptyBodyError))
-                    ).errors))
-
-          }
-        }
-
-        List(
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2021-22"), fullRequestJson, BAD_REQUEST, InvalidTaxYearParameterError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), fullRequestJson, BAD_REQUEST, TaxYearFormatError)
-        ).foreach(args => (validationErrorTest _).tupled(args))
-
       }
 
       "downstream service error" when {

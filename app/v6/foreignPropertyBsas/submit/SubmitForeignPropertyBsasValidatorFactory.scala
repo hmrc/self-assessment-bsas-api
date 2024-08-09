@@ -16,6 +16,7 @@
 
 package v6.foreignPropertyBsas.submit
 
+import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import v6.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema._
@@ -36,12 +37,11 @@ class SubmitForeignPropertyBsasValidatorFactory {
       body: JsValue
   ): Validator[SubmitForeignPropertyBsasRequestData] = {
 
-    val schema = SubmitForeignPropertyBsasSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
-      case Def2 => new Def2_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
-      case Def3 => new Def3_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+    SubmitForeignPropertyBsasSchema.schemaFor(taxYear) match {
+      case Valid(Def1)     => new Def1_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def2)     => new Def2_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def3)     => new Def3_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
 
   }

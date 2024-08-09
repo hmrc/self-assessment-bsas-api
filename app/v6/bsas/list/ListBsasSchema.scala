@@ -16,14 +16,18 @@
 
 package v6.bsas.list
 
+import cats.data.Validated
+import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
+import shared.models.errors.MtdError
 import shared.schema.DownstreamReadable
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
 import v6.bsas.list.model.response.ListBsasResponse
 
+import java.time.Clock
 import scala.math.Ordered.orderingToOrdered
 
 sealed trait ListBsasSchema extends DownstreamReadable[ListBsasResponse]
@@ -40,15 +44,14 @@ object ListBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_ListBsasResponse.reads
   }
 
-  def schemaFor(maybeTaxYear: Option[String]): ListBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(schemaFor(TaxYear.currentTaxYear))
-  }
+  def schemaFor(maybeTaxYear: Option[String])(implicit clock: Clock = Clock.systemUTC): Validated[Seq[MtdError], ListBsasSchema] =
+    maybeTaxYear match {
+      case Some(taxYearString) => ResolveTaxYear(taxYearString).map(schemaFor)
+      case None                => Valid(schemaFor(TaxYear.currentTaxYear))
+    }
 
   def schemaFor(taxYear: TaxYear): ListBsasSchema = {
-    if (taxYear < TaxYear.fromMtd("2025-26")) {
+    if (taxYear <= TaxYear.fromMtd("2024-25")) {
       Def1
     } else {
       Def2

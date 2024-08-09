@@ -16,6 +16,7 @@
 
 package v6.foreignPropertyBsas.retrieve
 
+import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
 import v6.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema._
 import v6.foreignPropertyBsas.retrieve.def1.Def1_RetrieveForeignPropertyBsasValidator
@@ -33,11 +34,10 @@ class RetrieveForeignPropertyBsasValidatorFactory {
       taxYear: Option[String]
   ): Validator[RetrieveForeignPropertyBsasRequestData] = {
 
-    val schema = RetrieveForeignPropertyBsasSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
-      case Def2 => new Def2_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
+    RetrieveForeignPropertyBsasSchema.schemaFor(taxYear) match {
+      case Valid(Def1)     => new Def1_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
+      case Valid(Def2)     => new Def2_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
 

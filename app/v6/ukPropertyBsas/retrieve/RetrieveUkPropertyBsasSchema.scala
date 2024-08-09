@@ -16,9 +16,12 @@
 
 package v6.ukPropertyBsas.retrieve
 
+import cats.data.Validated
+import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
 import shared.schema.DownstreamReadable
 import v6.ukPropertyBsas.retrieve.def1.model.response.Def1_RetrieveUkPropertyBsasResponse
 import v6.ukPropertyBsas.retrieve.def2.model.response.Def2_RetrieveUkPropertyBsasResponse
@@ -40,19 +43,18 @@ object RetrieveUkPropertyBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_RetrieveUkPropertyBsasResponse.reads
   }
 
-  private val defaultSchema = Def1
+  private val preTysSchema = Def1
 
-  def schemaFor(maybeTaxYear: Option[String]): RetrieveUkPropertyBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
-  }
+  def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], RetrieveUkPropertyBsasSchema] =
+    maybeTaxYear match {
+      case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
+      case None                => Valid(preTysSchema)
+    }
 
-  def schemaFor(taxYear: TaxYear): RetrieveUkPropertyBsasSchema = {
-    if (taxYear <= TaxYear.starting(2024)) Def1
-    else Def2
-
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveUkPropertyBsasSchema] = {
+    if (taxYear < TaxYear.tysTaxYear) Invalid(Seq(InvalidTaxYearParameterError))
+    else if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
+    else Valid(Def2)
   }
 
 }
