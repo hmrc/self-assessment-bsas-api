@@ -12,10 +12,12 @@ get:
     |----------------------------------|--------------------------------------------------------------------------------------------------------------------------|
     | N/A - DEFAULT               | Simulate a successful response containing multiple business types.                                                            |
     | SELF_EMPLOYMENT             | Simulate a successful response containing a self-employment business.                                                         |
-    | UK_PROPERTY                 | Simulate a successful response containing UK property businesses.                                                             |
-    | UK_PROPERTY_FHL             | Simulate a successful response containing UK FHL and non-FHL property businesses.                                             |
-    | FOREIGN_PROPERTY            | Simulate a successful response containing foreign property businesses.                                                        |
-    | FOREIGN_PROPERTY_FHL        | Simulate a successful response containing EEA FHL and foreign property businesses.                                            |
+    | UK_PROPERTY                 | Simulate a successful response containing UK property businesses for tax years 2025-26 and onwards.                                                             |
+    | UK_PROPERTY_NON_FHL         | Simulate a successful response containing UK property businesses for tax years before 2025-26.                                                             |
+    | UK_PROPERTY_FHL             | Simulate a successful response containing UK FHL and non-FHL property businesses for tax years before 2025-26.                                             |
+    | FOREIGN_PROPERTY            | Simulate a successful response containing foreign property businesses for tax years 2025-26 and onwards.                                                        |
+    | FOREIGN_PROPERTY_NON_FHL    | Simulate a successful response containing foreign property businesses for tax years before 2025-26.                                                        |
+    | FOREIGN_PROPERTY_FHL        | Simulate a successful response containing EEA FHL and foreign property businesses for tax years before 2025-26.                                            |
     | NOT_FOUND                   | Simulates the scenario where no data is found.                                                                                |
     | REQUEST_CANNOT_BE_FULFILLED | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors. |
     | DYNAMIC                     | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
