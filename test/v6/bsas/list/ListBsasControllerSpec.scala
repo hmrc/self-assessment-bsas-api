@@ -25,12 +25,12 @@ import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v6.bsas.list.def1.model.Def1_ListBsasFixtures
-import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
-import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
+import v6.bsas.list.def2.model.Def2_ListBsasFixtures
+import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
+import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
-import v6.common.model.TypeOfBusinessWithFHL
+import v6.common.model.TypeOfBusiness
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,7 +44,7 @@ class ListBsasControllerSpec
     with MockListBsasService
     with MockAppConfig
     with MockIdGenerator
-    with Def1_ListBsasFixtures {
+    with Def2_ListBsasFixtures {
 
   private val typeOfBusiness = "self-employment"
   private val businessId     = "XAIS12345678901"
@@ -117,23 +117,23 @@ class ListBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    val requestData: ListBsasRequestData = Def1_ListBsasRequestData(
+    val requestData: ListBsasRequestData = Def2_ListBsasRequestData(
       nino = parsedNino,
       taxYear = TaxYear.currentTaxYear(),
       incomeSourceId = Some(BusinessId(businessId)),
       incomeSourceType = Some(typeOfBusiness)
     )
 
-    val response: ListBsasResponse = Def1_ListBsasResponse(
+    val response: ListBsasResponse = Def2_ListBsasResponse(
       List(
         businessSourceSummary(),
         businessSourceSummary().copy(
-          typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-fhl`,
+          typeOfBusiness = TypeOfBusiness.`uk-property`,
           summaries = List(
             bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5")
           )),
         businessSourceSummary().copy(
-          typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-non-fhl`,
+          typeOfBusiness = TypeOfBusiness.`foreign-property`,
           summaries = List(
             bsasSummary.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6")
           ))

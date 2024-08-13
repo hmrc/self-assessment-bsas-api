@@ -21,8 +21,8 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{BusinessId, Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
-import v6.bsas.list.def1.model.Def1_ListBsasFixtures
-import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
+import v6.bsas.list.def2.model.Def2_ListBsasFixtures
+import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
 
@@ -34,8 +34,8 @@ class ListBsasConnectorSpec extends ConnectorSpec {
   private val incomeSourceId   = "XAIS12345678910"
   private val incomeSourceType = "02"
 
-  private val preTysTaxYear         = TaxYear.fromMtd("2018-19")
-  private val tysTaxYear            = TaxYear.fromMtd("2023-24")
+  private val preTysTaxYear = TaxYear.fromMtd("2018-19")
+  private val tysTaxYear    = TaxYear.fromMtd("2023-24")
 
   private val additionalQueryParams: Seq[(String, String)] = List(
     ("taxYear", preTysTaxYear.asDownstream)
@@ -48,20 +48,19 @@ class ListBsasConnectorSpec extends ConnectorSpec {
 
   "listBsas" should {
     "return a valid response" when {
-      "a valid request is supplied" in new IfsTest with Test with Def1_ListBsasFixtures {
+      "a valid request is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 
         val outcome = Right(ResponseWrapper(correlationId, listBsasResponse))
         stubHttpResponse(outcome)
 
-        val result: DownstreamOutcome[ListBsasResponse] = await(connector.listBsas(request))
-        result shouldBe outcome
+        await(connector.listBsas(request)) shouldBe outcome
       }
     }
   }
 
-  "a valid request with Tax Year Specific tax year is supplied" in new TysIfsTest with Test with Def1_ListBsasFixtures {
+  "a valid request with Tax Year Specific tax year is supplied" in new TysIfsTest with Test with Def2_ListBsasFixtures {
     def taxYear: TaxYear                             = tysTaxYear
     def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
     val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponse))
@@ -76,7 +75,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
       DownstreamErrors.single(DownstreamErrorCode("SOME_ERROR"))
     val outcome = Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
-    "return the error" in new IfsTest with Test with Def1_ListBsasFixtures {
+    "return the error" in new IfsTest with Test with Def2_ListBsasFixtures {
       def taxYear: TaxYear                             = preTysTaxYear
       def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 
@@ -87,7 +86,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
       result shouldBe outcome
     }
 
-    "return the error given a TYS tax year request" in new TysIfsTest with Test with Def1_ListBsasFixtures {
+    "return the error given a TYS tax year request" in new TysIfsTest with Test with Def2_ListBsasFixtures {
       def taxYear: TaxYear                             = tysTaxYear
       def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
 
@@ -104,7 +103,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     protected def downstreamQueryParams: Seq[(String, String)]
 
     protected val request: ListBsasRequestData =
-      Def1_ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
+      Def2_ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
 
     protected val connector: ListBsasConnector =
       new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
