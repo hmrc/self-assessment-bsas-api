@@ -23,10 +23,10 @@ case class DownstreamConfig(
     environmentHeaders: Option[Seq[String]]
 )
 
-case class SimpleDownstreamConfig(
+case class BasicAuthDownstreamConfig(
     baseUrl: String,
     env: String,
+    clientId: String,
+    clientSecret: String,
     environmentHeaders: Option[Seq[String]]
 )
-
-case class ClientAuthConfig(clientId: String, clientSecret: String)

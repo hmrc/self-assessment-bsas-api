@@ -37,4 +37,14 @@ object DownstreamUri {
   def TaxYearSpecificIfsUri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
     withStandardStrategy(value, appConfig.tysIfsDownstreamConfig)
 
+  def HipUri[Resp](path: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
+    DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig))
+
+  def DesToHipMigrationUri[Resp](path: String, switchName: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] = {
+    lazy val desStrategy = DownstreamStrategy.standardStrategy(appConfig.desDownstreamConfig)
+    lazy val hipStategy  = DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig)
+
+    DownstreamUri(path, DownstreamStrategy.switchedStrategy(onStrategy = hipStategy, offStrategy = desStrategy, switchName))
+  }
+
 }

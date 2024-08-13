@@ -17,7 +17,7 @@
 package shared.connectors
 
 import com.google.common.base.Charsets
-import shared.config.{ClientAuthConfig, DownstreamConfig, SimpleDownstreamConfig}
+import shared.config.{AppConfig, BasicAuthDownstreamConfig, ConfigFeatureSwitches, DownstreamConfig}
 
 import java.util.Base64
 import scala.concurrent.{ExecutionContext, Future}
@@ -65,14 +65,12 @@ object DownstreamStrategy {
   /** Creates a strategy instance that uses the OAuth client id and secret but as a base64-encoded Basic auth token.
     * @param downstreamConfig
     *   configuration for the downstream host & endpoint
-    * @param clientAuthConfig
-    *   registered security configuration for the client (i.e. this MTD API) will typically be the same for all hosts
     */
-  def basicAuthStrategy(downstreamConfig: SimpleDownstreamConfig, clientAuthConfig: ClientAuthConfig): DownstreamStrategy = new DownstreamStrategy {
+  def basicAuthStrategy(downstreamConfig: BasicAuthDownstreamConfig): DownstreamStrategy = new DownstreamStrategy {
     override def baseUrl: String = downstreamConfig.baseUrl
 
     override def contractHeaders(correlationId: String)(implicit ec: ExecutionContext): Future[Seq[(String, String)]] = {
-      val encodedToken = Base64.getEncoder.encodeToString(s"${clientAuthConfig.clientId}:${clientAuthConfig.clientSecret}".getBytes(Charsets.UTF_8))
+      val encodedToken = Base64.getEncoder.encodeToString(s"${downstreamConfig.clientId}:${downstreamConfig.clientSecret}".getBytes(Charsets.UTF_8))
 
       Future.successful(
         List(
@@ -84,5 +82,15 @@ object DownstreamStrategy {
 
     override def environmentHeaders: Seq[String] = downstreamConfig.environmentHeaders.getOrElse(Nil)
   }
+
+  /** Creates a strategy based on a choice of two strategies and the value of a feature switch.
+    * @param onStrategy
+    *   the strategy to use when the switch is enabled
+    * @param offStrategy
+    *   the strategy to use when the switch is disabled
+    */
+  def switchedStrategy(onStrategy: => DownstreamStrategy, offStrategy: => DownstreamStrategy, switchName: String)(implicit
+      appConfig: AppConfig): DownstreamStrategy =
+    if (ConfigFeatureSwitches().isEnabled(switchName)) onStrategy else offStrategy
 
 }

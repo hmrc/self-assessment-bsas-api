@@ -52,29 +52,23 @@ class AppConfig @Inject() (config: ServicesConfig, configuration: Configuration)
     DownstreamConfig(baseUrl, env, token, environmentHeaders)
   }
 
-  private def simpleDownstreamConfig(serviceName: String) = {
+  private def basicAuthDownstreamConfig(serviceName: String) = {
     val baseUrl = config.baseUrl(serviceName)
 
     val serviceKey = serviceKeyFor(serviceName)
 
     val env                = config.getString(s"$serviceKey.env")
+    val clientId           = config.getString(s"$serviceKey.clientId")
+    val clientSecret       = config.getString(s"$serviceKey.clientSecret")
     val environmentHeaders = configuration.getOptional[Seq[String]](s"$serviceKey.environmentHeaders")
 
-    SimpleDownstreamConfig(baseUrl, env, environmentHeaders)
+    BasicAuthDownstreamConfig(baseUrl, env, clientId, clientSecret, environmentHeaders)
   }
 
-  def hipAuthConfig: ClientAuthConfig = {
-    val clientId     = config.getString("hip-auth.clientId")
-    val clientSecret = config.getString("hip-auth.clientSecret")
-
-    ClientAuthConfig(clientId, clientSecret)
-  }
-
-  def desDownstreamConfig: DownstreamConfig    = downstreamConfig("des")
-  def ifsDownstreamConfig: DownstreamConfig    = downstreamConfig("ifs")
-  def tysIfsDownstreamConfig: DownstreamConfig = downstreamConfig("tys-ifs")
-
-  def hipIfsDownstreamConfig: SimpleDownstreamConfig = simpleDownstreamConfig("ifs")
+  def desDownstreamConfig: DownstreamConfig          = downstreamConfig("des")
+  def ifsDownstreamConfig: DownstreamConfig          = downstreamConfig("ifs")
+  def tysIfsDownstreamConfig: DownstreamConfig       = downstreamConfig("tys-ifs")
+  def hipDownstreamConfig: BasicAuthDownstreamConfig = basicAuthDownstreamConfig("hip")
 
   // API Config
   def apiGatewayContext: String                    = config.getString("api.gateway.context")

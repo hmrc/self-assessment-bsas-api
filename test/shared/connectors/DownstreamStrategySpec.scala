@@ -17,12 +17,13 @@
 package shared.connectors
 
 import org.scalatest.concurrent.ScalaFutures
-import shared.config.{ClientAuthConfig, DownstreamConfig, SimpleDownstreamConfig}
+import play.api.Configuration
+import shared.config.{BasicAuthDownstreamConfig, DownstreamConfig, MockAppConfig}
 import shared.utils.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class DownstreamStrategySpec extends UnitSpec with ScalaFutures {
+class DownstreamStrategySpec extends UnitSpec with ScalaFutures with MockAppConfig {
 
   "StandardStrategy" must {
     "use the supplied DownstreamConfig" in {
@@ -43,12 +44,16 @@ class DownstreamStrategySpec extends UnitSpec with ScalaFutures {
   }
 
   "BasicAuthStrategy" must {
-    "use the supplied SimpleDownstreamConfig and ClientAuthConfig" in {
+    "use the supplied BasicAuthDownstreamConfig and ClientAuthConfig" in {
       val downstreamConfig =
-        SimpleDownstreamConfig(baseUrl = "someBaseUrl", env = "someEnv", environmentHeaders = Some(Seq("header1", "header2")))
-      val basicAuthConfig = ClientAuthConfig(clientId = "someClient", clientSecret = "someSecret")
+        BasicAuthDownstreamConfig(
+          baseUrl = "someBaseUrl",
+          env = "someEnv",
+          clientId = "someClient",
+          clientSecret = "someSecret",
+          environmentHeaders = Some(Seq("header1", "header2")))
 
-      val strategy = DownstreamStrategy.basicAuthStrategy(downstreamConfig, basicAuthConfig)
+      val strategy = DownstreamStrategy.basicAuthStrategy(downstreamConfig)
 
       strategy.baseUrl shouldBe "someBaseUrl"
       strategy.contractHeaders("someCorrelationId").futureValue should contain theSameElementsAs
@@ -59,6 +64,23 @@ class DownstreamStrategySpec extends UnitSpec with ScalaFutures {
         )
       strategy.environmentHeaders should contain theSameElementsAs Seq("header1", "header2")
 
+    }
+  }
+
+  "switched strategy" must {
+    val onStrategy  = mock[DownstreamStrategy]
+    val offStrategy = mock[DownstreamStrategy]
+
+    "use the provided onStrategy when the switch is enabled" in {
+      MockAppConfig.featureSwitchConfig.returns(Configuration("someSwitch.enabled" -> true))
+
+      DownstreamStrategy.switchedStrategy(onStrategy, offStrategy, "someSwitch") shouldBe onStrategy
+    }
+
+    "use the provided offStrategy when the switch is disabled" in {
+      MockAppConfig.featureSwitchConfig.returns(Configuration("someSwitch.enabled" -> false))
+
+      DownstreamStrategy.switchedStrategy(onStrategy, offStrategy, "someSwitch") shouldBe offStrategy
     }
   }
 
