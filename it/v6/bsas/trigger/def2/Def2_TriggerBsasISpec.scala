@@ -24,7 +24,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v6.bsas.trigger.def2.model.Def2_TriggerBsasFixtures._
 
@@ -195,7 +195,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
       buildRequest(uri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 
@@ -211,9 +211,9 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
     def makeRequestBody(typeOfBusiness: String): JsObject = {
 
-      val startDate = "2024-05-01"
+      val startDate = "2025-05-01"
 
-      val endDate = "2024-05-02"
+      val endDate = "2025-05-02"
 
       Json.obj(
         "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
@@ -232,9 +232,9 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait TysIfsTest extends Test {
-    def downstreamTaxYear: String = "24-25"
+    def downstreamTaxYear: String = "25-26"
 
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino"
 
   }
 

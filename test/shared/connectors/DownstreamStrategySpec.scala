@@ -72,13 +72,13 @@ class DownstreamStrategySpec extends UnitSpec with ScalaFutures with MockAppConf
     val offStrategy = mock[DownstreamStrategy]
 
     "use the provided onStrategy when the switch is enabled" in {
-      MockAppConfig.featureSwitchConfig.returns(Configuration("someSwitch.enabled" -> true))
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("someSwitch.enabled" -> true))
 
       DownstreamStrategy.switchedStrategy(onStrategy, offStrategy, "someSwitch") shouldBe onStrategy
     }
 
     "use the provided offStrategy when the switch is disabled" in {
-      MockAppConfig.featureSwitchConfig.returns(Configuration("someSwitch.enabled" -> false))
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("someSwitch.enabled" -> false))
 
       DownstreamStrategy.switchedStrategy(onStrategy, offStrategy, "someSwitch") shouldBe offStrategy
     }

@@ -37,6 +37,8 @@ class RetrieveUkPropertyBsasController @Inject() (
     extends AuthorisedController(cc)
     with Logging {
 
+  val endpointName = "retrieve-uk-property-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrievePropertyBsasController",

@@ -25,7 +25,6 @@ case class BsasFeatureSwitches private (protected val featureSwitchConfig: Confi
 
   def isIfsEnabled: Boolean      = isEnabled("ifs")
   def isIfsInProduction: Boolean = isReleasedInProduction("ifs")
-
 }
 
 object BsasFeatureSwitches {

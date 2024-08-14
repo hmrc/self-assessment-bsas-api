@@ -17,6 +17,7 @@
 package v3.controllers
 
 import common.errors._
+import play.api.Configuration
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import shared.config.MockAppConfig
@@ -135,6 +136,12 @@ class RetrieveUkPropertyBsasControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
   }
