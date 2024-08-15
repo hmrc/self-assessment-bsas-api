@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package support
+package shared.support
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.client.{MappingBuilder, WireMock}

@@ -25,7 +25,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 import v6.bsas.list.def2.model.Def2_ListBsasFixtures
 
 class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures {

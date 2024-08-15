@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services._
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
   mtdRequestNonFhlFull,
