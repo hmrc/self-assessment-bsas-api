@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package support
+package shared.support
 
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite

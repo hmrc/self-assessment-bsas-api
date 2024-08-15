@@ -25,7 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 import v6.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.fullRequestJson
 
 class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
