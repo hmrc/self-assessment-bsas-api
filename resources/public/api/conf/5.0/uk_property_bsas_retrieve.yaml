@@ -34,6 +34,8 @@ get:
     | NOT_UK_PROPERTY                          | Simulates the scenario where the calculationId is not a UK property.                                                                      |
     | TAX_YEAR_NOT_SUPPORTED                   | Simulates the scenario where the tax year is not supported.                                                                               |
     | REQUEST_CANNOT_BE_FULFILLED              | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.             |
+    | STATEFUL                                 | Performs a stateful retrieve.                                                                                                             |
+
 
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       - metadata
