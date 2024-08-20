@@ -97,6 +97,46 @@ trait Def2_ListBsasFixtures {
     """.stripMargin
   )
 
+  val listBsasResponseDownstreamJsonUkNonFhl: JsValue = Json.parse(
+    """
+      |{
+      |  "incomeSourceType": "02",
+      |  "incomeSourceId": "000000000000210",
+      |  "accountingStartDate": "2025-01-01",
+      |  "accountingEndDate": "2026-01-01",
+      |  "taxYear": 2026,
+      |  "ascCalculations": [
+      |      {
+      |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+      |        "requestedDateTime": "2025-01-02T12:00:00Z",
+      |        "status": "valid",
+      |        "adjusted": false
+      |      }
+      |    ]
+      |}
+    """.stripMargin
+  )
+
+  val listBsasResponseDownstreamJsonForeignNonFhl: JsValue = Json.parse(
+    """
+      |{
+      |  "incomeSourceType": "15",
+      |  "incomeSourceId": "000000000000210",
+      |  "accountingStartDate": "2025-01-01",
+      |  "accountingEndDate": "2026-01-01",
+      |  "taxYear": 2026,
+      |  "ascCalculations": [
+      |      {
+      |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
+      |        "requestedDateTime": "2025-01-02T12:00:00Z",
+      |        "status": "valid",
+      |        "adjusted": false
+      |      }
+      |    ]
+      |}
+    """.stripMargin
+  )
+
   val businessSourceSummaryJson: JsValue = Json.parse(
     """
       |{
@@ -213,7 +253,9 @@ trait Def2_ListBsasFixtures {
 
   val listBsasDownstreamJsonMultiple: JsArray = JsArray(
     List(
-      listBsasResponseDownstreamJsonSE
+      listBsasResponseDownstreamJsonSE,
+      listBsasResponseDownstreamJsonUkNonFhl,
+      listBsasResponseDownstreamJsonForeignNonFhl
     ))
 
   def businessSourceSummary(taxYear: String = "2025-26"): BusinessSource = BusinessSource(
@@ -245,7 +287,41 @@ trait Def2_ListBsasFixtures {
          |          "adjustedSummary": false
          |        }
          |      ]
+         |    },
+         |    {
+         |  "businessId": "000000000000210",
+         |  "typeOfBusiness": "uk-property",
+         |  "accountingPeriod": {
+         |    "startDate": "2025-01-01",
+         |    "endDate": "2026-01-01"
+         |  },
+         |  "taxYear": "2025-26",
+         |  "summaries": [
+         |    {
+         |      "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
+         |      "requestedDateTime": "2025-01-02T12:00:00Z",
+         |      "summaryStatus": "valid",
+         |      "adjustedSummary": false
          |    }
+         |  ]
+         |},
+         |{
+         |  "businessId": "000000000000210",
+         |  "typeOfBusiness": "foreign-property",
+         |  "accountingPeriod": {
+         |    "startDate": "2025-01-01",
+         |    "endDate": "2026-01-01"
+         |  },
+         |  "taxYear": "2025-26",
+         |  "summaries": [
+         |    {
+         |      "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
+         |      "requestedDateTime": "2025-01-02T12:00:00Z",
+         |      "summaryStatus": "valid",
+         |      "adjustedSummary": false
+         |    }
+         |  ]
+         |}
          |  ]
          |}
     """.stripMargin

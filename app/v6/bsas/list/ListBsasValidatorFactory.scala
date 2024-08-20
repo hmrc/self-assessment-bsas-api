@@ -16,10 +16,12 @@
 
 package v6.bsas.list
 
+import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
 import v6.bsas.list.def1.Def1_ListBsasValidator
 import v6.bsas.list.def2.Def2_ListBsasValidator
 import v6.bsas.list.model.request.ListBsasRequestData
+import ListBsasSchema._
 
 import javax.inject.Singleton
 
@@ -33,11 +35,10 @@ class ListBsasValidatorFactory {
       businessId: Option[String]
   ): Validator[ListBsasRequestData] = {
 
-    val schema = ListBsasSchema.schemaFor(taxYear)
-
-    schema match {
-      case ListBsasSchema.Def1 => new Def1_ListBsasValidator(nino, taxYear, typeOfBusiness, businessId)
-      case ListBsasSchema.Def2 => new Def2_ListBsasValidator(nino, taxYear, typeOfBusiness, businessId)
+    ListBsasSchema.schemaFor(taxYear) match {
+      case Valid(Def1)     => new Def1_ListBsasValidator(nino, taxYear, typeOfBusiness, businessId)
+      case Valid(Def2)     => new Def2_ListBsasValidator(nino, taxYear, typeOfBusiness, businessId)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
 

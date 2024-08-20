@@ -18,23 +18,10 @@ package v6.bsas.list
 
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{BusinessId, Nino, TaxYear}
-import shared.models.errors.{
-  BusinessIdFormatError,
-  DownstreamErrorCode,
-  DownstreamErrors,
-  ErrorWrapper,
-  InternalError,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  TaxYearFormatError
-}
+import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v6.bsas.list.def1.model.Def1_ListBsasFixtures
-import v6.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v6.bsas.list.def2.model.Def2_ListBsasFixtures
 import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
@@ -45,11 +32,12 @@ class ListBsasServiceSpec extends ServiceSpec {
 
   private val nino                   = Nino("AA123456A")
   private val taxYear                = TaxYear.fromMtd("2019-20")
+  private val postFHLRemovalTaxYear  = TaxYear.fromMtd("2025-26")
   private val incomeSourceIdentifier = "IncomeSourceType"
   private val identifierValue        = BusinessId("01")
 
-  val fhlRequest: ListBsasRequestData = Def1_ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
-  val request: ListBsasRequestData = Def2_ListBsasRequestData(nino, TaxYear.fromMtd("2025-26"), Some(identifierValue), Some(incomeSourceIdentifier))
+  val fhlRequest: ListBsasRequestData = Def2_ListBsasRequestData(nino, taxYear, Some(identifierValue), Some(incomeSourceIdentifier))
+  val request: ListBsasRequestData    = Def2_ListBsasRequestData(nino, postFHLRemovalTaxYear, Some(identifierValue), Some(incomeSourceIdentifier))
 
   trait Test extends MockListBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -60,27 +48,19 @@ class ListBsasServiceSpec extends ServiceSpec {
 
   "ListBsas" should {
     "return a valid response with" when {
-      "a valid request is supplied with FHL" in new Test with Def1_ListBsasFixtures {
+      "a valid request is supplied" in new Test with Def2_ListBsasFixtures {
         MockListBsasConnector
           .listBsas(fhlRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, listBsasResponse))))
 
         await(service.listBsas(fhlRequest)) shouldBe Right(ResponseWrapper(correlationId, listBsasResponse))
       }
-
-      "a valid request is supplied" in new Test with Def2_ListBsasFixtures {
-        MockListBsasConnector
-          .listBsas(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, listBsasResponse))))
-
-        await(service.listBsas(request)) shouldBe Right(ResponseWrapper(correlationId, listBsasResponse))
-      }
     }
 
     "return error response" when {
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-        s"$downstreamErrorCode is returned from the service" in new Test with Def1_ListBsasFixtures {
+        s"$downstreamErrorCode is returned from the service" in new Test with Def2_ListBsasFixtures {
 
           MockListBsasConnector
             .listBsas(fhlRequest)

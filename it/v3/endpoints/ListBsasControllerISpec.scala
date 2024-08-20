@@ -35,7 +35,7 @@ import shared.models.errors.{
   TaxYearFormatError
 }
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 import v3.fixtures.ListBsasFixture
 
 class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {
