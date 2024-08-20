@@ -21,6 +21,7 @@ get:
     | NOT_FOUND                   | Simulates the scenario where no data is found.                                                                                |
     | REQUEST_CANNOT_BE_FULFILLED | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors. |
     | DYNAMIC                     | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
+    | STATEFUL                    | Performs a stateful list.                                                                                                     |
 
   parameters:
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
