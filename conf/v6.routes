@@ -2,8 +2,8 @@ GET         /:nino                                        v6.bsas.list.ListBsasC
 
 POST        /:nino/trigger                                v6.bsas.trigger.TriggerBsasController.triggerBsas(nino: String)
 
-GET         /:nino/self-employment/:calculationId         v5.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasController.handleRequest(nino:String, calculationId: String, taxYear: Option[String])
-POST        /:nino/self-employment/:calculationId/adjust  v5.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String])
+GET         /:nino/self-employment/:calculationId         v6.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasController.handleRequest(nino:String, calculationId: String, taxYear: Option[String])
+POST        /:nino/self-employment/:calculationId/adjust  v6.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasController.submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String])
 
 GET         /:nino/uk-property/:calculationId             v6.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasController.retrieve(nino: String, calculationId: String, taxYear: Option[String])
 POST        /:nino/uk-property/:calculationId/adjust      v6.ukPropertyBsas.submit.SubmitUkPropertyBsasController.handleRequest(nino: String, calculationId: String, taxYear: Option[String])

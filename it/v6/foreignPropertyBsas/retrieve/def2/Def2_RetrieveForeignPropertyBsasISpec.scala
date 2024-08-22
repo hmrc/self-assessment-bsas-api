@@ -29,7 +29,7 @@ import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
   retrieveForeignPropertyBsasDesNonFhlJson,
   retrieveForeignPropertyBsasMtdNonFhlJson
 }
-import v6.selfEmploymentBsas.retieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasFixtures
+import v6.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasFixtures
 import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
 
 class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
