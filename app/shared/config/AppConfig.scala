@@ -40,7 +40,7 @@ class AppConfig @Inject() (config: ServicesConfig, protected[config] val configu
 
   private def serviceKeyFor(serviceName: String) = s"microservice.services.$serviceName"
 
-  private def downstreamConfig(serviceName: String) = {
+  protected def downstreamConfig(serviceName: String): DownstreamConfig = {
     val baseUrl = config.baseUrl(serviceName)
 
     val serviceKey = serviceKeyFor(serviceName)
@@ -52,7 +52,7 @@ class AppConfig @Inject() (config: ServicesConfig, protected[config] val configu
     DownstreamConfig(baseUrl, env, token, environmentHeaders)
   }
 
-  private def basicAuthDownstreamConfig(serviceName: String) = {
+  protected def basicAuthDownstreamConfig(serviceName: String): BasicAuthDownstreamConfig = {
     val baseUrl = config.baseUrl(serviceName)
 
     val serviceKey = serviceKeyFor(serviceName)
