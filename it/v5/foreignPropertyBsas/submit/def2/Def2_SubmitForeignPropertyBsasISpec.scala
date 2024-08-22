@@ -24,8 +24,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
-import shared.stubs._
-import support.IntegrationBaseSpec
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.support.IntegrationBaseSpec
 import v5.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
   mtdRequestNonFhlFull,
@@ -208,7 +208,7 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
         .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.5.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 

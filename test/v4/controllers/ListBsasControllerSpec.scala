@@ -57,8 +57,8 @@ class ListBsasControllerSpec
   "list bsas" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -77,8 +77,8 @@ class ListBsasControllerSpec
       }
 
       "valid request with no taxYear path parameter" in new Test {
-        MockAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         override def maybeTaxYear: Option[String] = None
 
@@ -130,6 +130,12 @@ class ListBsasControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     val requestData: ListBsasRequestData = ListBsasRequestData(
       nino = parsedNino,

@@ -41,6 +41,8 @@ class SubmitUkPropertyBsasController @Inject() (
     appConfig: AppConfig
 ) extends AuthorisedController(cc) {
 
+  val endpointName = "submit-uk-property-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitUkPropertyBsasController", endpointName = "submitUkPropertyBsas")
 

@@ -37,6 +37,8 @@ class ListBsasController @Inject() (
     extends AuthorisedController(cc)
     with Logging {
 
+  val endpointName = "list-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListBsasController", endpointName = "listBsas")
 

@@ -1,0 +1,16 @@
+{
+  "foreignFhlEea": {
+    "income": {
+      "totalRentsReceived": 1000.45
+    },
+    "expenses": {
+      "premisesRunningCosts": 1001.00,
+      "repairsAndMaintenance": -99999.99,
+      "financialCosts": 200.50,
+      "professionalFees": -99999.99,
+      "costOfServices": -1000.45,
+      "other": 500.00,
+      "travelCosts": 100.00
+    }
+  }
+}

@@ -16,6 +16,7 @@
 
 package v6.bsas.trigger
 
+import cats.data.Validated.{Invalid, Valid}
 import config.BsasConfig
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
@@ -31,11 +32,10 @@ class TriggerBsasValidatorFactory @Inject() (implicit bsasConfig: BsasConfig) {
 
   def validator(nino: String, body: JsValue): Validator[TriggerBsasRequestData] = {
 
-    val schema = TriggerSchema.schemaFor(body)
-
-    schema match {
-      case Def1 => new Def1_TriggerBsasValidator(nino, body)
-      case Def2 => new Def2_TriggerBsasValidator(nino, body)
+    TriggerSchema.schemaFor(body) match {
+      case Valid(Def1)     => new Def1_TriggerBsasValidator(nino, body)
+      case Valid(Def2)     => new Def2_TriggerBsasValidator(nino, body)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
 

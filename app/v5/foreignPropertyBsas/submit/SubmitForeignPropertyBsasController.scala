@@ -41,6 +41,8 @@ class SubmitForeignPropertyBsasController @Inject() (
     appConfig: AppConfig
 ) extends AuthorisedController(cc) {
 
+  val endpointName = "submit-foreign-property-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitForeignPropertyBsasController", endpointName = "SubmitForeignPropertyBsas")
 

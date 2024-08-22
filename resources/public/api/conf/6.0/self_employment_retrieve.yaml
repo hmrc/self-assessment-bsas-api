@@ -27,6 +27,7 @@ get:
     | NOT_SELF_EMPLOYMENT                       | Simulates the scenario where the calculationId is not a self-employment.                                                              |
     | TAX_YEAR_NOT_SUPPORTED                    | Simulates the scenario where the tax year is not supported.                                                                           |
     | REQUEST_CANNOT_BE_FULFILLED               | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.         |
+    | STATEFUL                                  | Performs a stateful retrieve.                                                                                                         |
 
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
     - metadata
@@ -79,15 +80,15 @@ get:
             "Full Expenses":
               description: Full Expenses
               value:
-                $ref: "./examples/retrieveBsas/retrieve_self_employment_full_expenses.json"
+                $ref: "./examples/retrieve_self_employment/retrieve_self_employment_full_expenses.json"
             "Consolidated Expenses":
               description: Consolidated Expenses
               value:
-                $ref: "./examples/retrieveBsas/retrieve_self_employment_consolidated_expenses.json"
+                $ref: "./examples/retrieve_self_employment/retrieve_self_employment_consolidated_expenses.json"
             "Trading Allowance":
               description: Trading Allowance
               value:
-                $ref: "./examples/retrieveBsas/retrieve_self_employment_trading_allowance.json"
+                $ref: "./examples/retrieve_self_employment/retrieve_self_employment_trading_allowance.json"
 
     400:
       description: Bad request

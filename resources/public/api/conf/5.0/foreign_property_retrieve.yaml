@@ -41,7 +41,9 @@ get:
     | TAX_YEAR_NOT_SUPPORTED                        | Simulates the scenario where the tax year is not supported.                                                                              |
     | NOT_FOUND                                     | Simulates the scenario where no matching resource is found.                                                                              |
     | REQUEST_CANNOT_BE_FULFILLED                   | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.            |
+    | STATEFUL                                      | Performs a stateful retrieve.                                                                                                            |
     
+   
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       * metadata
         * calculationId

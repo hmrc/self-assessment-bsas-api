@@ -18,9 +18,9 @@ package v6.bsas.trigger.def2.model
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
-import v6.common.model.TypeOfBusiness
 import v6.bsas.trigger.def2.model.request.{AccountingPeriod, Def2_TriggerBsasRequestBody}
 import v6.bsas.trigger.def2.model.response.Def2_TriggerBsasResponse
+import v6.common.model.TypeOfBusiness
 
 object Def2_TriggerBsasFixtures {
 

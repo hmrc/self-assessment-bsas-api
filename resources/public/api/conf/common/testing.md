@@ -15,10 +15,10 @@ Some APIs may be marked \[test only\]. This means that they are not available fo
 
 Some endpoints support DYNAMIC gov test scenarios. The response is dynamic based on the request parameters:
 
-- List Business Source Adjustable Summaries V3.0 and later
-- Retrieve a Self-Employment Business Source Adjustable Summary V4.0
-- Retrieve a UK Property Business Source Adjustable Summary V4.0
-- Retrieve a Foreign Property Business Source Adjustable Summary V4.0
+- List Business Source Adjustable Summaries
+- Retrieve a Self-Employment Business Source Adjustable Summary
+- Retrieve a UK Property Business Source Adjustable Summary
+- Retrieve a Foreign Property Business Source Adjustable Summary
 
 ### Stateful
 
@@ -29,8 +29,8 @@ what you submitted.
 
 The following groups are stateful in the sandbox:
 
-- Trigger a Business Source Adjustable Summary v4.0
-- List a Business Source Adjustable Summary v4.0
-- Self-employment business v4.0
-- UK property business v4.0
-- Foreign property business v4.0
+- Trigger a Business Source Adjustable Summary
+- List a Business Source Adjustable Summary
+- Self-employment business
+- UK property business
+- Foreign property business

@@ -24,8 +24,8 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.support.IntegrationBaseSpec
 import v4.fixtures.TriggerBsasRequestBodyFixtures._
 
 class TriggerBsasControllerISpec extends IntegrationBaseSpec {

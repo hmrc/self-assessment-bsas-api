@@ -24,8 +24,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
-import shared.stubs._
-import support.IntegrationBaseSpec
+import shared.services._
+import shared.support.IntegrationBaseSpec
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {

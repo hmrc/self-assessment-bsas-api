@@ -30,15 +30,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveUkPropertyBsasController @Inject() (val authService: EnrolmentsAuthService,
-                                                  val lookupService: MtdIdLookupService,
-                                                  validatorFactory: RetrieveUkPropertyBsasValidatorFactory,
-                                                  service: RetrieveUkPropertyBsasService,
-                                                  hateoasFactory: HateoasFactory,
-                                                  cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+class RetrieveUkPropertyBsasController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: RetrieveUkPropertyBsasValidatorFactory,
+    service: RetrieveUkPropertyBsasService,
+    hateoasFactory: HateoasFactory,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator
+)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with Logging {
+
+  val endpointName = "retrieve-uk-property-bsas"
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(

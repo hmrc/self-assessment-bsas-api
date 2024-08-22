@@ -23,16 +23,16 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
-import shared.stubs._
-import support.IntegrationBaseSpec
-import v4.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestNonFhlFull, mtdRequestValid}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.support.IntegrationBaseSpec
+import v4.fixtures.foreignProperty.SubmitForeignPropertyBsasFixtures._
 
 class SubmitForeignPropertyBsasControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
+    val nino          = "AA123456A"
+    val calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
 
-    val nino: String          = "AA123456A"
-    val calculationId: String = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
     // Downstream returns the adjustments and adjusted calculation - we ignore whatever we get back...
     val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
 

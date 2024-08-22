@@ -31,4 +31,8 @@ class BsasFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[Bsa
     behave like aFeatureSwitchWithKey("ifs.released-in-production", _.isIfsInProduction)
   }
 
+  "supportingAgentsAccessControlEnabled" should {
+    behave like aFeatureSwitchWithKey("supporting-agents-access-control.enabled", _.supportingAgentsAccessControlEnabled)
+  }
+
 }

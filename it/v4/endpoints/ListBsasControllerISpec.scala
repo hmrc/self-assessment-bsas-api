@@ -24,18 +24,9 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{
-  BusinessIdFormatError,
-  InternalError,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError
-}
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.models.errors._
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.support.IntegrationBaseSpec
 import v4.fixtures.ListBsasFixture
 
 class ListBsasControllerISpec extends IntegrationBaseSpec with ListBsasFixture {

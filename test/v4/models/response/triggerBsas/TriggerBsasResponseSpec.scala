@@ -77,15 +77,15 @@ class TriggerBsasResponseSpec extends UnitSpec {
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
       val context        = "individuals/self-assessment/adjustable-summary"
 
-      MockAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {
-      MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "triggering a self employment BSAS" should {

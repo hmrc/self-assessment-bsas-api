@@ -18,6 +18,7 @@ post:
     | NOT_FOUND                   | Simulates the scenario where no data is found.                                                                               |
     | TAX_YEAR_NOT_SUPPORTED      | Simulates the scenario where the tax year is not supported.                                                                  |
     | REQUEST_CANNOT_BE_FULFILLED | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.|
+    | STATEFUL                    | Performs a stateful trigger.                                                                                                 |
 
   parameters:
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"

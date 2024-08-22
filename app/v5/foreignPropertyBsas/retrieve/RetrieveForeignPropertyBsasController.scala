@@ -37,6 +37,8 @@ class RetrieveForeignPropertyBsasController @Inject() (
     extends AuthorisedController(cc)
     with Logging {
 
+  val endpointName = "retrieve-foreign-property-bsas"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveForeignPropertyBsasController", endpointName = "retrieve")
 

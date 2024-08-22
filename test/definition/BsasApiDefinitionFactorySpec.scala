@@ -31,7 +31,7 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   class Test extends MockHttpClient with MockAppConfig {
-    MockAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
+    MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
     val apiDefinitionFactory = new BsasApiDefinitionFactory(mockAppConfig)
   }
 
@@ -39,12 +39,12 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
     "called" should {
       "return a valid Definition case class" in new Test {
         List(Version3, Version4, Version5, Version6).foreach { version =>
-          MockAppConfig.apiStatus(version) returns "BETA"
-          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
-          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
+          MockedAppConfig.apiStatus(version) returns "BETA"
+          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
         }
 
-        MockAppConfig.confidenceLevelConfig
+        MockedAppConfig.confidenceLevelConfig
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
@@ -109,7 +109,7 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
     ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
       s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
         s"return confidence level $expectedDefinitionCL" in new Test {
-          MockAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
+          MockedAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)
