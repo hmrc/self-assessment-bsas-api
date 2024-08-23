@@ -8,6 +8,10 @@ For the Shared Code update steps, see: https://confluence.tools.tax.service.gov.
 Place new items at the top, and auto-format the file...
 
 
+## August 23 2024: Update in ResolveTaxYear
+
+- Updated ResolveTaxYearMinMax to allow custom min and max errors
+
 ## July 10 2024: Updates from individual-calculations-api
 
 Added the following functions from individual-calculations-api:

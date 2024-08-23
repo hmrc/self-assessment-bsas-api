@@ -85,10 +85,7 @@ case class ResolveTaxYearMaximum(maximumTaxYear: TaxYear) extends ResolverSuppor
 
 }
 
-case class ResolveTaxYearMinMax(minMax: (TaxYear, TaxYear),
-                                minError: MtdError = RuleTaxYearNotSupportedError,
-                                maxError: MtdError = RuleTaxYearNotSupportedError)
-    extends ResolverSupport {
+case class ResolveTaxYearMinMax(minMax: (TaxYear, TaxYear), minError: MtdError, maxError: MtdError) extends ResolverSupport {
 
   private val (minimumTaxYear, maximumTaxYear) = minMax
 
@@ -104,6 +101,18 @@ case class ResolveTaxYearMinMax(minMax: (TaxYear, TaxYear),
       case Some(value) => resolver(value).map(Some(_))
       case None        => Valid(None)
     }
+
+}
+
+object ResolveTaxYearMinMax {
+
+  def apply(minMax: (TaxYear, TaxYear), error: MtdError): ResolveTaxYearMinMax = {
+    ResolveTaxYearMinMax(minMax, error, error)
+  }
+
+  def apply(minMax: (TaxYear, TaxYear)): ResolveTaxYearMinMax = {
+    ResolveTaxYearMinMax(minMax, RuleTaxYearNotSupportedError, RuleTaxYearNotSupportedError)
+  }
 
 }
 

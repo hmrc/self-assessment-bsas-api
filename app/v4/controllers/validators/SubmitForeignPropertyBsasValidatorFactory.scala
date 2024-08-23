@@ -23,7 +23,7 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.ResolverSupport._
 import shared.controllers.validators.resolvers._
 import shared.models.domain.TaxYear
-import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v4.controllers.validators.SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 import v4.controllers.validators.resolvers.ResolveOnlyOneJsonProperty
 import v4.models.request.submitBsas.foreignProperty.{SubmitForeignPropertyBsasRequestBody, SubmitForeignPropertyBsasRequestData}
@@ -38,7 +38,12 @@ class SubmitForeignPropertyBsasValidatorFactory {
   private val resolveOnlyOneJsonProperty = new ResolveOnlyOneJsonProperty("foreignFhlEea", "nonFurnishedHolidayLet")
 
   private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
-  private val resolveTaxYear = ResolveTaxYearMinMax(minMaxTaxYears, minError = InvalidTaxYearParameterError).resolver.resolveOptionally
+
+  private val resolveTaxYear = ResolveTaxYearMinMax(
+    minMaxTaxYears,
+    minError = InvalidTaxYearParameterError,
+    maxError = RuleTaxYearNotSupportedError
+  ).resolver.resolveOptionally
 
   def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitForeignPropertyBsasRequestData] =
     new Validator[SubmitForeignPropertyBsasRequestData] {

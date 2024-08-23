@@ -23,7 +23,7 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.ResolverSupport._
 import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYearMinMax}
 import shared.models.domain.TaxYear
-import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v4.models.request.retrieveBsas.RetrieveSelfEmploymentBsasRequestData
 
 import javax.inject.Singleton
@@ -32,7 +32,13 @@ import javax.inject.Singleton
 class RetrieveSelfEmploymentBsasValidatorFactory {
 
   private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
-  private val resolveTaxYear = ResolveTaxYearMinMax(minMaxTaxYears, minError = InvalidTaxYearParameterError).resolver.resolveOptionally
+
+  private val resolveTaxYear =
+    ResolveTaxYearMinMax(
+      minMaxTaxYears,
+      minError = InvalidTaxYearParameterError,
+      maxError = RuleTaxYearNotSupportedError
+    ).resolver.resolveOptionally
 
   def validator(nino: String, calculationId: String, taxYear: Option[String]): Validator[RetrieveSelfEmploymentBsasRequestData] =
     new Validator[RetrieveSelfEmploymentBsasRequestData] {

@@ -22,7 +22,7 @@ import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.domain.TaxYear
-import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v5.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v5.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
@@ -30,7 +30,12 @@ object Def1_SubmitSelfEmploymentBsasValidator extends ResolverSupport {
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def1_SubmitSelfEmploymentBsasRequestBody]
 
   private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
-  private val resolveTaxYear = ResolveTaxYearMinMax(minMaxTaxYears, minError = InvalidTaxYearParameterError).resolver.resolveOptionally
+
+  private val resolveTaxYear = ResolveTaxYearMinMax(
+    minMaxTaxYears,
+    minError = InvalidTaxYearParameterError,
+    maxError = RuleTaxYearNotSupportedError
+  ).resolver.resolveOptionally
 
 }
 
