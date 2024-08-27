@@ -30,7 +30,6 @@ import v4.controllers.validators.MockListBsasValidatorFactory
 import v4.fixtures.ListBsasFixture
 import v4.hateoas.HateoasLinks
 import v4.mocks.services.MockListBsasService
-import v4.models
 import v4.models.domain.TypeOfBusiness
 import v4.models.request.ListBsasRequestData
 import v4.models.response.listBsas.{BsasSummary, BusinessSourceSummary, ListBsasHateoasData, ListBsasResponse}
@@ -144,7 +143,7 @@ class ListBsasControllerSpec
       incomeSourceType = Some(typeOfBusiness)
     )
 
-    val response: ListBsasResponse[BsasSummary] = models.response.listBsas.ListBsasResponse(
+    val response: ListBsasResponse[BsasSummary] = ListBsasResponse(
       List(
         businessSourceSummaryModel(),
         businessSourceSummaryModel().copy(
