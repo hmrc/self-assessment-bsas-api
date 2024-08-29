@@ -74,11 +74,6 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
               categories = List("INCOME_TAX_MTD"),
               versions = List(
                 APIVersion(
-                  Version3,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
-                APIVersion(
                   Version4,
                   status = BETA,
                   endpointsEnabled = true
