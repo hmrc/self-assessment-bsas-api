@@ -22,7 +22,8 @@ import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
-import shared.models.errors.MtdError
+import shared.models.domain.TaxYear
+import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v5.ukPropertyBsas.submit.def1.model.request.{Def1_SubmitUkPropertyBsasRequestBody, Def1_SubmitUkPropertyBsasRequestData}
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
@@ -32,7 +33,13 @@ object Def1_SubmitUkPropertyBsasValidator extends ResolverSupport {
     new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "nonFurnishedHolidayLet").resolver thenResolve
       ResolveNonEmptyJsonObject.resolver[Def1_SubmitUkPropertyBsasRequestBody]
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
+
+  private val resolveTaxYear = ResolveTaxYearMinMax(
+    minMaxTaxYears,
+    minError = InvalidTaxYearParameterError,
+    maxError = RuleTaxYearNotSupportedError
+  ).resolver.resolveOptionally
 
 }
 
@@ -44,7 +51,7 @@ class Def1_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def1_SubmitUkPropertyBsasRequestData) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 

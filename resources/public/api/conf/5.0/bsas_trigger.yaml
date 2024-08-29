@@ -1,9 +1,10 @@
 post:
   summary: Trigger a Business Source Adjustable Summary
   description: |
-    This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary of the 
-    income and expenditure for a specified business for a given accounting period. A Business Source Adjustable Summary 
-    must be generated before accounting adjustments are to be entered. A National Insurance number must be provided.
+    This endpoint enables you to generate an end of accounting period Business Source Adjustable Summary of the income and expenditure for a specified business and accounting period.
+    A Business Source Adjustable Summary must be generated before accounting adjustments are to be entered. A National Insurance number must be provided.
+    
+    Note: this endpoint only supports submissions up to tax year 2024-25.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  

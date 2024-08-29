@@ -20,18 +20,16 @@ import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
+import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYearMinMax, ResolverSupport}
 import shared.models.domain.TaxYear
-import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import shared.models.errors.MtdError
 import v5.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v5.bsas.list.model.request.ListBsasRequestData
 import v5.common.resolvers.ResolveTypeOfBusiness
 
 object Def1_ListBsasValidator extends ResolverSupport {
-  private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
-
-  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear) thenValidate
-    satisfiesMin(listMinimumTaxYear, RuleTaxYearNotSupportedError)
+  private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.fromMtd("2019-20"), TaxYear.ending(2025))
+  private val resolveTaxYear                     = ResolveTaxYearMinMax(minMaxTaxYears).resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
 
   private val resolveBusinessId     = ResolveBusinessId.resolver.resolveOptionally
   private val resolveTypeOfBusiness = ResolveTypeOfBusiness.resolver.resolveOptionally
