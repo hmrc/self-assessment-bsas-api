@@ -27,7 +27,6 @@ class BsasApiDefinitionFactory @Inject() (protected val appConfig: AppConfig) ex
 
   lazy val definition: Definition =
     Definition(
-      scopes = scopes,
       api = APIDefinition(
         name = "Business Source Adjustable Summary (MTD)",
         description = "An API for providing business source adjustable summary data",
