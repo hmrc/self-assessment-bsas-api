@@ -71,7 +71,7 @@ class Def1_TriggerBsasRulesValidator(implicit bsasConfig: BsasConfig) extends Ru
   private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusinessWithFHL): Validated[Seq[MtdError], Unit] = {
 
     val earliestDate: LocalDate = typeOfBusiness match {
-      case `self-employment` | `uk-property-fhl` | `uk-property-non-fhl` =>
+      case `self-employment` | `uk-property-fhl` | `uk-property` =>
         selfEmploymentAndUkPropertyEarliestEndDate
       case `foreign-property-fhl-eea` | `foreign-property` =>
         foreignPropertyEarliestEndDate

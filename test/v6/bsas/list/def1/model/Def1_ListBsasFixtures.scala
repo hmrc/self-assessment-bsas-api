@@ -307,7 +307,7 @@ trait Def1_ListBsasFixtures {
          |    },
          |    {
          |      "businessId": "000000000000210",
-         |      "typeOfBusiness": "uk-property-non-fhl",
+         |      "typeOfBusiness": "uk-property",
          |      "accountingPeriod": {
          |        "startDate": "2018-10-11",
          |        "endDate": "2019-10-10"

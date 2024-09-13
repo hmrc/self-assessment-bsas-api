@@ -35,7 +35,7 @@ object TypeOfBusinessWithFHL {
     val asDownstreamValue: String = "04"
   }
 
-  case object `uk-property-non-fhl` extends TypeOfBusinessWithFHL {
+  case object `uk-property` extends TypeOfBusinessWithFHL {
     val asDownstreamValue: String = "02"
   }
 

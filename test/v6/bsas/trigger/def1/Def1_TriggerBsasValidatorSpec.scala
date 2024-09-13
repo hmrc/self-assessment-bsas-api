@@ -58,7 +58,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
       List(
         "self-employment",
         "uk-property-fhl",
-        "uk-property-non-fhl",
+        "uk-property",
         "foreign-property-fhl-eea",
         "foreign-property"
       ).foreach { typeOfBusiness =>
@@ -218,7 +218,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
         List(
           (TypeOfBusiness.`self-employment`, "2019-04-06"),
           (TypeOfBusinessWithFHL.`uk-property-fhl`, "2019-04-06"),
-          (TypeOfBusinessWithFHL.`uk-property-non-fhl`, "2019-04-06"),
+          (TypeOfBusinessWithFHL.`uk-property`, "2019-04-06"),
           (TypeOfBusinessWithFHL.`foreign-property-fhl-eea`, "2021-04-06"),
           (TypeOfBusiness.`foreign-property`, "2021-04-06")
         ).foreach { case (typeOfBusiness, endDate) =>
@@ -237,7 +237,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
           List(
             (TypeOfBusiness.`self-employment`, "2019-04-05"),
             (TypeOfBusinessWithFHL.`uk-property-fhl`, "2019-04-05"),
-            (TypeOfBusinessWithFHL.`uk-property-non-fhl`, "2019-04-05"),
+            (TypeOfBusinessWithFHL.`uk-property`, "2019-04-05"),
             (TypeOfBusinessWithFHL.`foreign-property-fhl-eea`, "2021-04-05"),
             (TypeOfBusiness.`foreign-property`, "2021-04-05")
           ).foreach { case (typeOfBusiness, endDate) =>
