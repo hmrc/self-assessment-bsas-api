@@ -24,13 +24,13 @@ class TypeOfBusinessWithFHLSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[TypeOfBusinessWithFHL](
     ("uk-property-fhl", `uk-property-fhl`),
-    ("uk-property-non-fhl", `uk-property-non-fhl`),
+    ("uk-property", `uk-property`),
     ("foreign-property-fhl-eea", `foreign-property-fhl-eea`)
   )
 
   "toIdentifierValue" should {
     "return the correct identifier value" in {
-      TypeOfBusinessWithFHL.`uk-property-non-fhl`.asDownstreamValue shouldBe "02"
+      TypeOfBusinessWithFHL.`uk-property`.asDownstreamValue shouldBe "02"
       TypeOfBusinessWithFHL.`uk-property-fhl`.asDownstreamValue shouldBe "04"
       TypeOfBusinessWithFHL.`foreign-property-fhl-eea`.asDownstreamValue shouldBe "03"
     }

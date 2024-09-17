@@ -36,7 +36,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
       List(
         "self-employment",
         "uk-property-fhl",
-        "uk-property-non-fhl",
+        "uk-property",
         "foreign-property-fhl-eea",
         "foreign-property"
       ).foreach { typeOfBusiness =>

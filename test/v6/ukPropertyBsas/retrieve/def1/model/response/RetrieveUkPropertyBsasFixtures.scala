@@ -312,7 +312,7 @@ object RetrieveUkPropertyBsasFixtures {
   val mtdInputsNonFhlJson: JsValue = Json.parse(
     s"""
        |{
-       |  "typeOfBusiness": "uk-property-non-fhl",
+       |  "typeOfBusiness": "uk-property",
        |  "businessId": "XAIS12345678910",
        |  "businessName": "Business Name",
        |  "accountingPeriodStartDate": "$now",
@@ -586,7 +586,7 @@ object RetrieveUkPropertyBsasFixtures {
 
   val inputsNonFhl: Inputs = Inputs(
     incomeSourceType = "02",
-    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property-non-fhl`,
+    typeOfBusiness = TypeOfBusinessWithFHL.`uk-property`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,

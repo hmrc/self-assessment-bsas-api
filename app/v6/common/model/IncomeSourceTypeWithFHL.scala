@@ -31,7 +31,7 @@ object IncomeSourceTypeWithFHL {
   }
 
   case object `02` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`uk-property-non-fhl`
+    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`uk-property`
   }
 
   case object `03` extends IncomeSourceTypeWithFHL {
