@@ -14,8 +14,7 @@ Added an apply function on ResolveTaxYearMinimum to allow adding custom errors. 
 ## August 29 2024:  Increased code coverage
 
 Increased the coverage for ResolveTaxYearMinMax and ResolveDateRange so that introducing the shared code into other APIs
-won't
-reduce their coverage % quite so much.
+won't reduce their coverage % quite so much.
 
 ## Aug 21 2024: Re-engineer BaseDownstreamConnector and DownstreamUri for HIP support
 
