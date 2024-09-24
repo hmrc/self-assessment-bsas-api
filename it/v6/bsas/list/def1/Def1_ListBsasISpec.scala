@@ -49,6 +49,23 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
 
       }
 
+      "valid request is made and multiple tax years returned from downstream" in new NonTysTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultipleWithDifferentTaxYears())
+        }
+
+        val response: WSResponse = await(request.get())
+
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe summariesJs()
+
+      }
+
       "valid request is made with a Tax Year Specific (TYS) tax year" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {

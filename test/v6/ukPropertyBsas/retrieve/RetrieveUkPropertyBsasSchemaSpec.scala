@@ -19,16 +19,16 @@ package v6.ukPropertyBsas.retrieve
 import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
-import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import shared.models.errors.{InvalidTaxYearParameterError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.utils.UnitSpec
 
 class RetrieveUkPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
     "a tax year is present" must {
-      "allow a tax year parameter for pre-TYS tax years" in {
+      "disallow a tax year parameter for pre-TYS tax years and return InvalidTaxYearParameterError" in {
         forPreTysTaxYears { taxYear =>
-          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
+          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Invalid(Seq(InvalidTaxYearParameterError))
         }
       }
 
@@ -45,6 +45,12 @@ class RetrieveUkPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPro
       "use Def2 for tax years 2025-26 onwards" in {
         val taxYear = TaxYear.fromMtd("2025-26")
         RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def2)
+      }
+    }
+
+    "no tax year is present (pre-TYS case)" must {
+      "use Def1" in {
+        RetrieveUkPropertyBsasSchema.schemaFor(None) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
       }
     }
 

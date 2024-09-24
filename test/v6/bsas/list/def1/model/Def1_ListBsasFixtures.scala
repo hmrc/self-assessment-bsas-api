@@ -259,6 +259,16 @@ trait Def1_ListBsasFixtures {
       listBsasResponseDownstreamJsonUkNonFhl(taxYear)
     ))
 
+  def listBsasDownstreamJsonMultipleWithDifferentTaxYears(): JsArray = JsArray(
+    List(
+      listBsasResponseDownstreamJsonSE("2021"),
+      listBsasResponseDownstreamJsonUkFhl("2021"),
+      listBsasResponseDownstreamJsonUkNonFhl("2021"),
+      listBsasResponseDownstreamJsonSE(),
+      listBsasResponseDownstreamJsonUkFhl(),
+      listBsasResponseDownstreamJsonUkNonFhl()
+    ))
+
   def businessSourceSummary(taxYear: String = "2019-20"): BusinessSource = BusinessSource(
     businessId = "000000000000210",
     typeOfBusiness = TypeOfBusinessWithFHL.`self-employment`,

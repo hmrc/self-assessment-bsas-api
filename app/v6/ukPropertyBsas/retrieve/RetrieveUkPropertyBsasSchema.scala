@@ -48,11 +48,11 @@ object RetrieveUkPropertyBsasSchema {
   def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], RetrieveUkPropertyBsasSchema] =
     maybeTaxYear match {
       case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
-      case None                => Invalid(Seq(InvalidTaxYearParameterError))
+      case None                => Valid(preTysSchema)
     }
 
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveUkPropertyBsasSchema] = {
-    if (taxYear < TaxYear.tysTaxYear) Valid(preTysSchema)
+    if (taxYear < TaxYear.tysTaxYear) Invalid(Seq(InvalidTaxYearParameterError))
     else if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
     else Valid(Def2)
   }
