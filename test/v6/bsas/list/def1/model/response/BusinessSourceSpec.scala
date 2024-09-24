@@ -25,7 +25,7 @@ class BusinessSourceSpec extends UnitSpec with Def1_ListBsasFixtures {
   "BusinessSourceSummary" when {
     "read from valid JSON" should {
       "return the expected data object" in {
-        val result = businessSourceSummaryDownstreamJson.as[BusinessSource]
+        val result = businessSourceSummaryDownstreamJson().as[BusinessSource]
         result shouldBe businessSourceSummary()
       }
     }
@@ -40,7 +40,7 @@ class BusinessSourceSpec extends UnitSpec with Def1_ListBsasFixtures {
     "written to JSON" should {
       "return the expected JSON" in {
         val result = Json.toJson(businessSourceSummary())
-        result shouldBe businessSourceSummaryJson
+        result shouldBe businessSourceSummaryJson()
       }
     }
   }

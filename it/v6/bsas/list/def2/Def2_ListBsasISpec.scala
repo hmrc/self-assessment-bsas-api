@@ -93,7 +93,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String                   = requestNino
-          override val taxYear: Option[String]        = Some(requestTaxYear)
+          override val taxYear: String                = requestTaxYear
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
           override val businessId: Option[String]     = requestBusinessId
 
@@ -170,7 +170,7 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String]     = Some("XAIS12345678910")
 
-    def taxYear: Option[String] = Some("2025-26")
+    def taxYear: String = "2025-26"
 
     def setupStubs(): StubMapping
 
@@ -189,13 +189,16 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         )
     }
 
-    private def mtdUri: String = s"/$nino"
+    private def mtdUri: String = s"/$nino/$taxYear"
 
-    private def mtdQueryParams: Seq[(String, String)] =
-      List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
+    private def mtdQueryParams: Seq[(String, String)] = {
+      val requiredParams = List("taxYear" -> taxYear)
+      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
         .collect { case (k, Some(v)) =>
           (k, v)
         }
+      requiredParams ++ optionalParams
+    }
 
     def errorBody(code: String): String =
       s"""{

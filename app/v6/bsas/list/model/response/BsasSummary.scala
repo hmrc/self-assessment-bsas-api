@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.bsas.list.def2.model.response
+package v6.bsas.list.model.response
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}

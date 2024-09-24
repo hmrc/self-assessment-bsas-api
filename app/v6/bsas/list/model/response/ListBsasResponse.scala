@@ -17,6 +17,7 @@
 package v6.bsas.list.model.response
 
 import play.api.libs.json.OWrites
+import shared.models.domain.TaxYear
 import shared.utils.JsonWritesUtil
 import v6.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v6.bsas.list.def2.model.response.Def2_ListBsasResponse
@@ -30,6 +31,13 @@ object ListBsasResponse extends JsonWritesUtil {
       implicitly[OWrites[Def1_ListBsasResponse]].writes(def1)
     case def2: Def2_ListBsasResponse =>
       implicitly[OWrites[Def2_ListBsasResponse]].writes(def2)
+  }
+
+  def filterByTaxYear(taxYear: TaxYear, response: ListBsasResponse): ListBsasResponse = response match {
+    case def1: Def1_ListBsasResponse =>
+      def1.copy(businessSources = def1.businessSources.filter(c => c.taxYear == taxYear))
+    case def2: Def2_ListBsasResponse => def2
+    case _                           => throw new IllegalArgumentException("Unsupported type") // TODO: fix this
   }
 
 }

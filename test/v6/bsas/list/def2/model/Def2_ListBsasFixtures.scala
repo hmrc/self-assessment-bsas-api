@@ -18,8 +18,8 @@ package v6.bsas.list.def2.model
 
 import play.api.libs.json.{JsArray, JsValue, Json}
 import shared.models.domain.{Status, TaxYear}
-import v6.bsas.list.def2.model.response.{AccountingPeriod, BsasSummary, BusinessSource, Def2_ListBsasResponse}
-import v6.bsas.list.model.response.ListBsasResponse
+import v6.bsas.list.def2.model.response.{AccountingPeriod, BusinessSource, Def2_ListBsasResponse}
+import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
 import v6.common.model.TypeOfBusiness
 
 trait Def2_ListBsasFixtures {
