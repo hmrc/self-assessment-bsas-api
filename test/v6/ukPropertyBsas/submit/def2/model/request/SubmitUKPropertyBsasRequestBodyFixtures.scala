@@ -20,9 +20,9 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
 
-  val mtdRequestNonFhlFull: JsValue = Json.parse("""
+  val mtdRequestUkPropertyFull: JsValue = Json.parse("""
       |{
-      |  "nonFurnishedHolidayLet": {
+      |  "ukProperty": {
       |    "income": {
       |      "totalRentsReceived": 1.45,
       |      "premiumsOfLeaseGrant": 2.45,
@@ -44,9 +44,9 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val validNonFHLInputJson: JsValue = Json.parse("""
+  val validUkPropertyInputJson: JsValue = Json.parse("""
       |{
-      |  "nonFurnishedHolidayLet": {
+      |  "ukProperty": {
       |    "income": {
       |      "totalRentsReceived": 1.45,
       |      "premiumsOfLeaseGrant": 2.45,
@@ -67,17 +67,17 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFull: Def2_SubmitUkPropertyBsasRequestBody = Def2_SubmitUkPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = Some(
-      NonFurnishedHolidayLet(
+  val requestUkPropertyFull: Def2_SubmitUkPropertyBsasRequestBody = Def2_SubmitUkPropertyBsasRequestBody(
+    ukProperty = Some(
+      UkProperty(
         income = Some(
-          NonFHLIncome(
+          Income(
             totalRentsReceived = Some(1.45),
             premiumsOfLeaseGrant = Some(2.45),
             reversePremiums = Some(3.45),
             otherPropertyIncome = Some(4.45)
           )),
-        expenses = Some(NonFHLExpenses(
+        expenses = Some(Expenses(
           consolidatedExpenses = Some(5.45),
           premisesRunningCosts = Some(6.45),
           repairsAndMaintenance = Some(7.45),
@@ -92,7 +92,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     furnishedHolidayLet = None
   )
 
-  val nonFHLBody: Def2_SubmitUkPropertyBsasRequestBody = requestNonFhlFull
+  val ukPropertyBody: Def2_SubmitUkPropertyBsasRequestBody = requestUkPropertyFull
 
   val downstreamRequestNonFhlFull: JsValue = Json.parse("""
       |{
@@ -119,7 +119,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val nonFHLExpensesAllFields: Option[JsObject] = Some(
+  val ukPropertyExpensesAllFields: Option[JsObject] = Some(
     Json.obj(
       "premisesRunningCosts"     -> 6.45,
       "repairsAndMaintenance"    -> 7.45,
@@ -192,7 +192,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
     ))
 
   val requestFhlFull: Def2_SubmitUkPropertyBsasRequestBody = Def2_SubmitUkPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = None,
+    ukProperty = None,
     furnishedHolidayLet = Some(
       FurnishedHolidayLet(
         income = Some(
@@ -244,7 +244,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   def submitBsasRawDataBodyNonFHL(income: Option[JsObject] = None, expenses: Option[JsObject] = None): JsValue = {
     Json.obj(
-      "nonFurnishedHolidayLet" ->
+      "ukProperty" ->
         (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
           expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
   }

@@ -74,27 +74,27 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             Some("2025-26"),
-            fullRequestJson.replaceWithEmptyObject("/income"),
+            fullRequestJson.replaceWithEmptyObject("/ukProperty/income"),
             BAD_REQUEST,
-            RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/income")))
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/ukProperty/income")))
           ),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             Some("2025-26"),
-            fullRequestJson.update("/expenses/consolidatedExpenses", JsNumber(1.23)),
+            fullRequestJson.update("/ukProperty/expenses/consolidatedExpenses", JsNumber(1.23)),
             BAD_REQUEST,
-            RuleBothExpensesError.copy(paths = Some(List("/expenses")))
+            RuleBothExpensesError.copy(paths = Some(List("/ukProperty/expenses")))
           ),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             Some("2025-26"),
-            fullRequestJson.update("/expenses/residentialFinancialCost", JsNumber(-1.523)),
+            fullRequestJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
             BAD_REQUEST,
             ValueFormatError.copy(
               message = "The value must be between 0 and 99999999999.99",
-              paths = Some(List("/expenses/residentialFinancialCost"))
+              paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
             ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))

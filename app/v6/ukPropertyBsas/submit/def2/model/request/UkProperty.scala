@@ -19,14 +19,14 @@ package v6.ukPropertyBsas.submit.def2.model.request
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class NonFurnishedHolidayLet(income: Option[NonFHLIncome], expenses: Option[NonFHLExpenses])
+case class UkProperty(income: Option[Income], expenses: Option[Expenses])
 
-object NonFurnishedHolidayLet {
+object UkProperty {
 
-  implicit val reads: Reads[NonFurnishedHolidayLet] = (
-    (JsPath \ "income").readNullable[NonFHLIncome] and
-      (JsPath \ "expenses").readNullable[NonFHLExpenses]
-  )(NonFurnishedHolidayLet.apply _)
+  implicit val reads: Reads[UkProperty] = (
+    (JsPath \ "income").readNullable[Income] and
+      (JsPath \ "expenses").readNullable[Expenses]
+  )(UkProperty.apply _)
 
-  implicit val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
+  implicit val writes: OWrites[UkProperty] = Json.writes[UkProperty]
 }

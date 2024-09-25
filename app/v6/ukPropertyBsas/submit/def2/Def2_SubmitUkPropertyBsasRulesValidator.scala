@@ -22,13 +22,7 @@ import common.errors.RuleBothExpensesError
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v6.ukPropertyBsas.submit.def2.model.request.{
-  Def2_SubmitUkPropertyBsasRequestData,
-  FHLExpenses,
-  FurnishedHolidayLet,
-  NonFHLExpenses,
-  NonFurnishedHolidayLet
-}
+import v6.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestData, Expenses, FHLExpenses, FurnishedHolidayLet, UkProperty}
 
 object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitUkPropertyBsasRequestData] {
 
@@ -45,11 +39,11 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
         (valid, valid)
     }
 
-    val (validatedNonFhl, validatedNonFhlConsolidated) = body.nonFurnishedHolidayLet match {
+    val (validatedUkProperty, validatedUkPropertyConsolidated) = body.ukProperty match {
       case Some(ukProperty) =>
         (
-          validateNonFhl(ukProperty),
-          validateNonFhlConsolidatedExpenses(ukProperty)
+          validateUkProperty(ukProperty),
+          validateUkPropertyConsolidatedExpenses(ukProperty)
         )
       case None =>
         (valid, valid)
@@ -58,8 +52,8 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
     combine(
       validatedFhl,
       validatedFhlConsolidated,
-      validatedNonFhl,
-      validatedNonFhlConsolidated
+      validatedUkProperty,
+      validatedUkPropertyConsolidated
     ).onSuccess(parsed)
   }
 
@@ -83,21 +77,21 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
     )
   }
 
-  private def validateNonFhl(nonFhl: NonFurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
+  private def validateUkProperty(ukProperty: UkProperty): Validated[Seq[MtdError], Unit] = {
     combine(
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/totalRentsReceived", nonFhl.income.flatMap(_.totalRentsReceived)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant", nonFhl.income.flatMap(_.premiumsOfLeaseGrant)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/reversePremiums", nonFhl.income.flatMap(_.reversePremiums)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/income/otherPropertyIncome", nonFhl.income.flatMap(_.otherPropertyIncome)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/premisesRunningCosts", nonFhl.expenses.flatMap(_.premisesRunningCosts)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/repairsAndMaintenance", nonFhl.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/financialCosts", nonFhl.expenses.flatMap(_.financialCosts)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/professionalFees", nonFhl.expenses.flatMap(_.professionalFees)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/travelCosts", nonFhl.expenses.flatMap(_.travelCosts)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/costOfServices", nonFhl.expenses.flatMap(_.costOfServices)),
-      resolveNonNegativeNumber("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", nonFhl.expenses.flatMap(_.residentialFinancialCost)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/other", nonFhl.expenses.flatMap(_.other)),
-      resolveMaybeNegativeNumber("/nonFurnishedHolidayLet/expenses/consolidatedExpenses", nonFhl.expenses.flatMap(_.consolidatedExpenses))
+      resolveMaybeNegativeNumber("/ukProperty/income/totalRentsReceived", ukProperty.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber("/ukProperty/income/premiumsOfLeaseGrant", ukProperty.income.flatMap(_.premiumsOfLeaseGrant)),
+      resolveMaybeNegativeNumber("/ukProperty/income/reversePremiums", ukProperty.income.flatMap(_.reversePremiums)),
+      resolveMaybeNegativeNumber("/ukProperty/income/otherPropertyIncome", ukProperty.income.flatMap(_.otherPropertyIncome)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/premisesRunningCosts", ukProperty.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/repairsAndMaintenance", ukProperty.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/financialCosts", ukProperty.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/professionalFees", ukProperty.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/travelCosts", ukProperty.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/costOfServices", ukProperty.expenses.flatMap(_.costOfServices)),
+      resolveNonNegativeNumber("/ukProperty/expenses/residentialFinancialCost", ukProperty.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/other", ukProperty.expenses.flatMap(_.other)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/consolidatedExpenses", ukProperty.expenses.flatMap(_.consolidatedExpenses))
     )
   }
 
@@ -115,15 +109,15 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
       .getOrElse(valid)
   }
 
-  private def validateNonFhlConsolidatedExpenses(nonFhl: NonFurnishedHolidayLet): Validated[Seq[MtdError], Unit] = {
-    nonFhl.expenses
+  private def validateUkPropertyConsolidatedExpenses(ukProperty: UkProperty): Validated[Seq[MtdError], Unit] = {
+    ukProperty.expenses
       .collect {
         case expenses if expenses.consolidatedExpenses.isDefined =>
           expenses match {
-            case NonFHLExpenses(None, None, None, None, None, None, None, None, Some(_)) =>
+            case Expenses(None, None, None, None, None, None, None, None, Some(_)) =>
               valid
             case _ =>
-              Invalid(List(RuleBothExpensesError.withPath("/nonFurnishedHolidayLet/expenses")))
+              Invalid(List(RuleBothExpensesError.withPath("/ukProperty/expenses")))
           }
       }
       .getOrElse(valid)

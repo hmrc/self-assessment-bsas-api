@@ -100,7 +100,7 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             None,
-            requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
+            requestBodyJson.update("/ukProperty/income/totalRentsReceived", JsNumber(2.25)),
             BAD_REQUEST,
             RuleBothPropertiesSuppliedError),
           (

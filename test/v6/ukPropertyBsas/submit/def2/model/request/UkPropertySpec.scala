@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def1.model.request
+package v6.ukPropertyBsas.submit.def2.model.request
 
 import play.api.libs.json.{JsObject, Json}
 import shared.utils.UnitSpec
 
-class NonFurnishedHolidayLetSpec extends UnitSpec {
+class UkPropertySpec extends UnitSpec {
 
   // Use simple case as formats for contents of income/expenses are tested elsewhere...
   private val json = Json.parse("""
@@ -31,37 +31,37 @@ class NonFurnishedHolidayLetSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val nonFurnishedHolidayLet = NonFurnishedHolidayLet(
-    Some(NonFHLIncome(None, None, None, None)),
-    Some(NonFHLExpenses(None, None, None, None, None, None, None, None, None))
+  private val ukProperty = UkProperty(
+    Some(Income(None, None, None, None)),
+    Some(Expenses(None, None, None, None, None, None, None, None, None))
   )
 
-  private val emptyNonFurnishedHolidayLet = NonFurnishedHolidayLet(None, None)
+  private val emptyUkProperty = UkProperty(None, None)
 
   "reads" when {
     "given MTD json" should {
-      "return the corresponding NonFurnishedHolidayLet" in {
-        json.as[NonFurnishedHolidayLet] shouldBe nonFurnishedHolidayLet
+      "return the corresponding UkProperty" in {
+        json.as[UkProperty] shouldBe ukProperty
       }
     }
 
     "given an empty JSON object" should {
-      "return an empty NonFurnishedHolidayLet" in {
-        JsObject.empty.as[NonFurnishedHolidayLet] shouldBe emptyNonFurnishedHolidayLet
+      "return an empty ukProperty" in {
+        JsObject.empty.as[UkProperty] shouldBe emptyUkProperty
       }
     }
   }
 
   "writes" when {
-    "given a NonFurnishedHolidayLet" should {
+    "given a ukProperty" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFurnishedHolidayLet) shouldBe json
+        Json.toJson(ukProperty) shouldBe json
       }
     }
 
     "given an empty NonFurnishedHolidayLet" should {
       "return an empty JSON object" in {
-        Json.toJson(emptyNonFurnishedHolidayLet) shouldBe JsObject.empty
+        Json.toJson(emptyUkProperty) shouldBe JsObject.empty
       }
     }
   }

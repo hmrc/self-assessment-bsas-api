@@ -18,7 +18,7 @@ package v6.ukPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{Json, OFormat}
 
-case class NonFHLExpenses(
+case class Expenses(
     premisesRunningCosts: Option[BigDecimal],
     repairsAndMaintenance: Option[BigDecimal],
     financialCosts: Option[BigDecimal],
@@ -30,6 +30,6 @@ case class NonFHLExpenses(
     consolidatedExpenses: Option[BigDecimal]
 )
 
-object NonFHLExpenses {
-  implicit val format: OFormat[NonFHLExpenses] = Json.format[NonFHLExpenses]
+object Expenses {
+  implicit val format: OFormat[Expenses] = Json.format[Expenses]
 }

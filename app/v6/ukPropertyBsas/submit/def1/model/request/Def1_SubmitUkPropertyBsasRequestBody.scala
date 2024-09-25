@@ -21,7 +21,7 @@ import shared.utils.JsonWritesUtil
 import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestBody
 
 case class Def1_SubmitUkPropertyBsasRequestBody(
-    nonFurnishedHolidayLet: Option[NonFurnishedHolidayLet],
+    ukProperty: Option[UkProperty],
     furnishedHolidayLet: Option[FurnishedHolidayLet]
 ) extends SubmitUkPropertyBsasRequestBody
 
@@ -31,7 +31,7 @@ object Def1_SubmitUkPropertyBsasRequestBody extends JsonWritesUtil {
   implicit val writes: OWrites[Def1_SubmitUkPropertyBsasRequestBody] = new OWrites[Def1_SubmitUkPropertyBsasRequestBody] {
 
     override def writes(o: Def1_SubmitUkPropertyBsasRequestBody): JsObject = {
-      writeIfPresent(o.nonFurnishedHolidayLet, incomeSourceType = "02")
+      writeIfPresent(o.ukProperty, incomeSourceType = "02")
         .orElse(writeIfPresent(o.furnishedHolidayLet, incomeSourceType = "04"))
         .getOrElse(JsObject.empty)
     }

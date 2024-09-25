@@ -2,7 +2,7 @@ get:
   summary: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
   description: |
     This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business 
-    Furnished Holiday Letting (FHL) or a Non FHL UK property. A National Insurance number and Calculation id must be 
+    Furnished Holiday Letting (FHL) or a UK property. A National Insurance number and Calculation id must be 
     provided.
     
     ### Test data
@@ -35,18 +35,10 @@ get:
     | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_PROFIT                  |  Simulates success response with uk property FHL and profit. See below for details about dynamic scenarios.                               |
     | Before 2025-26               | UK_PROPERTY_FHL_LOSS                            |  Simulates success response with uk property FHL and loss.                                                                                |
     | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_LOSS                    |  Simulates success response with uk property FHL and loss. See below for details about dynamic scenarios.                                 |
-    | Before 2025-26               | UK_PROPERTY_NON_FHL_PROFIT                      |  Simulates success response with uk property Non FHL and profit.                                                                          |
-    | Before 2025-26               | DYNAMIC_UK_PROPERTY_NON_FHL_PROFIT              |  Simulates success response with uk property Non FHL and profit. See below for details about dynamic scenarios.                           |
-    | Before 2025-26               | UK_PROPERTY_NON_FHL_LOSS                        |  Simulates success response with uk property Non FHL and loss.                                                                            |
-    | Before 2025-26               | DYNAMIC_UK_PROPERTY_NON_FHL_LOSS                |  Simulates success response with uk property Non FHL and loss. See below for details about dynamic scenarios.                             |
     | Before 2025-26               | UK_PROPERTY_FHL_CONSOLIDATED                    |  Simulates success response with FHL adjusted summary and consolidated expenses.                                                          |
     | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_CONSOLIDATED            |  Simulates success response with FHL adjusted summary and consolidated expenses.See below for details about dynamic scenarios.            |
-    | Before 2025-26               | UK_PROPERTY_NON_FHL_CONSOLIDATED                |  Simulates success response with non FHL adjusted summary and consolidated expenses.                                                      |
-    | Before 2025-26               | DYNAMIC_UK_PROPERTY_NON_FHL_CONSOLIDATED        |  Simulates success response with non FHL adjusted summary and consolidated expenses.See below for details about dynamic scenarios.        |
     | Before 2025-26               | UK_FHL_PROPERTY_ALLOWANCE                       |  Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
     | Before 2025-26               | DYNAMIC_UK_FHL_PROPERTY_ALLOWANCE               |  Simulates success response with FHL adjusted summary and propertyAllowance. See below for details about dynamic scenarios.               |
-    | Before 2025-26               | UK_NON_FHL_PROPERTY_ALLOWANCE                   |  Simulates success response with non FHL adjusted summary and propertyAllowance.                                                          |
-    | Before 2025-26               | DYNAMIC_UK_NON_FHL_PROPERTY_ALLOWANCE           |  Simulates success response with non FHL adjusted summary and propertyAllowance.See below for details about dynamic scenarios.            |
 
 
 
@@ -103,34 +95,34 @@ get:
               description: UK FHL Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_fhl_property.json"
-            PRE-TY-2024-25-UK-Non-FHL-Response:
-              description: UK Non-FHL Response
+            PRE-TY-2024-25-UK-Property-Response:
+              description: UK Property Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_non_fhl_property.json"
-            PRE-TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
-              description: UK Non-FHL with Consolidated Expenses Response
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_property.json"
+            PRE-TY-2024-25-UK-Property-Consolidated-Expenses-Response:
+              description: UK Property with Consolidated Expenses Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_non_fhl_property_consolidated.json"
-            PRE-TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
-              description: UK Non-FHL with Property Allowance Response
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_property_consolidated.json"
+            PRE-TY-2024-25-UK-Property-With-Property-Allowance-Response:
+              description: UK Property with Property Allowance Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieve_uk_property/def1/retrieve_uk_property_allowance.json"
             TY-2024-25-UK-FHL-Response:
               description: UK FHL Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_fhl_property.json"
-            TY-2024-25-UK-Non-FHL-Response:
-              description: UK Non-FHL Response
+            TY-2024-25-UK-Property-Response:
+              description: UK Property Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_non_fhl_property.json"
-            TY-2024-25-UK-Non-FHL-Consolidated-Expenses-Response:
-              description: UK Non-FHL with Consolidated Expenses Response
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property.json"
+            TY-2024-25-UK-Property-Consolidated-Expenses-Response:
+              description: UK Property with Consolidated Expenses Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_non_fhl_property_consolidated.json"
-            TY-2024-25-UK-Non-FHL-Property-Allowance-Response:
-              description: UK Non-FHL with Property Allowance Response
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property_consolidated.json"
+            TY-2024-25-UK-Property-With-Property-Allowance-Response:
+              description: UK Property with Property Allowance Response
               value:
-                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_non_fhl_property_property_allowance.json"
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property_allowance.json"
             TY-2025-26-UK-Property-Response:
               description: UK Property Response
               value:
