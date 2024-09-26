@@ -61,7 +61,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
       def requestBodyWithCountryCode(code: String): JsValue = Json.parse(s"""
            |{
-           |  "nonFurnishedHolidayLet": [
+           |  "foreignProperty": [
            |    {
            |      "countryCode": "$code",
            |      "income": {
@@ -104,21 +104,21 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
             None,
             mtdRequestNonFhlFull,
             BAD_REQUEST,
-            RuleBothExpensesError.copy(paths = Some(List("/nonFurnishedHolidayLet/0/expenses")))),
+            RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/0/expenses")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
-            RuleCountryCodeError.copy(paths = Some(List("/nonFurnishedHolidayLet/0/countryCode")))),
+            RuleCountryCodeError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(List("/nonFurnishedHolidayLet/0/countryCode"))))
+            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

@@ -22,7 +22,7 @@ object SubmitForeignPropertyBsasFixtures {
 
   val mtdRequestNonFhlFull: JsValue = Json.parse("""
       |{
-      |   "nonFurnishedHolidayLet":  [
+      |   "foreignProperty":  [
       |       {
       |          "countryCode": "FRA",
       |          "income": {
@@ -74,7 +74,7 @@ object SubmitForeignPropertyBsasFixtures {
       |""".stripMargin)
 
   val requestNonFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = Some(
+    foreignProperty = Some(
       List(
         ForeignProperty(
           countryCode = "FRA",
@@ -142,7 +142,7 @@ object SubmitForeignPropertyBsasFixtures {
       |""".stripMargin)
 
   val requestFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = None,
+    foreignProperty = None,
     foreignFhlEea = Some(
       FhlEea(
         income = Some(

@@ -35,7 +35,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
         Json
           .parse("""
             |{
-            |  "nonFurnishedHolidayLet": [
+            |  "foreignProperty": [
             |    {
             |      "countryCode": "FRA"
             |    }
