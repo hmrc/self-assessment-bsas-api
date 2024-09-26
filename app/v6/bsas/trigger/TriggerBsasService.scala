@@ -48,7 +48,7 @@ class TriggerBsasService @Inject() (connector: TriggerBsasConnector) extends Bas
       "INVALID_PAYLOAD"             -> InternalError,
       "NO_DATA_FOUND"               -> TriggerNotFoundError,
       "ACCOUNTING_PERIOD_NOT_ENDED" -> RuleAccountingPeriodNotEndedError,
-      "OBLIGATIONS_NOT_MET"         -> RulePeriodicDataIncompleteError,
+      "OBLIGATIONS_NOT_MET"         -> RuleObligationsNotMet,
       "NO_ACCOUNTING_PERIOD"        -> RuleNoAccountingPeriodError,
       "SERVER_ERROR"                -> InternalError,
       "SERVICE_UNAVAILABLE"         -> InternalError
