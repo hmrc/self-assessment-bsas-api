@@ -65,7 +65,7 @@ class BaseDownstreamConnectorSpec extends UnitSpec with MockHttpClient with Mock
     HeaderCarrier(otherHeaders = inputHeaders)
 
   val connector: BaseDownstreamConnector = new BaseDownstreamConnector {
-    val http: HttpClient     = mockHttpClient
+    val http: HttpClient           = mockHttpClient
     val appConfig: SharedAppConfig = mockSharedAppConfig
   }
 

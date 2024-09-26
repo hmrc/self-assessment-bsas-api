@@ -212,8 +212,11 @@ object RequestHandler {
         result
       }
 
-      private def handleFailure(
-          errorWrapper: ErrorWrapper)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: SharedAppConfig): Result = {
+      private def handleFailure(errorWrapper: ErrorWrapper)(implicit
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext,
+          appConfig: SharedAppConfig): Result = {
 
         implicit val apiVersion: Version = Version(request)
         logger.warn(

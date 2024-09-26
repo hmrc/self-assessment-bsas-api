@@ -109,7 +109,8 @@ class ListBsasResponseSpec extends UnitSpec with MockSharedAppConfig with ListBs
         }
 
         "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-          private val result = itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, selfEmploymentBsasResponse, taxYear), bsasSummaryModel)
+          private val result =
+            itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, selfEmploymentBsasResponse, taxYear), bsasSummaryModel)
           result shouldBe Seq(Link(s"/$context/$nino/self-employment/$bsasId?taxYear=2023-24", GET, "self"))
         }
       }
@@ -121,26 +122,30 @@ class ListBsasResponseSpec extends UnitSpec with MockSharedAppConfig with ListBs
         }
 
         "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-          private val result = itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, ukPropertyFhlBsasResponse, taxYear), bsasSummaryModel)
+          private val result =
+            itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, ukPropertyFhlBsasResponse, taxYear), bsasSummaryModel)
           result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId?taxYear=2023-24", GET, "self"))
         }
       }
 
       "given uk-property-non-fhl business type" should {
         "return correct links without tax year" in new TysDisabledTest {
-          private val result = itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, ukPropertyNonFhlBsasResponse, None), bsasSummaryModel)
+          private val result =
+            itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, ukPropertyNonFhlBsasResponse, None), bsasSummaryModel)
           result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId", GET, "self"))
         }
 
         "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-          private val result = itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, ukPropertyNonFhlBsasResponse, taxYear), bsasSummaryModel)
+          private val result =
+            itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, ukPropertyNonFhlBsasResponse, taxYear), bsasSummaryModel)
           result shouldBe Seq(Link(s"/$context/$nino/uk-property/$bsasId?taxYear=2023-24", GET, "self"))
         }
       }
 
       "given foreign-property-fhl-eea business type" should {
         "return correct links without tax year" in new TysDisabledTest {
-          private val result = itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, foreignPropertyFhlEeaBsasResponse, None), bsasSummaryModel)
+          private val result =
+            itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, foreignPropertyFhlEeaBsasResponse, None), bsasSummaryModel)
           result shouldBe Seq(Link(s"/$context/$nino/foreign-property/$bsasId", GET, "self"))
         }
 
@@ -158,7 +163,8 @@ class ListBsasResponseSpec extends UnitSpec with MockSharedAppConfig with ListBs
         }
 
         "return correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
-          private val result = itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, foreignPropertyBsasResponse, taxYear), bsasSummaryModel)
+          private val result =
+            itemLinks(mockSharedAppConfig, listBsas.ListBsasHateoasData(nino, foreignPropertyBsasResponse, taxYear), bsasSummaryModel)
           result shouldBe Seq(Link(s"/$context/$nino/foreign-property/$bsasId?taxYear=2023-24", GET, "self"))
         }
       }
