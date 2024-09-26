@@ -17,7 +17,7 @@
 package v5.bsas.list
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.controllers._
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils._
@@ -33,7 +33,7 @@ class ListBsasController @Inject() (
     service: ListBsasService,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
-)(implicit ec: ExecutionContext, appConfig: AppConfig)
+)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc)
     with Logging {
 

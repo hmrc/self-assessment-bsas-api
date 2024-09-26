@@ -18,27 +18,27 @@ package definition
 
 import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.definition.APIStatus.BETA
 import shared.definition._
 import shared.mocks.MockHttpClient
 import shared.routing.{Version3, Version4, Version5, Version6}
 import shared.utils.UnitSpec
 
-class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
+class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
 
-  class Test extends MockHttpClient with MockAppConfig {
-    MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
-    val apiDefinitionFactory = new BsasApiDefinitionFactory(mockAppConfig)
+  class Test extends MockHttpClient with MockSharedAppConfig {
+    MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
+    val apiDefinitionFactory = new BsasApiDefinitionFactory(mockSharedAppConfig)
   }
 
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
         List(Version3, Version4, Version5, Version6).foreach { version =>
-          MockedAppConfig.apiStatus(version) returns "BETA"
-          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
-          MockedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
+          MockedSharedAppConfig.apiStatus(version) returns "BETA"
+          MockedSharedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockedSharedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
         }
 
         apiDefinitionFactory.definition shouldBe

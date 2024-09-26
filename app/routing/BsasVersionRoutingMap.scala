@@ -17,17 +17,17 @@
 package routing
 
 import play.api.routing.Router
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.routing._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton case class BsasVersionRoutingMap @Inject() (
-    appConfig: AppConfig,
-    defaultRouter: Router,
-    v4Router: v4.Routes,
-    v5Router: v5.Routes,
-    v6Router: v6.Routes
+                                                        appConfig: SharedAppConfig,
+                                                        defaultRouter: Router,
+                                                        v4Router: v4.Routes,
+                                                        v5Router: v5.Routes,
+                                                        v6Router: v6.Routes
 ) extends VersionRoutingMap {
 
   /** Routes corresponding to available versions.

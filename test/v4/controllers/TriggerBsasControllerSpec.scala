@@ -20,7 +20,7 @@ import common.errors.RulePeriodicDataIncompleteError
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -50,7 +50,7 @@ class TriggerBsasControllerSpec
     with MockHateoasFactory
     with MockIdGenerator
     with MockAuditService
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   private val requestData = TriggerBsasRequestData(
     parsedNino,
@@ -159,11 +159,11 @@ class TriggerBsasControllerSpec
 
     protected val requestBodyForController: JsValue = requestBody
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.triggerBsas(validNino)(fakePostRequest(requestBodyForController))

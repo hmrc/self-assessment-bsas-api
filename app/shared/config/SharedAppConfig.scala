@@ -31,7 +31,7 @@ import java.time.temporal.ChronoField
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject() (config: ServicesConfig, protected[config] val configuration: Configuration) {
+class SharedAppConfig @Inject()(config: ServicesConfig, protected[config] val configuration: Configuration) {
   // API name
   def appName: String = config.getString("appName")
 

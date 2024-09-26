@@ -18,7 +18,7 @@ package v5.bsas.trigger
 
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.controllers._
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
@@ -38,7 +38,7 @@ class TriggerBsasController @Inject() (
     val idGenerator: IdGenerator
 )(implicit
     ec: ExecutionContext,
-    appConfig: AppConfig
+    appConfig: SharedAppConfig
 ) extends AuthorisedController(cc)
     with Logging {
 

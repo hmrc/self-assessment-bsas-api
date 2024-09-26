@@ -18,7 +18,7 @@ package v4.controllers
 
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.controllers._
 import shared.hateoas.HateoasFactory
 import shared.routing.Version
@@ -42,7 +42,7 @@ class SubmitSelfEmploymentBsasController @Inject() (
     auditService: AuditService,
     cc: ControllerComponents,
     val idGenerator: IdGenerator
-)(implicit ec: ExecutionContext, appConfig: AppConfig)
+)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName = "submit-self-employment-bsas"

@@ -18,7 +18,7 @@ package v4.controllers
 
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
 import shared.models.domain.{BusinessId, TaxYear}
@@ -45,7 +45,7 @@ class ListBsasControllerSpec
     with MockListBsasValidatorFactory
     with MockListBsasService
     with MockHateoasFactory
-    with MockAppConfig
+    with MockSharedAppConfig
     with HateoasLinks
     with MockIdGenerator
     with ListBsasFixture {
@@ -56,8 +56,8 @@ class ListBsasControllerSpec
   "list bsas" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedSharedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -76,8 +76,8 @@ class ListBsasControllerSpec
       }
 
       "valid request with no taxYear path parameter" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedSharedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         override def maybeTaxYear: Option[String] = None
 
@@ -130,11 +130,11 @@ class ListBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     val requestData: ListBsasRequestData = ListBsasRequestData(
       nino = parsedNino,
@@ -169,7 +169,7 @@ class ListBsasControllerSpec
             List(
               HateoasWrapper(
                 bsasSummaryModel,
-                List(getSelfEmploymentBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
+                List(getSelfEmploymentBsas(mockSharedAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", None))
               ))
           ),
           BusinessSourceSummary(
@@ -180,7 +180,7 @@ class ListBsasControllerSpec
             List(
               HateoasWrapper(
                 bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5"),
-                List(getUkPropertyBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
+                List(getUkPropertyBsas(mockSharedAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5", None))
               ))
           ),
           BusinessSourceSummary(
@@ -191,12 +191,12 @@ class ListBsasControllerSpec
             List(
               HateoasWrapper(
                 bsasSummaryModel.copy(calculationId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6"),
-                List(getUkPropertyBsas(mockAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
+                List(getUkPropertyBsas(mockSharedAppConfig, validNino, "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6", None))
               ))
           )
         )
       ),
-      List(triggerBsas(mockAppConfig, validNino), listBsas(mockAppConfig, validNino, None))
+      List(triggerBsas(mockSharedAppConfig, validNino), listBsas(mockSharedAppConfig, validNino, None))
     )
 
     protected def callController(): Future[Result] =

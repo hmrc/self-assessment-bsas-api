@@ -17,7 +17,7 @@
 package v4.controllers
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.controllers._
 import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
@@ -36,7 +36,7 @@ class ListBsasController @Inject() (val authService: EnrolmentsAuthService,
                                     service: ListBsasService,
                                     hateoasFactory: HateoasFactory,
                                     cc: ControllerComponents,
-                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc)
     with Logging {
 
