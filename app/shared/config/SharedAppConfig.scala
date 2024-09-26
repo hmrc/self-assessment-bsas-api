@@ -31,6 +31,7 @@ import java.time.temporal.ChronoField
 import javax.inject.{Inject, Singleton}
 
 @Singleton
+// Do not extend/sub-class this class, instead make your own api-specific config file and pass in separately
 class SharedAppConfig @Inject() (val config: ServicesConfig, protected[config] val configuration: Configuration) extends AppConfigBase {
   // API name
   def appName: String = config.getString("appName")
