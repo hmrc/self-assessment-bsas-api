@@ -71,7 +71,7 @@ class TriggerBsasServiceSpec extends ServiceSpec {
       val errors = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("ACCOUNTING_PERIOD_NOT_ENDED", RuleAccountingPeriodNotEndedError),
-        ("OBLIGATIONS_NOT_MET", RulePeriodicDataIncompleteError),
+        ("OBLIGATIONS_NOT_MET", RuleObligationsNotMet),
         ("NO_ACCOUNTING_PERIOD", RuleNoAccountingPeriodError),
         ("NO_DATA_FOUND", TriggerNotFoundError),
         ("INVALID_PAYLOAD", InternalError),
