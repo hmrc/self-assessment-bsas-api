@@ -17,7 +17,7 @@
 package config
 
 import play.api.Configuration
-import shared.config.FeatureSwitches
+import shared.config.{AppConfigBase, FeatureSwitches}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 /** Put API-specific config here...
   */
 @Singleton
-class BsasConfig @Inject() (config: ServicesConfig, configuration: Configuration) {
+class BsasConfig @Inject() (val config: ServicesConfig, val configuration: Configuration) extends AppConfigBase {
 
   def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
