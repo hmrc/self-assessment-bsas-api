@@ -12,7 +12,7 @@ post:
     |---------|----------------------------------|------------------------------------------------------------------------------------------------------------------------------|
     |ALL      | N/A - DEFAULT                    | Simulates success response.                                                                                                  |
     |ALL      | NO_ACCOUNTING_PERIOD             | Simulates the scenario where the supplied accounting period does not exist.                                                  |
-    |ALL      | OBLIGATIONS_NOT_MET              | Simulates the scenario where obligations for business have not been met.                                                     |
+    |ALL      | OBLIGATIONS_NOT_MET              | Simulates the scenario where obligations for the business have not been met.                                                 |
     |ALL      | ACCOUNTING_PERIOD_NOT_ENDED      | Simulates the scenario where the supplied accounting period has not ended.                                                   |
     |ALL      | NOT_FOUND                        | Simulates the scenario where no data is found.                                                                               |
     |ALL      | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                                                                  |
