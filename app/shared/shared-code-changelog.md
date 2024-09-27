@@ -10,7 +10,7 @@ Place new items at the top, and auto-format the file...
 ## September 26 2024: SharedAppConfig
 
 * Renamed AppConfig -> SharedAppConfig
-* Extracted trait AppConfigBase with relevant methods
+* Extracted trait AppConfigBase; make sure your API config extends this
 * Added two methods to trait EnumJsonSpecSupport (testSerialization and testDeserialization)
 * Added method to ValueFormatError (forPathAndMin)
 
