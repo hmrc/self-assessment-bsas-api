@@ -105,7 +105,7 @@ class Def2_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
     "writing a full ukProperty model" should {
       "return the downstream JSON" in {
-        Json.toJson(requestUkPropertyFull) shouldBe downstreamRequestNonFhlFull
+        Json.toJson(requestUkPropertyFull) shouldBe downstreamRequestUkPropertyFull
       }
     }
 

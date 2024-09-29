@@ -33,10 +33,10 @@ class AdjustmentsIncomeSpec extends UnitSpec with JsonErrorValidators with Round
   )(readsFhl)
 
   testRoundTrip(
-    "Adjustments Income Non-FHL",
+    "Adjustments Income Uk Property",
     downstreamAdjustmentsIncomeJson,
-    adjustmentsIncomeNonFhl,
-    mtdAdjustmentsIncomeNonFhlJson
-  )(readsNonFhl)
+    adjustmentsIncomeUkProperty,
+    mtdAdjustmentsIncomeUkPropertyJson
+  )(readsUkProperty)
 
 }

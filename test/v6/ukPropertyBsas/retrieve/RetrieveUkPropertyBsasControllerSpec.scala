@@ -60,17 +60,17 @@ class RetrieveUkPropertyBsasControllerSpec
         )
       }
     }
-    "return OK for non-FHL" when {
+    "return OK for Uk Property" when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveUkPropertyBsasService
           .retrieveBsas(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseNonFhl))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseUkProperty))))
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseNonFhlJson)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseUkPropertyJson)
         )
       }
     }

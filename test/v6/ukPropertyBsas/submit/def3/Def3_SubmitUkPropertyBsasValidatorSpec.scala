@@ -190,7 +190,7 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "an invalid non-fhl consolidated expenses request is supplied for a previous schema" in {
+      "an invalid Uk Property consolidated expenses request is supplied for a previous schema" in {
         val result = validator(validNino, validCalculationId, None, invalidUkPropertyConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Left(

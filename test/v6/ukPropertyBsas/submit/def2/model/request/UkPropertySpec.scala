@@ -59,7 +59,7 @@ class UkPropertySpec extends UnitSpec {
       }
     }
 
-    "given an empty NonFurnishedHolidayLet" should {
+    "given an empty ukProperty" should {
       "return an empty JSON object" in {
         Json.toJson(emptyUkProperty) shouldBe JsObject.empty
       }

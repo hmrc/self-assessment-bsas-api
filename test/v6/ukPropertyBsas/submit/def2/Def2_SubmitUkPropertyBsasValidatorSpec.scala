@@ -403,7 +403,7 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "passed consolidated and separate non-fhl expenses" in {
+      "passed consolidated and separate Uk Property expenses" in {
         val body   = ukPropertyBodyJson.update("ukProperty/expenses/consolidatedExpenses", JsNumber(123.45))
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 

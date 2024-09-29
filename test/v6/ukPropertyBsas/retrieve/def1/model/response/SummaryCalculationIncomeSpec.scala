@@ -33,10 +33,10 @@ class SummaryCalculationIncomeSpec extends UnitSpec with JsonErrorValidators wit
   )(readsFhl)
 
   testRoundTrip(
-    "Summary Calculation Income Non-FHL",
+    "Summary Calculation Income Uk Property",
     downstreamSummaryCalculationIncomeJson,
-    summaryCalculationIncomeNonFhl,
-    mtdSummaryCalculationIncomeNonFhlJson
-  )(readsNonFhl)
+    summaryCalculationIncomeUkProperty,
+    mtdSummaryCalculationIncomeUkPropertyJson
+  )(readsUkProperty)
 
 }

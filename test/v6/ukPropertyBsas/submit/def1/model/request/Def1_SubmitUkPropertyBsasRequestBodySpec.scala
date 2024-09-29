@@ -57,8 +57,8 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
 
-    "reading a full non-fhl body" should {
-      "return the expected non-fhl model" in {
+    "reading a full Uk Property body" should {
+      "return the expected Uk Property model" in {
         mtdRequestUkPropertyFull.as[Def1_SubmitUkPropertyBsasRequestBody] shouldBe requestUkPropertyFull
       }
     }
@@ -105,7 +105,7 @@ class Def1_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
     "writing a full ukProperty model" should {
       "return the downstream JSON" in {
-        Json.toJson(requestUkPropertyFull) shouldBe downstreamRequestNonFhlFull
+        Json.toJson(requestUkPropertyFull) shouldBe downstreamRequestUkPropertyFull
       }
     }
 

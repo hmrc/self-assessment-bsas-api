@@ -57,7 +57,7 @@ class ExpensesSpec extends UnitSpec {
     }
 
     "given an empty JSON object" should {
-      "return an empty NonFHLExpenses" in {
+      "return an empty ukPropertyExpenses" in {
         JsObject.empty.as[Expenses] shouldBe emptyExpenses
       }
     }

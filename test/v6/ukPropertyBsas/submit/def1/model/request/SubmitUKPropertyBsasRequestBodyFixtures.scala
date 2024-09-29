@@ -94,7 +94,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val ukPropertyBody: Def1_SubmitUkPropertyBsasRequestBody = requestUkPropertyFull
 
-  val downstreamRequestNonFhlFull: JsValue = Json.parse("""
+  val downstreamRequestUkPropertyFull: JsValue = Json.parse("""
       |{
       |  "incomeSourceType": "02",
       |  "adjustments": {
@@ -119,7 +119,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val nonFHLExpensesAllFields: Option[JsObject] = Some(
+  val ukPropertyExpensesAllFields: Option[JsObject] = Some(
     Json.obj(
       "premisesRunningCosts"     -> 6.45,
       "repairsAndMaintenance"    -> 7.45,
@@ -183,7 +183,7 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       "travelCosts"           -> 9.45
     ))
 
-  val nonFHLIncomeAllFields: Option[JsObject] = Some(
+  val ukPropertyIncomeAllFields: Option[JsObject] = Some(
     Json.obj(
       "totalRentsReceived"   -> 1.45,
       "premiumsOfLeaseGrant" -> 2.45,
