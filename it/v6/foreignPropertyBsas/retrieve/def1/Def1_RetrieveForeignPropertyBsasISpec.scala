@@ -27,9 +27,9 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
   retrieveForeignPropertyBsasDesFhlJson,
-  retrieveForeignPropertyBsasDesNonFhlJson,
+  retrieveForeignPropertyBsasDesJson,
   retrieveForeignPropertyBsasMtdFhlJson,
-  retrieveForeignPropertyBsasMtdNonFhlJson
+  retrieveForeignPropertyBsasMtdJson
 }
 import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
 import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures
@@ -39,11 +39,11 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
       "valid request is made and Non-fhl is returned" in new NonTysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson)
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdNonFhlJson
+        response.json shouldBe retrieveForeignPropertyBsasMtdJson
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
@@ -61,11 +61,11 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       }
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson)
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdNonFhlJson
+        response.json shouldBe retrieveForeignPropertyBsasMtdJson
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 

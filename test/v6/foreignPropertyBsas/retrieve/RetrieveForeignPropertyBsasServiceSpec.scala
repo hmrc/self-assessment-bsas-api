@@ -37,7 +37,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
 
   val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
 
-  val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponse
+  val response: RetrieveForeignPropertyBsasResponse = parsedRetrieveForeignPropertyBsasResponse
 
   trait Test extends MockRetrieveForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -61,7 +61,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
       "downstream returns a success response with invalid type of business" should {
         List("01", "02", "04").foreach(incomeSourceType =>
           s"return an error for $incomeSourceType" in new Test {
-            val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponseWith(incomeSourceType.toString)
+            val response: RetrieveForeignPropertyBsasResponse = parsedRetrieveForeignPropertyBsasResponseWith(incomeSourceType.toString)
 
             MockRetrieveForeignPropertyBsasConnector
               .retrieveForeignPropertyBsas(request)

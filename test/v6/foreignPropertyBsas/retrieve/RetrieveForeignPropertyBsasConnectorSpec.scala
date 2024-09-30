@@ -38,7 +38,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   "retrieveForeignPropertyBsas" should {
     "return a valid response" when {
-      val outcome = Right(ResponseWrapper(correlationId, parsedNonFhlRetrieveForeignPropertyBsasResponse))
+      val outcome = Right(ResponseWrapper(correlationId, parsedRetrieveForeignPropertyBsasResponse))
 
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData =

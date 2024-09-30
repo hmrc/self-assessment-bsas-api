@@ -51,9 +51,9 @@ object SummaryCalculation {
       Reads.pure(None)
   )(SummaryCalculation.apply _)
 
-  val readsNonFhl: Reads[SummaryCalculation] = (
+  val reads: Reads[SummaryCalculation] = (
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsNonFhl) and
+      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.reads) and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
       (JsPath \ "expenses").readNullable[SummaryCalculationExpenses] and
       (JsPath \ "netProfit").readNullable[BigDecimal] and
@@ -61,7 +61,7 @@ object SummaryCalculation {
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and
       (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsNonFhl) and
+      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.reads) and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal] and
       (JsPath \ "countryLevelDetail").readNullable[Seq[SummaryCalculationCountryLevelDetail]]

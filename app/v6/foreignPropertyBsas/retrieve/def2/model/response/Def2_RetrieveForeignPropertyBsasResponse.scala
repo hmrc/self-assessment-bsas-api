@@ -40,7 +40,7 @@ object Def2_RetrieveForeignPropertyBsasResponse {
 
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation]
 
-      adjustments <- nonFhlAdjustmentsReads(json)
+      adjustments <- AdjustmentsReads(json)
 
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation]
 
@@ -52,7 +52,7 @@ object Def2_RetrieveForeignPropertyBsasResponse {
       adjustedSummaryCalculation = adjustedSummaryCalculation
     )
 
-  private def nonFhlAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+  private def AdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments")
       .validateOpt[Seq[Adjustments]]
       .map(s => Some(Adjustments(s, None, None, None)))

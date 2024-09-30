@@ -45,7 +45,7 @@ object AdjustmentsExpenses {
       (JsPath \ "travelCosts").readNullable[BigDecimal]
   )(AdjustmentsExpenses.apply _)
 
-  val readsNonFhl: Reads[AdjustmentsExpenses] = (
+  val reads: Reads[AdjustmentsExpenses] = (
     (JsPath \ "consolidatedExpenses").readNullable[BigDecimal] and
       (JsPath \ "premisesRunningCosts").readNullable[BigDecimal] and
       (JsPath \ "repairsAndMaintenance").readNullable[BigDecimal] and

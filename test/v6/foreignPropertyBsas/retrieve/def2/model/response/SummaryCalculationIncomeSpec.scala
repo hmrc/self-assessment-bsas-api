@@ -23,10 +23,7 @@ import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
 class SummaryCalculationIncomeSpec extends UnitSpec with RoundTripTest {
   import SummaryCalculationIncome._
 
-  testRoundTrip(
-    "Summary Calculation Income ",
-    summaryCalculationIncomeDesJson,
-    parsedNonFhlSummaryCalculationIncome,
-    summaryCalculationIncomeMtdNonFhlJson)(reads)
+  testRoundTrip("Summary Calculation Income ", summaryCalculationIncomeDesJson, parsedSummaryCalculationIncome, summaryCalculationIncomeMtdJson)(
+    reads)
 
 }
