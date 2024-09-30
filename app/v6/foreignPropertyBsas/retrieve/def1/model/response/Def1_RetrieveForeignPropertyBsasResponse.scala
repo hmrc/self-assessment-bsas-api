@@ -45,7 +45,7 @@ object Def1_RetrieveForeignPropertyBsasResponse {
         if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.reads
       )
 
-      adjustments <- if (isFhl) fhlEeaAdjustmentsReads(json) else AdjustmentsReads(json)
+      adjustments <- if (isFhl) fhlEeaAdjustmentsReads(json) else adjustmentsReads(json)
 
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation](
         if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.reads
@@ -61,7 +61,7 @@ object Def1_RetrieveForeignPropertyBsasResponse {
   private def fhlEeaAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments").validateOpt[Adjustments](Adjustments.readsFhl)
 
-  private def AdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+  private def adjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments")
       .validateOpt[Seq[Adjustments]](Adjustments.readsSeq)
       .map(s => Some(Adjustments(s, None, None, None)))
