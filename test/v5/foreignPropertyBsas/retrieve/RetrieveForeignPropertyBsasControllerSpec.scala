@@ -19,7 +19,7 @@ package v5.foreignPropertyBsas.retrieve
 import common.errors._
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.CalculationId
 import shared.models.errors._
@@ -40,7 +40,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockRetrieveForeignPropertyBsasValidatorFactory
     with MockRetrieveForeignPropertyBsasService
     with MockIdGenerator
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
@@ -90,11 +90,11 @@ class RetrieveForeignPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)

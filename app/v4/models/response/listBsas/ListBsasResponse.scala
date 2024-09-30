@@ -20,7 +20,7 @@ import shared.hateoas.{HateoasData, HateoasListLinksFactory, Link}
 import shared.models.domain.TaxYear
 import cats.Functor
 import play.api.libs.json.{Json, OWrites, Reads, Writes}
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import v4.hateoas.HateoasLinks
 import v4.models.domain.TypeOfBusiness._
 
@@ -34,12 +34,12 @@ object ListBsasResponse extends HateoasLinks {
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListBsasResponse, BsasSummary, ListBsasHateoasData] {
 
-    override def links(appConfig: AppConfig, data: ListBsasHateoasData): Seq[Link] = Seq(
+    override def links(appConfig: SharedAppConfig, data: ListBsasHateoasData): Seq[Link] = Seq(
       triggerBsas(appConfig, data.nino),
       listBsas(appConfig, data.nino, data.taxYear)
     )
 
-    override def itemLinks(appConfig: AppConfig, data: ListBsasHateoasData, item: BsasSummary): Seq[Link] = {
+    override def itemLinks(appConfig: SharedAppConfig, data: ListBsasHateoasData, item: BsasSummary): Seq[Link] = {
       val filteredSummary: Seq[BusinessSourceSummary[BsasSummary]] = data.listBsasResponse.businessSources.filter(_.summaries.contains(item))
 
       filteredSummary.flatMap(summary =>

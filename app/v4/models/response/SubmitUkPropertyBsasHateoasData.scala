@@ -16,7 +16,7 @@
 
 package v4.models.response
 
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
 import v4.hateoas.HateoasLinks
@@ -25,7 +25,7 @@ object SubmitUkPropertyBsasHateoasData extends HateoasLinks {
 
   implicit object SubmitPropertyAdjustmentHateoasFactory extends HateoasLinksFactory[Unit, SubmitUkPropertyBsasHateoasData] {
 
-    override def links(appConfig: AppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: SubmitUkPropertyBsasHateoasData): Seq[Link] = {
 
       import data._
 

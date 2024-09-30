@@ -46,7 +46,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
     protected val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(
       http = mockHttpClient,
-      appConfig = mockAppConfig
+      appConfig = mockSharedAppConfig
     )
 
   }

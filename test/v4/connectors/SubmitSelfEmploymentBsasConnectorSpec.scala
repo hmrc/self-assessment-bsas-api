@@ -40,7 +40,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
-    val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
   }
 
   "submitBsas" must {

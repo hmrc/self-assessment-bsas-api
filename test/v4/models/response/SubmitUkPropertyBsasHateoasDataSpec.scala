@@ -17,7 +17,7 @@
 package v4.models.response
 
 import play.api.Configuration
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
@@ -26,22 +26,22 @@ import shared.utils.UnitSpec
 class SubmitUkPropertyBsasHateoasDataSpec extends UnitSpec {
 
   "HateoasFactory" must {
-    class Test extends MockAppConfig {
-      val hateoasFactory = new HateoasFactory(mockAppConfig)
+    class Test extends MockSharedAppConfig {
+      val hateoasFactory = new HateoasFactory(mockSharedAppConfig)
       val nino           = "someNino"
       val calcId         = "anId"
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
       val context        = "individuals/self-assessment/adjustable-summary"
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+      MockedSharedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "return the correct links without tax year" in new TysDisabledTest {

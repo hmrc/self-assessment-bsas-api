@@ -107,7 +107,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
       Def1_ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
 
     protected val connector: ListBsasConnector =
-      new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new ListBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     protected def stubHttpResponse(
         outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]

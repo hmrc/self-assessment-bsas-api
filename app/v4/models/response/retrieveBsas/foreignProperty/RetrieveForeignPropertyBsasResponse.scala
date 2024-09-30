@@ -17,7 +17,7 @@
 package v4.models.response.retrieveBsas.foreignProperty
 
 import play.api.libs.json._
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
 import v4.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
@@ -72,7 +72,7 @@ object RetrieveForeignPropertyBsasResponse {
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
       extends HateoasLinksFactory[RetrieveForeignPropertyBsasResponse, RetrieveForeignPropertyHateoasData] {
 
-    override def links(appConfig: AppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: RetrieveForeignPropertyHateoasData): Seq[Link] = {
       import data._
 
       Seq(

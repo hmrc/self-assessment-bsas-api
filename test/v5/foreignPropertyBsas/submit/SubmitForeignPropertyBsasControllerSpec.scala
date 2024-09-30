@@ -20,7 +20,7 @@ import common.errors._
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
@@ -42,7 +42,7 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockSubmitForeignPropertyBsasService
     with MockAuditService
     with MockIdGenerator
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
   private val rawTaxYear    = "2023-24"
@@ -143,11 +143,11 @@ class SubmitForeignPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     override protected def callController(): Future[Result] =
       controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))

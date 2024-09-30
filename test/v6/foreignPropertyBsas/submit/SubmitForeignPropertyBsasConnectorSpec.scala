@@ -33,7 +33,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
-    val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     def requestWith(taxYear: Option[TaxYear]): SubmitForeignPropertyBsasRequestData =
       Def3_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, parsedSubmitForeignPropertyBsasRequestBody)

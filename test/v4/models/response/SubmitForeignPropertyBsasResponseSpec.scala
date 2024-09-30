@@ -17,35 +17,35 @@
 package v4.models.response
 
 import play.api.Configuration
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.hateoas.Link
 import shared.hateoas.Method.GET
 import shared.models.domain.TaxYear
 import shared.utils.UnitSpec
 
-class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig {
+class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockSharedAppConfig {
 
-  class Test extends MockAppConfig {
+  class Test extends MockSharedAppConfig {
     val nino    = "someNino"
     val bsasId  = "anId"
     val taxYear = Some(TaxYear.fromMtd("2023-24"))
     val context = "individuals/self-assessment/adjustable-summary"
 
-    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+    MockedSharedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
   }
 
   class TysDisabledTest extends Test {
-    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
   }
 
   class TysEnabledTest extends Test {
-    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
   }
 
   "LinksFactory" should {
     "return the correct links without tax year" in new TysDisabledTest {
       private val data         = SubmitForeignPropertyBsasHateoasData(nino, bsasId, None)
-      private val result       = SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val result       = SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory.links(mockSharedAppConfig, data)
       private val expectedLink = Link(s"/$context/$nino/foreign-property/$bsasId", GET, "self")
 
       result shouldBe Seq(expectedLink)
@@ -53,7 +53,7 @@ class SubmitForeignPropertyBsasResponseSpec extends UnitSpec with MockAppConfig 
 
     "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
       private val data         = SubmitForeignPropertyBsasHateoasData(nino, bsasId, taxYear)
-      private val result       = SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val result       = SubmitForeignPropertyBsasResponse.SubmitForeignPropertyAdjustmentHateoasFactory.links(mockSharedAppConfig, data)
       private val expectedLink = Link(s"/$context/$nino/foreign-property/$bsasId?taxYear=2023-24", GET, "self")
 
       result shouldBe Seq(expectedLink)

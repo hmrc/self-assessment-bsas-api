@@ -20,7 +20,7 @@ import shared.hateoas.HateoasLinksFactory
 import shared.hateoas.{HateoasData, Link}
 import shared.models.domain.TaxYear
 import play.api.libs.json._
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import v4.hateoas.HateoasLinks
 import v4.models.domain.{HasTypeOfBusiness, TypeOfBusiness}
 
@@ -61,7 +61,7 @@ object RetrieveUkPropertyBsasResponse extends HateoasLinks {
   implicit object RetrieveSelfAssessmentBsasHateoasFactory
       extends HateoasLinksFactory[RetrieveUkPropertyBsasResponse, RetrieveUkPropertyHateoasData] {
 
-    override def links(appConfig: AppConfig, data: RetrieveUkPropertyHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: RetrieveUkPropertyHateoasData): Seq[Link] = {
       import data._
 
       Seq(

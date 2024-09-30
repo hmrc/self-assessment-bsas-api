@@ -17,29 +17,29 @@
 package v4.models.response
 
 import play.api.Configuration
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.hateoas.Link
 import shared.hateoas.Method.GET
 import shared.models.domain.TaxYear
 import shared.utils.UnitSpec
 
-class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
+class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockSharedAppConfig {
 
-  class Test extends MockAppConfig {
+  class Test extends MockSharedAppConfig {
     val nino          = "someNino"
     val calculationId = "anId"
     val taxYear       = Some(TaxYear.fromMtd("2023-24"))
     val context       = "individuals/self-assessment/adjustable-summary"
 
-    MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+    MockedSharedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
   }
 
   class TysDisabledTest extends Test {
-    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
   }
 
   class TysEnabledTest extends Test {
-    MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
   }
 
   "LinksFactory" should {
@@ -48,14 +48,14 @@ class SubmitSelfEmploymentBsasResponseSpec extends UnitSpec with MockAppConfig {
       private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId", method = GET, rel = "self")
 
       val result: Seq[Link] =
-        SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
+        SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockSharedAppConfig, data)
 
       result shouldBe Seq(expectedLink)
     }
 
     "return the correct links with TYS enabled and the tax year is TYS" in new TysEnabledTest {
       private val data         = SubmitSelfEmploymentBsasHateoasData(nino, calculationId, taxYear)
-      private val result       = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockAppConfig, data)
+      private val result       = SubmitSelfEmploymentBsasResponse.SubmitSelfEmploymentAdjustmentHateoasFactory.links(mockSharedAppConfig, data)
       private val expectedLink = Link(href = s"/$context/$nino/self-employment/$calculationId?taxYear=2023-24", method = GET, rel = "self")
 
       result shouldBe Seq(expectedLink)
