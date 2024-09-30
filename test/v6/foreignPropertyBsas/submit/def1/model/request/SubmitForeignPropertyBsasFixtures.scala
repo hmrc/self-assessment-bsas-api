@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 
 object SubmitForeignPropertyBsasFixtures {
 
-  val mtdRequestNonFhlFull: JsValue = Json.parse("""
+  val mtdRequestFull: JsValue = Json.parse("""
       |{
       |   "foreignProperty":  [
       |       {
@@ -46,7 +46,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamRequestNonFhlFull: JsValue = Json.parse("""
+  val downstreamRequestFull: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "15",
       |   "adjustments":  [
@@ -73,7 +73,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
+  val requestFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
     foreignProperty = Some(
       List(
         ForeignProperty(

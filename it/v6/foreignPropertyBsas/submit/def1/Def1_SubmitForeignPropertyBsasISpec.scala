@@ -25,11 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{
-  downstreamRequestValid,
-  mtdRequestNonFhlFull,
-  mtdRequestValid
-}
+import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 
 class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
@@ -102,7 +98,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             None,
-            mtdRequestNonFhlFull,
+            mtdRequestFull,
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/0/expenses")))),
           (

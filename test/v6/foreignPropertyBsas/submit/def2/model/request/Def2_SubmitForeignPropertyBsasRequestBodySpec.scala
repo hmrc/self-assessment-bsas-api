@@ -24,7 +24,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
   private val parsedEmptyRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None, None)
 
-  private val parsedNonFhlRequestBody =
+  private val parsedRequestBody =
     Def2_SubmitForeignPropertyBsasRequestBody(Some(List(ForeignProperty("FRA", None, None))), None)
 
   private val parsedFhlRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None, Some(FhlEea(None, None)))
@@ -42,7 +42,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
             |  ]
             |}
             |""".stripMargin)
-          .as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedNonFhlRequestBody
+          .as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedRequestBody
       }
     }
 
@@ -63,7 +63,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
     "given a full non-fhl body" should {
       "return the expected non-fhl data object" in {
-        mtdRequestNonFhlFull.as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe requestNonFhlFull
+        mtdRequestFull.as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe requestFull
       }
     }
 
@@ -83,7 +83,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "given a simple non-fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(parsedNonFhlRequestBody) shouldBe Json.parse("""
+        Json.toJson(parsedRequestBody) shouldBe Json.parse("""
             |{
             |  "incomeSourceType": "15",
             |  "adjustments": [
@@ -112,7 +112,7 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 
     "given a full non-fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(requestNonFhlFull) shouldBe downstreamRequestNonFhlFull
+        Json.toJson(requestFull) shouldBe downstreamRequestFull
       }
     }
 

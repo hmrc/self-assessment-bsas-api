@@ -73,11 +73,11 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       |  }
       |}""".stripMargin)
 
-  private def foreignPropertyBodyWith(nonFhlEntries: JsValue*): JsObject =
+  private def foreignPropertyBodyWith(Entries: JsValue*): JsObject =
     Json
       .parse(
         s"""{
-         |  "foreignProperty": ${JsArray(nonFhlEntries)}
+         |  "foreignProperty": ${JsArray(Entries)}
          |}
          |""".stripMargin
       )

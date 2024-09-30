@@ -28,8 +28,8 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
-  mtdRequestNonFhlFull,
-  mtdRequestNonFhlValid,
+  mtdRequestFull,
+  mtdRequestForeignPropertyValid,
   mtdRequestValid
 }
 
@@ -104,7 +104,7 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             Some("2023-24"),
-            mtdRequestNonFhlFull,
+            mtdRequestFull,
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/0/expenses")))),
           (
@@ -125,7 +125,7 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
             Some("2024-25"),
-            mtdRequestNonFhlValid,
+            mtdRequestForeignPropertyValid,
             BAD_REQUEST,
             ValueFormatError.copy(
               message = "The value must be between 0 and 99999999999.99",
