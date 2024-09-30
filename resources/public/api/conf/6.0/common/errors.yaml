@@ -105,11 +105,11 @@ components:
         code: RULE_SUMMARY_STATUS_SUPERSEDED
         message: A newer summary calculation exists for this accounting period
 
-    rulePeriodicDataIncomplete:
-      description: One or more periodic updates are missing for this accounting period.
+    ruleObligationsNotMet:
+      description: The obligations for the business have not been met.
       value:
-        code: RULE_PERIODIC_DATA_INCOMPLETE
-        message: One or more periodic updates are missing for this accounting period
+        code: RULE_OBLIGATIONS_NOT_MET
+        message: The obligations for the business have not been met
 
     ruleEndDateBeforeStartDate:
       description: The accounting period end date value is before the start date.

@@ -7,12 +7,12 @@ post:
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
-     
+    
     |Tax year | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                     |
     |---------|----------------------------------|------------------------------------------------------------------------------------------------------------------------------|
     |ALL      | N/A - DEFAULT                    | Simulates success response.                                                                                                  |
     |ALL      | NO_ACCOUNTING_PERIOD             | Simulates the scenario where the supplied accounting period does not exist.                                                  |
-    |ALL      | PERIODIC_DATA_INCOMPLETE         | Simulates the scenario where one or more periodic updates are missing for this accounting period.                            |
+    |ALL      | OBLIGATIONS_NOT_MET              | Simulates the scenario where obligations for the business have not been met.                                                 |
     |ALL      | ACCOUNTING_PERIOD_NOT_ENDED      | Simulates the scenario where the supplied accounting period has not ended.                                                   |
     |ALL      | NOT_FOUND                        | Simulates the scenario where no data is found.                                                                               |
     |ALL      | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                                                                  |
@@ -127,8 +127,8 @@ post:
               $ref: "./common/errors.yaml#/components/examples/ruleAccountingPeriodNotSupported"
             RULE_ACCOUNTING_PERIOD_NOT_ENDED:
               $ref: "./common/errors.yaml#/components/examples/ruleAccountingPeriodNotEnded"
-            RULE_PERIODIC_DATA_INCOMPLETE:
-              $ref: "./common/errors.yaml#/components/examples/rulePeriodicDataIncomplete"
+            RULE_OBLIGATIONS_NOT_MET:
+              $ref: "./common/errors.yaml#/components/examples/ruleObligationsNotMet"
             RULE_NO_ACCOUNTING_PERIOD:
               $ref: "./common/errors.yaml#/components/examples/ruleNoAccountingPeriod"
             RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:

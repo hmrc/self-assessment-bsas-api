@@ -118,9 +118,9 @@ class TriggerBsasControllerSpec
 
         MockTriggerBsasService
           .triggerBsas(requestDataDef1)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, RulePeriodicDataIncompleteError))))
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleObligationsNotMet))))
 
-        runErrorTestWithAudit(RulePeriodicDataIncompleteError, maybeAuditRequestBody = Some(requestBody))
+        runErrorTestWithAudit(RuleObligationsNotMet, maybeAuditRequestBody = Some(requestBody))
       }
     }
   }
@@ -176,9 +176,9 @@ class TriggerBsasControllerSpec
 
         MockTriggerBsasService
           .triggerBsas(requestDataDef2)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, RulePeriodicDataIncompleteError))))
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleObligationsNotMet))))
 
-        runErrorTestWithAudit(RulePeriodicDataIncompleteError, maybeAuditRequestBody = Some(requestBody))
+        runErrorTestWithAudit(RuleObligationsNotMet, maybeAuditRequestBody = Some(requestBody))
       }
     }
   }
