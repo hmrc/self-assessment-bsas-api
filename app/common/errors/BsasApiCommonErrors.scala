@@ -88,3 +88,5 @@ object RulePropertyIncomeAllowanceClaimed
       "RULE_PROPERTY_INCOME_ALLOWANCE_CLAIMED",
       "A claim for property income allowance was made. Cannot also have expenses",
       BAD_REQUEST)
+
+object RuleObligationsNotMet extends MtdError("RULE_OBLIGATIONS_NOT_MET", "The obligations for the business have not been met", BAD_REQUEST)
