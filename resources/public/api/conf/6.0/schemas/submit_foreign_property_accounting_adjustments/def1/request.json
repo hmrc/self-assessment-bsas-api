@@ -4,7 +4,7 @@
   "description": "Submit Foreign Property Accounting Adjustments Request",
   "type": "object",
   "properties": {
-    "nonFurnishedHolidayLet": {
+    "foreignProperty": {
       "type": "array",
       "description": "Array containing foreign Non-FHL adjustments.",
       "items": {
