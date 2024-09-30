@@ -20,7 +20,7 @@ import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.Configuration
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
@@ -47,7 +47,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockRetrieveSelfEmploymentBsasService
     with MockHateoasFactory
     with MockIdGenerator
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   private val calculationId    = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
   private val requestData      = retrieveBsas.RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, None)
@@ -111,11 +111,11 @@ class RetrieveSelfEmploymentBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId)(fakeGetRequest)
   }

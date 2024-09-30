@@ -17,7 +17,7 @@
 package v4.models.response.triggerBsas
 
 import play.api.libs.json._
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
 import v4.hateoas.HateoasLinks
@@ -34,7 +34,7 @@ object TriggerBsasResponse extends HateoasLinks {
 
   implicit object TriggerHateoasFactory extends HateoasLinksFactory[TriggerBsasResponse, TriggerBsasHateoasData] {
 
-    override def links(appConfig: AppConfig, data: TriggerBsasHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: TriggerBsasHateoasData): Seq[Link] = {
       import data._
       import v4.models.domain.TypeOfBusiness._
 

@@ -34,7 +34,8 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
   trait Test {
     _: ConnectorTest =>
 
-    val connector: RetrieveSelfEmploymentBsasConnector = new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveSelfEmploymentBsasConnector =
+      new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     def requestWith(taxYear: Option[TaxYear]): RetrieveSelfEmploymentBsasRequestData =
       Def1_RetrieveSelfEmploymentBsasRequestData(nino, calculationId, taxYear)

@@ -33,7 +33,10 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
-    val connector: RetrieveForeignPropertyBsasConnector = new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+
+    val connector: RetrieveForeignPropertyBsasConnector =
+      new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+
   }
 
   "retrieveForeignPropertyBsas" should {

@@ -19,7 +19,7 @@ package v6.selfEmploymentBsas.retrieve
 import common.errors._
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.CalculationId
 import shared.models.errors._
@@ -40,7 +40,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockRetrieveSelfEmploymentBsasValidatorFactory
     with MockRetrieveSelfEmploymentBsasService
     with MockIdGenerator
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   private val calculationId = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
   private val requestData   = Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, None)
@@ -90,11 +90,11 @@ class RetrieveSelfEmploymentBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId)(fakeGetRequest)
   }

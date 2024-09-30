@@ -16,14 +16,14 @@
 
 package v4.hateoas
 
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.hateoas.Method.{GET, POST}
 import shared.hateoas.{Link, Method}
 import shared.models.domain.TaxYear
 import shared.utils.UnitSpec
 import v4.hateoas.RelType._
 
-class HateoasLinksSpec extends UnitSpec with MockAppConfig {
+class HateoasLinksSpec extends UnitSpec with MockSharedAppConfig {
 
   private val nino        = "AA111111A"
   private val calcId      = "1234567890"
@@ -45,20 +45,20 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
   }
 
   class Test {
-    MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
+    MockedSharedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
   }
 
   "HateoasLinks" when {
     "triggerBsas" should {
       "return the correct link" in new Test {
         val link: Link = Link(href = s"/context/$nino/trigger", method = POST, rel = TRIGGER)
-        Target.triggerBsas(mockAppConfig, nino) shouldBe link
+        Target.triggerBsas(mockSharedAppConfig, nino) shouldBe link
       }
     }
 
     "listBsas" should {
       assertCorrectLink(
-        makeLink = Target.listBsas(mockAppConfig, nino, _),
+        makeLink = Target.listBsas(mockSharedAppConfig, nino, _),
         baseHref = s"/context/$nino",
         method = GET,
         rel = SELF
@@ -67,7 +67,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "getSelfEmploymentBsas" should {
       assertCorrectLink(
-        makeLink = Target.getSelfEmploymentBsas(mockAppConfig, nino, calcId, _),
+        makeLink = Target.getSelfEmploymentBsas(mockSharedAppConfig, nino, calcId, _),
         baseHref = s"/context/$nino/self-employment/$calcId",
         method = GET,
         rel = SELF
@@ -76,7 +76,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "getUkPropertyBsas" should {
       assertCorrectLink(
-        makeLink = Target.getUkPropertyBsas(mockAppConfig, nino, calcId, _),
+        makeLink = Target.getUkPropertyBsas(mockSharedAppConfig, nino, calcId, _),
         baseHref = s"/context/$nino/uk-property/$calcId",
         method = GET,
         rel = SELF
@@ -85,7 +85,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "getForeignPropertyBsas" should {
       assertCorrectLink(
-        makeLink = Target.getForeignPropertyBsas(mockAppConfig, nino, calcId, _),
+        makeLink = Target.getForeignPropertyBsas(mockSharedAppConfig, nino, calcId, _),
         baseHref = s"/context/$nino/foreign-property/$calcId",
         method = GET,
         rel = SELF
@@ -94,7 +94,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "adjustSelfEmploymentBsas" should {
       assertCorrectLink(
-        makeLink = Target.adjustSelfEmploymentBsas(mockAppConfig, nino, calcId, _),
+        makeLink = Target.adjustSelfEmploymentBsas(mockSharedAppConfig, nino, calcId, _),
         baseHref = s"/context/$nino/self-employment/$calcId/adjust",
         method = POST,
         rel = SUBMIT_SE_ADJUSTMENTS
@@ -103,7 +103,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "adjustUkPropertyBsas" should {
       assertCorrectLink(
-        makeLink = Target.adjustUkPropertyBsas(mockAppConfig, nino, calcId, _),
+        makeLink = Target.adjustUkPropertyBsas(mockSharedAppConfig, nino, calcId, _),
         baseHref = s"/context/$nino/uk-property/$calcId/adjust",
         method = POST,
         rel = SUBMIT_UK_PROPERTY_ADJUSTMENTS
@@ -112,7 +112,7 @@ class HateoasLinksSpec extends UnitSpec with MockAppConfig {
 
     "adjustForeignPropertyBsas" should {
       assertCorrectLink(
-        makeLink = Target.adjustForeignPropertyBsas(mockAppConfig, nino, calcId, _),
+        makeLink = Target.adjustForeignPropertyBsas(mockSharedAppConfig, nino, calcId, _),
         baseHref = s"/context/$nino/foreign-property/$calcId/adjust",
         method = POST,
         rel = SUBMIT_FOREIGN_PROPERTY_ADJUSTMENTS

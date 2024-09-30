@@ -20,7 +20,7 @@ import common.errors._
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.errors._
@@ -45,7 +45,7 @@ class TriggerBsasControllerSpec
     with MockTriggerBsasService
     with MockIdGenerator
     with MockAuditService
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   private val requestDataDef1 = Def1_TriggerBsasRequestData(
     parsedNino,
@@ -197,11 +197,11 @@ class TriggerBsasControllerSpec
 
     protected val requestBodyForController: JsValue = requestBody
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.triggerBsas(validNino)(fakePostRequest(requestBodyForController))

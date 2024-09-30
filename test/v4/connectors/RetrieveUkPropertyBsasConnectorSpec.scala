@@ -32,7 +32,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
-    val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
   }
 
   "retrieve" should {

@@ -16,7 +16,7 @@
 
 package v4.models.response
 
-import shared.config.AppConfig
+import shared.config.SharedAppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.models.domain.TaxYear
 import v4.hateoas.HateoasLinks
@@ -25,7 +25,7 @@ object SubmitSelfEmploymentBsasResponse extends HateoasLinks {
 
   implicit object SubmitSelfEmploymentAdjustmentHateoasFactory extends HateoasLinksFactory[Unit, SubmitSelfEmploymentBsasHateoasData] {
 
-    override def links(appConfig: AppConfig, data: SubmitSelfEmploymentBsasHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: SubmitSelfEmploymentBsasHateoasData): Seq[Link] = {
       import data._
       Seq(getSelfEmploymentBsas(appConfig, nino, calculationId, taxYear))
     }

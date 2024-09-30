@@ -86,7 +86,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
     protected def taxYear: TaxYear
     protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, triggerBsasRequestBody)
-    protected val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    protected val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     protected def stubHttpResponse(
         outcome: DownstreamOutcome[Def1_TriggerBsasResponse]): CallHandler[Future[DownstreamOutcome[Def1_TriggerBsasResponse]]]#Derived = {

@@ -18,7 +18,7 @@ package v4.models.response.triggerBsas
 
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsValue, Json}
-import shared.config.MockAppConfig
+import shared.config.MockSharedAppConfig
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasFactory, HateoasWrapper, Link}
 import shared.models.domain.TaxYear
@@ -70,22 +70,22 @@ class TriggerBsasResponseSpec extends UnitSpec {
   }
 
   "HateoasFactory" when {
-    class Test extends MockAppConfig {
-      val hateoasFactory = new HateoasFactory(mockAppConfig)
+    class Test extends MockSharedAppConfig {
+      val hateoasFactory = new HateoasFactory(mockSharedAppConfig)
       val nino           = "someNino"
       val bsasId         = "anId"
       val taxYear        = Some(TaxYear.fromMtd("2023-24"))
       val context        = "individuals/self-assessment/adjustable-summary"
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
+      MockedSharedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
     }
 
     class TysDisabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
     }
 
     class TysEnabledTest extends Test {
-      MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> true)).anyNumberOfTimes()
     }
 
     "triggering a self employment BSAS" should {
