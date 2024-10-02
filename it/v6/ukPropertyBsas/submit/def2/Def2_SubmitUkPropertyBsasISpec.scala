@@ -30,8 +30,8 @@ import v6.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBo
 
 class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  val requestBodyJson: JsValue       = validfhlInputJson
-  val nonFHLRequestBodyJson: JsValue = validNonFHLInputJson
+  val requestBodyJson: JsValue           = validfhlInputJson
+  val ukPropertyRequestBodyJson: JsValue = validUkPropertyInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
@@ -91,18 +91,18 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             None,
-            requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
+            requestBodyJson.update("/ukProperty/income/totalRentsReceived", JsNumber(2.25)),
             BAD_REQUEST,
             RuleBothPropertiesSuppliedError),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
             Some("2024-25"),
-            nonFHLRequestBodyJson.update("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", JsNumber(-1.523)),
+            ukPropertyRequestBodyJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
             BAD_REQUEST,
             ValueFormatError.copy(
               message = "The value must be between 0 and 99999999999.99",
-              paths = Some(List("/nonFurnishedHolidayLet/expenses/residentialFinancialCost"))
+              paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
             ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))

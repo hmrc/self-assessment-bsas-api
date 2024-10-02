@@ -36,7 +36,7 @@ case class AdjustedSummaryCalculation(
 object AdjustedSummaryCalculation {
   implicit val readsFhl: Reads[AdjustedSummaryCalculation] = summaryCalculationReadsFhl(AdjustedSummaryCalculation.apply _)
 
-  implicit val readsNonFhl: Reads[AdjustedSummaryCalculation] = summaryCalculationReadsNonFhl(AdjustedSummaryCalculation.apply _)
+  implicit val readsUkProperty: Reads[AdjustedSummaryCalculation] = summaryCalculationReadsUkProperty(AdjustedSummaryCalculation.apply _)
 
   implicit val writes: OWrites[AdjustedSummaryCalculation] = Json.writes[AdjustedSummaryCalculation]
 }

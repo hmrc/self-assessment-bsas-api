@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def1.model.request
+package v6.ukPropertyBsas.submit.def2.model.request
 
 import play.api.libs.json.{JsObject, Json}
 import shared.utils.UnitSpec
 
-class NonFHLIncomeSpec extends UnitSpec {
+class IncomeSpec extends UnitSpec {
 
   private val json = Json.parse("""
         |{
@@ -30,41 +30,41 @@ class NonFHLIncomeSpec extends UnitSpec {
         |}
         |""".stripMargin)
 
-  private val nonFhlIncome =
-    NonFHLIncome(
+  private val income =
+    Income(
       totalRentsReceived = Some(1.12),
       premiumsOfLeaseGrant = Some(2.12),
       reversePremiums = Some(3.12),
       otherPropertyIncome = Some(4.12)
     )
 
-  private val emptyNonFHLIncome = NonFHLIncome(None, None, None, None)
+  private val emptyIncome = Income(None, None, None, None)
 
   "reads" when {
     "given MTD json" should {
-      "return the expected NonFHLIncome" in {
+      "return the expected Income" in {
         json
-          .as[NonFHLIncome] shouldBe nonFhlIncome
+          .as[Income] shouldBe income
       }
     }
 
     "given an empty JSON object" should {
-      "return an empty NonFHLIncome" in {
-        JsObject.empty.as[NonFHLIncome] shouldBe emptyNonFHLIncome
+      "return an empty Income" in {
+        JsObject.empty.as[Income] shouldBe emptyIncome
       }
     }
   }
 
   "writes" when {
-    "given a NonFHLIncome" should {
+    "given a Income" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlIncome) shouldBe json
+        Json.toJson(income) shouldBe json
       }
     }
 
-    "given an empty NonFHLIncome" should {
+    "given an empty Income" should {
       "return an empty JSON object" in {
-        Json.toJson(emptyNonFHLIncome) shouldBe JsObject.empty
+        Json.toJson(emptyIncome) shouldBe JsObject.empty
       }
     }
   }

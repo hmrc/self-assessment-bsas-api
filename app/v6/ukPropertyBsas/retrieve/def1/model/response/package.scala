@@ -50,17 +50,17 @@ package object response {
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
 
-  val summaryCalculationReadsNonFhl: SummaryCalculationReads =
+  val summaryCalculationReadsUkProperty: SummaryCalculationReads =
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsNonFhl) and
+      (JsPath \ "income").readNullable[SummaryCalculationIncome](SummaryCalculationIncome.readsUkProperty) and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses](SummaryCalculationExpenses.readsNonFhl) and
+      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses](SummaryCalculationExpenses.readsUkProperty) and
       (JsPath \ "netProfit").readNullable[BigDecimal] and
       (JsPath \ "netLoss").readNullable[BigDecimal] and
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and
       (JsPath \ "additions").readNullable[SummaryCalculationAdditions] and
       (JsPath \ "totalDeductions").readNullable[BigDecimal] and
-      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsNonFhl) and
+      (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.readsUkProperty) and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
 

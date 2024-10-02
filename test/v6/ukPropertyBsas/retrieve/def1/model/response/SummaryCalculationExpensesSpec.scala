@@ -33,10 +33,10 @@ class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators w
   )(readsFhl)
 
   testRoundTrip(
-    "Summary Calculation Expenses Non-FHL",
+    "Summary Calculation Expenses Uk Property",
     downstreamSummaryCalculationExpensesJson,
-    summaryCalculationExpensesNonFhl,
-    mtdSummaryCalculationExpensesNonFhlJson
-  )(readsNonFhl)
+    summaryCalculationExpensesUkProperty,
+    mtdSummaryCalculationExpensesUkPropertyJson
+  )(readsUkProperty)
 
 }

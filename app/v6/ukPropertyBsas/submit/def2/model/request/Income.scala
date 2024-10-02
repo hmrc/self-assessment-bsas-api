@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def1.model.request
+package v6.ukPropertyBsas.submit.def2.model.request
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 
-case class NonFurnishedHolidayLet(income: Option[NonFHLIncome], expenses: Option[NonFHLExpenses])
+case class Income(
+    totalRentsReceived: Option[BigDecimal],
+    premiumsOfLeaseGrant: Option[BigDecimal],
+    reversePremiums: Option[BigDecimal],
+    otherPropertyIncome: Option[BigDecimal]
+)
 
-object NonFurnishedHolidayLet {
-
-  implicit val reads: Reads[NonFurnishedHolidayLet] = (
-    (JsPath \ "income").readNullable[NonFHLIncome] and
-      (JsPath \ "expenses").readNullable[NonFHLExpenses]
-  )(NonFurnishedHolidayLet.apply _)
-
-  implicit val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
+object Income {
+  implicit val format: OFormat[Income] = Json.format[Income]
 }

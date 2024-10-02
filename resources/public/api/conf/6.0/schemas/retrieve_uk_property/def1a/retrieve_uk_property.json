@@ -64,7 +64,7 @@
           "type": "string",
           "enum": [
             "uk-property-fhl",
-            "uk-property-non-fhl"
+            "uk-property"
           ],
           "description": "The type of business the calculation summary is for."
         },

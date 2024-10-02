@@ -22,7 +22,7 @@ import SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def3_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
-  private val emptyParsedRequestBody = Def3_SubmitUkPropertyBsasRequestBody(None, None)
+  private val emptyParsedRequestBody = Def3_SubmitUkPropertyBsasRequestBody(None)
 
   "reads" when {
 

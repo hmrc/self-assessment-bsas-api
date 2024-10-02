@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def2.model.request
+package v6.ukPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsObject, Json}
 import shared.utils.UnitSpec
 
-class NonFHLExpensesSpec extends UnitSpec {
+class ExpensesSpec extends UnitSpec {
 
   private val json = Json.parse("""
       |{
@@ -35,7 +35,7 @@ class NonFHLExpensesSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val nonFHLExpenses = NonFHLExpenses(
+  private val expenses = Expenses(
     premisesRunningCosts = Some(1.12),
     repairsAndMaintenance = Some(2.12),
     financialCosts = Some(3.12),
@@ -47,32 +47,32 @@ class NonFHLExpensesSpec extends UnitSpec {
     consolidatedExpenses = Some(9.12)
   )
 
-  private val emptyNonFHLExpenses = NonFHLExpenses(None, None, None, None, None, None, None, None, None)
+  private val emptyExpenses = Expenses(None, None, None, None, None, None, None, None, None)
 
   "reads" when {
     "given MTD json" should {
-      "return the expected NonFHLExpenses" in {
-        json.as[NonFHLExpenses] shouldBe nonFHLExpenses
+      "return the expected Expenses" in {
+        json.as[Expenses] shouldBe expenses
       }
     }
 
     "given an empty JSON object" should {
-      "return an empty NonFHLExpenses" in {
-        JsObject.empty.as[NonFHLExpenses] shouldBe emptyNonFHLExpenses
+      "return an empty ukPropertyExpenses" in {
+        JsObject.empty.as[Expenses] shouldBe emptyExpenses
       }
     }
   }
 
   "writes" when {
-    "given a NonFHLExpenses" should {
+    "given a Expenses" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFHLExpenses) shouldBe json
+        Json.toJson(expenses) shouldBe json
       }
     }
 
-    "given an empty NonFHLExpenses" should {
+    "given an empty Expenses" should {
       "return an empty JSON object" in {
-        Json.toJson(emptyNonFHLExpenses) shouldBe JsObject.empty
+        Json.toJson(emptyExpenses) shouldBe JsObject.empty
       }
     }
   }

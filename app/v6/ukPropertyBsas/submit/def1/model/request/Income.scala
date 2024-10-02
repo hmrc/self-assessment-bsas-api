@@ -18,13 +18,13 @@ package v6.ukPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json._
 
-case class NonFHLIncome(
+case class Income(
     totalRentsReceived: Option[BigDecimal],
     premiumsOfLeaseGrant: Option[BigDecimal],
     reversePremiums: Option[BigDecimal],
     otherPropertyIncome: Option[BigDecimal]
 )
 
-object NonFHLIncome {
-  implicit val format: OFormat[NonFHLIncome] = Json.format[NonFHLIncome]
+object Income {
+  implicit val format: OFormat[Income] = Json.format[Income]
 }

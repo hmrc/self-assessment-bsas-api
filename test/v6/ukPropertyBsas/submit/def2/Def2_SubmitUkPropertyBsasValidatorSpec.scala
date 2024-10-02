@@ -37,12 +37,12 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
   private val parsedCalculationId = CalculationId(validCalculationId)
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
-  private val nonFhlBodyJson =
+  private val ukPropertyBodyJson =
     Json
       .parse(
         s"""
        |{
-       |   "nonFurnishedHolidayLet": {
+       |   "ukProperty": {
        |      "income": {
        |         "totalRentsReceived": 1000.45,
        |         "premiumsOfLeaseGrant": 1000.45,
@@ -65,13 +65,13 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       )
       .as[JsObject]
 
-  private val parsedNonFhlBody = nonFhlBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
+  private val parsedUkPropertyBody = ukPropertyBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
-  private val nonFhlConsolidatedBodyJson =
+  private val ukPropertyConsolidatedBodyJson =
     Json.parse(
       """
       |{
-      |   "nonFurnishedHolidayLet": {
+      |   "ukProperty": {
       |      "income": {
       |         "totalRentsReceived": 1000.45,
       |         "premiumsOfLeaseGrant": 1000.45,
@@ -85,7 +85,7 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       |}""".stripMargin
     )
 
-  private val parsedNonFhlConsolidatedBody = nonFhlConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
+  private val parsedUkPropertyConsolidatedBody = ukPropertyConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
   private val fhlBodyJson =
     Json
@@ -153,11 +153,11 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "a valid non-fhl request is supplied" in {
-        val result = validator(validNino, validCalculationId, None, nonFhlBodyJson).validateAndWrapResult()
+      "a valid ukProperty request is supplied" in {
+        val result = validator(validNino, validCalculationId, None, ukPropertyBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedUkPropertyBody)
         )
       }
 
@@ -169,11 +169,11 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "a valid non-fhl consolidated expenses request is supplied" in {
-        val result = validator(validNino, validCalculationId, None, nonFhlConsolidatedBodyJson).validateAndWrapResult()
+      "a valid ukProperty consolidated expenses request is supplied" in {
+        val result = validator(validNino, validCalculationId, None, ukPropertyConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlConsolidatedBody)
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedUkPropertyConsolidatedBody)
         )
       }
 
@@ -198,12 +198,12 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "a minimal non-fhl request is supplied" in {
+      "a minimal ukProperty request is supplied" in {
         val minimalJson =
           Json.parse(
             """
               |{
-              |   "nonFurnishedHolidayLet": {
+              |   "ukProperty": {
               |      "income": {
               |         "totalRentsReceived": 1000.45
               |      }
@@ -239,8 +239,8 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
     }
 
     "return RuleBothPropertiesSuppliedError" when {
-      "passed both fhl and non-fhl" in {
-        val body   = fhlBodyJson ++ nonFhlBodyJson
+      "passed both fhl and ukProperty" in {
+        val body   = fhlBodyJson ++ ukPropertyBodyJson
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
@@ -248,13 +248,13 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "passed both fhl and non-fhl even if they are empty" in {
+      "passed both fhl and ukProperty even if they are empty" in {
         // Note: no other errors should be returned
         val body = Json.parse(
           s"""
                |{
                |  "furnishedHolidayLet": {},
-               |  "nonFurnishedHolidayLet": []
+               |  "ukProperty": []
                |}
                |""".stripMargin
         )
@@ -285,10 +285,10 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         ).foreach(path => testWith(fhlBodyJson.replaceWithEmptyObject(path), path))
 
         List(
-          "/nonFurnishedHolidayLet",
-          "/nonFurnishedHolidayLet/income",
-          "/nonFurnishedHolidayLet/expenses"
-        ).foreach(path => testWith(nonFhlBodyJson.replaceWithEmptyObject(path), path))
+          "/ukProperty",
+          "/ukProperty/income",
+          "/ukProperty/expenses"
+        ).foreach(path => testWith(ukPropertyBodyJson.replaceWithEmptyObject(path), path))
 
         def testWith(body: JsValue, expectedPath: String): Unit =
           s"for $expectedPath" in {
@@ -301,7 +301,7 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
       "an object is empty except for a additional (non-schema) property" in {
         val body = Json.parse("""{
-                                |    "nonFurnishedHolidayLet": {
+                                |    "ukProperty": {
                                 |       "unknownField": 999.99
                                 |    }
                                 |}""".stripMargin)
@@ -309,7 +309,7 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
-          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/nonFurnishedHolidayLet"))
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/ukProperty"))
         )
       }
     }
@@ -328,22 +328,22 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
 
         List(
-          "/nonFurnishedHolidayLet/income/totalRentsReceived",
-          "/nonFurnishedHolidayLet/income/premiumsOfLeaseGrant",
-          "/nonFurnishedHolidayLet/income/reversePremiums",
-          "/nonFurnishedHolidayLet/income/otherPropertyIncome",
-          "/nonFurnishedHolidayLet/expenses/premisesRunningCosts",
-          "/nonFurnishedHolidayLet/expenses/repairsAndMaintenance",
-          "/nonFurnishedHolidayLet/expenses/financialCosts",
-          "/nonFurnishedHolidayLet/expenses/professionalFees",
-          "/nonFurnishedHolidayLet/expenses/costOfServices",
-          "/nonFurnishedHolidayLet/expenses/other",
-          "/nonFurnishedHolidayLet/expenses/travelCosts"
-        ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path))
+          "/ukProperty/income/totalRentsReceived",
+          "/ukProperty/income/premiumsOfLeaseGrant",
+          "/ukProperty/income/reversePremiums",
+          "/ukProperty/income/otherPropertyIncome",
+          "/ukProperty/expenses/premisesRunningCosts",
+          "/ukProperty/expenses/repairsAndMaintenance",
+          "/ukProperty/expenses/financialCosts",
+          "/ukProperty/expenses/professionalFees",
+          "/ukProperty/expenses/costOfServices",
+          "/ukProperty/expenses/other",
+          "/ukProperty/expenses/travelCosts"
+        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path))
 
         List(
-          "/nonFurnishedHolidayLet/expenses/residentialFinancialCost"
-        ).foreach(path => testWith(nonFhlBodyJson.update(path, _), path, min = "0"))
+          "/ukProperty/expenses/residentialFinancialCost"
+        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path, min = "0"))
       }
 
       "consolidated expenses is invalid" when {
@@ -352,15 +352,15 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         ).foreach(path => testWith(fhlConsolidatedBodyJson.update(path, _), path))
 
         List(
-          "/nonFurnishedHolidayLet/expenses/consolidatedExpenses"
-        ).foreach(path => testWith(nonFhlConsolidatedBodyJson.update(path, _), path))
+          "/ukProperty/expenses/consolidatedExpenses"
+        ).foreach(path => testWith(ukPropertyConsolidatedBodyJson.update(path, _), path))
       }
 
       "multiple fields are invalid" in {
-        val path1 = "/nonFurnishedHolidayLet/income/totalRentsReceived"
-        val path2 = "/nonFurnishedHolidayLet/expenses/premisesRunningCosts"
+        val path1 = "/ukProperty/income/totalRentsReceived"
+        val path2 = "/ukProperty/expenses/premisesRunningCosts"
 
-        val body = nonFhlBodyJson
+        val body = ukPropertyBodyJson
           .update(path1, JsNumber(0))
           .update(path2, JsNumber(123.123))
 
@@ -403,14 +403,14 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "passed consolidated and separate non-fhl expenses" in {
-        val body   = nonFhlBodyJson.update("nonFurnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(123.45))
+      "passed consolidated and separate Uk Property expenses" in {
+        val body   = ukPropertyBodyJson.update("ukProperty/expenses/consolidatedExpenses", JsNumber(123.45))
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
-            RuleBothExpensesError.withPath("/nonFurnishedHolidayLet/expenses")
+            RuleBothExpensesError.withPath("/ukProperty/expenses")
           )
         )
       }

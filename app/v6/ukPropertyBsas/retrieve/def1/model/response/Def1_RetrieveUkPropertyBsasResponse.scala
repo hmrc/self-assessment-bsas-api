@@ -39,10 +39,10 @@ object Def1_RetrieveUkPropertyBsasResponse {
       inputs   <- (json \ "inputs").validate[Inputs]
       isFhl = inputs.incomeSourceType == TypeOfBusinessWithFHL.`uk-property-fhl`.asDownstreamValue
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation")
-        .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsNonFhl)
-      adjustments <- (json \ "adjustments").validateOpt[Adjustments](if (isFhl) Adjustments.readsFhl else Adjustments.readsNonFhl)
+        .validate[AdjustableSummaryCalculation](if (isFhl) AdjustableSummaryCalculation.readsFhl else AdjustableSummaryCalculation.readsUkProperty)
+      adjustments <- (json \ "adjustments").validateOpt[Adjustments](if (isFhl) Adjustments.readsFhl else Adjustments.readsUkProperty)
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation")
-        .validateOpt[AdjustedSummaryCalculation](if (isFhl) AdjustedSummaryCalculation.readsFhl else AdjustedSummaryCalculation.readsNonFhl)
+        .validateOpt[AdjustedSummaryCalculation](if (isFhl) AdjustedSummaryCalculation.readsFhl else AdjustedSummaryCalculation.readsUkProperty)
     } yield {
       Def1_RetrieveUkPropertyBsasResponse(
         metadata = metadata,
