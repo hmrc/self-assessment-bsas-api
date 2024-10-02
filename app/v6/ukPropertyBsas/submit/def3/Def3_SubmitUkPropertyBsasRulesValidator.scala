@@ -22,26 +22,26 @@ import common.errors.RuleBothExpensesError
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v6.ukPropertyBsas.submit.def3.model.request.{Def3_SubmitUkPropertyBsasRequestData, Expenses, Income}
+import v6.ukPropertyBsas.submit.def3.model.request.{Def3_SubmitUkPropertyBsasRequestData, Expenses, UkProperty}
 
 object Def3_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def3_SubmitUkPropertyBsasRequestData] {
 
   def validateBusinessRules(parsed: Def3_SubmitUkPropertyBsasRequestData): Validated[Seq[MtdError], Def3_SubmitUkPropertyBsasRequestData] = {
     import parsed.body
 
-    val (validatedExpenses, validatedConsolidatedExpenses) = body.expenses match {
-      case Some(expenses) =>
+    val (validatedExpenses, validatedConsolidatedExpenses) = body.ukProperty match {
+      case Some(ukProperty) =>
         (
-          validateExpenses(expenses),
-          validateConsolidatedExpenses(expenses)
+          validateExpenses(ukProperty),
+          validateConsolidatedExpenses(ukProperty)
         )
       case None =>
         (valid, valid)
     }
 
-    val validatedIncome = body.income match {
-      case Some(income) => validateIncome(income)
-      case None         => valid
+    val validatedIncome = body.ukProperty match {
+      case Some(ukProperty) => validateIncome(ukProperty)
+      case None             => valid
     }
 
     combine(
@@ -55,38 +55,43 @@ object Def3_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def3_Submi
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
-  private def validateExpenses(expenses: Expenses): Validated[Seq[MtdError], Unit] = {
+  private def validateExpenses(ukProperty: UkProperty): Validated[Seq[MtdError], Unit] = {
     combine(
-      resolveMaybeNegativeNumber("/expenses/premisesRunningCosts", expenses.premisesRunningCosts),
-      resolveMaybeNegativeNumber("/expenses/repairsAndMaintenance", expenses.repairsAndMaintenance),
-      resolveMaybeNegativeNumber("/expenses/financialCosts", expenses.financialCosts),
-      resolveMaybeNegativeNumber("/expenses/professionalFees", expenses.professionalFees),
-      resolveMaybeNegativeNumber("/expenses/travelCosts", expenses.travelCosts),
-      resolveMaybeNegativeNumber("/expenses/consolidatedExpenses", expenses.consolidatedExpenses),
-      resolveMaybeNegativeNumber("/expenses/costOfServices", expenses.costOfServices),
-      ResolveParsedNumber(disallowZero = true)(expenses.residentialFinancialCost, "/expenses/residentialFinancialCost"),
-      ResolveParsedNumber(disallowZero = true)(expenses.other, "/expenses/other")
+      resolveMaybeNegativeNumber("/ukProperty/expenses/premisesRunningCosts", ukProperty.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/repairsAndMaintenance", ukProperty.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/financialCosts", ukProperty.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/professionalFees", ukProperty.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/travelCosts", ukProperty.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/consolidatedExpenses", ukProperty.expenses.flatMap(_.consolidatedExpenses)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/costOfServices", ukProperty.expenses.flatMap(_.costOfServices)),
+      ResolveParsedNumber(disallowZero = true)(
+        ukProperty.expenses.flatMap(_.residentialFinancialCost),
+        "/ukProperty/expenses/residentialFinancialCost"),
+      ResolveParsedNumber(disallowZero = true)(ukProperty.expenses.flatMap(_.other), "/ukProperty/expenses/other")
     )
   }
 
-  private def validateIncome(income: Income): Validated[Seq[MtdError], Unit] = {
+  private def validateIncome(ukProperty: UkProperty): Validated[Seq[MtdError], Unit] = {
     combine(
-      resolveMaybeNegativeNumber("/income/totalRentsReceived", income.totalRentsReceived),
-      resolveMaybeNegativeNumber("/income/premiumsOfLeaseGrant", income.premiumsOfLeaseGrant),
-      resolveMaybeNegativeNumber("/income/reversePremiums", income.reversePremiums),
-      resolveMaybeNegativeNumber("/income/otherPropertyIncome", income.otherPropertyIncome)
+      resolveMaybeNegativeNumber("/ukProperty/income/totalRentsReceived", ukProperty.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber("/ukProperty/income/premiumsOfLeaseGrant", ukProperty.income.flatMap(_.premiumsOfLeaseGrant)),
+      resolveMaybeNegativeNumber("/ukProperty/income/reversePremiums", ukProperty.income.flatMap(_.reversePremiums)),
+      resolveMaybeNegativeNumber("/ukProperty/income/otherPropertyIncome", ukProperty.income.flatMap(_.otherPropertyIncome))
     )
   }
 
-  private def validateConsolidatedExpenses(expenses: Expenses): Validated[Seq[MtdError], Unit] = {
-    expenses match {
-      case Expenses(None, None, None, None, None, None, None, None, Some(_)) =>
-        valid
-      case Expenses(_, _, _, _, _, _, _, _, Some(_)) =>
-        Invalid(List(RuleBothExpensesError.withPath("/expenses")))
-      case _ =>
-        valid
-    }
+  private def validateConsolidatedExpenses(ukProperty: UkProperty): Validated[Seq[MtdError], Unit] = {
+    ukProperty.expenses
+      .collect {
+        case expenses if expenses.consolidatedExpenses.isDefined =>
+          expenses match {
+            case Expenses(None, None, None, None, None, None, None, None, Some(_)) =>
+              valid
+            case _ =>
+              Invalid(List(RuleBothExpensesError.withPath("/ukProperty/expenses")))
+          }
+      }
+      .getOrElse(valid)
   }
 
 }

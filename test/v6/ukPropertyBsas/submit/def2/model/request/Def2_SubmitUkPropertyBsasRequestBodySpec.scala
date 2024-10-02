@@ -24,21 +24,21 @@ class Def2_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
   private val emptyParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(None, None)
 
-  private val nonFhlParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(Some(NonFurnishedHolidayLet(None, None)), None)
+  private val ukPropertyParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(Some(UkProperty(None, None)), None)
 
   private val fhlParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None)))
 
   "reads" when {
-    "reading a simple non-fhl body" should {
-      "return the expected non-fhl model" in {
+    "reading a simple ukProperty body" should {
+      "return the expected ukProperty model" in {
         Json
           .parse("""
             |{
-            |  "nonFurnishedHolidayLet": {
+            |  "ukProperty": {
             |  }
             |}
             |""".stripMargin)
-          .as[Def2_SubmitUkPropertyBsasRequestBody] shouldBe nonFhlParsedRequestBody
+          .as[Def2_SubmitUkPropertyBsasRequestBody] shouldBe ukPropertyParsedRequestBody
       }
     }
 
@@ -57,9 +57,9 @@ class Def2_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
 
-    "reading a full non-fhl body" should {
-      "return the expected non-fhl model" in {
-        mtdRequestNonFhlFull.as[Def2_SubmitUkPropertyBsasRequestBody] shouldBe requestNonFhlFull
+    "reading a full ukProperty body" should {
+      "return the expected ukProperty model" in {
+        mtdRequestUkPropertyFull.as[Def2_SubmitUkPropertyBsasRequestBody] shouldBe requestUkPropertyFull
       }
     }
 
@@ -77,9 +77,9 @@ class Def2_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
   }
 
   "writes" when {
-    "writing a simple non-fhl model" should {
+    "writing a simple ukProperty model" should {
       "return the downstream JSON" in {
-        Json.toJson(nonFhlParsedRequestBody) shouldBe Json.parse("""
+        Json.toJson(ukPropertyParsedRequestBody) shouldBe Json.parse("""
             |{
             |  "incomeSourceType": "02",
             |  "adjustments": {
@@ -103,9 +103,9 @@ class Def2_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
       }
     }
 
-    "writing a full non-fhl model" should {
+    "writing a full ukProperty model" should {
       "return the downstream JSON" in {
-        Json.toJson(requestNonFhlFull) shouldBe downstreamRequestNonFhlFull
+        Json.toJson(requestUkPropertyFull) shouldBe downstreamRequestUkPropertyFull
       }
     }
 

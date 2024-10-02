@@ -45,6 +45,6 @@ class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
   import Inputs._
 
   testRoundTrip("Inputs FHL", downstreamInputsFhlJson, inputsFhl, mtdInputsFhlJson)(reads)
-  testRoundTrip("Inputs Non-FHL", downstreamInputsNonFhlJson, inputsNonFhl, mtdInputsNonFhlJson)(reads)
+  testRoundTrip("Inputs Uk Property", downstreamInputsUkPropertyJson, inputsUkProperty, mtdInputsUkPropertyJson)(reads)
 
 }

@@ -478,7 +478,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val mtdAdjustmentsExpensesNonFhlJson: JsValue = Json.parse(
+  val mtdAdjustmentsExpensesUkPropertyJson: JsValue = Json.parse(
     """
       |{
       |    "consolidatedExpenses": 2.01,
@@ -507,7 +507,7 @@ object RetrieveUkPropertyBsasFixtures {
     s"""
        |{
        |  "income": $mtdAdjustmentsIncomeJson,
-       |  "expenses": $mtdAdjustmentsExpensesNonFhlJson
+       |  "expenses": $mtdAdjustmentsExpensesUkPropertyJson
        |}
        |""".stripMargin
   )
@@ -701,7 +701,7 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.09)
   )
 
-  val adjustmentsExpensesNonFhl: AdjustmentsExpenses = AdjustmentsExpenses(
+  val adjustmentsExpensesUkProperty: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(2.01),
     premisesRunningCosts = Some(2.02),
     repairsAndMaintenance = Some(2.03),
@@ -720,7 +720,7 @@ object RetrieveUkPropertyBsasFixtures {
 
   val adjustments: Adjustments = Adjustments(
     income = Some(adjustmentsIncome),
-    expenses = Some(adjustmentsExpensesNonFhl)
+    expenses = Some(adjustmentsExpensesUkProperty)
   )
 
   val adjustedSummaryCalculationFhl: AdjustedSummaryCalculation = AdjustedSummaryCalculation(

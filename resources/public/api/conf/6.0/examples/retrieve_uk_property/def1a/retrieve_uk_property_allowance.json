@@ -9,7 +9,7 @@
   },
   "inputs": {
     "businessId": "XAIS12345678910",
-    "typeOfBusiness": "uk-property-non-fhl",
+    "typeOfBusiness": "uk-property",
     "businessName": "My uk property business",
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
@@ -35,27 +35,25 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "consolidatedExpenses": 0.12
+      "premisesRunningCosts": -509.67,
+      "repairsAndMaintenance": 50,
+      "financialCosts": -67.98,
+      "professionalFees": 100.00,
+      "costOfServices": 156001.76,
+      "travelCosts": 82.78,
+      "residentialFinancialCost": 98,
+      "broughtFwdResidentialFinancialCost": 0.12,
+      "other": 88.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
-      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12,
       "bpraBalancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "zeroEmissionGoods": 0.12,
-      "annualInvestmentAllowance": 0.12,
-      "costOfReplacingDomesticItems": 0.12,
-      "businessPremisesRenovationAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
-      "rarReliefClaimed": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "structuredBuildingAllowance": 0.12,
-      "enhancedStructuredBuildingAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "propertyAllowance": 0.12
     },
     "taxableProfit": 12500
   },
@@ -67,7 +65,14 @@
       "otherPropertyIncome": 0.12
     },
     "expenses": {
-      "consolidatedExpenses": 0.12
+      "premisesRunningCosts": 0.12,
+      "repairsAndMaintenance": 0.12,
+      "financialCosts": 0.12,
+      "professionalFees": 0.12,
+      "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "other": 0.12,
+      "travelCosts": 0.12
     }
   },
   "adjustedSummaryCalculation": {
@@ -81,27 +86,25 @@
     },
     "totalExpenses": 0.12,
     "expenses": {
-      "consolidatedExpenses": 0.12
+      "premisesRunningCosts": 0.12,
+      "repairsAndMaintenance": 0.12,
+      "financialCosts": 0.12,
+      "professionalFees": 0.12,
+      "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "broughtFwdResidentialFinancialCost": 0.12,
+      "other": 0.12,
+      "travelCosts": 0.12
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
-      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12,
       "bpraBalancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "zeroEmissionGoods": 0.12,
-      "annualInvestmentAllowance": 0.12,
-      "costOfReplacingDomesticItems": 0.12,
-      "businessPremisesRenovationAllowance": 0.12,
-      "otherCapitalAllowance": 0.12,
-      "rarReliefClaimed": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "structuredBuildingAllowance": 0.12,
-      "enhancedStructuredBuildingAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "propertyAllowance": 0.12
     },
     "taxableProfit": 22500
   }

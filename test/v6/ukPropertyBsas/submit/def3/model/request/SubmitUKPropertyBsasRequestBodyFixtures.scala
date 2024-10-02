@@ -22,22 +22,24 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
 
   val fullRequestJson: JsValue = Json.parse("""
       |{
-      | "income": {
-      |    "totalRentsReceived": 1000.45,
-      |    "premiumsOfLeaseGrant": 1000.45,
-      |    "reversePremiums": 1000.45,
-      |    "otherPropertyIncome": 1000.45
+      |"ukProperty": {
+      |   "income": {
+      |     "totalRentsReceived": 1000.45,
+      |     "premiumsOfLeaseGrant": 1000.45,
+      |     "reversePremiums": 1000.45,
+      |     "otherPropertyIncome": 1000.45
       | },
-      | "expenses": {
-      |    "premisesRunningCosts": -10.25,
-      |    "repairsAndMaintenance": 888.78,
-      |    "financialCosts": 10.25,
-      |    "professionalFees": 54.45,
-      |    "costOfServices": -10.50,
-      |    "residentialFinancialCost": 130.32,
-      |    "other": 10.78,
-      |    "travelCosts": 20.45
-      | }
+      |   "expenses": {
+      |     "premisesRunningCosts": -10.25,
+      |     "repairsAndMaintenance": 888.78,
+      |     "financialCosts": 10.25,
+      |     "professionalFees": 54.45,
+      |     "costOfServices": -10.50,
+      |     "residentialFinancialCost": 130.32,
+      |     "other": 10.78,
+      |     "travelCosts": 20.45
+      |    }
+      |  }
       |}
       |""".stripMargin)
 
@@ -68,25 +70,27 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
   )
 
   val requestFullParsed: Def3_SubmitUkPropertyBsasRequestBody = Def3_SubmitUkPropertyBsasRequestBody(
-    income = Some(
-      Income(
-        totalRentsReceived = Some(1000.45),
-        premiumsOfLeaseGrant = Some(1000.45),
-        reversePremiums = Some(1000.45),
-        otherPropertyIncome = Some(1000.45)
-      )
-    ),
-    expenses = Some(
-      Expenses(
-        premisesRunningCosts = Some(-10.25),
-        repairsAndMaintenance = Some(888.78),
-        financialCosts = Some(10.25),
-        professionalFees = Some(54.45),
-        costOfServices = Some(-10.50),
-        residentialFinancialCost = Some(130.32),
-        other = Some(10.78),
-        travelCosts = Some(20.45),
-        consolidatedExpenses = None
+    ukProperty = Some(
+      UkProperty(
+        income = Some(
+          Income(
+            totalRentsReceived = Some(1000.45),
+            premiumsOfLeaseGrant = Some(1000.45),
+            reversePremiums = Some(1000.45),
+            otherPropertyIncome = Some(1000.45)
+          )
+        ),
+        expenses = Some(Expenses(
+          premisesRunningCosts = Some(-10.25),
+          repairsAndMaintenance = Some(888.78),
+          financialCosts = Some(10.25),
+          professionalFees = Some(54.45),
+          costOfServices = Some(-10.50),
+          residentialFinancialCost = Some(130.32),
+          other = Some(10.78),
+          travelCosts = Some(20.45),
+          consolidatedExpenses = None
+        ))
       ))
   )
 

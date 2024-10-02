@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def2.model.request
+package v6.ukPropertyBsas.submit.def3.model.request
 
-import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class NonFHLIncome(
-    totalRentsReceived: Option[BigDecimal],
-    premiumsOfLeaseGrant: Option[BigDecimal],
-    reversePremiums: Option[BigDecimal],
-    otherPropertyIncome: Option[BigDecimal]
-)
+case class UkProperty(income: Option[Income], expenses: Option[Expenses])
 
-object NonFHLIncome {
-  implicit val format: OFormat[NonFHLIncome] = Json.format[NonFHLIncome]
+object UkProperty {
+
+  implicit val reads: Reads[UkProperty] = (
+    (JsPath \ "income").readNullable[Income] and
+      (JsPath \ "expenses").readNullable[Expenses]
+  )(UkProperty.apply _)
+
+  implicit val writes: OWrites[UkProperty] = Json.writes[UkProperty]
 }

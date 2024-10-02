@@ -45,6 +45,7 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
     Json.parse(
       s"""
        |{
+       |"ukProperty": {
        |  "income": {
        |     "totalRentsReceived": 1000.45,
        |     "premiumsOfLeaseGrant": 1000.45,
@@ -53,16 +54,16 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |  },
        |  "expenses": {
        |     "consolidatedExpenses": 1000.45
+       |    }
        |  }
        |}
        |""".stripMargin
     )
 
-  private val invalidDef2NonFhlConsolidatedBodyJson =
+  private val invalidUkPropertyConsolidatedBodyJson =
     Json.parse(
       """
         |{
-        |   "nonFurnishedHolidayLet": {
         |      "income": {
         |         "totalRentsReceived": 1000.45,
         |         "premiumsOfLeaseGrant": 1000.45,
@@ -71,7 +72,6 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         |      },
         |      "expenses": {
         |         "consolidatedExpenses": 1000.45
-        |      }
         |   }
         |}""".stripMargin
     )
@@ -113,8 +113,10 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           Json.parse(
             """
             |{
+            |"ukProperty": {
             |  "income": {
             |     "totalRentsReceived": 1000.45
+            |   }
             |  }
             |}
             |""".stripMargin
@@ -159,8 +161,8 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       "an object/array is empty or mandatory field is missing" when {
 
         List(
-          "/income",
-          "/expenses"
+          "/ukProperty/income",
+          "/ukProperty/expenses"
         ).foreach(path => testWith(fullRequestJson.replaceWithEmptyObject(path), path))
 
         def testWith(body: JsValue, expectedPath: String): Unit =
@@ -174,20 +176,22 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
       "an object is empty except for a additional (non-schema) property" in {
         val body = Json.parse("""{
-                                |"expenses": {
-                                |  "unknownField": 999.99
-                                |}
+                                |"ukProperty": {
+                                |  "expenses": {
+                                |   "unknownField": 999.99
+                                |   }
+                                |  }
                                 |}""".stripMargin)
 
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
-          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/expenses"))
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/ukProperty/expenses"))
         )
       }
 
-      "an invalid non-fhl consolidated expenses request is supplied for a previous schema" in {
-        val result = validator(validNino, validCalculationId, None, invalidDef2NonFhlConsolidatedBodyJson).validateAndWrapResult()
+      "an invalid Uk Property consolidated expenses request is supplied for a previous schema" in {
+        val result = validator(validNino, validCalculationId, None, invalidUkPropertyConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
@@ -198,35 +202,35 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
     "return ValueFormatError" when {
       "income or (non-consolidated) expenses is invalid" when {
         List(
-          "/income/totalRentsReceived",
-          "/income/premiumsOfLeaseGrant",
-          "/income/reversePremiums",
-          "/income/otherPropertyIncome",
-          "/expenses/premisesRunningCosts",
-          "/expenses/repairsAndMaintenance",
-          "/expenses/financialCosts",
-          "/expenses/professionalFees",
-          "/expenses/costOfServices",
-          "/expenses/travelCosts"
+          "/ukProperty/income/totalRentsReceived",
+          "/ukProperty/income/premiumsOfLeaseGrant",
+          "/ukProperty/income/reversePremiums",
+          "/ukProperty/income/otherPropertyIncome",
+          "/ukProperty/expenses/premisesRunningCosts",
+          "/ukProperty/expenses/repairsAndMaintenance",
+          "/ukProperty/expenses/financialCosts",
+          "/ukProperty/expenses/professionalFees",
+          "/ukProperty/expenses/costOfServices",
+          "/ukProperty/expenses/travelCosts"
         ).foreach(path => testWith(fullRequestJson.update(path, _), path))
       }
 
       "consolidated expenses is invalid" when {
         List(
-          "/expenses/consolidatedExpenses"
+          "/ukProperty/expenses/consolidatedExpenses"
         ).foreach(path => testWith(consolidatedBodyJson.update(path, _), path))
       }
 
       "non negative fields have negative values" when {
         List(
-          "/expenses/residentialFinancialCost",
-          "/expenses/other"
+          "/ukProperty/expenses/residentialFinancialCost",
+          "/ukProperty/expenses/other"
         ).foreach(path => testWith(fullRequestJson.update(path, _), path, min = "0"))
       }
 
       "multiple fields are invalid" in {
-        val path1 = "/income/totalRentsReceived"
-        val path2 = "/expenses/premisesRunningCosts"
+        val path1 = "/ukProperty/income/totalRentsReceived"
+        val path2 = "/ukProperty/expenses/premisesRunningCosts"
 
         val body = fullRequestJson
           .update(path1, JsNumber(0))
@@ -263,11 +267,11 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
     "return RuleBothExpensesSuppliedError" when {
       "passed consolidated and separate expenses" in {
-        val body   = fullRequestJson.update("expenses/consolidatedExpenses", JsNumber(123.45))
+        val body   = fullRequestJson.update("/ukProperty/expenses/consolidatedExpenses", JsNumber(123.45))
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
-          ErrorWrapper(correlationId, RuleBothExpensesError.withPath("/expenses"))
+          ErrorWrapper(correlationId, RuleBothExpensesError.withPath("/ukProperty/expenses"))
         )
       }
     }

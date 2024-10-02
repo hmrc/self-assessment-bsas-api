@@ -37,7 +37,7 @@ object SummaryCalculationIncome {
       (JsPath \ "rarRentReceived").readNullable[BigDecimal]
   )(SummaryCalculationIncome.apply _)
 
-  val readsNonFhl: Reads[SummaryCalculationIncome] = (
+  val readsUkProperty: Reads[SummaryCalculationIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
