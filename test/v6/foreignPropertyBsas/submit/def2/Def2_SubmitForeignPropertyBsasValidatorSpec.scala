@@ -73,18 +73,18 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       |  }
       |}""".stripMargin)
 
-  private def nonFhlBodyWith(nonFhlEntries: JsValue*): JsObject =
+  private def BodyWith(Entries: JsValue*): JsObject =
     Json
       .parse(
         s"""{
-         |  "nonFurnishedHolidayLet": ${JsArray(nonFhlEntries)}
+         |  "foreignProperty": ${JsArray(Entries)}
          |}
          |""".stripMargin
       )
       .as[JsObject]
 
-  private val nonFhlBody: JsValue = nonFhlBodyWith(entry)
-  private val parsedNonFhlBody    = nonFhlBody.as[Def2_SubmitForeignPropertyBsasRequestBody]
+  private val Body: JsValue = BodyWith(entry)
+  private val parsedBody    = Body.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
   private val fhlBodyJson =
     Json
@@ -143,9 +143,9 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "passed a valid non-fhl request" in {
-        val result = validator(validNino, validCalculationId, None, nonFhlBody).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, None, Body).validateAndWrapResult()
         result shouldBe Right(
-          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlBody)
+          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedBody)
         )
       }
 
@@ -157,13 +157,13 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "passed a valid non-fhl consolidated expenses request" in {
-        val nonFhlBodyConsolidated       = nonFhlBodyWith(entryConsolidated)
-        val parsedNonFhlBodyConsolidated = nonFhlBodyConsolidated.as[Def2_SubmitForeignPropertyBsasRequestBody]
+        val BodyConsolidated       = BodyWith(entryConsolidated)
+        val parsedBodyConsolidated = BodyConsolidated.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, None, nonFhlBodyConsolidated).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, None, BodyConsolidated).validateAndWrapResult()
 
         result shouldBe Right(
-          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedNonFhlBodyConsolidated)
+          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedBodyConsolidated)
         )
       }
 
@@ -190,9 +190,9 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "a minimal non-fhl request is supplied" in {
-        val minimalNonFhlBody = Json.parse("""
+        val minimalBody = Json.parse("""
           |{
-          |   "nonFurnishedHolidayLet":  [
+          |   "foreignProperty":  [
           |       {
           |          "countryCode": "FRA",
           |          "income": {
@@ -202,23 +202,23 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           |    ]
           |}
           |""".stripMargin)
-        val parsedMinimalNonFhlBody = minimalNonFhlBody.as[Def2_SubmitForeignPropertyBsasRequestBody]
+        val parsedMinimalBody = minimalBody.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, None, minimalNonFhlBody).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, None, minimalBody).validateAndWrapResult()
 
         result shouldBe Right(
-          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimalNonFhlBody)
+          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimalBody)
         )
       }
 
       "a valid request with a taxYear is supplied" in {
-        val nonFhlBodyWithConsolidatedEntry       = nonFhlBodyWith(entryConsolidated)
-        val parsedNonFhlBodyWithConsolidatedEntry = nonFhlBodyWithConsolidatedEntry.as[Def2_SubmitForeignPropertyBsasRequestBody]
+        val BodyWithConsolidatedEntry       = BodyWith(entryConsolidated)
+        val parsedBodyWithConsolidatedEntry = BodyWithConsolidatedEntry.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, Some(validTaxYear), nonFhlBodyWithConsolidatedEntry).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, Some(validTaxYear), BodyWithConsolidatedEntry).validateAndWrapResult()
 
         result shouldBe Right(
-          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear), parsedNonFhlBodyWithConsolidatedEntry)
+          Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear), parsedBodyWithConsolidatedEntry)
         )
       }
     }
@@ -270,7 +270,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
     "return RuleBothPropertiesSuppliedError" when {
       "passed both fhl and non-fhl" in {
-        val body   = fhlBodyJson ++ nonFhlBodyWith(entry)
+        val body   = fhlBodyJson ++ BodyWith(entry)
         val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
         result shouldBe Left(
@@ -284,7 +284,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           s"""
                |{
                |  "foreignFhlEea": {},
-               |  "nonFurnishedHolidayLet": []
+               |  "foreignProperty": []
                |}
                |""".stripMargin
         )
@@ -314,11 +314,11 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         ).foreach(path => testWith(fhlBodyJson.replaceWithEmptyObject(path), path))
 
         List(
-          (nonFhlBodyWith(), "/nonFurnishedHolidayLet"),
-          (nonFhlBodyWith(entry.replaceWithEmptyObject("/income")), "/nonFurnishedHolidayLet/0/income"),
-          (nonFhlBodyWith(entry.replaceWithEmptyObject("/expenses")), "/nonFurnishedHolidayLet/0/expenses"),
-          (nonFhlBodyWith(entry.removeProperty("/countryCode")), "/nonFurnishedHolidayLet/0/countryCode"),
-          (nonFhlBodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/nonFurnishedHolidayLet/0")
+          (BodyWith(), "/foreignProperty"),
+          (BodyWith(entry.replaceWithEmptyObject("/income")), "/foreignProperty/0/income"),
+          (BodyWith(entry.replaceWithEmptyObject("/expenses")), "/foreignProperty/0/expenses"),
+          (BodyWith(entry.removeProperty("/countryCode")), "/foreignProperty/0/countryCode"),
+          (BodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/foreignProperty/0")
         ).foreach((testWith _).tupled)
 
         def testWith(body: JsValue, expectedPath: String): Unit =
@@ -359,28 +359,22 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
 
           List(
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/totalRentsReceived", v)), "/nonFurnishedHolidayLet/0/income/totalRentsReceived"),
-            (
-              (v: JsNumber) => nonFhlBodyWith(entry.update("/income/premiumsOfLeaseGrant", v)),
-              "/nonFurnishedHolidayLet/0/income/premiumsOfLeaseGrant"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/income/otherPropertyIncome", v)), "/nonFurnishedHolidayLet/0/income/otherPropertyIncome"),
-            (
-              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/premisesRunningCosts", v)),
-              "/nonFurnishedHolidayLet/0/expenses/premisesRunningCosts"),
-            (
-              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/repairsAndMaintenance", v)),
-              "/nonFurnishedHolidayLet/0/expenses/repairsAndMaintenance"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/financialCosts", v)), "/nonFurnishedHolidayLet/0/expenses/financialCosts"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/professionalFees", v)), "/nonFurnishedHolidayLet/0/expenses/professionalFees"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/costOfServices", v)), "/nonFurnishedHolidayLet/0/expenses/costOfServices"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/other", v)), "/nonFurnishedHolidayLet/0/expenses/other"),
-            ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts")
+            ((v: JsNumber) => BodyWith(entry.update("/income/totalRentsReceived", v)), "/foreignProperty/0/income/totalRentsReceived"),
+            ((v: JsNumber) => BodyWith(entry.update("/income/premiumsOfLeaseGrant", v)), "/foreignProperty/0/income/premiumsOfLeaseGrant"),
+            ((v: JsNumber) => BodyWith(entry.update("/income/otherPropertyIncome", v)), "/foreignProperty/0/income/otherPropertyIncome"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/premisesRunningCosts", v)), "/foreignProperty/0/expenses/premisesRunningCosts"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/repairsAndMaintenance", v)), "/foreignProperty/0/expenses/repairsAndMaintenance"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/financialCosts", v)), "/foreignProperty/0/expenses/financialCosts"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/professionalFees", v)), "/foreignProperty/0/expenses/professionalFees"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/costOfServices", v)), "/foreignProperty/0/expenses/costOfServices"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/other", v)), "/foreignProperty/0/expenses/other"),
+            ((v: JsNumber) => BodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/0/expenses/travelCosts")
           ).foreach { case (body, path) => testWith(body, path) }
 
           List(
             (
-              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost")).foreach { case (body, path) => testWith(body, path, min = "0") }
+              (v: JsNumber) => BodyWith(entry.update("/expenses/residentialFinancialCost", v)),
+              "/foreignProperty/0/expenses/residentialFinancialCost")).foreach { case (body, path) => testWith(body, path, min = "0") }
         }
 
         "consolidated expenses is invalid" when {
@@ -390,17 +384,17 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
           List(
             (
-              (v: JsNumber) => nonFhlBodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
-              "/nonFurnishedHolidayLet/0/expenses/consolidatedExpenses")
+              (v: JsNumber) => BodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
+              "/foreignProperty/0/expenses/consolidatedExpenses")
           ).foreach { case (body, path) => testWith(body, path) }
         }
 
         "multiple fields are invalid" in {
-          val path1 = "/nonFurnishedHolidayLet/0/expenses/travelCosts"
-          val path2 = "/nonFurnishedHolidayLet/1/income/totalRentsReceived"
+          val path1 = "/foreignProperty/0/expenses/travelCosts"
+          val path2 = "/foreignProperty/1/income/totalRentsReceived"
 
           val json =
-            nonFhlBodyWith(
+            BodyWith(
               entryWith(countryCode = "ZWE").update("/expenses/travelCosts", JsNumber(0)),
               entryWith(countryCode = "AFG").update("/income/totalRentsReceived", JsNumber(123.123))
             )
@@ -436,22 +430,20 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
       "return RuleCountryCodeError" when {
         "passed an invalid country code" in {
-          val body   = nonFhlBodyWith(entryWith(countryCode = "QQQ"))
+          val body   = BodyWith(entryWith(countryCode = "QQQ"))
           val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
           result shouldBe Left(
-            ErrorWrapper(correlationId, RuleCountryCodeError.withPath("/nonFurnishedHolidayLet/0/countryCode"))
+            ErrorWrapper(correlationId, RuleCountryCodeError.withPath("/foreignProperty/0/countryCode"))
           )
         }
 
         "passed multiple invalid country codes" in {
-          val body   = nonFhlBodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
+          val body   = BodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
           val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
           result shouldBe Left(
-            ErrorWrapper(
-              correlationId,
-              RuleCountryCodeError.withPaths(List("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode")))
+            ErrorWrapper(correlationId, RuleCountryCodeError.withPaths(List("/foreignProperty/0/countryCode", "/foreignProperty/1/countryCode")))
           )
         }
       }
@@ -459,7 +451,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       "return RuleDuplicateCountryCodeError" when {
         "a country code is duplicated" in {
           val code   = "ZWE"
-          val body   = nonFhlBodyWith(entryWith(code), entryWith(code))
+          val body   = BodyWith(entryWith(code), entryWith(code))
           val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
           result shouldBe Left(
@@ -467,7 +459,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
               correlationId,
               RuleDuplicateCountryCodeError.forDuplicatedCodesAndPaths(
                 code = code,
-                paths = List("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/1/countryCode"))
+                paths = List("/foreignProperty/0/countryCode", "/foreignProperty/1/countryCode"))
             )
           )
         }
@@ -475,7 +467,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         "multiple country codes are duplicated" in {
           val code1  = "AFG"
           val code2  = "ZWE"
-          val body   = nonFhlBodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
+          val body   = BodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
           val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
 
           result shouldBe Left(
@@ -484,13 +476,9 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
               BadRequestError,
               Some(List(
                 RuleDuplicateCountryCodeError
-                  .forDuplicatedCodesAndPaths(
-                    code = code1,
-                    paths = List("/nonFurnishedHolidayLet/0/countryCode", "/nonFurnishedHolidayLet/2/countryCode")),
+                  .forDuplicatedCodesAndPaths(code = code1, paths = List("/foreignProperty/0/countryCode", "/foreignProperty/2/countryCode")),
                 RuleDuplicateCountryCodeError
-                  .forDuplicatedCodesAndPaths(
-                    code = code2,
-                    paths = List("/nonFurnishedHolidayLet/1/countryCode", "/nonFurnishedHolidayLet/3/countryCode"))
+                  .forDuplicatedCodesAndPaths(code = code2, paths = List("/foreignProperty/1/countryCode", "/foreignProperty/3/countryCode"))
               ))
             )
           )
@@ -508,7 +496,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         }
 
         "passed consolidated and separate non-fhl expenses" in {
-          val body = nonFhlBodyWith(
+          val body = BodyWith(
             entryWith(countryCode = "ZWE").update("expenses/consolidatedExpenses", JsNumber(123.45)),
             entryWith(countryCode = "AFG").update("expenses/consolidatedExpenses", JsNumber(123.45))
           )
@@ -517,7 +505,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           result shouldBe Left(
             ErrorWrapper(
               correlationId,
-              RuleBothExpensesError.withPaths(List("/nonFurnishedHolidayLet/0/expenses", "/nonFurnishedHolidayLet/1/expenses"))
+              RuleBothExpensesError.withPaths(List("/foreignProperty/0/expenses", "/foreignProperty/1/expenses"))
             )
           )
         }

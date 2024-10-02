@@ -30,7 +30,7 @@ import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequ
 object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "nonFurnishedHolidayLet").resolver thenResolve
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "foreignProperty").resolver thenResolve
       ResolveNonEmptyJsonObject.resolver[request.Def2_SubmitForeignPropertyBsasRequestBody]
 
   private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally

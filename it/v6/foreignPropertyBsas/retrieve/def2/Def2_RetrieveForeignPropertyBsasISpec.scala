@@ -26,8 +26,8 @@ import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
-  retrieveForeignPropertyBsasDesNonFhlJson,
-  retrieveForeignPropertyBsasMtdNonFhlJson
+  retrieveForeignPropertyBsasDesJson,
+  retrieveForeignPropertyBsasMtdJson
 }
 import v6.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasFixtures
 import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
@@ -38,11 +38,11 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     "return a valid response with status OK" when {
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesNonFhlJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson)
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdNonFhlJson
+        response.json shouldBe retrieveForeignPropertyBsasMtdJson
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 

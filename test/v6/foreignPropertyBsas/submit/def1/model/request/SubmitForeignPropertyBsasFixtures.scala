@@ -20,9 +20,9 @@ import play.api.libs.json.{JsValue, Json}
 
 object SubmitForeignPropertyBsasFixtures {
 
-  val mtdRequestNonFhlFull: JsValue = Json.parse("""
+  val mtdRequestFull: JsValue = Json.parse("""
       |{
-      |   "nonFurnishedHolidayLet":  [
+      |   "foreignProperty":  [
       |       {
       |          "countryCode": "FRA",
       |          "income": {
@@ -46,7 +46,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamRequestNonFhlFull: JsValue = Json.parse("""
+  val downstreamRequestFull: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "15",
       |   "adjustments":  [
@@ -73,8 +73,8 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = Some(
+  val requestFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
+    foreignProperty = Some(
       List(
         ForeignProperty(
           countryCode = "FRA",
@@ -142,7 +142,7 @@ object SubmitForeignPropertyBsasFixtures {
       |""".stripMargin)
 
   val requestFhlFull: Def1_SubmitForeignPropertyBsasRequestBody = Def1_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = None,
+    foreignProperty = None,
     foreignFhlEea = Some(
       FhlEea(
         income = Some(
