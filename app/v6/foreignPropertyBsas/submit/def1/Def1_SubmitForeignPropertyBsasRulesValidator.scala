@@ -42,11 +42,11 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
         (valid, valid)
     }
 
-    val (validatedNonFurnishedHolidayLets, validatedDuplicateCountryCode) = body.nonFurnishedHolidayLet match {
+    val (validatedForeignProperty, validatedDuplicateCountryCode) = body.foreignProperty match {
       case Some(foreignProperties) =>
         val foreignPropertiesWithIndex = foreignProperties.zipWithIndex.toList
         (
-          validateNonFurnishedHolidayLets(foreignPropertiesWithIndex),
+          validateForeignProperty(foreignPropertiesWithIndex),
           duplicateCountryCodeValidation(foreignPropertiesWithIndex)
         )
 
@@ -57,7 +57,7 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
     combine(
       validatedForeignFhlEea,
       validatedForeignFhlEeaConsolidated,
-      validatedNonFurnishedHolidayLets,
+      validatedForeignProperty,
       validatedDuplicateCountryCode
     ).onSuccess(parsed)
   }
@@ -92,7 +92,7 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
       .getOrElse(valid)
   }
 
-  private def validateNonFurnishedHolidayLets(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
+  private def validateForeignProperty(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
     foreignProperties.traverse_ { case (foreignProperty, i) =>
       validateForeignProperty(foreignProperty, i)
         .combine(validateForeignPropertyConsolidatedExpenses(foreignProperty, i))
@@ -103,7 +103,7 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
     val duplicateErrors = {
       foreignProperties
         .map { case (entry, idx) =>
-          (entry.countryCode, s"/nonFurnishedHolidayLet/$idx/countryCode")
+          (entry.countryCode, s"/foreignProperty/$idx/countryCode")
         }
         .groupBy(_._1)
         .collect {
@@ -120,7 +120,7 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
 
   private def validateForeignProperty(foreignProperty: ForeignProperty, index: Int): Validated[Seq[MtdError], Unit] = {
 
-    def path(suffix: String) = s"/nonFurnishedHolidayLet/$index/$suffix"
+    def path(suffix: String) = s"/foreignProperty/$index/$suffix"
 
     combine(
       ResolveParsedCountryCode(foreignProperty.countryCode, path("countryCode")),
@@ -148,7 +148,7 @@ object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_
             case ForeignPropertyExpenses(None, None, None, None, None, None, _, None, Some(_)) =>
               valid
             case _ =>
-              Invalid(List(RuleBothExpensesError.copy(paths = Some(List(s"/nonFurnishedHolidayLet/$index/expenses")))))
+              Invalid(List(RuleBothExpensesError.copy(paths = Some(List(s"/foreignProperty/$index/expenses")))))
           }
       }
       .getOrElse(valid)

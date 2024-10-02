@@ -25,5 +25,5 @@ class InputsSpec extends UnitSpec with RoundTripTest {
   import Inputs._
 
   testRoundTrip("Inputs FHL", inputsDesFhlJson, parsedFhlInputs, inputsMtdFhlJson)(reads)
-  testRoundTrip("Inputs Non-FHL", inputsDesNonFhlJson, parsedNonFhlInputs, inputsMtdNonFhlJson)(reads)
+  testRoundTrip("Inputs Non-FHL", inputsDesJson, parsedInputs, inputsMtdJson)(reads)
 }

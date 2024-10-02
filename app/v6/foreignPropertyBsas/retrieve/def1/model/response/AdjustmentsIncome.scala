@@ -31,7 +31,7 @@ object AdjustmentsIncome {
       Reads.pure(None)
   )(AdjustmentsIncome.apply _)
 
-  val readsNonFhl: Reads[AdjustmentsIncome] = (
+  val reads: Reads[AdjustmentsIncome] = (
     (JsPath \ "rentReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]

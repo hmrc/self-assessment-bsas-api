@@ -61,15 +61,15 @@ post:
           example-3:
             description: Foreign Property (Non-FHL)
             value:
-              $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_non_fhl_accounting_adjustments.json
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_accounting_adjustments.json
           example-4:
             description: Foreign Property (Non-FHL) with Consolidated
             value:
-              $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_non_fhl_consolidated_accounting_adjustments.json
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_consolidated_accounting_adjustments.json
           example-5:
             description: TY-2024-25 - Foreign Property (Non-FHL) with non-negative residential financial cost
             value:
-              $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_non_fhl_accounting_adjustments.json
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_accounting_adjustments.json
           example-6:
             description: TY-2025-26-Foreign Property Adjustment
             value:

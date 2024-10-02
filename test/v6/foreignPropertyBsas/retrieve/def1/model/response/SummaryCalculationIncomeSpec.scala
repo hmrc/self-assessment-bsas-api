@@ -33,7 +33,7 @@ class SummaryCalculationIncomeSpec extends UnitSpec with RoundTripTest {
   testRoundTrip(
     "Summary Calculation Income Non-FHL",
     summaryCalculationIncomeDesJson,
-    parsedNonFhlSummaryCalculationIncome,
-    summaryCalculationIncomeMtdNonFhlJson)(readsNonFhl)
+    parsedSummaryCalculationIncome,
+    summaryCalculationIncomeMtdJson)(reads)
 
 }

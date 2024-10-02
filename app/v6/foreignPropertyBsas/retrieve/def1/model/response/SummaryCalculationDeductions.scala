@@ -41,7 +41,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
   )(SummaryCalculationDeductions.apply _)
 
-  val readsNonFhl: Reads[SummaryCalculationDeductions] = (
+  val reads: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
       (JsPath \ "costOfReplacingDomesticItems").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsGoodsVehicleAllowance").readNullable[BigDecimal] and

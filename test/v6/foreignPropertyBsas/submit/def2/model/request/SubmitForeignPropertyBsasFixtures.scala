@@ -20,9 +20,9 @@ import play.api.libs.json.{JsValue, Json}
 
 object SubmitForeignPropertyBsasFixtures {
 
-  val mtdRequestNonFhlFull: JsValue = Json.parse("""
+  val mtdRequestFull: JsValue = Json.parse("""
       |{
-      |   "nonFurnishedHolidayLet":  [
+      |   "foreignProperty":  [
       |       {
       |          "countryCode": "FRA",
       |          "income": {
@@ -46,9 +46,9 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val mtdRequestNonFhlValid: JsValue = Json.parse("""
+  val mtdRequestForeignPropertyValid: JsValue = Json.parse("""
       |{
-      |   "nonFurnishedHolidayLet":  [
+      |   "foreignProperty":  [
       |       {
       |          "countryCode": "FRA",
       |          "income": {
@@ -71,7 +71,7 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val downstreamRequestNonFhlFull: JsValue = Json.parse("""
+  val downstreamRequestFull: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "15",
       |   "adjustments":  [
@@ -98,8 +98,8 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val requestNonFhlFull: Def2_SubmitForeignPropertyBsasRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = Some(
+  val requestFull: Def2_SubmitForeignPropertyBsasRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(
+    foreignProperty = Some(
       List(
         ForeignProperty(
           countryCode = "FRA",
@@ -167,7 +167,7 @@ object SubmitForeignPropertyBsasFixtures {
       |""".stripMargin)
 
   val requestFhlFull: Def2_SubmitForeignPropertyBsasRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(
-    nonFurnishedHolidayLet = None,
+    foreignProperty = None,
     foreignFhlEea = Some(
       FhlEea(
         income = Some(

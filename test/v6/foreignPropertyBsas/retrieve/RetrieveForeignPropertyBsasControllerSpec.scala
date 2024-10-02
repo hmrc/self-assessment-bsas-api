@@ -53,11 +53,11 @@ class RetrieveForeignPropertyBsasControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveForeignPropertyBsasService.retrieveBsas(requestData) returns
-          Future.successful(Right(ResponseWrapper(correlationId, parsedNonFhlRetrieveForeignPropertyBsasResponse)))
+          Future.successful(Right(ResponseWrapper(correlationId, parsedRetrieveForeignPropertyBsasResponse)))
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(retrieveForeignPropertyBsasMtdNonFhlJson)
+          maybeExpectedResponseBody = Some(retrieveForeignPropertyBsasMtdJson)
         )
       }
     }

@@ -42,13 +42,13 @@ object Def1_RetrieveForeignPropertyBsasResponse {
       isFhl = inputs.typeOfBusiness == TypeOfBusinessWithFHL.`foreign-property-fhl-eea`
 
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation](
-        if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.readsNonFhl
+        if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.reads
       )
 
-      adjustments <- if (isFhl) fhlEeaAdjustmentsReads(json) else nonFhlAdjustmentsReads(json)
+      adjustments <- if (isFhl) fhlEeaAdjustmentsReads(json) else adjustmentsReads(json)
 
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation](
-        if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.readsNonFhl
+        if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.reads
       )
     } yield Def1_RetrieveForeignPropertyBsasResponse(
       metadata = metadata,
@@ -61,9 +61,9 @@ object Def1_RetrieveForeignPropertyBsasResponse {
   private def fhlEeaAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments").validateOpt[Adjustments](Adjustments.readsFhl)
 
-  private def nonFhlAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+  private def adjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments")
-      .validateOpt[Seq[Adjustments]](Adjustments.readsNonFhlSeq)
+      .validateOpt[Seq[Adjustments]](Adjustments.readsSeq)
       .map(s => Some(Adjustments(s, None, None, None)))
       .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
 

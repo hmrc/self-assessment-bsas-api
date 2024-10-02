@@ -26,9 +26,9 @@ class AdjustmentsIncomeSpec extends UnitSpec with RoundTripTest {
 
   testRoundTrip(
     "Adjustments Income ",
-    adjustmentsIncomeDesNonFhlJson,
-    parsedNonFhlAdjustmentsIncome,
-    adjustmentsIncomeMtdNonFhlJson
+    adjustmentsIncomeDesJson,
+    parsedAdjustmentsIncome,
+    adjustmentsIncomeMtdJson
   )(reads)
 
 }

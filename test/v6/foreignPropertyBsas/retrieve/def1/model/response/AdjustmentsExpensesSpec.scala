@@ -34,8 +34,8 @@ class AdjustmentsExpensesSpec extends UnitSpec with RoundTripTest {
   testRoundTrip(
     "Adjustments Non-FHL",
     adjustmentsExpensesDesJson,
-    parsedNonFhlAdjustmentsExpenses,
-    adjustmentsExpensesMtdNonFhlJson
-  )(readsNonFhl)
+    parsedAdjustmentsExpenses,
+    adjustmentsExpensesMtdJson
+  )(reads)
 
 }
