@@ -51,12 +51,13 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveNonTysBsasUkPropertyResponseJson)
 
-        val response: WSResponse = await(request.get())
+          val response: WSResponse = await(request.get())
 
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveNonTysBsasResponseUkPropertyJson
+          response.status shouldBe OK
+          response.header("Content-Type") shouldBe Some("application/json")
+          response.json shouldBe mtdRetrieveNonTysBsasResponseUkPropertyJson
 
+        }
       }
 
       "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
