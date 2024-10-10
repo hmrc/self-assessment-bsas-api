@@ -50,7 +50,6 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveNonTysBsasUkPropertyResponseJson)
-        }
 
         val response: WSResponse = await(request.get())
 
