@@ -25,7 +25,7 @@ import shared.utils.UnitSpec
 class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport with TaxYearTestSupport {
 
   "schema lookup" when {
-    "a tax year is present" must {
+    "a valid tax year is present" must {
       "use Def1 for tax years before 2025-26" in {
         forTaxYearsBefore(TaxYear.fromMtd("2025-26")) { taxYear =>
           ListBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(ListBsasSchema.Def1)
@@ -39,18 +39,17 @@ class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wi
       }
     }
 
-  }
-
-  "the tax year is present but not valid" when {
-    "the tax year format is invalid" must {
-      "return a TaxYearFormatError" in {
-        ListBsasSchema.schemaFor("NotATaxYear") shouldBe Invalid(Seq(TaxYearFormatError))
+    "the tax year is present but not valid" when {
+      "the tax year format is invalid" must {
+        "return a TaxYearFormatError" in {
+          ListBsasSchema.schemaFor("NotATaxYear") shouldBe Invalid(Seq(TaxYearFormatError))
+        }
       }
-    }
 
-    "the tax year range is invalid" must {
-      "return a RuleTaxYearRangeInvalidError" in {
-        ListBsasSchema.schemaFor("2020-99") shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+      "the tax year range is invalid" must {
+        "return a RuleTaxYearRangeInvalidError" in {
+          ListBsasSchema.schemaFor("2020-99") shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+        }
       }
     }
   }

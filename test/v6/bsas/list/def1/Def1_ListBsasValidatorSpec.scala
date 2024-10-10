@@ -98,7 +98,7 @@ class Def1_ListBsasValidatorSpec extends UnitSpec {
 
     "return multiple errors" when {
       "multiple invalid parameters are provided" in {
-        val result = validator("not-a-nino", validTaxYear, Some("not-a-type-of-business"), None).validateAndWrapResult()
+        val result = validator("not-a-nino", "2019-20", Some("not-a-type-of-business"), None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(

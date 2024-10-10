@@ -16,6 +16,7 @@
 
 package v6.bsas.list
 
+import cats.implicits._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
@@ -35,14 +36,9 @@ class ListBsasService @Inject() (connector: ListBsasConnector) extends BaseServi
       ec: ExecutionContext
   ): Future[ServiceOutcome[ListBsasResponse]] = {
 
-    connector.listBsas(request).map {
-      case Right(response) =>
-        val filteredResponse = ListBsasResponse.filterByTaxYear(request.taxYear, response.responseData)
-        Right(response.copy(responseData = filteredResponse))
-
-      case Left(error) =>
-        Left(mapDownstreamErrors(errorMap)(error))
-    }
+    connector
+      .listBsas(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {

@@ -38,31 +38,14 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple())
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs()
-
-      }
-
-      "valid request is made and multiple tax years returned from downstream" in new NonTysTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultipleWithDifferentTaxYears())
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs()
+        response.json shouldBe summariesJs
 
       }
 
@@ -72,14 +55,14 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple("2024"))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs("2023-24")
+        response.json shouldBe summariesJs
       }
 
       "valid request is made with foreign property" in new NonTysTest {
@@ -88,14 +71,14 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign("2020"))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesForeignJs("2019-20")
+        response.json shouldBe summariesForeignJs
       }
 
       "valid request is made with foreign property and a Tax Year Specific (TYS) tax year" in new TysIfsTest {
@@ -104,14 +87,14 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign("2024"))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasResponseDownstreamJsonForeign)
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesForeignJs("2023-24")
+        response.json shouldBe summariesForeignJs
       }
 
     }

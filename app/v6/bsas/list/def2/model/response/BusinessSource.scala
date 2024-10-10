@@ -19,7 +19,6 @@ package v6.bsas.list.def2.model.response
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import shared.models.domain.TaxYear
-import v6.bsas.list.model.response.BsasSummary
 import v6.common.model.{IncomeSourceType, TypeOfBusiness}
 
 case class BusinessSource(

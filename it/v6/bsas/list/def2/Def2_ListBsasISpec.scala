@@ -64,22 +64,6 @@ class Def2_ListBsasISpec extends IntegrationBaseSpec with Def2_ListBsasFixtures 
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe summariesForeignJs
       }
-
-      "valid request is made without a tax year so that the current tax year is used" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs
-      }
     }
 
     "return error according to spec" when {

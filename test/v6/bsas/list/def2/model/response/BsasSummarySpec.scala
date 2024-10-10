@@ -19,7 +19,6 @@ package v6.bsas.list.def2.model.response
 import play.api.libs.json.{JsError, JsObject, Json}
 import shared.utils.UnitSpec
 import v6.bsas.list.def2.model.Def2_ListBsasFixtures
-import v6.bsas.list.model.response.BsasSummary
 
 class BsasSummarySpec extends UnitSpec with Def2_ListBsasFixtures {
 

@@ -17,25 +17,16 @@
 package v6.bsas.list.def1.model.response
 
 import play.api.libs.json.{JsError, JsObject, Json}
-import shared.config.MockAppConfig
-import shared.models.domain.TaxYear
+import shared.config.MockSharedAppConfig
 import shared.utils.UnitSpec
 import v6.bsas.list.def1.model.Def1_ListBsasFixtures
-import v6.bsas.list.model.response.ListBsasResponse
 
-class Def1_ListBsasResponseSpec extends UnitSpec with MockAppConfig with Def1_ListBsasFixtures {
+class Def1_ListBsasResponseSpec extends UnitSpec with MockSharedAppConfig with Def1_ListBsasFixtures {
 
   "ListBsasResponse" when {
-
     "read from valid JSON" should {
       "return the expected object" in {
-        val result = listBsasResponseDownstreamJson().as[Def1_ListBsasResponse]
-        result shouldBe listBsasResponse
-      }
-    }
-    "filterByTaxYear" should {
-      "return the expected object" in {
-        val result = ListBsasResponse.filterByTaxYear(TaxYear("2020"), listBsasMultipleTaxYearResponse)
+        val result = listBsasResponseDownstreamJson.as[Def1_ListBsasResponse]
         result shouldBe listBsasResponse
       }
     }
@@ -50,12 +41,7 @@ class Def1_ListBsasResponseSpec extends UnitSpec with MockAppConfig with Def1_Li
     "written to JSON" should {
       "return the expected JSON" in {
         val result = Json.toJson(listBsasResponse)
-        result shouldBe listBsasResponseJson()
-      }
-
-      "return the expected JSON for multiple tax years" in {
-        val result = Json.toJson(listBsasResponse)
-        result shouldBe listBsasResponseJson()
+        result shouldBe listBsasResponseJson
       }
     }
   }

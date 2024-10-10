@@ -18,8 +18,8 @@ package v6.bsas.list.def1.model
 
 import play.api.libs.json.{JsArray, JsValue, Json}
 import shared.models.domain.{Status, TaxYear}
-import v6.bsas.list.def1.model.response.{AccountingPeriod, BusinessSource, Def1_ListBsasResponse}
-import v6.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import v6.bsas.list.def1.model.response.{AccountingPeriod, BsasSummary, BusinessSource, Def1_ListBsasResponse}
+import v6.bsas.list.model.response.ListBsasResponse
 import v6.common.model.TypeOfBusinessWithFHL
 
 trait Def1_ListBsasFixtures {
@@ -77,14 +77,14 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def businessSourceSummaryDownstreamJson(taxYear: String = "2020"): JsValue = Json.parse(
-    s"""
+  val businessSourceSummaryDownstreamJson: JsValue = Json.parse(
+    """
       |{
       |  "incomeSourceId": "000000000000210",
       |  "incomeSourceType": "01",
       |  "accountingStartDate": "2018-10-11",
       |  "accountingEndDate": "2019-10-10",
-      |  "taxYear": $taxYear,
+      |  "taxYear": 2020,
       |  "ascCalculations": [
       |    {
       |      "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -97,8 +97,8 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def businessSourceSummaryJson(taxYear: String = "2019-20"): JsValue = Json.parse(
-    s"""
+  val businessSourceSummaryJson: JsValue = Json.parse(
+    """
       |{
       |  "businessId": "000000000000210",
       |  "typeOfBusiness": "self-employment",
@@ -106,7 +106,7 @@ trait Def1_ListBsasFixtures {
       |    "startDate": "2018-10-11",
       |    "endDate": "2019-10-10"
       |  },
-      |  "taxYear": "$taxYear",
+      |  "taxYear": "2019-20",
       |  "summaries": [
       |    {
       |      "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -119,15 +119,15 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def listBsasResponseDownstreamJson(taxYear: String = "2020"): JsValue = Json.parse(
-    s"""
+  val listBsasResponseDownstreamJson: JsValue = Json.parse(
+    """
       |[
       |  {
       |    "incomeSourceId": "000000000000210",
       |    "incomeSourceType": "01",
       |    "accountingStartDate": "2018-10-11",
       |    "accountingEndDate": "2019-10-10",
-      |    "taxYear": $taxYear,
+      |    "taxYear": 2020,
       |    "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -141,15 +141,15 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def listBsasResponseDownstreamJsonForeign(taxYear: String = "2020"): JsValue = Json.parse(
-    s"""
+  val listBsasResponseDownstreamJsonForeign: JsValue = Json.parse(
+    """
       |[
       |  {
       |    "incomeSourceId": "000000000000210",
       |    "incomeSourceType": "15",
       |    "accountingStartDate": "2018-10-11",
       |    "accountingEndDate": "2019-10-10",
-      |    "taxYear": $taxYear,
+      |    "taxYear": 2020,
       |    "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -163,11 +163,10 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  val listBsasResponse: ListBsasResponse                = Def1_ListBsasResponse(List(businessSourceSummary()))
-  val listBsasMultipleTaxYearResponse: ListBsasResponse = Def1_ListBsasResponse(Seq(businessSourceSummary(), businessSourceSummary("2020-21")))
+  val listBsasResponse: ListBsasResponse = Def1_ListBsasResponse(List(businessSourceSummary()))
 
-  def listBsasResponseJson(taxYear: String = "2019-20"): JsValue = Json.parse(
-    s"""
+  val listBsasResponseJson: JsValue = Json.parse(
+    """
       |{
       |  "businessSources": [
       |    {
@@ -177,7 +176,7 @@ trait Def1_ListBsasFixtures {
       |        "startDate": "2018-10-11",
       |        "endDate": "2019-10-10"
       |      },
-      |      "taxYear": "$taxYear",
+      |      "taxYear": "2019-20",
       |      "summaries": [
       |        {
       |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -192,12 +191,12 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def listBsasResponseDownstreamJsonSE(taxYear: String = "2020"): JsValue = Json.parse(
-    s"""
+  val listBsasResponseDownstreamJsonSE: JsValue = Json.parse(
+    """
       |{
       |  "incomeSourceType": "01",
       |  "incomeSourceId": "000000000000210",
-      |  "taxYear": $taxYear,
+      |  "taxYear": 2020,
       |  "accountingStartDate": "2018-10-11",
       |  "accountingEndDate": "2019-10-10",
       |  "ascCalculations": [
@@ -212,14 +211,14 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def listBsasResponseDownstreamJsonUkFhl(taxYear: String = "2020"): JsValue = Json.parse(
-    s"""
+  val listBsasResponseDownstreamJsonUkFhl: JsValue = Json.parse(
+    """
       |{
       |  "incomeSourceType": "04",
       |  "incomeSourceId": "000000000000210",
       |  "accountingStartDate": "2018-10-11",
       |  "accountingEndDate": "2019-10-10",
-      |  "taxYear": $taxYear,
+      |  "taxYear": 2020,
       |  "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
@@ -232,14 +231,14 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def listBsasResponseDownstreamJsonUkNonFhl(taxYear: String = "2020"): JsValue = Json.parse(
-    s"""
+  val listBsasResponseDownstreamJsonUkNonFhl: JsValue = Json.parse(
+    """
       |{
       |  "incomeSourceType": "02",
       |  "incomeSourceId": "000000000000210",
       |  "accountingStartDate": "2018-10-11",
       |  "accountingEndDate": "2019-10-10",
-      |  "taxYear": $taxYear,
+      |  "taxYear": 2020,
       |  "ascCalculations": [
       |      {
       |        "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
@@ -252,21 +251,11 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
   )
 
-  def listBsasDownstreamJsonMultiple(taxYear: String = "2020"): JsArray = JsArray(
+  val listBsasDownstreamJsonMultiple: JsArray = JsArray(
     List(
-      listBsasResponseDownstreamJsonSE(taxYear),
-      listBsasResponseDownstreamJsonUkFhl(taxYear),
-      listBsasResponseDownstreamJsonUkNonFhl(taxYear)
-    ))
-
-  def listBsasDownstreamJsonMultipleWithDifferentTaxYears(): JsArray = JsArray(
-    List(
-      listBsasResponseDownstreamJsonSE("2021"),
-      listBsasResponseDownstreamJsonUkFhl("2021"),
-      listBsasResponseDownstreamJsonUkNonFhl("2021"),
-      listBsasResponseDownstreamJsonSE(),
-      listBsasResponseDownstreamJsonUkFhl(),
-      listBsasResponseDownstreamJsonUkNonFhl()
+      listBsasResponseDownstreamJsonSE,
+      listBsasResponseDownstreamJsonUkFhl,
+      listBsasResponseDownstreamJsonUkNonFhl
     ))
 
   def businessSourceSummary(taxYear: String = "2019-20"): BusinessSource = BusinessSource(
@@ -277,7 +266,7 @@ trait Def1_ListBsasFixtures {
     summaries = List(bsasSummary)
   )
 
-  def summariesJs(taxYear: String = "2019-20"): JsValue =
+  val summariesJs: JsValue =
     Json.parse(
       s"""
          |{
@@ -289,7 +278,7 @@ trait Def1_ListBsasFixtures {
          |        "startDate": "2018-10-11",
          |        "endDate": "2019-10-10"
          |      },
-         |      "taxYear": "$taxYear",
+         |      "taxYear": "2019-20",
          |      "summaries": [
          |        {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
@@ -306,7 +295,7 @@ trait Def1_ListBsasFixtures {
          |        "startDate": "2018-10-11",
          |        "endDate": "2019-10-10"
          |      },
-         |      "taxYear": "$taxYear",
+         |      "taxYear": "2019-20",
          |      "summaries": [
          |        {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce5",
@@ -323,7 +312,7 @@ trait Def1_ListBsasFixtures {
          |        "startDate": "2018-10-11",
          |        "endDate": "2019-10-10"
          |      },
-         |      "taxYear": "$taxYear",
+         |      "taxYear": "2019-20",
          |      "summaries": [
          |        {
          |          "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce6",
@@ -338,7 +327,7 @@ trait Def1_ListBsasFixtures {
     """.stripMargin
     )
 
-  def summariesForeignJs(taxYear: String = "2019-20"): JsValue =
+  val summariesForeignJs: JsValue =
     Json.parse(
       s"""
          |{
@@ -346,7 +335,7 @@ trait Def1_ListBsasFixtures {
          |    {
          |      "typeOfBusiness": "foreign-property",
          |      "businessId": "000000000000210",
-         |      "taxYear": "$taxYear",
+         |      "taxYear": "2019-20",
          |      "accountingPeriod": {
          |        "startDate": "2018-10-11",
          |        "endDate": "2019-10-10"
