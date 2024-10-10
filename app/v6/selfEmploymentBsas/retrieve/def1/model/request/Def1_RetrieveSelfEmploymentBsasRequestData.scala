@@ -23,7 +23,7 @@ import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRe
 case class Def1_RetrieveSelfEmploymentBsasRequestData(
     nino: Nino,
     calculationId: CalculationId,
-    taxYear: Option[TaxYear]
+    taxYear: TaxYear
 ) extends RetrieveSelfEmploymentBsasRequestData {
 
   val schema: RetrieveSelfEmploymentBsasSchema = RetrieveSelfEmploymentBsasSchema.Def1

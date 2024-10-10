@@ -41,7 +41,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, retrieveBsasResponseFhl))
 
       "a valid Def1 request is supplied for a non-TYS year" in new IfsTest with Test {
-        private val request     = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear = None)
+        private val request     = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, TaxYear.fromMtd("2022-23"))
         private val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willGet(expectedUrl) returns Future.successful(outcome)
 
@@ -51,7 +51,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "a valid Def1 request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
         private def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-        private val request          = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
+        private val request          = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear)
         willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId") returns Future
           .successful(outcome)
 
@@ -61,7 +61,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "a valid Def2 request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
         private def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
-        private val request          = Def2_RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
+        private val request          = Def2_RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear)
         willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId") returns Future
           .successful(outcome)
 

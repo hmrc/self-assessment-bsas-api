@@ -37,20 +37,21 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     val connector: RetrieveSelfEmploymentBsasConnector =
       new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
-    def requestWith(taxYear: Option[TaxYear]): RetrieveSelfEmploymentBsasRequestData =
+    def requestWith(taxYear: TaxYear): RetrieveSelfEmploymentBsasRequestData =
       Def1_RetrieveSelfEmploymentBsasRequestData(nino, calculationId, taxYear)
 
   }
 
   "RetrieveSelfEmploymentBsasConnectorSpec" when {
-    "retrieveSelfEmploymentBsas is called" must {
+    "retrieveSelfEmploymentBsas is called for Non-TYS" must {
       "a valid request is supplied" in {
         new IfsTest with Test {
           val outcome     = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson))
           val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
-          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(None)))
+          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] =
+            await(connector.retrieveSelfEmploymentBsas(requestWith(TaxYear.fromMtd("2022-23"))))
           result shouldBe outcome
         }
       }
@@ -64,7 +65,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
           val expectedUrl      = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
-          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(Some(taxYear))))
+          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(taxYear)))
           result shouldBe outcome
         }
       }

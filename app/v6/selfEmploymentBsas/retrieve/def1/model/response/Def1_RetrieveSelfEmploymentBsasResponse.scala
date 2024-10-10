@@ -18,6 +18,7 @@ package v6.selfEmploymentBsas.retrieve.def1.model.response
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import shared.models.domain.TaxYear
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
 case class Def1_RetrieveSelfEmploymentBsasResponse(
@@ -29,7 +30,7 @@ case class Def1_RetrieveSelfEmploymentBsasResponse(
 ) extends RetrieveSelfEmploymentBsasResponse {
 
   override def incomeSourceType: String = inputs.incomeSourceType
-
+  override def taxYear: TaxYear         = TaxYear.fromMtd(metadata.taxYear)
 }
 
 object Def1_RetrieveSelfEmploymentBsasResponse {

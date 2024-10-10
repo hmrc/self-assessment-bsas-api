@@ -86,16 +86,16 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
   private val foreignPropertyBody: JsValue = foreignPropertyBodyWith(entry)
   private val parsedForeignPropertyBody    = foreignPropertyBody.as[Def3_SubmitForeignPropertyBsasRequestBody]
 
-  private def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue) =
+  private def validator(nino: String, calculationId: String, taxYear: String, body: JsValue) =
     new Def3_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
 
   "running a validation" should {
     "return the parsed domain object" when {
 
       "passed a valid foreign property request" in {
-        val result = validator(validNino, validCalculationId, None, foreignPropertyBody).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, foreignPropertyBody).validateAndWrapResult()
         result shouldBe Right(
-          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedForeignPropertyBody)
+          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedForeignPropertyBody)
         )
       }
 
@@ -103,10 +103,10 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         val foreignPropertyBodyConsolidated       = foreignPropertyBodyWith(entryConsolidated)
         val parsedForeignPropertyBodyConsolidated = foreignPropertyBodyConsolidated.as[Def3_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, None, foreignPropertyBodyConsolidated).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, foreignPropertyBodyConsolidated).validateAndWrapResult()
 
         result shouldBe Right(
-          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedForeignPropertyBodyConsolidated)
+          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedForeignPropertyBodyConsolidated)
         )
       }
 
@@ -125,10 +125,10 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           |""".stripMargin)
         val parsedMinimalForeignPropertyBody = minimalForeignPropertyBody.as[Def3_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, None, minimalForeignPropertyBody).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, minimalForeignPropertyBody).validateAndWrapResult()
 
         result shouldBe Right(
-          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, None, parsedMinimalForeignPropertyBody)
+          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedMinimalForeignPropertyBody)
         )
       }
 
@@ -136,21 +136,17 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         val foreignPropertyBodyWithConsolidatedEntry       = foreignPropertyBodyWith(entryConsolidated)
         val parsedForeignPropertyBodyWithConsolidatedEntry = foreignPropertyBodyWithConsolidatedEntry.as[Def3_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, Some(validTaxYear), foreignPropertyBodyWithConsolidatedEntry).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, foreignPropertyBodyWithConsolidatedEntry).validateAndWrapResult()
 
         result shouldBe Right(
-          Def3_SubmitForeignPropertyBsasRequestData(
-            parsedNino,
-            parsedCalculationId,
-            Some(parsedTaxYear),
-            parsedForeignPropertyBodyWithConsolidatedEntry)
+          Def3_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedForeignPropertyBodyWithConsolidatedEntry)
         )
       }
     }
 
     "return NinoFormatError" when {
       "passed an invalid nino" in {
-        val result = validator("A12344A", validCalculationId, None, foreignPropertyBody).validateAndWrapResult()
+        val result = validator("A12344A", validCalculationId, validTaxYear, foreignPropertyBody).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, NinoFormatError)
         )
@@ -159,25 +155,16 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
     "return CalculationIdFormatError" when {
       "passed an invalid calculationId" in {
-        val result = validator(validNino, "12345", None, foreignPropertyBody).validateAndWrapResult()
+        val result = validator(validNino, "12345", validTaxYear, foreignPropertyBody).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, CalculationIdFormatError)
         )
       }
     }
 
-    "return InvalidTaxYearParameterError" when {
-      "passed a tax year before TYS" in {
-        val result = validator(validNino, validCalculationId, Some("2022-23"), foreignPropertyBody).validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, InvalidTaxYearParameterError)
-        )
-      }
-    }
-
     "return TaxYearFormatError" when {
       "passed a badly formatted tax year" in {
-        val result = validator(validNino, validCalculationId, Some("not-a-tax-year"), foreignPropertyBody).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, "not-a-tax-year", foreignPropertyBody).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, TaxYearFormatError)
         )
@@ -186,7 +173,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
     "return RuleTaxYearRangeInvalidError" when {
       "passed a tax year range of more than one year" in {
-        val result = validator(validNino, validCalculationId, Some("2022-24"), foreignPropertyBody).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, "2022-24", foreignPropertyBody).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
         )
@@ -196,7 +183,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
     "return RuleIncorrectOrEmptyBodyError" when {
       "passed an empty body" in {
         val body   = Json.parse("{}")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
@@ -251,7 +238,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
               entryWith(countryCode = "AFG").update("/income/totalRentsReceived", JsNumber(123.123))
             )
 
-          val result = validator(validNino, validCalculationId, None, json).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, json).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
@@ -264,7 +251,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
           s"for $expectedPath" when {
             def doTest(value: JsNumber) = {
-              val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
+              val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
 
               result shouldBe Left(
                 ErrorWrapper(
@@ -283,7 +270,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       "return RuleCountryCodeError" when {
         "passed an invalid country code" in {
           val body   = foreignPropertyBodyWith(entryWith(countryCode = "QQQ"))
-          val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(correlationId, RuleCountryCodeError.withPath("/foreignProperty/0/countryCode"))
@@ -292,7 +279,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
         "passed multiple invalid country codes" in {
           val body   = foreignPropertyBodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
-          val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(correlationId, RuleCountryCodeError.withPaths(List("/foreignProperty/0/countryCode", "/foreignProperty/1/countryCode")))
@@ -304,7 +291,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         "a country code is duplicated" in {
           val code   = "ZWE"
           val body   = foreignPropertyBodyWith(entryWith(code), entryWith(code))
-          val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
@@ -320,7 +307,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           val code1  = "AFG"
           val code2  = "ZWE"
           val body   = foreignPropertyBodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
-          val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
@@ -343,7 +330,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             entryWith(countryCode = "ZWE").update("expenses/consolidatedExpenses", JsNumber(123.45)),
             entryWith(countryCode = "AFG").update("expenses/consolidatedExpenses", JsNumber(123.45))
           )
-          val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
@@ -356,7 +343,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
       "return multiple errors" when {
         "passed a request containing multiple errors" in {
-          val result = validator("A12344A", "not-a-calculation-id", None, foreignPropertyBody).validateAndWrapResult()
+          val result = validator("A12344A", "not-a-calculation-id", validTaxYear, foreignPropertyBody).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(

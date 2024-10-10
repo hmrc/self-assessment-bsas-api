@@ -22,6 +22,7 @@ import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v6.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
 import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
@@ -32,11 +33,11 @@ object Def2_SubmitUkPropertyBsasValidator extends ResolverSupport {
     new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "ukProperty").resolver thenResolve
       ResolveNonEmptyJsonObject.resolver[Def2_SubmitUkPropertyBsasRequestBody]
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
 
 }
 
-class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitUkPropertyBsasRequestData] {
   import Def2_SubmitUkPropertyBsasValidator._
 
@@ -44,7 +45,7 @@ class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear),
+      resolveTaxYear(Some(taxYear)),
       resolveJson(body)
     ).mapN(Def2_SubmitUkPropertyBsasRequestData) andThen Def2_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 

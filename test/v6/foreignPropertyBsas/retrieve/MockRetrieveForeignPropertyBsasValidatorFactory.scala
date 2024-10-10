@@ -27,7 +27,7 @@ trait MockRetrieveForeignPropertyBsasValidatorFactory extends MockValidatorFacto
 
   def validator(): CallHandler[Validator[RetrieveForeignPropertyBsasRequestData]] =
     (mockRetrieveForeignPropertyBsasValidatorFactory
-      .validator(_: String, _: String, _: Option[String]))
+      .validator(_: String, _: String, _: String))
       .expects(*, *, *)
 
 }

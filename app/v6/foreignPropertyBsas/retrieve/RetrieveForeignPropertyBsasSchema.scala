@@ -17,11 +17,10 @@
 package v6.foreignPropertyBsas.retrieve
 
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
-import shared.models.errors.{InvalidTaxYearParameterError, MtdError}
+import shared.models.errors.MtdError
 import shared.schema.DownstreamReadable
 import v6.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
 import v6.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignPropertyBsasResponse
@@ -43,18 +42,13 @@ object RetrieveForeignPropertyBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_RetrieveForeignPropertyBsasResponse.reads
   }
 
-  private val preTysSchema = Def1
+  def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] = {
+    ResolveTaxYear(taxYearString).map(schemaFor)
+  }
 
-  def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] =
-    maybeTaxYear match {
-      case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
-      case None                => Valid(preTysSchema)
-    }
-
-  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] = {
-    if (taxYear < TaxYear.tysTaxYear) Invalid(Seq(InvalidTaxYearParameterError))
-    else if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
-    else Valid(Def2)
+  def schemaFor(taxYear: TaxYear): RetrieveForeignPropertyBsasSchema = {
+    if (taxYear <= TaxYear.starting(2024)) Def1
+    else Def2
   }
 
 }

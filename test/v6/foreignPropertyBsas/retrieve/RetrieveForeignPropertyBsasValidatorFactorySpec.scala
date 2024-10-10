@@ -24,7 +24,7 @@ import v6.foreignPropertyBsas.retrieve.def2.Def2_RetrieveForeignPropertyBsasVali
 class RetrieveForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
 
   private def validatorFor(taxYear: String) =
-    new RetrieveForeignPropertyBsasValidatorFactory().validator(nino = "ignoredNino", calculationId = "ignored", taxYear = Some(taxYear))
+    new RetrieveForeignPropertyBsasValidatorFactory().validator(nino = "ignoredNino", calculationId = "ignored", taxYear = taxYear)
 
   "RetrieveForeignPropertyBsasValidatorFactory" when {
     "given a request corresponding to a Def1 schema" should {

@@ -26,11 +26,7 @@ import v6.ukPropertyBsas.submit.def3.Def3_SubmitUkPropertyBsasValidator
 class SubmitUkPropertyBsasValidatorFactorySpec extends UnitSpec {
 
   private def validatorFor(taxYear: String) =
-    new SubmitUkPropertyBsasValidatorFactory().validator(
-      nino = "ignoredNino",
-      calculationId = "ignored",
-      taxYear = Some(taxYear),
-      body = JsObject.empty)
+    new SubmitUkPropertyBsasValidatorFactory().validator(nino = "ignoredNino", calculationId = "ignored", taxYear = taxYear, body = JsObject.empty)
 
   "SubmitUkPropertyBsasValidatorFactory" when {
     "given a request corresponding to a Def1 schema" should {

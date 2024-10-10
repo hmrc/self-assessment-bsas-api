@@ -19,51 +19,45 @@ package v6.ukPropertyBsas.submit
 import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
-import shared.models.errors.{InvalidTaxYearParameterError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.utils.UnitSpec
 
 class SubmitUkPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
-    "a tax year is present" must {
-      "disallow a tax year parameter for pre-TYS tax years and return InvalidTaxYearParameterError" in {
+    "a valid tax year is present" must {
+      "use Def1 for tax year parameter for pre-TYS tax years" in {
         forPreTysTaxYears { taxYear =>
-          SubmitUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Invalid(Seq(InvalidTaxYearParameterError))
+          SubmitUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(SubmitUkPropertyBsasSchema.Def1)
         }
       }
 
       "use Def1 for tax year 2023-24" in {
         val taxYear = TaxYear.fromMtd("2023-24")
-        SubmitUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(SubmitUkPropertyBsasSchema.Def1)
+        SubmitUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(SubmitUkPropertyBsasSchema.Def1)
       }
 
       "use Def2 for tax year 2024-25" in {
         val taxYear = TaxYear.fromMtd("2024-25")
-        SubmitUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(SubmitUkPropertyBsasSchema.Def2)
+        SubmitUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(SubmitUkPropertyBsasSchema.Def2)
       }
 
       "use Def3 for tax years 2025-26 onwards" in {
         val taxYear = TaxYear.fromMtd("2025-26")
-        SubmitUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(SubmitUkPropertyBsasSchema.Def3)
-      }
-    }
-
-    "no tax year is present (pre-TYS case)" must {
-      "use Def1" in {
-        SubmitUkPropertyBsasSchema.schemaFor(None) shouldBe Valid(SubmitUkPropertyBsasSchema.Def1)
+        SubmitUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(SubmitUkPropertyBsasSchema.Def3)
       }
     }
 
     "the tax year is present but not valid" when {
       "the tax year format is invalid" must {
         "return a TaxYearFormatError" in {
-          SubmitUkPropertyBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe Invalid(Seq(TaxYearFormatError))
+          SubmitUkPropertyBsasSchema.schemaFor("NotATaxYear") shouldBe Invalid(Seq(TaxYearFormatError))
         }
       }
 
       "the tax year range is invalid" must {
         "return a RuleTaxYearRangeInvalidError" in {
-          SubmitUkPropertyBsasSchema.schemaFor(Some("2020-99")) shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+          SubmitUkPropertyBsasSchema.schemaFor("2020-99") shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
         }
       }
     }

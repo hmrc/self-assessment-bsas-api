@@ -36,11 +36,8 @@ object RetrieveSelfEmploymentBsasSchema {
 
   private val defaultSchema = Def1
 
-  def schemaFor(maybeTaxYear: Option[String]): RetrieveSelfEmploymentBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
+  def schemaFor(taxYearString: String): RetrieveSelfEmploymentBsasSchema = {
+    ResolveTaxYear(taxYearString).map(schemaFor).getOrElse(defaultSchema)
   }
 
   def schemaFor(taxYear: TaxYear): RetrieveSelfEmploymentBsasSchema = {

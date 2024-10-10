@@ -35,26 +35,15 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
-    def requestWith(taxYear: Option[TaxYear]): SubmitForeignPropertyBsasRequestData =
+    def requestWith(taxYear: TaxYear): SubmitForeignPropertyBsasRequestData =
       Def3_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, parsedSubmitForeignPropertyBsasRequestBody)
 
   }
 
   "submitBsas" must {
 
-    "post a SubmitBsasRequest body and return the result for a request without a tax year" in new IfsTest with Test {
-      private val request = requestWith(taxYear = None)
-      private val outcome = Right(ResponseWrapper(correlationId, ()))
-
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = parsedSubmitForeignPropertyBsasRequestBody)
-        .returns(Future.successful(outcome))
-
-      val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
-      result shouldBe outcome
-    }
-
     "post a SubmitBsasRequest body and return the result for a pre-TYS tax year request" in new IfsTest with Test {
-      private val request = requestWith(Some(TaxYear.fromMtd("2022-23")))
+      private val request = requestWith(TaxYear.fromMtd("2022-23"))
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = parsedSubmitForeignPropertyBsasRequestBody)
@@ -65,7 +54,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     }
 
     "post a SubmitBsasRequest body and return the result for a post-TYS tax year request" in new TysIfsTest with Test {
-      private val request = requestWith(Some(TaxYear.fromMtd("2023-24")))
+      private val request = requestWith(TaxYear.fromMtd("2023-24"))
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(

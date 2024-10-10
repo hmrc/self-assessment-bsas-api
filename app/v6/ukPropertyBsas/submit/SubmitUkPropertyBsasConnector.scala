@@ -40,12 +40,10 @@ class SubmitUkPropertyBsasConnector @Inject() (val http: HttpClient, val appConf
     implicit val successCode: SuccessCode = SuccessCode(OK)
 
     val downstreamUri =
-      taxYear match {
-        case Some(taxYear) if taxYear.useTaxYearSpecificApi =>
-          TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
-
-        case _ =>
-          IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+      } else {
+        IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
       }
 
     put(body, downstreamUri)

@@ -46,7 +46,7 @@ class SubmitUkPropertyBsasController @Inject() (
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "SubmitUkPropertyBsasController", endpointName = "submitUkPropertyBsas")
 
-  def handleRequest(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
+  def handleRequest(nino: String, calculationId: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 

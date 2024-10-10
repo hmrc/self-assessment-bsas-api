@@ -21,7 +21,7 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.CalculationId
+import shared.models.domain.{CalculationId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
@@ -43,7 +43,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockSharedAppConfig {
 
   private val calculationId = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
-  private val requestData   = Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, None)
+  private val requestData   = Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, TaxYear.fromMtd("2023-24"))
 
   "retrieve" should {
     "return OK" when {
@@ -96,7 +96,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId, "2023-24")(fakeGetRequest)
   }
 
 }

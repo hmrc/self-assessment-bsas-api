@@ -53,7 +53,7 @@ class SubmitUkPropertyBsasControllerSpec
     nino = parsedNino,
     calculationId = calculationId,
     body = requestFullParsed,
-    taxYear = Some(taxYear)
+    taxYear = taxYear
   )
 
   "submitUkPropertyBsas" should {
@@ -119,7 +119,7 @@ class SubmitUkPropertyBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(fullRequestJson))
+      controller.handleRequest(validNino, calculationId.calculationId, rawTaxYear)(fakePostRequest(fullRequestJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(

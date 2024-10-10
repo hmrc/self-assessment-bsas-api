@@ -34,7 +34,20 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2021,
+      |  "taxYear": 2024,
+      |  "status": "valid"
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamNonTysMetadataJson: JsValue = Json.parse(
+    """
+      |{
+      |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
+      |  "requestedDateTime": "2000-01-01T10:12:10Z",
+      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2020,
       |  "status": "valid"
       |}
       |""".stripMargin
@@ -289,6 +302,16 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |}
        |""".stripMargin)
 
+  val downstreamNonTysRetrieveBsasResponseJson: JsValue = Json.parse(s"""
+       |{
+       |  "metadata": $downstreamNonTysMetadataJson,
+       |  "inputs": $downstreamInputsJson,
+       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+       |  "adjustments": $downstreamAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+       |}
+       |""".stripMargin)
+
   def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
@@ -306,7 +329,20 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "nino": "AA999999A",
-      |  "taxYear": "2020-21",
+      |  "taxYear": "2023-24",
+      |  "summaryStatus": "valid"
+      |}
+      |""".stripMargin
+  )
+
+  val mtdNonTysMetadataJson: JsValue = Json.parse(
+    """
+      |{
+      |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
+      |  "requestedDateTime": "2000-01-01T10:12:10Z",
+      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
+      |  "nino": "AA999999A",
+      |  "taxYear": "2019-20",
       |  "summaryStatus": "valid"
       |}
       |""".stripMargin
@@ -535,12 +571,24 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
+  val mtdNonTysRetrieveBsasResponseJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "metadata": $mtdNonTysMetadataJson,
+       |  "inputs": $mtdInputsJson,
+       |  "adjustableSummaryCalculation": $mtdSummaryCalculationJson,
+       |  "adjustments": $mtdAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $mtdSummaryCalculationJson
+       |}
+       |""".stripMargin
+  )
+
   val parsedMetadata: Metadata = Metadata(
     calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
     requestedDateTime = "2000-01-01T10:12:10Z",
     adjustedDateTime = Some("2000-01-01T10:12:10Z"),
     nino = "AA999999A",
-    taxYear = "2020-21",
+    taxYear = "2023-24",
     summaryStatus = Status.`valid`
   )
 

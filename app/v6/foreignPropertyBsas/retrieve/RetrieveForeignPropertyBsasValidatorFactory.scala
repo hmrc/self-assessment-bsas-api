@@ -20,8 +20,8 @@ import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
 import v6.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema._
 import v6.foreignPropertyBsas.retrieve.def1.Def1_RetrieveForeignPropertyBsasValidator
-import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v6.foreignPropertyBsas.retrieve.def2.Def2_RetrieveForeignPropertyBsasValidator
+import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 
 import javax.inject.Singleton
 
@@ -31,7 +31,7 @@ class RetrieveForeignPropertyBsasValidatorFactory {
   def validator(
       nino: String,
       calculationId: String,
-      taxYear: Option[String]
+      taxYear: String
   ): Validator[RetrieveForeignPropertyBsasRequestData] = {
 
     RetrieveForeignPropertyBsasSchema.schemaFor(taxYear) match {

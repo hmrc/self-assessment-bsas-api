@@ -48,15 +48,15 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       "validation error" when {
         def validationErrorTest(requestNino: String,
                                 requestCalculationId: String,
-                                requestTaxYear: Option[String],
+                                requestTaxYear: String,
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String            = requestNino
-            override val calculationId: String   = requestCalculationId
-            override val taxYear: Option[String] = requestTaxYear
+            override val nino: String          = requestNino
+            override val calculationId: String = requestCalculationId
+            override val taxYear: String       = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
             response.status shouldBe expectedStatus
@@ -65,15 +65,14 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         }
 
         val input = List(
-          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2025-26"), fullRequestJson, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "041f7e4d87b9", Some("2025-26"), fullRequestJson, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-23"), fullRequestJson, BAD_REQUEST, InvalidTaxYearParameterError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), fullRequestJson, BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-24"), fullRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2025-26", fullRequestJson, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "041f7e4d87b9", "2025-26", fullRequestJson, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "BAD_TAX_YEAR", fullRequestJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2022-24", fullRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            Some("2025-26"),
+            "2025-26",
             fullRequestJson.replaceWithEmptyObject("/ukProperty/income"),
             BAD_REQUEST,
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/ukProperty/income")))
@@ -81,7 +80,7 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            Some("2025-26"),
+            "2025-26",
             fullRequestJson.update("/ukProperty/expenses/consolidatedExpenses", JsNumber(1.23)),
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/ukProperty/expenses")))
@@ -89,7 +88,7 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            Some("2025-26"),
+            "2025-26",
             fullRequestJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
             BAD_REQUEST,
             ValueFormatError.copy(
@@ -165,15 +164,15 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(s"/$nino/uk-property/$calculationId/adjust")
-        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
+      buildRequest(s"/$nino/uk-property/$calculationId/adjust/$taxYear")
+        .withQueryStringParameters("taxYear" -> taxYear)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
 
-    def taxYear: Option[String] = None
+    def taxYear: String
 
     def setupStubs(): Unit = ()
 
@@ -188,7 +187,7 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
   }
 
   private trait TysIfsTest extends Test {
-    override def taxYear: Option[String] = Some("2025-26")
+    override def taxYear: String = "2025-26"
 
     def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
   }

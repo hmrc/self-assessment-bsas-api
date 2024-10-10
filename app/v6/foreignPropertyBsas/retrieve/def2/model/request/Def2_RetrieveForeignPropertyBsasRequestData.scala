@@ -23,7 +23,7 @@ import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsas
 case class Def2_RetrieveForeignPropertyBsasRequestData(
     nino: Nino,
     calculationId: CalculationId,
-    taxYear: Option[TaxYear]
+    taxYear: TaxYear
 ) extends RetrieveForeignPropertyBsasRequestData {
 
   val schema: RetrieveForeignPropertyBsasSchema = RetrieveForeignPropertyBsasSchema.Def2

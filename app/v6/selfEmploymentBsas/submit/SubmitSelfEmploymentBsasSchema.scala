@@ -29,11 +29,8 @@ object SubmitSelfEmploymentBsasSchema {
 
   private val defaultSchema = Def1
 
-  def schemaFor(maybeTaxYear: Option[String]): SubmitSelfEmploymentBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
+  def schemaFor(taxYearString: String): SubmitSelfEmploymentBsasSchema = {
+    ResolveTaxYear(taxYearString).map(schemaFor).getOrElse(defaultSchema)
   }
 
   def schemaFor(taxYear: TaxYear): SubmitSelfEmploymentBsasSchema = {

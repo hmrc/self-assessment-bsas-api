@@ -25,39 +25,39 @@ import shared.utils.UnitSpec
 class RetrieveUkPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
-    "a tax year is present" must {
-      "allow a tax year parameter for pre-TYS tax years" in {
+    "a valid tax year is present" must {
+      "Use Def1 for tax year parameter for pre-TYS tax years" in {
         forPreTysTaxYears { taxYear =>
-          RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
+          RetrieveUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
         }
       }
 
       "use Def1 for tax year 2023-24" in {
         val taxYear = TaxYear.fromMtd("2023-24")
-        RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
+        RetrieveUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
       }
 
       "use Def1 for tax year 2024-25" in {
         val taxYear = TaxYear.fromMtd("2024-25")
-        RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
+        RetrieveUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def1)
       }
 
       "use Def2 for tax years 2025-26 onwards" in {
         val taxYear = TaxYear.fromMtd("2025-26")
-        RetrieveUkPropertyBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def2)
+        RetrieveUkPropertyBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveUkPropertyBsasSchema.Def2)
       }
     }
 
     "the tax year is present but not valid" when {
       "the tax year format is invalid" must {
         "return a TaxYearFormatError" in {
-          RetrieveUkPropertyBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe Invalid(Seq(TaxYearFormatError))
+          RetrieveUkPropertyBsasSchema.schemaFor("NotATaxYear") shouldBe Invalid(Seq(TaxYearFormatError))
         }
       }
 
       "the tax year range is invalid" must {
         "return a RuleTaxYearRangeInvalidError" in {
-          RetrieveUkPropertyBsasSchema.schemaFor(Some("2020-99")) shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+          RetrieveUkPropertyBsasSchema.schemaFor("2020-99") shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
         }
       }
     }

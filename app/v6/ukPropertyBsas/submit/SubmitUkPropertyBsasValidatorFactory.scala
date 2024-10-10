@@ -33,7 +33,7 @@ class SubmitUkPropertyBsasValidatorFactory {
   def validator(
       nino: String,
       calculationId: String,
-      taxYear: Option[String],
+      taxYear: String,
       body: JsValue
   ): Validator[SubmitUkPropertyBsasRequestData] = {
 
