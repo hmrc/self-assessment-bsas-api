@@ -40,12 +40,13 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
     def mtdUri: String
 
     def downstreamUrl: String
+    def taxYear: String
 
     def request(): WSRequest = {
       setupStubs()
       buildRequest(mtdUri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -61,13 +62,15 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    override def taxYear: String = "2019-20"
+    def mtdUri: String           = s"/$nino/self-employment/$calculationId/adjust/$taxYear"
+    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
   private trait TysIfsTest extends Test {
-    def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust?taxYear=2023-24"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    override def taxYear: String = "2023-24"
+    def mtdUri: String           = s"/$nino/self-employment/$calculationId/adjust/$taxYear"
+    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
   val requestBody: JsValue = mtdRequestJson

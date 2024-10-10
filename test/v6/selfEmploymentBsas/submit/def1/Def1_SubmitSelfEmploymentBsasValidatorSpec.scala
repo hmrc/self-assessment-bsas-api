@@ -38,53 +38,53 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
   private val parsedCalculationId = CalculationId(validCalculationId)
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue) =
+  private def validator(nino: String, calculationId: String, taxYear: String, body: JsValue) =
     new Def1_SubmitSelfEmploymentBsasValidator(nino, calculationId, taxYear, body)
 
   "running a validation" should {
     "return the parsed domain object" when {
 
       "passed a valid request" in {
-        val result = validator(validNino, validCalculationId, None, mtdRequestJson).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, mtdRequestJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, None, parsedMtdRequestBody)
+          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedMtdRequestBody)
         )
       }
 
       "passed a valid request with only consolidated expenses" in {
         val result =
-          validator(validNino, validCalculationId, None, mtdRequestWithOnlyConsolidatedExpenses).validateAndWrapResult()
+          validator(validNino, validCalculationId, validTaxYear, mtdRequestWithOnlyConsolidatedExpenses).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, None, parsedMtdRequestWithOnlyConsolidatedExpensesBody)
+          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedMtdRequestWithOnlyConsolidatedExpensesBody)
         )
       }
 
       "passed valid parameters with only additions expenses" in {
         val result =
-          validator(validNino, validCalculationId, None, mtdRequestWithOnlyAdditionsExpenses)
+          validator(validNino, validCalculationId, validTaxYear, mtdRequestWithOnlyAdditionsExpenses)
             .validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, None, parsedMtdRequestWithOnlyAdditionsExpenses)
+          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedMtdRequestWithOnlyAdditionsExpenses)
         )
       }
 
       "passed a valid TYS tax year" in {
         val result =
-          validator(validNino, validCalculationId, Some(validTaxYear), mtdRequestWithOnlyAdditionsExpenses)
+          validator(validNino, validCalculationId, validTaxYear, mtdRequestWithOnlyAdditionsExpenses)
             .validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear), parsedMtdRequestWithOnlyAdditionsExpenses)
+          Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedMtdRequestWithOnlyAdditionsExpenses)
         )
       }
     }
 
     "return NinoFormatError" when {
       "passed an invalid nino" in {
-        val result = validator("A12344A", validCalculationId, None, mtdRequestJson).validateAndWrapResult()
+        val result = validator("A12344A", validCalculationId, validTaxYear, mtdRequestJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, NinoFormatError)
         )
@@ -93,7 +93,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
     "return CalculationIdFormatError error" when {
       "passed an invalid calculationId" in {
-        val result = validator(validNino, "12345", None, mtdRequestJson).validateAndWrapResult()
+        val result = validator(validNino, "12345", validTaxYear, mtdRequestJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, CalculationIdFormatError)
         )
@@ -103,7 +103,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
     "return RuleIncorrectOrEmptyBodyError" when {
       "passed an empty body" in {
         val body   = Json.parse("{}")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
@@ -132,7 +132,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
         def testWith(body: JsValue, expectedPath: String): Unit =
           s"for $expectedPath" in {
-            val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+            val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
             result shouldBe Left(
               ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath(expectedPath))
             )
@@ -141,7 +141,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
       "income object is empty" in {
         val body   = Json.parse(""" { "income": {} }""")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/income"))
@@ -150,7 +150,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
       "expenses object is empty" in {
         val body   = Json.parse(""" { "expenses": {} }""")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/expenses"))
@@ -159,7 +159,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
       "additions object is empty" in {
         val body   = Json.parse(""" { "additions": {} }""")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/additions"))
@@ -168,7 +168,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
       "a field is empty" in {
         val body   = Json.parse(""" { "wagesAndStaffCostsDisallowable": {} }""")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
@@ -177,7 +177,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
       "an object is invalid" in {
         val body   = Json.parse(""" { "income": "not-an-object" }""")
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/income"))
@@ -249,7 +249,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
              |""".stripMargin
         )
 
-        val result = validator(validNino, validCalculationId, None, body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(
@@ -266,7 +266,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
       def testWith(body: JsNumber => JsValue, expectedPath: String): Unit = s"for $expectedPath" when {
         def doTest(value: JsNumber): Assertion = {
-          val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
+          val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
@@ -284,7 +284,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
     "return RuleBothExpensesSuppliedError" when {
       "passed consolidated and separate expenses" in {
-        val result = validator(validNino, validCalculationId, None, mtdRequestWithBothExpenses).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, mtdRequestWithBothExpenses).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleBothExpensesError.withPath("/expenses"))
@@ -294,7 +294,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
     "return multiple errors" when {
       "passed multiple invalid fields" in {
-        val result = validator("not-a-nino", "not-a-calculation-id", None, mtdRequestJson).validateAndWrapResult()
+        val result = validator("not-a-nino", "not-a-calculation-id", validTaxYear, mtdRequestJson).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(
@@ -305,20 +305,11 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
         )
       }
     }
-
-    "return InvalidTaxYearParameterError" when {
-      "passed a tax year before TYS" in {
-        val result = validator(validNino, validCalculationId, Some("2022-23"), mtdRequestJson).validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, InvalidTaxYearParameterError)
-        )
-      }
-    }
   }
 
   "return TaxYearFormatError" when {
     "passed an incorrectly formatted tax year" in {
-      val result = validator(validNino, validCalculationId, Some("202324"), mtdRequestJson).validateAndWrapResult()
+      val result = validator(validNino, validCalculationId, "202324", mtdRequestJson).validateAndWrapResult()
       result shouldBe Left(
         ErrorWrapper(correlationId, TaxYearFormatError)
       )
@@ -327,7 +318,7 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
   "return RuleTaxYearRangeInvalidError error" when {
     "passed a tax year range of more than one year" in {
-      val result = validator(validNino, validCalculationId, Some("2022-24"), mtdRequestJson).validateAndWrapResult()
+      val result = validator(validNino, validCalculationId, "2022-24", mtdRequestJson).validateAndWrapResult()
       result shouldBe Left(
         ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
       )

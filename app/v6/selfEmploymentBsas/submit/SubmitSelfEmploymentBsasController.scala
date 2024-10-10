@@ -47,7 +47,7 @@ class SubmitSelfEmploymentBsasController @Inject() (
       endpointName = "submitSelfEmploymentBsas"
     )
 
-  def submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: Option[String]): Action[JsValue] =
+  def submitSelfEmploymentBsas(nino: String, calculationId: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 

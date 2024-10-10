@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package v6.selfEmploymentBsas.submit.model.request
+package v6.common.model
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import v6.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasSchema
+import shared.models.domain.TaxYear
 
-trait SubmitSelfEmploymentBsasRequestData {
-  def nino: Nino
-  def calculationId: CalculationId
+trait HasTaxYear {
   def taxYear: TaxYear
-  def body: SubmitSelfEmploymentBsasRequestBody
-
-  val schema: SubmitSelfEmploymentBsasSchema
 }

@@ -23,7 +23,7 @@ import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequ
 case class Def1_SubmitForeignPropertyBsasRequestData(
     nino: Nino,
     calculationId: CalculationId,
-    taxYear: Option[TaxYear],
+    taxYear: TaxYear,
     body: Def1_SubmitForeignPropertyBsasRequestBody
 ) extends SubmitForeignPropertyBsasRequestData {
 

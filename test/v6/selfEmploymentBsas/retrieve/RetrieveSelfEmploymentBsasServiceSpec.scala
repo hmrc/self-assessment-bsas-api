@@ -18,7 +18,7 @@ package v6.selfEmploymentBsas.retrieve
 
 import common.errors._
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -35,7 +35,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  val request: RetrieveSelfEmploymentBsasRequestData = Def1_RetrieveSelfEmploymentBsasRequestData(nino, id, None)
+  val request: RetrieveSelfEmploymentBsasRequestData = Def1_RetrieveSelfEmploymentBsasRequestData(nino, id, TaxYear.fromMtd("2023-24"))
 
   trait Test extends MockRetrieveSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -70,6 +70,17 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
           })
       }
 
+      "downstream returns a success response with invalid Tax Year" should {
+        s"return an error matching resource not found" in new Test {
+
+          val request: RetrieveSelfEmploymentBsasRequestData = Def1_RetrieveSelfEmploymentBsasRequestData(nino, id, TaxYear.fromMtd("2019-20"))
+          MockRetrieveSelfEmploymentBsasConnector
+            .retrieveSelfEmploymentBsas(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponse))))
+
+          await(service.retrieveSelfEmploymentBsas(request)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
+        }
+      }
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 

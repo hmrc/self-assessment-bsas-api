@@ -21,7 +21,7 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.CalculationId
+import shared.models.domain.{CalculationId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
@@ -45,7 +45,7 @@ class RetrieveForeignPropertyBsasControllerSpec
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   private val requestData =
-    Def1_RetrieveForeignPropertyBsasRequestData(parsedNino, calculationId, taxYear = None)
+    Def1_RetrieveForeignPropertyBsasRequestData(parsedNino, calculationId, TaxYear.fromMtd("2023-24"))
 
   "retrieve" should {
     "return OK" when {
@@ -97,7 +97,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.retrieve(validNino, calculationId.calculationId, taxYear = None)(fakeGetRequest)
+      controller.retrieve(validNino, calculationId.calculationId, "2023-24")(fakeGetRequest)
 
   }
 

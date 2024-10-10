@@ -29,14 +29,14 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
   private val nino          = Nino("AA123456A")
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
-  private val nonTysRequest = makeRequest(None)
-  private val tysRequest    = makeRequest(Some("2023-24"))
+  private val nonTysRequest = makeRequest("2022-23")
+  private val tysRequest    = makeRequest("2023-24")
 
-  def makeRequest(taxYear: Option[String]): SubmitUkPropertyBsasRequestData = {
+  def makeRequest(taxYear: String): SubmitUkPropertyBsasRequestData = {
     Def3_SubmitUkPropertyBsasRequestData(
       nino = nino,
       calculationId = calculationId,
-      taxYear = taxYear.map(TaxYear.fromMtd),
+      taxYear = TaxYear.fromMtd(taxYear),
       body = requestFullParsed
     )
   }

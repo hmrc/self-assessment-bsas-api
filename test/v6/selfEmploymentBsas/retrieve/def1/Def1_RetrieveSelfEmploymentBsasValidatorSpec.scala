@@ -33,38 +33,38 @@ class Def1_RetrieveSelfEmploymentBsasValidatorSpec extends UnitSpec {
   private val parsedCalculationId = CalculationId(validCalculationId)
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, calculationId: String, taxYear: Option[String]) =
+  private def validator(nino: String, calculationId: String, taxYear: String) =
     new Def1_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid non-TYS request" in {
-        val result = validator(validNino, validCalculationId, None).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, None)
+          Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear)
         )
       }
 
       "passed a valid TYS request" in {
-        val result = validator(validNino, validCalculationId, Some(validTaxYear)).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
+          Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear)
         )
       }
     }
 
     "return a single error" when {
       "passed an invalid nino" in {
-        val result = validator("A12344A", validCalculationId, None).validateAndWrapResult()
+        val result = validator("A12344A", validCalculationId, validTaxYear).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, NinoFormatError)
         )
       }
 
       "passed an invalid calculation id" in {
-        val result = validator(validNino, "12345", None).validateAndWrapResult()
+        val result = validator(validNino, "12345", validTaxYear).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, CalculationIdFormatError)
         )
@@ -72,22 +72,15 @@ class Def1_RetrieveSelfEmploymentBsasValidatorSpec extends UnitSpec {
     }
 
     "return TYS errors for an invalid TYS request" when {
-      "passed an invalid taxYear (i.e. earlier than 2023-24)" in {
-        val result = validator(validNino, validCalculationId, Some("2022-23")).validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, InvalidTaxYearParameterError)
-        )
-      }
-
       "passed an incorrectly formatted taxYear" in {
-        val result = validator(validNino, validCalculationId, Some("202324")).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, "202324").validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, TaxYearFormatError)
         )
       }
 
       "passed a tax year range of more than one year" in {
-        val result = validator(validNino, validCalculationId, Some("2022-24")).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, "2022-24").validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
         )
@@ -96,7 +89,7 @@ class Def1_RetrieveSelfEmploymentBsasValidatorSpec extends UnitSpec {
 
     "return multiple errors" when {
       "passed multiple invalid fields" in {
-        val result = validator("not-a-nino", "not-a-calculation-id", None).validateAndWrapResult()
+        val result = validator("not-a-nino", "not-a-calculation-id", validTaxYear).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(

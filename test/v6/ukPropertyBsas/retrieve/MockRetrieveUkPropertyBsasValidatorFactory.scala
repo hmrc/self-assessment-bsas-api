@@ -26,7 +26,7 @@ trait MockRetrieveUkPropertyBsasValidatorFactory extends MockValidatorFactory[Re
 
   def validator(): CallHandler[Validator[RetrieveUkPropertyBsasRequestData]] =
     (mockRetrieveUkPropertyBsasValidatorFactory
-      .validator(_: String, _: String, _: Option[String]))
+      .validator(_: String, _: String, _: String))
       .expects(*, *, *)
 
 }

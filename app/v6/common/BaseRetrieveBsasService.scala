@@ -17,10 +17,11 @@
 package v6.common
 
 import common.errors._
-import shared.models.errors.ErrorWrapper
+import shared.models.domain.TaxYear
+import shared.models.errors.{ErrorWrapper, NotFoundError}
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{BaseService, ServiceOutcome}
-import v6.common.model.HasIncomeSourceType
+import v6.common.model.{HasIncomeSourceType, HasTaxYear}
 
 trait BaseRetrieveBsasService extends BaseService {
 
@@ -32,5 +33,13 @@ trait BaseRetrieveBsasService extends BaseService {
     } else {
       Left(ErrorWrapper(responseWrapper.correlationId, RuleTypeOfBusinessIncorrectError, None))
     }
+
+  final protected def checkTaxYear[T <: HasTaxYear](taxYear: TaxYear, responseWrapper: ResponseWrapper[T]): ServiceOutcome[T] = {
+    if (taxYear.useTaxYearSpecificApi || taxYear == responseWrapper.responseData.taxYear) {
+      Right(responseWrapper)
+    } else {
+      Left(ErrorWrapper(responseWrapper.correlationId, NotFoundError, None))
+    }
+  }
 
 }

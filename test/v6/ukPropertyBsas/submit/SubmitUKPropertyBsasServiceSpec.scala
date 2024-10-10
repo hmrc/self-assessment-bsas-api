@@ -18,7 +18,7 @@ package v6.ukPropertyBsas.submit
 
 import common.errors._
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -37,7 +37,7 @@ class SubmitUKPropertyBsasServiceSpec extends ServiceSpec {
   val requestData: SubmitUkPropertyBsasRequestData = Def3_SubmitUkPropertyBsasRequestData(
     nino = nino,
     calculationId = calculationId,
-    taxYear = None,
+    taxYear = TaxYear.fromMtd("2023-24"),
     body = requestFullParsed
   )
 

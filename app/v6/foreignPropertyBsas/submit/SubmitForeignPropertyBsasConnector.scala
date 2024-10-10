@@ -39,13 +39,12 @@ class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClient, val ap
 
     import request.{body, calculationId, nino, taxYear}
 
-    val downstreamUri = taxYear match {
-      case Some(ty) if ty.useTaxYearSpecificApi =>
-        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/$nino/$calculationId")
-      case _ =>
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+      } else {
         IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
-    }
-
+      }
     put(body, downstreamUri)
   }
 

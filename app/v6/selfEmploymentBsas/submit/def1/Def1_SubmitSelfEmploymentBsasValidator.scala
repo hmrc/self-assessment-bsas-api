@@ -21,6 +21,7 @@ import cats.implicits._
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v6.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v6.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
@@ -28,13 +29,13 @@ import v6.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasReques
 object Def1_SubmitSelfEmploymentBsasValidator extends ResolverSupport {
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def1_SubmitSelfEmploymentBsasRequestBody]
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
 }
 
 class Def1_SubmitSelfEmploymentBsasValidator(
     nino: String,
     calculationId: String,
-    taxYear: Option[String],
+    taxYear: String,
     body: JsValue
 ) extends Validator[SubmitSelfEmploymentBsasRequestData] {
 
@@ -44,7 +45,7 @@ class Def1_SubmitSelfEmploymentBsasValidator(
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear),
+      resolveTaxYear(Some(taxYear)),
       resolveJson(body)
     ).mapN(Def1_SubmitSelfEmploymentBsasRequestData) andThen Def1_SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
 

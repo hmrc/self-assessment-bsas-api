@@ -45,7 +45,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         val request: RetrieveForeignPropertyBsasRequestData =
-          Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear = None)
+          Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), TaxYear.fromMtd("2022-23"))
 
         val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
@@ -57,7 +57,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
         val request: RetrieveForeignPropertyBsasRequestData =
-          Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), Some(taxYear))
+          Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear)
 
         willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId") returns Future.successful(outcome)
 

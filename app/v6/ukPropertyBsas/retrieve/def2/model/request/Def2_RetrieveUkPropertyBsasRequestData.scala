@@ -23,7 +23,7 @@ import v6.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestDat
 case class Def2_RetrieveUkPropertyBsasRequestData(
     nino: Nino,
     calculationId: CalculationId,
-    taxYear: Option[TaxYear]
+    taxYear: TaxYear
 ) extends RetrieveUkPropertyBsasRequestData {
 
   val schema: RetrieveUkPropertyBsasSchema = RetrieveUkPropertyBsasSchema.Def2

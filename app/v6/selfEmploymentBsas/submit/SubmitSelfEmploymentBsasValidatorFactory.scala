@@ -27,7 +27,7 @@ import javax.inject.Singleton
 @Singleton
 class SubmitSelfEmploymentBsasValidatorFactory {
 
-  def validator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue): Validator[SubmitSelfEmploymentBsasRequestData] = {
+  def validator(nino: String, calculationId: String, taxYear: String, body: JsValue): Validator[SubmitSelfEmploymentBsasRequestData] = {
 
     val schema = SubmitSelfEmploymentBsasSchema.schemaFor(taxYear)
 

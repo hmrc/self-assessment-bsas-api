@@ -32,7 +32,20 @@ object RetrieveUkPropertyBsasFixtures {
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2021,
+      |  "taxYear": 2024,
+      |  "status": "valid"
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamNonTysMetadataJson: JsValue = Json.parse(
+    """
+      |{
+      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      |  "requestedDateTime": "2000-01-01T10:12:10Z",
+      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
+      |  "taxableEntityId": "AA999999A",
+      |  "taxYear": 2020,
       |  "status": "valid"
       |}
       |""".stripMargin
@@ -240,9 +253,29 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
+  val downstreamRetrieveBsasFhlNonTysResponseJson: JsValue = Json.parse(s"""
+       |{
+       |  "metadata": $downstreamNonTysMetadataJson,
+       |  "inputs": $downstreamInputsFhlJson,
+       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+       |  "adjustments": $downstreamAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+       |}
+       |""".stripMargin)
+
   val downstreamRetrieveBsasUkPropertyResponseJson: JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
+       |  "inputs": $downstreamInputsUkPropertyJson,
+       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+       |  "adjustments": $downstreamAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+       |}
+       |""".stripMargin)
+
+  val downstreamRetrieveNonTysBsasUkPropertyResponseJson: JsValue = Json.parse(s"""
+       |{
+       |  "metadata": $downstreamNonTysMetadataJson,
        |  "inputs": $downstreamInputsUkPropertyJson,
        |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
        |  "adjustments": $downstreamAdjustmentsJson,
@@ -267,7 +300,20 @@ object RetrieveUkPropertyBsasFixtures {
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "nino": "AA999999A",
-      |  "taxYear": "2020-21",
+      |  "taxYear": "2023-24",
+      |  "summaryStatus": "valid"
+      |}
+      |""".stripMargin
+  )
+
+  val mtdNonTysMetadataJson: JsValue = Json.parse(
+    """
+      |{
+      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+      |  "requestedDateTime": "2000-01-01T10:12:10Z",
+      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
+      |  "nino": "AA999999A",
+      |  "taxYear": "2019-20",
       |  "summaryStatus": "valid"
       |}
       |""".stripMargin
@@ -536,10 +582,34 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
+  val mtdRetrieveNonTysBsasResponseFhlJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "metadata": $mtdNonTysMetadataJson,
+       |  "inputs": $mtdInputsFhlJson,
+       |  "adjustableSummaryCalculation": $mtdSummaryCalculationFhlJson,
+       |  "adjustments": $mtdAdjustmentsFhlJson,
+       |  "adjustedSummaryCalculation": $mtdSummaryCalculationFhlJson
+       |}
+       |""".stripMargin
+  )
+
   val mtdRetrieveBsasResponseUkPropertyJson: JsValue = Json.parse(
     s"""
        |{
        |  "metadata": $mtdMetadataJson,
+       |  "inputs": $mtdInputsUkPropertyJson,
+       |  "adjustableSummaryCalculation": $mtdSummaryCalculationUkPropertyJson,
+       |  "adjustments": $mtdAdjustmentsUkPropertyJson,
+       |  "adjustedSummaryCalculation": $mtdSummaryCalculationUkPropertyJson
+       |}
+       |""".stripMargin
+  )
+
+  val mtdRetrieveNonTysBsasResponseUkPropertyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "metadata": $mtdNonTysMetadataJson,
        |  "inputs": $mtdInputsUkPropertyJson,
        |  "adjustableSummaryCalculation": $mtdSummaryCalculationUkPropertyJson,
        |  "adjustments": $mtdAdjustmentsUkPropertyJson,
@@ -553,7 +623,7 @@ object RetrieveUkPropertyBsasFixtures {
     requestedDateTime = "2000-01-01T10:12:10Z",
     adjustedDateTime = Some("2000-01-01T10:12:10Z"),
     nino = "AA999999A",
-    taxYear = "2020-21",
+    taxYear = "2023-24",
     summaryStatus = Status.`valid`
   )
 

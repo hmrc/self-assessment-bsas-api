@@ -62,6 +62,7 @@ class RetrieveForeignPropertyBsasService @Inject() (connector: RetrieveForeignPr
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveForeignPropertyBsas(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
+      mtdResponseWrapper <- EitherT.fromEither[Future](checkTaxYear(request.taxYear, mtdResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value

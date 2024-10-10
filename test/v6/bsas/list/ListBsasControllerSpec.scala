@@ -66,24 +66,6 @@ class ListBsasControllerSpec
           maybeExpectedResponseBody = Some(summariesJs)
         )
       }
-
-      "valid request with no taxYear path parameter" in new Test {
-        MockedSharedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
-
-        override def maybeTaxYear: Option[String] = None
-
-        willUseValidator(returningSuccess(requestData))
-
-        MockListBsasService
-          .listBsas(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-
-        runOkTest(
-          expectedStatus = OK,
-          maybeExpectedResponseBody = Some(summariesJs)
-        )
-      }
     }
 
     "return the error as per spec" when {
@@ -106,7 +88,7 @@ class ListBsasControllerSpec
   }
 
   private trait Test extends ControllerTest {
-    def maybeTaxYear: Option[String] = Some("2019-20")
+    def taxYear: String = "2019-20"
 
     val controller = new ListBsasController(
       authService = mockEnrolmentsAuthService,
@@ -146,7 +128,7 @@ class ListBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
+      controller.listBsas(validNino, taxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
 
   }
 

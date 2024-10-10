@@ -18,7 +18,7 @@ package v6.selfEmploymentBsas.submit
 
 import common.errors._
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -35,7 +35,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   val request: SubmitSelfEmploymentBsasRequestData =
-    Def1_SubmitSelfEmploymentBsasRequestData(nino, id, None, submitSelfEmploymentBsasRequestBody)
+    Def1_SubmitSelfEmploymentBsasRequestData(nino, id, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBody)
 
   trait Test extends MockSubmitSelfEmploymentBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

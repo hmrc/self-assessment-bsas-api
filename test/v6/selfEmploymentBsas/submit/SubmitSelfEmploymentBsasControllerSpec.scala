@@ -23,7 +23,7 @@ import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.CalculationId
+import shared.models.domain.{CalculationId, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
@@ -46,7 +46,9 @@ class SubmitSelfEmploymentBsasControllerSpec
     with MockSharedAppConfig {
 
   private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
-  private val requestData   = Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, calculationId, None, submitSelfEmploymentBsasRequestBody)
+
+  private val requestData =
+    Def1_SubmitSelfEmploymentBsasRequestData(parsedNino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBody)
 
   "submitSelfEmploymentBsas" should {
     "return OK" when {
@@ -120,7 +122,7 @@ class SubmitSelfEmploymentBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.submitSelfEmploymentBsas(validNino, calculationId.calculationId, None)(fakePostRequest(mtdRequestJson))
+      controller.submitSelfEmploymentBsas(validNino, calculationId.calculationId, "2023-24")(fakePostRequest(mtdRequestJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(

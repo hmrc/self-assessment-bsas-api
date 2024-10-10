@@ -29,7 +29,7 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
   def validator(
       nino: String,
       calculationId: String,
-      taxYear: Option[String]
+      taxYear: String
   ): Validator[RetrieveSelfEmploymentBsasRequestData] = {
 
     val schema = RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear)

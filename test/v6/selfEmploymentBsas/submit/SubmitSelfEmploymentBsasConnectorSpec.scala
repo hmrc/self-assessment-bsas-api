@@ -46,9 +46,9 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   "submitBsas" must {
 
-    "post a SubmitBsasRequest body and return the result" in new IfsTest with Test {
+    "post a SubmitBsasRequest body and return the result for Non-TYS" in new IfsTest with Test {
       val request: SubmitSelfEmploymentBsasRequestData =
-        Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, None, submitSelfEmploymentBsasRequestBodyModel)
+        Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2022-23"), submitSelfEmploymentBsasRequestBodyModel)
 
       val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
@@ -63,7 +63,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
     "post a SubmitBsasRequest body and return the result for a TYS tax year" in new TysIfsTest with Test {
       val request: SubmitSelfEmploymentBsasRequestData =
-        Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, Some(TaxYear.fromMtd("2023-24")), submitSelfEmploymentBsasRequestBodyModel)
+        Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBodyModel)
 
       val outcome = Right(ResponseWrapper(correlationId, ()))
 

@@ -29,7 +29,7 @@ class SubmitForeignPropertyBsasValidatorFactorySpec extends UnitSpec {
     new SubmitForeignPropertyBsasValidatorFactory().validator(
       nino = "ignoredNino",
       calculationId = "ignored",
-      taxYear = Some(taxYear),
+      taxYear = taxYear,
       body = JsObject.empty)
 
   "SubmitForeignPropertyBsasValidatorFactory" when {

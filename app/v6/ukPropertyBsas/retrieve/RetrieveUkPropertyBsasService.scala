@@ -63,7 +63,7 @@ class RetrieveUkPropertyBsasService @Inject() (connector: RetrieveUkPropertyBsas
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(desResponseWrapper))
-
+      mtdResponseWrapper <- EitherT.fromEither[Future](checkTaxYear(request.taxYear, mtdResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value

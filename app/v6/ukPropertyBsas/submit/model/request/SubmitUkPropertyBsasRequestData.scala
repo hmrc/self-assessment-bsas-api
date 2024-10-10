@@ -22,7 +22,7 @@ import v6.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema
 trait SubmitUkPropertyBsasRequestData {
   def nino: Nino
   def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
+  def taxYear: TaxYear
   def body: SubmitUkPropertyBsasRequestBody
 
   val schema: SubmitUkPropertyBsasSchema

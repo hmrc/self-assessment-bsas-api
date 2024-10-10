@@ -26,7 +26,7 @@ trait MockRetrieveSelfEmploymentBsasValidatorFactory extends MockValidatorFactor
 
   def validator(): CallHandler[Validator[RetrieveSelfEmploymentBsasRequestData]] =
     (mockRetrieveSelfEmploymentBsasValidatorFactory
-      .validator(_: String, _: String, _: Option[String]))
+      .validator(_: String, _: String, _: String))
       .expects(*, *, *)
 
 }

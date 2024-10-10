@@ -31,7 +31,7 @@ class RetrieveUkPropertyBsasValidatorFactory {
   def validator(
       nino: String,
       calculationId: String,
-      taxYear: Option[String]
+      taxYear: String
   ): Validator[RetrieveUkPropertyBsasRequestData] = {
 
     RetrieveUkPropertyBsasSchema.schemaFor(taxYear) match {

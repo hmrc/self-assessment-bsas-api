@@ -37,14 +37,14 @@ object Def1_ListBsasValidator extends ResolverSupport {
   private val resolveTypeOfBusinessWithFHL = ResolveTypeOfBusinessWithFHL.resolver.resolveOptionally
 }
 
-class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String])
+class Def1_ListBsasValidator(nino: String, taxYear: String, typeOfBusiness: Option[String], businessId: Option[String])
     extends Validator[ListBsasRequestData] {
   import Def1_ListBsasValidator._
 
   def validate: Validated[Seq[MtdError], ListBsasRequestData] =
     (
       ResolveNino(nino),
-      resolveTaxYear(taxYear),
+      resolveTaxYear(Some(taxYear)),
       resolveBusinessId(businessId),
       resolveTypeOfBusinessWithFHL(typeOfBusiness).map(_.map(_.asDownstreamValue))
     ).mapN(Def1_ListBsasRequestData)

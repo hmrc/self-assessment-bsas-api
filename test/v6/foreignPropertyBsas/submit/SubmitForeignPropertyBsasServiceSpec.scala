@@ -18,7 +18,7 @@ package v6.foreignPropertyBsas.submit
 
 import common.errors._
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -53,7 +53,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         )))
     )
 
-  private val request = Def3_SubmitForeignPropertyBsasRequestData(nino, id, None, foreignPropertyBody)
+  private val request = Def3_SubmitForeignPropertyBsasRequestData(nino, id, TaxYear.fromMtd("2023-24"), foreignPropertyBody)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

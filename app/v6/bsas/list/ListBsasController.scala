@@ -42,7 +42,7 @@ class ListBsasController @Inject() (
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListBsasController", endpointName = "listBsas")
 
-  def listBsas(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
+  def listBsas(nino: String, taxYear: String, typeOfBusiness: Option[String], businessId: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 

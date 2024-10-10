@@ -63,6 +63,7 @@ class RetrieveSelfEmploymentBsasService @Inject() (connector: RetrieveSelfEmploy
     val result = for {
       responseWrapper    <- EitherT(connector.retrieveSelfEmploymentBsas(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTypeOfBusiness(responseWrapper))
+      mtdResponseWrapper <- EitherT.fromEither[Future](checkTaxYear(request.taxYear, mtdResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value

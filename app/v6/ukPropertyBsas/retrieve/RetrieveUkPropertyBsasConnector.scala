@@ -38,12 +38,12 @@ class RetrieveUkPropertyBsasConnector @Inject() (val http: HttpClient, val appCo
     import request._
     import schema._
 
-    val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
-      case Some(taxYear) if taxYear.useTaxYearSpecificApi =>
+    val downstreamUri: DownstreamUri[DownstreamResp] =
+      if (taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
-      case _ => IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
-    }
-
+      } else {
+        IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      }
     get(downstreamUri)
 
   }

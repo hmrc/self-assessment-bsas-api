@@ -22,7 +22,7 @@ import v6.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema
 trait SubmitForeignPropertyBsasRequestData {
   def nino: Nino
   def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
+  def taxYear: TaxYear
   def body: SubmitForeignPropertyBsasRequestBody
 
   val schema: SubmitForeignPropertyBsasSchema

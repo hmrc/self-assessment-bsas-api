@@ -33,38 +33,38 @@ class Def1_RetrieveUkPropertyBsasValidatorSpec extends UnitSpec {
   private val parsedCalculationId = CalculationId(validCalculationId)
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, calculationId: String, taxYear: Option[String]) =
+  private def validator(nino: String, calculationId: String, taxYear: String) =
     new Def1_RetrieveUkPropertyBsasValidator(nino, calculationId, taxYear)
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in {
-        val result = validator(validNino, validCalculationId, None).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_RetrieveUkPropertyBsasRequestData(parsedNino, parsedCalculationId, None)
+          Def1_RetrieveUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear)
         )
       }
 
       "passed a valid request with a tax year" in {
-        val result = validator(validNino, validCalculationId, Some(validTaxYear)).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_RetrieveUkPropertyBsasRequestData(parsedNino, parsedCalculationId, Some(parsedTaxYear))
+          Def1_RetrieveUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear)
         )
       }
     }
 
     "return a single error" when {
       "passed an invalid nino" in {
-        val result = validator("A12344A", validCalculationId, None).validateAndWrapResult()
+        val result = validator("A12344A", validCalculationId, validTaxYear).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, NinoFormatError)
         )
       }
 
       "passed an invalid calculation ID" in {
-        val result = validator(validNino, "12345", None).validateAndWrapResult()
+        val result = validator(validNino, "12345", validTaxYear).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, CalculationIdFormatError)
         )
@@ -73,7 +73,7 @@ class Def1_RetrieveUkPropertyBsasValidatorSpec extends UnitSpec {
 
     "return multiple errors" when {
       "passed multiple invalid fields" in {
-        val result = validator("not-a-nino", "not-a-calculation-id", None).validateAndWrapResult()
+        val result = validator("not-a-nino", "not-a-calculation-id", validTaxYear).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(
@@ -85,18 +85,9 @@ class Def1_RetrieveUkPropertyBsasValidatorSpec extends UnitSpec {
       }
     }
 
-    "return InvalidTaxYearParameterError" when {
-      "passed an invalid taxYear (i.e. earlier than 2023-24)" in {
-        val result = validator(validNino, validCalculationId, Some("2022-23")).validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, InvalidTaxYearParameterError)
-        )
-      }
-    }
-
     "return TaxYearFormatError" when {
       "passed an incorrectly formatted taxYear" in {
-        val result = validator(validNino, validCalculationId, Some("202324")).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, "202324").validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, TaxYearFormatError)
         )
@@ -105,7 +96,7 @@ class Def1_RetrieveUkPropertyBsasValidatorSpec extends UnitSpec {
 
     "return RuleTaxYearRangeInvalidError" when {
       "passed a tax year range of more than one year" in {
-        val result = validator(validNino, validCalculationId, Some("2022-24")).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, "2022-24").validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
         )

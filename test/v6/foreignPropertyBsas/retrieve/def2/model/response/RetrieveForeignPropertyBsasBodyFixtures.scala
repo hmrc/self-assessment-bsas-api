@@ -28,7 +28,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
       |  "adjustedDateTime": "2020-12-05T16:19:44Z",
       |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2020,
+      |  "taxYear": 2024,
       |  "status": "valid"
       |}""".stripMargin
   )
@@ -211,7 +211,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
       |  "adjustedDateTime": "2020-12-05T16:19:44Z",
       |  "nino": "AA999999A",
-      |  "taxYear": "2019-20",
+      |  "taxYear": "2023-24",
       |  "summaryStatus": "valid"
       |}""".stripMargin
   )
@@ -427,7 +427,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     requestedDateTime = "2020-12-05T16:19:44Z",
     adjustedDateTime = Some("2020-12-05T16:19:44Z"),
     nino = "AA999999A",
-    taxYear = "2019-20",
+    taxYear = "2023-24",
     summaryStatus = "valid"
   )
 

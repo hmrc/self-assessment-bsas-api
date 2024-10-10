@@ -22,7 +22,7 @@ import v6.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema
 trait RetrieveUkPropertyBsasRequestData {
   def nino: Nino
   def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
+  def taxYear: TaxYear
 
   val schema: RetrieveUkPropertyBsasSchema
 }

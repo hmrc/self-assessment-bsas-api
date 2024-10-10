@@ -17,6 +17,7 @@
 package v6.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.json._
+import shared.models.domain.TaxYear
 import v6.common.model.TypeOfBusinessWithFHL
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
@@ -29,7 +30,7 @@ case class Def1_RetrieveForeignPropertyBsasResponse(
 ) extends RetrieveForeignPropertyBsasResponse {
 
   override def incomeSourceType: String = inputs.incomeSourceType
-
+  override def taxYear: TaxYear         = TaxYear.fromMtd(metadata.taxYear)
 }
 
 object Def1_RetrieveForeignPropertyBsasResponse {

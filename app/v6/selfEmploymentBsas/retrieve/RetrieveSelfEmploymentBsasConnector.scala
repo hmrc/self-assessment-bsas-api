@@ -38,13 +38,12 @@ class RetrieveSelfEmploymentBsasConnector @Inject() (val http: HttpClient, val a
     import request._
     import schema._
 
-    val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
-      case Some(taxYear) =>
+    val downstreamUri: DownstreamUri[DownstreamResp] =
+      if (taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
-      case None =>
+      } else {
         IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
-    }
-
+      }
     get(downstreamUri)
   }
 

@@ -36,47 +36,47 @@ class Def2_ListBsasValidatorSpec extends UnitSpec {
   private val parsedTypeOfBusinessSE = "01"
   private val parsedBusinessId       = BusinessId(validBusinessId)
 
-  private def validator(nino: String, taxYear: Option[String], typeOfBusiness: Option[String], businessId: Option[String]) =
+  private def validator(nino: String, taxYear: String, typeOfBusiness: Option[String], businessId: Option[String]) =
     new Def2_ListBsasValidator(nino, taxYear, typeOfBusiness, businessId)
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request with a Tax Year, 'self-employment' Type of Business and Business ID" in {
-        val result = validator(validNino, Some(validTaxYear), Some(validTypeOfBusinessSE), Some(validBusinessId)).validateAndWrapResult()
+        val result = validator(validNino, validTaxYear, Some(validTypeOfBusinessSE), Some(validBusinessId)).validateAndWrapResult()
         result shouldBe Right(Def2_ListBsasRequestData(parsedNino, parsedTaxYear, Some(parsedBusinessId), Some(parsedTypeOfBusinessSE)))
       }
 
       "return a single error" when {
         "passed an invalid nino" in {
-          val result = validator("A12344A", Some(validTaxYear), None, None).validateAndWrapResult()
+          val result = validator("A12344A", validTaxYear, None, None).validateAndWrapResult()
           result shouldBe Left(
             ErrorWrapper(correlationId, NinoFormatError)
           )
         }
 
         "passed a tax year range of more than one year" in {
-          val result = validator(validNino, Some("2025-27"), None, None).validateAndWrapResult()
+          val result = validator(validNino, "2025-27", None, None).validateAndWrapResult()
           result shouldBe Left(
             ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
           )
         }
 
         "passed an invalid taxYear (i.e. earlier than 2025-26)" in {
-          val result = validator(validNino, Some("2024-25"), None, None).validateAndWrapResult()
+          val result = validator(validNino, "2024-25", None, None).validateAndWrapResult()
           result shouldBe Left(
             ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
           )
         }
 
         "an invalid type of business is provided" in {
-          val result = validator(validNino, Some(validTaxYear), Some("not-a-type-of-business"), None).validateAndWrapResult()
+          val result = validator(validNino, validTaxYear, Some("not-a-type-of-business"), None).validateAndWrapResult()
           result shouldBe Left(
             ErrorWrapper(correlationId, TypeOfBusinessFormatError)
           )
         }
 
         "an invalid business id is provided" in {
-          val result = validator(validNino, Some(validTaxYear), None, Some("not-a-business-id")).validateAndWrapResult()
+          val result = validator(validNino, validTaxYear, None, Some("not-a-business-id")).validateAndWrapResult()
           result shouldBe Left(
             ErrorWrapper(correlationId, BusinessIdFormatError)
           )
@@ -85,7 +85,7 @@ class Def2_ListBsasValidatorSpec extends UnitSpec {
 
       "return multiple errors" when {
         "multiple invalid parameters are provided" in {
-          val result = validator("not-a-nino", Some("2025-26"), Some("not-a-type-of-business"), None).validateAndWrapResult()
+          val result = validator("not-a-nino", "2025-26", Some("not-a-type-of-business"), None).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(

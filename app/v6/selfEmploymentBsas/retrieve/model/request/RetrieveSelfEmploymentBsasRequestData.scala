@@ -22,7 +22,7 @@ import v6.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema
 trait RetrieveSelfEmploymentBsasRequestData {
   def nino: Nino
   def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
+  def taxYear: TaxYear
 
   val schema: RetrieveSelfEmploymentBsasSchema
 }

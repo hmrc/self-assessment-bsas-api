@@ -19,10 +19,10 @@ package v6.selfEmploymentBsas.retrieve.model.response
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
-import v6.common.model.HasIncomeSourceType
+import v6.common.model.{HasIncomeSourceType, HasTaxYear}
 import v6.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
 
-trait RetrieveSelfEmploymentBsasResponse extends HasIncomeSourceType
+trait RetrieveSelfEmploymentBsasResponse extends HasIncomeSourceType with HasTaxYear
 
 object RetrieveSelfEmploymentBsasResponse extends JsonWritesUtil {
 

@@ -23,29 +23,23 @@ import shared.utils.UnitSpec
 class RetrieveSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
-    "a tax year is present" must {
+    "a valid tax year is present" must {
       "use Def1 for tax years from 2023-24" in {
         forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
-          RetrieveSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+          RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
         }
       }
 
       "use Def1 for pre-TYS tax years" in {
         forPreTysTaxYears { taxYear =>
-          RetrieveSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+          RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
         }
       }
     }
 
     "the tax year is present but not valid" must {
       "use a default of Def1" in {
-        RetrieveSelfEmploymentBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
-      }
-    }
-
-    "no tax year is present" must {
-      "use a default of Def1" in {
-        RetrieveSelfEmploymentBsasSchema.schemaFor(None) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+        RetrieveSelfEmploymentBsasSchema.schemaFor("NotATaxYear") shouldBe RetrieveSelfEmploymentBsasSchema.Def1
       }
     }
   }
