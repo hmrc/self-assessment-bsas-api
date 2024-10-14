@@ -17,6 +17,7 @@
 package v6.bsas.list
 
 import cats.data.Validated
+import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
@@ -43,13 +44,13 @@ object ListBsasSchema {
   }
 
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], ListBsasSchema] =
-    ResolveTaxYear(taxYearString).map(schemaFor)
+    ResolveTaxYear(taxYearString) andThen schemaFor
 
-  def schemaFor(taxYear: TaxYear): ListBsasSchema = {
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], ListBsasSchema] = {
     if (taxYear <= TaxYear.fromMtd("2024-25")) {
-      Def1
+      Valid(Def1)
     } else {
-      Def2
+      Valid(Def2)
     }
   }
 

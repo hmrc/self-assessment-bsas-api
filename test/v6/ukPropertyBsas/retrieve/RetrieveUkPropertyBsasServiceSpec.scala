@@ -68,7 +68,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
             await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
           })
       }
-      "downstream returns a success response with invalid Tax Year" should {
+      "downstream returns a Tax Year different from that in the pre-TYS request" should {
         s"return an error matching resource not found" in new Test {
           val request: RetrieveUkPropertyBsasRequestData = Def1_RetrieveUkPropertyBsasRequestData(nino, id, taxYear = TaxYear.fromMtd("2019-20"))
 

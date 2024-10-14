@@ -158,9 +158,6 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
     def taxYear: String
-
-    def mtdUrl: String
-
     def downstreamUrl: String
 
     def request: WSRequest = {
@@ -168,7 +165,6 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       buildRequest(s"/$nino/foreign-property/$calculationId/$taxYear")
-        .withQueryStringParameters("taxYear" -> taxYear)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -178,19 +174,13 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: String = "2019-20"
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId/$taxYear"
-
+    def taxYear: String       = "2019-20"
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 
   private trait TysTest extends Test {
-    def taxYear: String = "2023-24"
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId/$taxYear"
-
+    def taxYear: String       = "2023-24"
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
   }

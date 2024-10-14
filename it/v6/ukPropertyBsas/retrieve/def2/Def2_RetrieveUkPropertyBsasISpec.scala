@@ -168,7 +168,6 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
-        .withQueryStringParameters("taxYear" -> taxYear)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")

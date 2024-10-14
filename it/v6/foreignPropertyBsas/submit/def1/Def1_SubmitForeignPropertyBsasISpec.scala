@@ -188,7 +188,6 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(s"/$nino/foreign-property/$calculationId/adjust/$taxYear")
-        .withQueryStringParameters("taxYear" -> taxYear)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")

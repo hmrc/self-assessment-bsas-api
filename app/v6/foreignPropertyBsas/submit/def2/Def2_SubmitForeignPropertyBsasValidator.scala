@@ -22,7 +22,6 @@ import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
-import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v6.foreignPropertyBsas.submit.def2.model.request
 import v6.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestData
@@ -34,7 +33,7 @@ object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
     new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "foreignProperty").resolver thenResolve
       ResolveNonEmptyJsonObject.resolver[request.Def2_SubmitForeignPropertyBsasRequestBody]
 
-  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
 class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
@@ -45,7 +44,7 @@ class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTaxYear(Some(taxYear)),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def2_SubmitForeignPropertyBsasRequestData) andThen Def2_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 

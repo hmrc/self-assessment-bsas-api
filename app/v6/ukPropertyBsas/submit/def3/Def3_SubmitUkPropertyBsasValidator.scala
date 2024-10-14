@@ -21,7 +21,6 @@ import cats.implicits._
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
-import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v6.ukPropertyBsas.submit.def3.model.request.{Def3_SubmitUkPropertyBsasRequestBody, Def3_SubmitUkPropertyBsasRequestData}
 import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
@@ -30,7 +29,7 @@ object Def3_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def3_SubmitUkPropertyBsasRequestBody]
 
-  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
+  private val resolveTaxYear = ResolveTaxYear.resolver
 
 }
 
@@ -42,7 +41,7 @@ class Def3_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTaxYear(Some(taxYear)),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def3_SubmitUkPropertyBsasRequestData) andThen Def3_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 

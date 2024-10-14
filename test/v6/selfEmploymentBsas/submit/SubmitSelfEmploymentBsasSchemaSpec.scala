@@ -16,8 +16,10 @@
 
 package v6.selfEmploymentBsas.submit
 
+import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.utils.UnitSpec
 
 class SubmitSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
@@ -26,20 +28,28 @@ class SubmitSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenP
     "a valid tax year is present" must {
       "use Def1 for tax years from 2023-24" in {
         forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
-          SubmitSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe SubmitSelfEmploymentBsasSchema.Def1
+          SubmitSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(SubmitSelfEmploymentBsasSchema.Def1)
         }
       }
 
       "use Def1 for pre-TYS tax years" in {
         forPreTysTaxYears { taxYear =>
-          SubmitSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe SubmitSelfEmploymentBsasSchema.Def1
+          SubmitSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(SubmitSelfEmploymentBsasSchema.Def1)
         }
       }
     }
 
     "the tax year is present but not valid" must {
-      "use a default of Def1" in {
-        SubmitSelfEmploymentBsasSchema.schemaFor("NotATaxYear") shouldBe SubmitSelfEmploymentBsasSchema.Def1
+      "the tax year format is invalid" must {
+        "return a TaxYearFormatError" in {
+          SubmitSelfEmploymentBsasSchema.schemaFor("NotATaxYear") shouldBe Invalid(Seq(TaxYearFormatError))
+        }
+      }
+
+      "the tax year range is invalid" must {
+        "return a RuleTaxYearRangeInvalidError" in {
+          SubmitSelfEmploymentBsasSchema.schemaFor("2020-99") shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+        }
       }
     }
   }

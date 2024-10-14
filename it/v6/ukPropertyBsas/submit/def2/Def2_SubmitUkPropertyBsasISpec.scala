@@ -174,7 +174,6 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(s"/$nino/uk-property/$calculationId/adjust/$taxYear")
-        .withQueryStringParameters("taxYear" -> taxYear)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")

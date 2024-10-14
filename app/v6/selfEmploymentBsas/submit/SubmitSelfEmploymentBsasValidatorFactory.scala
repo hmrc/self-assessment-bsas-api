@@ -16,6 +16,7 @@
 
 package v6.selfEmploymentBsas.submit
 
+import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import v6.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasSchema.Def1
@@ -32,7 +33,8 @@ class SubmitSelfEmploymentBsasValidatorFactory {
     val schema = SubmitSelfEmploymentBsasSchema.schemaFor(taxYear)
 
     schema match {
-      case Def1 => new Def1_SubmitSelfEmploymentBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def1)     => new Def1_SubmitSelfEmploymentBsasValidator(nino, calculationId, taxYear, body)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
 

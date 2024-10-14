@@ -21,7 +21,6 @@ import cats.implicits._
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
-import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
@@ -30,7 +29,7 @@ object Def3_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def3_SubmitForeignPropertyBsasRequestBody]
 
-  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
 class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
@@ -41,7 +40,7 @@ class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTaxYear(Some(taxYear)),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def3_SubmitForeignPropertyBsasRequestData) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 

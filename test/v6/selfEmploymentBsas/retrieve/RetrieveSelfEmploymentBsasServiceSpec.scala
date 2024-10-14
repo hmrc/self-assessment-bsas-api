@@ -70,7 +70,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
           })
       }
 
-      "downstream returns a success response with invalid Tax Year" should {
+      "downstream returns a Tax Year different from that in the pre-TYS request" should {
         s"return an error matching resource not found" in new Test {
 
           val request: RetrieveSelfEmploymentBsasRequestData = Def1_RetrieveSelfEmploymentBsasRequestData(nino, id, TaxYear.fromMtd("2019-20"))

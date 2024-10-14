@@ -28,8 +28,8 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
-  mtdRequestFull,
   mtdRequestForeignPropertyValid,
+  mtdRequestFull,
   mtdRequestValid
 }
 
@@ -204,7 +204,6 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(s"/$nino/foreign-property/$calculationId/adjust/$taxYear")
-        .withQueryStringParameters("taxYear" -> taxYear)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")

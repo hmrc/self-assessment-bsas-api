@@ -20,13 +20,12 @@ import cats.data.Validated
 import cats.implicits._
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
-import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v6.ukPropertyBsas.retrieve.def2.model.request.Def2_RetrieveUkPropertyBsasRequestData
 import v6.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 
 object Def2_RetrieveUkPropertyBsasValidator extends ResolverSupport {
-  private val resolveTaxYear = ResolveTaxYear.resolver.resolveOptionallyWithDefault(TaxYear.currentTaxYear)
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
 class Def2_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: String)
@@ -37,7 +36,7 @@ class Def2_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, 
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTaxYear(Some(taxYear))
+      resolveTaxYear(taxYear)
     ).mapN(Def2_RetrieveUkPropertyBsasRequestData)
 
 }

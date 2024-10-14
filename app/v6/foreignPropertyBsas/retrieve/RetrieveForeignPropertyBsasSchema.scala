@@ -17,6 +17,7 @@
 package v6.foreignPropertyBsas.retrieve
 
 import cats.data.Validated
+import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
 import shared.models.domain.TaxYear
@@ -43,12 +44,12 @@ object RetrieveForeignPropertyBsasSchema {
   }
 
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] = {
-    ResolveTaxYear(taxYearString).map(schemaFor)
+    ResolveTaxYear(taxYearString) andThen schemaFor
   }
 
-  def schemaFor(taxYear: TaxYear): RetrieveForeignPropertyBsasSchema = {
-    if (taxYear <= TaxYear.starting(2024)) Def1
-    else Def2
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] = {
+    if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
+    else Valid(Def2)
   }
 
 }

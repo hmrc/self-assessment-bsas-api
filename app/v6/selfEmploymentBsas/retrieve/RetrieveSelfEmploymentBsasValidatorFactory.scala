@@ -16,6 +16,7 @@
 
 package v6.selfEmploymentBsas.retrieve
 
+import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
 import v6.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema.Def1
 import v6.selfEmploymentBsas.retrieve.def1.Def1_RetrieveSelfEmploymentBsasValidator
@@ -35,7 +36,8 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
     val schema = RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear)
 
     schema match {
-      case Def1 => new Def1_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
+      case Valid(Def1)     => new Def1_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
+      case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
 
