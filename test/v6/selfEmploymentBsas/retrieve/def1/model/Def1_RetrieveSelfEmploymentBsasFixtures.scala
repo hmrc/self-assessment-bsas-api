@@ -27,7 +27,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
   private val now          = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
-  def downstreamMetadataJson(taxYear: Int): JsValue = Json.parse(
+  def downstreamMetadataJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""
       |{
       |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
@@ -279,7 +279,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
       |""".stripMargin
   )
 
-  def downstreamRetrieveBsasResponseJson(taxYear: Int): JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasResponseJson(taxYear: Int = 2024): JsValue = Json.parse(s"""
        |{
        |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": $downstreamInputsJson,
@@ -289,7 +289,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |}
        |""".stripMargin)
 
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int): JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int = 2024): JsValue = Json.parse(s"""
        |{
        |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
@@ -299,7 +299,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |}
        |""".stripMargin)
 
-  def mtdMetadataJson(taxYear: String): JsValue = Json.parse(
+  def mtdMetadataJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""
       |{
       |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
@@ -523,7 +523,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasResponseJson(taxYear: String): JsValue = Json.parse(
+  def mtdRetrieveBsasResponseJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""
        |{
        |  "metadata": ${mtdMetadataJson(taxYear)},

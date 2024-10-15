@@ -25,7 +25,7 @@ object RetrieveUkPropertyBsasFixtures {
   private val now          = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
-  def downstreamMetadataJson(taxYear: Int): JsValue = Json.parse(
+  def downstreamMetadataJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""
       |{
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -230,7 +230,7 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  def downstreamRetrieveBsasFhlResponseJson(taxYear: Int): JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasFhlResponseJson(taxYear: Int = 2024): JsValue = Json.parse(s"""
        |{
        |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": $downstreamInputsFhlJson,
@@ -240,7 +240,7 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  def downstreamRetrieveBsasUkPropertyResponseJson(taxYear: Int): JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasUkPropertyResponseJson(taxYear: Int = 2024): JsValue = Json.parse(s"""
        |{
        |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": $downstreamInputsUkPropertyJson,
@@ -250,7 +250,7 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int): JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int = 2024): JsValue = Json.parse(s"""
        |{
        |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
@@ -260,7 +260,7 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  def mtdMetadataJson(taxYear: String): JsValue = Json.parse(
+  def mtdMetadataJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""
       |{
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -524,7 +524,7 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasResponseFhlJson(taxYear: String): JsValue = Json.parse(
+  def mtdRetrieveBsasResponseFhlJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""
        |{
        |  "metadata": ${mtdMetadataJson(taxYear)},
@@ -536,7 +536,7 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  def mtdRetrieveBsasResponseUkPropertyJson(taxYear: String): JsValue = Json.parse(
+  def mtdRetrieveBsasResponseUkPropertyJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""
        |{
        |  "metadata": ${mtdMetadataJson(taxYear)},

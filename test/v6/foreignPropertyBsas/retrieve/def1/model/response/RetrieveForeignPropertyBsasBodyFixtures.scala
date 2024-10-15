@@ -23,7 +23,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   /* Downstream JSON */
 
-  def metadataDesJson(taxYear: Int): JsValue = Json.parse(
+  def metadataDesJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
@@ -206,7 +206,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  def retrieveForeignPropertyBsasDesFhlJson(taxYear: Int): JsValue = Json.parse(
+  def retrieveForeignPropertyBsasDesFhlJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataDesJson(taxYear)},
        |  "inputs": $inputsDesFhlJson,
@@ -216,7 +216,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  def retrieveForeignPropertyBsasDesJson(taxYear: Int): JsValue = Json.parse(
+  def retrieveForeignPropertyBsasDesJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataDesJson(taxYear)},
        |  "inputs": $inputsDesJson,
@@ -228,7 +228,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   /* MTD JSON */
 
-  def metadataMtdJson(taxYear: String): JsValue = Json.parse(
+  def metadataMtdJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
@@ -446,7 +446,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  def retrieveForeignPropertyBsasMtdFhlJson(taxYear: String): JsValue = Json.parse(
+  def retrieveForeignPropertyBsasMtdFhlJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataMtdJson(taxYear)},
        |  "inputs": $inputsMtdFhlJson,
@@ -456,7 +456,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  def retrieveForeignPropertyBsasMtdJson(taxYear: String): JsValue = Json.parse(
+  def retrieveForeignPropertyBsasMtdJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataMtdJson(taxYear)},
        |  "inputs": $inputsMtdJson,
@@ -473,7 +473,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     requestedDateTime = "2020-12-05T16:19:44Z",
     adjustedDateTime = Some("2020-12-05T16:19:44Z"),
     nino = "AA999999A",
-    taxYear = "2019-20",
+    taxYear = "2023-24",
     summaryStatus = "valid"
   )
 

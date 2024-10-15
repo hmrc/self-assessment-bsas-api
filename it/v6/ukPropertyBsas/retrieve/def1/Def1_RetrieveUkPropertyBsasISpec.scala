@@ -62,19 +62,19 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
       "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson(2024))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson())
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
+        response.json shouldBe mtdRetrieveBsasResponseFhlJson()
       }
 
       "any valid Tax Year Specific request is made and Uk Property is returned" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson(2024))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson())
         }
 
         val response: WSResponse = await(request.get())
@@ -82,7 +82,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
-        response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson(taxYear)
+        response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson()
       }
     }
 

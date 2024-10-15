@@ -42,10 +42,11 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockIdGenerator
     with MockSharedAppConfig {
 
-  private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
+  private val calculationId   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
+  private val taxYear: String = "2023-24"
 
   private val requestData =
-    Def1_RetrieveForeignPropertyBsasRequestData(parsedNino, calculationId, TaxYear.fromMtd("2023-24"))
+    Def1_RetrieveForeignPropertyBsasRequestData(parsedNino, calculationId, TaxYear.fromMtd(taxYear))
 
   "retrieve" should {
     "return OK" when {
@@ -57,7 +58,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(retrieveForeignPropertyBsasMtdJson("2019-20"))
+          maybeExpectedResponseBody = Some(retrieveForeignPropertyBsasMtdJson(taxYear))
         )
       }
     }
@@ -97,7 +98,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.retrieve(validNino, calculationId.calculationId, "2023-24")(fakeGetRequest)
+      controller.retrieve(validNino, calculationId.calculationId, taxYear)(fakeGetRequest)
 
   }
 

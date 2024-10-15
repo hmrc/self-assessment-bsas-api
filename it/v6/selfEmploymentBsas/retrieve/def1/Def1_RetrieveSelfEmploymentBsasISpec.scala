@@ -51,7 +51,7 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
       "given a valid TYS request" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson(2024))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson())
         }
 
         val response: WSResponse = await(request.get())

@@ -25,7 +25,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return the expected parsed object" when {
       "given a valid json object with all fields" in {
-        metadataDesJson(2020).as[Metadata] shouldBe parsedMetadata
+        metadataDesJson().as[Metadata] shouldBe parsedMetadata
       }
     }
   }
@@ -33,7 +33,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return the expected json" when {
       "given a valid data object" in {
-        parsedMetadata.toJson shouldBe metadataMtdJson("2019-20")
+        parsedMetadata.toJson shouldBe metadataMtdJson()
       }
     }
   }

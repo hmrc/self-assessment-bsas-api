@@ -61,7 +61,7 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       }
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson(2024))
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson())
 
         val response: WSResponse = await(request.get())
 
@@ -74,11 +74,11 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     "return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
-        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson(2024))
+        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson())
       }
 
       "Downstream response is self employment" in {
-        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson(2024))
+        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson())
       }
 
       def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =

@@ -26,7 +26,7 @@ class Def1_RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErro
   "reads" should {
     "return the parsed data object" when {
       "passed valid JSON" in {
-        downstreamRetrieveBsasResponseJson(2024).as[Def1_RetrieveSelfEmploymentBsasResponse] shouldBe retrieveBsasResponse
+        downstreamRetrieveBsasResponseJson().as[Def1_RetrieveSelfEmploymentBsasResponse] shouldBe retrieveBsasResponse
       }
     }
   }
@@ -34,7 +34,7 @@ class Def1_RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErro
   "writes" should {
     "return valid JSON" when {
       "passed a valid data object" in {
-        Json.toJson(retrieveBsasResponse) shouldBe mtdRetrieveBsasResponseJson("2023-24")
+        Json.toJson(retrieveBsasResponse) shouldBe mtdRetrieveBsasResponseJson()
       }
     }
   }
