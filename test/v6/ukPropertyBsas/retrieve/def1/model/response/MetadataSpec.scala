@@ -25,6 +25,6 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest 
 
   import Metadata._
 
-  testRoundTrip("Metadata", downstreamMetadataJson, parsedMetadata, mtdMetadataJson)(reads)
+  testRoundTrip("Metadata", downstreamMetadataJson(2024), parsedMetadata, mtdMetadataJson(taxYear = "2023-24"))(reads)
 
 }

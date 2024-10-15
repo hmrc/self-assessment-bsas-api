@@ -38,27 +38,27 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
     "return a valid response with status OK" when {
       "given a valid request" in new NonTysTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamNonTysRetrieveBsasResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson(2020))
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdNonTysRetrieveBsasResponseJson
+        response.json shouldBe mtdRetrieveBsasResponseJson(taxYear)
         response.header("Deprecation") shouldBe None
       }
 
       "given a valid TYS request" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson(2024))
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseJson
+        response.json shouldBe mtdRetrieveBsasResponseJson(taxYear)
         response.header("Deprecation") shouldBe None
       }
     }
@@ -70,7 +70,7 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
             DownstreamStub.GET,
             downstreamUrl,
             OK,
-            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
+            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`, 2020))
         }
         val response: WSResponse = await(request.get())
 

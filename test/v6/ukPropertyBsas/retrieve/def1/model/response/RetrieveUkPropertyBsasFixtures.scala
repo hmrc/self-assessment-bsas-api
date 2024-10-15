@@ -25,27 +25,14 @@ object RetrieveUkPropertyBsasFixtures {
   private val now          = "2019-04-06"
   private val aYearFromNow = "2020-04-05"
 
-  val downstreamMetadataJson: JsValue = Json.parse(
-    """
+  def downstreamMetadataJson(taxYear: Int): JsValue = Json.parse(
+    s"""
       |{
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2024,
-      |  "status": "valid"
-      |}
-      |""".stripMargin
-  )
-
-  val downstreamNonTysMetadataJson: JsValue = Json.parse(
-    """
-      |{
-      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-      |  "requestedDateTime": "2000-01-01T10:12:10Z",
-      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
-      |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2020,
+      |  "taxYear": $taxYear,
       |  "status": "valid"
       |}
       |""".stripMargin
@@ -243,9 +230,9 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamRetrieveBsasFhlResponseJson: JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasFhlResponseJson(taxYear: Int): JsValue = Json.parse(s"""
        |{
-       |  "metadata": $downstreamMetadataJson,
+       |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": $downstreamInputsFhlJson,
        |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
        |  "adjustments": $downstreamAdjustmentsJson,
@@ -253,19 +240,9 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  val downstreamRetrieveBsasFhlNonTysResponseJson: JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasUkPropertyResponseJson(taxYear: Int): JsValue = Json.parse(s"""
        |{
-       |  "metadata": $downstreamNonTysMetadataJson,
-       |  "inputs": $downstreamInputsFhlJson,
-       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
-       |  "adjustments": $downstreamAdjustmentsJson,
-       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
-       |}
-       |""".stripMargin)
-
-  val downstreamRetrieveBsasUkPropertyResponseJson: JsValue = Json.parse(s"""
-       |{
-       |  "metadata": $downstreamMetadataJson,
+       |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": $downstreamInputsUkPropertyJson,
        |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
        |  "adjustments": $downstreamAdjustmentsJson,
@@ -273,19 +250,9 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  val downstreamRetrieveNonTysBsasUkPropertyResponseJson: JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int): JsValue = Json.parse(s"""
        |{
-       |  "metadata": $downstreamNonTysMetadataJson,
-       |  "inputs": $downstreamInputsUkPropertyJson,
-       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
-       |  "adjustments": $downstreamAdjustmentsJson,
-       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
-       |}
-       |""".stripMargin)
-
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(s"""
-       |{
-       |  "metadata": $downstreamMetadataJson,
+       |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
        |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
        |  "adjustments": $downstreamAdjustmentsJson,
@@ -293,27 +260,14 @@ object RetrieveUkPropertyBsasFixtures {
        |}
        |""".stripMargin)
 
-  val mtdMetadataJson: JsValue = Json.parse(
-    """
+  def mtdMetadataJson(taxYear: String): JsValue = Json.parse(
+    s"""
       |{
       |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "nino": "AA999999A",
-      |  "taxYear": "2023-24",
-      |  "summaryStatus": "valid"
-      |}
-      |""".stripMargin
-  )
-
-  val mtdNonTysMetadataJson: JsValue = Json.parse(
-    """
-      |{
-      |  "calculationId": "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-      |  "requestedDateTime": "2000-01-01T10:12:10Z",
-      |  "adjustedDateTime": "2000-01-01T10:12:10Z",
-      |  "nino": "AA999999A",
-      |  "taxYear": "2019-20",
+      |  "taxYear": "$taxYear",
       |  "summaryStatus": "valid"
       |}
       |""".stripMargin
@@ -570,10 +524,10 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdRetrieveBsasResponseFhlJson: JsValue = Json.parse(
+  def mtdRetrieveBsasResponseFhlJson(taxYear: String): JsValue = Json.parse(
     s"""
        |{
-       |  "metadata": $mtdMetadataJson,
+       |  "metadata": ${mtdMetadataJson(taxYear)},
        |  "inputs": $mtdInputsFhlJson,
        |  "adjustableSummaryCalculation": $mtdSummaryCalculationFhlJson,
        |  "adjustments": $mtdAdjustmentsFhlJson,
@@ -582,34 +536,10 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdRetrieveNonTysBsasResponseFhlJson: JsValue = Json.parse(
+  def mtdRetrieveBsasResponseUkPropertyJson(taxYear: String): JsValue = Json.parse(
     s"""
        |{
-       |  "metadata": $mtdNonTysMetadataJson,
-       |  "inputs": $mtdInputsFhlJson,
-       |  "adjustableSummaryCalculation": $mtdSummaryCalculationFhlJson,
-       |  "adjustments": $mtdAdjustmentsFhlJson,
-       |  "adjustedSummaryCalculation": $mtdSummaryCalculationFhlJson
-       |}
-       |""".stripMargin
-  )
-
-  val mtdRetrieveBsasResponseUkPropertyJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "metadata": $mtdMetadataJson,
-       |  "inputs": $mtdInputsUkPropertyJson,
-       |  "adjustableSummaryCalculation": $mtdSummaryCalculationUkPropertyJson,
-       |  "adjustments": $mtdAdjustmentsUkPropertyJson,
-       |  "adjustedSummaryCalculation": $mtdSummaryCalculationUkPropertyJson
-       |}
-       |""".stripMargin
-  )
-
-  val mtdRetrieveNonTysBsasResponseUkPropertyJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "metadata": $mtdNonTysMetadataJson,
+       |  "metadata": ${mtdMetadataJson(taxYear)},
        |  "inputs": $mtdInputsUkPropertyJson,
        |  "adjustableSummaryCalculation": $mtdSummaryCalculationUkPropertyJson,
        |  "adjustments": $mtdAdjustmentsUkPropertyJson,

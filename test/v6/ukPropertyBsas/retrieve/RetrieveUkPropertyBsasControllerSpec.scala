@@ -56,7 +56,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseFhlJson)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseFhlJson(taxYear))
         )
       }
     }
@@ -70,7 +70,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseUkPropertyJson)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseUkPropertyJson(taxYear))
         )
       }
     }
@@ -103,6 +103,8 @@ class RetrieveUkPropertyBsasControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    val taxYear: String = "2023-24"
 
     MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true

@@ -37,16 +37,6 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
-      "any valid foreignProperty request is made" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(mtdRequestValid))
-        response.status shouldBe OK
-        response.header("X-CorrelationId") should not be empty
-      }
-
       "a valid request is made for TYS" in new TysIfsTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
@@ -221,12 +211,6 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
          |        "reason": "message"
          |      }
     """.stripMargin
-
-  }
-
-  private trait NonTysTest extends Test {
-    override def taxYear: String = "2019-20"
-    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

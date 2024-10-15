@@ -23,13 +23,13 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   /* Downstream JSON */
 
-  lazy val metadataDesJson: JsValue = Json.parse(
-    """{
+  def metadataDesJson(taxYear: Int): JsValue = Json.parse(
+    s"""{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
       |  "adjustedDateTime": "2020-12-05T16:19:44Z",
       |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2020,
+      |  "taxYear": $taxYear,
       |  "status": "valid"
       |}""".stripMargin
   )
@@ -206,9 +206,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasDesFhlJson: JsValue = Json.parse(
+  def retrieveForeignPropertyBsasDesFhlJson(taxYear: Int): JsValue = Json.parse(
     s"""{
-       |  "metadata": $metadataDesJson,
+       |  "metadata": ${metadataDesJson(taxYear)},
        |  "inputs": $inputsDesFhlJson,
        |  "adjustableSummaryCalculation": $summaryCalculationDesFhlJson,
        |  "adjustments": $adjustmentsDesFhlJson,
@@ -216,9 +216,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasDesJson: JsValue = Json.parse(
+  def retrieveForeignPropertyBsasDesJson(taxYear: Int): JsValue = Json.parse(
     s"""{
-       |  "metadata": $metadataDesJson,
+       |  "metadata": ${metadataDesJson(taxYear)},
        |  "inputs": $inputsDesJson,
        |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
        |  "adjustments": [$adjustmentsDesJson],
@@ -228,13 +228,13 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   /* MTD JSON */
 
-  lazy val metadataMtdJson: JsValue = Json.parse(
-    """{
+  def metadataMtdJson(taxYear: String): JsValue = Json.parse(
+    s"""{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
       |  "adjustedDateTime": "2020-12-05T16:19:44Z",
       |  "nino": "AA999999A",
-      |  "taxYear": "2019-20",
+      |  "taxYear": "$taxYear",
       |  "summaryStatus": "valid"
       |}""".stripMargin
   )
@@ -446,9 +446,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasMtdFhlJson: JsValue = Json.parse(
+  def retrieveForeignPropertyBsasMtdFhlJson(taxYear: String): JsValue = Json.parse(
     s"""{
-       |  "metadata": $metadataMtdJson,
+       |  "metadata": ${metadataMtdJson(taxYear)},
        |  "inputs": $inputsMtdFhlJson,
        |  "adjustableSummaryCalculation": $summaryCalculationMtdFhlJson,
        |  "adjustments": $adjustmentsMtdFhlJson,
@@ -456,9 +456,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasMtdJson: JsValue = Json.parse(
+  def retrieveForeignPropertyBsasMtdJson(taxYear: String): JsValue = Json.parse(
     s"""{
-       |  "metadata": $metadataMtdJson,
+       |  "metadata": ${metadataMtdJson(taxYear)},
        |  "inputs": $inputsMtdJson,
        |  "adjustableSummaryCalculation": $summaryCalculationMtdJson,
        |  "adjustments": $adjustmentsMtdJson,

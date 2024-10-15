@@ -27,16 +27,16 @@ class Def1_RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorVal
 
   testRoundTrip(
     testName = "Retrieve UK Property FHL",
-    downstreamJson = downstreamRetrieveBsasFhlResponseJson,
+    downstreamJson = downstreamRetrieveBsasFhlResponseJson(2024),
     dataObject = retrieveBsasResponseFhl,
-    mtdJson = mtdRetrieveBsasResponseFhlJson
+    mtdJson = mtdRetrieveBsasResponseFhlJson(taxYear = "2023-24")
   )(reads)
 
   testRoundTrip(
     testName = "Retrieve UK Property Uk Property",
-    downstreamJson = downstreamRetrieveBsasUkPropertyResponseJson,
+    downstreamJson = downstreamRetrieveBsasUkPropertyResponseJson(2024),
     dataObject = retrieveBsasResponseUkProperty,
-    mtdJson = mtdRetrieveBsasResponseUkPropertyJson
+    mtdJson = mtdRetrieveBsasResponseUkPropertyJson(taxYear = "2023-24")
   )(reads)
 
 }

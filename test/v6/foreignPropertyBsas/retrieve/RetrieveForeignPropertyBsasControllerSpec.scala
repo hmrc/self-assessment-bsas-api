@@ -57,7 +57,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(retrieveForeignPropertyBsasMtdJson)
+          maybeExpectedResponseBody = Some(retrieveForeignPropertyBsasMtdJson("2019-20"))
         )
       }
     }

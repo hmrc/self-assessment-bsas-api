@@ -56,7 +56,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
         runOkTest(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseJson)
+          maybeExpectedResponseBody = Some(mtdRetrieveBsasResponseJson("2023-24"))
         )
       }
     }
