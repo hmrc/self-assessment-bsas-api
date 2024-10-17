@@ -35,46 +35,46 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       "valid request is made and FHL is returned" in new NonTysTest {
 
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson(2020))
         }
 
         val response: WSResponse = await(request.get())
-
+        response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseFhlJson
+        // response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
 
       }
 
       "valid request is made and Uk Property is returned" in new NonTysTest {
 
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson(2020))
+
+          val response: WSResponse = await(request.get())
+
+          response.status shouldBe OK
+          response.header("Content-Type") shouldBe Some("application/json")
+          response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson(taxYear)
+
         }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson
-
       }
 
       "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson())
         }
 
         val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseFhlJson
+        response.json shouldBe mtdRetrieveBsasResponseFhlJson()
       }
 
       "any valid Tax Year Specific request is made and Uk Property is returned" in new TysIfsTest {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson())
         }
 
         val response: WSResponse = await(request.get())
@@ -82,7 +82,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
-        response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson
+        response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson()
       }
     }
 
@@ -94,7 +94,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
             DownstreamStub.GET,
             downstreamUri,
             OK,
-            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`))
+            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`01`, 2020))
         }
 
         val response: WSResponse = await(request.get())
@@ -108,7 +108,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
       def validationErrorTest(requestNino: String,
                               requestCalculationId: String,
-                              taxYearString: Option[String],
+                              taxYearString: String,
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
@@ -116,7 +116,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
 
-          override def taxYear: Option[String] = taxYearString
+          override def taxYear: String = taxYearString
 
           override def setupStubs(): Unit = {}
 
@@ -128,10 +128,9 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       }
 
       val input = List(
-        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-24"), BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", Some("2023-24"), BAD_REQUEST, CalculationIdFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-2024"), BAD_REQUEST, TaxYearFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2019-20"), BAD_REQUEST, InvalidTaxYearParameterError)
+        ("AA1123A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-24", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", "2023-24", BAD_REQUEST, CalculationIdFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-2024", BAD_REQUEST, TaxYearFormatError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -182,9 +181,9 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait Test {
-    val nino          = "AA123456B"
-    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
+    val nino            = "AA123456B"
+    val calculationId   = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    def taxYear: String = "2019-20"
     def downstreamUri: String
 
     def setupStubs(): Unit
@@ -195,26 +194,24 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
-        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
 
-    def taxYear: Option[String] = None
-
-    def uri: String = s"/$nino/uk-property/$calculationId"
+    def uri: String = s"/$nino/uk-property/$calculationId/$taxYear"
   }
 
   private trait NonTysTest extends Test {
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    override def taxYear: String = "2019-20"
+    def downstreamUri: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
   private trait TysIfsTest extends Test {
 
-    override def taxYear: Option[String] = Some("2023-24")
+    override def taxYear: String = "2023-24"
 
     def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }

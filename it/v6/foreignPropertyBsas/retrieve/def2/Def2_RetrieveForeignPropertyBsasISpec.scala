@@ -71,19 +71,13 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-      def validationErrorTest(requestNino: String,
-                              requestBsasId: String,
-                              requestTaxYear: Option[String],
-                              expectedStatus: Int,
-                              expectedBody: MtdError): Unit =
+      def validationErrorTest(requestNino: String, requestBsasId: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit =
         s"validation fails with ${expectedBody.code} error" in new TysTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
 
-          val response: WSResponse = requestTaxYear match {
-            case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get())
-            case _          => await(request.get())
-          }
+          override def taxYear: String = requestTaxYear
+          val response: WSResponse     = await(request.get())
 
           response.json shouldBe Json.toJson(expectedBody)
           response.status shouldBe expectedStatus
@@ -91,11 +85,10 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
         }
 
       val input = List(
-        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "bad_calc_id", None, BAD_REQUEST, CalculationIdFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023"), BAD_REQUEST, TaxYearFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-25"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), BAD_REQUEST, InvalidTaxYearParameterError)
+        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "bad_calc_id", "2025-26", BAD_REQUEST, CalculationIdFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023", BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-25", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -143,18 +136,14 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     val nino          = "AA123456B"
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-    def taxYear: Option[String]
-
-    def mtdUrl: String
-
+    def taxYear: String
     def downstreamUrl: String
 
     def request: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
-      buildRequest(s"/$nino/foreign-property/$calculationId")
-        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
+      buildRequest(s"/$nino/foreign-property/$calculationId/$taxYear")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -164,10 +153,7 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait TysTest extends Test {
-    def taxYear: Option[String] = Some("2025-26")
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
-
+    def taxYear: String       = "2025-26"
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
 
   }

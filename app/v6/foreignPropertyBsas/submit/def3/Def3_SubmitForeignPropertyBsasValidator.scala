@@ -29,10 +29,10 @@ object Def3_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def3_SubmitForeignPropertyBsasRequestBody]
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
-class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
   import Def3_SubmitForeignPropertyBsasValidator._
 
@@ -40,7 +40,7 @@ class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def3_SubmitForeignPropertyBsasRequestData) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 

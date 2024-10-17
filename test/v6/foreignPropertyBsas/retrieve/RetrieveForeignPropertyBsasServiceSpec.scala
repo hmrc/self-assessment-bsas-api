@@ -18,11 +18,12 @@ package v6.foreignPropertyBsas.retrieve
 
 import common.errors._
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
+import v6.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v6.foreignPropertyBsas.retrieve.def2.model.request.Def2_RetrieveForeignPropertyBsasRequestData
 import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
@@ -35,7 +36,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, taxYear = None)
+  val request: RetrieveForeignPropertyBsasRequestData = Def2_RetrieveForeignPropertyBsasRequestData(nino, id, TaxYear.fromMtd("2023-24"))
 
   val response: RetrieveForeignPropertyBsasResponse = parsedRetrieveForeignPropertyBsasResponse
 
@@ -70,7 +71,18 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
             await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
           })
       }
+      "downstream returns a Tax Year different from that in the pre-TYS request" should {
+        s"return an error matching resource not found" in new Test {
 
+          val request: RetrieveForeignPropertyBsasRequestData = Def1_RetrieveForeignPropertyBsasRequestData(nino, id, TaxYear.fromMtd("2019-20"))
+          val response: RetrieveForeignPropertyBsasResponse   = parsedRetrieveForeignPropertyBsasResponse
+          MockRetrieveForeignPropertyBsasConnector
+            .retrieveForeignPropertyBsas(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+          await(service.retrieveForeignPropertyBsas(request)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
+        }
+      }
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"$downstreamErrorCode is returned from the service" in new Test {
 

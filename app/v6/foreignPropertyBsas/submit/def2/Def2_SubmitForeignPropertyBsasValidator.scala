@@ -33,10 +33,10 @@ object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
     new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "foreignProperty").resolver thenResolve
       ResolveNonEmptyJsonObject.resolver[request.Def2_SubmitForeignPropertyBsasRequestBody]
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
-class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
+class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
   import Def2_SubmitForeignPropertyBsasValidator._
 
@@ -44,7 +44,7 @@ class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def2_SubmitForeignPropertyBsasRequestData) andThen Def2_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 

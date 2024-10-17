@@ -16,10 +16,10 @@
 
 package v6.selfEmploymentBsas.submit
 
+import cats.data.Validated
+import cats.data.Validated.Valid
 import shared.controllers.validators.resolvers.ResolveTaxYear
-import shared.models.domain.TaxYear
-
-import scala.math.Ordered.orderingToOrdered
+import shared.models.errors.MtdError
 
 sealed trait SubmitSelfEmploymentBsasSchema
 
@@ -27,21 +27,12 @@ object SubmitSelfEmploymentBsasSchema {
 
   case object Def1 extends SubmitSelfEmploymentBsasSchema
 
-  private val defaultSchema = Def1
-
-  def schemaFor(maybeTaxYear: Option[String]): SubmitSelfEmploymentBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
+  def schemaFor(taxYearString: String): Validated[Seq[MtdError], SubmitSelfEmploymentBsasSchema] = {
+    ResolveTaxYear(taxYearString) andThen (_ => schemaFor())
   }
 
-  def schemaFor(taxYear: TaxYear): SubmitSelfEmploymentBsasSchema = {
-    if (TaxYear.starting(2023) <= taxYear) {
-      Def1
-    } else {
-      defaultSchema
-    }
+  def schemaFor(): Validated[Seq[MtdError], SubmitSelfEmploymentBsasSchema] = {
+    Valid(Def1)
   }
 
 }

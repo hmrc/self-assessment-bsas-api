@@ -16,14 +16,14 @@
 
 package v6.selfEmploymentBsas.retrieve
 
+import cats.data.Validated
+import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
-import shared.models.domain.TaxYear
+import shared.models.errors.MtdError
 import shared.schema.DownstreamReadable
 import v6.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
-
-import scala.math.Ordered.orderingToOrdered
 
 sealed trait RetrieveSelfEmploymentBsasSchema extends DownstreamReadable[RetrieveSelfEmploymentBsasResponse]
 
@@ -34,21 +34,12 @@ object RetrieveSelfEmploymentBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def1_RetrieveSelfEmploymentBsasResponse.reads
   }
 
-  private val defaultSchema = Def1
-
-  def schemaFor(maybeTaxYear: Option[String]): RetrieveSelfEmploymentBsasSchema = {
-    maybeTaxYear
-      .map(ResolveTaxYear.resolver)
-      .flatMap(_.toOption.map(schemaFor))
-      .getOrElse(defaultSchema)
+  def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
+    ResolveTaxYear(taxYearString) andThen (_ => schemaFor())
   }
 
-  def schemaFor(taxYear: TaxYear): RetrieveSelfEmploymentBsasSchema = {
-    if (TaxYear.starting(2023) <= taxYear) {
-      Def1
-    } else {
-      defaultSchema
-    }
+  def schemaFor(): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
+    Valid(Def1)
   }
 
 }

@@ -42,7 +42,7 @@ class RetrieveSelfEmploymentBsasController @Inject() (
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveSelfEmploymentBsasController", endpointName = "retrieve")
 
-  def handleRequest(nino: String, calculationId: String, taxYear: Option[String] = None): Action[AnyContent] =
+  def handleRequest(nino: String, calculationId: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 

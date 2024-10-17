@@ -39,33 +39,33 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
       "valid request is made and Non-fhl is returned" in new NonTysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson(2020))
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdJson
+        response.json shouldBe retrieveForeignPropertyBsasMtdJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
       }
 
       "valid request is made and fhl is returned" in new NonTysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesFhlJson(2020))
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdFhlJson
+        response.json shouldBe retrieveForeignPropertyBsasMtdFhlJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
       }
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson())
 
         val response: WSResponse = await(request.get())
 
-        response.json shouldBe retrieveForeignPropertyBsasMtdJson
+        response.json shouldBe retrieveForeignPropertyBsasMtdJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
@@ -74,11 +74,11 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     "return error response with status BAD_REQUEST" when {
       "Downstream response is UK property" in {
-        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson)
+        checkTypeOfBusinessIncorrectWith(RetrieveUkPropertyBsasFixtures.downstreamRetrieveBsasFhlResponseJson())
       }
 
       "Downstream response is self employment" in {
-        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson)
+        checkTypeOfBusinessIncorrectWith(Def1_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson())
       }
 
       def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =
@@ -94,31 +94,22 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     }
 
     "return error according to spec" when {
-      def validationErrorTest(requestNino: String,
-                              requestBsasId: String,
-                              requestTaxYear: Option[String],
-                              expectedStatus: Int,
-                              expectedBody: MtdError): Unit =
+      def validationErrorTest(requestNino: String, requestBsasId: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit =
         s"validation fails with ${expectedBody.code} error" in new TysTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
-
-          val response: WSResponse = requestTaxYear match {
-            case Some(year) => await(request.withQueryStringParameters("taxYear" -> year).get())
-            case _          => await(request.get())
-          }
-
+          override def taxYear: String       = requestTaxYear
+          val response: WSResponse           = await(request.get())
           response.json shouldBe Json.toJson(expectedBody)
           response.status shouldBe expectedStatus
           response.header("Content-Type") shouldBe Some("application/json")
         }
 
       val input = List(
-        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "bad_calc_id", None, BAD_REQUEST, CalculationIdFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023"), BAD_REQUEST, TaxYearFormatError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2023-25"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", Some("2022-23"), BAD_REQUEST, InvalidTaxYearParameterError)
+        ("BAD_NINO", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-24", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "bad_calc_id", "2023-24", BAD_REQUEST, CalculationIdFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-2024", BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-25", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -166,18 +157,14 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
     val nino          = "AA123456B"
     val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
 
-    def taxYear: Option[String]
-
-    def mtdUrl: String
-
+    def taxYear: String
     def downstreamUrl: String
 
     def request: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
-      buildRequest(s"/$nino/foreign-property/$calculationId")
-        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
+      buildRequest(s"/$nino/foreign-property/$calculationId/$taxYear")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -187,19 +174,13 @@ class Def1_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: Option[String] = None
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
-
+    def taxYear: String       = "2019-20"
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 
   private trait TysTest extends Test {
-    def taxYear: Option[String] = Some("2023-24")
-
-    def mtdUrl: String = s"/$nino/foreign-property/$calculationId"
-
+    def taxYear: String       = "2023-24"
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
   }

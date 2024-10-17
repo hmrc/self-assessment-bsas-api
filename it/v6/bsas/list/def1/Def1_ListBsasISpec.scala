@@ -23,7 +23,6 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
@@ -98,25 +97,6 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
         response.json shouldBe summariesForeignJs
       }
 
-      "valid request is made without a tax year so that the current tax year is used" in new TysIfsTest {
-        private val currentTaxYear = TaxYear.now()
-
-        override val taxYear: Option[String]   = None
-        override def downstreamTaxYear: String = currentTaxYear.asTysDownstream
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, listBsasDownstreamJsonMultiple)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe summariesJs
-      }
     }
 
     "return error according to spec" when {
@@ -130,7 +110,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
         s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
           override val nino: String                   = requestNino
-          override val taxYear: Option[String]        = Some(requestTaxYear)
+          override val taxYear: String                = requestTaxYear
           override val typeOfBusiness: Option[String] = requestTypeOfBusiness
           override val businessId: Option[String]     = requestBusinessId
 
@@ -207,7 +187,7 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
     val typeOfBusiness: Option[String] = Some("self-employment")
     val businessId: Option[String]     = Some("XAIS12345678910")
 
-    def taxYear: Option[String]
+    def taxYear: String
 
     // downstream
     def downstreamUri: String
@@ -224,13 +204,16 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
         )
     }
 
-    private def mtdUri: String = s"/$nino"
+    private def mtdUri: String = s"/$nino/$taxYear"
 
-    private def mtdQueryParams: Seq[(String, String)] =
-      List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId, "taxYear" -> taxYear)
+    private def mtdQueryParams: Seq[(String, String)] = {
+      val requiredParams = List("taxYear" -> taxYear)
+      val optionalParams = List("typeOfBusiness" -> typeOfBusiness, "businessId" -> businessId)
         .collect { case (k, Some(v)) =>
           (k, v)
         }
+      requiredParams ++ optionalParams
+    }
 
     def errorBody(code: String): String =
       s"""{
@@ -241,13 +224,13 @@ class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures 
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: Option[String] = Some("2019-20")
+    def taxYear: String = "2019-20"
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: Option[String] = Some("2023-24")
+    def taxYear: String = "2023-24"
 
     def downstreamTaxYear: String = "23-24"
 

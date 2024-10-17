@@ -93,7 +93,7 @@ class SubmitForeignPropertyBsasControllerSpec
     Def3_SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)))
 
   private val requestData =
-    Def3_SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, Some(taxYear), requestBody)
+    Def3_SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, taxYear, requestBody)
 
   "handleRequest" should {
     "return OK" when {
@@ -150,7 +150,7 @@ class SubmitForeignPropertyBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     override protected def callController(): Future[Result] =
-      controller.handleRequest(validNino, calculationId.calculationId, Some(rawTaxYear))(fakePostRequest(requestJson))
+      controller.handleRequest(validNino, calculationId.calculationId, rawTaxYear)(fakePostRequest(requestJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(

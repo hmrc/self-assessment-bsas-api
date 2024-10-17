@@ -40,12 +40,12 @@ class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClient, val app
 
     import request._
 
-    val downstreamUri = taxYear match {
-      case Some(taxYearValue) if taxYearValue.useTaxYearSpecificApi =>
-        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/$nino/$calculationId")
-      case _ => IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
-    }
-
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+      } else {
+        IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      }
     put(body, downstreamUri)
   }
 

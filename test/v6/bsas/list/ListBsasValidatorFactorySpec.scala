@@ -24,7 +24,7 @@ import v6.bsas.list.def2.Def2_ListBsasValidator
 class ListBsasValidatorFactorySpec extends UnitSpec {
 
   private def validatorFor(taxYear: String) =
-    new ListBsasValidatorFactory().validator(nino = "ignoredNino", taxYear = Some(taxYear), typeOfBusiness = None, businessId = None)
+    new ListBsasValidatorFactory().validator(nino = "ignoredNino", taxYear = taxYear, typeOfBusiness = None, businessId = None)
 
   "ListBsasValidatorFactory" when {
     "given a request corresponding to a Def1 schema" should {

@@ -30,7 +30,7 @@ class ListBsasValidatorFactory {
 
   def validator(
       nino: String,
-      taxYear: Option[String],
+      taxYear: String,
       typeOfBusiness: Option[String],
       businessId: Option[String]
   ): Validator[ListBsasRequestData] = {

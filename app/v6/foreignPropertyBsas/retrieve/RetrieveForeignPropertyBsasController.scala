@@ -42,7 +42,7 @@ class RetrieveForeignPropertyBsasController @Inject() (
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveForeignPropertyBsasController", endpointName = "retrieve")
 
-  def retrieve(nino: String, calculationId: String, taxYear: Option[String]): Action[AnyContent] =
+  def retrieve(nino: String, calculationId: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 

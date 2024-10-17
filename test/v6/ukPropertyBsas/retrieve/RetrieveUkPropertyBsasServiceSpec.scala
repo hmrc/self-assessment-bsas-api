@@ -18,7 +18,7 @@ package v6.ukPropertyBsas.retrieve
 
 import common.errors.RuleTypeOfBusinessIncorrectError
 import shared.controllers.EndpointLogContext
-import shared.models.domain.{CalculationId, Nino}
+import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
@@ -35,7 +35,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
   private val id   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
-  val request: RetrieveUkPropertyBsasRequestData = Def1_RetrieveUkPropertyBsasRequestData(nino, id, taxYear = None)
+  val request: RetrieveUkPropertyBsasRequestData = Def1_RetrieveUkPropertyBsasRequestData(nino, id, taxYear = TaxYear.fromMtd("2023-24"))
 
   trait Test extends MockRetrieveUkPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -67,6 +67,17 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
 
             await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, RuleTypeOfBusinessIncorrectError))
           })
+      }
+      "downstream returns a Tax Year different from that in the pre-TYS request" should {
+        s"return an error matching resource not found" in new Test {
+          val request: RetrieveUkPropertyBsasRequestData = Def1_RetrieveUkPropertyBsasRequestData(nino, id, taxYear = TaxYear.fromMtd("2019-20"))
+
+          MockRetrievePropertyBsasConnector
+            .retrievePropertyBsas(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBsasResponseUkProperty))))
+
+          await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
+        }
       }
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =

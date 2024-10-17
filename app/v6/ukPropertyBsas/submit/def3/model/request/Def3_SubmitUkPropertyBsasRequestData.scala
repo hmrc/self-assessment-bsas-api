@@ -23,7 +23,7 @@ import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 case class Def3_SubmitUkPropertyBsasRequestData(
     nino: Nino,
     calculationId: CalculationId,
-    taxYear: Option[TaxYear],
+    taxYear: TaxYear,
     body: Def3_SubmitUkPropertyBsasRequestBody
 ) extends SubmitUkPropertyBsasRequestData {
 

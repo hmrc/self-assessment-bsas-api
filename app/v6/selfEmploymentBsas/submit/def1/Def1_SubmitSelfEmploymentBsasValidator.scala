@@ -28,13 +28,13 @@ import v6.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasReques
 object Def1_SubmitSelfEmploymentBsasValidator extends ResolverSupport {
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[Def1_SubmitSelfEmploymentBsasRequestBody]
 
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
 class Def1_SubmitSelfEmploymentBsasValidator(
     nino: String,
     calculationId: String,
-    taxYear: Option[String],
+    taxYear: String,
     body: JsValue
 ) extends Validator[SubmitSelfEmploymentBsasRequestData] {
 
@@ -44,7 +44,7 @@ class Def1_SubmitSelfEmploymentBsasValidator(
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def1_SubmitSelfEmploymentBsasRequestData) andThen Def1_SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
 

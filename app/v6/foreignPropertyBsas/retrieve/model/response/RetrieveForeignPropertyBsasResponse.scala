@@ -18,11 +18,11 @@ package v6.foreignPropertyBsas.retrieve.model.response
 
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
-import v6.common.model.HasIncomeSourceType
+import v6.common.model.{HasIncomeSourceType, HasTaxYear}
 import v6.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
 import v6.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignPropertyBsasResponse
 
-trait RetrieveForeignPropertyBsasResponse extends HasIncomeSourceType
+trait RetrieveForeignPropertyBsasResponse extends HasIncomeSourceType with HasTaxYear
 
 object RetrieveForeignPropertyBsasResponse extends JsonWritesUtil {
 

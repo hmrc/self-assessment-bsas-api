@@ -16,36 +16,40 @@
 
 package v6.selfEmploymentBsas.retrieve
 
+import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import shared.utils.UnitSpec
 
 class RetrieveSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 
   "schema lookup" when {
-    "a tax year is present" must {
+    "a valid tax year is present" must {
       "use Def1 for tax years from 2023-24" in {
         forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
-          RetrieveSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+          RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
         }
       }
 
-      "use Def1 for pre-TYS tax years" in {
+      "use Default(Def1 Schema) for pre-TYS tax years" in {
         forPreTysTaxYears { taxYear =>
-          RetrieveSelfEmploymentBsasSchema.schemaFor(Some(taxYear.asMtd)) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+          RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
         }
       }
     }
 
     "the tax year is present but not valid" must {
-      "use a default of Def1" in {
-        RetrieveSelfEmploymentBsasSchema.schemaFor(Some("NotATaxYear")) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+      "the tax year format is invalid" must {
+        "return a TaxYearFormatError" in {
+          RetrieveSelfEmploymentBsasSchema.schemaFor("NotATaxYear") shouldBe Invalid(Seq(TaxYearFormatError))
+        }
       }
-    }
 
-    "no tax year is present" must {
-      "use a default of Def1" in {
-        RetrieveSelfEmploymentBsasSchema.schemaFor(None) shouldBe RetrieveSelfEmploymentBsasSchema.Def1
+      "the tax year range is invalid" must {
+        "return a RuleTaxYearRangeInvalidError" in {
+          RetrieveSelfEmploymentBsasSchema.schemaFor("2020-99") shouldBe Invalid(Seq(RuleTaxYearRangeInvalidError))
+        }
       }
     }
   }

@@ -23,7 +23,7 @@ import v6.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasReques
 case class Def1_SubmitSelfEmploymentBsasRequestData(
     nino: Nino,
     calculationId: CalculationId,
-    taxYear: Option[TaxYear],
+    taxYear: TaxYear,
     body: Def1_SubmitSelfEmploymentBsasRequestBody
 ) extends SubmitSelfEmploymentBsasRequestData {
 

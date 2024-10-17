@@ -20,19 +20,19 @@ import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTysTaxYear, ResolverSupport}
+import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import shared.models.errors.MtdError
 import v6.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 
 object Def1_RetrieveSelfEmploymentBsasValidator extends ResolverSupport {
-  private val resolveTysTaxYear = ResolveTysTaxYear.resolver.resolveOptionally
+  private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
 class Def1_RetrieveSelfEmploymentBsasValidator(
     nino: String,
     calculationId: String,
-    taxYear: Option[String]
+    taxYear: String
 ) extends Validator[RetrieveSelfEmploymentBsasRequestData] {
 
   import Def1_RetrieveSelfEmploymentBsasValidator._
@@ -41,7 +41,7 @@ class Def1_RetrieveSelfEmploymentBsasValidator(
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
-      resolveTysTaxYear(taxYear)
+      resolveTaxYear(taxYear)
     ).mapN(Def1_RetrieveSelfEmploymentBsasRequestData)
 
 }

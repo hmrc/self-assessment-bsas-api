@@ -26,7 +26,7 @@ trait MockListBsasValidatorFactory extends MockValidatorFactory[ListBsasRequestD
 
   def validator(): CallHandler[Validator[ListBsasRequestData]] =
     (mockListBsasValidatorFactory
-      .validator(_: String, _: Option[String], _: Option[String], _: Option[String]))
+      .validator(_: String, _: String, _: Option[String], _: Option[String]))
       .expects(*, *, *, *)
 
 }

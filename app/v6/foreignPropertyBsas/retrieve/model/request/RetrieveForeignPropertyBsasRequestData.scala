@@ -22,7 +22,7 @@ import v6.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema
 trait RetrieveForeignPropertyBsasRequestData {
   def nino: Nino
   def calculationId: CalculationId
-  def taxYear: Option[TaxYear]
+  def taxYear: TaxYear
 
   val schema: RetrieveForeignPropertyBsasSchema
 }
