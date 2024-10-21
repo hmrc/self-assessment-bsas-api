@@ -60,19 +60,19 @@ tags:
 
 
 paths:
-  /individuals/self-assessment/adjustable-summary/{nino}:
+  /individuals/self-assessment/adjustable-summary/{nino}/{taxYear}:
     $ref: ./bsas_list.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/trigger:
     $ref: ./bsas_trigger.yaml
-  /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}:
+  /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}/{taxYear}:
     $ref: ./self_employment_retrieve.yaml
-  /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}/adjust:
+  /individuals/self-assessment/adjustable-summary/{nino}/self-employment/{calculationId}/adjust/{taxYear}:
     $ref: ./self_employment_adjustments_submit.yaml
-  /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}:
+  /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}/{taxYear}:
     $ref: ./uk_property_bsas_retrieve.yaml
-  /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}/adjust:
+  /individuals/self-assessment/adjustable-summary/{nino}/uk-property/{calculationId}/adjust/{taxYear}:
     $ref: ./uk_property_accounting_adjustments_submit.yaml
-  /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}:
+  /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}/{taxYear}:
     $ref: ./foreign_property_retrieve.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}/adjust:
     $ref: ./foreign_property_accounting_adjustments_submit.yaml
