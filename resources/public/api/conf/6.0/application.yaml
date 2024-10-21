@@ -74,5 +74,5 @@ paths:
     $ref: ./uk_property_accounting_adjustments_submit.yaml
   /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}/{taxYear}:
     $ref: ./foreign_property_retrieve.yaml
-  /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}:
+  /individuals/self-assessment/adjustable-summary/{nino}/foreign-property/{calculationId}/adjust:
     $ref: ./foreign_property_accounting_adjustments_submit.yaml
