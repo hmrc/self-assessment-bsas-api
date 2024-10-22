@@ -61,21 +61,21 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
       .authorised(initialPredicate(mtdId))
       .retrieve(affinityGroup and authorisedEnrolments) {
         case Some(Individual) ~ _ =>
-          Future.successful(Right(UserDetails("", "Individual", None)))
+          Future.successful(Right(UserDetails(mtdId, "Individual", None)))
 
         case Some(Organisation) ~ _ =>
-          Future.successful(Right(UserDetails("", "Organisation", None)))
+          Future.successful(Right(UserDetails(mtdId, "Organisation", None)))
 
         case Some(Agent) ~ authorisedEnrolments =>
           authFunction
             .authorised(mtdEnrolmentPredicate(mtdId)) {
-              Future.successful(agentDetails(authorisedEnrolments))
+              Future.successful(agentDetails(mtdId, authorisedEnrolments))
             }
             .recoverWith { case _: AuthorisationException =>
               if (endpointAllowsSupportingAgents) {
                 authFunction
                   .authorised(supportingAgentAuthPredicate(mtdId)) {
-                    Future.successful(agentDetails(authorisedEnrolments))
+                    Future.successful(agentDetails(mtdId, authorisedEnrolments))
                   }
               } else {
                 Future.successful(Left(ClientOrAgentNotAuthorisedError))
@@ -100,13 +100,13 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
       }
   }
 
-  private def agentDetails(authorisedEnrolments: Enrolments): Either[MtdError, UserDetails] =
+  private def agentDetails(mtdId: String, authorisedEnrolments: Enrolments): Either[MtdError, UserDetails] =
     (
       for {
         enrolment  <- authorisedEnrolments.getEnrolment("HMRC-AS-AGENT")
         identifier <- enrolment.getIdentifier("AgentReferenceNumber")
         arn = identifier.value
-      } yield UserDetails("", "Agent", Some(arn))
+      } yield UserDetails(mtdId, "Agent", Some(arn))
     ).toRight(left = {
       logger.warn(s"[EnrolmentsAuthService][authorised] No AgentReferenceNumber defined on agent enrolment.")
       InternalError
