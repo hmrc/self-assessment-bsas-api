@@ -40,10 +40,10 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamSubmissionPeriodWithPeriodIdRegexJson: JsValue = Json.parse(
+  val downstreamSubmissionPeriodWithSubmissionIdRegexJson: JsValue = Json.parse(
     s"""
        |{
-       |  "periodId": "1234567890123456",
+       |  "submissionId": "1234567890123456",
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -51,10 +51,10 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  val downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson: JsValue = Json.parse(
+  val downstreamSubmissionPeriodWithInvalidSubmissionIdRegexJson: JsValue = Json.parse(
     s"""
        |{
-       |  "periodId": "7038926d-d7a1-4399-8641-f278b438259c",
+       |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -71,7 +71,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson, $downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson]
+       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )
@@ -85,7 +85,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-VAT",
-       |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )
@@ -99,7 +99,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )

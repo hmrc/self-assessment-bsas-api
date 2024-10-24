@@ -26,15 +26,8 @@ class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundT
   import SubmissionPeriod._
 
   testRoundTrip(
-    "Submission Period with valid periodId",
-    downstreamSubmissionPeriodWithPeriodIdRegexJson,
-    submissionPeriodWithPeriodId,
-    mtdSubmissionPeriodWithPeriodIdJson
-  )(reads)
-
-  testRoundTrip(
     "Submission Period with submissionId",
-    downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson,
+    downstreamSubmissionPeriodWithSubmissionIdRegexJson,
     submissionPeriodWithSubmissionId,
     mtdSubmissionPeriodWithSubmissionIdJson
   )(reads)

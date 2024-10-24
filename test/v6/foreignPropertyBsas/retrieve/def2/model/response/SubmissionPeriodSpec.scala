@@ -16,26 +16,14 @@
 
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
-import shared.models.utils.JsonErrorValidators
+import common.model.RoundTripTest
 import shared.utils.UnitSpec
 import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
-class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators {
+class SubmissionPeriodSpec extends UnitSpec with RoundTripTest {
 
-  "reads" should {
-    "return the expected SubmissionPeriod" when {
-      "given a valid json object with all fields" in {
-        submissionPeriodDesJson.as[SubmissionPeriods] shouldBe parsedSubmissionPeriod
-      }
-    }
-  }
+  import SubmissionPeriod._
 
-  "writes" should {
-    "return the expected json object" when {
-      "given a valid SubmissionPeriod" in {
-        parsedSubmissionPeriod.toJson shouldBe submissionPeriodMtdJson
-      }
-    }
-  }
+  testRoundTrip("Submission Period", submissionPeriodDesJson, parsedSubmissionPeriod, submissionPeriodMtdJson)(reads)
 
 }

@@ -28,7 +28,7 @@ case class Inputs(
     accountingPeriodStartDate: String,
     accountingPeriodEndDate: String,
     source: Source,
-    submissionPeriods: Seq[SubmissionPeriod]
+    submissionPeriod: SubmissionPeriod
 )
 
 object Inputs {
@@ -40,7 +40,7 @@ object Inputs {
       (JsPath \ "accountingPeriodStartDate").read[String] and
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[Source] and
-      (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
+      (JsPath \ "submissionPeriod").read[SubmissionPeriod]
   )(Inputs.apply _)
 
   implicit val writes: OWrites[Inputs] = (o: Inputs) =>
@@ -50,7 +50,7 @@ object Inputs {
       "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
       "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
       "source"                    -> o.source,
-      "submissionPeriods"         -> o.submissionPeriods
+      "submissionPeriod"          -> o.submissionPeriod
     )
 
 }

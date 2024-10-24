@@ -35,7 +35,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val submissionPeriodDesJson: JsValue = Json.parse(
     """{
-      |      "periodId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |      "submissionId": "64cc4efc-d8a9-4c4d-96a8-2be26eb169f6",
       |      "startDate": "2019-04-06",
       |      "endDate": "2020-04-05",
       |      "receivedDateTime": "2019-02-15T09:35:04.843Z"
@@ -50,7 +50,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "accountingPeriodStartDate": "2019-04-06",
        |  "accountingPeriodEndDate": "2020-04-05",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$submissionPeriodDesJson]
+       |  "submissionPeriod": $submissionPeriodDesJson
        |}""".stripMargin
   )
 
@@ -218,7 +218,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val submissionPeriodMtdJson: JsValue = Json.parse(
     """{
-      |  "submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      |  "submissionId": "64cc4efc-d8a9-4c4d-96a8-2be26eb169f6",
       |  "startDate": "2019-04-06",
       |  "endDate": "2020-04-05",
       |  "receivedDateTime": "2019-02-15T09:35:04.843Z"
@@ -232,7 +232,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "accountingPeriodStartDate": "2019-04-06",
        |  "accountingPeriodEndDate": "2020-04-05",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$submissionPeriodMtdJson]
+       |  "submissionPeriod": $submissionPeriodMtdJson
        |}""".stripMargin
   )
 
@@ -431,8 +431,8 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     summaryStatus = "valid"
   )
 
-  lazy val parsedSubmissionPeriod: SubmissionPeriods = SubmissionPeriods(
-    submissionId = "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+  lazy val parsedSubmissionPeriod: SubmissionPeriod = SubmissionPeriod(
+    submissionId = "64cc4efc-d8a9-4c4d-96a8-2be26eb169f6",
     startDate = "2019-04-06",
     endDate = "2020-04-05",
     receivedDateTime = "2019-02-15T09:35:04.843Z"
@@ -445,7 +445,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     accountingPeriodStartDate = "2019-04-06",
     accountingPeriodEndDate = "2020-04-05",
     source = "MTD-SA",
-    submissionPeriods = List(parsedSubmissionPeriod)
+    submissionPeriod = parsedSubmissionPeriod
   )
 
   lazy val parsedFhlSummaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(

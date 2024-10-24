@@ -19,14 +19,14 @@ package v6.foreignPropertyBsas.retrieve.def2.model.response
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SubmissionPeriods(submissionId: String, startDate: String, endDate: String, receivedDateTime: String)
+case class SubmissionPeriod(submissionId: String, startDate: String, endDate: String, receivedDateTime: String)
 
-object SubmissionPeriods {
+object SubmissionPeriod {
 
-  implicit val reads: Reads[SubmissionPeriods] = ((JsPath \ "periodId").read[String] and
+  implicit val reads: Reads[SubmissionPeriod] = ((JsPath \ "submissionId").read[String] and
     (JsPath \ "startDate").read[String] and
     (JsPath \ "endDate").read[String] and
-    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriods.apply _)
+    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriod.apply _)
 
-  implicit val writes: OWrites[SubmissionPeriods] = Json.writes[SubmissionPeriods]
+  implicit val writes: OWrites[SubmissionPeriod] = Json.writes[SubmissionPeriod]
 }

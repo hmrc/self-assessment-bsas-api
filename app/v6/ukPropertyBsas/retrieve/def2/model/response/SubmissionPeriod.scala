@@ -16,42 +16,17 @@
 
 package v6.ukPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SubmissionPeriod(
-    periodId: Option[String],
-    submissionId: Option[String],
-    startDate: String,
-    endDate: String,
-    receivedDateTime: String
-)
+case class SubmissionPeriod(submissionId: String, startDate: String, endDate: String, receivedDateTime: String)
 
 object SubmissionPeriod {
 
-  private val periodIdRegex = "^[0-9]{16}$"
-
-  implicit val reads: Reads[SubmissionPeriod] = (json: JsValue) => {
-    for {
-      startDate        <- (json \ "startDate").validate[String]
-      endDate          <- (json \ "endDate").validate[String]
-      receivedDateTime <- (json \ "receivedDateTime").validate[String]
-      id               <- (json \ "periodId").validate[String]
-      (periodId, submissionId) = {
-        if (id.matches(periodIdRegex)) {
-          (Some(id), None)
-        } else {
-          (None, Some(s"${startDate}_$endDate"))
-        }
-      }
-    } yield {
-      SubmissionPeriod(
-        periodId = periodId,
-        submissionId = submissionId,
-        startDate = startDate,
-        endDate = endDate,
-        receivedDateTime = receivedDateTime)
-    }
-  }
+  implicit val reads: Reads[SubmissionPeriod] = ((JsPath \ "submissionId").read[String] and
+    (JsPath \ "startDate").read[String] and
+    (JsPath \ "endDate").read[String] and
+    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriod.apply _)
 
   implicit val writes: OWrites[SubmissionPeriod] = Json.writes[SubmissionPeriod]
 }
