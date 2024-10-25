@@ -274,17 +274,6 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-//  val mtdSubmissionPeriodWithSubmissionIdJson: JsValue = Json.parse(
-//    s"""
-//       |{
-//       |  "submissionId": "${now}_$aYearFromNow",
-//       |  "startDate": "$now",
-//       |  "endDate": "$aYearFromNow",
-//       |  "receivedDateTime": "2000-01-01T10:12:10Z"
-//       |}
-//       |""".stripMargin
-//  )
-
   val mtdInputsFhlJson: JsValue = Json.parse(
     s"""
        |{
@@ -539,14 +528,6 @@ object RetrieveUkPropertyBsasFixtures {
     endDate = aYearFromNow,
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
-
-//  val submissionPeriodWithSubmissionId: SubmissionPeriod = SubmissionPeriod(
-//    periodId = None,
-//    submissionId = Some(s"${now}_$aYearFromNow"),
-//    startDate = now,
-//    endDate = aYearFromNow,
-//    receivedDateTime = "2000-01-01T10:12:10Z"
-//  )
 
   val inputsFhl: Inputs = Inputs(
     incomeSourceType = "04",
