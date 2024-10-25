@@ -92,7 +92,8 @@ class SharedAppConfigSpec extends UnitSpec {
 
     "return the apiDocumentationUrl" when {
       "it is not specified" in {
-        simpleAppConfig.apiDocumentationUrl shouldBe s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${simpleAppConfig.appName}"
+        val changedAppConfig = appConfig("", None)
+        changedAppConfig.apiDocumentationUrl shouldBe s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${changedAppConfig.appName}"
       }
       "it is specified" in {
         val changedAppConfig = appConfig("", Some("test123"))
