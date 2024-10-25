@@ -17,7 +17,7 @@
 package shared.config
 
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.{ Invalid, Valid }
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import shared.config.Deprecation.Deprecated
@@ -88,6 +88,17 @@ class SharedAppConfigSpec extends UnitSpec {
         "TYS-IFS-ABCD1234",
         expectedTysIfsEnvHeaders
       )
+    }
+
+    "return the apiDocumentationUrl" when {
+      "it is not specified" in {
+        val changedAppConfig = appConfig("", None)
+        changedAppConfig.apiDocumentationUrl shouldBe s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${changedAppConfig.appName}"
+      }
+      "it is specified" in {
+        val changedAppConfig = appConfig("", Some("test123"))
+        changedAppConfig.apiDocumentationUrl shouldBe "test123"
+      }
     }
   }
 
@@ -309,57 +320,62 @@ class SharedAppConfigSpec extends UnitSpec {
     }
   }
 
-  private def appConfig(versionConf: String): SharedAppConfig = {
+  private def appConfig(versionConf: String, apiDocumentationUrl: Option[String] = None): SharedAppConfig = {
     val conf = ConfigFactory.parseString(
-      """
-        |  appName = "any-name-api"
-        |  appUrl = "http://localhost:9999"
-        |  
-        |  api {
-        |""".stripMargin ++
+      s"""
+         |  appName = "any-name-api"
+         |  appUrl = "http://localhost:9999"
+         |  
+         |  api {
+         |""".stripMargin ++
 
         versionConf ++
 
-        """
-          |  }
-          |  
-          |  microservice {
-          |    services {
-          |      mtd-id-lookup {
-          |        host = localhost
-          |        port = 9769
-          |      }
-          |
-          |      des {
-          |        host = 127.0.0.1
-          |        port = 6666
-          |        env = Prod
-          |        token = DES-ABCD1234
-          |        environmentHeaders = ["Des-Accept", "Des-Gov-Test-Scenario", "Des-Content-Type"]
-          |      }
-          |
-          |      ifs {
-          |        enabled = true
-          |        host = 127.0.0.1
-          |        port = 7777
-          |        env = Prod
-          |        token = IFS-ABCD1234
-          |        environmentHeaders = ["IFS-Accept", "IFS-Gov-Test-Scenario", "IFS-Content-Type"]
-          |      }
-          |
-          |      tys-ifs {
-          |        host = 127.0.0.1
-          |        port = 8888
-          |        env = Prod
-          |        token = TYS-IFS-ABCD1234
-          |        environmentHeaders = ["TYS-IFS-Accept", "TYS-IFS-Gov-Test-Scenario", "TYS-IFS-Content-Type"]
-          |      }
-          |    }
-          |  }
-          |""".stripMargin
+        s"""
+           |${apiDocumentationUrl match {
+             case Some(url) => s"documentation-url = $url"
+             case _         => ""
+           }}
+           |  }
+           |
+           |  
+           |  microservice {
+           |    services {
+           |      mtd-id-lookup {
+           |        host = localhost
+           |        port = 9769
+           |      }
+           |
+           |      des {
+           |        host = 127.0.0.1
+           |        port = 6666
+           |        env = Prod
+           |        token = DES-ABCD1234
+           |        environmentHeaders = ["Des-Accept", "Des-Gov-Test-Scenario", "Des-Content-Type"]
+           |      }
+           |
+           |      ifs {
+           |        enabled = true
+           |        host = 127.0.0.1
+           |        port = 7777
+           |        env = Prod
+           |        token = IFS-ABCD1234
+           |        environmentHeaders = ["IFS-Accept", "IFS-Gov-Test-Scenario", "IFS-Content-Type"]
+           |      }
+           |
+           |      tys-ifs {
+           |        host = 127.0.0.1
+           |        port = 8888
+           |        env = Prod
+           |        token = TYS-IFS-ABCD1234
+           |        environmentHeaders = ["TYS-IFS-Accept", "TYS-IFS-Gov-Test-Scenario", "TYS-IFS-Content-Type"]
+           |      }
+           |    }
+           |  }
+           |""".stripMargin
     )
 
-    val configuration  = Configuration(conf)
+    val configuration = Configuration(conf)
     val servicesConfig = new ServicesConfig(configuration)
     new SharedAppConfig(servicesConfig, configuration)
   }
