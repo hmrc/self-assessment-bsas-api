@@ -34,9 +34,9 @@ class Def2_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "given a valid TYS request" in new TysIfsTest {
+      "given a valid TYS request" in new Test {
         override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson())
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson(2026))
         }
 
         val response: WSResponse = await(request.get())
@@ -55,7 +55,7 @@ class Def2_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
                               expectedStatus: Int,
                               expectedBody: MtdError,
                               maybeGovTestScenario: Option[String]): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+        s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
@@ -103,7 +103,7 @@ class Def2_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
            |}""".stripMargin
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamStatus error and status $downstreamCode" in new TysIfsTest {
+        s"downstream returns an $downstreamStatus error and status $downstreamCode" in new Test {
 
           override def setupStubs(): Unit = {
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
@@ -133,8 +133,9 @@ class Def2_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait Test {
-    val nino          = "AA123456A"
-    val calculationId = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
+    val nino            = "AA123456A"
+    val calculationId   = "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7"
+    def taxYear: String = "2025-26"
 
     def request: WSRequest = {
       AuditStub.audit()
@@ -148,17 +149,10 @@ class Def2_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
         )
     }
 
-    def taxYear: String
-
-    def uri: String = s"/$nino/self-employment/$calculationId/$taxYear"
+    def uri: String           = s"/$nino/self-employment/$calculationId/$taxYear"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
 
     def setupStubs(): Unit = ()
-  }
-
-  private trait TysIfsTest extends Test {
-    override def taxYear: String = "2023-24"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
 }

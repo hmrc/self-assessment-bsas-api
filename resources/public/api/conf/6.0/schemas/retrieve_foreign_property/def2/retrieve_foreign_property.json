@@ -84,11 +84,9 @@
           ],
           "description": "Specifies the source of the income data used in this calculation."
         },
-        "submissionPeriods": {
-          "type": "array",
-          "description": "Array containing the submission periods for the income source.",
-          "items": {
-            "type": "object",
+        "submissionPeriod": {
+          "type": "object",
+          "description": "Array containing the submission period for the income source.",
             "properties": {
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",

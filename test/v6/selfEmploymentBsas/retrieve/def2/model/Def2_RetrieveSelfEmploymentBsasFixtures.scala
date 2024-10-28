@@ -24,8 +24,8 @@ import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasR
 
 object Def2_RetrieveSelfEmploymentBsasFixtures {
 
-  private val now          = "2019-04-06"
-  private val aYearFromNow = "2020-04-05"
+  private val now          = "2025-04-06"
+  private val aYearFromNow = "2026-04-05"
 
   def downstreamMetadataJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""
