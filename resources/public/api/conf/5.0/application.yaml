@@ -7,7 +7,7 @@ info:
     Retrieve an adjustable summary calculation for a specified self-employment or property business, for a given
     accounting period.
     
-    The following groups are stateful in the sandbox:
+    The following groups of endpoints are stateful in the Sandbox:
     * [Self-employment business](#tag/Self-employment-business)
     * [UK property business](#tag/UK-property-business)
     * [Foreign property business](#tag/Foreign-property-business)
