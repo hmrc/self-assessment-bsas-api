@@ -108,6 +108,7 @@
               }
             },
             "required": [
+              "submissionId",
               "startDate",
               "endDate",
               "receivedDateTime"
@@ -121,7 +122,7 @@
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
         "source",
-        "submissionPeriods"
+        "submissionPeriod"
       ]
     },
     "adjustableSummaryCalculation": {

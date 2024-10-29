@@ -126,7 +126,7 @@
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
         "source",
-        "submissionPeriods"
+        "submissionPeriod"
       ],
       "additionalProperties": false
     },
