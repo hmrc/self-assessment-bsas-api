@@ -17,7 +17,7 @@
 package shared.config
 
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import shared.config.Deprecation.Deprecated
@@ -333,9 +333,9 @@ class SharedAppConfigSpec extends UnitSpec {
 
         s"""
            |${apiDocumentationUrl match {
-             case Some(url) => s"documentation-url = $url"
-             case _         => ""
-           }}
+            case Some(url) => s"documentation-url = $url"
+            case _         => ""
+          }}
            |  }
            |
            |  
@@ -375,7 +375,7 @@ class SharedAppConfigSpec extends UnitSpec {
            |""".stripMargin
     )
 
-    val configuration = Configuration(conf)
+    val configuration  = Configuration(conf)
     val servicesConfig = new ServicesConfig(configuration)
     new SharedAppConfig(servicesConfig, configuration)
   }

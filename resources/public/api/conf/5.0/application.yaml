@@ -7,6 +7,15 @@ info:
     Retrieve an adjustable summary calculation for a specified self-employment or property business, for a given
     accounting period.
     
+    The following groups are stateful in the sandbox:
+    * [Self-employment business](#tag/Self-employment-business)
+    * [UK property business](#tag/UK-property-business)
+    * [Foreign property business](#tag/Foreign-property-business)
+    
+    The following endpoints are stateful in the Sandbox:
+    * Trigger a Business Source Adjustable Summary
+    * List a Business Source Adjustable Summary
+    
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
     
