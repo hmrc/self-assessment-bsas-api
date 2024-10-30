@@ -82,18 +82,10 @@
           ],
           "description": "Specifies the source of the income data used in this calculation."
         },
-        "submissionPeriods": {
-          "type": "array",
-          "description": "Array containing the submission periods for the income source. A periodic summary will always have either a periodId or a submissionId, but not both.",
-          "items": {
-            "type": "object",
+        "submissionPeriod": {
+          "type": "object",
+          "description": "Array containing the submission period for the income source. A periodic summary will always have either a periodId or a submissionId, but not both.",
             "properties": {
-              "periodId": {
-                "description": "A reference to the unique identifier of the period. Must conform to: \nYYYY-MM-DD_YYYY-MM-DD",
-                "type": "string",
-                "example": "2019-04-06_2019-07-05",
-                "format": "YYYY-MM-DD_YYYY-MM-DD"
-              },
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",
                 "type": "string",
@@ -116,6 +108,7 @@
               }
             },
             "required": [
+              "submissionId",
               "startDate",
               "endDate",
               "receivedDateTime"
@@ -129,7 +122,7 @@
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
         "source",
-        "submissionPeriods"
+        "submissionPeriod"
       ]
     },
     "adjustableSummaryCalculation": {

@@ -14,47 +14,36 @@
  * limitations under the License.
  */
 
-package v6.selfEmploymentBsas.retrieve.def2.model.response
+package v6.selfEmploymentBsas.retrieve.def2.model
 
 import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
 import v6.common.model.{IncomeSourceType, TypeOfBusiness}
-import v6.selfEmploymentBsas.retrieve.def1.model.response._
+import v6.selfEmploymentBsas.retrieve.def2.model.response._
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
 object Def2_RetrieveSelfEmploymentBsasFixtures {
 
-  private val now          = "2019-04-06"
-  private val aYearFromNow = "2020-04-05"
+  private val now          = "2025-04-06"
+  private val aYearFromNow = "2026-04-05"
 
-  val downstreamMetadataJson: JsValue = Json.parse(
-    """
+  def downstreamMetadataJson(taxYear: Int = 2024): JsValue = Json.parse(
+    s"""
       |{
       |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "taxableEntityId": "AA999999A",
-      |  "taxYear": 2021,
+      |  "taxYear": $taxYear,
       |  "status": "valid"
       |}
       |""".stripMargin
   )
 
-  val downstreamSubmissionPeriodWithPeriodIdRegexJson: JsValue = Json.parse(
+  val downstreamSubmissionPeriodWithSubmissionIdRegexJson: JsValue = Json.parse(
     s"""
        |{
-       |  "periodId": "1234567890123456",
-       |  "startDate": "$now",
-       |  "endDate": "$aYearFromNow",
-       |  "receivedDateTime": "2000-01-01T10:12:10Z"
-       |}
-       |""".stripMargin
-  )
-
-  val downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "periodId": "7038926d-d7a1-4399-8641-f278b438259c",
+       |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -71,7 +60,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson, $downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson]
+       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )
@@ -85,7 +74,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-VAT",
-       |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )
@@ -99,7 +88,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )
@@ -279,55 +268,43 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  val downstreamRetrieveBsasResponseJson: JsValue = Json.parse(s"""
-                                                                  |{
-                                                                  |  "metadata": $downstreamMetadataJson,
-                                                                  |  "inputs": $downstreamInputsJson,
-                                                                  |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
-                                                                  |  "adjustments": $downstreamAdjustmentsJson,
-                                                                  |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
-                                                                  |}
-                                                                  |""".stripMargin)
+  def downstreamRetrieveBsasResponseJson(taxYear: Int = 2024): JsValue = Json.parse(s"""
+        |{
+        |  "metadata": ${downstreamMetadataJson(taxYear)},
+        |  "inputs": $downstreamInputsJson,
+        |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+        |  "adjustments": $downstreamAdjustmentsJson,
+        |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+        |}
+        |""".stripMargin)
 
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType): JsValue = Json.parse(s"""
-                                                                                                                             |{
-                                                                                                                             |  "metadata": $downstreamMetadataJson,
-                                                                                                                             |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(
-                                                                                                                              incomeSourceType)},
-                                                                                                                             |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
-                                                                                                                             |  "adjustments": $downstreamAdjustmentsJson,
-                                                                                                                             |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
-                                                                                                                             |}
-                                                                                                                             |""".stripMargin)
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int = 2024): JsValue = Json.parse(s"""
+       |{
+       |  "metadata": ${downstreamMetadataJson(taxYear)},
+       |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
+       |  "adjustableSummaryCalculation": $downstreamSummaryCalculationJson,
+       |  "adjustments": $downstreamAdjustmentsJson,
+       |  "adjustedSummaryCalculation": $downstreamSummaryCalculationJson
+       |}
+       |""".stripMargin)
 
-  val mtdMetadataJson: JsValue = Json.parse(
-    """
+  def mtdMetadataJson(taxYear: String = "2023-24"): JsValue = Json.parse(
+    s"""
       |{
       |  "calculationId": "03e3bc8b-910d-4f5b-88d7-b627c84f2ed7",
       |  "requestedDateTime": "2000-01-01T10:12:10Z",
       |  "adjustedDateTime": "2000-01-01T10:12:10Z",
       |  "nino": "AA999999A",
-      |  "taxYear": "2020-21",
+      |  "taxYear": "$taxYear",
       |  "summaryStatus": "valid"
       |}
       |""".stripMargin
   )
 
-  val mtdSubmissionPeriodWithPeriodIdJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "periodId": "1234567890123456",
-       |  "startDate": "$now",
-       |  "endDate": "$aYearFromNow",
-       |  "receivedDateTime": "2000-01-01T10:12:10Z"
-       |}
-       |""".stripMargin
-  )
-
   val mtdSubmissionPeriodWithSubmissionIdJson: JsValue = Json.parse(
     s"""
        |{
-       |  "submissionId": "${now}_$aYearFromNow",
+       |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -344,7 +321,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$mtdSubmissionPeriodWithPeriodIdJson, $mtdSubmissionPeriodWithSubmissionIdJson]
+       |  "submissionPeriod": $mtdSubmissionPeriodWithSubmissionIdJson
        |}
        |""".stripMargin
   )
@@ -524,10 +501,10 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdRetrieveBsasResponseJson: JsValue = Json.parse(
+  def mtdRetrieveBsasResponseJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""
        |{
-       |  "metadata": $mtdMetadataJson,
+       |  "metadata": ${mtdMetadataJson(taxYear)},
        |  "inputs": $mtdInputsJson,
        |  "adjustableSummaryCalculation": $mtdSummaryCalculationJson,
        |  "adjustments": $mtdAdjustmentsJson,
@@ -541,21 +518,19 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     requestedDateTime = "2000-01-01T10:12:10Z",
     adjustedDateTime = Some("2000-01-01T10:12:10Z"),
     nino = "AA999999A",
-    taxYear = "2020-21",
+    taxYear = "2023-24",
     summaryStatus = Status.`valid`
   )
 
   val submissionPeriodWithPeriodId: SubmissionPeriod = SubmissionPeriod(
-    periodId = Some("1234567890123456"),
-    submissionId = None,
+    submissionId = "7038926d-d7a1-4399-8641-f278b438259c",
     startDate = now,
     endDate = aYearFromNow,
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
 
   val submissionPeriodWithSubmissionId: SubmissionPeriod = SubmissionPeriod(
-    periodId = None,
-    submissionId = Some(s"${now}_$aYearFromNow"),
+    submissionId = "7038926d-d7a1-4399-8641-f278b438259c",
     startDate = now,
     endDate = aYearFromNow,
     receivedDateTime = "2000-01-01T10:12:10Z"
@@ -569,7 +544,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
+    submissionPeriod = submissionPeriodWithSubmissionId
   )
 
   val summaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
@@ -724,7 +699,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     adjustedIncomeTaxLoss = Some(9)
   )
 
-  val retrieveBsasResponse: RetrieveSelfEmploymentBsasResponse = Def1_RetrieveSelfEmploymentBsasResponse(
+  val retrieveBsasResponse: Def2_RetrieveSelfEmploymentBsasResponse = Def2_RetrieveSelfEmploymentBsasResponse(
     metadata = parsedMetadata,
     inputs = parsedInputs,
     adjustableSummaryCalculation = adjustableSummaryCalculation,
@@ -733,7 +708,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
   )
 
   def retrieveBsasResponseInvalidTypeOfBusinessDataObject(incomeSourceType: String): RetrieveSelfEmploymentBsasResponse =
-    Def1_RetrieveSelfEmploymentBsasResponse(
+    Def2_RetrieveSelfEmploymentBsasResponse(
       metadata = parsedMetadata,
       inputs = parsedInputs.copy(incomeSourceType = incomeSourceType),
       adjustableSummaryCalculation = adjustableSummaryCalculation,

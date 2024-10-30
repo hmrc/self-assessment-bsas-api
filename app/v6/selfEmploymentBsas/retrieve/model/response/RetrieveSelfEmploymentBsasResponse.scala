@@ -21,13 +21,17 @@ import play.api.libs.json._
 import shared.utils.JsonWritesUtil
 import v6.common.model.{HasIncomeSourceType, HasTaxYear}
 import v6.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
+import v6.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasResponse
 
 trait RetrieveSelfEmploymentBsasResponse extends HasIncomeSourceType with HasTaxYear
 
 object RetrieveSelfEmploymentBsasResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = writesFrom { case a: Def1_RetrieveSelfEmploymentBsasResponse =>
-    implicitly[OWrites[Def1_RetrieveSelfEmploymentBsasResponse]].writes(a)
+  implicit val writes: OWrites[RetrieveSelfEmploymentBsasResponse] = writesFrom {
+    case def1: Def1_RetrieveSelfEmploymentBsasResponse =>
+      implicitly[OWrites[Def1_RetrieveSelfEmploymentBsasResponse]].writes(def1)
+    case def2: Def2_RetrieveSelfEmploymentBsasResponse =>
+      implicitly[OWrites[Def2_RetrieveSelfEmploymentBsasResponse]].writes(def2)
   }
 
 }

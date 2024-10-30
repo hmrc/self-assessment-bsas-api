@@ -26,7 +26,7 @@ case class Inputs(businessId: String,
                   accountingPeriodStartDate: String,
                   accountingPeriodEndDate: String,
                   source: String,
-                  submissionPeriods: Seq[SubmissionPeriods])
+                  submissionPeriod: SubmissionPeriod)
 
 object Inputs extends JsonWritesUtil {
 
@@ -37,7 +37,7 @@ object Inputs extends JsonWritesUtil {
       (JsPath \ "accountingPeriodStartDate").read[String] and
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[String] and
-      (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriods]]
+      (JsPath \ "submissionPeriod").read[SubmissionPeriod]
   )(Inputs.apply _)
 
   implicit val writes: OWrites[Inputs] = (o: Inputs) =>
@@ -48,7 +48,7 @@ object Inputs extends JsonWritesUtil {
         "accountingPeriodStartDate" -> o.accountingPeriodStartDate,
         "accountingPeriodEndDate"   -> o.accountingPeriodEndDate,
         "source"                    -> o.source,
-        "submissionPeriods"         -> o.submissionPeriods
+        "submissionPeriod"          -> o.submissionPeriod
       ))
 
 }

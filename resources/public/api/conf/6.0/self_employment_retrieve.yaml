@@ -75,20 +75,34 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/retrieve_self_employment/response.json"
+            oneOf:
+              - $ref: "./schemas/retrieve_self_employment/def1/response.json"
+              - $ref: "./schemas/retrieve_self_employment/def2/response.json"
           examples:
-            "Full Expenses":
+            "PRE-TY-2025-26-Full-Expenses":
               description: Full Expenses
               value:
-                $ref: "./examples/retrieve_self_employment/retrieve_self_employment_full_expenses.json"
-            "Consolidated Expenses":
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_full_expenses.json"
+            "PRE-TY-2025-26-Consolidated-Expenses":
               description: Consolidated Expenses
               value:
-                $ref: "./examples/retrieve_self_employment/retrieve_self_employment_consolidated_expenses.json"
-            "Trading Allowance":
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_consolidated_expenses.json"
+            "PRE-TY-2025-26-Trading-Allowance":
               description: Trading Allowance
               value:
-                $ref: "./examples/retrieve_self_employment/retrieve_self_employment_trading_allowance.json"
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_trading_allowance.json"
+            "TY-2025-26-Full-Expenses":
+              description: Full Expenses
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_full_expenses.json"
+            "TY-2025-26-Consolidated-Expenses":
+              description: Consolidated Expenses
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_consolidated_expenses.json"
+            "TY-2025-26-Trading-Allowance":
+              description: Trading Allowance
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_trading_allowance.json"
 
     400:
       description: Bad request

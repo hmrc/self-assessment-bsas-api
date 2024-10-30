@@ -20,10 +20,14 @@ import cats.data.Validated
 import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import shared.controllers.validators.resolvers.ResolveTaxYear
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import shared.schema.DownstreamReadable
 import v6.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
+import v6.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasResponse
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
+
+import scala.math.Ordered.orderingToOrdered
 
 sealed trait RetrieveSelfEmploymentBsasSchema extends DownstreamReadable[RetrieveSelfEmploymentBsasResponse]
 
@@ -34,12 +38,18 @@ object RetrieveSelfEmploymentBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def1_RetrieveSelfEmploymentBsasResponse.reads
   }
 
-  def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
-    ResolveTaxYear(taxYearString) andThen (_ => schemaFor())
+  case object Def2 extends RetrieveSelfEmploymentBsasSchema {
+    type DownstreamResp = Def2_RetrieveSelfEmploymentBsasResponse
+    val connectorReads: Reads[DownstreamResp] = Def2_RetrieveSelfEmploymentBsasResponse.reads
   }
 
-  def schemaFor(): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
-    Valid(Def1)
+  def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
+    ResolveTaxYear(taxYearString) andThen schemaFor
+  }
+
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
+    if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
+    else Valid(Def2)
   }
 
 }

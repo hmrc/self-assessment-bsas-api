@@ -41,7 +41,7 @@ object RetrieveUkPropertyBsasFixtures {
   val downstreamSubmissionPeriodWithPeriodIdRegexJson: JsValue = Json.parse(
     s"""
       |{
-      |  "periodId": "1234567890123456",
+      |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
       |  "startDate": "$now",
       |  "endDate": "$aYearFromNow",
       |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -49,10 +49,10 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson: JsValue = Json.parse(
+  val downstreamSubmissionPeriodWithSubmissionIdRegexJson: JsValue = Json.parse(
     s"""
        |{
-       |  "periodId": "7038926d-d7a1-4399-8641-f278b438259c",
+       |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -69,7 +69,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "accountingPeriodStartDate": "$now",
       |  "accountingPeriodEndDate": "$aYearFromNow",
       |  "source": "MTD-SA",
-      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson, $downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson]
+      |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
       |}
       |""".stripMargin
   )
@@ -83,7 +83,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "accountingPeriodStartDate": "$now",
       |  "accountingPeriodEndDate": "$aYearFromNow",
       |  "source": "MTD-SA",
-      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson, $downstreamSubmissionPeriodWithInvalidPeriodIdRegexJson]
+      |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
       |}
       |""".stripMargin
   )
@@ -97,7 +97,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "accountingPeriodStartDate": "$now",
       |  "accountingPeriodEndDate": "$aYearFromNow",
       |  "source": "MTD-VAT",
-      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+      |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
       |}
       |""".stripMargin
   )
@@ -111,7 +111,7 @@ object RetrieveUkPropertyBsasFixtures {
       |  "accountingPeriodStartDate": "$now",
       |  "accountingPeriodEndDate": "$aYearFromNow",
       |  "source": "MTD-SA",
-      |  "submissionPeriods": [$downstreamSubmissionPeriodWithPeriodIdRegexJson]
+      |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
       |}
       |""".stripMargin
   )
@@ -263,21 +263,10 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val mtdSubmissionPeriodWithPeriodIdJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "periodId": "1234567890123456",
-       |  "startDate": "$now",
-       |  "endDate": "$aYearFromNow",
-       |  "receivedDateTime": "2000-01-01T10:12:10Z"
-       |}
-       |""".stripMargin
-  )
-
   val mtdSubmissionPeriodWithSubmissionIdJson: JsValue = Json.parse(
     s"""
        |{
-       |  "submissionId": "${now}_$aYearFromNow",
+       |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
@@ -293,7 +282,7 @@ object RetrieveUkPropertyBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$mtdSubmissionPeriodWithPeriodIdJson, $mtdSubmissionPeriodWithSubmissionIdJson]
+       |  "submissionPeriods": $mtdSubmissionPeriodWithSubmissionIdJson
        |}
        |""".stripMargin
   )
@@ -306,7 +295,7 @@ object RetrieveUkPropertyBsasFixtures {
        |  "accountingPeriodStartDate": "$now",
        |  "accountingPeriodEndDate": "$aYearFromNow",
        |  "source": "MTD-SA",
-       |  "submissionPeriods": [$mtdSubmissionPeriodWithPeriodIdJson, $mtdSubmissionPeriodWithSubmissionIdJson]
+       |  "submissionPeriod": $mtdSubmissionPeriodWithSubmissionIdJson
        |}
        |""".stripMargin
   )
@@ -533,17 +522,8 @@ object RetrieveUkPropertyBsasFixtures {
     summaryStatus = Status.`valid`
   )
 
-  val submissionPeriodWithPeriodId: SubmissionPeriod = SubmissionPeriod(
-    periodId = Some("1234567890123456"),
-    submissionId = None,
-    startDate = now,
-    endDate = aYearFromNow,
-    receivedDateTime = "2000-01-01T10:12:10Z"
-  )
-
   val submissionPeriodWithSubmissionId: SubmissionPeriod = SubmissionPeriod(
-    periodId = None,
-    submissionId = Some(s"${now}_$aYearFromNow"),
+    submissionId = "7038926d-d7a1-4399-8641-f278b438259c",
     startDate = now,
     endDate = aYearFromNow,
     receivedDateTime = "2000-01-01T10:12:10Z"
@@ -556,7 +536,7 @@ object RetrieveUkPropertyBsasFixtures {
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
+    submissionPeriod = submissionPeriodWithSubmissionId
   )
 
   val inputs: Inputs = Inputs(
@@ -566,7 +546,7 @@ object RetrieveUkPropertyBsasFixtures {
     accountingPeriodStartDate = now,
     accountingPeriodEndDate = aYearFromNow,
     source = Source.`MTD-SA`,
-    submissionPeriods = List(submissionPeriodWithPeriodId, submissionPeriodWithSubmissionId)
+    submissionPeriod = submissionPeriodWithSubmissionId
   )
 
   val summaryCalculationIncomeFhl: SummaryCalculationIncome = SummaryCalculationIncome(

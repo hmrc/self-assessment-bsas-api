@@ -29,7 +29,7 @@ import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
   retrieveForeignPropertyBsasDesJson,
   retrieveForeignPropertyBsasMtdJson
 }
-import v6.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasFixtures
+import v6.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures
 import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
 
 class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
@@ -55,7 +55,7 @@ class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
       }
 
       "Downstream response is self employment" in {
-        checkTypeOfBusinessIncorrectWith(Def2_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson)
+        checkTypeOfBusinessIncorrectWith(Def2_RetrieveSelfEmploymentBsasFixtures.downstreamRetrieveBsasResponseJson())
       }
 
       def checkTypeOfBusinessIncorrectWith(downstreamResponse: JsValue): Unit =

@@ -26,16 +26,26 @@ class RetrieveSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrive
 
   "schema lookup" when {
     "a valid tax year is present" must {
-      "use Def1 for tax years from 2023-24" in {
-        forTaxYearsFrom(TaxYear.fromMtd("2023-24")) { taxYear =>
-          RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
-        }
-      }
 
       "use Default(Def1 Schema) for pre-TYS tax years" in {
         forPreTysTaxYears { taxYear =>
           RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
         }
+      }
+
+      "use Def1 for tax year 2023-24" in {
+        val taxYear = TaxYear.fromMtd("2023-24")
+        RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
+      }
+
+      "use Def1 for tax year 2024-25" in {
+        val taxYear = TaxYear.fromMtd("2024-25")
+        RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
+      }
+
+      "use Def2 for tax years 2025-26 onwards" in {
+        val taxYear = TaxYear.fromMtd("2025-26")
+        RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def2)
       }
     }
 
