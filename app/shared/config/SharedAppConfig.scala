@@ -86,7 +86,7 @@ class SharedAppConfig @Inject() (val config: ServicesConfig, protected[config] v
 
   def apiDocumentationUrl: String =
     configuration
-      .get[Option[String]]("api.documentation-url")
+      .getOptional[String]("api.documentation-url")
       .getOrElse(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/$appName")
 
   private val DATE_FORMATTER = new DateTimeFormatterBuilder()

@@ -148,7 +148,7 @@ class RequestHandlerSpec
         status(result) shouldBe NO_CONTENT
       }
 
-      "wrap the response with hateoas links if required§" in {
+      "wrap the response with hateoas links if required" in {
         val requestHandler = successRequestHandler.withHateoasResult(mockHateoasFactory)(HData, successCode)
 
         mockDeprecation(NotDeprecated)
