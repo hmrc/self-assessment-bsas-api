@@ -84,7 +84,7 @@
         },
         "submissionPeriod": {
           "type": "object",
-          "description": "Array containing the submission period for the income source. A periodic summary will always have either a periodId or a submissionId, but not both.",
+          "description": "Object containing the submission period for the income source.",
             "properties": {
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",
@@ -113,12 +113,10 @@
               "endDate",
               "receivedDateTime"
             ]
-          }
         }
       },
       "required": [
         "businessId",
-        "typeOfBusiness",
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
         "source",

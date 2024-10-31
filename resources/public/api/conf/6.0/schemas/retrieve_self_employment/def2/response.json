@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve a Self-Employment Business Source Adjustable Summary Response",
+  "title": "For TY 2025-26 and after",
   "description": "Retrieve a Self-Employment Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
@@ -93,7 +93,7 @@
         },
         "submissionPeriod": {
           "type": "object",
-          "description": "Array containing the submission periods for the income source. A periodic summary will always have either a periodId or a submissionId, but not both.",
+          "description": "Object containing the submission period for the income source.",
             "properties": {
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",
@@ -124,7 +124,6 @@
               "receivedDateTime"
             ],
             "additionalProperties": false
-          }
         }
       },
       "required": [
