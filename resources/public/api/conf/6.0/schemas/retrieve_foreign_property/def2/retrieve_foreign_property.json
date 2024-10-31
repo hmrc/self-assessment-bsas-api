@@ -86,7 +86,7 @@
         },
         "submissionPeriod": {
           "type": "object",
-          "description": "Array containing the submission period for the income source.",
+          "description": "Object containing the submission period for the income source.",
             "properties": {
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",
@@ -117,12 +117,10 @@
               "receivedDateTime"
             ],
             "additionalProperties": false
-          }
         }
       },
       "required": [
         "businessId",
-        "typeOfBusiness",
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
         "source",
