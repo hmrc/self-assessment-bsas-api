@@ -75,12 +75,12 @@
           "example": "My self-employment"
         },
         "accountingPeriodStartDate": {
-          "description": "The date the accounting period started.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>.",
+          "description": "The date the accounting period started.",
           "type": "string",
           "example": "2021-22"
         },
         "accountingPeriodEndDate": {
-          "description": "The date the accounting period ended.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>.",
+          "description": "The date the accounting period ended.",
           "type": "string",
           "example": "2022-23"
         },

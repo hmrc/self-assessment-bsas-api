@@ -7,7 +7,7 @@
     "accountingPeriod": {
       "type": "object",
       "title": "The accounting period",
-      "description": "The duration of the business income source operations to be included in the tax year submission. The earliest tax year to which the accounting period can be assigned is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+      "description": "The duration of the business income source operations to be included in the tax year submission. The earliest tax year to which the accounting period can be assigned is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.",
       "properties": {
         "startDate": {
           "type": "string",

@@ -27,7 +27,7 @@
           "accountingPeriod": {
             "type": "object",
             "title": "The accounting period",
-            "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+            "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned.",
             "required": [
               "startDate",
               "endDate"

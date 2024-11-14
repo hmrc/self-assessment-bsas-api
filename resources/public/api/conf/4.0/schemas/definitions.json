@@ -54,7 +54,7 @@
     "accountingPeriod": {
       "type": "object",
       "title": "The accounting period",
-      "description": "An object containing the accounting period start and end dates.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+      "description": "An object containing the accounting period start and end dates.",
       "required": [
         "startDate",
         "endDate"
