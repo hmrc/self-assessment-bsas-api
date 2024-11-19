@@ -27,7 +27,6 @@ case class SummaryCalculationDeductions(
     propertyAllowance: Option[BigDecimal],
     otherCapitalAllowance: Option[BigDecimal],
     rarReliefClaimed: Option[BigDecimal],
-    electricChargePointAllowance: Option[BigDecimal],
     structuredBuildingAllowance: Option[BigDecimal],
     enhancedStructuredBuildingAllowance: Option[BigDecimal],
     zeroEmissionsCarAllowance: Option[BigDecimal]
@@ -43,7 +42,6 @@ object SummaryCalculationDeductions {
       (JsPath \ "propertyAllowance").readNullable[BigDecimal] and
       (JsPath \ "otherCapitalAllowance").readNullable[BigDecimal] and
       (JsPath \ "rarReliefClaimed").readNullable[BigDecimal] and
-      (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
       (JsPath \ "structuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "enhancedStructuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]

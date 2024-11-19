@@ -80,7 +80,6 @@
       "allowanceOnSales": 0.12,
       "capitalAllowanceSingleAssetPool": 0.12,
       "includedNonTaxableProfits": 0.12,
-      "electricChargePointAllowance": 0.12,
       "structuredBuildingAllowance": 0.12,
       "enhancedStructuredBuildingAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
@@ -192,7 +191,6 @@
       "allowanceOnSales": 0.12,
       "capitalAllowanceSingleAssetPool": 0.12,
       "includedNonTaxableProfits": 0.12,
-      "electricChargePointAllowance": 0.12,
       "structuredBuildingAllowance": 0.12,
       "enhancedStructuredBuildingAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12

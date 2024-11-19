@@ -166,7 +166,6 @@ object RetrieveUkPropertyBsasFixtures {
       |  "propertyAllowance": 6.05,
       |  "otherCapitalAllowance": 6.06,
       |  "rarReliefClaimed": 6.07,
-      |  "electricChargePointAllowance": 6.08,
       |  "structuredBuildingAllowance": 6.09,
       |  "enhancedStructuredBuildingAllowance": 6.10,
       |  "zeroEmissionsCarAllowance": 6.11
@@ -371,7 +370,6 @@ object RetrieveUkPropertyBsasFixtures {
       |  "propertyAllowance": 6.05,
       |  "otherCapitalAllowance": 6.06,
       |  "rarReliefClaimed": 6.07,
-      |  "electricChargePointAllowance": 6.08,
       |  "zeroEmissionsCarAllowance": 6.11
       |}
       |""".stripMargin
@@ -387,7 +385,6 @@ object RetrieveUkPropertyBsasFixtures {
       |  "propertyAllowance": 6.05,
       |  "otherCapitalAllowance": 6.06,
       |  "rarReliefClaimed": 6.07,
-      |  "electricChargePointAllowance": 6.08,
       |  "structuredBuildingAllowance": 6.09,
       |  "enhancedStructuredBuildingAllowance": 6.10,
       |  "zeroEmissionsCarAllowance": 6.11
@@ -605,7 +602,6 @@ object RetrieveUkPropertyBsasFixtures {
     propertyAllowance = Some(6.05),
     otherCapitalAllowance = Some(6.06),
     rarReliefClaimed = Some(6.07),
-    electricChargePointAllowance = Some(6.08),
     structuredBuildingAllowance = None,
     enhancedStructuredBuildingAllowance = None,
     zeroEmissionsCarAllowance = Some(6.11)
@@ -619,7 +615,6 @@ object RetrieveUkPropertyBsasFixtures {
     propertyAllowance = Some(6.05),
     otherCapitalAllowance = Some(6.06),
     rarReliefClaimed = Some(6.07),
-    electricChargePointAllowance = Some(6.08),
     structuredBuildingAllowance = Some(6.09),
     enhancedStructuredBuildingAllowance = Some(6.10),
     zeroEmissionsCarAllowance = Some(6.11)

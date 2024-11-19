@@ -164,7 +164,6 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |  "allowanceOnSales": 6.08,
       |  "capitalAllowanceSingleAssetPool": 6.09,
       |  "includedNonTaxableProfits": 6.10,
-      |  "electricChargePointAllowance": 6.11,
       |  "structuredBuildingAllowance": 6.12,
       |  "enhancedStructuredBuildingAllowance": 6.13,
       |  "zeroEmissionsCarAllowance": 6.14
@@ -397,7 +396,6 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |  "allowanceOnSales": 6.08,
       |  "capitalAllowanceSingleAssetPool": 6.09,
       |  "includedNonTaxableProfits": 6.10,
-      |  "electricChargePointAllowance": 6.11,
       |  "structuredBuildingAllowance": 6.12,
       |  "enhancedStructuredBuildingAllowance": 6.13,
       |  "zeroEmissionsCarAllowance": 6.14
@@ -604,7 +602,6 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     allowanceOnSales = Some(6.08),
     capitalAllowanceSingleAssetPool = Some(6.09),
     includedNonTaxableProfits = Some(6.10),
-    electricChargePointAllowance = Some(6.11),
     structuredBuildingAllowance = Some(6.12),
     enhancedStructuredBuildingAllowance = Some(6.13),
     zeroEmissionsCarAllowance = Some(6.14)

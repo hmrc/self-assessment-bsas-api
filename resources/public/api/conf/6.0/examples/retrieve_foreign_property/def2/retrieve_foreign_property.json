@@ -52,7 +52,6 @@
       "costOfReplacingDomesticItems": 0.12,
       "zeroEmissionGoods": 0.12,
       "otherCapitalAllowance": 0.12,
-      "electricChargePointAllowance": 0.12,
       "structuredBuildingAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
     },
@@ -90,7 +89,6 @@
           "costOfReplacingDomesticItems": 0.12,
           "zeroEmissionGoods": 0.12,
           "otherCapitalAllowance": 0.12,
-          "electricChargePointAllowance": 0.12,
           "structuredBuildingAllowance": 0.12,
           "zeroEmissionsCarAllowance": 0.12
         },
@@ -151,7 +149,6 @@
       "costOfReplacingDomesticItems": 0.12,
       "zeroEmissionGoods": 0.12,
       "otherCapitalAllowance": 0.12,
-      "electricChargePointAllowance": 0.12
     },
     "taxableProfit": 2500,
     "countryLevelDetail": [
@@ -186,8 +183,7 @@
           "annualInvestmentAllowance": 0.12,
           "costOfReplacingDomesticItems": 0.12,
           "zeroEmissionGoods": 0.12,
-          "otherCapitalAllowance": 0.12,
-          "electricChargePointAllowance": 0.12
+          "otherCapitalAllowance": 0.12
         },
         "taxableProfit": 0.12
       }
