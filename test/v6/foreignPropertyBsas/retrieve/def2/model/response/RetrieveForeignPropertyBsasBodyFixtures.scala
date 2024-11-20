@@ -91,7 +91,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "zeroEmissionsGoodsVehicleAllowance": 0.24,
       |  "propertyAllowance": 0.25,
       |  "otherCapitalAllowance": 0.26,
-      |  "electricChargePointAllowance": 0.27,
       |  "structuredBuildingAllowance": 0.28,
       |  "zeroEmissionsCarAllowance": 0.29
       |}""".stripMargin
@@ -289,7 +288,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |  "zeroEmissionGoods": 0.24,
       |  "propertyAllowance": 0.25,
       |  "otherCapitalAllowance": 0.26,
-      |  "electricChargePointAllowance": 0.27,
       |  "structuredBuildingAllowance": 0.28,
       |  "zeroEmissionsCarAllowance": 0.29
       |}""".stripMargin
@@ -484,7 +482,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     zeroEmissionGoods = None,
     propertyAllowance = Some(0.25),
     otherCapitalAllowance = Some(0.26),
-    electricChargePointAllowance = Some(0.27),
     structuredBuildingAllowance = None,
     zeroEmissionsCarAllowance = Some(0.29)
   )
@@ -495,7 +492,6 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     zeroEmissionGoods = Some(0.24),
     propertyAllowance = Some(0.25),
     otherCapitalAllowance = Some(0.26),
-    electricChargePointAllowance = Some(0.27),
     structuredBuildingAllowance = Some(0.28),
     zeroEmissionsCarAllowance = Some(0.29)
   )
