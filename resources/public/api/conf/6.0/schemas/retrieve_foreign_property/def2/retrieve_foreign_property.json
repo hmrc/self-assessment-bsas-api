@@ -68,12 +68,12 @@
           "example": "My foreign property business "
         },
         "accountingPeriodStartDate": {
-          "description": "The date the accounting period started.",
+          "description": "The date the accounting period started.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
           "type": "string",
           "example": "2021-04-06"
         },
         "accountingPeriodEndDate": {
-          "description": "The date the accounting period ended.",
+          "description": "The date the accounting period ended.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
           "type": "string",
           "example": "2022-04-05"
         },
