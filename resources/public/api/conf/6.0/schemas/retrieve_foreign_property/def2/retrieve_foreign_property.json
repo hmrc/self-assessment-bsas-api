@@ -755,7 +755,7 @@
             ],
             "additionalProperties": false
           }
-        },
+        }
       },
       "additionalProperties": false
     },
