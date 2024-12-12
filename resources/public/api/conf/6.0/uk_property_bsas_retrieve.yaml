@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve a UK Property Business Source Adjustable Summary (BSAS)
+  summary: Retrieve a UK Property Business Source Adjustable Summary
   description: |
     This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business 
     Furnished Holiday Letting (FHL) or a UK property. A National Insurance number and Calculation id must be 
