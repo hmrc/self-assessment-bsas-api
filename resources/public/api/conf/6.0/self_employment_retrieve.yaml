@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve a Self-Employment Business Source Adjustable Summary (BSAS)
+  summary: Retrieve a Self-Employment Business Source Adjustable Summary
   description: |
     This endpoint allows the user to request a specific Business Source Adjustable Summary. 
     A National Insurance number and Calculation id must be provided.

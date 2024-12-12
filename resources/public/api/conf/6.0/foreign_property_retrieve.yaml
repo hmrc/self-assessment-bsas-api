@@ -56,7 +56,7 @@ get:
 
 
 
-  summary: Retrieve a Foreign Property Business Source Adjustable Summary (BSAS)
+  summary: Retrieve a Foreign Property Business Source Adjustable Summary
   tags:
   - Foreign property business
 
