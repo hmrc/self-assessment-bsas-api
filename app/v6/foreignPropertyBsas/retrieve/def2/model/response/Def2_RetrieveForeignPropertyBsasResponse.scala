@@ -16,6 +16,7 @@
 
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json._
 import shared.models.domain.TaxYear
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
@@ -24,7 +25,7 @@ case class Def2_RetrieveForeignPropertyBsasResponse(
     metadata: Metadata,
     inputs: Inputs,
     adjustableSummaryCalculation: SummaryCalculation,
-    adjustments: Option[Adjustments],
+    adjustments: Option[Seq[Adjustments]],
     adjustedSummaryCalculation: Option[SummaryCalculation]
 ) extends RetrieveForeignPropertyBsasResponse {
 
@@ -34,31 +35,14 @@ case class Def2_RetrieveForeignPropertyBsasResponse(
 
 object Def2_RetrieveForeignPropertyBsasResponse {
 
-  implicit val reads: Reads[Def2_RetrieveForeignPropertyBsasResponse] = (json: JsValue) =>
-    for {
-      metadata <- (json \ "metadata").validate[Metadata]
-      inputs   <- (json \ "inputs").validate[Inputs]
-
-      adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation]
-
-      adjustments <- adjustmentsReads(json)
-
-      adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation]
-
-    } yield Def2_RetrieveForeignPropertyBsasResponse(
-      metadata = metadata,
-      inputs = inputs,
-      adjustableSummaryCalculation = adjustableSummaryCalculation,
-      adjustments = adjustments,
-      adjustedSummaryCalculation = adjustedSummaryCalculation
-    )
-
-  private def adjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
-    (json \ "adjustments")
-      .validateOpt[Seq[Adjustments]]
-      .map(s => Some(Adjustments(s, None, None, None)))
-      .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
+  implicit val reads: Reads[Def2_RetrieveForeignPropertyBsasResponse] = (
+    (JsPath \ "metadata").read[Metadata] and
+      (JsPath \ "inputs").read[Inputs] and
+      (JsPath \ "adjustableSummaryCalculation").read[SummaryCalculation] and
+      // Handles cases where "adjustments" is not always an array, e.g., typeOfBusiness is self-employment
+      (JsPath \ "adjustments").readNullable[Seq[Adjustments]].orElse(Reads.pure(None)) and
+      (JsPath \ "adjustedSummaryCalculation").readNullable[SummaryCalculation]
+  )(Def2_RetrieveForeignPropertyBsasResponse.apply _)
 
   implicit val writes: OWrites[Def2_RetrieveForeignPropertyBsasResponse] = Json.writes[Def2_RetrieveForeignPropertyBsasResponse]
-
 }
