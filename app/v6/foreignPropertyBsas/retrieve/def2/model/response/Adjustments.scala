@@ -16,22 +16,11 @@
 
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
-case class Adjustments(countryLevelDetail: Option[Seq[Adjustments]],
-                       countryCode: Option[String],
-                       income: Option[AdjustmentsIncome],
-                       expenses: Option[AdjustmentsExpenses])
+case class Adjustments(countryCode: Option[String], income: Option[AdjustmentsIncome], expenses: Option[AdjustmentsExpenses])
 
 object Adjustments {
 
-  implicit val reads: Reads[Adjustments] = (
-    Reads.pure(None) and
-      (JsPath \ "countryCode").readNullable[String] and
-      (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
-  )(Adjustments.apply _)
-
-  implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
+  implicit val format: OFormat[Adjustments] = Json.format[Adjustments]
 }
