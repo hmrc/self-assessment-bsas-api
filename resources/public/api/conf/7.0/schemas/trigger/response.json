@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Trigger a Business Source Adjustable Summary",
+  "description": "Trigger a Business Source Adjustable Summary",
+  "type": "object",
+  "properties": {
+    "calculationId": {
+      "$ref": "../definitions.json#/definitions/bsasId"
+    }
+  },
+  "required": [
+    "calculationId"
+  ],
+  "additionalProperties": false
+}

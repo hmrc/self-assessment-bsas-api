@@ -1,0 +1,115 @@
+get:
+  summary: List Business Source Adjustable Summaries
+  description: |
+    This endpoint allows the user to generate a list of Business Source Adjustable Summaries for a given tax year. A 
+    filter can be set to return the summaries for a single business or business type. The National Insurance number must
+    be provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
+    
+    | Tax Years        | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                      |
+    |------------------|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+    | ALL              | N/A - DEFAULT                    | Simulate a successful response containing multiple business types.                                                            |
+    | ALL              | SELF_EMPLOYMENT                  | Simulate a successful response containing a self-employment business.                                                         |
+    | ALL              | UK_PROPERTY                      | Simulate a successful response containing a UK property business.                                                             |
+    | Before 2025-26   | UK_PROPERTY_FHL                  | Simulate a successful response containing UK FHL property businesses.                                                         |
+    | ALL              | FOREIGN_PROPERTY                 | Simulate a successful response containing a foreign property business.                                                        |
+    | Before 2025-26   | FOREIGN_PROPERTY_FHL             | Simulate a successful response containing EEA FHL foreign property businesses. 	                                              |
+    | ALL              | NOT_FOUND                        | Simulates the scenario where no data is found.                                                                                |
+    | ALL              | REQUEST_CANNOT_BE_FULFILLED      | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors. |
+    | ALL              | DYNAMIC                          | The following response values will change to correspond to the values submitted in the request:<br> • businessID<br> • typeOfBusiness<br> • accountingPeriod.startdate<br> • accountingPeriod.enddate<br> • taxYear<br> • requestedDatetime<br> • adjustedDatetime |
+    | ALL              | STATEFUL                         | Performs a stateful list.                                                                                                     |   
+
+  parameters:
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/typeOfBusinessOptional"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/businessIdOptional"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "./schemas/list/def1/list_response.json"
+              - $ref: "./schemas/list/def2/list_response.json"
+          examples:
+            "For TY 2024-25 and before":
+              description: Example Response
+              value:
+                $ref: "./examples/list/def1/list_response.json"
+            "For TY 2025-26 and after":
+              description: Example Response
+              value:
+                $ref: "./examples/list/def2/list_response.json"
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            FORMAT_BUSINESS_ID:
+              $ref: "./common/errors.yaml#/components/examples/formatBusinessId"
+            FORMAT_TYPE_OF_BUSINESS:
+              $ref: "./common/errors.yaml#/components/examples/formatTypeOfBusiness"
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/ListNotFound"
+
+    "422":
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            RULE_REQUEST_CANNOT_BE_FULFILLED:
+              $ref: "./common/errors.yaml#/components/examples/requestCannotBeFulfilled"

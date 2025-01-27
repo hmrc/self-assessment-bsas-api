@@ -26,14 +26,16 @@ import javax.inject.{Inject, Singleton}
     appConfig: SharedAppConfig,
     defaultRouter: Router,
     v5Router: v5.Routes,
-    v6Router: v6.Routes
+    v6Router: v6.Routes,
+    v7Router: v7.Routes
 ) extends VersionRoutingMap {
 
   /** Routes corresponding to available versions.
     */
   val map: Map[Version, Router] = Map(
     Version5 -> v5Router,
-    Version6 -> v6Router
+    Version6 -> v6Router,
+    Version7 -> v7Router
   )
 
 }

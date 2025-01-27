@@ -1,0 +1,20 @@
+{
+  "ukProperty": {
+    "income": {
+      "totalRentsReceived": 1000.45,
+      "premiumsOfLeaseGrant": 1000.45,
+      "reversePremiums": 1000.45,
+      "otherPropertyIncome": 1000.45
+    },
+    "expenses": {
+      "premisesRunningCosts": 1000.45,
+      "repairsAndMaintenance": 1000.45,
+      "financialCosts": 1000.45,
+      "professionalFees": 1000.45,
+      "costOfServices": 1000.45,
+      "residentialFinancialCost": 1000.45,
+      "other": 1000.45,
+      "travelCosts": 1000.45
+    }
+  }
+}

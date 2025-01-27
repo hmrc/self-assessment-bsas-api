@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    "requestedDateTime": "2020-12-05T16:19:44Z",
+    "adjustedDateTime": "2020-12-05T16:19:44Z",
+    "nino": "TC663795B",
+    "taxYear": "2019-20",
+    "summaryStatus": "valid"
+  },
+  "inputs": {
+    "businessId": "XAIS12345678910",
+    "typeOfBusiness": "uk-property",
+    "businessName": "My uk property business",
+    "accountingPeriodStartDate": "2019-04-06",
+    "accountingPeriodEndDate": "2020-04-05",
+    "source": "MTD-SA",
+    "submissionPeriods": [
+      {
+        "periodId": "2019-04-06_2019-07-05",
+        "submissionId": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+        "startDate": "2019-04-06",
+        "endDate": "2020-04-05",
+        "receivedDateTime": "2019-02-15T09:35:04.843Z"
+      }
+    ]
+  },
+  "adjustableSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12,
+      "rarRentReceived": 0.12
+    },
+    "totalExpenses": 0.12,
+    "expenses": {
+      "premisesRunningCosts": -509.67,
+      "repairsAndMaintenance": 50,
+      "financialCosts": -67.98,
+      "professionalFees": 100.00,
+      "costOfServices": 156001.76,
+      "travelCosts": 82.78,
+      "residentialFinancialCost": 98,
+      "broughtFwdResidentialFinancialCost": 0.12,
+      "other": 88.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "balancingCharge": 0.12,
+      "bpraBalancingCharge": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "propertyAllowance": 0.12
+    },
+    "taxableProfit": 12500
+  },
+  "adjustments": {
+    "income": {
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12
+    },
+    "expenses": {
+      "premisesRunningCosts": 0.12,
+      "repairsAndMaintenance": 0.12,
+      "financialCosts": 0.12,
+      "professionalFees": 0.12,
+      "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "other": 0.12,
+      "travelCosts": 0.12
+    }
+  },
+  "adjustedSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "reversePremiums": 0.12,
+      "otherPropertyIncome": 0.12,
+      "rarRentReceived": 0.12
+    },
+    "totalExpenses": 0.12,
+    "expenses": {
+      "premisesRunningCosts": 0.12,
+      "repairsAndMaintenance": 0.12,
+      "financialCosts": 0.12,
+      "professionalFees": 0.12,
+      "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "broughtFwdResidentialFinancialCost": 0.12,
+      "other": 0.12,
+      "travelCosts": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "balancingCharge": 0.12,
+      "bpraBalancingCharge": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "propertyAllowance": 0.12
+    },
+    "taxableProfit": 22500
+  }
+}
