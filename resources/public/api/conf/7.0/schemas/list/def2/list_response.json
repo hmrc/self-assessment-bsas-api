@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "For TY 2025-26 and after",
+  "description": "List Business Source Adjustable Summaries Response",
+  "type": "object",
+  "properties": {
+    "businessSources": {
+      "title": "Business Source",
+      "description": "The array holding Business Source Accounting Summary Entries, by business Income Source.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "typeOfBusiness",
+          "businessId",
+          "accountingPeriod",
+          "taxYear",
+          "summaries"
+        ],
+        "properties": {
+          "typeOfBusiness": {
+            "$ref": "../../definitions.json#/definitions/typeOfBusiness"
+          },
+          "businessId": {
+            "$ref": "../../definitions.json#/definitions/businessId"
+          },
+          "accountingPeriod": {
+            "type": "object",
+            "title": "The accounting period",
+            "description": "The duration of the business income source operations to be included in the tax year submission. 2019-20 is the earliest tax year to which the accounting period can be assigned.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+            "required": [
+              "startDate",
+              "endDate"
+            ],
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "description": "The date the accounting period began.",
+                "example": "2018-05-01"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
+                "example": "2019-04-30"
+              }
+            },
+            "additionalProperties": false
+          },
+          "taxYear": {
+            "type": "string",
+            "description": "The tax year that the Adjustable Summary Calculation relates to.",
+            "example": "2020-21"
+          },
+          "summaries": {
+            "title": "Summaries",
+            "description": "The array holding Business Source Accounting Summary Entries.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "calculationId": {
+                  "title": "Calculation ID",
+                  "description": "The unique identifier of the summary calculation.",
+                  "type": "string",
+                  "example": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+                  "pattern": "^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                },
+                "requestedDateTime": {
+                  "title": "Requested Datetime",
+                  "description": "The date and time this summary calculation was originally requested, prior to any adjustments.",
+                  "type": "string"
+                },
+                "summaryStatus": {
+                  "title": "Summary Status",
+                  "description": "The status of this calculated summary.",
+                  "type": "string",
+                  "enum": [
+                    "valid",
+                    "invalid",
+                    "superseded"
+                  ]
+                },
+                "adjustedSummary": {
+                  "title": "Adjusted Summary",
+                  "description": "Indicates whether the original summary calculation has had adjustments applied.",
+                  "type": "boolean",
+                  "example": "false"
+                },
+                "adjustedDateTime": {
+                  "title": "Adjusted Datetime",
+                  "description": "The date and time this calculation was adjusted.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "calculationId",
+                "requestedDateTime",
+                "summaryStatus",
+                "adjustedSummary"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "businessSources"
+  ],
+  "additionalProperties": false
+}

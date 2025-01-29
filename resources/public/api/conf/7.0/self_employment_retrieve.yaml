@@ -1,0 +1,159 @@
+get:
+  summary: Retrieve a Self-Employment Business Source Adjustable Summary
+  description: |
+    This endpoint allows the user to request a specific Business Source Adjustable Summary. 
+    A National Insurance number and Calculation id must be provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.     
+     
+    | Header Value (Gov-Test-Scenario)          | Scenario                                                                                                                              |
+    |-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                             | Simulates the scenario where no data is found.                                                                                        |
+    | SELF_EMPLOYMENT_PROFIT                    | Simulates success response with all fields and netProfit.                                                                             |
+    | DYNAMIC_SELF_EMPLOYMENT_PROFIT            | Simulates success response with all fields and netProfit.                   <br/><br/> See below for details about DYNAMIC scenarios. |            
+    | SELF_EMPLOYMENT_LOSS                      | Simulates success response with all fields and netLoss.                                                                               |
+    | DYNAMIC_SELF_EMPLOYMENT_LOSS              | Simulates success response with all fields and netLoss.                     <br/><br/> See below for details about DYNAMIC scenarios. |          
+    | SELF_EMPLOYMENT_CONSOLIDATED              | Simulates success response with adjusted summary and consolidated expenses.                                                           |
+    | DYNAMIC_SELF_EMPLOYMENT_CONSOLIDATED      | Simulates success response with adjusted summary and consolidated expenses. <br/><br/> See below for details about DYNAMIC scenarios. |                  
+    | TRADING_ALLOWANCE                         | Simulates success response with adjusted summary and trading allowance.                                                               |
+    | DYNAMIC_TRADING_ALLOWANCE                 | Simulates success response with adjusted summary and trading allowance.     <br/><br/> See below for details about DYNAMIC scenarios. |       
+    | SELF_EMPLOYMENT_UNADJUSTED                | Simulates success response with unadjusted summary.                                                                                   |
+    | DYNAMIC_SELF_EMPLOYMENT_UNADJUSTED        | Simulates success response with unadjusted summary.                         <br/><br/> See below for details about DYNAMIC scenarios. |                
+    | SELF_EMPLOYMENT_STATUS_INVALID            | Simulates success response with summary status invalid.                                                                               |
+    | DYNAMIC_SELF_EMPLOYMENT_STATUS_INVALID    | Simulates success response with summary status invalid.                     <br/><br/> See below for details about DYNAMIC scenarios. |                    
+    | SELF_EMPLOYMENT_STATUS_SUPERSEDED         | Simulates success response with summary status superseded.                                                                            |
+    | DYNAMIC_SELF_EMPLOYMENT_STATUS_SUPERSEDED | Simulates success response with summary status superseded.                  <br/><br/> See below for details about DYNAMIC scenarios. |                       
+    | NOT_SELF_EMPLOYMENT                       | Simulates the scenario where the calculationId is not a self-employment.                                                              |
+    | TAX_YEAR_NOT_SUPPORTED                    | Simulates the scenario where the tax year is not supported.                                                                           |
+    | REQUEST_CANNOT_BE_FULFILLED               | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.         |
+    | STATEFUL                                  | Performs a stateful retrieve.                                                                                                         |
+
+    In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
+    - metadata
+      - calculationId
+      - taxYear
+      - nino
+      - requestedDateTime
+      - adjustedDateTime
+    - inputs
+      - accountingPeriodStartDate
+      - accountingPeriodEndDate
+      - submissionPeriods
+        - startDate
+        - endDate
+    
+    For tax years prior to 2023-24, when the tax year is not supplied, these values will be based on a tax year of 2022-23.
+
+  tags:
+    - Self-employment business
+
+  parameters:
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/calculationId"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    200:
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "./schemas/retrieve_self_employment/def1/response.json"
+              - $ref: "./schemas/retrieve_self_employment/def2/response.json"
+          examples:
+            "PRE-TY-2025-26-Full-Expenses":
+              description: Full Expenses
+              value:
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_full_expenses.json"
+            "PRE-TY-2025-26-Consolidated-Expenses":
+              description: Consolidated Expenses
+              value:
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_consolidated_expenses.json"
+            "PRE-TY-2025-26-Trading-Allowance":
+              description: Trading Allowance
+              value:
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_trading_allowance.json"
+            "TY-2025-26-Full-Expenses":
+              description: Full Expenses
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_full_expenses.json"
+            "TY-2025-26-Consolidated-Expenses":
+              description: Consolidated Expenses
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_consolidated_expenses.json"
+            "TY-2025-26-Trading-Allowance":
+              description: Trading Allowance
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_trading_allowance.json"
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            FORMAT_CALCULATION_ID:
+              $ref: "./common/errors.yaml#/components/examples/formatCalculationId"
+            RULE_TYPE_OF_BUSINESS_INCORRECT:
+              $ref: "./common/errors.yaml#/components/examples/ruleTypeOfBusinessIncorrectSE"
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
+            INVALID_TAX_YEAR_PARAMETER:
+              $ref: "./common/errors.yaml#/components/examples/invalidTaxYear"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/summaryNotFound"
+
+    "422":
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error_response.yaml"
+          examples:
+            RULE_REQUEST_CANNOT_BE_FULFILLED:
+              $ref: "./common/errors.yaml#/components/examples/requestCannotBeFulfilled"

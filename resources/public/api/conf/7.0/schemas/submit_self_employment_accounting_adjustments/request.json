@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Submit a Self-Employment Business' Accounting Adjustments",
+  "description": "This endpoint allows the user to provide accounting adjustments against a specified Business Source Adjustable Summary quoting its unique identifier. The BSAS ID quoted must be for a Self-Employment Business and it must not have been adjusted, previously.",
+  "type": "object",
+  "properties": {
+    "income": {
+      "$ref": "adjustment_definitions.json#/definitions/seIncome"
+    },
+    "expenses": {
+      "$ref": "adjustment_definitions.json#/definitions/seExpenses"
+    },
+    "additions": {
+      "$ref": "adjustment_definitions.json#/definitions/seAdditions"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    "requestedDateTime": "2021-01-01T10:10:10Z",
+    "adjustedDateTime": "2021-01-02T10:10:10Z",
+    "nino": "TC663795B",
+    "taxYear": "2020-21",
+    "summaryStatus": "valid"
+  },
+  "inputs": {
+    "typeOfBusiness": "self-employment",
+    "businessId": "XAIS12345678910",
+    "businessName": "My self-employment",
+    "accountingPeriodStartDate": "2020-04-06",
+    "accountingPeriodEndDate": "2021-04-05",
+    "source": "MTD-SA",
+    "submissionPeriods": [
+      {
+        "periodId": "2020-04-06_2020-07-05",
+        "startDate": "2020-04-06",
+        "endDate": "2020-07-05",
+        "receivedDateTime": "2020-07-07T10:12:10.123Z"
+      }
+    ]
+  },
+  "adjustableSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "turnover": 0.12,
+      "other": 0.12
+    },
+    "totalExpenses": -0.02,
+    "expenses": {
+      "costOfGoodsAllowable": -0.12,
+      "paymentsToSubcontractorsAllowable": -0.12,
+      "wagesAndStaffCostsAllowable": -0.12,
+      "carVanTravelExpensesAllowable": -0.12,
+      "premisesRunningCostsAllowable": 0.12,
+      "maintenanceCostsAllowable": 0.12,
+      "adminCostsAllowable": 0.12,
+      "interestOnBankOtherLoansAllowable": 0.12,
+      "financeChargesAllowable": 0.12,
+      "irrecoverableDebtsAllowable": 0.12,
+      "professionalFeesAllowable": 0.12,
+      "depreciationAllowable": 0.12,
+      "otherExpensesAllowable": 0.12,
+      "advertisingCostsAllowable": 0.12,
+      "businessEntertainmentCostsAllowable": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "costOfGoodsDisallowable": -0.12,
+      "paymentsToSubcontractorsDisallowable": -0.12,
+      "wagesAndStaffCostsDisallowable": -0.12,
+      "carVanTravelExpensesDisallowable": 0.12,
+      "premisesRunningCostsDisallowable": 0.12,
+      "maintenanceCostsDisallowable": 0.12,
+      "adminCostsDisallowable": 0.12,
+      "interestOnBankOtherLoansDisallowable": 0.12,
+      "financeChargesDisallowable": 0.12,
+      "irrecoverableDebtsDisallowable": 0.12,
+      "professionalFeesDisallowable": 0.12,
+      "depreciationDisallowable": 0.12,
+      "otherExpensesDisallowable": 0.12,
+      "advertisingCostsDisallowable": 0.12,
+      "businessEntertainmentCostsDisallowable": 0.12,
+      "outstandingBusinessIncome": 0.12,
+      "balancingChargeOther": 0.12,
+      "balancingChargeBpra": 0.12,
+      "goodsAndServicesOwnUse": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "tradingAllowance": 0.12
+    },
+    "totalAccountingAdjustments": 0.12,
+    "accountingAdjustments": {
+      "basisAdjustment": 0.12,
+      "overlapReliefUsed": 0.12,
+      "accountingAdjustment": 0.12,
+      "averagingAdjustment": 0.12
+    },
+    "taxableProfit": 100
+  },
+  "adjustments": {
+    "income": {
+      "turnover": 100.01,
+      "other": 100.02
+    },
+    "expenses": {
+      "costOfGoodsAllowable": 100.04,
+      "paymentsToSubcontractorsAllowable": 100.05,
+      "wagesAndStaffCostsAllowable": 100.06,
+      "carVanTravelExpensesAllowable": 100.01,
+      "premisesRunningCostsAllowable": 99999999999.99,
+      "maintenanceCostsAllowable": -99999999999.99,
+      "adminCostsAllowable": 0.12,
+      "interestOnBankOtherLoansAllowable": -0.01,
+      "financeChargesAllowable": 100.50,
+      "irrecoverableDebtsAllowable": 100.50,
+      "professionalFeesAllowable": 100.50,
+      "depreciationAllowable": 100.50,
+      "otherExpensesAllowable": 100.50,
+      "advertisingCostsAllowable": 100.50,
+      "businessEntertainmentCostsAllowable": 100.50
+    },
+    "additions": {
+      "costOfGoodsDisallowable": 100.45,
+      "paymentsToSubcontractorsDisallowable": 100.45,
+      "wagesAndStaffCostsDisallowable": 100.45,
+      "carVanTravelExpensesDisallowable": 100.45,
+      "premisesRunningCostsDisallowable": 100.45,
+      "maintenanceCostsDisallowable": 100.45,
+      "adminCostsDisallowable": 100.45,
+      "interestOnBankOtherLoansDisallowable": 100.45,
+      "financeChargesDisallowable": 100.45,
+      "irrecoverableDebtsDisallowable": 100.45,
+      "professionalFeesDisallowable": 100.45,
+      "depreciationDisallowable": 100.45,
+      "otherExpensesDisallowable": 100.45,
+      "advertisingCostsDisallowable": 100.45,
+      "businessEntertainmentCostsDisallowable": 100.45
+    }
+  },
+  "adjustedSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "turnover": 0.12,
+      "other": 0.12
+    },
+    "totalExpenses": 0.12,
+    "expenses": {
+      "costOfGoodsAllowable": 0.12,
+      "paymentsToSubcontractorsAllowable": 0.12,
+      "wagesAndStaffCostsAllowable": 0.12,
+      "carVanTravelExpensesAllowable": 0.12,
+      "premisesRunningCostsAllowable": 0.12,
+      "maintenanceCostsAllowable": 0.12,
+      "adminCostsAllowable": 0.12,
+      "interestOnBankOtherLoansAllowable": 0.12,
+      "financeChargesAllowable": 0.12,
+      "irrecoverableDebtsAllowable": 0.12,
+      "professionalFeesAllowable": 0.12,
+      "depreciationAllowable": 0.12,
+      "otherExpensesAllowable": 0.12,
+      "advertisingCostsAllowable": 0.12,
+      "businessEntertainmentCostsAllowable": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "costOfGoodsDisallowable": 0.12,
+      "paymentsToSubcontractorsDisallowable": 0.12,
+      "wagesAndStaffCostsDisallowable": 0.12,
+      "carVanTravelExpensesDisallowable": 0.12,
+      "premisesRunningCostsDisallowable": 0.12,
+      "maintenanceCostsDisallowable": 0.12,
+      "adminCostsDisallowable": 0.12,
+      "interestOnBankOtherLoansDisallowable": 0.12,
+      "financeChargesDisallowable": 0.12,
+      "irrecoverableDebtsDisallowable": 0.12,
+      "professionalFeesDisallowable": 0.12,
+      "depreciationDisallowable": 0.12,
+      "otherExpensesDisallowable": 0.12,
+      "advertisingCostsDisallowable": 0.12,
+      "businessEntertainmentCostsDisallowable": 0.12,
+      "outstandingBusinessIncome": 0.12,
+      "balancingChargeOther": 0.12,
+      "balancingChargeBpra": 0.12,
+      "goodsAndServicesOwnUse": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "tradingAllowance": 0.12
+    },
+    "totalAccountingAdjustments": 0.12,
+    "accountingAdjustments": {
+      "basisAdjustment": 0.12,
+      "overlapReliefUsed": 0.12,
+      "accountingAdjustment": 0.12,
+      "averagingAdjustment": 0.12
+    },
+    "taxableProfit": 100
+  }
+}

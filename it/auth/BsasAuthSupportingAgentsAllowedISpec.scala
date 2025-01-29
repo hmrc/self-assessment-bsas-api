@@ -19,12 +19,12 @@ package auth
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthSupportingAgentsAllowedISpec
-import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures
-import v6.common.model.TypeOfBusiness
+import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures
+import v7.common.model.TypeOfBusiness
 
 class BsasAuthSupportingAgentsAllowedISpec extends AuthSupportingAgentsAllowedISpec {
 
-  val callingApiVersion = "6.0"
+  val callingApiVersion = "7.0"
 
   val supportingAgentsAllowedEndpoint = "trigger-bsas"
 

@@ -1,0 +1,47 @@
+components:
+  parameters:
+    businessIdOptional:
+      name: businessId
+      in: query
+      description: An identifier for the business, unique to the customer.
+      schema:
+        type: string
+        example: XAIS12345678910
+        pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
+      required: false
+
+    typeOfBusinessWithFHLOptional:
+      name: typeOfBusiness
+      in: query
+      description: The type of business the summary calculation is for.
+      schema:
+        type: string
+        enum: [ self-employment, uk-property-fhl, uk-property, foreign-property-fhl-eea, foreign-property ]
+        example: foreign-property
+      required: false
+
+    typeOfBusinessOptional:
+      name: typeOfBusiness
+      in: query
+      description: |
+        The type of business the summary calculation is for.
+
+        Limited to the following possible values for tax years before 2025-26:
+
+        - foreign-property-fhl-eea
+        - foreign-property
+        - uk-property-non-fhl
+        - uk-property-fhl
+        - self-employment
+
+        Limited to the following possible values for tax year 2025-26 onwards:
+
+        - foreign-property
+        - uk-property
+        - self-employment
+      schema:
+        type: string
+        enum: [ self-employment, uk-property-fhl, uk-property, foreign-property-fhl-eea, foreign-property, uk-property ]
+        example: foreign-property
+      required: false
+

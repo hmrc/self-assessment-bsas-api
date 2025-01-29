@@ -1,0 +1,1276 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "For TY 2025-26 and after",
+  "description": "Retrieve a Foreign property Business Source Adjustable Summary Response.",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Object containing the identifying data for the business and associated information for the BSAS with this ID.",
+      "properties": {
+        "calculationId": {
+          "description": "The unique identifier of the summary calculation.",
+          "type": "string",
+          "example": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
+        },
+        "requestedDateTime": {
+          "description": "The date and time the summary calculation was originally requested, prior to any adjustments.",
+          "type": "string",
+          "example": "2019-04-04T01:01:01Z"
+        },
+        "adjustedDateTime": {
+          "description": "The date and time this calculation was adjusted.",
+          "type": "string",
+          "example": "2019-04-04T01:01:01Z"
+        },
+        "nino": {
+          "description": "National Insurance number, in the format AA999999A.",
+          "type": "string",
+          "example": "TC663795B"
+        },
+        "taxYear": {
+          "description": "The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. No gaps are allowed, for example, 2020-22 is not valid.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "summaryStatus": {
+          "type": "string",
+          "enum": [
+            "valid",
+            "invalid",
+            "superseded"
+          ],
+          "description": "The status of the this calculated summary."
+        }
+      },
+      "required": [
+        "calculationId",
+        "requestedDateTime",
+        "nino",
+        "taxYear",
+        "summaryStatus"
+      ],
+      "additionalProperties": false
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Object containing the inputs that were used in this calculation.",
+      "properties": {
+        "businessId": {
+          "description": "An identifier for the business, unique to the customer.",
+          "type": "string",
+          "pattern": "^X[A-Z0-9]{1}IS[0-9]{11}$",
+          "example": "XAIS12345678910"
+        },
+        "businessName": {
+          "description": "The name of the business.",
+          "type": "string",
+          "example": "My foreign property business "
+        },
+        "accountingPeriodStartDate": {
+          "description": "The date the accounting period started.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+          "type": "string",
+          "example": "2021-04-06"
+        },
+        "accountingPeriodEndDate": {
+          "description": "The date the accounting period ended.\n\nNote: <b>Accounting period start and end dates should not be displayed to users of your software.</b>",
+          "type": "string",
+          "example": "2022-04-05"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "MTD-SA"
+          ],
+          "description": "Specifies the source of the income data used in this calculation."
+        },
+        "submissionPeriod": {
+          "type": "object",
+          "description": "Object containing the submission period for the income source.",
+            "properties": {
+              "submissionId": {
+                "description": "A reference to the unique identifier of the period.",
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "example": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+              },
+              "startDate": {
+                "description": "The date the submission period started.",
+                "type": "string",
+                "example": "2019-04-06"
+              },
+              "endDate": {
+                "description": "The date the submission period ended.",
+                "type": "string",
+                "example": "2019-07-05"
+              },
+              "receivedDateTime": {
+                "description": "The date and time data received.",
+                "type": "string",
+                "example": "2021-07-09T01:01:01.000Z"
+              }
+            },
+            "required": [
+              "submissionId",
+              "startDate",
+              "endDate",
+              "receivedDateTime"
+            ],
+            "additionalProperties": false
+        }
+      },
+      "required": [
+        "businessId",
+        "accountingPeriodStartDate",
+        "accountingPeriodEndDate",
+        "source",
+        "submissionPeriod"
+      ],
+      "additionalProperties": false
+    },
+    "adjustableSummaryCalculation": {
+      "type": "object",
+      "description": "Object containing the details about foreign property summary calculation.",
+      "properties": {
+        "totalIncome": {
+          "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "income": {
+          "type": "object",
+          "description": "Object containing the fields that can be adjusted for foreign property income sources.",
+          "properties": {
+            "totalRentsReceived": {
+              "description": "The total amount of property rental income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "premiumsOfLeaseGrant": {
+              "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "otherPropertyIncome": {
+              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "totalExpenses": {
+          "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
+          "example": "2000.50"
+        },
+        "expenses": {
+          "type": "object",
+          "description": "Object containing the expenses for foreign property income sources.",
+          "properties": {
+            "consolidatedExpenses": {
+              "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "premisesRunningCosts": {
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "repairsAndMaintenance": {
+              "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "financialCosts": {
+              "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "professionalFees": {
+              "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "costOfServices": {
+              "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "residentialFinancialCost": {
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "broughtFwdResidentialFinancialCost": {
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "other": {
+              "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "travelCosts": {
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "netProfit": {
+          "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "netLoss": {
+          "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "totalAdditions": {
+          "description": "The total additions to net profit (or deduction to net loss). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "additions": {
+          "type": "object",
+          "description": "Object containing the breakdown of the adjustable additions for the accounting period.",
+          "properties": {
+            "privateUseAdjustment": {
+              "description": "Private use adjustment on an asset by a sole trader or partner in a partnership, the asset is put in to a single-asset pool and allowances are restricted on the business to private-use ratio. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "balancingCharge": {
+              "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "totalDeductions": {
+          "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "deductions": {
+          "type": "object",
+          "description": "Object containing the deduction for foreign property income sources.",
+          "properties": {
+            "annualInvestmentAllowance": {
+              "description": "Annual investment allowance on items that qualify up to the AIA amount. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "costOfReplacingDomesticItems": {
+              "description": "Cost of Replacing Domestic Items - formerly Wear and Tear allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "zeroEmissionGoods": {
+              "description": "Zero emission goods vehicle allowance for goods vehicles purchased for business use. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "propertyAllowance": {
+              "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "otherCapitalAllowance": {
+              "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "structuredBuildingAllowance": {
+              "description": "The amount of enhanced structured building allowance.  The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "zeroEmissionsCarAllowance": {
+              "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "taxableProfit": {
+          "description": "Amount of taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99999999999,
+          "example": "1000"
+        },
+        "adjustedIncomeTaxLoss": {
+          "description": "Amount of taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99999999999,
+          "example": "1000"
+        },
+        "countryLevelDetail": {
+          "type": "array",
+          "description": "Array containing a breakdown of the foreign property by country.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "countryCode": {
+                "description": "A three-letter code that represents a country name. This must be an ISO 3166-1 Alpha-3 value.",
+                "type": "string",
+                "example": "FRA"
+              },
+              "totalIncome": {
+                "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "income": {
+                "type": "object",
+                "description": "Object containing the fields that can be adjusted for foreign property income sources.",
+                "properties": {
+                  "totalRentsReceived": {
+                    "description": "The total amount of property rental income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "premiumsOfLeaseGrant": {
+                    "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "otherPropertyIncome": {
+                    "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "totalExpenses": {
+                "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "2000.50"
+              },
+              "expenses": {
+                "type": "object",
+                "description": "Object containing the expenses for foreign property income sources.",
+                "properties": {
+                  "consolidatedExpenses": {
+                    "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "premisesRunningCosts": {
+                    "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "repairsAndMaintenance": {
+                    "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "financialCosts": {
+                    "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "professionalFees": {
+                    "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "costOfServices": {
+                    "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "residentialFinancialCost": {
+                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "broughtFwdResidentialFinancialCost": {
+                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "other": {
+                    "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "travelCosts": {
+                    "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "netProfit": {
+                "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "netLoss": {
+                "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "totalAdditions": {
+                "description": "The total additions to net profit (or deduction to net loss). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "additions": {
+                "type": "object",
+                "description": "Object containing the breakdown of the adjustable additions for the accounting period.",
+                "properties": {
+                  "privateUseAdjustment": {
+                    "description": "Private use adjustment on an asset by a sole trader or partner in a partnership, the asset is put in to a single-asset pool and allowances are restricted on the business to private-use ratio. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "balancingCharge": {
+                    "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "totalDeductions": {
+                "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "deductions": {
+                "type": "object",
+                "description": "Object containing the deduction for foreign property income sources.",
+                "properties": {
+                  "annualInvestmentAllowance": {
+                    "description": "Annual investment allowance on items that qualify up to the AIA amount. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "costOfReplacingDomesticItems": {
+                    "description": "Cost of Replacing Domestic Items - formerly Wear and Tear allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "zeroEmissionGoods": {
+                    "description": "Zero emission goods vehicle allowance for goods vehicles purchased for business use. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "propertyAllowance": {
+                    "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "otherCapitalAllowance": {
+                    "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "electricChargePointAllowance": {
+                    "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "structuredBuildingAllowance": {
+                    "description": "The amount of structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "zeroEmissionsCarAllowance": {
+                    "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "taxableProfit": {
+                "description": "Amount of taxable net profit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "adjustedIncomeTaxLoss": {
+                "description": "Amount of taxable net loss. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              }
+            },
+            "required": [
+              "countryCode"
+            ]
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "adjustments": {
+      "description": "Array containing the adjustments made.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "countryLevelDetail",
+        "properties": {
+          "countryCode": {
+            "description": "A three-letter code that represents a country name. This must be an ISO 3166-1 Alpha-3 value.",
+            "type": "string",
+            "example": "FRA"
+          },
+          "income": {
+            "type": "object",
+            "description": "Object containing the adjustments to income.",
+            "properties": {
+              "totalRentsReceived": {
+                "description": "The total amount of property rental Income. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "premiumsOfLeaseGrant": {
+                "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.89"
+              },
+              "otherPropertyIncome": {
+                "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              }
+            },
+            "additionalProperties": false
+          },
+          "expenses": {
+            "type": "object",
+            "description": "Object containing the adjustments to expenses.",
+            "properties": {
+              "premisesRunningCosts": {
+                "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "repairsAndMaintenance": {
+                "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "financialCosts": {
+                "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "professionalFees": {
+                "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "costOfServices": {
+                "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "residentialFinancialCost": {
+                "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "travelCosts": {
+                "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "other": {
+                "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              },
+              "consolidatedExpenses": {
+                "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "10000.45"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "countryCode"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "adjustedSummaryCalculation": {
+      "type": "object",
+      "description": "Object containing the latest foreign property summary calculation.",
+      "properties": {
+        "totalIncome": {
+          "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "income": {
+          "type": "object",
+          "description": "Object containing the fields that can be adjusted for foreign property income sources.",
+          "properties": {
+            "totalRentsReceived": {
+              "description": "The total amount of property rental income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "premiumsOfLeaseGrant": {
+              "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "otherPropertyIncome": {
+              "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "totalExpenses": {
+          "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
+          "example": "2000.50"
+        },
+        "expenses": {
+          "type": "object",
+          "description": "Object containing the expenses for foreign property income sources.",
+          "properties": {
+            "consolidatedExpenses": {
+              "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "premisesRunningCosts": {
+              "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "repairsAndMaintenance": {
+              "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "financialCosts": {
+              "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "professionalFees": {
+              "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "costOfServices": {
+              "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "residentialFinancialCost": {
+              "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "broughtFwdResidentialFinancialCost": {
+              "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "other": {
+              "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "travelCosts": {
+              "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "netProfit": {
+          "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "netLoss": {
+          "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "totalAdditions": {
+          "description": "The total additions to net profit (or deduction to net loss). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "additions": {
+          "type": "object",
+          "description": "Object containing the breakdown of the adjustable additions for the accounting period.",
+          "properties": {
+            "privateUseAdjustment": {
+              "description": "Private use adjustment on an asset by a sole trader or partner in a partnership, the asset is put in to a single-asset pool and allowances are restricted on the business to private-use ratio. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "balancingCharge": {
+              "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "totalDeductions": {
+          "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "deductions": {
+          "type": "object",
+          "description": "Object containing the deduction for foreign property income sources.",
+          "properties": {
+            "annualInvestmentAllowance": {
+              "description": "Annual investment allowance on items that qualify up to the AIA amount. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "costOfReplacingDomesticItems": {
+              "description": "Cost of Replacing Domestic Items - formerly Wear and Tear allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "zeroEmissionGoods": {
+              "description": "Zero emission goods vehicle allowance for goods vehicles purchased for business use. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "propertyAllowance": {
+              "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "otherCapitalAllowance": {
+              "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "electricChargePointAllowance": {
+              "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "structuredBuildingAllowance": {
+              "description": "The amount of enhanced structured building allowance.  The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            },
+            "zeroEmissionsCarAllowance": {
+              "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": "1000.45"
+            }
+          },
+          "additionalProperties": false
+        },
+        "taxableProfit": {
+          "description": "Amount of taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99999999999,
+          "example": "1000"
+        },
+        "adjustedIncomeTaxLoss": {
+          "description": "Amount of taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99999999999,
+          "example": "1000"
+        },
+        "countryLevelDetail": {
+          "type": "array",
+          "description": "Array containing a breakdown of the foreign property by country.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "countryCode": {
+                "description": "A three-letter code that represents a country name. This must be an ISO 3166-1 Alpha-3 value.",
+                "type": "string",
+                "example": "FRA"
+              },
+              "totalIncome": {
+                "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "income": {
+                "type": "object",
+                "description": "Object containing the fields that can be adjusted for foreign property income sources.",
+                "properties": {
+                  "totalRentsReceived": {
+                    "description": "The total amount of property rental income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "premiumsOfLeaseGrant": {
+                    "description": "Premiums received for the grant of a lease and other lump sums to possess a property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "otherPropertyIncome": {
+                    "description": "Other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "totalExpenses": {
+                "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": "2000.50"
+              },
+              "expenses": {
+                "type": "object",
+                "description": "Object containing the expenses for foreign property income sources.",
+                "properties": {
+                  "consolidatedExpenses": {
+                    "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "premisesRunningCosts": {
+                    "description": "Rent, rates, insurance, ground rents etc. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "repairsAndMaintenance": {
+                    "description": "Property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "financialCosts": {
+                    "description": "Loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "professionalFees": {
+                    "description": "Legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "costOfServices": {
+                    "description": "Cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "residentialFinancialCost": {
+                    "description": "Captures residential financial cost that can be deductible from rental income (tax relief). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "broughtFwdResidentialFinancialCost": {
+                    "description": "Amount of relief brought forward for restricted residential financial costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "other": {
+                    "description": "Other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "travelCosts": {
+                    "description": "Car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": -99999999999.99,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "netProfit": {
+                "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "netLoss": {
+                "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "totalAdditions": {
+                "description": "The total additions to net profit (or deduction to net loss). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "additions": {
+                "type": "object",
+                "description": "Object containing the breakdown of the adjustable additions for the accounting period.",
+                "properties": {
+                  "privateUseAdjustment": {
+                    "description": "Private use adjustment on an asset by a sole trader or partner in a partnership, the asset is put in to a single-asset pool and allowances are restricted on the business to private-use ratio. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "balancingCharge": {
+                    "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "totalDeductions": {
+                "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "deductions": {
+                "type": "object",
+                "description": "Object containing the deduction for foreign property income sources.",
+                "properties": {
+                  "annualInvestmentAllowance": {
+                    "description": "Annual investment allowance on items that qualify up to the AIA amount. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "costOfReplacingDomesticItems": {
+                    "description": "Cost of Replacing Domestic Items - formerly Wear and Tear allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "zeroEmissionGoods": {
+                    "description": "Zero emission goods vehicle allowance for goods vehicles purchased for business use. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "propertyAllowance": {
+                    "description": "The amount of property allowance income received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "otherCapitalAllowance": {
+                    "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "electricChargePointAllowance": {
+                    "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "structuredBuildingAllowance": {
+                    "description": "The amount of structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  },
+                  "zeroEmissionsCarAllowance": {
+                    "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 99999999999.99,
+                    "example": "1000.45"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "taxableProfit": {
+                "description": "Amount of taxable net profit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              },
+              "adjustedIncomeTaxLoss": {
+                "description": "Amount of  taxable net loss. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999999999.99,
+                "example": "1000.45"
+              }
+            },
+            "required": [
+              "countryCode"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "metadata",
+    "inputs",
+    "adjustableSummaryCalculation"
+  ],
+  "additionalProperties": false
+}
