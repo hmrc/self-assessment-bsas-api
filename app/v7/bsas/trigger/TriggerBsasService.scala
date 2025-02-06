@@ -50,6 +50,7 @@ class TriggerBsasService @Inject() (connector: TriggerBsasConnector) extends Bas
       "ACCOUNTING_PERIOD_NOT_ENDED" -> RuleAccountingPeriodNotEndedError,
       "OBLIGATIONS_NOT_MET"         -> RuleObligationsNotMet,
       "NO_ACCOUNTING_PERIOD"        -> RuleNoAccountingPeriodError,
+      "OUTSIDE_AMENDMENT_WINDOW"    -> RuleOutsideAmendmentWindowError,
       "SERVER_ERROR"                -> InternalError,
       "SERVICE_UNAVAILABLE"         -> InternalError
     )

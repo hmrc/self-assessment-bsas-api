@@ -59,7 +59,8 @@ class SubmitSelfEmploymentBsasService @Inject() (connector: SubmitSelfEmployment
       "INVALID_CORRELATIONID"         -> InternalError,
       "SERVER_ERROR"                  -> InternalError,
       "SERVICE_UNAVAILABLE"           -> InternalError,
-      "RULE_TAX_YEAR_RANGE_INVALID"   -> RuleTaxYearRangeInvalidError
+      "RULE_TAX_YEAR_RANGE_INVALID"   -> RuleTaxYearRangeInvalidError,
+      "OUTSIDE_AMENDMENT_WINDOW"      -> RuleOutsideAmendmentWindowError
     )
 
     val extraTysErrors =
