@@ -87,7 +87,8 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("NO_DATA_FOUND", NotFoundError),
         ("INVALID_CORRELATIONID", InternalError),
         ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError)
+        ("SERVICE_UNAVAILABLE", InternalError),
+        ("OUTSIDE_AMENDMENT_WINDOW", RuleOutsideAmendmentWindowError)
       )
 
       val extraTysErrors = List(

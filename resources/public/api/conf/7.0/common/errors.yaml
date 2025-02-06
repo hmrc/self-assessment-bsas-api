@@ -193,6 +193,12 @@ components:
         code: RULE_RESULTING_VALUE_NOT_PERMITTED
         message: The adjustments provided would produce an unacceptable negative monetary value
 
+    ruleOutsideAmendmentWindow:
+      description: The request cannot be completed as you are outside the amendment window.
+      value:
+        code: RULE_OUTSIDE_AMENDMENT_WINDOW
+        message: You are outside the amendment window
+
     invalidTaxYear:
       description: |
         A tax year before 2023-24 was supplied. A request with a tax year parameter is only valid for tax years

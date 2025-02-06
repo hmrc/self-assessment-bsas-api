@@ -62,6 +62,7 @@ class SubmitUkPropertyBsasService @Inject() (connector: SubmitUkPropertyBsasConn
       "UNALLOWABLE_VALUE"             -> RuleResultingValueNotPermitted,
       "ASC_ID_INVALID"                -> RuleSummaryStatusInvalid,
       "INCOMESOURCE_TYPE_NOT_MATCHED" -> RuleTypeOfBusinessIncorrectError,
+      "OUTSIDE_AMENDMENT_WINDOW"      -> RuleOutsideAmendmentWindowError,
       "SERVER_ERROR"                  -> InternalError,
       "SERVICE_UNAVAILABLE"           -> InternalError
     )

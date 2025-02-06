@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,8 @@ object RulePeriodicDataIncompleteError
 
 object RuleTypeOfBusinessIncorrectError
     extends MtdError("RULE_TYPE_OF_BUSINESS_INCORRECT", "The calculation ID supplied relates to a different type of business", BAD_REQUEST)
+
+object RuleOutsideAmendmentWindowError extends MtdError("RULE_OUTSIDE_AMENDMENT_WINDOW", "You are outside the amendment window", BAD_REQUEST)
 
 object RuleSummaryStatusInvalid extends MtdError("RULE_SUMMARY_STATUS_INVALID", "Periodic data has changed. Request a new summary", BAD_REQUEST)
 

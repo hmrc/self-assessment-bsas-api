@@ -18,6 +18,7 @@ post:
     | RESULTING_VALUE_NOT_PERMITTED                        | Simulates the scenario where one or more adjustments would result in a negative value that is not permitted.                 |
     | SELF_EMPLOYMENT_OVER_CONSOLIDATED_EXPENSES_THRESHOLD | Simulates the scenario where the cumulative turnover amount exceeds the consolidated expenses threshold.                     |
     | TRADING_INCOME_ALLOWANCE_CLAIMED                     | Simulates the scenario where trading income allowance was claimed but the adjustment was made to expenses.                   |
+    | OUTSIDE_AMENDMENT_WINDOW                             | Simulates the scenario where request cannot be completed as it is outside the amendment window.                              |
     | NOT_FOUND                                            | Simulates the scenario where no data is found.                                                                               |
     | TAX_YEAR_NOT_SUPPORTED                               | Simulates the scenario where the tax year is not supported.                                                                  |
     | REQUEST_CANNOT_BE_FULFILLED                          | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.|
@@ -98,6 +99,8 @@ post:
               $ref: "./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold"
             RULE_TRADING_INCOME_ALLOWANCE_CLAIMED:
               $ref: "./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceClaimed"
+            RULE_OUTSIDE_AMENDMENT_WINDOW:
+              $ref: "./common/errors.yaml#/components/examples/ruleOutsideAmendmentWindow"
             RULE_TAX_YEAR_NOT_SUPPORTED:
               $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
             INVALID_TAX_YEAR_PARAMETER:
