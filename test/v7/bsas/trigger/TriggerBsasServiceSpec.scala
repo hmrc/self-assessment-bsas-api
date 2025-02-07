@@ -73,6 +73,7 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("ACCOUNTING_PERIOD_NOT_ENDED", RuleAccountingPeriodNotEndedError),
         ("OBLIGATIONS_NOT_MET", RuleObligationsNotMet),
         ("NO_ACCOUNTING_PERIOD", RuleNoAccountingPeriodError),
+        ("OUTSIDE_AMENDMENT_WINDOW", RuleOutsideAmendmentWindowError),
         ("NO_DATA_FOUND", TriggerNotFoundError),
         ("INVALID_PAYLOAD", InternalError),
         ("SERVER_ERROR", InternalError),
