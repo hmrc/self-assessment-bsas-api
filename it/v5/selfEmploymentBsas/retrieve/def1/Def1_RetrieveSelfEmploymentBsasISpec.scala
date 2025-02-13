@@ -25,7 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v5.common.model.IncomeSourceType
+import v5.common.model.IncomeSourceType.{`02`, `03`, `04`, `15`}
 import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 
 class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
@@ -63,21 +63,42 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
       }
     }
 
-    "return error response with status FORBIDDEN" when {
-      "given a valid request but downstream response has invalid type of business" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(
-            DownstreamStub.GET,
-            downstreamUrl,
-            OK,
-            downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(IncomeSourceType.`15`))
+    "return error response with status BAD_REQUEST" when {
+      Seq(`02`, `03`, `04`, `15`).foreach { incomeSourceType =>
+        Seq(
+          (
+            "Non-TYS",
+            new NonTysTest {
+              override def setupStubs(): Unit =
+                DownstreamStub.onSuccess(
+                  DownstreamStub.GET,
+                  downstreamUrl,
+                  OK,
+                  downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType)
+                )
+            }
+          ),
+          (
+            "TYS",
+            new TysIfsTest {
+              override def setupStubs(): Unit =
+                DownstreamStub.onSuccess(
+                  DownstreamStub.GET,
+                  downstreamUrl,
+                  OK,
+                  downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType)
+                )
+            }
+          )
+        ).foreach { case (scenario, testInstance) =>
+          s"given a valid $scenario request but downstream response has invalid income source type $incomeSourceType" in {
+            val response: WSResponse = await(testInstance.request.get())
+
+            response.status shouldBe BAD_REQUEST
+            response.header("Content-Type") shouldBe Some("application/json")
+            response.json shouldBe RuleTypeOfBusinessIncorrectError.asJson
+          }
         }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe BAD_REQUEST
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe RuleTypeOfBusinessIncorrectError.asJson
       }
     }
 

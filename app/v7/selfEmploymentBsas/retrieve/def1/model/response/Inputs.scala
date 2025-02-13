@@ -20,11 +20,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import shared.models.domain.Source
-import v7.common.model.{IncomeSourceType, TypeOfBusiness}
+import v7.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class Inputs(
     incomeSourceType: String,
-    typeOfBusiness: TypeOfBusiness,
+    typeOfBusiness: TypeOfBusinessWithFHL,
     businessId: String,
     businessName: Option[String],
     accountingPeriodStartDate: String,
@@ -37,7 +37,7 @@ object Inputs {
 
   implicit val reads: Reads[Inputs] = (
     (JsPath \ "incomeSourceType").read[String] and
-      (JsPath \ "incomeSourceType").read[IncomeSourceType].map(_.toTypeOfBusiness) and
+      (JsPath \ "incomeSourceType").read[IncomeSourceTypeWithFHL].map(_.toTypeOfBusiness) and
       (JsPath \ "incomeSourceId").read[String] and
       (JsPath \ "incomeSourceName").readNullable[String] and
       (JsPath \ "accountingPeriodStartDate").read[String] and
