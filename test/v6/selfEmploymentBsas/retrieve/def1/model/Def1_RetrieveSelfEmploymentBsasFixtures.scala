@@ -18,7 +18,7 @@ package v6.selfEmploymentBsas.retrieve.def1.model
 
 import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
-import v6.common.model.{IncomeSourceType, TypeOfBusiness}
+import v6.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 import v6.selfEmploymentBsas.retrieve.def1.model.response._
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
@@ -90,7 +90,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
       |""".stripMargin
   )
 
-  def downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType: IncomeSourceType): JsValue = Json.parse(
+  def downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType: IncomeSourceTypeWithFHL): JsValue = Json.parse(
     s"""
       |{
       |  "incomeSourceType": "$incomeSourceType",
@@ -289,7 +289,8 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
        |}
        |""".stripMargin)
 
-  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceType, taxYear: Int = 2024): JsValue = Json.parse(s"""
+  def downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType: IncomeSourceTypeWithFHL, taxYear: Int = 2024): JsValue =
+    Json.parse(s"""
        |{
        |  "metadata": ${downstreamMetadataJson(taxYear)},
        |  "inputs": ${downstreamInputsInvalidIncomeSourceTypeJson(incomeSourceType)},
@@ -562,7 +563,7 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
 
   val parsedInputs: Inputs = Inputs(
     incomeSourceType = "01",
-    typeOfBusiness = TypeOfBusiness.`self-employment`,
+    typeOfBusiness = TypeOfBusinessWithFHL.`self-employment`,
     businessId = "XAIS12345678910",
     businessName = Some("Business Name"),
     accountingPeriodStartDate = now,
