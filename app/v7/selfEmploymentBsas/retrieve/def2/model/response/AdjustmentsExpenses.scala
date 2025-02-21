@@ -21,21 +21,21 @@ import play.api.libs.json._
 
 case class AdjustmentsExpenses(
     consolidatedExpenses: Option[BigDecimal],
-    costOfGoodsAllowable: Option[BigDecimal],
-    paymentsToSubcontractorsAllowable: Option[BigDecimal],
-    wagesAndStaffCostsAllowable: Option[BigDecimal],
-    carVanTravelExpensesAllowable: Option[BigDecimal],
-    premisesRunningCostsAllowable: Option[BigDecimal],
-    maintenanceCostsAllowable: Option[BigDecimal],
-    adminCostsAllowable: Option[BigDecimal],
-    interestOnBankOtherLoansAllowable: Option[BigDecimal],
-    financeChargesAllowable: Option[BigDecimal],
-    irrecoverableDebtsAllowable: Option[BigDecimal],
-    professionalFeesAllowable: Option[BigDecimal],
-    depreciationAllowable: Option[BigDecimal],
-    otherExpensesAllowable: Option[BigDecimal],
-    advertisingCostsAllowable: Option[BigDecimal],
-    businessEntertainmentCostsAllowable: Option[BigDecimal]
+    costOfGoods: Option[BigDecimal],
+    paymentsToSubcontractors: Option[BigDecimal],
+    wagesAndStaffCosts: Option[BigDecimal],
+    carVanTravelExpenses: Option[BigDecimal],
+    premisesRunningCosts: Option[BigDecimal],
+    maintenanceCosts: Option[BigDecimal],
+    adminCosts: Option[BigDecimal],
+    interestOnBankOtherLoans: Option[BigDecimal],
+    financeCharges: Option[BigDecimal],
+    irrecoverableDebts: Option[BigDecimal],
+    professionalFees: Option[BigDecimal],
+    depreciation: Option[BigDecimal],
+    otherExpenses: Option[BigDecimal],
+    advertisingCosts: Option[BigDecimal],
+    businessEntertainmentCosts: Option[BigDecimal]
 )
 
 object AdjustmentsExpenses {
