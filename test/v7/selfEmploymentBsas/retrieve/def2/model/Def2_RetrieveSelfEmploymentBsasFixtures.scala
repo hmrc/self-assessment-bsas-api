@@ -338,21 +338,21 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     """
       |{
       |  "consolidatedExpenses": 2.01,
-      |  "costOfGoodsAllowable": 2.02,
-      |  "paymentsToSubcontractorsAllowable": 2.03,
-      |  "wagesAndStaffCostsAllowable": 2.04,
-      |  "carVanTravelExpensesAllowable": 2.05,
-      |  "premisesRunningCostsAllowable": 2.06,
-      |  "maintenanceCostsAllowable": 2.07,
-      |  "adminCostsAllowable": 2.08,
-      |  "interestOnBankOtherLoansAllowable": 2.09,
-      |  "financeChargesAllowable": 2.10,
-      |  "irrecoverableDebtsAllowable": 2.11,
-      |  "professionalFeesAllowable": 2.12,
-      |  "depreciationAllowable": 2.13,
-      |  "otherExpensesAllowable": 2.14,
-      |  "advertisingCostsAllowable": 2.15,
-      |  "businessEntertainmentCostsAllowable": 2.16
+      |  "costOfGoods": 2.02,
+      |  "paymentsToSubcontractors": 2.03,
+      |  "wagesAndStaffCosts": 2.04,
+      |  "carVanTravelExpenses": 2.05,
+      |  "premisesRunningCosts": 2.06,
+      |  "maintenanceCosts": 2.07,
+      |  "adminCosts": 2.08,
+      |  "interestOnBankOtherLoans": 2.09,
+      |  "financeCharges": 2.10,
+      |  "irrecoverableDebts": 2.11,
+      |  "professionalFees": 2.12,
+      |  "depreciation": 2.13,
+      |  "otherExpenses": 2.14,
+      |  "advertisingCosts": 2.15,
+      |  "businessEntertainmentCosts": 2.16
       |}
       |""".stripMargin
   )
@@ -448,21 +448,21 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     """
       |{
       |    "consolidatedExpenses": 2.01,
-      |    "costOfGoodsAllowable": 2.02,
-      |    "paymentsToSubcontractorsAllowable": 2.03,
-      |    "wagesAndStaffCostsAllowable": 2.04,
-      |    "carVanTravelExpensesAllowable": 2.05,
-      |    "premisesRunningCostsAllowable": 2.06,
-      |    "maintenanceCostsAllowable": 2.07,
-      |    "adminCostsAllowable": 2.08,
-      |    "interestOnBankOtherLoansAllowable": 2.09,
-      |    "financeChargesAllowable": 2.10,
-      |    "irrecoverableDebtsAllowable": 2.11,
-      |    "professionalFeesAllowable": 2.12,
-      |    "depreciationAllowable": 2.13,
-      |    "otherExpensesAllowable": 2.14,
-      |    "advertisingCostsAllowable": 2.15,
-      |    "businessEntertainmentCostsAllowable": 2.16
+      |    "costOfGoods": 2.02,
+      |    "paymentsToSubcontractors": 2.03,
+      |    "wagesAndStaffCosts": 2.04,
+      |    "carVanTravelExpenses": 2.05,
+      |    "premisesRunningCosts": 2.06,
+      |    "maintenanceCosts": 2.07,
+      |    "adminCosts": 2.08,
+      |    "interestOnBankOtherLoans": 2.09,
+      |    "financeCharges": 2.10,
+      |    "irrecoverableDebts": 2.11,
+      |    "professionalFees": 2.12,
+      |    "depreciation": 2.13,
+      |    "otherExpenses": 2.14,
+      |    "advertisingCosts": 2.15,
+      |    "businessEntertainmentCosts": 2.16
       |}
       |""".stripMargin
   )
@@ -552,21 +552,21 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
 
   val summaryCalculationExpenses: SummaryCalculationExpenses = SummaryCalculationExpenses(
     consolidatedExpenses = Some(2.01),
-    costOfGoodsAllowable = Some(2.02),
-    paymentsToSubcontractorsAllowable = Some(2.03),
-    wagesAndStaffCostsAllowable = Some(2.04),
-    carVanTravelExpensesAllowable = Some(2.05),
-    premisesRunningCostsAllowable = Some(2.06),
-    maintenanceCostsAllowable = Some(2.07),
-    adminCostsAllowable = Some(2.08),
-    interestOnBankOtherLoansAllowable = Some(2.09),
-    financeChargesAllowable = Some(2.10),
-    irrecoverableDebtsAllowable = Some(2.11),
-    professionalFeesAllowable = Some(2.12),
-    depreciationAllowable = Some(2.13),
-    otherExpensesAllowable = Some(2.14),
-    advertisingCostsAllowable = Some(2.15),
-    businessEntertainmentCostsAllowable = Some(2.16)
+    costOfGoods = Some(2.02),
+    paymentsToSubcontractors = Some(2.03),
+    wagesAndStaffCosts = Some(2.04),
+    carVanTravelExpenses = Some(2.05),
+    premisesRunningCosts = Some(2.06),
+    maintenanceCosts = Some(2.07),
+    adminCosts = Some(2.08),
+    interestOnBankOtherLoans = Some(2.09),
+    financeCharges = Some(2.10),
+    irrecoverableDebts = Some(2.11),
+    professionalFees = Some(2.12),
+    depreciation = Some(2.13),
+    otherExpenses = Some(2.14),
+    advertisingCosts = Some(2.15),
+    businessEntertainmentCosts = Some(2.16)
   )
 
   val summaryCalculationAdditions: SummaryCalculationAdditions = SummaryCalculationAdditions(
@@ -638,21 +638,21 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
 
   val adjustmentsExpenses: AdjustmentsExpenses = AdjustmentsExpenses(
     consolidatedExpenses = Some(2.01),
-    costOfGoodsAllowable = Some(2.02),
-    paymentsToSubcontractorsAllowable = Some(2.03),
-    wagesAndStaffCostsAllowable = Some(2.04),
-    carVanTravelExpensesAllowable = Some(2.05),
-    premisesRunningCostsAllowable = Some(2.06),
-    maintenanceCostsAllowable = Some(2.07),
-    adminCostsAllowable = Some(2.08),
-    interestOnBankOtherLoansAllowable = Some(2.09),
-    financeChargesAllowable = Some(2.10),
-    irrecoverableDebtsAllowable = Some(2.11),
-    professionalFeesAllowable = Some(2.12),
-    depreciationAllowable = Some(2.13),
-    otherExpensesAllowable = Some(2.14),
-    advertisingCostsAllowable = Some(2.15),
-    businessEntertainmentCostsAllowable = Some(2.16)
+    costOfGoods = Some(2.02),
+    paymentsToSubcontractors = Some(2.03),
+    wagesAndStaffCosts = Some(2.04),
+    carVanTravelExpenses = Some(2.05),
+    premisesRunningCosts = Some(2.06),
+    maintenanceCosts = Some(2.07),
+    adminCosts = Some(2.08),
+    interestOnBankOtherLoans = Some(2.09),
+    financeCharges = Some(2.10),
+    irrecoverableDebts = Some(2.11),
+    professionalFees = Some(2.12),
+    depreciation = Some(2.13),
+    otherExpenses = Some(2.14),
+    advertisingCosts = Some(2.15),
+    businessEntertainmentCosts = Some(2.16)
   )
 
   val adjustmentsAdditions: AdjustmentsAdditions = AdjustmentsAdditions(
