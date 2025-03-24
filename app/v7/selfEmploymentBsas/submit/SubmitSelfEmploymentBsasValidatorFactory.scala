@@ -19,8 +19,9 @@ package v7.selfEmploymentBsas.submit
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import v7.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasSchema.Def1
+import v7.selfEmploymentBsas.submit.SubmitSelfEmploymentBsasSchema.{Def1, Def2}
 import v7.selfEmploymentBsas.submit.def1.Def1_SubmitSelfEmploymentBsasValidator
+import v7.selfEmploymentBsas.submit.def2.Def2_SubmitSelfEmploymentBsasValidator
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
 import javax.inject.Singleton
@@ -34,6 +35,7 @@ class SubmitSelfEmploymentBsasValidatorFactory {
 
     schema match {
       case Valid(Def1)     => new Def1_SubmitSelfEmploymentBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def2)     => new Def2_SubmitSelfEmploymentBsasValidator(nino, calculationId, taxYear, body)
       case Invalid(errors) => Validator.returningErrors(errors)
     }
   }

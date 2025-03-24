@@ -19,13 +19,17 @@ package v7.selfEmploymentBsas.submit.model.request
 import play.api.libs.json.OWrites
 import shared.utils.JsonWritesUtil
 import v7.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestBody
+import v7.selfEmploymentBsas.submit.def2.model.request.Def2_SubmitSelfEmploymentBsasRequestBody
 
 trait SubmitSelfEmploymentBsasRequestBody
 
 object SubmitSelfEmploymentBsasRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = writesFrom { case a: Def1_SubmitSelfEmploymentBsasRequestBody =>
-    implicitly[OWrites[Def1_SubmitSelfEmploymentBsasRequestBody]].writes(a)
+  implicit val writes: OWrites[SubmitSelfEmploymentBsasRequestBody] = writesFrom {
+    case def1: Def1_SubmitSelfEmploymentBsasRequestBody =>
+      implicitly[OWrites[Def1_SubmitSelfEmploymentBsasRequestBody]].writes(def1)
+    case def2: Def2_SubmitSelfEmploymentBsasRequestBody =>
+      implicitly[OWrites[Def2_SubmitSelfEmploymentBsasRequestBody]].writes(def2)
   }
 
 }
