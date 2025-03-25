@@ -14,14 +14,13 @@
     "accountingPeriodStartDate": "2020-04-06",
     "accountingPeriodEndDate": "2021-04-05",
     "source": "MTD-SA",
-    "submissionPeriods": [
-      {
-        "periodId": "2020-04-06_2020-07-05",
-        "startDate": "2020-04-06",
-        "endDate": "2020-07-05",
-        "receivedDateTime": "2020-07-07T10:12:10.123Z"
-      }
-    ]
+    "submissionPeriod":
+    {
+      "submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      "startDate": "2020-04-06",
+      "endDate": "2020-07-05",
+      "receivedDateTime": "2020-07-07T10:12:10.123Z"
+    }
   },
   "adjustableSummaryCalculation": {
     "totalIncome": 0.12,
@@ -81,7 +80,6 @@
       "allowanceOnSales": 0.12,
       "capitalAllowanceSingleAssetPool": 0.12,
       "includedNonTaxableProfits": 0.12,
-      "electricChargePointAllowance": 0.12,
       "structuredBuildingAllowance": 0.12,
       "enhancedStructuredBuildingAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12
@@ -156,7 +154,6 @@
       "allowanceOnSales": 0.12,
       "capitalAllowanceSingleAssetPool": 0.12,
       "includedNonTaxableProfits": 0.12,
-      "electricChargePointAllowance": 0.12,
       "structuredBuildingAllowance": 0.12,
       "enhancedStructuredBuildingAllowance": 0.12,
       "zeroEmissionsCarAllowance": 0.12

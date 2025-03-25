@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "For TY 2023-24 and Before",
+  "title": "For TY 2025-26 and after",
   "description": "Retrieve a Self-Employment Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
@@ -91,18 +91,10 @@
           ],
           "description": "Specifies the source of the income data used in this calculation."
         },
-        "submissionPeriods": {
-          "type": "array",
-          "description": "Array containing the submission periods for the income source. A periodic summary will always have either a periodId or a submissionId, but not both.",
-          "items": {
-            "type": "object",
+        "submissionPeriod": {
+          "type": "object",
+          "description": "Object containing the submission period for the income source.",
             "properties": {
-              "periodId": {
-                "description": "A reference to the unique identifier of the period. Must conform to: YYYY-MM-DD_YYYY-MM-DD",
-                "type": "string",
-                "example": "2019-04-06_2019-07-05",
-                "format": "YYYY-MM-DD_YYYY-MM-DD"
-              },
               "submissionId": {
                 "description": "A reference to the unique identifier of the period.",
                 "type": "string",
@@ -112,26 +104,26 @@
               "startDate": {
                 "description": "The date the submission period started.",
                 "type": "string",
-                "example": "2019-04-06"
+                "example": "2025-04-06"
               },
               "endDate": {
                 "description": "The date the submission period ended.",
                 "type": "string",
-                "example": "2019-07-05"
+                "example": "2026-04-05"
               },
               "receivedDateTime": {
                 "description": "The date and time data received.",
                 "type": "string",
-                "example": "2019-04-04T01:01:01.123Z"
+                "example": "2026-04-04T01:01:01.123Z"
               }
             },
             "required": [
+              "submissionId",
               "startDate",
               "endDate",
               "receivedDateTime"
             ],
             "additionalProperties": false
-          }
         }
       },
       "required": [
@@ -140,7 +132,7 @@
         "accountingPeriodStartDate",
         "accountingPeriodEndDate",
         "source",
-        "submissionPeriods"
+        "submissionPeriod"
       ],
       "additionalProperties": false
     },
@@ -544,13 +536,6 @@
               "maximum": 99999999999.99,
               "example": "1000.45"
             },
-            "electricChargePointAllowance": {
-              "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "minimum": 0,
-              "maximum": 99999999999.99,
-              "example": "1000.45"
-            },
             "structuredBuildingAllowance": {
               "description": "The amount of structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
@@ -889,6 +874,11 @@
             }
           },
           "additionalProperties": false
+        },
+        "zeroAdjustments": {
+          "type": "boolean",
+          "description": "Indicates zero adjustments for all income, expenses and additions. The value must be true if this is the case.",
+          "enum": [true]
         }
       },
       "additionalProperties": false

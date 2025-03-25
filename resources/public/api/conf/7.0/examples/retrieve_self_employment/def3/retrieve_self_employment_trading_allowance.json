@@ -14,14 +14,13 @@
     "accountingPeriodStartDate": "2020-04-06",
     "accountingPeriodEndDate": "2021-04-05",
     "source": "MTD-SA",
-    "submissionPeriods": [
-      {
-        "periodId": "2020-04-06_2020-07-05",
-        "startDate": "2020-04-06",
-        "endDate": "2020-07-05",
-        "receivedDateTime": "2020-07-07T10:12:10.123Z"
-      }
-    ]
+    "submissionPeriod":
+    {
+      "submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      "startDate": "2020-04-06",
+      "endDate": "2020-07-05",
+      "receivedDateTime": "2020-07-07T10:12:10.123Z"
+    }
   },
   "adjustableSummaryCalculation": {
     "totalIncome": 0.12,
@@ -31,7 +30,7 @@
     },
     "totalExpenses": -0.02,
     "expenses": {
-      "costOfGoods": 0.12,
+      "costOfGoods": -0.12,
       "paymentsToSubcontractors": -0.12,
       "wagesAndStaffCosts": -0.12,
       "carVanTravelExpenses": -0.12,
@@ -50,10 +49,10 @@
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
-      "costOfGoodsDisallowable": 0.12,
+      "costOfGoodsDisallowable": -0.12,
       "paymentsToSubcontractorsDisallowable": -0.12,
       "wagesAndStaffCostsDisallowable": -0.12,
-      "carVanTravelExpensesDisallowable": -0.12,
+      "carVanTravelExpensesDisallowable": 0.12,
       "premisesRunningCostsDisallowable": 0.12,
       "maintenanceCostsDisallowable": 0.12,
       "adminCostsDisallowable": 0.12,
@@ -72,19 +71,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "annualInvestmentAllowance": 0.12,
-      "capitalAllowanceMainPool": 0.12,
-      "capitalAllowanceSpecialRatePool": 0.12,
-      "zeroEmissionGoods": 0.12,
-      "businessPremisesRenovationAllowance": 0.12,
-      "enhancedCapitalAllowance": 0.12,
-      "allowanceOnSales": 0.12,
-      "capitalAllowanceSingleAssetPool": 0.12,
-      "includedNonTaxableProfits": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "structuredBuildingAllowance": 0.12,
-      "enhancedStructuredBuildingAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "tradingAllowance": 0.12
     },
     "totalAccountingAdjustments": 0.12,
     "accountingAdjustments": {
@@ -184,19 +171,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "annualInvestmentAllowance": 0.12,
-      "capitalAllowanceMainPool": 0.12,
-      "capitalAllowanceSpecialRatePool": 0.12,
-      "zeroEmissionGoods": 0.12,
-      "businessPremisesRenovationAllowance": 0.12,
-      "enhancedCapitalAllowance": 0.12,
-      "allowanceOnSales": 0.12,
-      "capitalAllowanceSingleAssetPool": 0.12,
-      "includedNonTaxableProfits": 0.12,
-      "electricChargePointAllowance": 0.12,
-      "structuredBuildingAllowance": 0.12,
-      "enhancedStructuredBuildingAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "tradingAllowance": 0.12
     },
     "totalAccountingAdjustments": 0.12,
     "accountingAdjustments": {
