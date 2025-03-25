@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    "requestedDateTime": "2021-01-01T10:10:10Z",
+    "adjustedDateTime": "2021-01-02T10:10:10Z",
+    "nino": "TC663795B",
+    "taxYear": "2020-21",
+    "summaryStatus": "valid"
+  },
+  "inputs": {
+    "typeOfBusiness": "self-employment",
+    "businessId": "XAIS12345678910",
+    "businessName": "My self-employment",
+    "accountingPeriodStartDate": "2020-04-06",
+    "accountingPeriodEndDate": "2021-04-05",
+    "source": "MTD-SA",
+    "submissionPeriod":
+    {
+      "submissionId": "617f3a7a-db8e-11e9-8a34-2a2ae2dbeed4",
+      "startDate": "2020-04-06",
+      "endDate": "2020-07-05",
+      "receivedDateTime": "2020-07-07T10:12:10.123Z"
+    }
+  },
+  "adjustableSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "turnover": 0.12,
+      "other": 0.12
+    },
+    "totalExpenses": -0.02,
+    "expenses": {
+      "costOfGoods": 0.12,
+      "paymentsToSubcontractors": -0.12,
+      "wagesAndStaffCosts": -0.12,
+      "carVanTravelExpenses": -0.12,
+      "premisesRunningCosts": 0.12,
+      "maintenanceCosts": 0.12,
+      "adminCosts": 0.12,
+      "interestOnBankOtherLoans": 0.12,
+      "financeCharges": 0.12,
+      "irrecoverableDebts": 0.12,
+      "professionalFees": 0.12,
+      "depreciation": 0.12,
+      "otherExpenses": 0.12,
+      "advertisingCosts": 0.12,
+      "businessEntertainmentCosts": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "costOfGoodsDisallowable": 0.12,
+      "paymentsToSubcontractorsDisallowable": -0.12,
+      "wagesAndStaffCostsDisallowable": -0.12,
+      "carVanTravelExpensesDisallowable": -0.12,
+      "premisesRunningCostsDisallowable": 0.12,
+      "maintenanceCostsDisallowable": 0.12,
+      "adminCostsDisallowable": 0.12,
+      "interestOnBankOtherLoansDisallowable": 0.12,
+      "financeChargesDisallowable": 0.12,
+      "irrecoverableDebtsDisallowable": 0.12,
+      "professionalFeesDisallowable": 0.12,
+      "depreciationDisallowable": 0.12,
+      "otherExpensesDisallowable": 0.12,
+      "advertisingCostsDisallowable": 0.12,
+      "businessEntertainmentCostsDisallowable": 0.12,
+      "outstandingBusinessIncome": 0.12,
+      "balancingChargeOther": 0.12,
+      "balancingChargeBpra": 0.12,
+      "goodsAndServicesOwnUse": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "annualInvestmentAllowance": 0.12,
+      "capitalAllowanceMainPool": 0.12,
+      "capitalAllowanceSpecialRatePool": 0.12,
+      "zeroEmissionGoods": 0.12,
+      "businessPremisesRenovationAllowance": 0.12,
+      "enhancedCapitalAllowance": 0.12,
+      "allowanceOnSales": 0.12,
+      "capitalAllowanceSingleAssetPool": 0.12,
+      "includedNonTaxableProfits": 0.12,
+      "structuredBuildingAllowance": 0.12,
+      "enhancedStructuredBuildingAllowance": 0.12,
+      "zeroEmissionsCarAllowance": 0.12
+    },
+    "totalAccountingAdjustments": 0.12,
+    "accountingAdjustments": {
+      "basisAdjustment": 0.12,
+      "overlapReliefUsed": 0.12,
+      "accountingAdjustment": 0.12,
+      "averagingAdjustment": 0.12
+    },
+    "taxableProfit": 100
+  },
+  "adjustments": {
+    "zeroAdjustments": true
+  },
+  "adjustedSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "turnover": 0.12,
+      "other": 0.12
+    },
+    "totalExpenses": -0.02,
+    "expenses": {
+      "costOfGoods": 0.12,
+      "paymentsToSubcontractors": -0.12,
+      "wagesAndStaffCosts": -0.12,
+      "carVanTravelExpenses": -0.12,
+      "premisesRunningCosts": 0.12,
+      "maintenanceCosts": 0.12,
+      "adminCosts": 0.12,
+      "interestOnBankOtherLoans": 0.12,
+      "financeCharges": 0.12,
+      "irrecoverableDebts": 0.12,
+      "professionalFees": 0.12,
+      "depreciation": 0.12,
+      "otherExpenses": 0.12,
+      "advertisingCosts": 0.12,
+      "businessEntertainmentCosts": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "costOfGoodsDisallowable": 0.12,
+      "paymentsToSubcontractorsDisallowable": -0.12,
+      "wagesAndStaffCostsDisallowable": -0.12,
+      "carVanTravelExpensesDisallowable": -0.12,
+      "premisesRunningCostsDisallowable": 0.12,
+      "maintenanceCostsDisallowable": 0.12,
+      "adminCostsDisallowable": 0.12,
+      "interestOnBankOtherLoansDisallowable": 0.12,
+      "financeChargesDisallowable": 0.12,
+      "irrecoverableDebtsDisallowable": 0.12,
+      "professionalFeesDisallowable": 0.12,
+      "depreciationDisallowable": 0.12,
+      "otherExpensesDisallowable": 0.12,
+      "advertisingCostsDisallowable": 0.12,
+      "businessEntertainmentCostsDisallowable": 0.12,
+      "outstandingBusinessIncome": 0.12,
+      "balancingChargeOther": 0.12,
+      "balancingChargeBpra": 0.12,
+      "goodsAndServicesOwnUse": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "annualInvestmentAllowance": 0.12,
+      "capitalAllowanceMainPool": 0.12,
+      "capitalAllowanceSpecialRatePool": 0.12,
+      "zeroEmissionGoods": 0.12,
+      "businessPremisesRenovationAllowance": 0.12,
+      "enhancedCapitalAllowance": 0.12,
+      "allowanceOnSales": 0.12,
+      "capitalAllowanceSingleAssetPool": 0.12,
+      "includedNonTaxableProfits": 0.12,
+      "structuredBuildingAllowance": 0.12,
+      "enhancedStructuredBuildingAllowance": 0.12,
+      "zeroEmissionsCarAllowance": 0.12
+    },
+    "totalAccountingAdjustments": 0.12,
+    "accountingAdjustments": {
+      "basisAdjustment": 0.12,
+      "overlapReliefUsed": 0.12,
+      "accountingAdjustment": 0.12,
+      "averagingAdjustment": 0.12
+    },
+    "taxableProfit": 100
+  }
+}

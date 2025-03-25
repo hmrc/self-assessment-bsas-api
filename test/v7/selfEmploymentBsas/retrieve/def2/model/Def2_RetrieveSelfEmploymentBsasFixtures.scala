@@ -680,7 +680,6 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     zeroAdjustments = Some(true)
   )
 
-
   val adjustedSummaryCalculation: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
     totalIncome = Some(1),
     income = Some(summaryCalculationIncome),

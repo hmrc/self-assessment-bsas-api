@@ -95,6 +95,14 @@ get:
               description: Full Expenses
               value:
                 $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_full_expenses.json"
+            "PRE-TY-2025-26-Zero-Adjustments":
+              description: Zero Adjustments
+              value:
+                $ref: "./examples/retrieve_self_employment/def1/retrieve_self_employment_zero_adjustments.json"
+            "TY-2025-26-Zero-Adjustments":
+              description: Zero Adjustments
+              value:
+                $ref: "./examples/retrieve_self_employment/def2/retrieve_self_employment_zero_adjustments.json"
             "TY-2025-26-Consolidated-Expenses":
               description: Consolidated Expenses
               value:
