@@ -704,7 +704,8 @@ object Def1_RetrieveSelfEmploymentBsasFixtures {
   val adjustments: Adjustments = Adjustments(
     income = Some(adjustmentsIncome),
     expenses = Some(adjustmentsExpenses),
-    additions = Some(adjustmentsAdditions)
+    additions = Some(adjustmentsAdditions),
+    zeroAdjustments = Some(true)
   )
 
   val adjustedSummaryCalculation: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
