@@ -44,16 +44,25 @@ post:
     content:
       application/json:
         schema:
-          $ref: "./schemas/submit_self_employment_accounting_adjustments/request.json"
+          oneOf:
+            - $ref: "./schemas/submit_self_employment_accounting_adjustments/def1/request.json"
+            - $ref: "./schemas/submit_self_employment_accounting_adjustments/def2/request.json"
         examples:
-          adjustments_full:
-            description: Full Expenses
+          Full Expenses request for TY 2023-24 and before:
             value:
-              $ref: "./examples/adjustments/submit_se_adjustments_full.json"
-          adjustments_consolidated:
-            description: Consolidated Expenses
+              $ref: './examples/submit_self_employment_accounting_adjustments/def1/submit_se_adjustments_full.json'
+          Consolidated Expenses request for TY 2023-24 and before:
             value:
-              $ref: "./examples/adjustments/submit_se_adjustments_consolidated.json"
+              $ref: './examples/submit_self_employment_accounting_adjustments/def1/submit_se_adjustments_consolidated.json'
+          Full Expenses request for TY 2024-25 and after:
+            value:
+              $ref: './examples/submit_self_employment_accounting_adjustments/def2/submit_se_adjustments_full.json'
+          Consolidated Expenses request for TY 2024-25 and after:
+            value:
+              $ref: './examples/submit_self_employment_accounting_adjustments/def2/submit_se_adjustments_consolidated.json'
+          Zero Adjustments request for TY 2024-25 and after:
+            value:
+              $ref: './examples/submit_self_employment_accounting_adjustments/def2/submit_se_adjustments_zero.json'
 
   responses:
     200:
@@ -108,12 +117,14 @@ post:
               $ref: "./common/errors.yaml#/components/examples/ruleOverConsolidatedExpensesThreshold"
             RULE_TRADING_INCOME_ALLOWANCE_CLAIMED:
               $ref: "./common/errors.yaml#/components/examples/ruleTradingIncomeAllowanceClaimed"
+            RULE_ZERO_ADJUSTMENTS_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleZeroAdjustmentsInvalid"
+            RULE_BOTH_ADJUSTMENTS_SUPPLIED:
+              $ref: "./common/errors.yaml#/components/examples/ruleBothAdjustmentsSupplied"
             RULE_OUTSIDE_AMENDMENT_WINDOW:
               $ref: "./common/errors.yaml#/components/examples/ruleOutsideAmendmentWindow"
             RULE_TAX_YEAR_NOT_SUPPORTED:
               $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
-            INVALID_TAX_YEAR_PARAMETER:
-              $ref: "./common/errors.yaml#/components/examples/invalidTaxYear"
             FORMAT_TAX_YEAR:
               $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
             RULE_TAX_YEAR_RANGE_INVALID:
