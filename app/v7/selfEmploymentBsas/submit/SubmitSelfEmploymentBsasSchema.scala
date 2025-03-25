@@ -19,20 +19,22 @@ package v7.selfEmploymentBsas.submit
 import cats.data.Validated
 import cats.data.Validated.Valid
 import shared.controllers.validators.resolvers.ResolveTaxYear
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
+
+import scala.math.Ordered.orderingToOrdered
 
 sealed trait SubmitSelfEmploymentBsasSchema
 
 object SubmitSelfEmploymentBsasSchema {
 
   case object Def1 extends SubmitSelfEmploymentBsasSchema
+  case object Def2 extends SubmitSelfEmploymentBsasSchema
 
-  def schemaFor(taxYearString: String): Validated[Seq[MtdError], SubmitSelfEmploymentBsasSchema] = {
-    ResolveTaxYear(taxYearString) andThen (_ => schemaFor())
-  }
+  def schemaFor(taxYearString: String): Validated[Seq[MtdError], SubmitSelfEmploymentBsasSchema] =
+    ResolveTaxYear(taxYearString) andThen schemaFor
 
-  def schemaFor(): Validated[Seq[MtdError], SubmitSelfEmploymentBsasSchema] = {
-    Valid(Def1)
-  }
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], SubmitSelfEmploymentBsasSchema] =
+    if (taxYear >= TaxYear.fromMtd("2024-25")) Valid(Def2) else Valid(Def1)
 
 }
