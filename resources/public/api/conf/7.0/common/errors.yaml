@@ -199,6 +199,18 @@ components:
         code: RULE_OUTSIDE_AMENDMENT_WINDOW
         message: You are outside the amendment window
 
+    ruleZeroAdjustmentsInvalid:
+      description: Zero adjustments can only be set to true.
+      value:
+        code: RULE_ZERO_ADJUSTMENTS_INVALID
+        message: Zero adjustments can only be set to true
+
+    ruleBothAdjustmentsSupplied:
+      description: Both adjustments and zero adjustments must not be present at the same time.
+      value:
+        code: RULE_BOTH_ADJUSTMENTS_SUPPLIED
+        message: Both adjustments and zero adjustments must not be present at the same time
+
     invalidTaxYear:
       description: |
         A tax year before 2023-24 was supplied. A request with a tax year parameter is only valid for tax years
