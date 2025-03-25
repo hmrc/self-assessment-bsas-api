@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.submit.def2
 
-import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
+import common.errors._
 import org.scalatest.Assertion
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
@@ -24,6 +24,7 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v7.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
+import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
@@ -31,7 +32,7 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
   private val validNino          = "AA123456A"
   private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val validTaxYear       = "2023-24"
+  private val validTaxYear       = "2024-25"
 
   private val parsedNino          = Nino(validNino)
   private val parsedCalculationId = CalculationId(validCalculationId)
@@ -131,6 +132,11 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
 
   private val parsedFhlConsolidatedBody = fhlConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
+  private val propertyTypes: List[String] = List("ukProperty", "furnishedHolidayLet")
+
+  private def parsedWithOnlyZeroAdjustmentsBody(propertyType: String): Def2_SubmitUkPropertyBsasRequestBody =
+    mtdRequestWithOnlyZeroAdjustments(propertyType, zeroAdjustments = true).as[Def2_SubmitUkPropertyBsasRequestBody]
+
   private def validator(nino: String, calculationId: String, taxYear: String, body: JsValue) =
     new Def2_SubmitUkPropertyBsasValidator(nino, calculationId, taxYear, body)
 
@@ -218,6 +224,22 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedMinimal)
         )
       }
+
+      propertyTypes.foreach { propertyType =>
+        s"a valid $propertyType request with only zero adjustments set to true is supplied" in {
+          val result =
+            validator(
+              validNino,
+              validCalculationId,
+              validTaxYear,
+              mtdRequestWithOnlyZeroAdjustments(propertyType, zeroAdjustments = true)
+            ).validateAndWrapResult()
+
+          result shouldBe Right(
+            Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedWithOnlyZeroAdjustmentsBody(propertyType))
+          )
+        }
+      }
     }
 
     "return NinoFormatError" when {
@@ -225,6 +247,24 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         val result = validator("A12344A", validCalculationId, validTaxYear, fhlBodyJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, NinoFormatError)
+        )
+      }
+    }
+
+    "return TaxYearFormatError" when {
+      "given a badly formatted tax year" in {
+        val result = validator(validNino, validCalculationId, "202324", fhlBodyJson).validateAndWrapResult()
+        result shouldBe Left(
+          ErrorWrapper(correlationId, TaxYearFormatError)
+        )
+      }
+    }
+
+    "return RuleTaxYearRangeInvalidError" when {
+      "given a tax year range of more than one year" in {
+        val result = validator(validNino, validCalculationId, "2022-24", fhlBodyJson).validateAndWrapResult()
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
         )
       }
     }
@@ -416,21 +456,37 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       }
     }
 
-    "return TaxYearFormatError" when {
-      "given a badly formatted tax year" in {
-        val result = validator(validNino, validCalculationId, "202324", fhlBodyJson).validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, TaxYearFormatError)
-        )
+    "return RuleZeroAdjustmentsInvalidError" when {
+      propertyTypes.foreach { propertyType =>
+        s"passed only zero adjustments as false in $propertyType" in {
+          val result = validator(
+            validNino,
+            validCalculationId,
+            validTaxYear,
+            mtdRequestWithOnlyZeroAdjustments(propertyType, zeroAdjustments = false)
+          ).validateAndWrapResult()
+
+          result shouldBe Left(
+            ErrorWrapper(correlationId, RuleZeroAdjustmentsInvalidError.withPath(s"/$propertyType/zeroAdjustments"))
+          )
+        }
       }
     }
 
-    "return RuleTaxYearRangeInvalidError error" when {
-      "given a tax year range of more than one year" in {
-        val result = validator(validNino, validCalculationId, "2022-24", fhlBodyJson).validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
-        )
+    "return RuleBothAdjustmentsSuppliedError" when {
+      propertyTypes.foreach { propertyType =>
+        s"passed zero adjustments as true and other adjustments in $propertyType" in {
+          val result = validator(
+            validNino,
+            validCalculationId,
+            validTaxYear,
+            mtdRequestWithZeroAndOtherAdjustments(propertyType, zeroAdjustments = true)
+          ).validateAndWrapResult()
+
+          result shouldBe Left(
+            ErrorWrapper(correlationId, RuleBothAdjustmentsSuppliedError.withPath(s"/$propertyType"))
+          )
+        }
       }
     }
 
@@ -445,6 +501,30 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             Some(List(CalculationIdFormatError, NinoFormatError))
           )
         )
+      }
+
+      propertyTypes.foreach { propertyType =>
+        s"passed zero adjustments as false and other adjustments in $propertyType" in {
+          val result = validator(
+            validNino,
+            validCalculationId,
+            validTaxYear,
+            mtdRequestWithZeroAndOtherAdjustments(propertyType, zeroAdjustments = false)
+          ).validateAndWrapResult()
+
+          result shouldBe Left(
+            ErrorWrapper(
+              correlationId,
+              BadRequestError,
+              Some(
+                List(
+                  RuleBothAdjustmentsSuppliedError.withPath(s"/$propertyType"),
+                  RuleZeroAdjustmentsInvalidError.withPath(s"/$propertyType/zeroAdjustments")
+                )
+              )
+            )
+          )
+        }
       }
     }
   }

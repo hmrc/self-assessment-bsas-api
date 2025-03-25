@@ -18,7 +18,7 @@ package v7.ukPropertyBsas.submit.def2.model.request
 
 import play.api.libs.json.{Json, OFormat}
 
-case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses])
+case class FurnishedHolidayLet(income: Option[FHLIncome], expenses: Option[FHLExpenses], zeroAdjustments: Option[Boolean])
 
 object FurnishedHolidayLet {
   implicit val format: OFormat[FurnishedHolidayLet] = Json.format[FurnishedHolidayLet]

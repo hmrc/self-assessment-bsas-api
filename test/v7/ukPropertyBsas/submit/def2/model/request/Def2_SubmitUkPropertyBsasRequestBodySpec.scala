@@ -24,9 +24,9 @@ class Def2_SubmitUkPropertyBsasRequestBodySpec extends UnitSpec {
 
   private val emptyParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(None, None)
 
-  private val ukPropertyParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(Some(UkProperty(None, None)), None)
+  private val ukPropertyParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(Some(UkProperty(None, None, None)), None)
 
-  private val fhlParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None)))
+  private val fhlParsedRequestBody = Def2_SubmitUkPropertyBsasRequestBody(None, Some(FurnishedHolidayLet(None, None, None)))
 
   "reads" when {
     "reading a simple ukProperty body" should {
