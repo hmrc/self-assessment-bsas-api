@@ -51,34 +51,36 @@ post:
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def2/request.json'
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def3/request.json'
         examples:
-          example-1:
-            description: Foreign Property EEA FHL
+          Foreign Property EEA FHL:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_eeh_fhl_accounting_adjustments.json
-          example-2:
-            description: Foreign Property EEA FHL with Consolidated
+          Foreign Property EEA FHL with Consolidated:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_eeh_fhl_consolidated_accounting_adjustments.json
-          example-3:
-            description: Foreign Property (Non-FHL)
+          Foreign Property (Non-FHL):
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_accounting_adjustments.json
-          example-4:
-            description: Foreign Property (Non-FHL) with Consolidated
+          Foreign Property (Non-FHL) with Consolidated:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def1/submit_foreign_property_consolidated_accounting_adjustments.json
-          example-5:
-            description: TY-2024-25 - Foreign Property (Non-FHL) with non-negative residential financial cost
+          TY-2024-25 - Foreign Property EEA FHL Zero Adjustments:
+            value:
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_eeh_fhl_accounting_adjustments_zero.json
+          TY-2024-25 - Foreign Property Zero Adjustments:
+            value:
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_accounting_adjustments_zero.json
+          TY-2024-25 - Foreign Property (Non-FHL) with non-negative residential financial cost:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_accounting_adjustments.json
-          example-6:
-            description: TY-2025-26-Foreign Property Adjustment
+          TY-2025-26-Foreign Property Adjustment:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def3/submit_foreign_property_accounting_adjustments.json
-          example-7:
-            description: TY-2025-26-Foreign Property Consolidated Adjustment
+          TY-2025-26-Foreign Property Consolidated Adjustment:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def3/submit_foreign_property_consolidated_accounting_adjustments.json
+          TY-2025-26 onwards - Foreign Property Zero Adjustments:
+            value:
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def3/submit_foreign_property_accounting_adjustments_zero.json
 
   responses:
     200:
@@ -153,6 +155,10 @@ post:
               $ref: ./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid
             RULE_INCORRECT_GOV_TEST_SCENARIO:
               $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
+            RULE_ZERO_ADJUSTMENTS_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleZeroAdjustmentsInvalid"
+            RULE_BOTH_ADJUSTMENTS_SUPPLIED:
+                $ref: "./common/errors.yaml#/components/examples/ruleBothAdjustmentsSupplied"
 
     403:
       description: Forbidden

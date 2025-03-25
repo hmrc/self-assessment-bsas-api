@@ -112,6 +112,11 @@
               }
             },
             "additionalProperties": false
+          },
+          "zeroAdjustments": {
+            "type": "boolean",
+            "description": "Indicates zero adjustments for all income and expenses. The value can only be set to true.",
+            "enum": [true]
           }
         },
         "required": [
