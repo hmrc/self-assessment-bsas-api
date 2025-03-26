@@ -1,8 +1,5 @@
 {
-  "foreignProperty": [
-    {
-      "countryCode": "FRA",
-      "zeroAdjustments": true
-    }
-  ]
+  "foreignProperty": {
+  "zeroAdjustments": true
+}
 }
