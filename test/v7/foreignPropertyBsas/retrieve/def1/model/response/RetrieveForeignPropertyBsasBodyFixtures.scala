@@ -206,6 +206,12 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
+  lazy val zeroAdjustmentsDesJson: JsValue = Json.parse(
+    s"""{
+       |  "zeroAdjustments": true
+       |}""".stripMargin
+  )
+
   def retrieveForeignPropertyBsasDesFhlJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataDesJson(taxYear)},
@@ -216,12 +222,32 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
+  def retrieveForeignPropertyBsasDesZeroAdjustmentsFhlJson(taxYear: Int = 2024): JsValue = Json.parse(
+    s"""{
+       |  "metadata": ${metadataDesJson(taxYear)},
+       |  "inputs": $inputsDesFhlJson,
+       |  "adjustableSummaryCalculation": $summaryCalculationDesFhlJson,
+       |  "adjustments": $zeroAdjustmentsDesJson,
+       |  "adjustedSummaryCalculation": $summaryCalculationDesFhlJson
+       |}""".stripMargin
+  )
+
   def retrieveForeignPropertyBsasDesJson(taxYear: Int = 2024): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataDesJson(taxYear)},
        |  "inputs": $inputsDesJson,
        |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
        |  "adjustments": [$adjustmentsDesJson],
+       |  "adjustedSummaryCalculation": $summaryCalculationDesJson
+       |}""".stripMargin
+  )
+
+  def retrieveForeignPropertyBsasDesZeroAdjustmentsJson(taxYear: Int = 2024): JsValue = Json.parse(
+    s"""{
+       |  "metadata": ${metadataDesJson(taxYear)},
+       |  "inputs": $inputsDesJson,
+       |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
+       |  "adjustments": $zeroAdjustmentsDesJson,
        |  "adjustedSummaryCalculation": $summaryCalculationDesJson
        |}""".stripMargin
   )
@@ -440,6 +466,12 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
+  lazy val zeroAdjustmentsMtdJson: JsValue = Json.parse(
+    s"""{
+       |  "zeroAdjustments": true
+       |}""".stripMargin
+  )
+
   lazy val adjustmentsMtdJson: JsValue = Json.parse(
     s"""{
        |  "countryLevelDetail": [$adjustmentsCountryLevelDetailMtdJson]
@@ -456,12 +488,32 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
+  def retrieveForeignPropertyBsasMtdFhlZeroAdjustmentsJson(taxYear: String = "2023-24"): JsValue = Json.parse(
+    s"""{
+       |  "metadata": ${metadataMtdJson(taxYear)},
+       |  "inputs": $inputsMtdFhlJson,
+       |  "adjustableSummaryCalculation": $summaryCalculationMtdFhlJson,
+       |  "adjustments": $zeroAdjustmentsMtdJson,
+       |  "adjustedSummaryCalculation": $summaryCalculationMtdFhlJson
+       |}""".stripMargin
+  )
+
   def retrieveForeignPropertyBsasMtdJson(taxYear: String = "2023-24"): JsValue = Json.parse(
     s"""{
        |  "metadata": ${metadataMtdJson(taxYear)},
        |  "inputs": $inputsMtdJson,
        |  "adjustableSummaryCalculation": $summaryCalculationMtdJson,
        |  "adjustments": $adjustmentsMtdJson,
+       |  "adjustedSummaryCalculation": $summaryCalculationMtdJson
+       |}""".stripMargin
+  )
+
+  def retrieveForeignPropertyBsasMtdZeroAdjustmentsJson(taxYear: String = "2023-24"): JsValue = Json.parse(
+    s"""{
+       |  "metadata": ${metadataMtdJson(taxYear)},
+       |  "inputs": $inputsMtdJson,
+       |  "adjustableSummaryCalculation": $summaryCalculationMtdJson,
+       |  "adjustments": $zeroAdjustmentsMtdJson,
        |  "adjustedSummaryCalculation": $summaryCalculationMtdJson
        |}""".stripMargin
   )
@@ -646,28 +698,39 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     countryLevelDetail = None,
     countryCode = None,
     income = Some(parsedFhlAdjustmentsIncome),
-    expenses = Some(parsedFhlAdjustmentsExpenses)
+    expenses = Some(parsedFhlAdjustmentsExpenses),
+    zeroAdjustments = None
   )
 
   lazy val parsedAdjustments: Adjustments = Adjustments(
     countryLevelDetail = None,
     countryCode = Some("AFG"),
     income = Some(parsedAdjustmentsIncome),
-    expenses = Some(parsedAdjustmentsExpenses)
+    expenses = Some(parsedAdjustmentsExpenses),
+    zeroAdjustments = None
+  )
+
+  lazy val parsedZeroAdjustments: Adjustments = Adjustments(
+    countryLevelDetail = None,
+    countryCode = None,
+    income = None,
+    expenses = None,
+    zeroAdjustments = Some(true)
   )
 
   lazy val parsedAdjustmentsSeq: Adjustments = Adjustments(
     countryLevelDetail = Some(
-      List(
-        Adjustments(
-          countryLevelDetail = None,
-          countryCode = parsedAdjustments.countryCode,
-          income = parsedAdjustments.income,
-          expenses = parsedAdjustments.expenses
-        ))),
+      List(Adjustments(
+        countryLevelDetail = None,
+        countryCode = parsedAdjustments.countryCode,
+        income = parsedAdjustments.income,
+        expenses = parsedAdjustments.expenses,
+        zeroAdjustments = None
+      ))),
     countryCode = None,
     income = None,
-    expenses = None
+    expenses = None,
+    zeroAdjustments = None
   )
 
   lazy val parsedFhlRetrieveForeignPropertyBsasResponse: Def1_RetrieveForeignPropertyBsasResponse = Def1_RetrieveForeignPropertyBsasResponse(
@@ -678,6 +741,15 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     adjustedSummaryCalculation = Some(parsedFhlsummaryCalculation)
   )
 
+  lazy val parsedFhlRetrieveForeignPropertyBsasZeroAdjustmentsResponse: Def1_RetrieveForeignPropertyBsasResponse =
+    Def1_RetrieveForeignPropertyBsasResponse(
+      metadata = parsedMetadata,
+      inputs = parsedFhlInputs,
+      adjustableSummaryCalculation = parsedFhlsummaryCalculation,
+      adjustments = Some(parsedZeroAdjustments),
+      adjustedSummaryCalculation = Some(parsedFhlsummaryCalculation)
+    )
+
   lazy val parsedRetrieveForeignPropertyBsasResponse: Def1_RetrieveForeignPropertyBsasResponse = Def1_RetrieveForeignPropertyBsasResponse(
     metadata = parsedMetadata,
     inputs = parsedInputs,
@@ -685,6 +757,15 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     adjustments = Some(parsedAdjustmentsSeq),
     adjustedSummaryCalculation = Some(parsedSummaryCalculation)
   )
+
+  lazy val parsedRetrieveForeignPropertyBsasZeroAdjustmentsResponse: Def1_RetrieveForeignPropertyBsasResponse =
+    Def1_RetrieveForeignPropertyBsasResponse(
+      metadata = parsedMetadata,
+      inputs = parsedInputs,
+      adjustableSummaryCalculation = parsedSummaryCalculation,
+      adjustments = Some(parsedZeroAdjustments),
+      adjustedSummaryCalculation = Some(parsedSummaryCalculation)
+    )
 
   def parsedRetrieveForeignPropertyBsasResponseWith(typeOfBusinessWithFHL: TypeOfBusinessWithFHL): Def1_RetrieveForeignPropertyBsasResponse =
     Def1_RetrieveForeignPropertyBsasResponse(

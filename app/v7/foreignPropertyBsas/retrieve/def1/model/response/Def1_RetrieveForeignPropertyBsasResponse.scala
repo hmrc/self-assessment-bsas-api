@@ -46,7 +46,7 @@ object Def1_RetrieveForeignPropertyBsasResponse {
         if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.reads
       )
 
-      adjustments <- if (isFhl) fhlEeaAdjustmentsReads(json) else adjustmentsReads(json)
+      adjustments <- if (isFhl) adjustmentsReadsFhlEea(json) else adjustmentsReadsNonFhl(json)
 
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation](
         if (isFhl) SummaryCalculation.readsFhl else SummaryCalculation.reads
@@ -59,13 +59,18 @@ object Def1_RetrieveForeignPropertyBsasResponse {
       adjustedSummaryCalculation = adjustedSummaryCalculation
     )
 
-  private def fhlEeaAdjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
-    (json \ "adjustments").validateOpt[Adjustments](Adjustments.readsFhl)
+  private def adjustmentsReadsFhlEea(json: JsValue): JsResult[Option[Adjustments]] = {
+    (json \ "adjustments")
+      .validateOpt[Adjustments](Adjustments.readsFhl)
+      .filter(_.exists(adj => adj.income.isDefined || adj.expenses.isDefined))
+      .orElse((json \ "adjustments").validateOpt[Adjustments](Adjustments.readsZeroAdjustments))
+  }
 
-  private def adjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+  private def adjustmentsReadsNonFhl(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments")
       .validateOpt[Seq[Adjustments]](Adjustments.readsSeq)
-      .map(s => Some(Adjustments(s, None, None, None)))
+      .map(s => Some(Adjustments(s, None, None, None, None)))
+      .orElse((json \ "adjustments").validateOpt[Adjustments](Adjustments.readsZeroAdjustments))
       .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
 
   implicit val writes: OWrites[Def1_RetrieveForeignPropertyBsasResponse] = Json.writes[Def1_RetrieveForeignPropertyBsasResponse]
