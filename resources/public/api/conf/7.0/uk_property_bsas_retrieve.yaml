@@ -35,6 +35,7 @@ get:
     | Before 2025-26               | DYNAMIC_UK_PROPERTY_FHL_CONSOLIDATED            |  Simulates success response with FHL adjusted summary and consolidated expenses.See below for details about dynamic scenarios.            |
     | Before 2025-26               | UK_FHL_PROPERTY_ALLOWANCE                       |  Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
     | Before 2025-26               | DYNAMIC_UK_FHL_PROPERTY_ALLOWANCE               |  Simulates success response with FHL adjusted summary and propertyAllowance. See below for details about dynamic scenarios.               |
+    | 2024-25 Onwards              | ZERO_ADJUSTMENTS                                |  Simulate the scenario where all income and expenses have zero adjustments.                                                               |
 
 
 
@@ -119,6 +120,10 @@ get:
               description: UK Property with Property Allowance Response
               value:
                 $ref: "./examples/retrieve_uk_property/def1a/retrieve_uk_property_allowance.json"
+            TY-2024-25-Zero-Adjustments-Response:
+              description: Zero Adjustments Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def1a/retrieve_zero_adjustments.json"
             TY-2025-26-UK-Property-Response:
               description: UK Property Response
               value:
@@ -131,6 +136,10 @@ get:
               description: UK Property with Property Allowance Response
               value:
                 $ref: "./examples/retrieve_uk_property/def2/retrieve_uk_property_allowance.json"
+            TY-2025-26-Zero-Adjustments-Response:
+              description: Zero Adjustments Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def2/retrieve_zero_adjustments.json"
 
 
     400:
