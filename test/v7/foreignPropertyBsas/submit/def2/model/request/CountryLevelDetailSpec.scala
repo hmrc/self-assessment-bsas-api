@@ -16,52 +16,61 @@
 
 package v7.foreignPropertyBsas.submit.def2.model.request
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import shared.utils.UnitSpec
 
-class FhlEeaSpec extends UnitSpec {
+class CountryLevelDetailSpec extends UnitSpec {
 
   val json: JsValue = Json.parse(
     """
       |{
+      |    "countryCode": "FRA",
       |    "income": {},
       |    "expenses": {}
       |}
     """.stripMargin
   )
 
-  val model: FhlEea = FhlEea(
-    Some(FhlIncome(None)),
-    Some(FhlEeaExpenses(None, None, None, None, None, None, None, None)),
-    None
+  val minimalJson: JsValue = Json.parse(
+    """
+      |{
+      |    "countryCode": "FRA"
+      |}
+    """.stripMargin
   )
 
-  val emptyModel: FhlEea = FhlEea(None, None, None)
+  val model: CountryLevelDetail = CountryLevelDetail(
+    countryCode = "FRA",
+    income = Some(ForeignPropertyIncome(None, None, None)),
+    expenses = Some(ForeignPropertyExpenses(None, None, None, None, None, None, None, None, None))
+  )
+
+  val minimalModel: CountryLevelDetail = CountryLevelDetail("FRA", None, None)
 
   "reads" when {
     "passed mtd json" should {
       "return the corresponding model" in {
-        json.as[FhlEea] shouldBe model
+        json.as[CountryLevelDetail] shouldBe model
       }
     }
 
-    "passed an empty JSON" should {
-      "return an empty model" in {
-        JsObject.empty.as[FhlEea] shouldBe emptyModel
+    "passed mtd JSON with only mandatory fields" should {
+      "return the corresponding model" in {
+        minimalJson.as[CountryLevelDetail] shouldBe minimalModel
       }
     }
   }
 
   "writes" when {
     "passed a model" should {
-      "return the downstream JSON" in {
+      "return the corresponding downstream JSON" in {
         Json.toJson(model) shouldBe json
       }
     }
 
-    "passed an empty model" should {
-      "return an empty JSON" in {
-        Json.toJson(emptyModel) shouldBe JsObject.empty
+    "passed a model with only mandatory fields" should {
+      "return the corresponding downstream JSON" in {
+        Json.toJson(minimalModel) shouldBe minimalJson
       }
     }
   }

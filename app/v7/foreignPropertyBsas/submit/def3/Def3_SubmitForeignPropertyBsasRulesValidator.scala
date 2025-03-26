@@ -19,11 +19,11 @@ package v7.foreignPropertyBsas.submit.def3
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits.toFoldableOps
-import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
+import common.errors._
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v7.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestData, ForeignProperty, ForeignPropertyExpenses}
+import v7.foreignPropertyBsas.submit.def3.model.request._
 
 object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_SubmitForeignPropertyBsasRequestData] {
 
@@ -31,12 +31,14 @@ object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_
       parsed: Def3_SubmitForeignPropertyBsasRequestData): Validated[Seq[MtdError], Def3_SubmitForeignPropertyBsasRequestData] = {
     import parsed.body
 
-    val (validatedForeignProperties, validatedDuplicateCountryCode) = body.foreignProperty match {
-      case Some(foreignProperties) =>
-        val foreignPropertiesWithIndex = foreignProperties.zipWithIndex.toList
+    val validatedZeroAdjustments = validateZeroAdjustments(body.foreignProperty)
+
+    val (validatedCountryLevelDetails, validatedDuplicateCountryCode) = body.foreignProperty match {
+      case Some(foreignProperty) =>
+        val countryLevelDetailsWithIndex = foreignProperty.countryLevelDetail.getOrElse(Seq.empty).zipWithIndex
         (
-          validateForeignProperties(foreignPropertiesWithIndex),
-          duplicateCountryCodeValidation(foreignPropertiesWithIndex)
+          validateCountryLevelDetails(countryLevelDetailsWithIndex),
+          duplicateCountryCodeValidation(countryLevelDetailsWithIndex)
         )
 
       case None =>
@@ -44,9 +46,33 @@ object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_
     }
 
     combine(
-      validatedForeignProperties,
+      validatedZeroAdjustments,
+      validatedCountryLevelDetails,
       validatedDuplicateCountryCode
     ).onSuccess(parsed)
+  }
+
+  private def validateZeroAdjustments(foreignProperty: Option[ForeignProperty]): Validated[Seq[MtdError], Unit] = {
+    val zeroAdjustments: Option[Boolean] = foreignProperty.flatMap(_.zeroAdjustments)
+    val hasAdjustableFields: Boolean = foreignProperty.exists { prop =>
+      prop.countryLevelDetail.exists(_.exists(detail => detail.income.isDefined || detail.expenses.isDefined))
+    }
+
+    (zeroAdjustments, hasAdjustableFields) match {
+      case (Some(true), true) => Invalid(List(RuleBothAdjustmentsSuppliedError.withPath("/foreignProperty")))
+
+      case (Some(false), true) =>
+        Invalid(
+          List(
+            RuleBothAdjustmentsSuppliedError.withPath("/foreignProperty"),
+            RuleZeroAdjustmentsInvalidError.withPath("/foreignProperty/zeroAdjustments")
+          )
+        )
+
+      case (Some(false), false) => Invalid(List(RuleZeroAdjustmentsInvalidError.withPath("/foreignProperty/zeroAdjustments")))
+
+      case _ => valid
+    }
   }
 
   private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
@@ -55,18 +81,17 @@ object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
-  private def validateForeignProperties(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
-    foreignProperties.traverse_ { case (foreignProperty, i) =>
-      validateForeignProperty(foreignProperty, i)
-        .combine(validateForeignPropertyConsolidatedExpenses(foreignProperty, i))
+  private def validateCountryLevelDetails(countryLevelDetails: Seq[(CountryLevelDetail, Int)]): Validated[Seq[MtdError], Unit] =
+    countryLevelDetails.traverse_ { case (countryLevelDetail, i) =>
+      validateCountryLevelDetail(countryLevelDetail, i)
+        .combine(validateCountryLevelDetailConsolidatedExpenses(countryLevelDetail, i))
     }
-  }
 
-  private def duplicateCountryCodeValidation(foreignProperties: Seq[(ForeignProperty, Int)]): Validated[Seq[MtdError], Unit] = {
+  private def duplicateCountryCodeValidation(countryLevelDetails: Seq[(CountryLevelDetail, Int)]): Validated[Seq[MtdError], Unit] = {
     val duplicateErrors = {
-      foreignProperties
+      countryLevelDetails
         .map { case (entry, idx) =>
-          (entry.countryCode, s"/foreignProperty/$idx/countryCode")
+          (entry.countryCode, s"/foreignProperty/countryLevelDetail/$idx/countryCode")
         }
         .groupBy(_._1)
         .collect {
@@ -75,46 +100,41 @@ object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_
         }
     }
 
-    if (duplicateErrors.nonEmpty)
-      Invalid(duplicateErrors.toList)
-    else
-      valid
+    if (duplicateErrors.nonEmpty) Invalid(duplicateErrors.toList) else valid
   }
 
-  private def validateForeignProperty(foreignProperty: ForeignProperty, index: Int): Validated[Seq[MtdError], Unit] = {
+  private def validateCountryLevelDetail(countryLevelDetail: CountryLevelDetail, index: Int): Validated[Seq[MtdError], Unit] = {
 
-    def path(suffix: String) = s"/foreignProperty/$index/$suffix"
+    def path(suffix: String) = s"/foreignProperty/countryLevelDetail/$index/$suffix"
 
     combine(
-      ResolveParsedCountryCode(foreignProperty.countryCode, path("countryCode")),
-      resolveMaybeNegativeNumber(path("income/totalRentsReceived"), foreignProperty.income.flatMap(_.totalRentsReceived)),
-      resolveMaybeNegativeNumber(path("income/premiumsOfLeaseGrant"), foreignProperty.income.flatMap(_.premiumsOfLeaseGrant)),
-      resolveMaybeNegativeNumber(path("income/otherPropertyIncome"), foreignProperty.income.flatMap(_.otherPropertyIncome)),
-      resolveMaybeNegativeNumber(path("expenses/premisesRunningCosts"), foreignProperty.expenses.flatMap(_.premisesRunningCosts)),
-      resolveMaybeNegativeNumber(path("expenses/repairsAndMaintenance"), foreignProperty.expenses.flatMap(_.repairsAndMaintenance)),
-      resolveMaybeNegativeNumber(path("expenses/financialCosts"), foreignProperty.expenses.flatMap(_.financialCosts)),
-      resolveMaybeNegativeNumber(path("expenses/professionalFees"), foreignProperty.expenses.flatMap(_.professionalFees)),
-      resolveMaybeNegativeNumber(path("expenses/travelCosts"), foreignProperty.expenses.flatMap(_.travelCosts)),
-      resolveMaybeNegativeNumber(path("expenses/costOfServices"), foreignProperty.expenses.flatMap(_.costOfServices)),
-      resolveNonNegativeNumber(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
-      resolveMaybeNegativeNumber(path("expenses/other"), foreignProperty.expenses.flatMap(_.other)),
-      resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), foreignProperty.expenses.flatMap(_.consolidatedExpenses))
+      ResolveParsedCountryCode(countryLevelDetail.countryCode, path("countryCode")),
+      resolveMaybeNegativeNumber(path("income/totalRentsReceived"), countryLevelDetail.income.flatMap(_.totalRentsReceived)),
+      resolveMaybeNegativeNumber(path("income/premiumsOfLeaseGrant"), countryLevelDetail.income.flatMap(_.premiumsOfLeaseGrant)),
+      resolveMaybeNegativeNumber(path("income/otherPropertyIncome"), countryLevelDetail.income.flatMap(_.otherPropertyIncome)),
+      resolveMaybeNegativeNumber(path("expenses/premisesRunningCosts"), countryLevelDetail.expenses.flatMap(_.premisesRunningCosts)),
+      resolveMaybeNegativeNumber(path("expenses/repairsAndMaintenance"), countryLevelDetail.expenses.flatMap(_.repairsAndMaintenance)),
+      resolveMaybeNegativeNumber(path("expenses/financialCosts"), countryLevelDetail.expenses.flatMap(_.financialCosts)),
+      resolveMaybeNegativeNumber(path("expenses/professionalFees"), countryLevelDetail.expenses.flatMap(_.professionalFees)),
+      resolveMaybeNegativeNumber(path("expenses/travelCosts"), countryLevelDetail.expenses.flatMap(_.travelCosts)),
+      resolveMaybeNegativeNumber(path("expenses/costOfServices"), countryLevelDetail.expenses.flatMap(_.costOfServices)),
+      resolveNonNegativeNumber(path("expenses/residentialFinancialCost"), countryLevelDetail.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber(path("expenses/other"), countryLevelDetail.expenses.flatMap(_.other)),
+      resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), countryLevelDetail.expenses.flatMap(_.consolidatedExpenses))
     )
   }
 
-  private def validateForeignPropertyConsolidatedExpenses(foreignProperty: ForeignProperty, index: Int): Validated[Seq[MtdError], Unit] = {
-
-    foreignProperty.expenses
+  private def validateCountryLevelDetailConsolidatedExpenses(countryLevelDetail: CountryLevelDetail, index: Int): Validated[Seq[MtdError], Unit] =
+    countryLevelDetail.expenses
       .collect {
         case expenses if expenses.consolidatedExpenses.isDefined =>
           expenses match {
             case ForeignPropertyExpenses(None, None, None, None, None, None, _, None, Some(_)) =>
               valid
             case _ =>
-              Invalid(List(RuleBothExpensesError.copy(paths = Some(List(s"/foreignProperty/$index/expenses")))))
+              Invalid(List(RuleBothExpensesError.copy(paths = Some(List(s"/foreignProperty/countryLevelDetail/$index/expenses")))))
           }
       }
       .getOrElse(valid)
-  }
 
 }

@@ -20,159 +20,226 @@ import play.api.libs.json.{JsValue, Json}
 
 object SubmitForeignPropertyBsasFixtures {
 
-  val mtdRequestForeignPropertyFull: JsValue = Json.parse("""
+  val mtdRequestForeignPropertyFull: JsValue = Json.parse(
+    """
       |{
-      |   "foreignProperty":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "totalRentsReceived": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "consolidatedExpenses": 4.12,
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": 10.12,
-      |              "other": 11.12,
-      |              "travelCosts": 12.12
-      |          }
-      |       }
-      |    ]
+      |    "foreignProperty": {
+      |        "countryLevelDetail": [
+      |            {
+      |                "countryCode": "FRA",
+      |                "income": {
+      |                    "totalRentsReceived": 1.12,
+      |                    "premiumsOfLeaseGrant": 2.12,
+      |                    "otherPropertyIncome": 3.12
+      |                },
+      |                "expenses": {
+      |                    "consolidatedExpenses": 4.12,
+      |                    "premisesRunningCosts": 5.12,
+      |                    "repairsAndMaintenance": 6.12,
+      |                    "financialCosts": 7.12,
+      |                    "professionalFees": 8.12,
+      |                    "costOfServices": 9.12,
+      |                    "residentialFinancialCost": 10.12,
+      |                    "other": 11.12,
+      |                    "travelCosts": 12.12
+      |                }
+      |            }
+      |        ]
+      |    }
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
-  val mtdRequestForeignPropertyValid: JsValue = Json.parse("""
+  val mtdRequestForeignPropertyValid: JsValue = Json.parse(
+    """
       |{
-      |   "foreignProperty":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "totalRentsReceived": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": 10.12,
-      |              "other": 11.12,
-      |              "travelCosts": 12.12
-      |          }
-      |       }
-      |    ]
+      |    "foreignProperty": {
+      |        "countryLevelDetail": [
+      |            {
+      |                "countryCode": "FRA",
+      |                "income": {
+      |                    "totalRentsReceived": 1.12,
+      |                    "premiumsOfLeaseGrant": 2.12,
+      |                    "otherPropertyIncome": 3.12
+      |                },
+      |                "expenses": {
+      |                    "premisesRunningCosts": 5.12,
+      |                    "repairsAndMaintenance": 6.12,
+      |                    "financialCosts": 7.12,
+      |                    "professionalFees": 8.12,
+      |                    "costOfServices": 9.12,
+      |                    "residentialFinancialCost": 10.12,
+      |                    "other": 11.12,
+      |                    "travelCosts": 12.12
+      |                }
+      |            }
+      |        ]
+      |    }
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
-  val mtdRequestForeignPropertyInvalidResidentialCost: JsValue = Json.parse("""
+  val mtdRequestForeignPropertyInvalidResidentialCost: JsValue = Json.parse(
+    """
       |{
-      |   "foreignProperty":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "totalRentsReceived": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": -10.12,
-      |              "other": 11.12,
-      |              "travelCosts": 12.12
-      |          }
-      |       }
-      |    ]
+      |    "foreignProperty": {
+      |        "countryLevelDetail": [
+      |            {
+      |                "countryCode": "FRA",
+      |                "income": {
+      |                    "totalRentsReceived": 1.12,
+      |                    "premiumsOfLeaseGrant": 2.12,
+      |                    "otherPropertyIncome": 3.12
+      |                },
+      |                "expenses": {
+      |                    "premisesRunningCosts": 5.12,
+      |                    "repairsAndMaintenance": 6.12,
+      |                    "financialCosts": 7.12,
+      |                    "professionalFees": 8.12,
+      |                    "costOfServices": 9.12,
+      |                    "residentialFinancialCost": -10.12,
+      |                    "other": 11.12,
+      |                    "travelCosts": 12.12
+      |                }
+      |            }
+      |        ]
+      |    }
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
-  val downstreamRequestForeignPropertyFull: JsValue = Json.parse("""
+  val downstreamRequestForeignPropertyFull: JsValue = Json.parse(
+    """
       |{
-      |   "incomeSourceType": "15",
-      |   "adjustments":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "rent": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "consolidatedExpenses": 4.12,
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": 10.12,
-      |              "other": 11.12,
-      |              "travelCosts": 12.12
-      |          }
-      |       }
+      |    "incomeSourceType": "15",
+      |    "adjustments": [
+      |        {
+      |            "countryCode": "FRA",
+      |            "income": {
+      |                "rent": 1.12,
+      |                "premiumsOfLeaseGrant": 2.12,
+      |                "otherPropertyIncome": 3.12
+      |            },
+      |            "expenses": {
+      |                "consolidatedExpenses": 4.12,
+      |                "premisesRunningCosts": 5.12,
+      |                "repairsAndMaintenance": 6.12,
+      |                "financialCosts": 7.12,
+      |                "professionalFees": 8.12,
+      |                "costOfServices": 9.12,
+      |                "residentialFinancialCost": 10.12,
+      |                "other": 11.12,
+      |                "travelCosts": 12.12
+      |            }
+      |        }
       |    ]
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
   val requestForeignPropertyFull: Def3_SubmitForeignPropertyBsasRequestBody = Def3_SubmitForeignPropertyBsasRequestBody(
     foreignProperty = Some(
-      List(
-        ForeignProperty(
-          countryCode = "FRA",
-          income = Some(
-            ForeignPropertyIncome(
-              totalRentsReceived = Some(1.12),
-              premiumsOfLeaseGrant = Some(2.12),
-              otherPropertyIncome = Some(3.12)
-            )),
-          expenses = Some(ForeignPropertyExpenses(
-            consolidatedExpenses = Some(4.12),
-            premisesRunningCosts = Some(5.12),
-            repairsAndMaintenance = Some(6.12),
-            financialCosts = Some(7.12),
-            professionalFees = Some(8.12),
-            costOfServices = Some(9.12),
-            residentialFinancialCost = Some(10.12),
-            other = Some(11.12),
-            travelCosts = Some(12.12)
-          ))
-        )
-      ))
+      ForeignProperty(
+        countryLevelDetail = Some(
+          Seq(
+            CountryLevelDetail(
+              countryCode = "FRA",
+              income = Some(
+                ForeignPropertyIncome(
+                  totalRentsReceived = Some(1.12),
+                  premiumsOfLeaseGrant = Some(2.12),
+                  otherPropertyIncome = Some(3.12)
+                )
+              ),
+              expenses = Some(
+                ForeignPropertyExpenses(
+                  consolidatedExpenses = Some(4.12),
+                  premisesRunningCosts = Some(5.12),
+                  repairsAndMaintenance = Some(6.12),
+                  financialCosts = Some(7.12),
+                  professionalFees = Some(8.12),
+                  costOfServices = Some(9.12),
+                  residentialFinancialCost = Some(10.12),
+                  other = Some(11.12),
+                  travelCosts = Some(12.12)
+                )
+              )
+            )
+          )
+        ),
+        zeroAdjustments = None
+      )
+    )
   )
 
-  val downstreamRequestValid: JsValue = Json.parse("""
+  val downstreamRequestValid: JsValue = Json.parse(
+    """
       |{
-      |   "incomeSourceType": "15",
-      |   "adjustments":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "rent": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "travelCosts": 12.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": 10.12,
-      |              "other": 11.12
-      |          }
-      |       }
+      |    "incomeSourceType": "15",
+      |    "adjustments": [
+      |        {
+      |            "countryCode": "FRA",
+      |            "income": {
+      |                "rent": 1.12,
+      |                "premiumsOfLeaseGrant": 2.12,
+      |                "otherPropertyIncome": 3.12
+      |            },
+      |            "expenses": {
+      |                "premisesRunningCosts": 5.12,
+      |                "repairsAndMaintenance": 6.12,
+      |                "financialCosts": 7.12,
+      |                "professionalFees": 8.12,
+      |                "travelCosts": 12.12,
+      |                "costOfServices": 9.12,
+      |                "residentialFinancialCost": 10.12,
+      |                "other": 11.12
+      |            }
+      |        }
       |    ]
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
+
+  val downstreamRequestWithOnlyZeroAdjustments: JsValue = Json.parse(
+    """
+      |{
+      |    "incomeSourceType": "15",
+      |    "adjustments": {
+      |        "zeroAdjustments": true
+      |    }
+      |}
+    """.stripMargin
+  )
+
+  def mtdRequestWithOnlyZeroAdjustments(zeroAdjustments: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |    "foreignProperty": {
+      |        "zeroAdjustments": $zeroAdjustments
+      |    }
+      |}
+    """.stripMargin
+  )
+
+  def mtdRequestWithZeroAndOtherAdjustments(zeroAdjustments: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |    "foreignProperty": {
+      |        "countryLevelDetail": [
+      |            {
+      |                "countryCode": "FRA",
+      |                "income": {
+      |                    "totalRentsReceived": 1000.25
+      |                },
+      |                "expenses": {
+      |                    "premisesRunningCosts": 2000.25
+      |                }
+      |            }
+      |        ],
+      |        "zeroAdjustments": $zeroAdjustments
+      |    }
+      |}
+    """.stripMargin
+  )
 
 }

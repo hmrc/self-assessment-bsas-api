@@ -45,52 +45,72 @@ class SubmitForeignPropertyBsasControllerSpec
     with MockSharedAppConfig {
 
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
-  private val rawTaxYear    = "2023-24"
+  private val rawTaxYear    = "2025-26"
   private val taxYear       = TaxYear.fromMtd(rawTaxYear)
 
   private val requestJson = Json.parse(
-    """|{
-       |    "foreignProperty": {
-       |        "income": {
-       |            "rentIncome": 123.12,
-       |            "premiumsOfLeaseGrant": 123.12,
-       |            "otherPropertyIncome": 123.12
-       |        },
-       |        "expenses": {
-       |            "premisesRunningCosts": 123.12,
-       |            "repairsAndMaintenance": 123.12,
-       |            "financialCosts": 123.12,
-       |            "professionalFees": 123.12,
-       |            "travelCosts": 123.12,
-       |            "costOfServices": 123.12,
-       |            "residentialFinancialCost": 123.12,
-       |            "other": 123.12
-       |        }
-       |    }
-       |}
-       |""".stripMargin
+    """
+      |{
+      |    "foreignProperty": {
+      |        "countryLevelDetail": [
+      |            {
+      |                "countryCode": "FRA",
+      |                "income": {
+      |                    "totalRentsReceived": 123.12,
+      |                    "premiumsOfLeaseGrant": 123.12,
+      |                    "otherPropertyIncome": 123.12
+      |                },
+      |                "expenses": {
+      |                    "premisesRunningCosts": 123.12,
+      |                    "repairsAndMaintenance": 123.12,
+      |                    "financialCosts": 123.12,
+      |                    "professionalFees": 123.12,
+      |                    "travelCosts": 123.12,
+      |                    "costOfServices": 123.12,
+      |                    "residentialFinancialCost": 123.12,
+      |                    "other": 123.12
+      |                }
+      |            }
+      |        ]
+      |    }
+      |}
+    """.stripMargin
   )
 
   private val foreignProperty: ForeignProperty =
     ForeignProperty(
-      "FRA",
-      Some(ForeignPropertyIncome(Some(123.12), Some(123.12), Some(123.12))),
-      Some(
-        ForeignPropertyExpenses(
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          Some(123.12),
-          None
-        ))
+      countryLevelDetail = Some(
+        Seq(
+          CountryLevelDetail(
+            countryCode = "FRA",
+            income = Some(
+              ForeignPropertyIncome(
+                totalRentsReceived = Some(123.12),
+                premiumsOfLeaseGrant = Some(123.12),
+                otherPropertyIncome = Some(123.12)
+              )
+            ),
+            expenses = Some(
+              ForeignPropertyExpenses(
+                premisesRunningCosts = Some(123.12),
+                repairsAndMaintenance = Some(123.12),
+                financialCosts = Some(123.12),
+                professionalFees = Some(123.12),
+                costOfServices = Some(123.12),
+                residentialFinancialCost = Some(123.12),
+                other = Some(123.12),
+                travelCosts = Some(123.12),
+                consolidatedExpenses = None
+              )
+            )
+          )
+        )
+      ),
+      zeroAdjustments = None
     )
 
   val requestBody: Def3_SubmitForeignPropertyBsasRequestBody =
-    Def3_SubmitForeignPropertyBsasRequestBody(Some(List(foreignProperty)))
+    Def3_SubmitForeignPropertyBsasRequestBody(Some(foreignProperty))
 
   private val requestData =
     Def3_SubmitForeignPropertyBsasRequestData(parsedNino, calculationId, taxYear, requestBody)

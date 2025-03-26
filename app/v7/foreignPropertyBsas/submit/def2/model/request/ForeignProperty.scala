@@ -17,17 +17,9 @@
 package v7.foreignPropertyBsas.submit.def2.model.request
 
 import play.api.libs.json.{Format, Json}
-import shapeless.HNil
-import shared.utils.EmptinessChecker
 
-case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses])
+case class ForeignProperty(countryLevelDetail: Option[Seq[CountryLevelDetail]], zeroAdjustments: Option[Boolean])
 
 object ForeignProperty {
-
-  implicit val emptinessChecker: EmptinessChecker[ForeignProperty] = EmptinessChecker.use { body =>
-    "income"     -> body.income ::
-      "expenses" -> body.expenses :: HNil
-  }
-
   implicit val format: Format[ForeignProperty] = Json.format[ForeignProperty]
 }

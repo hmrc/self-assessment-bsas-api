@@ -16,10 +16,18 @@
 
 package v7.foreignPropertyBsas.submit.def2.model.request
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json}
+import shapeless.HNil
+import shared.utils.EmptinessChecker
 
-case class FhlEea(income: Option[FhlIncome], expenses: Option[FhlEeaExpenses], zeroAdjustments: Option[Boolean])
+case class CountryLevelDetail(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses])
 
-object FhlEea {
-  implicit val format: OFormat[FhlEea] = Json.format[FhlEea]
+object CountryLevelDetail {
+
+  implicit val emptinessChecker: EmptinessChecker[CountryLevelDetail] = EmptinessChecker.use { body =>
+    "income"     -> body.income ::
+      "expenses" -> body.expenses :: HNil
+  }
+
+  implicit val format: Format[CountryLevelDetail] = Json.format[CountryLevelDetail]
 }

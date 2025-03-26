@@ -21,7 +21,7 @@ import shared.utils.JsonWritesUtil
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestBody
 
 case class Def3_SubmitForeignPropertyBsasRequestBody(
-    foreignProperty: Option[Seq[ForeignProperty]]
+    foreignProperty: Option[ForeignProperty]
 ) extends SubmitForeignPropertyBsasRequestBody
 
 object Def3_SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
@@ -29,14 +29,19 @@ object Def3_SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
 
   implicit val writes: OWrites[Def3_SubmitForeignPropertyBsasRequestBody] = new OWrites[Def3_SubmitForeignPropertyBsasRequestBody] {
 
-    override def writes(o: Def3_SubmitForeignPropertyBsasRequestBody): JsObject = {
-      writeIfPresent(o.foreignProperty, incomeSourceType = "15")
-        .getOrElse(JsObject.empty)
-    }
+    override def writes(o: Def3_SubmitForeignPropertyBsasRequestBody): JsObject =
+      o.foreignProperty.map(writeForeignProperty).getOrElse(JsObject.empty)
 
-    private def writeIfPresent[A: Writes](oa: Option[A], incomeSourceType: String): Option[JsObject] =
-      oa.map { a =>
-        Json.obj("incomeSourceType" -> incomeSourceType, "adjustments" -> a)
+    private def writeForeignProperty(foreignProperty: ForeignProperty): JsObject =
+      foreignProperty.countryLevelDetail match {
+        case Some(details) =>
+          Json.obj("incomeSourceType" -> "15", "adjustments" -> details)
+
+        case None =>
+          Json.obj(
+            "incomeSourceType" -> "15",
+            "adjustments"      -> Json.obj("zeroAdjustments" -> foreignProperty.zeroAdjustments)
+          )
       }
 
   }
