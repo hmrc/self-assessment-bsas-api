@@ -32,4 +32,11 @@ class AdjustmentsSpec extends UnitSpec with JsonErrorValidators with RoundTripTe
     mtdAdjustmentsJson
   )(reads)
 
+  testRoundTrip(
+    "Zero Adjustments",
+    zeroAdjustmentsJson,
+    zerAdjustments,
+    mtdZeroAdjustmentsJson
+  )(reads)
+
 }

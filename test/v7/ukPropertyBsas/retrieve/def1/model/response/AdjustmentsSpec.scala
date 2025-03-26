@@ -39,4 +39,18 @@ class AdjustmentsSpec extends UnitSpec with JsonErrorValidators with RoundTripTe
     mtdAdjustmentsUkPropertyJson
   )(readsUkProperty)
 
+  testRoundTrip(
+    "Zero Adjustments FHL",
+    downstreamZeroAdjustmentsJson,
+    zeroAdjustmentsFhl,
+    mtdZeroAdjustmentsJson
+  )(readsFhl)
+
+  testRoundTrip(
+    "Zero Adjustments Uk Property",
+    downstreamZeroAdjustmentsJson,
+    zeroAdjustmentsUkProperty,
+    mtdZeroAdjustmentsJson
+  )(readsUkProperty)
+
 }
