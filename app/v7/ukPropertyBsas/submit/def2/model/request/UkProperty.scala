@@ -16,17 +16,10 @@
 
 package v7.ukPropertyBsas.submit.def2.model.request
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
-case class UkProperty(income: Option[Income], expenses: Option[Expenses])
+case class UkProperty(income: Option[Income], expenses: Option[Expenses], zeroAdjustments: Option[Boolean])
 
 object UkProperty {
-
-  implicit val reads: Reads[UkProperty] = (
-    (JsPath \ "income").readNullable[Income] and
-      (JsPath \ "expenses").readNullable[Expenses]
-  )(UkProperty.apply _)
-
-  implicit val writes: OWrites[UkProperty] = Json.writes[UkProperty]
+  implicit val format: OFormat[UkProperty] = Json.format[UkProperty]
 }

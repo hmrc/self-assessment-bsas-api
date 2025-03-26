@@ -18,7 +18,7 @@ package v7.ukPropertyBsas.submit.def3
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import common.errors.RuleBothExpensesError
+import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, RuleZeroAdjustmentsInvalidError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
@@ -28,6 +28,8 @@ object Def3_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def3_Submi
 
   def validateBusinessRules(parsed: Def3_SubmitUkPropertyBsasRequestData): Validated[Seq[MtdError], Def3_SubmitUkPropertyBsasRequestData] = {
     import parsed.body
+
+    val validatedZeroAdjustments = validateZeroAdjustments(body.ukProperty)
 
     val (validatedExpenses, validatedConsolidatedExpenses) = body.ukProperty match {
       case Some(ukProperty) =>
@@ -45,11 +47,34 @@ object Def3_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def3_Submi
     }
 
     combine(
+      validatedZeroAdjustments,
       validatedExpenses,
       validatedConsolidatedExpenses,
       validatedIncome
     ).onSuccess(parsed)
 
+  }
+
+  private def validateZeroAdjustments(ukProperty: Option[UkProperty]): Validated[Seq[MtdError], Unit] = {
+    val zeroAdjustments: Option[Boolean] = ukProperty.flatMap(_.zeroAdjustments)
+
+    val hasAdjustableFields: Boolean = ukProperty.exists(prop => prop.income.isDefined || prop.expenses.isDefined)
+
+    (zeroAdjustments, hasAdjustableFields) match {
+      case (Some(true), true) => Invalid(List(RuleBothAdjustmentsSuppliedError.withPath("/ukProperty")))
+
+      case (Some(false), true) =>
+        Invalid(
+          List(
+            RuleBothAdjustmentsSuppliedError.withPath("/ukProperty"),
+            RuleZeroAdjustmentsInvalidError.withPath("/ukProperty/zeroAdjustments")
+          )
+        )
+
+      case (Some(false), false) => Invalid(List(RuleZeroAdjustmentsInvalidError.withPath("/ukProperty/zeroAdjustments")))
+
+      case _ => valid
+    }
   }
 
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =

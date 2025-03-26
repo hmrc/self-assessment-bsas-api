@@ -33,10 +33,11 @@ class UkPropertySpec extends UnitSpec {
 
   private val ukProperty = UkProperty(
     Some(Income(None, None, None, None)),
-    Some(Expenses(None, None, None, None, None, None, None, None, None))
+    Some(Expenses(None, None, None, None, None, None, None, None, None)),
+    None
   )
 
-  private val emptyUkProperty = UkProperty(None, None)
+  private val emptyUkProperty = UkProperty(None, None, None)
 
   "reads" when {
     "given MTD json" should {

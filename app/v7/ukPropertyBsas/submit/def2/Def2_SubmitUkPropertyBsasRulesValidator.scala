@@ -18,7 +18,7 @@ package v7.ukPropertyBsas.submit.def2
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import common.errors.RuleBothExpensesError
+import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, RuleZeroAdjustmentsInvalidError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
@@ -28,6 +28,8 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
 
   def validateBusinessRules(parsed: Def2_SubmitUkPropertyBsasRequestData): Validated[Seq[MtdError], Def2_SubmitUkPropertyBsasRequestData] = {
     import parsed.body
+
+    val validatedZeroAdjustments = validateZeroAdjustments(body.ukProperty, body.furnishedHolidayLet)
 
     val (validatedFhl, validatedFhlConsolidated) = body.furnishedHolidayLet match {
       case Some(fhl) =>
@@ -50,11 +52,44 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
     }
 
     combine(
+      validatedZeroAdjustments,
       validatedFhl,
       validatedFhlConsolidated,
       validatedUkProperty,
       validatedUkPropertyConsolidated
     ).onSuccess(parsed)
+  }
+
+  private def validateZeroAdjustments(ukProperty: Option[UkProperty],
+                                      furnishedHolidayLet: Option[FurnishedHolidayLet]): Validated[Seq[MtdError], Unit] = {
+    val zeroAdjustmentsFromUkProperty: Option[Boolean] = ukProperty.flatMap(_.zeroAdjustments)
+    val zeroAdjustmentsFromFhl: Option[Boolean]        = furnishedHolidayLet.flatMap(_.zeroAdjustments)
+
+    val path: Option[String] =
+      zeroAdjustmentsFromUkProperty
+        .map(_ => "/ukProperty")
+        .orElse(zeroAdjustmentsFromFhl.map(_ => "/furnishedHolidayLet"))
+
+    val zeroAdjustments: Option[Boolean] = zeroAdjustmentsFromUkProperty.orElse(zeroAdjustmentsFromFhl)
+
+    val hasAdjustableFields: Boolean = ukProperty.exists(prop => prop.income.isDefined || prop.expenses.isDefined) ||
+      furnishedHolidayLet.exists(fhl => fhl.income.isDefined || fhl.expenses.isDefined)
+
+    (zeroAdjustments, hasAdjustableFields) match {
+      case (Some(true), true) => Invalid(List(RuleBothAdjustmentsSuppliedError.withPath(path.get)))
+
+      case (Some(false), true) =>
+        Invalid(
+          List(
+            RuleBothAdjustmentsSuppliedError.withPath(path.get),
+            RuleZeroAdjustmentsInvalidError.withPath(s"${path.get}/zeroAdjustments")
+          )
+        )
+
+      case (Some(false), false) => Invalid(List(RuleZeroAdjustmentsInvalidError.withPath(s"${path.get}/zeroAdjustments")))
+
+      case _ => valid
+    }
   }
 
   private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =

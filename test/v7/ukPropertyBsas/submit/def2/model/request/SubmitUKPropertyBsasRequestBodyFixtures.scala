@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.submit.def2.model.request
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 
 object SubmitUKPropertyBsasRequestBodyFixtures {
 
@@ -87,12 +87,11 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
           residentialFinancialCost = Some(11.45),
           other = Some(12.45),
           travelCosts = Some(13.45)
-        ))
+        )),
+        zeroAdjustments = None
       )),
     furnishedHolidayLet = None
   )
-
-  val ukPropertyBody: Def2_SubmitUkPropertyBsasRequestBody = requestUkPropertyFull
 
   val downstreamRequestUkPropertyFull: JsValue = Json.parse("""
       |{
@@ -118,18 +117,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |  }
       |}
       |""".stripMargin)
-
-  val ukPropertyExpensesAllFields: Option[JsObject] = Some(
-    Json.obj(
-      "premisesRunningCosts"     -> 6.45,
-      "repairsAndMaintenance"    -> 7.45,
-      "financialCosts"           -> 8.45,
-      "professionalFees"         -> 9.45,
-      "costOfServices"           -> 10.45,
-      "residentialFinancialCost" -> 11.45,
-      "other"                    -> 12.45,
-      "travelCosts"              -> 13.45
-    ))
 
   val mtdRequestFhlFull: JsValue = Json.parse("""
       |{
@@ -170,27 +157,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val fhlIncomeAllFields: Option[JsObject] = Some(Json.obj("totalRentsReceived" -> 1.45))
-
-  val fhlExpensesAllFields: Option[JsObject] = Some(
-    Json.obj(
-      "premisesRunningCosts"  -> 3.45,
-      "repairsAndMaintenance" -> 4.45,
-      "financialCosts"        -> 5.45,
-      "professionalFees"      -> 6.45,
-      "costOfServices"        -> 7.45,
-      "other"                 -> 8.45,
-      "travelCosts"           -> 9.45
-    ))
-
-  val ukPropertyIncomeAllFields: Option[JsObject] = Some(
-    Json.obj(
-      "totalRentsReceived"   -> 1.45,
-      "premiumsOfLeaseGrant" -> 2.45,
-      "reversePremiums"      -> 3.45,
-      "otherPropertyIncome"  -> 4.45
-    ))
-
   val requestFhlFull: Def2_SubmitUkPropertyBsasRequestBody = Def2_SubmitUkPropertyBsasRequestBody(
     ukProperty = None,
     furnishedHolidayLet = Some(
@@ -208,11 +174,10 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
           costOfServices = Some(7.45),
           other = Some(8.45),
           travelCosts = Some(9.45)
-        ))
+        )),
+        zeroAdjustments = None
       ))
   )
-
-  val fhlBody: Def2_SubmitUkPropertyBsasRequestBody = requestFhlFull
 
   val downstreamRequestFhlFull: JsValue = Json.parse("""
       |{
@@ -235,18 +200,41 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  def submitBsasRawDataBodyFHL(income: Option[JsObject] = None, expenses: Option[JsObject] = None): JsValue = {
-    Json.obj(
-      "furnishedHolidayLet" ->
-        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
-          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
-  }
+  def downstreamRequestWithOnlyZeroAdjustments(incomeSourceType: String): JsValue = Json.parse(
+    s"""
+      |{
+      |    "incomeSourceType": "$incomeSourceType",
+      |    "adjustments": {
+      |        "zeroAdjustments": true
+      |    }
+      |}
+    """.stripMargin
+  )
 
-  def submitBsasRawDataBodyUkProperty(income: Option[JsObject] = None, expenses: Option[JsObject] = None): JsValue = {
-    Json.obj(
-      "ukProperty" ->
-        (income.fold(Json.obj())(income => Json.obj("income" -> income)) ++
-          expenses.fold(Json.obj())(expenses => Json.obj("expenses" -> expenses))))
-  }
+  def mtdRequestWithOnlyZeroAdjustments(propertyType: String, zeroAdjustments: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |    "$propertyType": {
+      |        "zeroAdjustments": $zeroAdjustments
+      |    }
+      |}
+    """.stripMargin
+  )
+
+  def mtdRequestWithZeroAndOtherAdjustments(propertyType: String, zeroAdjustments: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |   "$propertyType": {
+      |        "zeroAdjustments": $zeroAdjustments,
+      |        "income": {
+      |            "totalRentsReceived": 1000.25
+      |        },
+      |        "expenses": {
+      |            "premisesRunningCosts": 2000.25
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
 
 }

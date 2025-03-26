@@ -90,8 +90,46 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
           other = Some(10.78),
           travelCosts = Some(20.45),
           consolidatedExpenses = None
-        ))
+        )),
+        zeroAdjustments = None
       ))
+  )
+
+  val downstreamRequestWithOnlyZeroAdjustments: JsValue = Json.parse(
+    """
+      |{
+      |    "incomeSourceType": "02",
+      |    "adjustments": {
+      |        "zeroAdjustments": true
+      |    }
+      |}
+    """.stripMargin
+  )
+
+  def mtdRequestWithOnlyZeroAdjustments(zeroAdjustments: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |    "ukProperty": {
+      |        "zeroAdjustments": $zeroAdjustments
+      |    }
+      |}
+    """.stripMargin
+  )
+
+  def mtdRequestWithZeroAndOtherAdjustments(zeroAdjustments: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |   "ukProperty": {
+      |        "zeroAdjustments": $zeroAdjustments,
+      |        "income": {
+      |            "totalRentsReceived": 1000.25
+      |        },
+      |        "expenses": {
+      |            "premisesRunningCosts": 2000.25
+      |        }
+      |    }
+      |}
+    """.stripMargin
   )
 
 }

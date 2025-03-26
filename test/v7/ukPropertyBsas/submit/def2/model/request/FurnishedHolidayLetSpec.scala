@@ -33,10 +33,11 @@ class FurnishedHolidayLetSpec extends UnitSpec {
 
   private val furnishedHolidayLet: FurnishedHolidayLet = FurnishedHolidayLet(
     Some(FHLIncome(None)),
-    Some(FHLExpenses(None, None, None, None, None, None, None, None))
+    Some(FHLExpenses(None, None, None, None, None, None, None, None)),
+    None
   )
 
-  private val emptyFurnishedHolidayLet: FurnishedHolidayLet = FurnishedHolidayLet(None, None)
+  private val emptyFurnishedHolidayLet: FurnishedHolidayLet = FurnishedHolidayLet(None, None, None)
 
   "reads" when {
     "given MTD json" should {
