@@ -9,7 +9,7 @@
   },
   "inputs": {
     "businessId": "XAIS12345678910",
-    "typeOfBusiness": "foreign-property-fhl-eea",
+    "typeOfBusiness": "foreign-property",
     "businessName": "My foreign property business",
     "accountingPeriodStartDate": "2024-04-06",
     "accountingPeriodEndDate": "2025-04-05",
