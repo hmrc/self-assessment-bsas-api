@@ -16,22 +16,15 @@
 
 package v7.selfEmploymentBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class Adjustments(
     income: Option[AdjustmentsIncome],
     expenses: Option[AdjustmentsExpenses],
-    additions: Option[AdjustmentsAdditions]
+    additions: Option[AdjustmentsAdditions],
+    zeroAdjustments: Option[Boolean]
 )
 
 object Adjustments {
-
-  implicit val reads: Reads[Adjustments] = (
-    (JsPath \ "income").readNullable[AdjustmentsIncome] and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses] and
-      (JsPath \ "additions").readNullable[AdjustmentsAdditions]
-  )(Adjustments.apply _)
-
-  implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
+  implicit val format: OFormat[Adjustments] = Json.format[Adjustments]
 }
