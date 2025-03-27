@@ -36,6 +36,7 @@ get:
     | Before 2025-26               | DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED     | Simulates success response with FHL adjusted summary and consolidated expenses.  <br><br> See below for details on DYNAMIC scenarios.    |
     | Before 2025-26               | FOREIGN_FHL_PROPERTY_ALLOWANCE                | Simulates success response with FHL adjusted summary and propertyAllowance.                                                              |
     | Before 2025-26               | DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE        | Simulates success response with FHL adjusted summary and propertyAllowance. <br><br> See below for details on DYNAMIC scenarios.         |
+    | 2024-25 onwards              | FOREIGN_PROPERTY_ZERO_ADJUSTMENTS             | Simulates the scenario where all income, expenses and additions have zero adjustments.                                                   |
     
     In each case where a scenario is prefixed by DYNAMIC_, the following response values will change based on the values submitted in the request:
       * metadata
@@ -93,49 +94,44 @@ get:
             - $ref: "./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json"
           examples:
             PRE-TY-2023-24-Foreign-Property-EEA-FHL:
-              description: Foreign Property EEA FHL
               value:
                 $ref: "./examples/retrieve_foreign_property/def1/retrieve_foreign_property_eeafhl.json"
             PRE-TY-2023-24-Foreign-Property-Non-FHL:
-              description: Foreign Property Non FHL
               value:
                 $ref: "./examples/retrieve_foreign_property/def1/retrieve_foreign_property_nonfhl.json"
             PRE-TY-2023-24-Foreign-Property-Consolidated-Expenses:
-              description: Foreign Property with Consolidated Expenses
               value:
                 $ref: "./examples/retrieve_foreign_property/def1/retrieve_foreign_property_consolidated.json"
             PRE-TY-2023-24-Foreign-Property-with-Property-Allowance:
-              description: Foreign Property with Property Allowance
               value:
                 $ref: "./examples/retrieve_foreign_property/def1/retrieve_foreign_property_allowance.json"
             TY-2024-25-Foreign-Property-EEA-FHL:
-              description: Foreign Property EEA FHL
               value:
                 $ref: "./examples/retrieve_foreign_property/def1a/retrieve_foreign_property_eeafhl.json"
             TY-2024-25-Foreign-Property-Non-FHL:
-              description: Foreign Property Non FHL
               value:
                 $ref: "./examples/retrieve_foreign_property/def1a/retrieve_foreign_property_nonfhl.json"
             TY-2024-25-Foreign-Property-Consolidated-Expenses:
-              description: Foreign Property with Consolidated Expenses
               value:
                 $ref: "./examples/retrieve_foreign_property/def1a/retrieve_foreign_property_consolidated.json"
             TY-2024-25-Foreign-Property-with-Property-Allowance:
-              description: Foreign Property with Property Allowance
               value:
                 $ref: "./examples/retrieve_foreign_property/def1a/retrieve_foreign_property_allowance.json"
+            TY-2024-25-Foreign-Property-Zero-Adjustments:
+              value:
+                $ref: "./examples/retrieve_foreign_property/def1a/retrieve_foreign_property_zero_adjustments.json"
             TY-2025-26-Foreign-Property:
-              description: Foreign Property
               value:
                 $ref: "./examples/retrieve_foreign_property/def2/retrieve_foreign_property.json"
             TY-2025-26-Foreign-Property-Consolidated-Expenses:
-              description: Foreign Property with Consolidated Expenses
               value:
                 $ref: "./examples/retrieve_foreign_property/def2/retrieve_foreign_property_consolidated.json"
             TY-2025-26-Foreign-Property-with-Property-Allowance:
-              description: Foreign Property with Property Allowance
               value:
                 $ref: "./examples/retrieve_foreign_property/def2/retrieve_foreign_property_allowance.json"
+            TY-2025-26-Foreign-Property-Zero-Adjustments:
+              value:
+                $ref: "./examples/retrieve_foreign_property/def2/retrieve_foreign_property_zero_adjustments.json"
 
     400:
       description: Bad request

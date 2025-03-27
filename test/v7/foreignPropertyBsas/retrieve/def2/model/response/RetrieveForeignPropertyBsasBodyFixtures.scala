@@ -162,12 +162,28 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
+  lazy val zeroAdjustmentsDesJson: JsValue = Json.parse(
+    """{
+       |  "zeroAdjustments": true
+       |}""".stripMargin
+  )
+
   lazy val retrieveForeignPropertyBsasDesJson: JsValue = Json.parse(
     s"""{
        |  "metadata": $metadataDesJson,
        |  "inputs": $inputsDesJson,
        |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
        |  "adjustments": [$adjustmentsDesJson],
+       |  "adjustedSummaryCalculation": $summaryCalculationDesJson
+       |}""".stripMargin
+  )
+
+  lazy val retrieveForeignPropertyBsasDesZeroAdjustmentJson: JsValue = Json.parse(
+    s"""{
+       |  "metadata": $metadataDesJson,
+       |  "inputs": $inputsDesJson,
+       |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
+       |  "adjustments": $zeroAdjustmentsDesJson,
        |  "adjustedSummaryCalculation": $summaryCalculationDesJson
        |}""".stripMargin
   )
@@ -305,14 +321,50 @@ object RetrieveForeignPropertyBsasBodyFixtures {
       |}""".stripMargin
   )
 
+  lazy val adjustmentsIncomeMtdFhlJson: JsValue = Json.parse(
+    """{
+      |  "totalRentsReceived": 0.12
+      |}""".stripMargin
+  )
+
+  lazy val adjustmentsExpensesMtdFhlJson: JsValue = Json.parse(
+    """{
+      |  "consolidatedExpenses": 0.01,
+      |  "repairsAndMaintenance": 0.02,
+      |  "financialCosts": 0.03,
+      |  "professionalFees": 0.04,
+      |  "costOfServices": 0.05,
+      |  "travelCosts": 0.06,
+      |  "other": 0.07,
+      |  "premisesRunningCosts": 0.08
+      |}""".stripMargin
+  )
+
+  lazy val adjustmentsMtdFhlJson: JsValue = Json.parse(
+    s"""{
+       |  "income": $adjustmentsIncomeMtdFhlJson,
+       |  "expenses": $adjustmentsExpensesMtdFhlJson
+       |}""".stripMargin
+  )
+
+  lazy val adjustmentsCountryLevelDetailMtdJson: JsValue = Json.parse(
+    s"""{
+       |  "countryCode": "AFG",
+       |  "income": $adjustmentsIncomeMtdJson,
+       |  "expenses": $adjustmentsExpensesMtdJson
+       |}""".stripMargin
+  )
+
+  lazy val zeroAdjustmentsMtdJson: JsValue = Json.parse(
+    """{
+       |  "zeroAdjustments": true
+       |}""".stripMargin
+  )
+
   lazy val adjustmentsMtdJson: JsValue = Json.parse(
-    s"""
-      |{
-      |  "countryCode": "AFG",
-      |  "income": $adjustmentsIncomeMtdJson,
-      |  "expenses": $adjustmentsExpensesMtdJson
-      |}
-    """.stripMargin
+    s"""{
+       |  "countryLevelDetail": [$adjustmentsCountryLevelDetailMtdJson]
+       |}""".stripMargin
   )
 
   lazy val retrieveForeignPropertyBsasMtdJson: JsValue = Json.parse(
@@ -320,7 +372,17 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "metadata": $metadataMtdJson,
        |  "inputs": $inputsMtdJson,
        |  "adjustableSummaryCalculation": $summaryCalculationMtdJson,
-       |  "adjustments": [$adjustmentsMtdJson],
+       |  "adjustments": $adjustmentsMtdJson,
+       |  "adjustedSummaryCalculation": $summaryCalculationMtdJson
+       |}""".stripMargin
+  )
+
+  lazy val retrieveForeignPropertyBsasMtdZeroAdjustmentJson: JsValue = Json.parse(
+    s"""{
+       |  "metadata": $metadataMtdJson,
+       |  "inputs": $inputsMtdJson,
+       |  "adjustableSummaryCalculation": $summaryCalculationMtdJson,
+       |  "adjustments": $zeroAdjustmentsMtdJson,
        |  "adjustedSummaryCalculation": $summaryCalculationMtdJson
        |}""".stripMargin
   )
@@ -440,23 +502,57 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   lazy val parsedAdjustments: Adjustments = Adjustments(
     countryCode = Some("AFG"),
     income = Some(parsedAdjustmentsIncome),
-    expenses = Some(parsedAdjustmentsExpenses)
+    expenses = Some(parsedAdjustmentsExpenses),
+    countryLevelDetail = None,
+    zeroAdjustments = None
+  )
+
+  lazy val zeroParsedAdjustments: Adjustments = Adjustments(
+    countryCode = None,
+    income = None,
+    expenses = None,
+    countryLevelDetail = None,
+    zeroAdjustments = Some(true)
+  )
+
+  lazy val parsedAdjustmentsSeq: Adjustments = Adjustments(
+    countryLevelDetail = Some(
+      List(Adjustments(
+        countryLevelDetail = None,
+        countryCode = parsedAdjustments.countryCode,
+        income = parsedAdjustments.income,
+        expenses = parsedAdjustments.expenses,
+        zeroAdjustments = None
+      ))),
+    countryCode = None,
+    income = None,
+    expenses = None,
+    zeroAdjustments = None
   )
 
   lazy val parsedRetrieveForeignPropertyBsasResponse: Def2_RetrieveForeignPropertyBsasResponse = Def2_RetrieveForeignPropertyBsasResponse(
     metadata = parsedMetadata,
     inputs = parsedInputs,
     adjustableSummaryCalculation = parsedSummaryCalculation,
-    adjustments = Some(Seq(parsedAdjustments)),
+    adjustments = Some(parsedAdjustmentsSeq),
     adjustedSummaryCalculation = Some(parsedSummaryCalculation)
   )
+
+  lazy val parsedRetrieveForeignPropertyBsasZeroAdjustmentResponse: Def2_RetrieveForeignPropertyBsasResponse =
+    Def2_RetrieveForeignPropertyBsasResponse(
+      metadata = parsedMetadata,
+      inputs = parsedInputs,
+      adjustableSummaryCalculation = parsedSummaryCalculation,
+      adjustments = Some(zeroParsedAdjustments),
+      adjustedSummaryCalculation = Some(parsedSummaryCalculation)
+    )
 
   def parsedRetrieveForeignPropertyBsasResponseWith(incomeSourceType: String): Def2_RetrieveForeignPropertyBsasResponse =
     Def2_RetrieveForeignPropertyBsasResponse(
       metadata = parsedMetadata,
       inputs = parsedInputs.copy(incomeSourceType = incomeSourceType),
       adjustableSummaryCalculation = parsedSummaryCalculation,
-      adjustments = Some(Seq(parsedAdjustments)),
+      adjustments = Some(parsedAdjustmentsSeq),
       adjustedSummaryCalculation = Some(parsedSummaryCalculation)
     )
 

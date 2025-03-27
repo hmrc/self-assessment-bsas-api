@@ -23,6 +23,7 @@ class AdjustmentsSpec extends RoundTripTest {
 
   import Adjustments._
 
-  testRoundTrip("Adjustments ", adjustmentsDesJson, parsedAdjustments, adjustmentsMtdJson)(format.reads(_))
+  testRoundTrip("Adjustments ", adjustmentsDesJson, parsedAdjustments, adjustmentsCountryLevelDetailMtdJson)(reads)
+  testRoundTrip("Zero Adjustments ", zeroAdjustmentsDesJson, zeroParsedAdjustments, zeroAdjustmentsMtdJson)(readsZeroAdjustments)
 
 }

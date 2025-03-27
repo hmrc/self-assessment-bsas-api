@@ -22,7 +22,8 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class Adjustments(countryLevelDetail: Option[Seq[Adjustments]],
                        countryCode: Option[String],
                        income: Option[AdjustmentsIncome],
-                       expenses: Option[AdjustmentsExpenses])
+                       expenses: Option[AdjustmentsExpenses],
+                       zeroAdjustments: Option[Boolean])
 
 object Adjustments {
 
@@ -30,17 +31,27 @@ object Adjustments {
     Reads.pure(None) and
       Reads.pure(None) and
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl)
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl) and
+      Reads.pure(None)
   )(Adjustments.apply _)
 
-  val reads: Reads[Adjustments] = (
+  val readsNonFhl: Reads[Adjustments] = (
     Reads.pure(None) and
       (JsPath \ "countryCode").readNullable[String] and
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads) and
+      Reads.pure(None)
   )(Adjustments.apply _)
 
-  val readsSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, reads)
+  val readsSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, readsNonFhl)
+
+  val readsZeroAdjustments: Reads[Adjustments] = (
+    Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      (JsPath \ "zeroAdjustments").readNullable[Boolean]
+  )(Adjustments.apply _)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

@@ -96,26 +96,28 @@
       }
     ]
   },
-  "adjustments": [
-    {
-      "countryCode": "CYM",
-      "income": {
-        "totalRentsReceived": 99999999999.99,
-        "premiumsOfLeaseGrant": 99999999999.99,
-        "otherPropertyIncome": 99999999999.99
-      },
-      "expenses": {
-        "premisesRunningCosts": 99999999999.99,
-        "repairsAndMaintenance": 99999999999.99,
-        "financialCosts": 99999999999.99,
-        "professionalFees": 99999999999.99,
-        "costOfServices": 99999999999.99,
-        "residentialFinancialCost": 99999999999.99,
-        "other": 99999999999.99,
-        "travelCosts": 99999999999.99
+  "adjustments": {
+    "countryLevelDetail": [
+      {
+        "countryCode": "CYM",
+        "income": {
+          "totalRentsReceived": 99999999999.99,
+          "premiumsOfLeaseGrant": 99999999999.99,
+          "otherPropertyIncome": 99999999999.99
+        },
+        "expenses": {
+          "premisesRunningCosts": 99999999999.99,
+          "repairsAndMaintenance": 99999999999.99,
+          "financialCosts": 99999999999.99,
+          "professionalFees": 99999999999.99,
+          "travelCosts": 99999999999.99,
+          "costOfServices": 99999999999.99,
+          "residentialFinancialCost": 99999999999.99,
+          "other": 99999999999.99
+        }
       }
-    }
-  ],
+    ]
+  },
   "adjustedSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
