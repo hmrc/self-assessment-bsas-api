@@ -16,13 +16,14 @@
 
 package v7.foreignPropertyBsas.submit.def2
 
-import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError}
+import common.errors._
 import play.api.libs.json._
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v7.foreignPropertyBsas.submit.def2.model.request.{Def2_SubmitForeignPropertyBsasRequestBody, Def2_SubmitForeignPropertyBsasRequestData}
+import v7.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures._
 
 class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
@@ -30,103 +31,118 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
   private val validNino          = "AA123456A"
   private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val validTaxYear       = "2023-24"
+  private val validTaxYear       = "2024-25"
 
   private val parsedNino          = Nino(validNino)
   private val parsedCalculationId = CalculationId(validCalculationId)
   private val parsedTaxYear       = TaxYear.fromMtd(validTaxYear)
 
   private def entryWith(countryCode: String) =
-    Json.parse(s"""
-      |{
-      |  "countryCode": "$countryCode",
-      |  "income": {
-      |    "totalRentsReceived": 1000.45,
-      |    "premiumsOfLeaseGrant": -99.99,
-      |    "otherPropertyIncome": 1000.00
-      |  },
-      |  "expenses": {
-      |    "premisesRunningCosts": 1000.45,
-      |    "repairsAndMaintenance": -99999.99,
-      |    "financialCosts": 5000.45,
-      |    "professionalFees": 300.99,
-      |    "costOfServices": 500.00,
-      |    "residentialFinancialCost": 9000.00,
-      |    "other": 1000.00,
-      |    "travelCosts": 99.99
-      |  }
-      |}""".stripMargin)
+    Json.parse(
+      s"""
+        |{
+        |    "countryCode": "$countryCode",
+        |    "income": {
+        |        "totalRentsReceived": 1000.45,
+        |        "premiumsOfLeaseGrant": -99.99,
+        |        "otherPropertyIncome": 1000.00
+        |    },
+        |    "expenses": {
+        |        "premisesRunningCosts": 1000.45,
+        |        "repairsAndMaintenance": -99999.99,
+        |        "financialCosts": 5000.45,
+        |        "professionalFees": 300.99,
+        |        "costOfServices": 500.00,
+        |        "residentialFinancialCost": 9000.00,
+        |        "other": 1000.00,
+        |        "travelCosts": 99.99
+        |    }
+        |}
+      """.stripMargin
+    )
 
   private val entry = entryWith(countryCode = "AFG")
 
   private val entryConsolidated =
-    Json.parse("""
-      |{
-      |  "countryCode": "AFG",
-      |  "income": {
-      |    "totalRentsReceived": 1000.45,
-      |    "premiumsOfLeaseGrant": -99.99,
-      |    "otherPropertyIncome": 1000.00
-      |  },
-      |  "expenses": {
-      |    "consolidatedExpenses": 332.78
-      |  }
-      |}""".stripMargin)
+    Json.parse(
+      """
+        |{
+        |    "countryCode": "AFG",
+        |    "income": {
+        |        "totalRentsReceived": 1000.45,
+        |        "premiumsOfLeaseGrant": -99.99,
+        |        "otherPropertyIncome": 1000.00
+        |    },
+        |    "expenses": {
+        |        "consolidatedExpenses": 332.78
+        |    }
+        |}
+      """.stripMargin
+    )
 
-  private def BodyWith(Entries: JsValue*): JsObject =
+  private def bodyWith(entries: JsValue*): JsObject =
     Json
       .parse(
-        s"""{
-         |  "foreignProperty": ${JsArray(Entries)}
-         |}
-         |""".stripMargin
+        s"""
+        |{
+        |    "foreignProperty": {
+        |        "countryLevelDetail": ${JsArray(entries)}
+        |    }
+        |}
+      """.stripMargin
       )
       .as[JsObject]
 
-  private val Body: JsValue = BodyWith(entry)
-  private val parsedBody    = Body.as[Def2_SubmitForeignPropertyBsasRequestBody]
+  private val body: JsValue = bodyWith(entry)
+  private val parsedBody    = body.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
   private val fhlBodyJson =
     Json
       .parse(
-        s"""
-         |{
-         |  "foreignFhlEea": {
-         |    "income": {
-         |      "totalRentsReceived": 1000.45
-         |    },
-         |    "expenses": {
-         |      "premisesRunningCosts": 1001.00,
-         |      "repairsAndMaintenance": -99999.99,
-         |      "financialCosts": 200.50,
-         |      "professionalFees": -99999.99,
-         |      "costOfServices": -1000.45,
-         |      "other": 500.00,
-         |      "travelCosts": 100.00
-         |    }
-         |  }
-         |}
-         |""".stripMargin
+        """
+        |{
+        |    "foreignFhlEea": {
+        |        "income": {
+        |            "totalRentsReceived": 1000.45
+        |        },
+        |        "expenses": {
+        |            "premisesRunningCosts": 1001.00,
+        |            "repairsAndMaintenance": -99999.99,
+        |            "financialCosts": 200.50,
+        |            "professionalFees": -99999.99,
+        |            "costOfServices": -1000.45,
+        |            "other": 500.00,
+        |            "travelCosts": 100.00
+        |        }
+        |    }
+        |}
+      """.stripMargin
       )
       .as[JsObject]
 
   private val parsedFhlBody = fhlBodyJson.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
   private val fhlBodyConsolidated = Json.parse(
-    s"""{
-       |  "foreignFhlEea": {
-       |    "income": {
-       |      "totalRentsReceived": 1000.45
-       |    },
-       |    "expenses": {
-       |      "consolidatedExpenses": 1000.45
-       |    }
-       |  }
-       |}
-       |""".stripMargin
+    """
+      |{
+      |    "foreignFhlEea": {
+      |        "income": {
+      |            "totalRentsReceived": 1000.45
+      |        },
+      |        "expenses": {
+      |            "consolidatedExpenses": 1000.45
+      |        }
+      |    }
+      |}
+    """.stripMargin
   )
 
   private val parsedFhlBodyConsolidated = fhlBodyConsolidated.as[Def2_SubmitForeignPropertyBsasRequestBody]
+
+  private val propertyTypes: List[String] = List("foreignProperty", "foreignFhlEea")
+
+  private def parsedWithOnlyZeroAdjustmentsBody(propertyType: String): Def2_SubmitForeignPropertyBsasRequestBody =
+    mtdRequestWithOnlyZeroAdjustments(propertyType, zeroAdjustments = true).as[Def2_SubmitForeignPropertyBsasRequestBody]
 
   private def validator(nino: String, calculationId: String, taxYear: String, body: JsValue) =
     new Def2_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
@@ -143,7 +159,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "passed a valid non-fhl request" in {
-        val result = validator(validNino, validCalculationId, validTaxYear, Body).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
         result shouldBe Right(
           Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedBody)
         )
@@ -157,10 +173,10 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "passed a valid non-fhl consolidated expenses request" in {
-        val BodyConsolidated       = BodyWith(entryConsolidated)
-        val parsedBodyConsolidated = BodyConsolidated.as[Def2_SubmitForeignPropertyBsasRequestBody]
+        val bodyConsolidated       = bodyWith(entryConsolidated)
+        val parsedBodyConsolidated = bodyConsolidated.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, validTaxYear, BodyConsolidated).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, bodyConsolidated).validateAndWrapResult()
 
         result shouldBe Right(
           Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedBodyConsolidated)
@@ -171,14 +187,14 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         val minimalFhlBody =
           Json.parse(
             """
-            |{
-            |  "foreignFhlEea": {
-            |    "income": {
-            |      "totalRentsReceived": 1000.45
-            |    }
-            |  }
-            |}
-            |""".stripMargin
+              |{
+              |    "foreignFhlEea": {
+              |        "income": {
+              |            "totalRentsReceived": 1000.45
+              |        }
+              |    }
+              |}
+            """.stripMargin
           )
         val parsedMinimalFhlBody = minimalFhlBody.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
@@ -190,18 +206,22 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "a minimal non-fhl request is supplied" in {
-        val minimalBody = Json.parse("""
-          |{
-          |   "foreignProperty":  [
-          |       {
-          |          "countryCode": "FRA",
-          |          "income": {
-          |              "totalRentsReceived": 1000.45
-          |          }
-          |       }
-          |    ]
-          |}
-          |""".stripMargin)
+        val minimalBody = Json.parse(
+          """
+            |{
+            |    "foreignProperty": {
+            |        "countryLevelDetail": [
+            |            {
+            |                "countryCode": "FRA",
+            |                "income": {
+            |                    "totalRentsReceived": 1000.45
+            |                }
+            |            }
+            |        ]
+            |    }
+            |}
+          """.stripMargin
+        )
         val parsedMinimalBody = minimalBody.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
         val result = validator(validNino, validCalculationId, validTaxYear, minimalBody).validateAndWrapResult()
@@ -212,14 +232,30 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "a valid request with a taxYear is supplied" in {
-        val BodyWithConsolidatedEntry       = BodyWith(entryConsolidated)
-        val parsedBodyWithConsolidatedEntry = BodyWithConsolidatedEntry.as[Def2_SubmitForeignPropertyBsasRequestBody]
+        val bodyWithConsolidatedEntry       = bodyWith(entryConsolidated)
+        val parsedBodyWithConsolidatedEntry = bodyWithConsolidatedEntry.as[Def2_SubmitForeignPropertyBsasRequestBody]
 
-        val result = validator(validNino, validCalculationId, validTaxYear, BodyWithConsolidatedEntry).validateAndWrapResult()
+        val result = validator(validNino, validCalculationId, validTaxYear, bodyWithConsolidatedEntry).validateAndWrapResult()
 
         result shouldBe Right(
           Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedBodyWithConsolidatedEntry)
         )
+      }
+
+      propertyTypes.foreach { propertyType =>
+        s"a valid $propertyType request with only zero adjustments set to true is supplied" in {
+          val result =
+            validator(
+              validNino,
+              validCalculationId,
+              validTaxYear,
+              mtdRequestWithOnlyZeroAdjustments(propertyType, zeroAdjustments = true)
+            ).validateAndWrapResult()
+
+          result shouldBe Right(
+            Def2_SubmitForeignPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedWithOnlyZeroAdjustmentsBody(propertyType))
+          )
+        }
       }
     }
 
@@ -261,7 +297,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
     "return RuleBothPropertiesSuppliedError" when {
       "passed both fhl and non-fhl" in {
-        val body   = fhlBodyJson ++ BodyWith(entry)
+        val body   = fhlBodyJson ++ bodyWith(entry)
         val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
         result shouldBe Left(
@@ -270,14 +306,13 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "passed both fhl and non-fhl even if they are empty" in {
-        // Note: no other errors should be returned
         val body = Json.parse(
-          s"""
-               |{
-               |  "foreignFhlEea": {},
-               |  "foreignProperty": []
-               |}
-               |""".stripMargin
+          """
+            |{
+            |    "foreignFhlEea": {},
+            |    "foreignProperty": {}
+            |}
+          """.stripMargin
         )
         val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
@@ -305,11 +340,11 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         ).foreach(path => testWith(fhlBodyJson.replaceWithEmptyObject(path), path))
 
         List(
-          (BodyWith(), "/foreignProperty"),
-          (BodyWith(entry.replaceWithEmptyObject("/income")), "/foreignProperty/0/income"),
-          (BodyWith(entry.replaceWithEmptyObject("/expenses")), "/foreignProperty/0/expenses"),
-          (BodyWith(entry.removeProperty("/countryCode")), "/foreignProperty/0/countryCode"),
-          (BodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/foreignProperty/0")
+          (bodyWith(), "/foreignProperty/countryLevelDetail"),
+          (bodyWith(entry.replaceWithEmptyObject("/income")), "/foreignProperty/countryLevelDetail/0/income"),
+          (bodyWith(entry.replaceWithEmptyObject("/expenses")), "/foreignProperty/countryLevelDetail/0/expenses"),
+          (bodyWith(entry.removeProperty("/countryCode")), "/foreignProperty/countryLevelDetail/0/countryCode"),
+          (bodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/foreignProperty/countryLevelDetail/0")
         ).foreach((testWith _).tupled)
 
         def testWith(body: JsValue, expectedPath: String): Unit =
@@ -322,12 +357,15 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
 
       "an object is empty except for an additional (non-schema) property" in {
-        val body = Json.parse("""
-          |{
-          |    "foreignFhlEea":{
-          |       "unknownField": 999.99
-          |    }
-          |}""".stripMargin)
+        val body = Json.parse(
+          """
+            |{
+            |    "foreignFhlEea": {
+            |        "unknownField": 999.99
+            |    }
+            |}
+          """.stripMargin
+        )
 
         val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
 
@@ -335,182 +373,275 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/foreignFhlEea"))
         )
       }
+    }
 
-      "return ValueFormatError" when {
-        "income or (non-consolidated) expenses is invalid" when {
-          List(
-            "/foreignFhlEea/income/totalRentsReceived",
-            "/foreignFhlEea/expenses/premisesRunningCosts",
-            "/foreignFhlEea/expenses/repairsAndMaintenance",
-            "/foreignFhlEea/expenses/financialCosts",
-            "/foreignFhlEea/expenses/professionalFees",
-            "/foreignFhlEea/expenses/costOfServices",
-            "/foreignFhlEea/expenses/other",
-            "/foreignFhlEea/expenses/travelCosts"
-          ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
+    "return ValueFormatError" when {
+      "income or (non-consolidated) expenses is invalid" when {
+        List(
+          "/foreignFhlEea/income/totalRentsReceived",
+          "/foreignFhlEea/expenses/premisesRunningCosts",
+          "/foreignFhlEea/expenses/repairsAndMaintenance",
+          "/foreignFhlEea/expenses/financialCosts",
+          "/foreignFhlEea/expenses/professionalFees",
+          "/foreignFhlEea/expenses/costOfServices",
+          "/foreignFhlEea/expenses/other",
+          "/foreignFhlEea/expenses/travelCosts"
+        ).foreach(path => testWith(fhlBodyJson.update(path, _), path))
 
-          List(
-            ((v: JsNumber) => BodyWith(entry.update("/income/totalRentsReceived", v)), "/foreignProperty/0/income/totalRentsReceived"),
-            ((v: JsNumber) => BodyWith(entry.update("/income/premiumsOfLeaseGrant", v)), "/foreignProperty/0/income/premiumsOfLeaseGrant"),
-            ((v: JsNumber) => BodyWith(entry.update("/income/otherPropertyIncome", v)), "/foreignProperty/0/income/otherPropertyIncome"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/premisesRunningCosts", v)), "/foreignProperty/0/expenses/premisesRunningCosts"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/repairsAndMaintenance", v)), "/foreignProperty/0/expenses/repairsAndMaintenance"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/financialCosts", v)), "/foreignProperty/0/expenses/financialCosts"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/professionalFees", v)), "/foreignProperty/0/expenses/professionalFees"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/costOfServices", v)), "/foreignProperty/0/expenses/costOfServices"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/other", v)), "/foreignProperty/0/expenses/other"),
-            ((v: JsNumber) => BodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/0/expenses/travelCosts")
-          ).foreach { case (body, path) => testWith(body, path) }
+        List(
+          (
+            (v: JsNumber) => bodyWith(entry.update("/income/totalRentsReceived", v)),
+            "/foreignProperty/countryLevelDetail/0/income/totalRentsReceived"),
+          (
+            (v: JsNumber) => bodyWith(entry.update("/income/premiumsOfLeaseGrant", v)),
+            "/foreignProperty/countryLevelDetail/0/income/premiumsOfLeaseGrant"),
+          (
+            (v: JsNumber) => bodyWith(entry.update("/income/otherPropertyIncome", v)),
+            "/foreignProperty/countryLevelDetail/0/income/otherPropertyIncome"),
+          (
+            (v: JsNumber) => bodyWith(entry.update("/expenses/premisesRunningCosts", v)),
+            "/foreignProperty/countryLevelDetail/0/expenses/premisesRunningCosts"),
+          (
+            (v: JsNumber) => bodyWith(entry.update("/expenses/repairsAndMaintenance", v)),
+            "/foreignProperty/countryLevelDetail/0/expenses/repairsAndMaintenance"),
+          ((v: JsNumber) => bodyWith(entry.update("/expenses/financialCosts", v)), "/foreignProperty/countryLevelDetail/0/expenses/financialCosts"),
+          (
+            (v: JsNumber) => bodyWith(entry.update("/expenses/professionalFees", v)),
+            "/foreignProperty/countryLevelDetail/0/expenses/professionalFees"),
+          ((v: JsNumber) => bodyWith(entry.update("/expenses/costOfServices", v)), "/foreignProperty/countryLevelDetail/0/expenses/costOfServices"),
+          ((v: JsNumber) => bodyWith(entry.update("/expenses/other", v)), "/foreignProperty/countryLevelDetail/0/expenses/other"),
+          ((v: JsNumber) => bodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/countryLevelDetail/0/expenses/travelCosts")
+        ).foreach { case (body, path) => testWith(body, path) }
 
-          List(
-            (
-              (v: JsNumber) => BodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-              "/foreignProperty/0/expenses/residentialFinancialCost")).foreach { case (body, path) => testWith(body, path, min = "0") }
-        }
+        List(
+          (
+            (v: JsNumber) => bodyWith(entry.update("/expenses/residentialFinancialCost", v)),
+            "/foreignProperty/countryLevelDetail/0/expenses/residentialFinancialCost")
+        ).foreach { case (body, path) => testWith(body, path, min = "0") }
+      }
 
-        "consolidated expenses is invalid" when {
-          List(
-            "/foreignFhlEea/expenses/consolidatedExpenses"
-          ).foreach(path => testWith(fhlBodyConsolidated.update(path, _), path))
+      "consolidated expenses is invalid" when {
+        List(
+          "/foreignFhlEea/expenses/consolidatedExpenses"
+        ).foreach(path => testWith(fhlBodyConsolidated.update(path, _), path))
 
-          List(
-            (
-              (v: JsNumber) => BodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
-              "/foreignProperty/0/expenses/consolidatedExpenses")
-          ).foreach { case (body, path) => testWith(body, path) }
-        }
+        List(
+          (
+            (v: JsNumber) => bodyWith(entryConsolidated.update("/expenses/consolidatedExpenses", v)),
+            "/foreignProperty/countryLevelDetail/0/expenses/consolidatedExpenses")
+        ).foreach { case (body, path) => testWith(body, path) }
+      }
 
-        "multiple fields are invalid" in {
-          val path1 = "/foreignProperty/0/expenses/travelCosts"
-          val path2 = "/foreignProperty/1/income/totalRentsReceived"
+      "multiple fields are invalid" in {
+        val path1 = "/foreignProperty/countryLevelDetail/0/expenses/travelCosts"
+        val path2 = "/foreignProperty/countryLevelDetail/1/income/totalRentsReceived"
 
-          val json =
-            BodyWith(
-              entryWith(countryCode = "ZWE").update("/expenses/travelCosts", JsNumber(0)),
-              entryWith(countryCode = "AFG").update("/income/totalRentsReceived", JsNumber(123.123))
+        val json =
+          bodyWith(
+            entryWith(countryCode = "ZWE").update("/expenses/travelCosts", JsNumber(0)),
+            entryWith(countryCode = "AFG").update("/income/totalRentsReceived", JsNumber(123.123))
+          )
+
+        val result = validator(validNino, validCalculationId, validTaxYear, json).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            ValueFormatError.copy(paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99")
+          )
+        )
+      }
+
+      def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+        s"for $expectedPath" when {
+          def doTest(value: JsNumber) = {
+            val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
+
+            result shouldBe Left(
+              ErrorWrapper(
+                correlationId,
+                ValueFormatError.forPathAndRange(expectedPath, min, max)
+              )
             )
+          }
 
-          val result = validator(validNino, validCalculationId, validTaxYear, json).validateAndWrapResult()
+          "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
+
+          "value is zero" in doTest(JsNumber(0))
+        }
+    }
+
+    "return RuleCountryCodeError" when {
+      "passed an invalid country code" in {
+        val body   = bodyWith(entryWith(countryCode = "QQQ"))
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleCountryCodeError.withPath("/foreignProperty/countryLevelDetail/0/countryCode"))
+        )
+      }
+
+      "passed multiple invalid country codes" in {
+        val body   = bodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            RuleCountryCodeError.withPaths(
+              List("/foreignProperty/countryLevelDetail/0/countryCode", "/foreignProperty/countryLevelDetail/1/countryCode"))
+          )
+        )
+      }
+    }
+
+    "return RuleDuplicateCountryCodeError" when {
+      "a country code is duplicated" in {
+        val code   = "ZWE"
+        val body   = bodyWith(entryWith(code), entryWith(code))
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            RuleDuplicateCountryCodeError.forDuplicatedCodesAndPaths(
+              code = code,
+              paths = List(
+                "/foreignProperty/countryLevelDetail/0/countryCode",
+                "/foreignProperty/countryLevelDetail/1/countryCode"
+              )
+            )
+          )
+        )
+      }
+
+      "multiple country codes are duplicated" in {
+        val code1  = "AFG"
+        val code2  = "ZWE"
+        val body   = bodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            BadRequestError,
+            Some(List(
+              RuleDuplicateCountryCodeError
+                .forDuplicatedCodesAndPaths(
+                  code = code1,
+                  paths = List(
+                    "/foreignProperty/countryLevelDetail/0/countryCode",
+                    "/foreignProperty/countryLevelDetail/2/countryCode"
+                  )
+                ),
+              RuleDuplicateCountryCodeError
+                .forDuplicatedCodesAndPaths(
+                  code = code2,
+                  paths = List(
+                    "/foreignProperty/countryLevelDetail/1/countryCode",
+                    "/foreignProperty/countryLevelDetail/3/countryCode"
+                  )
+                )
+            ))
+          )
+        )
+      }
+    }
+
+    "return RuleBothExpensesSuppliedError" when {
+      "passed consolidated and separate fhl expenses" in {
+        val body   = fhlBodyJson.update("foreignFhlEea/expenses/consolidatedExpenses", JsNumber(123.45))
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleBothExpensesError.withPath("/foreignFhlEea/expenses"))
+        )
+      }
+
+      "passed consolidated and separate non-fhl expenses" in {
+        val body = bodyWith(
+          entryWith(countryCode = "ZWE").update("expenses/consolidatedExpenses", JsNumber(123.45)),
+          entryWith(countryCode = "AFG").update("expenses/consolidatedExpenses", JsNumber(123.45))
+        )
+        val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            RuleBothExpensesError.withPaths(
+              List("/foreignProperty/countryLevelDetail/0/expenses", "/foreignProperty/countryLevelDetail/1/expenses")
+            )
+          )
+        )
+      }
+    }
+
+    "return RuleZeroAdjustmentsInvalidError" when {
+      propertyTypes.foreach { propertyType =>
+        s"passed only zero adjustments as false in $propertyType" in {
+          val result = validator(
+            validNino,
+            validCalculationId,
+            validTaxYear,
+            mtdRequestWithOnlyZeroAdjustments(propertyType, zeroAdjustments = false)
+          ).validateAndWrapResult()
+
+          result shouldBe Left(
+            ErrorWrapper(correlationId, RuleZeroAdjustmentsInvalidError.withPath(s"/$propertyType/zeroAdjustments"))
+          )
+        }
+      }
+    }
+
+    "return RuleBothAdjustmentsSuppliedError" when {
+      propertyTypes.foreach { propertyType =>
+        s"passed zero adjustments as true and other adjustments in $propertyType" in {
+          val result = validator(
+            validNino,
+            validCalculationId,
+            validTaxYear,
+            mtdRequestWithZeroAndOtherAdjustments(propertyType, zeroAdjustments = true)
+          ).validateAndWrapResult()
+
+          result shouldBe Left(
+            ErrorWrapper(correlationId, RuleBothAdjustmentsSuppliedError.withPath(s"/$propertyType"))
+          )
+        }
+      }
+    }
+
+    "return multiple errors" when {
+      "passed a request containing multiple errors" in {
+        val result = validator("A12344A", "not-a-calculation-id", validTaxYear, fhlBodyJson).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            BadRequestError,
+            Some(List(CalculationIdFormatError, NinoFormatError))
+          )
+        )
+      }
+
+      propertyTypes.foreach { propertyType =>
+        s"passed zero adjustments as false and other adjustments in $propertyType" in {
+          val result = validator(
+            validNino,
+            validCalculationId,
+            validTaxYear,
+            mtdRequestWithZeroAndOtherAdjustments(propertyType, zeroAdjustments = false)
+          ).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
               correlationId,
-              ValueFormatError.copy(paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99")
-            )
-          )
-        }
-
-        def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
-          s"for $expectedPath" when {
-            def doTest(value: JsNumber) = {
-              val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
-
-              result shouldBe Left(
-                ErrorWrapper(
-                  correlationId,
-                  ValueFormatError.forPathAndRange(expectedPath, min, max)
+              BadRequestError,
+              Some(
+                List(
+                  RuleBothAdjustmentsSuppliedError.withPath(s"/$propertyType"),
+                  RuleZeroAdjustmentsInvalidError.withPath(s"/$propertyType/zeroAdjustments")
                 )
               )
-            }
-
-            "value is out of range" in doTest(JsNumber(99999999999.99 + 0.01))
-
-            "value is zero" in doTest(JsNumber(0))
-          }
-      }
-
-      "return RuleCountryCodeError" when {
-        "passed an invalid country code" in {
-          val body   = BodyWith(entryWith(countryCode = "QQQ"))
-          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(correlationId, RuleCountryCodeError.withPath("/foreignProperty/0/countryCode"))
-          )
-        }
-
-        "passed multiple invalid country codes" in {
-          val body   = BodyWith(entryWith(countryCode = "QQQ"), entryWith(countryCode = "AAA"))
-          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(correlationId, RuleCountryCodeError.withPaths(List("/foreignProperty/0/countryCode", "/foreignProperty/1/countryCode")))
-          )
-        }
-      }
-
-      "return RuleDuplicateCountryCodeError" when {
-        "a country code is duplicated" in {
-          val code   = "ZWE"
-          val body   = BodyWith(entryWith(code), entryWith(code))
-          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(
-              correlationId,
-              RuleDuplicateCountryCodeError.forDuplicatedCodesAndPaths(
-                code = code,
-                paths = List("/foreignProperty/0/countryCode", "/foreignProperty/1/countryCode"))
-            )
-          )
-        }
-
-        "multiple country codes are duplicated" in {
-          val code1  = "AFG"
-          val code2  = "ZWE"
-          val body   = BodyWith(entryWith(code1), entryWith(code2), entryWith(code1), entryWith(code2))
-          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(
-              correlationId,
-              BadRequestError,
-              Some(List(
-                RuleDuplicateCountryCodeError
-                  .forDuplicatedCodesAndPaths(code = code1, paths = List("/foreignProperty/0/countryCode", "/foreignProperty/2/countryCode")),
-                RuleDuplicateCountryCodeError
-                  .forDuplicatedCodesAndPaths(code = code2, paths = List("/foreignProperty/1/countryCode", "/foreignProperty/3/countryCode"))
-              ))
-            )
-          )
-        }
-      }
-
-      "return RuleBothExpensesSuppliedError" when {
-        "passed consolidated and separate fhl expenses" in {
-          val body   = fhlBodyJson.update("foreignFhlEea/expenses/consolidatedExpenses", JsNumber(123.45))
-          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(correlationId, RuleBothExpensesError.withPath("/foreignFhlEea/expenses"))
-          )
-        }
-
-        "passed consolidated and separate non-fhl expenses" in {
-          val body = BodyWith(
-            entryWith(countryCode = "ZWE").update("expenses/consolidatedExpenses", JsNumber(123.45)),
-            entryWith(countryCode = "AFG").update("expenses/consolidatedExpenses", JsNumber(123.45))
-          )
-          val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(
-              correlationId,
-              RuleBothExpensesError.withPaths(List("/foreignProperty/0/expenses", "/foreignProperty/1/expenses"))
-            )
-          )
-        }
-      }
-
-      "return multiple errors" when {
-        "passed a request containing multiple errors" in {
-          val result = validator("A12344A", "not-a-calculation-id", validTaxYear, fhlBodyJson).validateAndWrapResult()
-
-          result shouldBe Left(
-            ErrorWrapper(
-              correlationId,
-              BadRequestError,
-              Some(List(CalculationIdFormatError, NinoFormatError))
             )
           )
         }

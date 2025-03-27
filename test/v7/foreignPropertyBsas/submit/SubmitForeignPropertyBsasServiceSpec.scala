@@ -35,25 +35,40 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
   private val foreignPropertyBody =
     Def3_SubmitForeignPropertyBsasRequestBody(
       foreignProperty = Some(
-        List(ForeignProperty(
-          "FRA",
-          Some(ForeignPropertyIncome(Some(123.12), Some(123.12), Some(123.12))),
-          Some(
-            ForeignPropertyExpenses(
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              Some(123.12),
-              None
-            ))
-        )))
+        ForeignProperty(
+          countryLevelDetail = Some(
+            Seq(
+              CountryLevelDetail(
+                countryCode = "FRA",
+                income = Some(
+                  ForeignPropertyIncome(
+                    totalRentsReceived = Some(123.12),
+                    premiumsOfLeaseGrant = Some(123.12),
+                    otherPropertyIncome = Some(123.12)
+                  )
+                ),
+                expenses = Some(
+                  ForeignPropertyExpenses(
+                    premisesRunningCosts = Some(123.12),
+                    repairsAndMaintenance = Some(123.12),
+                    financialCosts = Some(123.12),
+                    professionalFees = Some(123.12),
+                    costOfServices = Some(123.12),
+                    residentialFinancialCost = Some(123.12),
+                    other = Some(123.12),
+                    travelCosts = Some(123.12),
+                    consolidatedExpenses = None
+                  )
+                )
+              )
+            )
+          ),
+          zeroAdjustments = None
+        )
+      )
     )
 
-  private val request = Def3_SubmitForeignPropertyBsasRequestData(nino, id, TaxYear.fromMtd("2023-24"), foreignPropertyBody)
+  private val request = Def3_SubmitForeignPropertyBsasRequestData(nino, id, TaxYear.fromMtd("2025-26"), foreignPropertyBody)
 
   trait Test extends MockSubmitForeignPropertyBsasConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

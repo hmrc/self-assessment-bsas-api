@@ -25,23 +25,38 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   private val parsedEmptyRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None, None)
 
   private val parsedRequestBody =
-    Def2_SubmitForeignPropertyBsasRequestBody(Some(List(ForeignProperty("FRA", None, None))), None)
+    Def2_SubmitForeignPropertyBsasRequestBody(
+      foreignProperty = Some(
+        ForeignProperty(
+          countryLevelDetail = Some(Seq(CountryLevelDetail(countryCode = "FRA", income = None, expenses = None))),
+          zeroAdjustments = None
+        )
+      ),
+      foreignFhlEea = None
+    )
 
-  private val parsedFhlRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(None, Some(FhlEea(None, None)))
+  private val parsedFhlRequestBody = Def2_SubmitForeignPropertyBsasRequestBody(
+    foreignProperty = None,
+    foreignFhlEea = Some(FhlEea(None, None, None))
+  )
 
   "reads" when {
     "given a simple non-fhl body" should {
       "return the expected non-fhl data object" in {
         Json
-          .parse("""
+          .parse(
+            """
             |{
-            |  "foreignProperty": [
-            |    {
-            |      "countryCode": "FRA"
+            |    "foreignProperty": {
+            |        "countryLevelDetail": [
+            |            {
+            |                "countryCode": "FRA"
+            |            }
+            |        ]
             |    }
-            |  ]
             |}
-            |""".stripMargin)
+          """.stripMargin
+          )
           .as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedRequestBody
       }
     }
@@ -52,10 +67,9 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
           .parse(
             """
             |{
-            |  "foreignFhlEea": {
-            |  }
+            |    "foreignFhlEea": {}
             |}
-            |""".stripMargin
+          """.stripMargin
           )
           .as[Def2_SubmitForeignPropertyBsasRequestBody] shouldBe parsedFhlRequestBody
       }
@@ -83,16 +97,18 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "given a simple non-fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(parsedRequestBody) shouldBe Json.parse("""
+        Json.toJson(parsedRequestBody) shouldBe Json.parse(
+          """
             |{
-            |  "incomeSourceType": "15",
-            |  "adjustments": [
-            |    {
-            |      "countryCode": "FRA"
-            |    }
-            |  ]
+            |    "incomeSourceType": "15",
+            |    "adjustments": [
+            |        {
+            |            "countryCode": "FRA"
+            |        }
+            |    ]
             |}
-            |""".stripMargin)
+          """.stripMargin
+        )
       }
     }
 
@@ -101,11 +117,10 @@ class Def2_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
         Json.toJson(parsedFhlRequestBody) shouldBe Json.parse(
           """
             |{
-            |  "incomeSourceType": "03",
-            |  "adjustments": {
-            |  }
+            |    "incomeSourceType": "03",
+            |    "adjustments": {}
             |}
-            |""".stripMargin
+          """.stripMargin
         )
       }
     }

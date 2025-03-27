@@ -25,21 +25,32 @@ class Def3_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   private val parsedEmptyRequestBody = Def3_SubmitForeignPropertyBsasRequestBody(None)
 
   private val parsedForeignPropertyRequestBody =
-    Def3_SubmitForeignPropertyBsasRequestBody(Some(List(ForeignProperty("FRA", None, None))))
+    Def3_SubmitForeignPropertyBsasRequestBody(
+      foreignProperty = Some(
+        ForeignProperty(
+          countryLevelDetail = Some(Seq(CountryLevelDetail(countryCode = "FRA", income = None, expenses = None))),
+          zeroAdjustments = None
+        )
+      )
+    )
 
   "reads" when {
     "given a simple foreign Property body" should {
       "return the expected foreign Property data object" in {
         Json
-          .parse("""
+          .parse(
+            """
             |{
-            |  "foreignProperty": [
-            |    {
-            |      "countryCode": "FRA"
+            |    "foreignProperty": {
+            |        "countryLevelDetail": [
+            |            {
+            |                "countryCode": "FRA"
+            |            }
+            |        ]
             |    }
-            |  ]
             |}
-            |""".stripMargin)
+          """.stripMargin
+          )
           .as[Def3_SubmitForeignPropertyBsasRequestBody] shouldBe parsedForeignPropertyRequestBody
       }
     }
@@ -60,16 +71,18 @@ class Def3_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
   "writes" when {
     "given a simple non-fhl data object" should {
       "return the downstream JSON" in {
-        Json.toJson(parsedForeignPropertyRequestBody) shouldBe Json.parse("""
+        Json.toJson(parsedForeignPropertyRequestBody) shouldBe Json.parse(
+          """
             |{
-            |  "incomeSourceType": "15",
-            |  "adjustments": [
-            |    {
-            |      "countryCode": "FRA"
-            |    }
-            |  ]
+            |    "incomeSourceType": "15",
+            |    "adjustments": [
+            |        {
+            |            "countryCode": "FRA"
+            |        }
+            |    ]
             |}
-            |""".stripMargin)
+          """.stripMargin
+        )
       }
     }
 

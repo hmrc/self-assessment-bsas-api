@@ -16,33 +16,41 @@
 
 package v7.foreignPropertyBsas.submit.def2.model.request
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.utils.UnitSpec
 
 class ForeignPropertySpec extends UnitSpec {
 
-  // Use simple case as formats for contents of income/expenses are tested elsewhere...
-  val json: JsValue = Json.parse("""
+  val json: JsValue = Json.parse(
+    """
       |{
-      |  "countryCode": "FRA",
-      |  "income": {
-      |  },
-      |  "expenses": {
-      |  }
+      |    "countryLevelDetail": [
+      |        {
+      |            "countryCode": "FRA",
+      |            "income": {},
+      |            "expenses": {}
+      |        }
+      |    ]
       |}
-      |""".stripMargin)
-
-  val minimalJson: JsValue = Json.parse("""{
-      |  "countryCode": "FRA"
-      |}""".stripMargin)
-
-  val model: ForeignProperty = ForeignProperty(
-    "FRA",
-    Some(ForeignPropertyIncome(None, None, None)),
-    Some(ForeignPropertyExpenses(None, None, None, None, None, None, None, None, None))
+    """.stripMargin
   )
 
-  val minimalModel: ForeignProperty = ForeignProperty("FRA", None, None)
+  val emptyJson: JsValue = JsObject.empty
+
+  val model: ForeignProperty = ForeignProperty(
+    countryLevelDetail = Some(
+      Seq(
+        CountryLevelDetail(
+          countryCode = "FRA",
+          income = Some(ForeignPropertyIncome(None, None, None)),
+          expenses = Some(ForeignPropertyExpenses(None, None, None, None, None, None, None, None, None))
+        )
+      )
+    ),
+    zeroAdjustments = None
+  )
+
+  val emptyModel: ForeignProperty = ForeignProperty(None, None)
 
   "reads" when {
     "passed mtd json" should {
@@ -53,7 +61,7 @@ class ForeignPropertySpec extends UnitSpec {
 
     "passed an empty JSON" should {
       "return an empty model" in {
-        minimalJson.as[ForeignProperty] shouldBe minimalModel
+        emptyJson.as[ForeignProperty] shouldBe emptyModel
       }
     }
   }
@@ -67,7 +75,7 @@ class ForeignPropertySpec extends UnitSpec {
 
     "passed an empty model" should {
       "return an empty JSON" in {
-        Json.toJson(minimalModel) shouldBe minimalJson
+        Json.toJson(emptyModel) shouldBe emptyJson
       }
     }
   }
