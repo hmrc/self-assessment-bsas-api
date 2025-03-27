@@ -229,6 +229,14 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
+  val zeroAdjustmentsJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "zeroAdjustments": true
+       |}
+       |""".stripMargin
+  )
+
   val downstreamRetrieveBsasResponseJson: JsValue = Json.parse(s"""
        |{
        |  "metadata": $downstreamMetadataJson,
@@ -498,6 +506,14 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
+  val mtdZeroAdjustmentsJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "zeroAdjustments": true
+       |}
+       |""".stripMargin
+  )
+
   val mtdRetrieveBsasResponseJson: JsValue = Json.parse(
     s"""
        |{
@@ -690,12 +706,20 @@ object RetrieveUkPropertyBsasFixtures {
 
   val adjustmentsFhl: Adjustments = Adjustments(
     income = Some(adjustmentsIncomeFhl),
-    expenses = Some(adjustmentsExpensesFhl)
+    expenses = Some(adjustmentsExpensesFhl),
+    zeroAdjustments = None
   )
 
   val adjustments: Adjustments = Adjustments(
     income = Some(adjustmentsIncome),
-    expenses = Some(adjustmentsExpensesUkProperty)
+    expenses = Some(adjustmentsExpensesUkProperty),
+    zeroAdjustments = None
+  )
+
+  val zerAdjustments: Adjustments = Adjustments(
+    income = None,
+    expenses = None,
+    zeroAdjustments = Some(true)
   )
 
   val adjustedSummaryCalculationFhl: AdjustedSummaryCalculation = AdjustedSummaryCalculation(

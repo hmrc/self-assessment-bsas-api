@@ -21,14 +21,16 @@ import play.api.libs.json._
 
 case class Adjustments(
     income: Option[AdjustmentsIncome],
-    expenses: Option[AdjustmentsExpenses]
+    expenses: Option[AdjustmentsExpenses],
+    zeroAdjustments: Option[Boolean]
 )
 
 object Adjustments {
 
   implicit val reads: Reads[Adjustments] = (
     (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
-      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads) and
+      (JsPath \ "zeroAdjustments").readNullable[Boolean]
   )(Adjustments.apply _)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]

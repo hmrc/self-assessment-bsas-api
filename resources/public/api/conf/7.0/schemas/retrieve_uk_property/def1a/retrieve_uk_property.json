@@ -467,7 +467,7 @@
         },
         "expenses": {
           "type": "object",
-          "description": "Object containing the adjustments to income.",
+          "description": "Object containing the adjustments to expenses.",
           "properties": {
             "consolidatedExpenses": {
               "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 values or 0.00 values).",
@@ -533,6 +533,11 @@
               "example": "10000.45"
             }
           }
+        },
+        "zeroAdjustments": {
+          "type": "boolean",
+          "description": "Indicates zero adjustments for all income and expenses. The value must be true if this is the case.",
+          "enum": [true]
         }
       }
     },
