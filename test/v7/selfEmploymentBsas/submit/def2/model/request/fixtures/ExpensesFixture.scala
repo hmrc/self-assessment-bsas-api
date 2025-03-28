@@ -23,21 +23,21 @@ object ExpensesFixture {
 
   val expenses: Expenses =
     Expenses(
-      costOfGoodsAllowable = Some(2000.25),
-      paymentsToSubcontractorsAllowable = Some(2000.50),
-      wagesAndStaffCostsAllowable = Some(2000.75),
-      carVanTravelExpensesAllowable = Some(-2000.25),
-      premisesRunningCostsAllowable = Some(-2000.50),
-      maintenanceCostsAllowable = Some(-2000.75),
-      adminCostsAllowable = Some(2001.25),
-      advertisingCostsAllowable = Some(2001.50),
-      businessEntertainmentCostsAllowable = Some(2001.75),
-      interestOnBankOtherLoansAllowable = Some(-2001.25),
-      financeChargesAllowable = Some(-2001.50),
-      irrecoverableDebtsAllowable = Some(-2001.75),
-      professionalFeesAllowable = Some(2002.25),
-      depreciationAllowable = Some(2002.50),
-      otherExpensesAllowable = Some(2002.75),
+      costOfGoods = Some(2000.25),
+      paymentsToSubcontractors = Some(2000.50),
+      wagesAndStaffCosts = Some(2000.75),
+      carVanTravelExpenses = Some(-2000.25),
+      premisesRunningCosts = Some(-2000.50),
+      maintenanceCosts = Some(-2000.75),
+      adminCosts = Some(2001.25),
+      advertisingCosts = Some(2001.50),
+      businessEntertainmentCosts = Some(2001.75),
+      interestOnBankOtherLoans = Some(-2001.25),
+      financeCharges = Some(-2001.50),
+      irrecoverableDebts = Some(-2001.75),
+      professionalFees = Some(2002.25),
+      depreciation = Some(2002.50),
+      otherExpenses = Some(2002.75),
       consolidatedExpenses = None
     )
 
@@ -46,21 +46,21 @@ object ExpensesFixture {
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
-        "costOfGoodsAllowable"                -> costOfGoodsAllowable,
-        "paymentsToSubcontractorsAllowable"   -> paymentsToSubcontractorsAllowable,
-        "wagesAndStaffCostsAllowable"         -> wagesAndStaffCostsAllowable,
-        "carVanTravelExpensesAllowable"       -> carVanTravelExpensesAllowable,
-        "premisesRunningCostsAllowable"       -> premisesRunningCostsAllowable,
-        "maintenanceCostsAllowable"           -> maintenanceCostsAllowable,
-        "adminCostsAllowable"                 -> adminCostsAllowable,
-        "advertisingCostsAllowable"           -> advertisingCostsAllowable,
-        "businessEntertainmentCostsAllowable" -> businessEntertainmentCostsAllowable,
-        "interestOnBankOtherLoansAllowable"   -> interestOnBankOtherLoansAllowable,
-        "financeChargesAllowable"             -> financeChargesAllowable,
-        "irrecoverableDebtsAllowable"         -> irrecoverableDebtsAllowable,
-        "professionalFeesAllowable"           -> professionalFeesAllowable,
-        "depreciationAllowable"               -> depreciationAllowable,
-        "otherExpensesAllowable"              -> otherExpensesAllowable
+        "costOfGoodsAllowable"                -> costOfGoods,
+        "paymentsToSubcontractorsAllowable"   -> paymentsToSubcontractors,
+        "wagesAndStaffCostsAllowable"         -> wagesAndStaffCosts,
+        "carVanTravelExpensesAllowable"       -> carVanTravelExpenses,
+        "premisesRunningCostsAllowable"       -> premisesRunningCosts,
+        "maintenanceCostsAllowable"           -> maintenanceCosts,
+        "adminCostsAllowable"                 -> adminCosts,
+        "advertisingCostsAllowable"           -> advertisingCosts,
+        "businessEntertainmentCostsAllowable" -> businessEntertainmentCosts,
+        "interestOnBankOtherLoansAllowable"   -> interestOnBankOtherLoans,
+        "financeChargesAllowable"             -> financeCharges,
+        "irrecoverableDebtsAllowable"         -> irrecoverableDebts,
+        "professionalFeesAllowable"           -> professionalFees,
+        "depreciationAllowable"               -> depreciation,
+        "otherExpensesAllowable"              -> otherExpenses
       )
 
     Json.toJsObject(queryMap(desFields))
@@ -71,21 +71,21 @@ object ExpensesFixture {
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(
-        "costOfGoodsAllowable"                -> costOfGoodsAllowable,
-        "paymentsToSubcontractorsAllowable"   -> paymentsToSubcontractorsAllowable,
-        "wagesAndStaffCostsAllowable"         -> wagesAndStaffCostsAllowable,
-        "carVanTravelExpensesAllowable"       -> carVanTravelExpensesAllowable,
-        "premisesRunningCostsAllowable"       -> premisesRunningCostsAllowable,
-        "maintenanceCostsAllowable"           -> maintenanceCostsAllowable,
-        "adminCostsAllowable"                 -> adminCostsAllowable,
-        "advertisingCostsAllowable"           -> advertisingCostsAllowable,
-        "businessEntertainmentCostsAllowable" -> businessEntertainmentCostsAllowable,
-        "interestOnBankOtherLoansAllowable"   -> interestOnBankOtherLoansAllowable,
-        "financeChargesAllowable"             -> financeChargesAllowable,
-        "irrecoverableDebtsAllowable"         -> irrecoverableDebtsAllowable,
-        "professionalFeesAllowable"           -> professionalFeesAllowable,
-        "depreciationAllowable"               -> depreciationAllowable,
-        "otherExpensesAllowable"              -> otherExpensesAllowable
+        "costOfGoods"                -> costOfGoods,
+        "paymentsToSubcontractors"   -> paymentsToSubcontractors,
+        "wagesAndStaffCosts"         -> wagesAndStaffCosts,
+        "carVanTravelExpenses"       -> carVanTravelExpenses,
+        "premisesRunningCosts"       -> premisesRunningCosts,
+        "maintenanceCosts"           -> maintenanceCosts,
+        "adminCosts"                 -> adminCosts,
+        "advertisingCosts"           -> advertisingCosts,
+        "businessEntertainmentCosts" -> businessEntertainmentCosts,
+        "interestOnBankOtherLoans"   -> interestOnBankOtherLoans,
+        "financeCharges"             -> financeCharges,
+        "irrecoverableDebts"         -> irrecoverableDebts,
+        "professionalFees"           -> professionalFees,
+        "depreciation"               -> depreciation,
+        "otherExpenses"              -> otherExpenses
       )
 
     Json.toJsObject(queryMap(vendorSuppliedFields))

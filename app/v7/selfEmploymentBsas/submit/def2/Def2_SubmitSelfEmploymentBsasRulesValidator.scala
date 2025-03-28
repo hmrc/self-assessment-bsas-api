@@ -86,21 +86,21 @@ object Def2_SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[Def2_S
 
   private def validateExpenses(expenses: Expenses): Validated[Seq[MtdError], Unit] =
     combine(
-      resolveAdjusted("/expenses/costOfGoodsAllowable", expenses.costOfGoodsAllowable),
-      resolveAdjusted("/expenses/paymentsToSubcontractorsAllowable", expenses.paymentsToSubcontractorsAllowable),
-      resolveAdjusted("/expenses/wagesAndStaffCostsAllowable", expenses.wagesAndStaffCostsAllowable),
-      resolveAdjusted("/expenses/carVanTravelExpensesAllowable", expenses.carVanTravelExpensesAllowable),
-      resolveAdjusted("/expenses/premisesRunningCostsAllowable", expenses.premisesRunningCostsAllowable),
-      resolveAdjusted("/expenses/maintenanceCostsAllowable", expenses.maintenanceCostsAllowable),
-      resolveAdjusted("/expenses/adminCostsAllowable", expenses.adminCostsAllowable),
-      resolveAdjusted("/expenses/interestOnBankOtherLoansAllowable", expenses.interestOnBankOtherLoansAllowable),
-      resolveAdjusted("/expenses/financeChargesAllowable", expenses.financeChargesAllowable),
-      resolveAdjusted("/expenses/irrecoverableDebtsAllowable", expenses.irrecoverableDebtsAllowable),
-      resolveAdjusted("/expenses/professionalFeesAllowable", expenses.professionalFeesAllowable),
-      resolveAdjusted("/expenses/depreciationAllowable", expenses.depreciationAllowable),
-      resolveAdjusted("/expenses/otherExpensesAllowable", expenses.otherExpensesAllowable),
-      resolveAdjusted("/expenses/advertisingCostsAllowable", expenses.advertisingCostsAllowable),
-      resolveAdjusted("/expenses/businessEntertainmentCostsAllowable", expenses.businessEntertainmentCostsAllowable),
+      resolveAdjusted("/expenses/costOfGoods", expenses.costOfGoods),
+      resolveAdjusted("/expenses/paymentsToSubcontractors", expenses.paymentsToSubcontractors),
+      resolveAdjusted("/expenses/wagesAndStaffCosts", expenses.wagesAndStaffCosts),
+      resolveAdjusted("/expenses/carVanTravelExpenses", expenses.carVanTravelExpenses),
+      resolveAdjusted("/expenses/premisesRunningCosts", expenses.premisesRunningCosts),
+      resolveAdjusted("/expenses/maintenanceCosts", expenses.maintenanceCosts),
+      resolveAdjusted("/expenses/adminCosts", expenses.adminCosts),
+      resolveAdjusted("/expenses/interestOnBankOtherLoans", expenses.interestOnBankOtherLoans),
+      resolveAdjusted("/expenses/financeCharges", expenses.financeCharges),
+      resolveAdjusted("/expenses/irrecoverableDebts", expenses.irrecoverableDebts),
+      resolveAdjusted("/expenses/professionalFees", expenses.professionalFees),
+      resolveAdjusted("/expenses/depreciation", expenses.depreciation),
+      resolveAdjusted("/expenses/otherExpenses", expenses.otherExpenses),
+      resolveAdjusted("/expenses/advertisingCosts", expenses.advertisingCosts),
+      resolveAdjusted("/expenses/businessEntertainmentCosts", expenses.businessEntertainmentCosts),
       resolveAdjusted("/expenses/consolidatedExpenses", expenses.consolidatedExpenses)
     )
 
