@@ -119,9 +119,9 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
 
         List(
           "/expenses",
-          "/expenses/costOfGoodsAllowable",
-          "/expenses/paymentsToSubcontractorsAllowable",
-          "/expenses/wagesAndStaffCostsAllowable"
+          "/expenses/costOfGoods",
+          "/expenses/paymentsToSubcontractors",
+          "/expenses/wagesAndStaffCosts"
         ).foreach(path => testWith(mtdRequestJson.replaceWithEmptyObject(path), path))
 
         List(
@@ -190,21 +190,21 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
         List(
           "/income/turnover",
           "/income/other",
-          "/expenses/costOfGoodsAllowable",
-          "/expenses/paymentsToSubcontractorsAllowable",
-          "/expenses/wagesAndStaffCostsAllowable",
-          "/expenses/carVanTravelExpensesAllowable",
-          "/expenses/premisesRunningCostsAllowable",
-          "/expenses/maintenanceCostsAllowable",
-          "/expenses/adminCostsAllowable",
-          "/expenses/interestOnBankOtherLoansAllowable",
-          "/expenses/financeChargesAllowable",
-          "/expenses/irrecoverableDebtsAllowable",
-          "/expenses/professionalFeesAllowable",
-          "/expenses/depreciationAllowable",
-          "/expenses/otherExpensesAllowable",
-          "/expenses/advertisingCostsAllowable",
-          "/expenses/businessEntertainmentCostsAllowable",
+          "/expenses/costOfGoods",
+          "/expenses/paymentsToSubcontractors",
+          "/expenses/wagesAndStaffCosts",
+          "/expenses/carVanTravelExpenses",
+          "/expenses/premisesRunningCosts",
+          "/expenses/maintenanceCosts",
+          "/expenses/adminCosts",
+          "/expenses/interestOnBankOtherLoans",
+          "/expenses/financeCharges",
+          "/expenses/irrecoverableDebts",
+          "/expenses/professionalFees",
+          "/expenses/depreciation",
+          "/expenses/otherExpenses",
+          "/expenses/advertisingCosts",
+          "/expenses/businessEntertainmentCosts",
           "/additions/costOfGoodsDisallowable",
           "/additions/paymentsToSubcontractorsDisallowable",
           "/additions/wagesAndStaffCostsDisallowable",
