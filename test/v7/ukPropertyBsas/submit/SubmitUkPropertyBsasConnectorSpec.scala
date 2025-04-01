@@ -72,6 +72,15 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
         result shouldBe outcome
       }
 
+      "post a SubmitBsasRequest body and return the result for the TYS scenario on HIP" in new HipTest with Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val url     = s"$baseUrl/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
+        willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
+
+        val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(tysRequest))
+        result shouldBe outcome
+      }
+
     }
   }
 

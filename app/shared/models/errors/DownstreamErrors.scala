@@ -16,19 +16,15 @@
 
 package shared.models.errors
 
-import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{JsPath, Reads}
+import play.api.libs.json.{Reads, __}
 
 case class DownstreamErrorCode(code: String) {
   def toMtd(httpStatus: Int): MtdError = MtdError(code = code, message = "", httpStatus = httpStatus)
 }
 
 object DownstreamErrorCode {
-
-  implicit val reads: Reads[DownstreamErrorCode] =
-    ((JsPath \ "code").readNullable[String] and
-      (JsPath \ "type").readNullable[String])((code: Option[String], `type`: Option[String]) =>
-      new DownstreamErrorCode(if (code.isEmpty) `type`.get else code.get))
+  implicit val reads: Reads[DownstreamErrorCode] = (__ \ "code").read[String].map(DownstreamErrorCode(_))
+  (__ \ "type").read[String].map(DownstreamErrorCode(_))
 }
 
 sealed trait DownstreamError
