@@ -71,7 +71,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(
-        url = s"$baseUrl/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId",
+        url = s"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId",
         body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 

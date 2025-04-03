@@ -41,7 +41,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
         response.header("X-CorrelationId") should not be empty
       }
 
-      "a valid request is made for TYS" in new TysIfsTest {
+      "a valid request is made for TYS" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
@@ -75,7 +75,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new HipTest {
 
             override val nino: String          = requestNino
             override val calculationId: String = requestCalculationId
@@ -120,7 +120,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
 
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
@@ -214,10 +214,10 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   }
 
-  private trait TysIfsTest extends Test {
+  private trait HipTest extends Test {
     override def taxYear: String = "2023-24"
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

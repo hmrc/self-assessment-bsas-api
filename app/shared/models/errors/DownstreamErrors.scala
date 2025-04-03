@@ -24,7 +24,15 @@ case class DownstreamErrorCode(code: String) {
 
 object DownstreamErrorCode {
   implicit val reads: Reads[DownstreamErrorCode] = (__ \ "code").read[String].map(DownstreamErrorCode(_))
-  (__ \ "type").read[String].map(DownstreamErrorCode(_))
+}
+
+case class HipDownstreamErrorCode(code: String) {
+  def toMtd(httpStatus: Int): MtdError           = MtdError(code = code, message = "", httpStatus = httpStatus)
+  def toDownstreamErrorCode: DownstreamErrorCode = DownstreamErrorCode(code)
+}
+
+object HipDownstreamErrorCode {
+  implicit val reads: Reads[HipDownstreamErrorCode] = (__ \ "type").read[String].map(HipDownstreamErrorCode(_))
 }
 
 sealed trait DownstreamError

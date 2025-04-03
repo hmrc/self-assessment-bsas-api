@@ -45,7 +45,7 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         response.header("Content-Type") shouldBe None
       }
 
-      "any valid request is made for a TYS tax year" in new TysIfsTest {
+      "any valid request is made for a TYS tax year" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
@@ -64,7 +64,7 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new HipTest {
 
             override val nino: String            = requestNino
             override val calculationId: String   = requestCalculationId
@@ -207,10 +207,10 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
   }
 
-  private trait TysIfsTest extends Test {
+  private trait HipTest extends Test {
     override def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUri: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
   }
 
   private trait NonTysTest extends Test {

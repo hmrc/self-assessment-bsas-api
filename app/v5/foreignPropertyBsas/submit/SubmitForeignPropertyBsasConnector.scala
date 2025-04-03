@@ -42,7 +42,7 @@ class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClient, val ap
     val downstreamUri = taxYear match {
       case Some(ty) if ty.useTaxYearSpecificApi =>
         ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874") match {
-          case true  => HipUri[Unit](s"income-tax/v1/${ty.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
+          case true  => HipUri[Unit](s"itsa/income-tax/v1/${ty.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
           case false => TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/$nino/$calculationId")
         }
       case _ =>

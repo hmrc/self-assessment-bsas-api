@@ -39,7 +39,7 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
           downstreamRequestWithOnlyZeroAdjustments
         )
       ).foreach { case (scenario, mtdRequestBodyJson, downstreamRequestBodyJson) =>
-        s"any valid request $scenario is made for TYS" in new TysTest {
+        s"any valid request $scenario is made for TYS" in new HipTest {
           override def setupStubs(): Unit = stubDownstreamSuccess(downstreamRequestBodyJson)
 
           val response: WSResponse = await(request().post(mtdRequestBodyJson))
@@ -74,7 +74,7 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
                               expectedStatus: Int,
                               expectedBody: MtdError,
                               errorWrapper: Option[ErrorWrapper]): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new TysTest {
+        s"validation fails with ${expectedBody.code} error" in new HipTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
           override val taxYear: String       = requestTaxYear
@@ -186,7 +186,7 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
@@ -271,10 +271,10 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
   }
 
-  private trait TysTest extends Test {
+  private trait HipTest extends Test {
     override def taxYear: String = "2025-26"
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

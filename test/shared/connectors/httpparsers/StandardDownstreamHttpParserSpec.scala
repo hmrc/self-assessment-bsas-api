@@ -140,6 +140,32 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
     """.stripMargin
   )
 
+  val singleHipErrorJson: JsValue = Json.parse(
+    """
+      |{
+      |   "type": "TYPE",
+      |   "reason": "MESSAGE"
+      |}
+    """.stripMargin
+  )
+
+  val multipleHipErrorsJson: JsValue = Json.parse(
+    """
+      |{
+      |   "failures": [
+      |       {
+      |           "type": "TYPE 1",
+      |           "reason": "MESSAGE 1"
+      |       },
+      |       {
+      |           "type": "TYPE 2",
+      |           "reason": "MESSAGE 2"
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
   val malformedErrorJson: JsValue = Json.parse(
     """
       |{
@@ -159,11 +185,26 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
             ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("CODE"))))
         }
 
+        "be able to parse a single HIP error" in {
+          val httpResponse = HttpResponse(responseCode, singleHipErrorJson.toString(), Map("CorrelationId" -> List(correlationId)))
+
+          httpReads.read(method, url, httpResponse) shouldBe Left(
+            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("TYPE"))))
+        }
+
         "be able to parse multiple errors" in {
           val httpResponse = HttpResponse(responseCode, multipleErrorsJson.toString(), Map("CorrelationId" -> List(correlationId)))
 
           httpReads.read(method, url, httpResponse) shouldBe {
             Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode("CODE 1"), DownstreamErrorCode("CODE 2")))))
+          }
+        }
+
+        "be able to parse multiple HIP errors" in {
+          val httpResponse = HttpResponse(responseCode, multipleHipErrorsJson.toString(), Map("CorrelationId" -> List(correlationId)))
+
+          httpReads.read(method, url, httpResponse) shouldBe {
+            Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode("TYPE 1"), DownstreamErrorCode("TYPE 2")))))
           }
         }
 

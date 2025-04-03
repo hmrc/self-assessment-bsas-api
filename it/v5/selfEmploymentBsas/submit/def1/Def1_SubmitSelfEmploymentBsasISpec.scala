@@ -65,9 +65,9 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
-  private trait TysIfsTest extends Test {
+  private trait HipTest extends Test {
     def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust?taxYear=2023-24"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
   }
 
   val requestBody: JsValue = mtdRequestJson
@@ -87,7 +87,7 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
         result.header("Content-Type") shouldBe None
       }
 
-      "any valid TYS request is made" in new TysIfsTest {
+      "any valid TYS request is made" in new HipTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

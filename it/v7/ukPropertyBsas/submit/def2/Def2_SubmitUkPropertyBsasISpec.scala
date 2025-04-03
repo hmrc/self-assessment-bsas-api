@@ -56,7 +56,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
           downstreamRequestWithOnlyZeroAdjustments("04")
         )
       ).foreach { case (scenario, mtdRequestBodyJson, downstreamRequestBodyJson) =>
-        s"any valid request $scenario is made for a TYS tax year" in new TysTest {
+        s"any valid request $scenario is made for a TYS tax year" in new HipTest {
           override def setupStubs(): Unit = stubDownstreamSuccess(downstreamRequestBodyJson)
 
           val response: WSResponse = await(request().post(mtdRequestBodyJson))
@@ -75,7 +75,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
                               expectedBody: MtdError,
                               errorWrapper: Option[ErrorWrapper],
                               scenario: Option[String]): Unit = {
-        s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new TysTest {
+        s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new HipTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
           override val taxYear: String       = requestTaxYear
@@ -227,7 +227,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
@@ -310,10 +310,10 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
   }
 
-  private trait TysTest extends Test {
+  private trait HipTest extends Test {
     override def taxYear: String = "2024-25"
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino/$calculationId"
+    def downstreamUri: String = s"/itsa/income-tax/v1/24-25/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

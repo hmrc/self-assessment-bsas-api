@@ -43,7 +43,7 @@ class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClient, val app
     val downstreamUri = taxYear match {
       case Some(taxYearValue) if taxYearValue.useTaxYearSpecificApi =>
         ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874") match {
-          case true  => HipUri[Unit](s"income-tax/v1/${taxYearValue.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
+          case true  => HipUri[Unit](s"itsa/income-tax/v1/${taxYearValue.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
           case false => TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/$nino/$calculationId")
         }
       case _ => IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
