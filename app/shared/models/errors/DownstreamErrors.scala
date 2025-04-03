@@ -16,14 +16,14 @@
 
 package shared.models.errors
 
-import play.api.libs.json.{Reads, __}
+import play.api.libs.json.{Json, Reads, __}
 
 case class DownstreamErrorCode(code: String) {
   def toMtd(httpStatus: Int): MtdError = MtdError(code = code, message = "", httpStatus = httpStatus)
 }
 
 object DownstreamErrorCode {
-  implicit val reads: Reads[DownstreamErrorCode] = (__ \ "code").read[String].map(DownstreamErrorCode(_))
+  implicit val reads: Reads[DownstreamErrorCode] = Json.reads[DownstreamErrorCode]
 }
 
 case class HipDownstreamErrorCode(code: String) {

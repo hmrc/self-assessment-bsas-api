@@ -143,8 +143,14 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
   val singleHipErrorJson: JsValue = Json.parse(
     """
       |{
-      |   "type": "TYPE",
-      |   "reason": "MESSAGE"
+      |   "response": {
+      |      "failures": [
+      |         {
+      |            "type": "TYPE",
+      |            "reason": "MESSAGE"
+      |         }
+      |      ]
+      |   }
       |}
     """.stripMargin
   )
@@ -152,16 +158,18 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
   val multipleHipErrorsJson: JsValue = Json.parse(
     """
       |{
-      |   "failures": [
-      |       {
-      |           "type": "TYPE 1",
-      |           "reason": "MESSAGE 1"
-      |       },
-      |       {
-      |           "type": "TYPE 2",
-      |           "reason": "MESSAGE 2"
-      |       }
-      |   ]
+      |   "response": {
+      |      "failures": [
+      |         {
+      |            "type": "TYPE 1",
+      |            "reason": "MESSAGE 1"
+      |         },
+      |         {
+      |            "type": "TYPE 2",
+      |            "reason": "MESSAGE 2"
+      |         }
+      |      ]
+      |   }
       |}
     """.stripMargin
   )
