@@ -14,32 +14,54 @@
  * limitations under the License.
  */
 
-package v7.foreignPropertyBsas.submit.def3
+package v7.foreignPropertyBsas.submit.def2
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsPath, JsValue, Json, Reads}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers._
 import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures._
+import v7.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures._
 
-class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
+
+  private def removePropertyFromArray(json: JsValue, pathToArray: JsPath): JsValue =
+    json
+      .transform(
+        pathToArray.json.update(
+          Reads.list((JsPath \ "expenses" \ "consolidatedExpenses").json.prune).map(JsArray(_))
+        )
+      )
+      .get
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
       List(
-        ("without zero adjustments", mtdRequestForeignPropertyValid, downstreamRequestValid),
         (
-          "with only zero adjustments set to true",
-          mtdRequestWithOnlyZeroAdjustments(true),
-          downstreamRequestWithOnlyZeroAdjustments
+          "without zero adjustments in foreignProperty",
+          removePropertyFromArray(mtdRequestFull, JsPath \ "foreignProperty" \ "countryLevelDetail"),
+          removePropertyFromArray(downstreamRequestFull, JsPath \ "adjustments")
+        ),
+        ("without zero adjustments in foreignFhlEea", mtdRequestValid, downstreamRequestValid),
+        (
+          "with only zero adjustments set to true in foreignProperty",
+          mtdRequestWithOnlyZeroAdjustments("foreignProperty", zeroAdjustments = true),
+          downstreamRequestWithOnlyZeroAdjustments("15")
+        ),
+        (
+          "with only zero adjustments set to true in foreignFhlEea",
+          mtdRequestWithOnlyZeroAdjustments("foreignFhlEea", zeroAdjustments = true),
+          downstreamRequestWithOnlyZeroAdjustments("03")
         )
       ).foreach { case (scenario, mtdRequestBodyJson, downstreamRequestBodyJson) =>
-        s"any valid request $scenario is made for TYS" in new HipTest {
+        s"a valid request $scenario is made for TYS" in new TysTest {
           override def setupStubs(): Unit = stubDownstreamSuccess(downstreamRequestBodyJson)
 
           val response: WSResponse = await(request().post(mtdRequestBodyJson))
@@ -73,8 +95,9 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
                               requestBody: JsValue,
                               expectedStatus: Int,
                               expectedBody: MtdError,
-                              errorWrapper: Option[ErrorWrapper]): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new HipTest {
+                              errorWrapper: Option[ErrorWrapper],
+                              scenario: Option[String]): Unit = {
+        s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new TysTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
           override val taxYear: String       = requestTaxYear
@@ -91,32 +114,26 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
       }
 
       val input = List(
-        ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", mtdRequestForeignPropertyValid, BAD_REQUEST, NinoFormatError, None),
-        ("AA123456A", "BAD_CALC_ID", "2025-26", mtdRequestForeignPropertyValid, BAD_REQUEST, CalculationIdFormatError, None),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestForeignPropertyValid, BAD_REQUEST, TaxYearFormatError, None),
+        ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2024-25", mtdRequestValid, BAD_REQUEST, NinoFormatError, None, None),
+        ("AA123456A", "BAD_CALC_ID", "2024-25", mtdRequestValid, BAD_REQUEST, CalculationIdFormatError, None, None),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestValid, BAD_REQUEST, TaxYearFormatError, None, None),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2022-24", mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError, None, None),
+        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2024-25", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, None),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2022-24",
-          mtdRequestForeignPropertyValid,
-          BAD_REQUEST,
-          RuleTaxYearRangeInvalidError,
-          None),
-        ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
-        (
-          "AA123456A",
-          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
-          mtdRequestWithZeroAndOtherAdjustments(true),
+          "2024-25",
+          mtdRequestWithZeroAndOtherAdjustments("foreignProperty", zeroAdjustments = true),
           BAD_REQUEST,
           RuleBothAdjustmentsSuppliedError.withPath("/foreignProperty"),
-          None
+          None,
+          Some("for zero adjustments set to true and other adjustments supplied in foreignProperty")
         ),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
-          mtdRequestWithZeroAndOtherAdjustments(false),
+          "2024-25",
+          mtdRequestWithZeroAndOtherAdjustments("foreignProperty", zeroAdjustments = false),
           BAD_REQUEST,
           BadRequestError,
           Some(
@@ -130,54 +147,101 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
                 )
               )
             )
-          )
+          ),
+          Some("for zero adjustments set to false and other adjustments supplied in foreignProperty")
         ),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
-          mtdRequestWithOnlyZeroAdjustments(false),
+          "2024-25",
+          mtdRequestWithOnlyZeroAdjustments("foreignProperty", zeroAdjustments = false),
           BAD_REQUEST,
           RuleZeroAdjustmentsInvalidError.withPath("/foreignProperty/zeroAdjustments"),
-          None
+          None,
+          Some("for only zero adjustments set to false in foreignProperty")
         ),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
-          mtdRequestForeignPropertyFull,
+          "2024-25",
+          mtdRequestWithZeroAndOtherAdjustments("foreignFhlEea", zeroAdjustments = true),
+          BAD_REQUEST,
+          RuleBothAdjustmentsSuppliedError.withPath("/foreignFhlEea"),
+          None,
+          Some("for zero adjustments set to true and other adjustments supplied in foreignFhlEea")
+        ),
+        (
+          "AA123456A",
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+          "2024-25",
+          mtdRequestWithZeroAndOtherAdjustments("foreignFhlEea", zeroAdjustments = false),
+          BAD_REQUEST,
+          BadRequestError,
+          Some(
+            ErrorWrapper(
+              "123",
+              BadRequestError,
+              Some(
+                List(
+                  RuleBothAdjustmentsSuppliedError.withPath("/foreignFhlEea"),
+                  RuleZeroAdjustmentsInvalidError.withPath("/foreignFhlEea/zeroAdjustments")
+                )
+              )
+            )
+          ),
+          Some("for zero adjustments set to false and other adjustments supplied in foreignFhlEea")
+        ),
+        (
+          "AA123456A",
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+          "2024-25",
+          mtdRequestWithOnlyZeroAdjustments("foreignFhlEea", zeroAdjustments = false),
+          BAD_REQUEST,
+          RuleZeroAdjustmentsInvalidError.withPath("/foreignFhlEea/zeroAdjustments"),
+          None,
+          Some("for only zero adjustments set to false in foreignFhlEea")
+        ),
+        (
+          "AA123456A",
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+          "2024-25",
+          mtdRequestFull,
           BAD_REQUEST,
           RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/countryLevelDetail/0/expenses"))),
+          None,
           None
         ),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
+          "2024-25",
           requestBodyWithCountryCode("XXX"),
           BAD_REQUEST,
           RuleCountryCodeError.copy(paths = Some(List("/foreignProperty/countryLevelDetail/0/countryCode"))),
+          None,
           None
         ),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
+          "2024-25",
           requestBodyWithCountryCode("FRANCE"),
           BAD_REQUEST,
           CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/countryLevelDetail/0/countryCode"))),
+          None,
           None
         ),
         (
           "AA123456A",
           "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
-          mtdRequestForeignPropertyInvalidResidentialCost,
+          "2024-25",
+          mtdRequestForeignPropertyInvalid,
           BAD_REQUEST,
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
             paths = Some(List("/foreignProperty/countryLevelDetail/0/expenses/residentialFinancialCost"))
           ),
+          None,
           None
         )
       )
@@ -186,11 +250,12 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysTest {
+
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request().post(mtdRequestForeignPropertyValid))
+            val response: WSResponse = await(request().post(mtdRequestValid))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -215,7 +280,6 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
           (CONFLICT, "ASC_ALREADY_SUPERSEDED", BAD_REQUEST, RuleSummaryStatusSuperseded),
           (CONFLICT, "ASC_ALREADY_ADJUSTED", BAD_REQUEST, RuleAlreadyAdjusted),
           (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", BAD_REQUEST, RuleResultingValueNotPermitted),
-          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError),
           (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", BAD_REQUEST, RuleSummaryStatusInvalid),
           (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
@@ -271,10 +335,10 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
   }
 
-  private trait HipTest extends Test {
-    override def taxYear: String = "2025-26"
+  private trait TysTest extends Test {
+    override def taxYear: String = "2024-25"
 
-    def downstreamUrl: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino/$calculationId"
 
   }
 

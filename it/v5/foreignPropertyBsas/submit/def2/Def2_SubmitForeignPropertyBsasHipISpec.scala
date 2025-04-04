@@ -33,19 +33,10 @@ import v5.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsa
   mtdRequestValid
 }
 
-class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def2_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
-      "any valid foreignProperty request is made" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(mtdRequestValid))
-        response.status shouldBe OK
-        response.header("X-CorrelationId") should not be empty
-      }
 
       "a valid request is made for TYS" in new HipTest {
         override def setupStubs(): Unit = {
@@ -223,11 +214,6 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
          |        "reason": "message"
          |      }
     """.stripMargin
-
-  }
-
-  private trait NonTysTest extends Test {
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

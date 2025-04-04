@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v7.ukPropertyBsas.submit.def2
+package v7.ukPropertyBsas.submit.def3
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -25,38 +25,24 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v7.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  val requestBodyJson: JsValue           = validfhlInputJson
-  val ukPropertyRequestBodyJson: JsValue = validUkPropertyInputJson
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
       List(
+        ("without zero adjustments", fullRequestJson, fullDownStreamRequest),
         (
-          "without zero adjustments in ukProperty",
-          ukPropertyRequestBodyJson,
-          downstreamRequestUkPropertyFull.removeProperty("/adjustments/expenses/consolidatedExpenses")
-        ),
-        (
-          "without zero adjustments in furnishedHolidayLet",
-          requestBodyJson,
-          downstreamRequestFhlFull.removeProperty("/adjustments/expenses/consolidatedExpenses")
-        ),
-        (
-          "with only zero adjustments set to true in ukProperty",
-          mtdRequestWithOnlyZeroAdjustments("ukProperty", zeroAdjustments = true),
-          downstreamRequestWithOnlyZeroAdjustments("02")
-        ),
-        (
-          "with only zero adjustments set to true in furnishedHolidayLet",
-          mtdRequestWithOnlyZeroAdjustments("furnishedHolidayLet", zeroAdjustments = true),
-          downstreamRequestWithOnlyZeroAdjustments("04")
+          "with only zero adjustments set to true",
+          mtdRequestWithOnlyZeroAdjustments(true),
+          downstreamRequestWithOnlyZeroAdjustments
         )
       ).foreach { case (scenario, mtdRequestBodyJson, downstreamRequestBodyJson) =>
-        s"any valid request $scenario is made for a TYS tax year" in new HipTest {
+        s"any valid request $scenario is made for a TYS tax year" in new TysTest {
           override def setupStubs(): Unit = stubDownstreamSuccess(downstreamRequestBodyJson)
 
           val response: WSResponse = await(request().post(mtdRequestBodyJson))
@@ -67,15 +53,15 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
     }
 
     "return validation error according to spec" when {
+
       def validationErrorTest(requestNino: String,
                               requestCalculationId: String,
                               requestTaxYear: String,
                               requestBody: JsValue,
                               expectedStatus: Int,
                               expectedBody: MtdError,
-                              errorWrapper: Option[ErrorWrapper],
-                              scenario: Option[String]): Unit = {
-        s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new HipTest {
+                              errorWrapper: Option[ErrorWrapper]): Unit = {
+        s"validation fails with ${expectedBody.code} error" in new TysTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
           override val taxYear: String       = requestTaxYear
@@ -92,25 +78,24 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       }
 
       val input = List(
-        ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2024-25", requestBodyJson, BAD_REQUEST, NinoFormatError, None, None),
-        ("AA123456A", "041f7e4d87b9", "2024-25", requestBodyJson, BAD_REQUEST, CalculationIdFormatError, None, None),
-        ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "BAD_TAX_YEAR", requestBodyJson, BAD_REQUEST, TaxYearFormatError, None, None),
-        ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2022-24", requestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None, None),
+        ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2025-26", fullRequestJson, BAD_REQUEST, NinoFormatError, None),
+        ("AA123456A", "041f7e4d87b9", "2025-26", fullRequestJson, BAD_REQUEST, CalculationIdFormatError, None),
+        ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "BAD_TAX_YEAR", fullRequestJson, BAD_REQUEST, TaxYearFormatError, None),
+        ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2022-24", fullRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
         (
           "AA123456A",
           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          mtdRequestWithZeroAndOtherAdjustments("ukProperty", zeroAdjustments = true),
+          "2025-26",
+          mtdRequestWithZeroAndOtherAdjustments(true),
           BAD_REQUEST,
           RuleBothAdjustmentsSuppliedError.withPath("/ukProperty"),
-          None,
-          Some("for zero adjustments set to true and other adjustments supplied in ukProperty")
+          None
         ),
         (
           "AA123456A",
           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          mtdRequestWithZeroAndOtherAdjustments("ukProperty", zeroAdjustments = false),
+          "2025-26",
+          mtdRequestWithZeroAndOtherAdjustments(false),
           BAD_REQUEST,
           BadRequestError,
           Some(
@@ -124,101 +109,45 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
                 )
               )
             )
-          ),
-          Some("for zero adjustments set to false and other adjustments supplied in ukProperty")
+          )
         ),
         (
           "AA123456A",
           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          mtdRequestWithOnlyZeroAdjustments("ukProperty", zeroAdjustments = false),
+          "2025-26",
+          mtdRequestWithOnlyZeroAdjustments(false),
           BAD_REQUEST,
           RuleZeroAdjustmentsInvalidError.withPath("/ukProperty/zeroAdjustments"),
-          None,
-          Some("for only zero adjustments set to false in ukProperty")
-        ),
-        (
-          "AA123456A",
-          "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          mtdRequestWithZeroAndOtherAdjustments("furnishedHolidayLet", zeroAdjustments = true),
-          BAD_REQUEST,
-          RuleBothAdjustmentsSuppliedError.withPath("/furnishedHolidayLet"),
-          None,
-          Some("for zero adjustments set to true and other adjustments supplied in furnishedHolidayLet")
-        ),
-        (
-          "AA123456A",
-          "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          mtdRequestWithZeroAndOtherAdjustments("furnishedHolidayLet", zeroAdjustments = false),
-          BAD_REQUEST,
-          BadRequestError,
-          Some(
-            ErrorWrapper(
-              "123",
-              BadRequestError,
-              Some(
-                List(
-                  RuleBothAdjustmentsSuppliedError.withPath("/furnishedHolidayLet"),
-                  RuleZeroAdjustmentsInvalidError.withPath("/furnishedHolidayLet/zeroAdjustments")
-                )
-              )
-            )
-          ),
-          Some("for zero adjustments set to false and other adjustments supplied in furnishedHolidayLet")
-        ),
-        (
-          "AA123456A",
-          "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          mtdRequestWithOnlyZeroAdjustments("furnishedHolidayLet", zeroAdjustments = false),
-          BAD_REQUEST,
-          RuleZeroAdjustmentsInvalidError.withPath("/furnishedHolidayLet/zeroAdjustments"),
-          None,
-          Some("for only zero adjustments set to false in furnishedHolidayLet")
-        ),
-        (
-          "AA123456A",
-          "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
-          BAD_REQUEST,
-          RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/furnishedHolidayLet/income"))),
-          None,
           None
         ),
         (
           "AA123456A",
           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          requestBodyJson.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
+          "2025-26",
+          fullRequestJson.replaceWithEmptyObject("/ukProperty/income"),
           BAD_REQUEST,
-          RuleBothExpensesError.copy(paths = Some(List("/furnishedHolidayLet/expenses"))),
-          None,
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/ukProperty/income"))),
           None
         ),
         (
           "AA123456A",
           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          requestBodyJson.update("/ukProperty/income/totalRentsReceived", JsNumber(2.25)),
+          "2025-26",
+          fullRequestJson.update("/ukProperty/expenses/consolidatedExpenses", JsNumber(1.23)),
           BAD_REQUEST,
-          RuleBothPropertiesSuppliedError,
-          None,
+          RuleBothExpensesError.copy(paths = Some(List("/ukProperty/expenses"))),
           None
         ),
         (
           "AA123456A",
           "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          ukPropertyRequestBodyJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
+          "2025-26",
+          fullRequestJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
           BAD_REQUEST,
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
             paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
           ),
-          None,
           None
         )
       )
@@ -227,11 +156,11 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysTest {
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request().post(requestBodyJson))
+            val response: WSResponse = await(request().post(fullRequestJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -256,6 +185,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
           (UNPROCESSABLE_ENTITY, "UNALLOWABLE_VALUE", BAD_REQUEST, RuleResultingValueNotPermitted),
           (UNPROCESSABLE_ENTITY, "ASC_ID_INVALID", BAD_REQUEST, RuleSummaryStatusInvalid),
           (UNPROCESSABLE_ENTITY, "INCOMESOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError),
+          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
@@ -310,10 +240,10 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
   }
 
-  private trait HipTest extends Test {
-    override def taxYear: String = "2024-25"
+  private trait TysTest extends Test {
+    override def taxYear: String = "2025-26"
 
-    def downstreamUri: String = s"/itsa/income-tax/v1/24-25/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
   }
 
 }

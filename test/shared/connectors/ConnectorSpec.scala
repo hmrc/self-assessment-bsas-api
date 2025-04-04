@@ -16,14 +16,16 @@
 
 package shared.connectors
 
+import com.google.common.base.Charsets
 import org.scalamock.handlers.CallHandler
 import play.api.Configuration
 import play.api.http.{HeaderNames, MimeTypes, Status}
-import shared.config.{DownstreamConfig, MockSharedAppConfig}
+import shared.config.{BasicAuthDownstreamConfig, DownstreamConfig, MockSharedAppConfig}
 import shared.mocks.MockHttpClient
 import shared.utils.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.util.Base64
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames {
@@ -136,11 +138,28 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false)).anyNumberOfTimes()
   }
 
-  protected trait HipTest extends StandardConnectorTest {
-    override val name = "hip"
+  protected trait HipTest extends ConnectorTest {
+    private val clientId     = "clientId"
+    private val clientSecret = "clientSecret"
 
-    MockedSharedAppConfig.hipDownstreamConfig.anyNumberOfTimes() returns config
+    private val token =
+      Base64.getEncoder.encodeToString(s"$clientId:$clientSecret".getBytes(Charsets.UTF_8))
+
+    private val environment = "hip-environment"
+
+    protected final lazy val requiredHeaders: Seq[(String, String)] = List(
+      "Authorization"        -> s"Basic $token",
+      "Environment"          -> environment,
+      "User-Agent"           -> "this-api",
+      "CorrelationId"        -> correlationId,
+      "Gov-Test-Scenario"    -> "DEFAULT"
+    ) ++ intent.map("intent" -> _)
+
+    MockedSharedAppConfig.hipDownstreamConfig
+      .anyNumberOfTimes() returns BasicAuthDownstreamConfig(this.baseUrl, environment, clientId, clientSecret, Some(allowedHeaders))
+
     MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true)).anyNumberOfTimes()
+
   }
 
 }

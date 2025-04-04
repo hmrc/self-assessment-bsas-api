@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.ukPropertyBsas.submit.def2
+package v5.ukPropertyBsas.submit.def1
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -28,10 +28,12 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  val requestBodyJson: JsValue       = validfhlInputJson
-  val nonFHLRequestBodyJson: JsValue = validNonFHLInputJson
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
+
+  val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
@@ -46,7 +48,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         response.header("Content-Type") shouldBe None
       }
 
-      "any valid request is made for a TYS tax year" in new HipTest {
+      "any valid request is made for a TYS tax year" in new TysIfsTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
@@ -65,7 +67,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new HipTest {
+          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
             override val nino: String            = requestNino
             override val calculationId: String   = requestCalculationId
@@ -107,12 +109,14 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            Some("2024-25"),
-            nonFHLRequestBodyJson.update("/nonFurnishedHolidayLet/expenses/residentialFinancialCost", JsNumber(-1.523)),
+            None,
+            requestBodyJson
+              .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
+              .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
             BAD_REQUEST,
             ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
-              paths = Some(List("/nonFurnishedHolidayLet/expenses/residentialFinancialCost"))
+              message = "The value must be between -99999999999.99 and 99999999999.99",
+              paths = Some(List("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))
             ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -206,10 +210,10 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
   }
 
-  private trait HipTest extends Test {
-    override def taxYear: Option[String] = Some("2024-25")
+  private trait TysIfsTest extends Test {
+    override def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamUri: String = s"/itsa/income-tax/v1/24-25/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
   private trait NonTysTest extends Test {

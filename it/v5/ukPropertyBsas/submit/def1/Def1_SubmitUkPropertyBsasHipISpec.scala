@@ -28,23 +28,12 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def1_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made for a non-tys tax year" in new NonTysTest {
-
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(requestBodyJson))
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe None
-      }
-
       "any valid request is made for a TYS tax year" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
@@ -121,7 +110,7 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
 
             override def setupStubs(): Unit = {
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
@@ -211,11 +200,6 @@ class Def1_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
     override def taxYear: Option[String] = Some("2023-24")
 
     def downstreamUri: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
-  }
-
-  private trait NonTysTest extends Test {
-
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

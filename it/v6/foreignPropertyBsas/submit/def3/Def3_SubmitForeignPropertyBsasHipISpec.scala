@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def2
+package v6.foreignPropertyBsas.submit.def3
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -26,23 +26,24 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
+import v6.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
-  mtdRequestForeignPropertyValid,
-  mtdRequestFull,
-  mtdRequestValid
+  mtdRequestForeignPropertyFull,
+  mtdRequestForeignPropertyInvalidResidentialCost,
+  mtdRequestForeignPropertyValid
 }
 
-class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
+
       "a valid request is made for TYS" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
 
-        val response: WSResponse = await(request().post(mtdRequestValid))
+        val response: WSResponse = await(request().post(mtdRequestForeignPropertyValid))
         response.status shouldBe OK
         response.header("X-CorrelationId") should not be empty
       }
@@ -84,37 +85,37 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
         }
 
         val input = List(
-          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2024-25", mtdRequestValid, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "BAD_CALC_ID", "2024-25", mtdRequestValid, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestValid, BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2022-24", mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2024-25", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", mtdRequestForeignPropertyValid, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "BAD_CALC_ID", "2025-26", mtdRequestForeignPropertyValid, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestForeignPropertyValid, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2022-24", mtdRequestForeignPropertyValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2023-24",
-            mtdRequestFull,
+            "2025-26",
+            mtdRequestForeignPropertyFull,
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/0/expenses")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2024-25",
+            "2025-26",
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2024-25",
+            "2025-26",
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
             CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2024-25",
-            mtdRequestForeignPropertyValid,
+            "2025-26",
+            mtdRequestForeignPropertyInvalidResidentialCost,
             BAD_REQUEST,
             ValueFormatError.copy(
               message = "The value must be between 0 and 99999999999.99",
@@ -131,7 +132,7 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request().post(mtdRequestValid))
+            val response: WSResponse = await(request().post(mtdRequestForeignPropertyValid))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -215,9 +216,9 @@ class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
   }
 
   private trait HipTest extends Test {
-    override def taxYear: String = "2024-25"
+    override def taxYear: String = "2025-26"
 
-    def downstreamUrl: String = s"/itsa/income-tax/v1/24-25/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def1
+package v6.foreignPropertyBsas.submit.def2
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -23,24 +23,20 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
+import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
+import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
+  downstreamRequestValid,
+  mtdRequestForeignPropertyValid,
+  mtdRequestFull,
+  mtdRequestValid
+}
 
-class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
+class Def2_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
-      "any valid foreignProperty request is made" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(mtdRequestValid))
-        response.status shouldBe OK
-        response.header("X-CorrelationId") should not be empty
-      }
-
       "a valid request is made for TYS" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
@@ -88,11 +84,11 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
         }
 
         val input = List(
-          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-24", mtdRequestValid, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "BAD_CALC_ID", "2023-24", mtdRequestValid, BAD_REQUEST, CalculationIdFormatError),
+          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2024-25", mtdRequestValid, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "BAD_CALC_ID", "2024-25", mtdRequestValid, BAD_REQUEST, CalculationIdFormatError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestValid, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2022-24", mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-24", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2024-25", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
@@ -103,17 +99,27 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2023-24",
+            "2024-25",
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2023-24",
+            "2024-25",
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode"))))
+            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
+          (
+            "AA123456A",
+            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+            "2024-25",
+            mtdRequestForeignPropertyValid,
+            BAD_REQUEST,
+            ValueFormatError.copy(
+              message = "The value must be between 0 and 99999999999.99",
+              paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
+            ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -208,16 +214,10 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   }
 
-  private trait NonTysTest extends Test {
-    override def taxYear: String = "2019-20"
-    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-  }
-
   private trait HipTest extends Test {
-    override def taxYear: String = "2023-24"
+    override def taxYear: String = "2024-25"
 
-    def downstreamUrl: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/24-25/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

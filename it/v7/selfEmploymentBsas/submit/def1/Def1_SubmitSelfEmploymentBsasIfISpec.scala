@@ -28,7 +28,10 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
 
-class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
+class Def1_SubmitSelfEmploymentBsasIfISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   private trait Test {
 
@@ -67,10 +70,10 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
     def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
-  private trait HipTest extends Test {
+  private trait TysIfsTest extends Test {
     override def taxYear: String = "2023-24"
     def mtdUri: String           = s"/$nino/self-employment/$calculationId/adjust/$taxYear"
-    def downstreamUrl: String    = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
+    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
   val requestBody: JsValue = mtdRequestJson
@@ -90,7 +93,7 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
         result.header("Content-Type") shouldBe None
       }
 
-      "any valid TYS request is made" in new HipTest {
+      "any valid TYS request is made" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

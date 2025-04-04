@@ -33,7 +33,9 @@ trait MockSharedAppConfig extends MockFactory {
     def desDownstreamConfig: CallHandler0[DownstreamConfig]    = (() => mockSharedAppConfig.desDownstreamConfig: DownstreamConfig).expects()
     def ifsDownstreamConfig: CallHandler0[DownstreamConfig]    = (() => mockSharedAppConfig.ifsDownstreamConfig: DownstreamConfig).expects()
     def tysIfsDownstreamConfig: CallHandler0[DownstreamConfig] = (() => mockSharedAppConfig.tysIfsDownstreamConfig: DownstreamConfig).expects()
-    def hipDownstreamConfig: CallHandler[DownstreamConfig]     = (() => mockSharedAppConfig.hipDownstreamConfig: DownstreamConfig).expects()
+
+    def hipDownstreamConfig: CallHandler[BasicAuthDownstreamConfig] =
+      (() => mockSharedAppConfig.hipDownstreamConfig: BasicAuthDownstreamConfig).expects()
 
     // API Config
     def featureSwitchConfig: CallHandler0[Configuration]         = (() => mockSharedAppConfig.featureSwitchConfig: Configuration).expects()
