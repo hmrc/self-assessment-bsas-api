@@ -53,10 +53,16 @@ class Def1_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
-         | {
-         |   "code": "$code",
-         |   "reason": "error message"
-         | }
+         |{
+         |  "response": {
+         |    "failures": [
+         |      {
+         |        "type": "$code",
+         |        "reason": "message"
+         |      }
+         |    ]
+         |  }
+         |}
     """.stripMargin
 
   }

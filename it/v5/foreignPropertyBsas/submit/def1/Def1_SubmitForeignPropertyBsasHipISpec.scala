@@ -197,10 +197,16 @@ class Def1_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
+         |{
+         |  "response": {
+         |    "failures": [
          |      {
-         |        "code": "$code",
+         |        "type": "$code",
          |        "reason": "message"
          |      }
+         |    ]
+         |  }
+         |}
     """.stripMargin
 
   }

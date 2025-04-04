@@ -303,8 +303,14 @@ class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErr
     def errorBody(code: String): String =
       s"""
          |{
-         |  "code": "$code",
-         |  "reason": "message"
+         |  "response": {
+         |    "failures": [
+         |      {
+         |        "type": "$code",
+         |        "reason": "message"
+         |      }
+         |    ]
+         |  }
          |}
        """.stripMargin
 
