@@ -27,7 +27,10 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures._
 
-class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {

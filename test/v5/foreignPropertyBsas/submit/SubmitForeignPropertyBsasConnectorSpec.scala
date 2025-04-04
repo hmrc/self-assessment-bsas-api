@@ -76,6 +76,19 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
       result shouldBe outcome
     }
+
+    "post a SubmitBsasRequest body and return the result for a post-TYS tax year request on HIP" in new HipTest with Test {
+      private val request = requestWith(Some(TaxYear.fromMtd("2023-24")))
+      private val outcome = Right(ResponseWrapper(correlationId, ()))
+
+      willPut(
+        url = s"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId",
+        body = parsedSubmitForeignPropertyBsasRequestBody)
+        .returns(Future.successful(outcome))
+
+      val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
+      result shouldBe outcome
+    }
   }
 
 }

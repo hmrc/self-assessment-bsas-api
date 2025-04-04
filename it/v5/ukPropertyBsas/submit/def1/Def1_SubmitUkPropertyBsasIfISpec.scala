@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def3
+package v5.ukPropertyBsas.submit.def1
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -26,19 +26,34 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v6.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.fullRequestJson
+import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
+
+  val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
+      "any valid request is made for a non-tys tax year" in new NonTysTest {
+
+        override def setupStubs(): Unit = {
+          stubDownstreamSuccess()
+        }
+
+        val response: WSResponse = await(request().post(requestBodyJson))
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe None
+      }
 
       "any valid request is made for a TYS tax year" in new TysIfsTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
 
-        val response: WSResponse = await(request().post(fullRequestJson))
+        val response: WSResponse = await(request().post(requestBodyJson))
         response.status shouldBe OK
         response.header("Content-Type") shouldBe None
       }
@@ -48,15 +63,15 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       "validation error" when {
         def validationErrorTest(requestNino: String,
                                 requestCalculationId: String,
-                                requestTaxYear: String,
+                                requestTaxYear: Option[String],
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
 
-            override val nino: String          = requestNino
-            override val calculationId: String = requestCalculationId
-            override val taxYear: String       = requestTaxYear
+            override val nino: String            = requestNino
+            override val calculationId: String   = requestCalculationId
+            override val taxYear: Option[String] = requestTaxYear
 
             val response: WSResponse = await(request().post(requestBody))
             response.status shouldBe expectedStatus
@@ -65,35 +80,43 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
         }
 
         val input = List(
-          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2025-26", fullRequestJson, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "041f7e4d87b9", "2025-26", fullRequestJson, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "BAD_TAX_YEAR", fullRequestJson, BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", "2022-24", fullRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA1234A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", None, requestBodyJson, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "041f7e4d87b9", None, requestBodyJson, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-23"), requestBodyJson, BAD_REQUEST, InvalidTaxYearParameterError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("BAD_TAX_YEAR"), requestBodyJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2", Some("2022-24"), requestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            "2025-26",
-            fullRequestJson.replaceWithEmptyObject("/ukProperty/income"),
+            None,
+            requestBodyJson.replaceWithEmptyObject("/furnishedHolidayLet/income"),
             BAD_REQUEST,
-            RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/ukProperty/income")))
-          ),
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/furnishedHolidayLet/income")))),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            "2025-26",
-            fullRequestJson.update("/ukProperty/expenses/consolidatedExpenses", JsNumber(1.23)),
+            None,
+            requestBodyJson.update("/furnishedHolidayLet/expenses/consolidatedExpenses", JsNumber(1.23)),
             BAD_REQUEST,
-            RuleBothExpensesError.copy(paths = Some(List("/ukProperty/expenses")))
-          ),
+            RuleBothExpensesError.copy(paths = Some(List("/furnishedHolidayLet/expenses")))),
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            "2025-26",
-            fullRequestJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
+            None,
+            requestBodyJson.update("/nonFurnishedHolidayLet/income/totalRentsReceived", JsNumber(2.25)),
+            BAD_REQUEST,
+            RuleBothPropertiesSuppliedError),
+          (
+            "AA123456A",
+            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
+            None,
+            requestBodyJson
+              .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
+              .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
             BAD_REQUEST,
             ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
-              paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
+              message = "The value must be between -99999999999.99 and 99999999999.99",
+              paths = Some(List("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))
             ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -101,13 +124,13 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): Unit = {
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().post(fullRequestJson))
+            val response: WSResponse = await(request().post(requestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -149,8 +172,9 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val calculationId: String = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val nino: String                       = "AA123456A"
+    val calculationId: String              = "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    val ignoredDownstreamResponse: JsValue = Json.parse("""{"ignored": "doesn't matter"}""")
 
     def downstreamUri: String
 
@@ -164,14 +188,15 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(s"/$nino/uk-property/$calculationId/adjust/$taxYear")
+      buildRequest(s"/$nino/uk-property/$calculationId/adjust")
+        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
 
-    def taxYear: String
+    def taxYear: Option[String] = None
 
     def setupStubs(): Unit = ()
 
@@ -186,9 +211,14 @@ class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
   }
 
   private trait TysIfsTest extends Test {
-    override def taxYear: String = "2025-26"
+    override def taxYear: Option[String] = Some("2023-24")
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+  }
+
+  private trait NonTysTest extends Test {
+
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

@@ -75,6 +75,21 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       val result: DownstreamOutcome[Unit] = await(connector.submitSelfEmploymentBsas(request))
       result shouldBe outcome
     }
+
+    "post a SubmitBsasRequest body and return the result for a TYS tax year on HIP" in new HipTest with Test {
+      val request: SubmitSelfEmploymentBsasRequestData =
+        Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, Some(TaxYear.fromMtd("2023-24")), submitSelfEmploymentBsasRequestBodyModel)
+
+      val outcome = Right(ResponseWrapper(correlationId, ()))
+
+      willPut(
+        url = s"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId",
+        body = submitSelfEmploymentBsasRequestBodyModel
+      ).returns(Future.successful(outcome))
+
+      val result: DownstreamOutcome[Unit] = await(connector.submitSelfEmploymentBsas(request))
+      result shouldBe outcome
+    }
   }
 
 }

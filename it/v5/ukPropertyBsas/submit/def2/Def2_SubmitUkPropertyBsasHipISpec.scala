@@ -28,25 +28,14 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   val requestBodyJson: JsValue       = validfhlInputJson
   val nonFHLRequestBodyJson: JsValue = validNonFHLInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made for a non-tys tax year" in new NonTysTest {
-
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(requestBodyJson))
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe None
-      }
-
-      "any valid request is made for a TYS tax year" in new TysIfsTest {
+      "any valid request is made for a TYS tax year" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
@@ -65,7 +54,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new HipTest {
 
             override val nino: String            = requestNino
             override val calculationId: String   = requestCalculationId
@@ -199,17 +188,23 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
     def errorBody(code: String): String =
       s"""
          |{
-         |  "code": "$code",
-         |  "reason": "message"
+         |  "response": {
+         |    "failures": [
+         |      {
+         |        "type": "$code",
+         |        "reason": "message"
+         |      }
+         |    ]
+         |  }
          |}
        """.stripMargin
 
   }
 
-  private trait TysIfsTest extends Test {
+  private trait HipTest extends Test {
     override def taxYear: Option[String] = Some("2024-25")
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino/$calculationId"
+    def downstreamUri: String = s"/itsa/income-tax/v1/24-25/adjustable-summary-calculation/$nino/$calculationId"
   }
 
   private trait NonTysTest extends Test {
