@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.submit.def2
+package v7.ukPropertyBsas.submit.def1
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -26,15 +26,27 @@ import shared.models.errors._
 import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v6.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v7.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures.validfhlInputJson
 
-class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  val requestBodyJson: JsValue           = validfhlInputJson
-  val ukPropertyRequestBodyJson: JsValue = validUkPropertyInputJson
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
+
+  val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
+      "any valid request is made for a non-tys tax year" in new NonTysTest {
+
+        override def setupStubs(): Unit = {
+          stubDownstreamSuccess()
+        }
+
+        val response: WSResponse = await(request().post(requestBodyJson))
+        response.status shouldBe OK
+        response.header("Content-Type") shouldBe None
+      }
 
       "any valid request is made for a TYS tax year" in new TysIfsTest {
         override def setupStubs(): Unit = {
@@ -96,12 +108,14 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
           (
             "AA123456A",
             "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            "2024-25",
-            ukPropertyRequestBodyJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
+            "2023-24",
+            requestBodyJson
+              .update("/furnishedHolidayLet/expenses/travelCosts", JsNumber(1.523))
+              .update("/furnishedHolidayLet/expenses/other", JsNumber(0.00)),
             BAD_REQUEST,
             ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
-              paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
+              message = "The value must be between -99999999999.99 and 99999999999.99",
+              paths = Some(List("/furnishedHolidayLet/expenses/travelCosts", "/furnishedHolidayLet/expenses/other"))
             ))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -109,7 +123,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): Unit = {
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
@@ -175,7 +189,7 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
       setupStubs()
       buildRequest(s"/$nino/uk-property/$calculationId/adjust/$taxYear")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -195,9 +209,14 @@ class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorV
   }
 
   private trait TysIfsTest extends Test {
-    override def taxYear: String = "2024-25"
+    override def taxYear: String = "2023-24"
 
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/24-25/$nino/$calculationId"
+    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+  }
+
+  private trait NonTysTest extends Test {
+    override def taxYear: String = "2019-20"
+    def downstreamUri: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

@@ -28,7 +28,10 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
 
-class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
+class Def1_SubmitSelfEmploymentBsasIfISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   private trait Test {
 

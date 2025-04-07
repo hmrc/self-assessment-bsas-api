@@ -27,7 +27,10 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v7.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
-class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {

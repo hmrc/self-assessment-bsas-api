@@ -27,7 +27,10 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures._
 
-class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   private def removePropertyFromArray(json: JsValue, pathToArray: JsPath): JsValue =
     json

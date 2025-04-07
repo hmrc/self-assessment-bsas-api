@@ -27,21 +27,11 @@ import shared.services._
 import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 
-class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
+class Def1_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
-      "any valid foreignProperty request is made" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(mtdRequestValid))
-        response.status shouldBe OK
-        response.header("X-CorrelationId") should not be empty
-      }
-
-      "a valid request is made for TYS" in new TysIfsTest {
+      "a valid request is made for TYS" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
@@ -75,7 +65,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new HipTest {
 
             override val nino: String          = requestNino
             override val calculationId: String = requestCalculationId
@@ -120,7 +110,7 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
 
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
@@ -200,24 +190,24 @@ class Def1_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
+         |{
+         |  "response": {
+         |    "failures": [
          |      {
-         |        "code": "$code",
+         |        "type": "$code",
          |        "reason": "message"
          |      }
+         |    ]
+         |  }
+         |}
     """.stripMargin
 
   }
 
-  private trait NonTysTest extends Test {
-    override def taxYear: String = "2019-20"
-    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-  }
-
-  private trait TysIfsTest extends Test {
+  private trait HipTest extends Test {
     override def taxYear: String = "2023-24"
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

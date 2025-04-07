@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.foreignPropertyBsas.submit.def3
+package v7.foreignPropertyBsas.submit.def1
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -23,27 +23,20 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
-import shared.models.utils.JsonErrorValidators
 import shared.services._
 import shared.support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.{
-  downstreamRequestValid,
-  mtdRequestForeignPropertyFull,
-  mtdRequestForeignPropertyInvalidResidentialCost,
-  mtdRequestForeignPropertyValid
-}
+import v7.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 
-class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def1_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
-
-      "a valid request is made for TYS" in new TysIfsTest {
+      "a valid request is made for TYS" in new HipTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
 
-        val response: WSResponse = await(request().post(mtdRequestForeignPropertyValid))
+        val response: WSResponse = await(request().post(mtdRequestValid))
         response.status shouldBe OK
         response.header("X-CorrelationId") should not be empty
       }
@@ -72,7 +65,7 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new HipTest {
 
             override val nino: String          = requestNino
             override val calculationId: String = requestCalculationId
@@ -85,54 +78,44 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
         }
 
         val input = List(
-          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", mtdRequestForeignPropertyValid, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "BAD_CALC_ID", "2025-26", mtdRequestForeignPropertyValid, BAD_REQUEST, CalculationIdFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestForeignPropertyValid, BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2022-24", mtdRequestForeignPropertyValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2025-26", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("Walrus", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-24", mtdRequestValid, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "BAD_CALC_ID", "2023-24", mtdRequestValid, BAD_REQUEST, CalculationIdFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "BAD_TAX_YEAR", mtdRequestValid, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2022-24", mtdRequestValid, BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-24", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2025-26",
-            mtdRequestForeignPropertyFull,
+            "2023-24",
+            mtdRequestFull,
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/foreignProperty/0/expenses")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2025-26",
+            "2023-24",
             requestBodyWithCountryCode("XXX"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
           (
             "AA123456A",
             "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2025-26",
+            "2023-24",
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
-          (
-            "AA123456A",
-            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2025-26",
-            mtdRequestForeignPropertyInvalidResidentialCost,
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
-              paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
-            ))
+            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode"))))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new HipTest {
 
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request().post(mtdRequestForeignPropertyValid))
+            val response: WSResponse = await(request().post(mtdRequestValid))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -196,7 +179,7 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
       setupStubs()
       buildRequest(s"/$nino/foreign-property/$calculationId/adjust/$taxYear")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -207,18 +190,24 @@ class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonE
 
     def errorBody(code: String): String =
       s"""
+         |{
+         |  "response": {
+         |    "failures": [
          |      {
-         |        "code": "$code",
+         |        "type": "$code",
          |        "reason": "message"
          |      }
+         |    ]
+         |  }
+         |}
     """.stripMargin
 
   }
 
-  private trait TysIfsTest extends Test {
-    override def taxYear: String = "2025-26"
+  private trait HipTest extends Test {
+    override def taxYear: String = "2023-24"
 
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

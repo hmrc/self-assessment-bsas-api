@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.selfEmploymentBsas.submit.def1
+package v7.selfEmploymentBsas.submit.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors._
@@ -26,9 +26,12 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
+import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
 
-class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
+class Def1_SubmitSelfEmploymentBsasIfISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
   private trait Test {
 
@@ -40,12 +43,13 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
     def mtdUri: String
 
     def downstreamUrl: String
+    def taxYear: String
 
     def request(): WSRequest = {
       setupStubs()
       buildRequest(mtdUri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.5.0+json"),
+          (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -61,13 +65,15 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+    override def taxYear: String = "2019-20"
+    def mtdUri: String           = s"/$nino/self-employment/$calculationId/adjust/$taxYear"
+    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
   private trait TysIfsTest extends Test {
-    def mtdUri: String        = s"/$nino/self-employment/$calculationId/adjust?taxYear=2023-24"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    override def taxYear: String = "2023-24"
+    def mtdUri: String           = s"/$nino/self-employment/$calculationId/adjust/$taxYear"
+    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
   val requestBody: JsValue = mtdRequestJson
@@ -167,7 +173,8 @@ class Def1_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
+          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError)
         )
 
         val extraTysErrors = List(
