@@ -28,7 +28,7 @@ import shared.support.IntegrationBaseSpec
 import v7.common.model.IncomeSourceType
 import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
-class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
+class Def1_RetrieveUkPropertyBsasHipISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -42,7 +42,6 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
         response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        // response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
 
       }
 
@@ -163,6 +162,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       val errors = List(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, InternalError),
@@ -212,8 +212,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
   private trait TysIfsTest extends Test {
 
     override def taxYear: String = "2023-24"
-
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUri: String    = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

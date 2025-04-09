@@ -16,6 +16,7 @@
 
 package v5.ukPropertyBsas.submit
 
+import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -64,6 +65,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       }
 
       "post a SubmitBsasRequest body and return the result for the TYS scenario" in new TysIfsTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
         val outcome = Right(ResponseWrapper(correlationId, ()))
         val url     = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
         willPut(url = url, body = nonFHLBody) returns Future.successful(outcome)
@@ -73,6 +75,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       }
 
       "post a SubmitBsasRequest body and return the result for the TYS scenario on HIP" in new HipTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true))
         val outcome = Right(ResponseWrapper(correlationId, ()))
         val url     = s"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
         willPut(url = url, body = nonFHLBody) returns Future.successful(outcome)

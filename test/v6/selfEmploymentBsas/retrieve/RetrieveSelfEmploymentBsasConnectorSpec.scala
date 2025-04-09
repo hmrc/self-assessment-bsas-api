@@ -16,6 +16,7 @@
 
 package v6.selfEmploymentBsas.retrieve
 
+import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -57,12 +58,30 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       }
     }
 
-    "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year" must {
+    "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year on IFS" must {
       "a valid request is supplied" in {
         new TysIfsTest with Test {
+          MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
+
           val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
           val outcome          = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson("2023-24")))
           val expectedUrl      = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId"
+          willGet(url = expectedUrl) returns Future.successful(outcome)
+
+          val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(taxYear)))
+          result shouldBe outcome
+        }
+      }
+    }
+
+    "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year on HIP" must {
+      "a valid request is supplied" in {
+        new HipTest with Test {
+          MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> true))
+
+          val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+          val outcome          = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson("2023-24")))
+          val expectedUrl      = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
           val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(taxYear)))
