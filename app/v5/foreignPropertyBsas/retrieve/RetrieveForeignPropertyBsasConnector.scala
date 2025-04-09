@@ -16,10 +16,11 @@
 
 package v5.foreignPropertyBsas.retrieve
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri, TaxYearSpecificIfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
+import shared.models.domain.TaxYear
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
@@ -38,11 +39,17 @@ class RetrieveForeignPropertyBsasConnector @Inject() (val http: HttpClient, val 
     import request._
     import schema._
 
+    def downstreamUri1876(taxYear: TaxYear): DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1876")) {
+      HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
+    } else {
+      TaxYearSpecificIfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+    }
+
+    lazy val downstreamUri1516: DownstreamUri[DownstreamResp] = IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
-      case Some(ty) if ty.useTaxYearSpecificApi =>
-        TaxYearSpecificIfsUri(s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/$nino/$calculationId")
-      case _ =>
-        IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
+      case Some(ty) if ty.useTaxYearSpecificApi => downstreamUri1876(ty)
+      case _                                    => downstreamUri1516
     }
 
     get(downstreamUri)
