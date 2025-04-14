@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.ukPropertyBsas.retrieve.def1
+package v7.ukPropertyBsas.retrieve.def1
 
 import common.errors._
 import play.api.http.HeaderNames.ACCEPT
@@ -25,10 +25,13 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v6.common.model.IncomeSourceType
-import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v7.common.model.IncomeSourceType
+import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 
-class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
+class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1876.enabled" -> false) ++ super.servicesConfig
 
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -195,7 +198,7 @@ class Def1_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

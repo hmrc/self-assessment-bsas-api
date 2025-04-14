@@ -88,6 +88,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_RETURN", InternalError),
         ("INVALID_CORRELATIONID", InternalError),
+        ("INVALID_CORRELATION_ID", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
         ("UNPROCESSABLE_ENTITY", InternalError),
         ("SERVER_ERROR", InternalError),

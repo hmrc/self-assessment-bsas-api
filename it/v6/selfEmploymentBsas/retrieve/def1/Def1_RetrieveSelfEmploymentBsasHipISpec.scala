@@ -28,11 +28,13 @@ import shared.support.IntegrationBaseSpec
 import v6.common.model.IncomeSourceTypeWithFHL.{`02`, `03`, `04`, `15`}
 import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
 
-class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
+class Def1_RetrieveSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
 
   override def servicesConfig: Map[String, Any] =
-    super.servicesConfig +
-      ("api.6.0.endpoints.allow-request-cannot-be-fulfilled-header" -> true)
+    Map(
+      "api.6.0.endpoints.allow-request-cannot-be-fulfilled-header" -> true,
+      "feature-switch.ifs_hip_migration_1876.enabled"              -> true
+    ) ++ super.servicesConfig
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -175,6 +177,7 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
@@ -217,8 +220,7 @@ class Def1_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
   private trait TysIfsTest extends Test {
     override def taxYear: String = "2023-24"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+    def downstreamUrl: String    = s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

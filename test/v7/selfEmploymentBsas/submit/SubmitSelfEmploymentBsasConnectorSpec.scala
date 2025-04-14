@@ -16,6 +16,7 @@
 
 package v7.selfEmploymentBsas.submit
 
+import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -62,6 +63,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     }
 
     "post a SubmitBsasRequest body and return the result for a TYS tax year" in new TysIfsTest with Test {
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
       val request: SubmitSelfEmploymentBsasRequestData =
         Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBodyModel)
 
@@ -77,6 +79,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     }
 
     "post a SubmitBsasRequest body and return the result for a TYS tax year on HIP" in new HipTest with Test {
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true))
       val request: SubmitSelfEmploymentBsasRequestData =
         Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBodyModel)
 

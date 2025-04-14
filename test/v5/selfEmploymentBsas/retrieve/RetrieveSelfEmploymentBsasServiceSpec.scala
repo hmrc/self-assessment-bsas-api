@@ -85,6 +85,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_CALCULATION_ID", CalculationIdFormatError),
         ("INVALID_CORRELATIONID", InternalError),
+        ("INVALID_CORRELATION_ID", InternalError),
         ("INVALID_RETURN", InternalError),
         ("UNPROCESSABLE_ENTITY", InternalError),
         ("NO_DATA_FOUND", NotFoundError),

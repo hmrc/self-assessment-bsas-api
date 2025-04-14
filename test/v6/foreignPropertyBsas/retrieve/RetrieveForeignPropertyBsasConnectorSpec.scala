@@ -16,6 +16,7 @@
 
 package v6.foreignPropertyBsas.retrieve
 
+import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -53,13 +54,27 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
       }
 
-      "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
+      "a valid request with queryParams is supplied for a TYS year on IFS" in new TysIfsTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
         def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
         val request: RetrieveForeignPropertyBsasRequestData =
           Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear)
 
         willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId") returns Future.successful(outcome)
+
+        val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
+        result shouldBe outcome
+      }
+
+      "a valid request with queryParams is supplied for a TYS year on HIP" in new HipTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> true))
+        def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
+
+        val request: RetrieveForeignPropertyBsasRequestData =
+          Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear)
+
+        willGet(s"$baseUrl/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome

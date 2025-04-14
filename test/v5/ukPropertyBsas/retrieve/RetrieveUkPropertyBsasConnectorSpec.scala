@@ -16,6 +16,7 @@
 
 package v5.ukPropertyBsas.retrieve
 
+import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -48,10 +49,24 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
         result shouldBe outcome
       }
 
-      "a valid request with queryParams is supplied for a TYS year" in new TysIfsTest with Test {
+      "a valid request with queryParams is supplied for a TYS year on IFS" in new TysIfsTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
+
         private def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
         private val request          = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
         willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId") returns Future
+          .successful(outcome)
+
+        val result: DownstreamOutcome[RetrieveUkPropertyBsasResponse] = await(connector.retrieve(request))
+        result shouldBe outcome
+      }
+
+      "a valid request with queryParams is supplied for a TYS year on HIP" in new HipTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> true))
+
+        private def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+        private val request          = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
+        willGet(s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId") returns Future
           .successful(outcome)
 
         val result: DownstreamOutcome[RetrieveUkPropertyBsasResponse] = await(connector.retrieve(request))
