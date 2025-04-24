@@ -48,7 +48,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasResponseJson
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("Thu, 24 Apr 2025 23:59:59 GMT")
       }
 
       "given a valid TYS request" in new TysIfsTest {
@@ -61,7 +61,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasResponseJson
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("Thu, 24 Apr 2025 23:59:59 GMT")
       }
     }
 
