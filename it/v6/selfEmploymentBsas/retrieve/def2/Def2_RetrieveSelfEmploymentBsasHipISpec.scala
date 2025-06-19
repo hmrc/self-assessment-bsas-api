@@ -46,7 +46,7 @@ class Def2_RetrieveSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasResponseJson(taxYear)
-        response.header("Deprecation") shouldBe None
+        response.header("Deprecation") shouldBe Some("Thu, 19 Jun 2025 23:59:59 GMT")
       }
     }
 
