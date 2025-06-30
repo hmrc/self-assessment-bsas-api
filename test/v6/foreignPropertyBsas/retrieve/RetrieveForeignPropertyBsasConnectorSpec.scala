@@ -24,7 +24,7 @@ import v6.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPr
 import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
-
+import uk.gov.hmrc.http.StringContextOps
 import scala.concurrent.Future
 
 class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -48,7 +48,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         val request: RetrieveForeignPropertyBsasRequestData =
           Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), TaxYear.fromMtd("2022-23"))
 
-        val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+        val expectedUrl = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willGet(url = expectedUrl) returns Future.successful(outcome)
 
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
@@ -61,7 +61,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         val request: RetrieveForeignPropertyBsasRequestData =
           Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear)
 
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId") returns Future.successful(outcome)
+        willGet(url"$baseUrl/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome
@@ -74,7 +74,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         val request: RetrieveForeignPropertyBsasRequestData =
           Def1_RetrieveForeignPropertyBsasRequestData(nino, CalculationId(calculationId), taxYear)
 
-        willGet(s"$baseUrl/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId") returns Future.successful(outcome)
+        willGet(url"$baseUrl/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveForeignPropertyBsasResponse] = await(connector.retrieveForeignPropertyBsas(request))
         result shouldBe outcome

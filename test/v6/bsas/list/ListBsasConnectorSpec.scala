@@ -25,7 +25,7 @@ import v6.bsas.list.def2.model.Def2_ListBsasFixtures
 import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
-
+import uk.gov.hmrc.http.StringContextOps
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec {
@@ -52,7 +52,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 
-        val outcome = Right(ResponseWrapper(correlationId, listBsasResponse))
+        val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
         stubHttpResponse(outcome)
 
         await(connector.listBsas(request)) shouldBe outcome
@@ -63,7 +63,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
   "a valid request with Tax Year Specific tax year is supplied" in new TysIfsTest with Test with Def2_ListBsasFixtures {
     def taxYear: TaxYear                             = tysTaxYear
     def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
-    val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponse))
+    val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
 
     stubTysHttpResponse(outcome)
 
@@ -112,7 +112,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
         outcome: DownstreamOutcome[ListBsasResponse]
     ): CallHandler[Future[DownstreamOutcome[ListBsasResponse]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }
@@ -121,7 +121,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
         outcome: DownstreamOutcome[ListBsasResponse]
     ): CallHandler[Future[DownstreamOutcome[ListBsasResponse]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }

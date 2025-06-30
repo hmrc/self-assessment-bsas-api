@@ -22,10 +22,10 @@ import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v6.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveForeignPropertyBsasService extends MockFactory {
+trait MockRetrieveForeignPropertyBsasService extends TestSuite with MockFactory {
 
   val mockService: RetrieveForeignPropertyBsasService = mock[RetrieveForeignPropertyBsasService]
 

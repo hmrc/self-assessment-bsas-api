@@ -21,10 +21,10 @@ import org.scalamock.scalatest.MockFactory
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v5.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitSelfEmploymentBsasService extends MockFactory {
+trait MockSubmitSelfEmploymentBsasService extends TestSuite with MockFactory {
 
   val mockService: SubmitSelfEmploymentBsasService = mock[SubmitSelfEmploymentBsasService]
 

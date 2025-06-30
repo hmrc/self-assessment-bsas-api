@@ -22,10 +22,10 @@ import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListBsasConnector extends MockFactory {
+trait MockListBsasConnector extends TestSuite with MockFactory {
 
   val mockConnector: ListBsasConnector = mock[ListBsasConnector]
 

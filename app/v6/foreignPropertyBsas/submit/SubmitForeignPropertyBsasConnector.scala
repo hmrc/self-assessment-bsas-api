@@ -21,14 +21,15 @@ import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri, TaxYearSpecificIfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.HttpClientV2
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit
       hc: HeaderCarrier,
@@ -41,9 +42,10 @@ class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClient, val ap
 
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {
-        ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874") match {
-          case true  => HipUri[Unit](s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
-          case false => TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+        if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874")) {
+          HipUri[Unit](s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
+        } else {
+          TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
         }
       } else {
         IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")

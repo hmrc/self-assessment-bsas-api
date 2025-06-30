@@ -22,7 +22,7 @@ import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
 import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
-
+import uk.gov.hmrc.http.StringContextOps
 import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -47,7 +47,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       private val request = requestWith(TaxYear.fromMtd("2022-23"))
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      willPut(url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = parsedSubmitForeignPropertyBsasRequestBody)
+      willPut(url = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId", body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
@@ -60,7 +60,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId",
         body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 
@@ -74,7 +74,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willPut(
-        url = s"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId",
+        url = url"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId",
         body = parsedSubmitForeignPropertyBsasRequestBody)
         .returns(Future.successful(outcome))
 

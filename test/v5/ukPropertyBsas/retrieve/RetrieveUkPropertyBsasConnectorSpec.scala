@@ -23,7 +23,7 @@ import shared.models.outcomes.ResponseWrapper
 import v5.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
 import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
-
+import uk.gov.hmrc.http.StringContextOps
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -42,7 +42,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "a valid request is supplied for a non-TYS year" in new IfsTest with Test {
         private val request     = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, taxYear = None)
-        private val expectedUrl = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+        private val expectedUrl = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willGet(expectedUrl) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[RetrieveUkPropertyBsasResponse] = await(connector.retrieve(request))
@@ -54,7 +54,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
         private def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
         private val request          = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
-        willGet(s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId") returns Future
+        willGet(url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId") returns Future
           .successful(outcome)
 
         val result: DownstreamOutcome[RetrieveUkPropertyBsasResponse] = await(connector.retrieve(request))
@@ -66,7 +66,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
         private def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
         private val request          = Def1_RetrieveUkPropertyBsasRequestData(nino, calculationId, Some(taxYear))
-        willGet(s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId") returns Future
+        willGet(url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId") returns Future
           .successful(outcome)
 
         val result: DownstreamOutcome[RetrieveUkPropertyBsasResponse] = await(connector.retrieve(request))

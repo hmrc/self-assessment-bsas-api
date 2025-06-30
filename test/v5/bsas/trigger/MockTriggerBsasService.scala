@@ -21,10 +21,10 @@ import org.scalamock.scalatest.MockFactory
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v5.bsas.trigger.model.{TriggerBsasRequestData, TriggerBsasResponse}
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockTriggerBsasService extends MockFactory {
+trait MockTriggerBsasService extends TestSuite with MockFactory {
 
   val mockService: TriggerBsasService = mock[TriggerBsasService]
 

@@ -21,10 +21,10 @@ import org.scalamock.scalatest.MockFactory
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.bsas.trigger.model.{TriggerBsasRequestData, TriggerBsasResponse}
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockTriggerBsasConnector extends MockFactory {
+trait MockTriggerBsasConnector extends TestSuite with MockFactory {
 
   val mockConnector: TriggerBsasConnector = mock[TriggerBsasConnector]
 

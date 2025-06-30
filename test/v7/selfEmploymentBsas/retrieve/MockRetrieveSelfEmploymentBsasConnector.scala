@@ -22,10 +22,10 @@ import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v7.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveSelfEmploymentBsasConnector extends MockFactory {
+trait MockRetrieveSelfEmploymentBsasConnector extends TestSuite with MockFactory {
 
   val mockConnector: RetrieveSelfEmploymentBsasConnector = mock[RetrieveSelfEmploymentBsasConnector]
 

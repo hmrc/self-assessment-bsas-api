@@ -25,7 +25,7 @@ import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
 import v7.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v7.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v7.bsas.trigger.model.TriggerBsasRequestData
-
+import uk.gov.hmrc.http.StringContextOps
 import scala.concurrent.Future
 
 class TriggerBsasConnectorSpec extends ConnectorSpec {
@@ -41,7 +41,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     "post a TriggerBsasRequest body and return the result" in new IfsTest with Test {
       protected def taxYear: TaxYear = preTysTaxYear
 
-      val outcome = Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
+      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] = Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
       stubHttpResponse(outcome)
 
       await(connector.triggerBsas(request)) shouldBe outcome
@@ -51,7 +51,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
       protected def taxYear: TaxYear                         = tysTaxYear
 
-      val outcome = Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
+      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] = Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
       stubTysHttpResponse(outcome)
 
       await(connector.triggerBsas(request)) shouldBe outcome
@@ -91,7 +91,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     protected def stubHttpResponse(
         outcome: DownstreamOutcome[Def1_TriggerBsasResponse]): CallHandler[Future[DownstreamOutcome[Def1_TriggerBsasResponse]]]#Derived = {
       willPost(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         body = triggerBsasRequestBody
       ).returns(Future.successful(outcome))
     }
@@ -99,7 +99,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     protected def stubTysHttpResponse(
         outcome: DownstreamOutcome[Def1_TriggerBsasResponse]): CallHandler[Future[DownstreamOutcome[Def1_TriggerBsasResponse]]]#Derived = {
       willPost(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         body = tysTriggerBsasRequestBody
       ).returns(Future.successful(outcome))
     }
