@@ -23,8 +23,7 @@ import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.submitUkPropertyBsas.connectors.MockSubmitUkPropertyBsasConnector
-import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasService
+import v5.ukPropertyBsas.submit.{MockSubmitUkPropertyBsasConnector, SubmitUkPropertyBsasService}
 import v5.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestData
 import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
