@@ -21,10 +21,10 @@ import org.scalamock.scalatest.MockFactory
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitSelfEmploymentBsasConnector extends MockFactory {
+trait MockSubmitSelfEmploymentBsasConnector extends TestSuite with MockFactory {
 
   val mockConnector: SubmitSelfEmploymentBsasConnector = mock[SubmitSelfEmploymentBsasConnector]
 

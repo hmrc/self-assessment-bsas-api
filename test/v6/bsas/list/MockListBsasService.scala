@@ -22,10 +22,10 @@ import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListBsasService extends MockFactory {
+trait MockListBsasService extends TestSuite with MockFactory {
 
   val mockListBsasService: ListBsasService = mock[ListBsasService]
 

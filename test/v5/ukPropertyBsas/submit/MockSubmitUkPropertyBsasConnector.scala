@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v5.submitUkPropertyBsas.connectors
+package v5.ukPropertyBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
@@ -22,10 +22,10 @@ import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 import v5.ukPropertyBsas.submit.SubmitUkPropertyBsasConnector
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSubmitUkPropertyBsasConnector extends MockFactory {
+trait MockSubmitUkPropertyBsasConnector extends TestSuite with MockFactory {
 
   val mockConnector: SubmitUkPropertyBsasConnector = mock[SubmitUkPropertyBsasConnector]
 

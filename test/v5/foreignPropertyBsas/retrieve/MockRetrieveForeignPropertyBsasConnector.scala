@@ -22,10 +22,10 @@ import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveForeignPropertyBsasConnector extends MockFactory {
+trait MockRetrieveForeignPropertyBsasConnector extends TestSuite with MockFactory {
 
   val mockConnector: RetrieveForeignPropertyBsasConnector = mock[RetrieveForeignPropertyBsasConnector]
 

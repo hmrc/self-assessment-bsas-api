@@ -18,6 +18,7 @@ package v5.bsas.list
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v5.bsas.list.model.request.ListBsasRequestData
@@ -25,7 +26,7 @@ import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListBsasService extends MockFactory {
+trait MockListBsasService extends TestSuite with MockFactory {
 
   val mockListBsasService: ListBsasService = mock[ListBsasService]
 

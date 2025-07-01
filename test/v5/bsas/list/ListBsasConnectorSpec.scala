@@ -25,6 +25,7 @@ import v5.bsas.list.def1.model.Def1_ListBsasFixtures
 import v5.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v5.bsas.list.model.request.ListBsasRequestData
 import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}
+import uk.gov.hmrc.http.StringContextOps
 
 import scala.concurrent.Future
 
@@ -52,7 +53,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
         def taxYear: TaxYear                             = preTysTaxYear
         def downstreamQueryParams: Seq[(String, String)] = commonQueryParams ++ additionalQueryParams
 
-        val outcome = Right(ResponseWrapper(correlationId, listBsasResponse))
+        val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse[BsasSummary]]] = Right(ResponseWrapper(correlationId, listBsasResponse))
         stubHttpResponse(outcome)
 
         val result: DownstreamOutcome[ListBsasResponse[BsasSummary]] = await(connector.listBsas(request))
@@ -64,7 +65,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
   "a valid request with Tax Year Specific tax year is supplied" in new TysIfsTest with Test {
     def taxYear: TaxYear                             = tysTaxYear
     def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
-    val outcome                                      = Right(ResponseWrapper(correlationId, listBsasResponse))
+    val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse[BsasSummary]]] = Right(ResponseWrapper(correlationId, listBsasResponse))
 
     stubTysHttpResponse(outcome)
 
@@ -113,7 +114,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
         outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
     ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }
@@ -122,7 +123,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
         outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
     ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
-        url = s"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
+        url = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         parameters = downstreamQueryParams
       ).returns(Future.successful(outcome))
     }

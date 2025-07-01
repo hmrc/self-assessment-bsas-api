@@ -20,14 +20,15 @@ import play.api.http.Status
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri, TaxYearSpecificIfsUri}
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.HttpClientV2
 import v5.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(implicit
       hc: HeaderCarrier,
@@ -42,9 +43,10 @@ class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClient, val app
 
     val downstreamUri = taxYear match {
       case Some(taxYearValue) if taxYearValue.useTaxYearSpecificApi =>
-        ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874") match {
-          case true  => HipUri[Unit](s"itsa/income-tax/v1/${taxYearValue.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
-          case false => TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/$nino/$calculationId")
+        if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874")) {
+          HipUri[Unit](s"itsa/income-tax/v1/${taxYearValue.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
+        } else {
+          TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/$nino/$calculationId")
         }
       case _ => IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
     }

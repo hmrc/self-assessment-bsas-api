@@ -18,8 +18,9 @@ package config
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 
-trait MockBsasConfig extends MockFactory {
+trait MockBsasConfig extends TestSuite with MockFactory {
 
   implicit val mockBsasConfig: BsasConfig = mock[BsasConfig]
 

@@ -22,10 +22,10 @@ import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
-
+import org.scalatest.TestSuite
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveSelfEmploymentBsasService extends MockFactory {
+trait MockRetrieveSelfEmploymentBsasService extends TestSuite with MockFactory {
 
   val mockService: RetrieveSelfEmploymentBsasService = mock[RetrieveSelfEmploymentBsasService]
 
