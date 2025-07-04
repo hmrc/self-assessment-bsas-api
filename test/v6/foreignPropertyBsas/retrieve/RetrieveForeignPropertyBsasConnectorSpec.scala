@@ -54,7 +54,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
         await(connector.retrieveForeignPropertyBsas(request)) shouldBe outcome
       }
 
-      "a valid request with queryParams is supplied for a TYS year on IFS" in new TysIfsTest with Test {
+      "a valid request with queryParams is supplied for a TYS year on IFS" in new IfsTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
         def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 

@@ -61,7 +61,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
     "retrieveSelfEmploymentBsas is called for a TaxYearSpecific tax year on IFS" must {
       "a valid request is supplied" in {
-        new TysIfsTest with Test {
+        new IfsTest with Test {
           MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
 
           val taxYear: TaxYear = TaxYear.fromMtd("2023-24")

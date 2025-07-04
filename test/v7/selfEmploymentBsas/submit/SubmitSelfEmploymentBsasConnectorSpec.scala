@@ -62,7 +62,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       result shouldBe outcome
     }
 
-    "post a SubmitBsasRequest body and return the result for a TYS tax year" in new TysIfsTest with Test {
+    "post a SubmitBsasRequest body and return the result for a TYS tax year" in new IfsTest with Test {
       MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
       val request: SubmitSelfEmploymentBsasRequestData =
         Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBodyModel)

@@ -17,7 +17,7 @@
 package v5.foreignPropertyBsas.retrieve
 
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import shared.models.domain.TaxYear
@@ -30,12 +30,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveForeignPropertyBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveForeignPropertyBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveForeignPropertyBsas(request: RetrieveForeignPropertyBsasRequestData)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
+                                                                                   hc: HeaderCarrier,
+                                                                                   ec: ExecutionContext,
+                                                                                   correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
     import request._
     import schema._
@@ -43,14 +43,14 @@ class RetrieveForeignPropertyBsasConnector @Inject() (val http: HttpClientV2, va
     def downstreamUri1876(taxYear: TaxYear): DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1876")) {
       HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
     } else {
-      TaxYearSpecificIfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
+      IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
     }
 
     lazy val downstreamUri1516: DownstreamUri[DownstreamResp] = IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
       case Some(ty) if ty.useTaxYearSpecificApi => downstreamUri1876(ty)
-      case _                                    => downstreamUri1516
+      case _ => downstreamUri1516
     }
 
     get(downstreamUri)

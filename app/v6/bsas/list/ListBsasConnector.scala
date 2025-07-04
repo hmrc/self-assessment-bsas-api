@@ -17,7 +17,7 @@
 package v6.bsas.list
 
 import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.DownstreamUri.IfsUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,18 +29,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class ListBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def listBsas(request: ListBsasRequestData)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[ListBsasResponse]] = {
+                                             hc: HeaderCarrier,
+                                             ec: ExecutionContext,
+                                             correlationId: String): Future[DownstreamOutcome[ListBsasResponse]] = {
 
     import request._
     import schema._
 
     val queryParams = Map(
-      "incomeSourceId"   -> incomeSourceId.map(_.businessId),
+      "incomeSourceId" -> incomeSourceId.map(_.businessId),
       "incomeSourceType" -> incomeSourceType
     )
 
@@ -48,7 +48,7 @@ class ListBsasConnector @Inject() (val http: HttpClientV2, val appConfig: Shared
 
     if (taxYear.useTaxYearSpecificApi) {
       get(
-        TaxYearSpecificIfsUri[DownstreamResp](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino"),
+        IfsUri[DownstreamResp](s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino"),
         mappedQueryParams.toList
       )
     } else {
