@@ -36,6 +36,12 @@ case class ResolveParsedNumber(min: BigDecimal = 0, max: BigDecimal = 9999999999
   def apply(value: BigDecimal, path: String): Validated[Seq[MtdError], BigDecimal] =
     resolver(errorFor(path))(value)
 
-  private def errorFor(path: String) = ValueFormatError.forPathAndRange(path, min.toString, max.toString)
+  private def errorFor(path: String) =
+    if (disallowZero) {
+      ValueFormatError.forPathAndRangeExcludeZero(path, min.toString, max.toString)
+    }
+    else {
+      ValueFormatError.forPathAndRange(path, min.toString, max.toString)
+    }
 
 }

@@ -103,7 +103,7 @@ class Def2_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErro
             ukPropertyRequestBodyJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
             BAD_REQUEST,
             ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
+              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
               paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
             ))
         )

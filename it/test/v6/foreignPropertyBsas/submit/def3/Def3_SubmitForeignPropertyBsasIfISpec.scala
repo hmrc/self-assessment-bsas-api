@@ -121,7 +121,7 @@ class Def3_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
             mtdRequestForeignPropertyInvalidResidentialCost,
             BAD_REQUEST,
             ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
+              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
               paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
             ))
         )
