@@ -13,6 +13,8 @@
 or
 `sbt run`
 
+Start the service manager profile: `sm2 --start MTDFB_BSAS`
+
 ## Running tests
 
 ```
