@@ -65,7 +65,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
         result shouldBe outcome
       }
 
-      "post a SubmitBsasRequest body and return the result for the TYS scenario" in new TysIfsTest with Test {
+      "post a SubmitBsasRequest body and return the result for the TYS scenario" in new IfsTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
         val url     = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"

@@ -47,7 +47,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       await(connector.triggerBsas(request)) shouldBe outcome
     }
 
-    "post a TriggerBsasRequest body and return the result given a TYS tax year" in new TysIfsTest with Test {
+    "post a TriggerBsasRequest body and return the result given a TYS tax year" in new IfsTest with Test {
       override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
       protected def taxYear: TaxYear                         = tysTaxYear
 
@@ -71,7 +71,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       await(connector.triggerBsas(request)) shouldBe outcome
     }
 
-    "return the error given a TYS tax year request" in new TysIfsTest with Test {
+    "return the error given a TYS tax year request" in new IfsTest with Test {
       override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
       protected def taxYear: TaxYear                         = tysTaxYear
 

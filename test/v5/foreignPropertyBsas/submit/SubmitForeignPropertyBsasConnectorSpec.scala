@@ -65,7 +65,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       result shouldBe outcome
     }
 
-    "post a SubmitBsasRequest body and return the result for a post-TYS tax year request" in new TysIfsTest with Test {
+    "post a SubmitBsasRequest body and return the result for a post-TYS tax year request" in new IfsTest with Test {
       MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
       private val request = requestWith(Some(TaxYear.fromMtd("2023-24")))
       private val outcome = Right(ResponseWrapper(correlationId, ()))

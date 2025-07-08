@@ -18,7 +18,7 @@ package v5.foreignPropertyBsas.submit
 
 import play.api.http.Status
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,12 +29,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class SubmitForeignPropertyBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def submitForeignPropertyBsas(request: SubmitForeignPropertyBsasRequestData)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                                               hc: HeaderCarrier,
+                                                                               ec: ExecutionContext,
+                                                                               correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
@@ -45,7 +45,7 @@ class SubmitForeignPropertyBsasConnector @Inject() (val http: HttpClientV2, val 
         if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874")) {
           HipUri[Unit](s"itsa/income-tax/v1/${ty.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
         } else {
-          TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/$nino/$calculationId")
+          IfsUri[Unit](s"income-tax/adjustable-summary-calculation/${ty.asTysDownstream}/$nino/$calculationId")
         }
       case _ =>
         IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")

@@ -18,7 +18,7 @@ package v5.selfEmploymentBsas.submit
 
 import play.api.http.Status
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -46,7 +46,7 @@ class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClientV2, val a
         if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1874")) {
           HipUri[Unit](s"itsa/income-tax/v1/${taxYearValue.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
         } else {
-          TaxYearSpecificIfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/$nino/$calculationId")
+          IfsUri[Unit](s"income-tax/adjustable-summary-calculation/${taxYearValue.asTysDownstream}/$nino/$calculationId")
         }
       case _ => IfsUri[Unit](s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
     }

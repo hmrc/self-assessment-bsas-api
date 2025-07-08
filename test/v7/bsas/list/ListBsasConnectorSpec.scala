@@ -60,7 +60,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     }
   }
 
-  "a valid request with Tax Year Specific tax year is supplied" in new TysIfsTest with Test with Def2_ListBsasFixtures {
+  "a valid request with Tax Year Specific tax year is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
     def taxYear: TaxYear                             = tysTaxYear
     def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
     val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
@@ -86,7 +86,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
       result shouldBe outcome
     }
 
-    "return the error given a TYS tax year request" in new TysIfsTest with Test with Def2_ListBsasFixtures {
+    "return the error given a TYS tax year request" in new IfsTest with Test with Def2_ListBsasFixtures {
       def taxYear: TaxYear                             = tysTaxYear
       def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
 

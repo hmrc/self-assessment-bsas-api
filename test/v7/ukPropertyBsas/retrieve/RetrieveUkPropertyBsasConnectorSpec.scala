@@ -50,7 +50,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
         result shouldBe outcome
       }
 
-      "a valid Def1 request with queryParams is supplied for a TYS year on IFS" in new TysIfsTest with Test {
+      "a valid Def1 request with queryParams is supplied for a TYS year on IFS" in new IfsTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
 
         private def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
@@ -74,7 +74,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
         result shouldBe outcome
       }
 
-      "a valid Def2 request with queryParams is supplied for a TYS year on IFS" in new TysIfsTest with Test {
+      "a valid Def2 request with queryParams is supplied for a TYS year on IFS" in new IfsTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
 
         private def taxYear: TaxYear = TaxYear.fromMtd("2025-26")
