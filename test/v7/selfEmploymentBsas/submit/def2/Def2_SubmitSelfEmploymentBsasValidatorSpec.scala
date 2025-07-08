@@ -284,7 +284,7 @@ class Def2_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
             BadRequestError,
             Some(List(
               ValueFormatError
-                .copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99"),
+                .copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)"),
               RuleBothExpensesError.withPath("/expenses")
             ))
           )
@@ -298,7 +298,7 @@ class Def2_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
           result shouldBe Left(
             ErrorWrapper(
               correlationId,
-              ValueFormatError.forPathAndRange(expectedPath, "-99999999999.99", "99999999999.99")
+              ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
             )
           )
         }

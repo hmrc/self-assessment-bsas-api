@@ -119,7 +119,7 @@ class Def2_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
             mtdRequestNonFhlValid,
             BAD_REQUEST,
             ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99",
+              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
               paths = Some(List("/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"))
             ))
         )

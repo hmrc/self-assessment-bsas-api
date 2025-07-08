@@ -397,7 +397,8 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           result shouldBe Left(
             ErrorWrapper(
               correlationId,
-              ValueFormatError.copy(paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99")
+              ValueFormatError.copy(
+                paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
             )
           )
         }
@@ -410,7 +411,7 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
               result shouldBe Left(
                 ErrorWrapper(
                   correlationId,
-                  ValueFormatError.forPathAndRange(expectedPath, min, max)
+                  ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
                 )
               )
             }
