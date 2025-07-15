@@ -16,7 +16,7 @@
 
 package v5.selfEmploymentBsas.retrieve.def1.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class AdjustableSummaryCalculation(
     totalIncome: Option[BigDecimal],

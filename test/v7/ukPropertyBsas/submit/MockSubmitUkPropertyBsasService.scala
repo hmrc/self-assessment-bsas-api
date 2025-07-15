@@ -18,10 +18,11 @@ package v7.ukPropertyBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitUkPropertyBsasService extends TestSuite with MockFactory {

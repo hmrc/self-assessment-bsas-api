@@ -106,7 +106,7 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
   }
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
     protected def taxYear: TaxYear
 
     protected def downstreamQueryParams: Seq[(String, String)]

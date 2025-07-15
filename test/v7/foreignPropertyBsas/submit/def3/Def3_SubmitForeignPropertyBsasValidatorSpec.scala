@@ -16,14 +16,14 @@
 
 package v7.foreignPropertyBsas.submit.def3
 
-import common.errors._
-import play.api.libs.json._
+import common.errors.*
+import play.api.libs.json.*
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
+import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.*
 import v7.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
-import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures._
 
 class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 

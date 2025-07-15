@@ -18,10 +18,11 @@ package v6.selfEmploymentBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v6.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitSelfEmploymentBsasConnector extends TestSuite with MockFactory {

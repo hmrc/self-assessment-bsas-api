@@ -16,7 +16,7 @@
 
 package v5.foreignPropertyBsas.submit.def2.model.request
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class ForeignPropertyIncome(totalRentsReceived: Option[BigDecimal],
@@ -30,6 +30,6 @@ object ForeignPropertyIncome {
     (JsPath \ "rent").writeNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").writeNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").writeNullable[BigDecimal]
-  )(unlift(ForeignPropertyIncome.unapply))
+    )(w => Tuple.fromProductTyped(w))
 
 }

@@ -17,7 +17,7 @@
 package config
 
 import play.api.Configuration
-import shared.config.{SharedAppConfig, FeatureSwitches}
+import shared.config.{FeatureSwitches, SharedAppConfig}
 
 /** API-specific feature switches.
   */

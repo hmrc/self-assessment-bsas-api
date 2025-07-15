@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.submit
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
@@ -24,12 +24,12 @@ import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v7.ukPropertyBsas.submit.def3.model.request.Def3_SubmitUkPropertyBsasRequestData
-import v7.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v7.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -17,8 +17,8 @@
 package v7.bsas.list.def2
 
 import cats.data.Validated
-import cats.data.Validated._
-import cats.implicits._
+import cats.data.Validated.*
+import cats.implicits.*
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import shared.models.domain.TaxYear
@@ -39,7 +39,7 @@ object Def2_ListBsasValidator extends ResolverSupport {
 
 class Def2_ListBsasValidator(nino: String, taxYear: String, typeOfBusiness: Option[String], businessId: Option[String])
     extends Validator[ListBsasRequestData] {
-  import Def2_ListBsasValidator._
+  import Def2_ListBsasValidator.*
 
   def validate: Validated[Seq[MtdError], ListBsasRequestData] =
     (

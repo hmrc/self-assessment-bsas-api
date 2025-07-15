@@ -29,7 +29,7 @@ trait HasTypeOfBusiness {
 
 //noinspection ScalaStyle
 object TypeOfBusiness {
-  val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness]
+  val parser: PartialFunction[String, TypeOfBusiness] = Enums.parser[TypeOfBusiness](Array())
 
   case object `self-employment` extends TypeOfBusiness {
     val asDownstreamValue: String = "01"
@@ -43,6 +43,7 @@ object TypeOfBusiness {
     val asDownstreamValue: String = "15"
   }
 
-  implicit val format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness]
+  given format: Format[TypeOfBusiness] = Enums.format[TypeOfBusiness](Array())
+  
 
 }

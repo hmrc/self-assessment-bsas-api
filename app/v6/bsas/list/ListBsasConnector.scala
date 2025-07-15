@@ -18,7 +18,7 @@ package v6.bsas.list
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.IfsUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -36,8 +36,8 @@ class ListBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedA
                                              ec: ExecutionContext,
                                              correlationId: String): Future[DownstreamOutcome[ListBsasResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     val queryParams = Map(
       "incomeSourceId" -> incomeSourceId.map(_.businessId),

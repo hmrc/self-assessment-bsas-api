@@ -17,16 +17,16 @@
 package v7.bsas.trigger.def2
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures._
+import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
 
 class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
@@ -74,7 +74,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        import RequestBodyHelper._
+        import RequestBodyHelper.*
 
         val input = List(
           ("AA1123A", requestBody(), BAD_REQUEST, NinoFormatError),

@@ -67,7 +67,7 @@ object Expenses {
       (JsPath \ "advertisingCostsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").writeNullable[BigDecimal]
-  )(unlift(Expenses.unapply))
+    )(w => Tuple.fromProductTyped(w))
 
   implicit val reads: Reads[Expenses] = Json.reads[Expenses]
 }

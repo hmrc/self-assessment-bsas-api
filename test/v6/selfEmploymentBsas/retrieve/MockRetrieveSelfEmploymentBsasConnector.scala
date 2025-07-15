@@ -18,11 +18,12 @@ package v6.selfEmploymentBsas.retrieve
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSelfEmploymentBsasConnector extends TestSuite with MockFactory {

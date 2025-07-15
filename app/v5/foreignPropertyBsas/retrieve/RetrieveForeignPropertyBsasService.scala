@@ -17,14 +17,15 @@
 package v5.foreignPropertyBsas.retrieve
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.ServiceOutcome
 import v5.common.BaseRetrieveBsasService
 import v5.common.model.TypeOfBusiness
 import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 

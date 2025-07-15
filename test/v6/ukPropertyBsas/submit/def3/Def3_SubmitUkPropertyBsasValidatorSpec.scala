@@ -21,7 +21,7 @@ import org.scalatest.Assertion
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsNumber, JsValue, Json}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v6.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.fullRequestJson

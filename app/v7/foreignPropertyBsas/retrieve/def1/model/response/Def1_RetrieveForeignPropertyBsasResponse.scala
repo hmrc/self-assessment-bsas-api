@@ -16,7 +16,7 @@
 
 package v7.foreignPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import v7.common.model.TypeOfBusinessWithFHL
 import v7.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse

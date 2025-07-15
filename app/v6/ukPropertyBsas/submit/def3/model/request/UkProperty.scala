@@ -16,7 +16,7 @@
 
 package v6.ukPropertyBsas.submit.def3.model.request
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class UkProperty(income: Option[Income], expenses: Option[Expenses])

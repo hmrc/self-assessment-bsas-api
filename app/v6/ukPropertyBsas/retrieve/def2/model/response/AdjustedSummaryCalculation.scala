@@ -16,7 +16,7 @@
 
 package v6.ukPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class AdjustedSummaryCalculation(
     totalIncome: Option[BigDecimal],

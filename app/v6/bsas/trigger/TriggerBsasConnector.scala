@@ -18,7 +18,7 @@ package v6.bsas.trigger
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.IfsUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -35,8 +35,8 @@ class TriggerBsasConnector @Inject()(val http: HttpClientV2, val appConfig: Shar
                                                    ec: ExecutionContext,
                                                    correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     val downstreamUri: DownstreamUri[DownstreamResp] =
       if (taxYear.useTaxYearSpecificApi) {

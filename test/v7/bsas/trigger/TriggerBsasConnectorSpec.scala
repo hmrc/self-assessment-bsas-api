@@ -21,11 +21,12 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
-import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
+import uk.gov.hmrc.http.StringContextOps
+import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v7.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v7.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v7.bsas.trigger.model.TriggerBsasRequestData
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class TriggerBsasConnectorSpec extends ConnectorSpec {
@@ -82,7 +83,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   }
 
   private trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     protected def taxYear: TaxYear
     protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, triggerBsasRequestBody)

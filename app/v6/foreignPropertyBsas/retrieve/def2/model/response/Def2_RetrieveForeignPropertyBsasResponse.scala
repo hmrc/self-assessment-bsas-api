@@ -17,7 +17,7 @@
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 

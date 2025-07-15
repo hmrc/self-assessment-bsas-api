@@ -22,7 +22,7 @@ import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, R
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v7.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestData, Expenses, FHLExpenses, FurnishedHolidayLet, UkProperty}
+import v7.ukPropertyBsas.submit.def2.model.request.*
 
 object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitUkPropertyBsasRequestData] {
 

@@ -18,7 +18,7 @@ package v5.bsas.trigger.def1
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleAccountingPeriodNotSupportedError
 import config.BsasConfig
 import shared.controllers.validators.RulesValidator
@@ -56,7 +56,7 @@ class Def1_TriggerBsasRulesValidator(implicit bsasConfig: BsasConfig) extends Ru
 
   def validateBusinessRules(parsed: Def1_TriggerBsasRequestData): Validated[Seq[MtdError], Def1_TriggerBsasRequestData] = {
     import parsed.body
-    import parsed.body.accountingPeriod._
+    import parsed.body.accountingPeriod.*
 
     val (validatedBusinessId, validatedDateRange, validatedTypeOfBusiness) = (
       ResolveBusinessId(body.businessId),

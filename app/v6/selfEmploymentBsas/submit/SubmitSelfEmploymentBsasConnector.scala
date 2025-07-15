@@ -35,11 +35,11 @@ class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClientV2, val ap
                                                                              ec: ExecutionContext,
                                                                              correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+    import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-    import request._
+    import request.*
 
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {

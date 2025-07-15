@@ -16,15 +16,15 @@
 
 package v5.selfEmploymentBsas.retrieve
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.common.model.TypeOfBusiness
-import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
+import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v5.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 import v5.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
@@ -58,7 +58,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
-        import TypeOfBusiness._
+        import TypeOfBusiness.*
         List(`uk-property-fhl`, `uk-property-non-fhl`, `foreign-property`, `foreign-property-fhl-eea`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
             val response: RetrieveSelfEmploymentBsasResponse = retrieveBsasResponseInvalidTypeOfBusinessDataObject(typeOfBusiness = typeOfBusiness)

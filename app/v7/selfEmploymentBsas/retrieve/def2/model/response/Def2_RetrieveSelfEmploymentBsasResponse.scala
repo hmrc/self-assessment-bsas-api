@@ -16,8 +16,8 @@
 
 package v7.selfEmploymentBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import v7.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 

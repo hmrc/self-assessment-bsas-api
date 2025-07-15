@@ -21,7 +21,7 @@ import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.{BusinessId, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
@@ -106,7 +106,7 @@ class ListBsasControllerSpec
   }
 
   private trait Test extends ControllerTest {
-    def maybeTaxYear: Option[String] = Some("2019-20")
+    def maybeTaxYear: Option[String] = Some("2023-24")
 
     val controller = new ListBsasController(
       authService = mockEnrolmentsAuthService,
@@ -146,7 +146,10 @@ class ListBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
+      controller.listBsas()
+        
+        
+        //listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
 
   }
 

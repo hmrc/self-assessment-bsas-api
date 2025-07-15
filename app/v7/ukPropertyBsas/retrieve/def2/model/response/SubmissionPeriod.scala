@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SubmissionPeriod(submissionId: String, startDate: String, endDate: String, receivedDateTime: String)

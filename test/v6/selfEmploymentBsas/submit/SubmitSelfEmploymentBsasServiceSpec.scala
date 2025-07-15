@@ -16,10 +16,10 @@
 
 package v6.selfEmploymentBsas.submit
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier

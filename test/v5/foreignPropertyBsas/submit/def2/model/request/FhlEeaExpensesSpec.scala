@@ -18,7 +18,6 @@ package v5.foreignPropertyBsas.submit.def2.model.request
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.utils.UnitSpec
-import v5.foreignPropertyBsas.submit.def2.model.request.FhlEeaExpenses
 
 class FhlEeaExpensesSpec extends UnitSpec {
 

@@ -17,11 +17,11 @@
 package v7.foreignPropertyBsas.retrieve.def2.model.response
 
 import common.model.RoundTripTest
-import v7.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v7.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class AdjustmentsSpec extends RoundTripTest {
 
-  import Adjustments._
+  import Adjustments.*
 
   testRoundTrip("Adjustments ", adjustmentsDesJson, parsedAdjustments, adjustmentsCountryLevelDetailMtdJson)(reads)
   testRoundTrip("Zero Adjustments ", zeroAdjustmentsDesJson, zeroParsedAdjustments, zeroAdjustmentsMtdJson)(readsZeroAdjustments)

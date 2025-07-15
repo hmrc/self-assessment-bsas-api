@@ -17,9 +17,9 @@
 package v5.ukPropertyBsas.retrieve
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.ServiceOutcome
 import v5.common.BaseRetrieveBsasService
 import v5.common.model.TypeOfBusiness

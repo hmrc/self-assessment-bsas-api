@@ -17,11 +17,11 @@
 package v5.foreignPropertyBsas.submit.def2
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.domain.TaxYear
 import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v5.foreignPropertyBsas.submit.def2.model.request.{Def2_SubmitForeignPropertyBsasRequestBody, Def2_SubmitForeignPropertyBsasRequestData}
@@ -45,7 +45,7 @@ object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
 class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def2_SubmitForeignPropertyBsasValidator._
+  import Def2_SubmitForeignPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
     (

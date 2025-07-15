@@ -16,8 +16,8 @@
 
 package v7.selfEmploymentBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class AdjustmentsExpenses(
     consolidatedExpenses: Option[BigDecimal],

@@ -17,9 +17,9 @@
 package v7.foreignPropertyBsas.submit.def1
 
 import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError}
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v7.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}

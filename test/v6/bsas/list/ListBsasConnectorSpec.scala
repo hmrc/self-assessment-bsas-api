@@ -21,11 +21,12 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{BusinessId, Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v6.bsas.list.def2.model.Def2_ListBsasFixtures
 import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v6.bsas.list.model.request.ListBsasRequestData
 import v6.bsas.list.model.response.ListBsasResponse
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec {
@@ -98,7 +99,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
     protected def taxYear: TaxYear
     protected def downstreamQueryParams: Seq[(String, String)]
 

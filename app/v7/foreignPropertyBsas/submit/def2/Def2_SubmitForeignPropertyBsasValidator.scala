@@ -17,11 +17,11 @@
 package v7.foreignPropertyBsas.submit.def2
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.errors.MtdError
 import v7.foreignPropertyBsas.submit.def2.model.request
 import v7.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestData
@@ -38,7 +38,7 @@ object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
 class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def2_SubmitForeignPropertyBsasValidator._
+  import Def2_SubmitForeignPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
     (

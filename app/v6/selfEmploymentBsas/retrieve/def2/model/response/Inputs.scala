@@ -16,9 +16,9 @@
 
 package v6.selfEmploymentBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.Reads.*
+import play.api.libs.json.*
 import shared.models.domain.Source
 import v6.common.model.{IncomeSourceType, TypeOfBusiness}
 

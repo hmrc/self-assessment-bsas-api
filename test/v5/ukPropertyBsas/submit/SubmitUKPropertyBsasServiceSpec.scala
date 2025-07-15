@@ -16,17 +16,17 @@
 
 package v5.submitUkPropertyBsas.services
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.ukPropertyBsas.submit.{MockSubmitUkPropertyBsasConnector, SubmitUkPropertyBsasService}
 import v5.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestData
-import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
+import v5.ukPropertyBsas.submit.{MockSubmitUkPropertyBsasConnector, SubmitUkPropertyBsasService}
 
 import scala.concurrent.Future
 

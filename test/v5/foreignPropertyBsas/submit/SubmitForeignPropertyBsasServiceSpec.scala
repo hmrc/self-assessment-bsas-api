@@ -16,14 +16,14 @@
 
 package v5.foreignPropertyBsas.submit
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.foreignPropertyBsas.submit.def1.model.request._
+import v5.foreignPropertyBsas.submit.def1.model.request.*
 
 import scala.concurrent.Future
 

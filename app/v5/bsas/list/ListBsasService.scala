@@ -16,9 +16,9 @@
 
 package v5.bsas.list
 
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import v5.bsas.list.model.request.ListBsasRequestData
 import v5.bsas.list.model.response.{BsasSummary, ListBsasResponse}

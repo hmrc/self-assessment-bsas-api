@@ -17,10 +17,10 @@
 package v7.ukPropertyBsas.submit.def3
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.errors.MtdError
 import v7.ukPropertyBsas.submit.def3.model.request.{Def3_SubmitUkPropertyBsasRequestBody, Def3_SubmitUkPropertyBsasRequestData}
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
@@ -35,7 +35,7 @@ object Def3_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
 class Def3_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitUkPropertyBsasRequestData] {
-  import Def3_SubmitUkPropertyBsasValidator._
+  import Def3_SubmitUkPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
     (

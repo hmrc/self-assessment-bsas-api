@@ -16,18 +16,18 @@
 
 package v7.ukPropertyBsas.retrieve
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v7.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
-import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

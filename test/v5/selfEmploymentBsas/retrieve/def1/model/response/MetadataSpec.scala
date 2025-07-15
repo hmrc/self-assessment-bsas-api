@@ -19,7 +19,7 @@ package v5.selfEmploymentBsas.retrieve.def1.model.response
 import play.api.libs.json.Json
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
+import v5.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 

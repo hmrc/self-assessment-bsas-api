@@ -46,5 +46,5 @@ object IncomeSourceTypeWithFHL {
     override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`foreign-property`
   }
 
-  implicit val format: json.Format[IncomeSourceTypeWithFHL] = Enums.format[IncomeSourceTypeWithFHL]
+  given format: json.Format[IncomeSourceTypeWithFHL] = Enums.format[IncomeSourceTypeWithFHL](Array())
 }

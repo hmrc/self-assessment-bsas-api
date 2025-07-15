@@ -16,14 +16,14 @@
 
 package v7.foreignPropertyBsas.submit.def1
 
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
-import shared.services._
+import shared.models.errors.*
+import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 

@@ -23,7 +23,7 @@ import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixt
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import Metadata._
+  import Metadata.*
 
   testRoundTrip("Metadata", downstreamMetadataJson, parsedMetadata, mtdMetadataJson)(reads)
 

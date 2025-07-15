@@ -18,7 +18,7 @@ package v5.common.model
 
 import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
-import v5.common.model.IncomeSourceType._
+import v5.common.model.IncomeSourceType.*
 
 class IncomeSourceTypeSpec extends UnitSpec with EnumJsonSpecSupport {
 

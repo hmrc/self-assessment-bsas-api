@@ -53,7 +53,7 @@ class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks wi
       "use the same schema as for the current tax year" in {
         implicit val arbYear: Arbitrary[Int] = Arbitrary(Gen.choose(min = 2000, max = 2099))
 
-        forAll { year: Int =>
+        forAll {( year: Int) =>
           implicit val clock: Clock = clockForTimeInYear(year)
 
           ListBsasSchema.schemaFor(None) shouldBe

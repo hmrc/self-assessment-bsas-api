@@ -21,7 +21,7 @@ import cats.implicits.catsSyntaxTuple4Semigroupal
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.domain.TaxYear
 import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v5.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
@@ -45,7 +45,7 @@ object Def2_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
 class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String], body: JsValue)
     extends Validator[SubmitUkPropertyBsasRequestData] {
-  import Def2_SubmitUkPropertyBsasValidator._
+  import Def2_SubmitUkPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
     (

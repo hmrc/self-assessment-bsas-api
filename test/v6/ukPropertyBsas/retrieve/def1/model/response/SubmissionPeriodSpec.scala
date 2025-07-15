@@ -19,11 +19,11 @@ package v6.ukPropertyBsas.retrieve.def1.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v6.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import SubmissionPeriod._
+  import SubmissionPeriod.*
 
   testRoundTrip(
     "Submission Period with valid periodId",

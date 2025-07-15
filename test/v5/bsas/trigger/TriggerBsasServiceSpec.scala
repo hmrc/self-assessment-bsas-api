@@ -16,14 +16,14 @@
 
 package v5.bsas.trigger
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.Nino
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
+import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v5.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v5.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v5.bsas.trigger.model.TriggerBsasRequestData

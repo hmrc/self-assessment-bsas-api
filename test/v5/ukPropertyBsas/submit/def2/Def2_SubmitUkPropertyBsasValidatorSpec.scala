@@ -20,7 +20,7 @@ import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
 import org.scalatest.Assertion
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v5.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}

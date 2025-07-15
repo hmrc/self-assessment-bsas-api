@@ -17,7 +17,7 @@
 package v5.ukPropertyBsas.retrieve.def1
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYearMinMax, ResolverSupport}
 import shared.models.domain.TaxYear
@@ -38,7 +38,7 @@ object Def1_RetrieveUkPropertyBsasValidator extends ResolverSupport {
 
 class Def1_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: Option[String])
     extends Validator[RetrieveUkPropertyBsasRequestData] {
-  import Def1_RetrieveUkPropertyBsasValidator._
+  import Def1_RetrieveUkPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] =
     (

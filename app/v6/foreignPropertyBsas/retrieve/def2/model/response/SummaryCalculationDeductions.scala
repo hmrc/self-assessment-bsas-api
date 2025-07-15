@@ -16,7 +16,7 @@
 
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SummaryCalculationDeductions(annualInvestmentAllowance: Option[BigDecimal],

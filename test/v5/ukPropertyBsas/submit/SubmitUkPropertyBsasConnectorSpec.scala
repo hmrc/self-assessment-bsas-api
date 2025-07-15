@@ -21,9 +21,9 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
-import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 import v5.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestData
+import v5.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
+import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
 import scala.concurrent.Future
 
@@ -44,7 +44,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
   }
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     protected val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(
       http = mockHttpClient,

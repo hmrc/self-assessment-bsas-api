@@ -16,15 +16,15 @@
 
 package v7.selfEmploymentBsas.submit.def2
 
-import common.errors._
+import common.errors.*
 import org.scalatest.Assertion
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v7.selfEmploymentBsas.submit.def2.model.request.Def2_SubmitSelfEmploymentBsasRequestData
-import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
+import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.*
 
 class Def2_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 

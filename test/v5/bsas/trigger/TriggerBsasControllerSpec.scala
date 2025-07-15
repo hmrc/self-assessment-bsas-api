@@ -16,18 +16,18 @@
 
 package v5.bsas.trigger
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
+import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v5.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v5.common.model.TypeOfBusiness
 

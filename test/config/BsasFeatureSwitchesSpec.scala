@@ -17,12 +17,14 @@
 package config
 
 import play.api.Configuration
-import shared.config.FeatureSwitchesBehaviour
+import shared.config.{FeatureSwitches, FeatureSwitchesBehaviour, SharedAppConfig}
 import shared.utils.UnitSpec
 
 class BsasFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[BsasFeatureSwitches] {
-  override def featureSwitches(configuration: Configuration): BsasFeatureSwitches = BsasFeatureSwitches(configuration)
+  //override def featureSwitches(configuration: Configuration): BsasFeatureSwitches = BsasFeatureSwitches(configuration)
+  override def featureSwitches(implicit appConfig: SharedAppConfig): BsasFeatureSwitches = BsasFeatureSwitches()
 
+  
   "isIfsEnabled" should {
     behave like aFeatureSwitchWithKey("ifs.enabled", _.isIfsEnabled)
   }

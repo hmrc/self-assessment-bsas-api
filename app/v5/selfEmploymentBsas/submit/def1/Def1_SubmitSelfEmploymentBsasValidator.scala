@@ -17,10 +17,10 @@
 package v5.selfEmploymentBsas.submit.def1
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.domain.TaxYear
 import shared.models.errors.{InvalidTaxYearParameterError, MtdError, RuleTaxYearNotSupportedError}
 import v5.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
@@ -46,7 +46,7 @@ class Def1_SubmitSelfEmploymentBsasValidator(
     body: JsValue
 ) extends Validator[SubmitSelfEmploymentBsasRequestData] {
 
-  import Def1_SubmitSelfEmploymentBsasValidator._
+  import Def1_SubmitSelfEmploymentBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
     (
