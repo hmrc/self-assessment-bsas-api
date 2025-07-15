@@ -146,9 +146,9 @@ class ListBsasControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.listBsas()
-        
-        
+      controller.listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))
+
+
         //listBsas(validNino, maybeTaxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)
 
   }
