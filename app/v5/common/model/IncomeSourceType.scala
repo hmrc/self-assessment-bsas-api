@@ -62,3 +62,8 @@ enum IncomeSourceType {
     
   }
 }
+
+
+object IncomeSourceType {
+  given json.Format[IncomeSourceType] = Enums.format(values)
+}

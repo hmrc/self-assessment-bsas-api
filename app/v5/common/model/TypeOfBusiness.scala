@@ -27,7 +27,7 @@ trait HasTypeOfBusiness {
   def typeOfBusiness: TypeOfBusiness
 }
 
-enum TypeOfBusiness(val valasDownstreamValue: String) {
+enum TypeOfBusiness(val asDownstreamValue: String) {
   case `self-employment` extends TypeOfBusiness("01")
   case `uk-property-fhl` extends TypeOfBusiness("04")
   case `uk-property-non-fhl` extends TypeOfBusiness("02")
