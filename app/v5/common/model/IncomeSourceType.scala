@@ -19,32 +19,46 @@ package v5.common.model
 import play.api.libs.json
 import shared.utils.enums.Enums
 
-sealed trait IncomeSourceType {
-  def toTypeOfBusiness: TypeOfBusiness
-}
+//sealed trait IncomeSourceType {
+//  def toTypeOfBusiness: TypeOfBusiness
+//}
 
 //noinspection ScalaStyle
-object IncomeSourceType {
+//object IncomeSourceType {
+//
+//  case object `01` extends IncomeSourceType {
+//    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`
+//  }
+//
+//  case object `02` extends IncomeSourceType {
+//    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`
+//  }
+//
+//  case object `03` extends IncomeSourceType {
+//    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`
+//  }
+//
+//  case object `04` extends IncomeSourceType {
+//    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`uk-property-fhl`
+//  }
+//
+//  case object `15` extends IncomeSourceType {
+//    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`foreign-property`
+//  }
+//
+//  given format: json.Format[IncomeSourceType] = Enums.format[IncomeSourceType](Array())
+//}
 
-  case object `01` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`
+
+enum IncomeSourceType {
+  case `01`, `02`, `03`, `04`, `15`
+
+  def toTypeOfBusiness: TypeOfBusiness = this match{
+  case `01` => TypeOfBusiness.`self-employment`
+  case `02` => TypeOfBusiness.`uk-property-non-fhl`
+  case `03` => TypeOfBusiness.`foreign-property-fhl-eea`
+  case `04` => TypeOfBusiness.`uk-property-fhl`
+  case `15` => TypeOfBusiness.`foreign-property`
+    
   }
-
-  case object `02` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`uk-property-non-fhl`
-  }
-
-  case object `03` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`foreign-property-fhl-eea`
-  }
-
-  case object `04` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`uk-property-fhl`
-  }
-
-  case object `15` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`foreign-property`
-  }
-
-  given format: json.Format[IncomeSourceType] = Enums.format[IncomeSourceType](Array())
 }
