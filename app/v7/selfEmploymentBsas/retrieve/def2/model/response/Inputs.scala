@@ -44,7 +44,7 @@ object Inputs {
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[Source] and
       (JsPath \ "submissionPeriod").read[SubmissionPeriod]
-  )(Inputs.apply _)
+  )(Inputs.apply)
 
   implicit val writes: OWrites[Inputs] = (o: Inputs) =>
     Json.obj(

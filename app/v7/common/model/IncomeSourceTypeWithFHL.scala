@@ -17,35 +17,18 @@
 package v7.common.model
 
 import play.api.libs.json
+import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-sealed trait IncomeSourceTypeWithFHL {
-  def toTypeOfBusiness: TypeOfBusinessWithFHL
+enum IncomeSourceTypeWithFHL(val toTypeOfBusiness: TypeOfBusinessWithFHL) {
+  case `01` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`self-employment`)
+  case `02` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`uk-property`)
+  case `03` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`foreign-property-fhl-eea`)
+  case `04` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`uk-property-fhl`)
+  case `15` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`foreign-property`)
 }
 
-//noinspection ScalaStyle
 object IncomeSourceTypeWithFHL {
 
-  case object `01` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`self-employment`
-  }
-
-  case object `02` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`uk-property`
-  }
-
-  case object `03` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`foreign-property-fhl-eea`
-  }
-
-  case object `04` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`uk-property-fhl`
-  }
-
-  case object `15` extends IncomeSourceTypeWithFHL {
-    override def toTypeOfBusiness: TypeOfBusinessWithFHL = TypeOfBusinessWithFHL.`foreign-property`
-  }
-  
-  given format: json.Format[IncomeSourceTypeWithFHL] = Enums.format[IncomeSourceTypeWithFHL](Array())
-
+  given Format[IncomeSourceTypeWithFHL] = Enums.format(values)
 }

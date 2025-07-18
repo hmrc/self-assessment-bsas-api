@@ -42,6 +42,6 @@ class Def2_RetrieveSelfEmploymentBsasValidator(
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear)
-    ).mapN(Def2_RetrieveSelfEmploymentBsasRequestData)
+    ).mapN(Def2_RetrieveSelfEmploymentBsasRequestData.apply)
 
 }

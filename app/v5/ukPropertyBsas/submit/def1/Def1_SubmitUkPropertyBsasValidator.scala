@@ -30,8 +30,9 @@ import v5.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 object Def1_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "nonFurnishedHolidayLet").resolver thenResolve
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "nonFurnishedHolidayLet").resolver.thenResolve(
       ResolveNonEmptyJsonObject.resolver[Def1_SubmitUkPropertyBsasRequestBody]
+    )
 
   private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
 
@@ -53,6 +54,6 @@ class Def1_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_SubmitUkPropertyBsasRequestData) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def1_SubmitUkPropertyBsasRequestData.apply) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 
 }

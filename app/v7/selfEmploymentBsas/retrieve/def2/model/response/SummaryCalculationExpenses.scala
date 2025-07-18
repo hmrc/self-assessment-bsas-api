@@ -57,7 +57,7 @@ object SummaryCalculationExpenses {
       (JsPath \ "otherExpensesAllowable").readNullable[BigDecimal] and
       (JsPath \ "advertisingCostsAllowable").readNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsAllowable").readNullable[BigDecimal]
-  )(SummaryCalculationExpenses.apply _)
+  )(SummaryCalculationExpenses.apply)
 
   implicit val writes: OWrites[SummaryCalculationExpenses] = Json.writes[SummaryCalculationExpenses]
 }

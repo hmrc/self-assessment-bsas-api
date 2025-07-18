@@ -148,7 +148,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
           RuleRequestCannotBeFulfilledError,
           Some("REQUEST_CANNOT_BE_FULFILLED"))
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
     }
 
     "service error" when {
@@ -185,7 +185,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      errors.foreach(args => (serviceErrorTest _).tupled(args))
+      errors.foreach(serviceErrorTest.tupled)
     }
   }
 
@@ -199,7 +199,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
-        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil)*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123")

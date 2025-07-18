@@ -49,7 +49,7 @@ object SummaryCalculation {
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal] and
       Reads.pure(None)
-  )(SummaryCalculation.apply _)
+  )(SummaryCalculation.apply)
 
   val reads: Reads[SummaryCalculation] = (
     (JsPath \ "totalIncome").readNullable[BigDecimal] and
@@ -65,7 +65,7 @@ object SummaryCalculation {
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal] and
       (JsPath \ "countryLevelDetail").readNullable[Seq[SummaryCalculationCountryLevelDetail]]
-  )(SummaryCalculation.apply _)
+  )(SummaryCalculation.apply)
 
   implicit val writes: OWrites[SummaryCalculation] = Json.writes[SummaryCalculation]
 }

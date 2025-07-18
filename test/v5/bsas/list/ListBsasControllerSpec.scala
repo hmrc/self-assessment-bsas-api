@@ -108,7 +108,7 @@ class ListBsasControllerSpec
   private trait Test extends ControllerTest {
     def maybeTaxYear: Option[String] = Some("2019-20")
 
-    val controller = new ListBsasController(
+    val controller: ListBsasController = new ListBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockListBsasValidatorFactory,

@@ -97,7 +97,7 @@ class SubmitSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
 
-      (input ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (input ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

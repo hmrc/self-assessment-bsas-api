@@ -81,7 +81,7 @@ class RetrieveForeignPropertyBsasControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveForeignPropertyBsasController(
+    val controller: RetrieveForeignPropertyBsasController = new RetrieveForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveForeignPropertyBsasValidatorFactory,

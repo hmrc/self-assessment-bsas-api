@@ -19,35 +19,16 @@ package v6.common.model
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-sealed trait TypeOfBusinessWithFHL {
-  def asDownstreamValue: String
+enum TypeOfBusinessWithFHL(val asDownstreamValue: String) {
+  case `self-employment` extends TypeOfBusinessWithFHL("01")
+  case `uk-property-fhl` extends TypeOfBusinessWithFHL("04")
+  case `uk-property` extends TypeOfBusinessWithFHL("02")
+  case `foreign-property-fhl-eea` extends TypeOfBusinessWithFHL("03")
+  case `foreign-property` extends TypeOfBusinessWithFHL("15")
 }
 
-//noinspection ScalaStyle
 object TypeOfBusinessWithFHL {
-  given parser: PartialFunction[String, TypeOfBusinessWithFHL] = Enums.parser[TypeOfBusinessWithFHL](Array())
+  val parser: PartialFunction[String, TypeOfBusinessWithFHL] = Enums.parser(values)
 
-  case object `self-employment` extends TypeOfBusinessWithFHL {
-    val asDownstreamValue: String = "01"
-  }
-
-  case object `uk-property-fhl` extends TypeOfBusinessWithFHL {
-    val asDownstreamValue: String = "04"
-  }
-
-  case object `uk-property` extends TypeOfBusinessWithFHL {
-    val asDownstreamValue: String = "02"
-  }
-
-  case object `foreign-property-fhl-eea` extends TypeOfBusinessWithFHL {
-    val asDownstreamValue: String = "03"
-  }
-
-  case object `foreign-property` extends TypeOfBusinessWithFHL {
-    val asDownstreamValue: String = "15"
-  }
-  
-  given format: Format[TypeOfBusinessWithFHL] = Enums.format[TypeOfBusinessWithFHL](Array())
-
-
+  given Format[TypeOfBusinessWithFHL] = Enums.format(values)
 }

@@ -17,8 +17,8 @@
 package v7.foreignPropertyBsas.submit.def2
 
 import common.errors.*
-import play.api.http.HeaderNames.ACCEPT
 import play.api.libs.json.*
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
 import shared.models.errors.*
@@ -246,7 +246,7 @@ class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
         )
       )
 
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
@@ -291,7 +291,7 @@ class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

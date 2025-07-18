@@ -20,6 +20,7 @@ import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
@@ -122,7 +123,7 @@ class Def3_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
               paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
             ))
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "service error" when {
@@ -168,7 +169,7 @@ class Def3_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

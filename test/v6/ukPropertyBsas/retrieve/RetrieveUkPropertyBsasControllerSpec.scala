@@ -96,7 +96,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveUkPropertyBsasController(
+    val controller: RetrieveUkPropertyBsasController = new RetrieveUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveUkPropertyBsasValidatorFactory,

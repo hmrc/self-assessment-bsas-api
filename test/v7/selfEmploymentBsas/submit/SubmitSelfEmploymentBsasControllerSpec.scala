@@ -105,7 +105,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new SubmitSelfEmploymentBsasController(
+    val controller: SubmitSelfEmploymentBsasController = new SubmitSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitSelfEmploymentBsasValidatorFactory,

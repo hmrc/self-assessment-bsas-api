@@ -31,7 +31,7 @@ object SummaryCalculationAdditions {
     (JsPath \ "privateUseAdjustment").readNullable[BigDecimal] and
       (JsPath \ "balancingCharge").readNullable[BigDecimal] and
       (JsPath \ "bpraBalancingCharge").readNullable[BigDecimal]
-  )(SummaryCalculationAdditions.apply _)
+  )(SummaryCalculationAdditions.apply)
 
   implicit val writes: OWrites[SummaryCalculationAdditions] = Json.writes[SummaryCalculationAdditions]
 }

@@ -40,7 +40,7 @@ class EnumsSpec extends UnitSpec with Inspectors {
 
   import Enum.*
 
-  given Arbitrary[Enum] = Arbitrary(Gen.oneOf(values))
+  given Arbitrary[Enum] = Arbitrary(Gen.oneOf(values.toList))
 
   "SealedTraitEnumJson" must {
 

@@ -41,7 +41,7 @@ object Inputs extends JsonWritesUtil {
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[String] and
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriods]]
-  )(Inputs.apply _)
+  )(Inputs.apply)
 
   implicit val writes: OWrites[Inputs] = (o: Inputs) =>
     filterNull(

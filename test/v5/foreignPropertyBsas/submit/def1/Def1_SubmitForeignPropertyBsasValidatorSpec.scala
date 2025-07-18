@@ -328,7 +328,7 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           (nonFhlBodyWith(entry.replaceWithEmptyObject("/expenses")), "/nonFurnishedHolidayLet/0/expenses"),
           (nonFhlBodyWith(entry.removeProperty("/countryCode")), "/nonFurnishedHolidayLet/0/countryCode"),
           (nonFhlBodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/nonFurnishedHolidayLet/0")
-        ).foreach((testWith _).tupled)
+        ).foreach(testWith.tupled)
 
         def testWith(body: JsValue, expectedPath: String): Unit =
           s"for $expectedPath" in {

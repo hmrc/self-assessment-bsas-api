@@ -45,6 +45,6 @@ class Def1_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, 
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_RetrieveUkPropertyBsasRequestData)
+    ).mapN(Def1_RetrieveUkPropertyBsasRequestData.apply)
 
 }

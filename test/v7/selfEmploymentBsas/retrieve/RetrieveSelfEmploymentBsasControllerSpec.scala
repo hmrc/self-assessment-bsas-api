@@ -81,7 +81,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveSelfEmploymentBsasController(
+    val controller: RetrieveSelfEmploymentBsasController = new RetrieveSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveSelfEmploymentBsasValidatorFactory,

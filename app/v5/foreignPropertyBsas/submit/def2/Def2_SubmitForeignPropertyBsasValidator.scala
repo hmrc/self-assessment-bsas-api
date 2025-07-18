@@ -30,8 +30,9 @@ import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequ
 object Def2_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "nonFurnishedHolidayLet").resolver thenResolve
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "nonFurnishedHolidayLet").resolver.thenResolve(
       ResolveNonEmptyJsonObject.resolver[Def2_SubmitForeignPropertyBsasRequestBody]
+    )
 
   private val minMaxTaxYears: (TaxYear, TaxYear) = (TaxYear.ending(2024), TaxYear.ending(2025))
 
@@ -53,6 +54,6 @@ class Def2_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def2_SubmitForeignPropertyBsasRequestData) andThen Def2_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def2_SubmitForeignPropertyBsasRequestData.apply) andThen Def2_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 
 }

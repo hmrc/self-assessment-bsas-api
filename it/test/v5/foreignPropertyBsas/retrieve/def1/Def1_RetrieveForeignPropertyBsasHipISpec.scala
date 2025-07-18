@@ -120,7 +120,7 @@ class Def1_RetrieveForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
         ("AA123456A", "bb9e053d-9c3a-4ccb-891e-89aebdbdbdc9", Some("2023-25"), BAD_REQUEST, RuleTaxYearRangeInvalidError),
         ("AA123456A", "bb9e053d-9c3a-4ccb-891e-89aebdbdbdc9", Some("2022-23"), BAD_REQUEST, InvalidTaxYearParameterError)
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
     }
 
     "downstream service error" when {
@@ -159,7 +159,7 @@ class Def1_RetrieveForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+      (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
     }
   }
 
@@ -175,7 +175,7 @@ class Def1_RetrieveForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       buildRequest(s"/$nino/foreign-property/$calculationId")
-        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil): _*)
+        .withQueryStringParameters(taxYear.map(ty => List("taxYear" -> ty)).getOrElse(Nil)*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123")

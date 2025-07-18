@@ -33,7 +33,7 @@ object Adjustments {
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads) and
       Reads.pure(None)
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   val readsZeroAdjustments: Reads[Adjustments] = (
     Reads.pure(None) and
@@ -41,7 +41,7 @@ object Adjustments {
       Reads.pure(None) and
       Reads.pure(None) and
       (JsPath \ "zeroAdjustments").readNullable[Boolean]
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

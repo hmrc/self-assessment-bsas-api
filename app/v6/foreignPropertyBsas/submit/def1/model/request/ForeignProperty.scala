@@ -17,15 +17,18 @@
 package v6.foreignPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{Format, Json}
-
 import shared.utils.EmptinessChecker
+import shared.utils.EmptinessChecker.field
 
 case class ForeignProperty(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses])
 
 object ForeignProperty {
 
   implicit val emptinessChecker: EmptinessChecker[ForeignProperty] = EmptinessChecker.use { body =>
-    (body.income, body.expenses )
+    List(
+      field("income", body.income),
+      field("expenses", body.expenses)
+    )
   }
 
   implicit val format: Format[ForeignProperty] = Json.format[ForeignProperty]
