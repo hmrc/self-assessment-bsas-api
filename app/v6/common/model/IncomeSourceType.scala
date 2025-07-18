@@ -19,28 +19,23 @@ package v6.common.model
 import play.api.libs.json
 import shared.utils.enums.Enums
 
-sealed trait IncomeSourceType {
-  def toTypeOfBusiness: TypeOfBusiness
-}
 
 trait HasIncomeSourceType {
   def incomeSourceType: String
 }
 
-//noinspection ScalaStyle
+enum IncomeSourceType {
+  case `01`, `02`, `03`, `04`, `15`
+
+  def toTypeOfBusiness: TypeOfBusiness = this match{
+    case `01` => TypeOfBusiness.`self-employment`
+    case `02` => TypeOfBusiness.`uk-property`
+    case `15` => TypeOfBusiness.`foreign-property`
+
+  }
+}
+
+
 object IncomeSourceType {
-
-  case object `01` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`self-employment`
-  }
-
-  case object `02` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`uk-property`
-  }
-
-  case object `15` extends IncomeSourceType {
-    override def toTypeOfBusiness: TypeOfBusiness = TypeOfBusiness.`foreign-property`
-  }
-
-  given format: json.Format[IncomeSourceType] = Enums.format[IncomeSourceType](Array())
+  given json.Format[IncomeSourceType] = Enums.format(values)
 }

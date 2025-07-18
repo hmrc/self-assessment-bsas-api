@@ -18,7 +18,8 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / scalaVersion := "3.5.2"
 ThisBuild / majorVersion := 1
-
+ThisBuild / scalacOptions += "-Werror"
+ThisBuild / scalacOptions += "-nowarn"
 
 val appName = "self-assessment-bsas-api"
 
