@@ -24,11 +24,11 @@ trait HasTypeOfBusiness {
 }
 
 enum TypeOfBusiness(val asDownstreamValue: String) {
-  case `self-employment` extends TypeOfBusiness("01")
-  case `uk-property-fhl` extends TypeOfBusiness("04")
-  case `uk-property-non-fhl` extends TypeOfBusiness("02")
+  case `self-employment`          extends TypeOfBusiness("01")
+  case `uk-property-fhl`          extends TypeOfBusiness("04")
+  case `uk-property-non-fhl`      extends TypeOfBusiness("02")
   case `foreign-property-fhl-eea` extends TypeOfBusiness("03")
-  case `foreign-property` extends TypeOfBusiness("15")
+  case `foreign-property`         extends TypeOfBusiness("15")
 }
 
 object TypeOfBusiness {

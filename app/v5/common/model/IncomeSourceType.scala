@@ -32,4 +32,3 @@ object IncomeSourceType {
 
   given Format[IncomeSourceType] = Enums.format(values)
 }
-

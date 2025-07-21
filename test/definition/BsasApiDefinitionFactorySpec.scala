@@ -26,7 +26,6 @@ import shared.utils.UnitSpec
 
 class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
 
-
   "definition" when {
     "called" should {
       "return a valid Definition case class" in {

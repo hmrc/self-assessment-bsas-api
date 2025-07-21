@@ -24,8 +24,8 @@ trait HasTypeOfBusiness {
 }
 
 enum TypeOfBusiness(val asDownstreamValue: String) {
-  case `self-employment` extends TypeOfBusiness("01")
-  case `uk-property` extends TypeOfBusiness("02")
+  case `self-employment`  extends TypeOfBusiness("01")
+  case `uk-property`      extends TypeOfBusiness("02")
   case `foreign-property` extends TypeOfBusiness("15")
 }
 
@@ -34,4 +34,3 @@ object TypeOfBusiness {
 
   given Format[TypeOfBusiness] = Enums.format(values)
 }
-

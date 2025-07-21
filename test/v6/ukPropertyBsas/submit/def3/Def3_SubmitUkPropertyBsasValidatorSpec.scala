@@ -242,7 +242,8 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           ErrorWrapper(
             correlationId,
             ValueFormatError.copy(
-              paths = Some(List(path2, path1)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+              paths = Some(List(path2, path1)),
+              message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
           )
         )
       }

@@ -31,12 +31,12 @@ import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
 
-  private val nino = Nino("AA123456A")
-  private val incomeSourceId = "XAIS12345678910"
+  private val nino             = Nino("AA123456A")
+  private val incomeSourceId   = "XAIS12345678910"
   private val incomeSourceType = "02"
 
   private val preTysTaxYear = TaxYear.fromMtd("2018-19")
-  private val tysTaxYear = TaxYear.fromMtd("2023-24")
+  private val tysTaxYear    = TaxYear.fromMtd("2023-24")
 
   private val additionalQueryParams: Seq[(String, String)] = List(
     ("taxYear", preTysTaxYear.asDownstream)
@@ -118,8 +118,8 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
       new ListBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     protected def stubHttpResponse(
-                                    outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
-                                  ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
         url = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino",
         parameters = downstreamQueryParams
@@ -127,8 +127,8 @@ class ListBsasConnectorSpec extends ConnectorSpec with Def1_ListBsasFixtures {
     }
 
     protected def stubTysHttpResponse(
-                                       outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
-                                     ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
+        outcome: DownstreamOutcome[ListBsasResponse[BsasSummary]]
+    ): CallHandler[Future[DownstreamOutcome[ListBsasResponse[BsasSummary]]]]#Derived = {
       willGet(
         url = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino",
         parameters = downstreamQueryParams

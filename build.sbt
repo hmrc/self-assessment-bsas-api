@@ -22,6 +22,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-Werror",
   "-Wconf:msg=Flag.*repeatedly:s"
 )
+ThisBuild / scalafmtOnCompile := true
 
 val appName = "self-assessment-bsas-api"
 
@@ -45,7 +46,7 @@ lazy val microservice = Project(appName, file("."))
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test")
-  .settings(DefaultBuildSettings.itSettings() ++ ScalafmtPlugin.scalafmtConfigSettings)
+  .settings(DefaultBuildSettings.itSettings())
   .settings(
     Test / fork := true,
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")

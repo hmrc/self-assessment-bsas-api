@@ -62,8 +62,8 @@ class ListBsasConnectorSpec extends ConnectorSpec {
   }
 
   "a valid request with Tax Year Specific tax year is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
-    def taxYear: TaxYear                             = tysTaxYear
-    def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+    def taxYear: TaxYear                                           = tysTaxYear
+    def downstreamQueryParams: Seq[(String, String)]               = commonQueryParams
     val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
 
     stubTysHttpResponse(outcome)

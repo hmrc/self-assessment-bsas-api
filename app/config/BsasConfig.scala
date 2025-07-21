@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 class BsasConfig @Inject() (val config: ServicesConfig, val configuration: Configuration) extends AppConfigBase {
 
   def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
-  
+
   def featureSwitches(implicit appConfig: SharedAppConfig): FeatureSwitches = BsasFeatureSwitches()
 
   // V3 Trigger BSAS minimum dates

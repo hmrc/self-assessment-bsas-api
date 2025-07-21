@@ -83,8 +83,8 @@ class EnumsSpec extends UnitSpec with Inspectors {
     "allows alternative names (specified by method)" in {
 
       enum Enum2(val altName: String) {
-        case `enum-one` extends Enum2("one")
-        case `enum-two` extends Enum2("two")
+        case `enum-one`   extends Enum2("one")
+        case `enum-two`   extends Enum2("two")
         case `enum-three` extends Enum2("three")
       }
 

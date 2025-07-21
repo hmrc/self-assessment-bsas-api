@@ -133,9 +133,9 @@ object UnexpectedJsonFieldsValidator extends ResolverSupport {
 
     inline given derived[A](using m: Mirror.ProductOf[A]): SchemaStructureSource[A] =
       instance { a =>
-        val elemLabels = summonLabels[m.MirroredElemLabels]
+        val elemLabels    = summonLabels[m.MirroredElemLabels]
         val elemInstances = summonAllInstances[m.MirroredElemTypes]
-        val elems = a.asInstanceOf[Product].productIterator.toList
+        val elems         = a.asInstanceOf[Product].productIterator.toList
         val fields = elemLabels.lazyZip(elems).lazyZip(elemInstances).map { (label, value, checker) =>
           label -> checker.value().schemaStructureOf(value)
         }
@@ -144,14 +144,16 @@ object UnexpectedJsonFieldsValidator extends ResolverSupport {
 
     private inline def summonLabels[T <: Tuple]: List[String] =
       inline erasedValue[T] match {
-        case _: (h *: t) => constValue[h].asInstanceOf[String] :: summonLabels[t]
+        case _: (h *: t)   => constValue[h].asInstanceOf[String] :: summonLabels[t]
         case _: EmptyTuple => Nil
       }
 
     private inline def summonAllInstances[T <: Tuple]: List[Lazy[SchemaStructureSource[Any]]] =
       inline erasedValue[T] match {
-        case _: (h *: t) => summonInline[Lazy[SchemaStructureSource[h]]].asInstanceOf[Lazy[SchemaStructureSource[Any]]] :: summonAllInstances[t]
+        case _: (h *: t)   => summonInline[Lazy[SchemaStructureSource[h]]].asInstanceOf[Lazy[SchemaStructureSource[Any]]] :: summonAllInstances[t]
         case _: EmptyTuple => Nil
       }
+
   }
+
 }

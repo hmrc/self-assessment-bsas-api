@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class TriggerBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def triggerBsas(request: TriggerBsasRequestData)(implicit
-                                                   hc: HeaderCarrier,
-                                                   ec: ExecutionContext,
-                                                   correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
     import request.*
     import schema.*

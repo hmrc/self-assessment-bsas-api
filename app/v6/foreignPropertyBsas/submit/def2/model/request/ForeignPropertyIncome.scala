@@ -30,5 +30,6 @@ object ForeignPropertyIncome {
     (JsPath \ "rent").writeNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").writeNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").writeNullable[BigDecimal]
-    )(w => Tuple.fromProductTyped(w))
+  )(w => Tuple.fromProductTyped(w))
+
 }

@@ -20,11 +20,11 @@ import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
 enum TypeOfBusinessWithFHL(val asDownstreamValue: String) {
-  case `self-employment` extends TypeOfBusinessWithFHL("01")
-  case `uk-property-fhl` extends TypeOfBusinessWithFHL("04")
-  case `uk-property` extends TypeOfBusinessWithFHL("02")
+  case `self-employment`          extends TypeOfBusinessWithFHL("01")
+  case `uk-property-fhl`          extends TypeOfBusinessWithFHL("04")
+  case `uk-property`              extends TypeOfBusinessWithFHL("02")
   case `foreign-property-fhl-eea` extends TypeOfBusinessWithFHL("03")
-  case `foreign-property` extends TypeOfBusinessWithFHL("15")
+  case `foreign-property`         extends TypeOfBusinessWithFHL("15")
 }
 
 object TypeOfBusinessWithFHL {
