@@ -46,6 +46,6 @@ class Def1_RetrieveForeignPropertyBsasValidator(nino: String, calculationId: Str
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_RetrieveForeignPropertyBsasRequestData)
+    ).mapN(Def1_RetrieveForeignPropertyBsasRequestData.apply)
 
 }

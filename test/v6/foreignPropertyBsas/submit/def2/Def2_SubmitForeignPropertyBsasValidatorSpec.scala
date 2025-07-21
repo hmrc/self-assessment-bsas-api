@@ -310,7 +310,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           (BodyWith(entry.replaceWithEmptyObject("/expenses")), "/foreignProperty/0/expenses"),
           (BodyWith(entry.removeProperty("/countryCode")), "/foreignProperty/0/countryCode"),
           (BodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/foreignProperty/0")
-        ).foreach((testWith _).tupled)
+        ).foreach(testWith.tupled)
 
         def testWith(body: JsValue, expectedPath: String): Unit =
           s"for $expectedPath" in {
@@ -395,7 +395,9 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           result shouldBe Left(
             ErrorWrapper(
               correlationId,
-              ValueFormatError.copy(paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+              ValueFormatError.copy(
+                paths = Some(List(path1, path2)),
+                message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
             )
           )
         }

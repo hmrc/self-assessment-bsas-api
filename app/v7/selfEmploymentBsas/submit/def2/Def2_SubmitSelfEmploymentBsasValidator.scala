@@ -46,6 +46,6 @@ class Def2_SubmitSelfEmploymentBsasValidator(
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def2_SubmitSelfEmploymentBsasRequestData) andThen Def2_SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
+    ).mapN(Def2_SubmitSelfEmploymentBsasRequestData.apply) andThen Def2_SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
 
 }

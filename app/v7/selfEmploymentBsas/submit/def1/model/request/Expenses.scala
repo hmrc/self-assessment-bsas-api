@@ -16,7 +16,7 @@
 
 package v7.selfEmploymentBsas.submit.def1.model.request
 
-import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
 case class Expenses(
@@ -67,7 +67,7 @@ object Expenses {
       (JsPath \ "advertisingCostsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsAllowable").writeNullable[BigDecimal] and
       (JsPath \ "consolidatedExpenses").writeNullable[BigDecimal]
-    )(w => Tuple.fromProductTyped(w))
+  )(w => Tuple.fromProductTyped(w))
 
   implicit val reads: Reads[Expenses] = Json.reads[Expenses]
 }

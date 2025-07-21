@@ -39,7 +39,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
       Reads.pure(None) and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-  )(SummaryCalculationDeductions.apply _)
+  )(SummaryCalculationDeductions.apply)
 
   val readsNonFhl: Reads[SummaryCalculationDeductions] = (
     (JsPath \ "annualInvestmentAllowance").readNullable[BigDecimal] and
@@ -50,7 +50,7 @@ object SummaryCalculationDeductions {
       (JsPath \ "electricChargePointAllowance").readNullable[BigDecimal] and
       (JsPath \ "structuredBuildingAllowance").readNullable[BigDecimal] and
       (JsPath \ "zeroEmissionsCarAllowance").readNullable[BigDecimal]
-  )(SummaryCalculationDeductions.apply _)
+  )(SummaryCalculationDeductions.apply)
 
   implicit val writes: OWrites[SummaryCalculationDeductions] = Json.writes[SummaryCalculationDeductions]
 }

@@ -42,9 +42,8 @@ trait ListBsasResponse[+I] {
 
 object ListBsasResponse extends JsonWritesUtil {
 
-  implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] = writesFrom { case a: Def1_ListBsasResponse[I] =>
-    implicitly[OWrites[Def1_ListBsasResponse[I]]].writes(a)
-  }
+  implicit def writes[I: Writes]: OWrites[ListBsasResponse[I]] =
+    implicitly[OWrites[Def1_ListBsasResponse[I]]].contramap(_.asInstanceOf[Def1_ListBsasResponse[I]])
 
   implicit object ResponseFunctor extends Functor[ListBsasResponse] {
     override def map[A, B](fa: ListBsasResponse[A])(f: A => B): ListBsasResponse[B] = fa.mapItems(f)

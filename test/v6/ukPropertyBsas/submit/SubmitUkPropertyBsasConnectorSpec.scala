@@ -58,7 +58,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new IfsTest with Test {
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-        val url     = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+        val url                                            = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(nonTysRequest))
@@ -68,7 +68,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the TYS scenario" in new IfsTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-        val url     = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+        val url                                            = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
         willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(tysRequest))
@@ -78,7 +78,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the TYS scenario on HIP" in new HipTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true))
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-        val url     = url"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
+        val url = url"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
         willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(tysRequest))

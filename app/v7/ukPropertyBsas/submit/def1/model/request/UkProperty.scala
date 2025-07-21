@@ -26,7 +26,7 @@ object UkProperty {
   implicit val reads: Reads[UkProperty] = (
     (JsPath \ "income").readNullable[Income] and
       (JsPath \ "expenses").readNullable[Expenses]
-  )(UkProperty.apply _)
+  )(UkProperty.apply)
 
   implicit val writes: OWrites[UkProperty] = Json.writes[UkProperty]
 }

@@ -45,6 +45,6 @@ class Def1_ListBsasValidator(nino: String, taxYear: Option[String], typeOfBusine
       resolveTaxYear(taxYear),
       resolveBusinessId(businessId),
       resolveTypeOfBusiness(typeOfBusiness).map(_.map(_.asDownstreamValue))
-    ).mapN(Def1_ListBsasRequestData)
+    ).mapN(Def1_ListBsasRequestData.apply)
 
 }

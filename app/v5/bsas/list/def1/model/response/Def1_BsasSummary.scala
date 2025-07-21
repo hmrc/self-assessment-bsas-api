@@ -37,7 +37,7 @@ object Def1_BsasSummary {
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean] and
       (JsPath \ "adjustedDateTime").readNullable[String]
-  )(Def1_BsasSummary.apply _)
+  )(Def1_BsasSummary.apply)
 
   implicit val writes: OWrites[Def1_BsasSummary] = Json.writes[Def1_BsasSummary]
 }

@@ -33,14 +33,14 @@ object AdjustmentsIncome {
       Reads.pure(None) and
       Reads.pure(None) and
       Reads.pure(None)
-  )(AdjustmentsIncome.apply _)
+  )(AdjustmentsIncome.apply)
 
   val readsUkProperty: Reads[AdjustmentsIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-  )(AdjustmentsIncome.apply _)
+  )(AdjustmentsIncome.apply)
 
   implicit val writes: OWrites[AdjustmentsIncome] = Json.writes[AdjustmentsIncome]
 }

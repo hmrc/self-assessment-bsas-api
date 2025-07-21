@@ -115,7 +115,7 @@ class TriggerBsasControllerSpec
 
   trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new TriggerBsasController(
+    val controller: TriggerBsasController = new TriggerBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockTriggerBsasValidatorFactory,

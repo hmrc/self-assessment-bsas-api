@@ -31,7 +31,7 @@ object Adjustments {
     (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads) and
       (JsPath \ "zeroAdjustments").readNullable[Boolean]
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

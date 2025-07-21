@@ -43,6 +43,6 @@ class Def3_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def3_SubmitUkPropertyBsasRequestData) andThen Def3_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def3_SubmitUkPropertyBsasRequestData.apply) andThen Def3_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 
 }

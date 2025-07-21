@@ -42,6 +42,6 @@ class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def3_SubmitForeignPropertyBsasRequestData) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def3_SubmitForeignPropertyBsasRequestData.apply) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 
 }

@@ -33,7 +33,7 @@ object SummaryCalculationAccountingAdjustments {
       (JsPath \ "overlapReliefUsed").readNullable[BigDecimal] and
       (JsPath \ "accountingAdjustment").readNullable[BigDecimal] and
       (JsPath \ "averagingAdjustment").readNullable[BigDecimal]
-  )(SummaryCalculationAccountingAdjustments.apply _)
+  )(SummaryCalculationAccountingAdjustments.apply)
 
   implicit val writes: OWrites[SummaryCalculationAccountingAdjustments] = Json.writes[SummaryCalculationAccountingAdjustments]
 }

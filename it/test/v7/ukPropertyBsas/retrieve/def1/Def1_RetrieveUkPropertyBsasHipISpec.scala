@@ -131,7 +131,7 @@ class Def1_RetrieveUkPropertyBsasHipISpec extends IntegrationBaseSpec {
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-beans", "2023-24", BAD_REQUEST, CalculationIdFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-2024", BAD_REQUEST, TaxYearFormatError)
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
     }
 
     "des service error" when {
@@ -176,7 +176,7 @@ class Def1_RetrieveUkPropertyBsasHipISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+      (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
     }
   }
 

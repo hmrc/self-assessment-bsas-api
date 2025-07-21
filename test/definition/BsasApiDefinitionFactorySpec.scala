@@ -21,17 +21,15 @@ import shared.config.Deprecation.NotDeprecated
 import shared.config.MockSharedAppConfig
 import shared.definition.APIStatus.BETA
 import shared.definition.*
-import shared.mocks.MockHttpClient
 import shared.routing.{Version5, Version6, Version7}
 import shared.utils.UnitSpec
 
 class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
 
-
   "definition" when {
     "called" should {
       "return a valid Definition case class" in {
-        MockedSharedAppConfig.apiGatewayContext returns "individuals/reliefs"
+        MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
 
         List(Version5, Version6, Version7).foreach { version =>
           MockedSharedAppConfig.apiStatus(version) returns "BETA"

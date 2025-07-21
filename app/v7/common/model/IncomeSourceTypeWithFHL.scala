@@ -17,23 +17,18 @@
 package v7.common.model
 
 import play.api.libs.json
+import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-
-enum IncomeSourceTypeWithFHL {
-  case `01`, `02`, `03`, `04`, `15`
-
-  def toTypeOfBusiness: TypeOfBusinessWithFHL = this match{
-    case `01` => TypeOfBusinessWithFHL.`self-employment`
-    case `02` => TypeOfBusinessWithFHL.`uk-property`
-    case `03` => TypeOfBusinessWithFHL.`foreign-property-fhl-eea`
-    case `04` => TypeOfBusinessWithFHL.`uk-property-fhl`
-    case `15` => TypeOfBusinessWithFHL.`foreign-property`
-
-  }
+enum IncomeSourceTypeWithFHL(val toTypeOfBusiness: TypeOfBusinessWithFHL) {
+  case `01` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`self-employment`)
+  case `02` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`uk-property`)
+  case `03` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`foreign-property-fhl-eea`)
+  case `04` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`uk-property-fhl`)
+  case `15` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`foreign-property`)
 }
 
-
 object IncomeSourceTypeWithFHL {
-  given json.Format[IncomeSourceTypeWithFHL] = Enums.format(values)
+
+  given Format[IncomeSourceTypeWithFHL] = Enums.format(values)
 }

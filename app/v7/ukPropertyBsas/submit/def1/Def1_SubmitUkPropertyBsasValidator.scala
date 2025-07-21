@@ -29,8 +29,9 @@ import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 object Def1_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "ukProperty").resolver thenResolve
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "ukProperty").resolver.thenResolve(
       ResolveNonEmptyJsonObject.resolver[Def1_SubmitUkPropertyBsasRequestBody]
+    )
 
   private val resolveTaxYear = ResolveTaxYear.resolver
 
@@ -46,6 +47,6 @@ class Def1_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_SubmitUkPropertyBsasRequestData) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def1_SubmitUkPropertyBsasRequestData.apply) andThen Def1_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 
 }

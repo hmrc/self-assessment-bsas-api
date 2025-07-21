@@ -29,18 +29,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class ListBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def listBsas(request: ListBsasRequestData)(implicit
-                                             hc: HeaderCarrier,
-                                             ec: ExecutionContext,
-                                             correlationId: String): Future[DownstreamOutcome[ListBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListBsasResponse]] = {
 
     import request.*
     import schema.*
 
     val queryParams = Map(
-      "incomeSourceId" -> incomeSourceId.map(_.businessId),
+      "incomeSourceId"   -> incomeSourceId.map(_.businessId),
       "incomeSourceType" -> incomeSourceType
     )
 

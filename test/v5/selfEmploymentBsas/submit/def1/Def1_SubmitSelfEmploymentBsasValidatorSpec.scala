@@ -257,7 +257,9 @@ class Def1_SubmitSelfEmploymentBsasValidatorSpec extends UnitSpec with JsonError
             BadRequestError,
             Some(List(
               ValueFormatError
-                .copy(paths = Some(List(path1, path2, path3)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)"),
+                .copy(
+                  paths = Some(List(path1, path2, path3)),
+                  message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)"),
               RuleBothExpensesError.withPath("/expenses") // because there's consolidatedExpenses + an addition
             ))
           )

@@ -38,7 +38,7 @@ object Metadata {
       (JsPath \ "taxableEntityId").read[String] and
       (JsPath \ "taxYear").read[Int].map(taxYear => TaxYear.fromDownstreamInt(taxYear).asMtd) and
       (JsPath \ "status").read[Status]
-  )(Metadata.apply _)
+  )(Metadata.apply)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

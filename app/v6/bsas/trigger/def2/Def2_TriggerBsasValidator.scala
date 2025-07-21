@@ -44,7 +44,7 @@ class Def2_TriggerBsasValidator(
     (
       ResolveNino(nino),
       resolveJson(body)
-    ).mapN(Def2_TriggerBsasRequestData) andThen rulesValidator.validateBusinessRules
+    ).mapN(Def2_TriggerBsasRequestData.apply) andThen rulesValidator.validateBusinessRules
   }
 
 }

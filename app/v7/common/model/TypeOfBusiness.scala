@@ -19,15 +19,13 @@ package v7.common.model
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-
 trait HasTypeOfBusiness {
   def typeOfBusiness: TypeOfBusiness
 }
 
-
 enum TypeOfBusiness(val asDownstreamValue: String) {
-  case `self-employment` extends TypeOfBusiness("01")
-  case `uk-property` extends TypeOfBusiness("02")
+  case `self-employment`  extends TypeOfBusiness("01")
+  case `uk-property`      extends TypeOfBusiness("02")
   case `foreign-property` extends TypeOfBusiness("15")
 }
 

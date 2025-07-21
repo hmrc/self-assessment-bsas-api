@@ -26,7 +26,7 @@ object NonFurnishedHolidayLet {
   implicit val reads: Reads[NonFurnishedHolidayLet] = (
     (JsPath \ "income").readNullable[NonFHLIncome] and
       (JsPath \ "expenses").readNullable[NonFHLExpenses]
-  )(NonFurnishedHolidayLet.apply _)
+  )(NonFurnishedHolidayLet.apply)
 
   implicit val writes: OWrites[NonFurnishedHolidayLet] = Json.writes[NonFurnishedHolidayLet]
 }

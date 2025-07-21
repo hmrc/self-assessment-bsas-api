@@ -102,7 +102,7 @@ class SubmitUkPropertyBsasControllerSpec
 
   trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new SubmitUkPropertyBsasController(
+    val controller: SubmitUkPropertyBsasController = new SubmitUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitUkPropertyBsasValidatorFactory,

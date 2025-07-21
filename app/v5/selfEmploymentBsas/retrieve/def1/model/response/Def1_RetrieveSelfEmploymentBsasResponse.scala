@@ -41,7 +41,7 @@ object Def1_RetrieveSelfEmploymentBsasResponse {
       (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
       (JsPath \ "adjustments").readNullable[Adjustments] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustedSummaryCalculation]
-  )(Def1_RetrieveSelfEmploymentBsasResponse.apply _)
+  )(Def1_RetrieveSelfEmploymentBsasResponse.apply)
 
   implicit val writes: OWrites[Def1_RetrieveSelfEmploymentBsasResponse] = Json.writes
 }

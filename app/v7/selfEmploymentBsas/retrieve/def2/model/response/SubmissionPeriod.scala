@@ -31,7 +31,7 @@ object SubmissionPeriod {
   implicit val reads: Reads[SubmissionPeriod] = ((JsPath \ "submissionId").read[String] and
     (JsPath \ "startDate").read[String] and
     (JsPath \ "endDate").read[String] and
-    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriod.apply _)
+    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriod.apply)
 
   implicit val writes: OWrites[SubmissionPeriod] = Json.writes[SubmissionPeriod]
 }

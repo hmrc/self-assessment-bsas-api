@@ -42,7 +42,7 @@ object Def2_RetrieveForeignPropertyBsasResponse {
       // Handles cases where "adjustments" is not always an array, e.g., typeOfBusiness is self-employment
       (JsPath \ "adjustments").readNullable[Seq[Adjustments]].orElse(Reads.pure(None)) and
       (JsPath \ "adjustedSummaryCalculation").readNullable[SummaryCalculation]
-  )(Def2_RetrieveForeignPropertyBsasResponse.apply _)
+  )(Def2_RetrieveForeignPropertyBsasResponse.apply)
 
   implicit val writes: OWrites[Def2_RetrieveForeignPropertyBsasResponse] = Json.writes[Def2_RetrieveForeignPropertyBsasResponse]
 }

@@ -30,12 +30,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveUkPropertyBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit
-                                                           hc: HeaderCarrier,
-                                                           ec: ExecutionContext,
-                                                           correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
 
     import request.*
     import schema.*
@@ -50,7 +50,7 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClientV2, val appC
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
       case Some(ty) if ty.useTaxYearSpecificApi => downstreamUri1876(ty)
-      case _ => downstreamUri1516
+      case _                                    => downstreamUri1516
     }
 
     get(downstreamUri)

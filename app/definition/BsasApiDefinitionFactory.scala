@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class BsasApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
 
-   val definition: Definition =
+  val definition: Definition =
     Definition(
       api = APIDefinition(
         name = "Business Source Adjustable Summary (MTD)",

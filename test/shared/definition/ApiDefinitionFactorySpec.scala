@@ -17,7 +17,6 @@
 package shared.definition
 
 import cats.implicits.catsSyntaxValidatedId
-import org.scalatest.TestSuite
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{MockSharedAppConfig, SharedAppConfig}
 import shared.definition.APIStatus.{ALPHA, BETA}

@@ -31,14 +31,14 @@ object Adjustments {
       Reads.pure(None) and
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl)
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   val reads: Reads[Adjustments] = (
     Reads.pure(None) and
       (JsPath \ "countryCode").readNullable[String] and
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads)
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   val readsSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, reads)
 

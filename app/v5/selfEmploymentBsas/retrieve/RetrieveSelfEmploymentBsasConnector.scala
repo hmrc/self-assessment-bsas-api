@@ -30,12 +30,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveSelfEmploymentBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(implicit
-                                                                                 hc: HeaderCarrier,
-                                                                                 ec: ExecutionContext,
-                                                                                 correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
     import request.*
     import schema.*
@@ -50,7 +50,7 @@ class RetrieveSelfEmploymentBsasConnector @Inject()(val http: HttpClientV2, val 
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
       case Some(ty) if ty.useTaxYearSpecificApi => downstreamUri1876(ty)
-      case _ => downstreamUri1516
+      case _                                    => downstreamUri1516
     }
 
     get(downstreamUri)

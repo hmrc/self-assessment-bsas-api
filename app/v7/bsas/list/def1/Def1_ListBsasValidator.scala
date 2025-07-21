@@ -30,8 +30,9 @@ import v7.common.resolvers.ResolveTypeOfBusinessWithFHL
 object Def1_ListBsasValidator extends ResolverSupport {
   private val listMinimumTaxYear = TaxYear.fromMtd("2019-20")
 
-  private val resolveTaxYear = ResolveTaxYear.resolver thenValidate
+  private val resolveTaxYear = ResolveTaxYear.resolver.thenValidate(
     satisfiesMin(listMinimumTaxYear, RuleTaxYearNotSupportedError)
+  )
 
   private val resolveBusinessId            = ResolveBusinessId.resolver.resolveOptionally
   private val resolveTypeOfBusinessWithFHL = ResolveTypeOfBusinessWithFHL.resolver.resolveOptionally
@@ -47,6 +48,6 @@ class Def1_ListBsasValidator(nino: String, taxYear: String, typeOfBusiness: Opti
       resolveTaxYear(taxYear),
       resolveBusinessId(businessId),
       resolveTypeOfBusinessWithFHL(typeOfBusiness).map(_.map(_.asDownstreamValue))
-    ).mapN(Def1_ListBsasRequestData)
+    ).mapN(Def1_ListBsasRequestData.apply)
 
 }
