@@ -19,11 +19,11 @@ package v6.ukPropertyBsas.retrieve.def2.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures._
+import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class AdjustmentsIncomeSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import AdjustmentsIncome._
+  import AdjustmentsIncome.*
 
   testRoundTrip(
     "Adjustments Income",

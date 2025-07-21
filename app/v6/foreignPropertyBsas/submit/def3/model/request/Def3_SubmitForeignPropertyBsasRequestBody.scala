@@ -16,7 +16,7 @@
 
 package v6.foreignPropertyBsas.submit.def3.model.request
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestBody
 

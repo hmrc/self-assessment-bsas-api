@@ -16,7 +16,7 @@
 
 package v5.bsas.list.def1.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.models.domain.Status
 import v5.bsas.list.model.response.BsasSummary
@@ -37,7 +37,7 @@ object Def1_BsasSummary {
       (JsPath \ "status").read[Status] and
       (JsPath \ "adjusted").read[Boolean] and
       (JsPath \ "adjustedDateTime").readNullable[String]
-  )(Def1_BsasSummary.apply _)
+  )(Def1_BsasSummary.apply)
 
   implicit val writes: OWrites[Def1_BsasSummary] = Json.writes[Def1_BsasSummary]
 }

@@ -16,7 +16,7 @@
 
 package v6.foreignPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SummaryCalculationCountryLevelDetail(countryCode: String,
@@ -49,7 +49,7 @@ object SummaryCalculationCountryLevelDetail {
       (JsPath \ "deductions").readNullable[SummaryCalculationDeductions](SummaryCalculationDeductions.reads) and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
       (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
-  )(SummaryCalculationCountryLevelDetail.apply _)
+  )(SummaryCalculationCountryLevelDetail.apply)
 
   implicit val writes: OWrites[SummaryCalculationCountryLevelDetail] = Json.writes[SummaryCalculationCountryLevelDetail]
 }

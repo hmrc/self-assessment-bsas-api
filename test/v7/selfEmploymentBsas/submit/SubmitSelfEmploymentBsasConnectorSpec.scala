@@ -20,12 +20,13 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture.additions
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture.expenses
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.IncomeFixture.income
 import v7.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
@@ -41,7 +42,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
     val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
   }
 

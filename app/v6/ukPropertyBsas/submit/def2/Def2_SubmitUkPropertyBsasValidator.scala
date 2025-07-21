@@ -17,11 +17,11 @@
 package v6.ukPropertyBsas.submit.def2
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.errors.MtdError
 import v6.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
 import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
@@ -29,8 +29,9 @@ import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 object Def2_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "ukProperty").resolver thenResolve
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "furnishedHolidayLet", "ukProperty").resolver.thenResolve(
       ResolveNonEmptyJsonObject.resolver[Def2_SubmitUkPropertyBsasRequestBody]
+    )
 
   private val resolveTaxYear = ResolveTaxYear.resolver
 
@@ -38,7 +39,7 @@ object Def2_SubmitUkPropertyBsasValidator extends ResolverSupport {
 
 class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitUkPropertyBsasRequestData] {
-  import Def2_SubmitUkPropertyBsasValidator._
+  import Def2_SubmitUkPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitUkPropertyBsasRequestData] =
     (
@@ -46,6 +47,6 @@ class Def2_SubmitUkPropertyBsasValidator(nino: String, calculationId: String, ta
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def2_SubmitUkPropertyBsasRequestData) andThen Def2_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def2_SubmitUkPropertyBsasRequestData.apply) andThen Def2_SubmitUkPropertyBsasRulesValidator.validateBusinessRules
 
 }

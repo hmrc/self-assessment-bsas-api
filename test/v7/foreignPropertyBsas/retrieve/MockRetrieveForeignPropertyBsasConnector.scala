@@ -18,11 +18,12 @@ package v7.foreignPropertyBsas.retrieve
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveForeignPropertyBsasConnector extends TestSuite with MockFactory {

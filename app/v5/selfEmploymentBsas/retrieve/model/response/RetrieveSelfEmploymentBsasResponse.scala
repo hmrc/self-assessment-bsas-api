@@ -17,7 +17,7 @@
 package v5.selfEmploymentBsas.retrieve.model.response
 
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v5.common.model.HasTypeOfBusiness
 import v5.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse

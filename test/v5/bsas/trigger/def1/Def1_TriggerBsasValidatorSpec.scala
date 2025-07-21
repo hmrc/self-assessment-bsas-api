@@ -22,7 +22,7 @@ import common.errors.{RuleAccountingPeriodNotSupportedError, TypeOfBusinessForma
 import config.MockBsasConfig
 import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.models.domain.Nino
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v5.bsas.trigger.def1.model.request.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 import v5.bsas.trigger.model.TriggerBsasRequestData

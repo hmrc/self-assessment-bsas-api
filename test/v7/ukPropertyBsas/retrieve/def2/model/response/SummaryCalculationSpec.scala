@@ -19,7 +19,7 @@ package v7.ukPropertyBsas.retrieve.def2.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures._
+import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 

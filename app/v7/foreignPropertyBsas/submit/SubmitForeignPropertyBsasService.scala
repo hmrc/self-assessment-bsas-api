@@ -16,10 +16,10 @@
 
 package v7.foreignPropertyBsas.submit
 
-import cats.implicits._
-import common.errors._
+import cats.implicits.*
+import common.errors.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 

@@ -16,17 +16,17 @@
 
 package v7.selfEmploymentBsas.retrieve
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
+import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v7.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -81,7 +81,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveSelfEmploymentBsasController(
+    val controller: RetrieveSelfEmploymentBsasController = new RetrieveSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveSelfEmploymentBsasValidatorFactory,

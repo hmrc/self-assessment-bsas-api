@@ -21,11 +21,12 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
-import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
+import uk.gov.hmrc.http.StringContextOps
+import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v6.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v6.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v6.bsas.trigger.model.TriggerBsasRequestData
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class TriggerBsasConnectorSpec extends ConnectorSpec {
@@ -41,7 +42,8 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     "post a TriggerBsasRequest body and return the result" in new IfsTest with Test {
       protected def taxYear: TaxYear = preTysTaxYear
 
-      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] = Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
+      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] =
+        Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
       stubHttpResponse(outcome)
 
       await(connector.triggerBsas(request)) shouldBe outcome
@@ -51,7 +53,8 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
       protected def taxYear: TaxYear                         = tysTaxYear
 
-      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] = Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
+      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] =
+        Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
       stubTysHttpResponse(outcome)
 
       await(connector.triggerBsas(request)) shouldBe outcome
@@ -82,7 +85,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   }
 
   private trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     protected def taxYear: TaxYear
     protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, triggerBsasRequestBody)

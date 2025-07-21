@@ -17,10 +17,10 @@
 package v6.selfEmploymentBsas.submit.def1
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.errors.MtdError
 import v6.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v6.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
@@ -38,7 +38,7 @@ class Def1_SubmitSelfEmploymentBsasValidator(
     body: JsValue
 ) extends Validator[SubmitSelfEmploymentBsasRequestData] {
 
-  import Def1_SubmitSelfEmploymentBsasValidator._
+  import Def1_SubmitSelfEmploymentBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitSelfEmploymentBsasRequestData] =
     (
@@ -46,6 +46,6 @@ class Def1_SubmitSelfEmploymentBsasValidator(
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_SubmitSelfEmploymentBsasRequestData) andThen Def1_SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
+    ).mapN(Def1_SubmitSelfEmploymentBsasRequestData.apply) andThen Def1_SubmitSelfEmploymentBsasRulesValidator.validateBusinessRules
 
 }

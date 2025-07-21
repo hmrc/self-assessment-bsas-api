@@ -16,7 +16,7 @@
 
 package v7.selfEmploymentBsas.submit
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
@@ -24,7 +24,7 @@ import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
@@ -105,7 +105,7 @@ class SubmitSelfEmploymentBsasControllerSpec
 
   trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new SubmitSelfEmploymentBsasController(
+    val controller: SubmitSelfEmploymentBsasController = new SubmitSelfEmploymentBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitSelfEmploymentBsasValidatorFactory,

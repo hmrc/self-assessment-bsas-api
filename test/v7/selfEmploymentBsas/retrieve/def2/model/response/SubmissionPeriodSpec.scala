@@ -19,11 +19,11 @@ package v7.selfEmploymentBsas.retrieve.def2.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures._
+import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures.*
 
 class SubmissionPeriodSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import SubmissionPeriod._
+  import SubmissionPeriod.*
 
   testRoundTrip(
     "Submission Period with submissionId",

@@ -16,7 +16,7 @@
 
 package v5.common
 
-import common.errors._
+import common.errors.*
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{BaseService, ServiceOutcome}

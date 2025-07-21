@@ -17,7 +17,7 @@
 package definition
 
 import shared.config.SharedAppConfig
-import shared.definition._
+import shared.definition.*
 import shared.routing.{Version5, Version6, Version7}
 
 import javax.inject.{Inject, Singleton}
@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class BsasApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
 
-  lazy val definition: Definition =
+  val definition: Definition =
     Definition(
       api = APIDefinition(
         name = "Business Source Adjustable Summary (MTD)",

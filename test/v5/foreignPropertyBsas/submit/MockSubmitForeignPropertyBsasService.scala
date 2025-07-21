@@ -18,10 +18,11 @@ package v5.foreignPropertyBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitForeignPropertyBsasService extends TestSuite with MockFactory {

@@ -18,9 +18,9 @@ package v7.selfEmploymentBsas.submit.def2.model.request.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v7.selfEmploymentBsas.submit.def2.model.request.Def2_SubmitSelfEmploymentBsasRequestBody
-import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.AdditionsFixture._
-import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.ExpensesFixture._
-import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.IncomeFixture._
+import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.AdditionsFixture.*
+import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.ExpensesFixture.*
+import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.IncomeFixture.*
 
 import scala.collection.mutable.ListBuffer
 
@@ -270,7 +270,7 @@ object SubmitSelfEmploymentBsasFixtures {
       |}""".stripMargin)
 
   def submitSelfEmploymentBsasRequestBodyDesJson(dataObject: Def2_SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import dataObject._
+    import dataObject.*
 
     val jsObjects: ListBuffer[JsObject] = ListBuffer.empty[JsObject]
 

@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class Adjustments(
     income: Option[AdjustmentsIncome],
@@ -31,13 +31,13 @@ object Adjustments {
     (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl) and
       (JsPath \ "zeroAdjustments").readNullable[Boolean]
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   implicit val readsUkProperty: Reads[Adjustments] = (
     (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsUkProperty) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsUkProperty) and
       (JsPath \ "zeroAdjustments").readNullable[Boolean]
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

@@ -16,7 +16,7 @@
 
 package v7.bsas.trigger.def2.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import v7.bsas.trigger.model.TriggerBsasResponse
 
 case class Def2_TriggerBsasResponse(calculationId: String) extends TriggerBsasResponse

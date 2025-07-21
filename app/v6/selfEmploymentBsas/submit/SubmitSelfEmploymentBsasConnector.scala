@@ -28,18 +28,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitSelfEmploymentBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class SubmitSelfEmploymentBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def submitSelfEmploymentBsas(request: SubmitSelfEmploymentBsasRequestData)(implicit
-                                                                             hc: HeaderCarrier,
-                                                                             ec: ExecutionContext,
-                                                                             correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+    import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-    import request._
+    import request.*
 
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {

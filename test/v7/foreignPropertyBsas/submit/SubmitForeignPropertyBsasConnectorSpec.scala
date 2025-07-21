@@ -20,9 +20,10 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v7.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -33,7 +34,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
   private val parsedSubmitForeignPropertyBsasRequestBody = Def3_SubmitForeignPropertyBsasRequestBody(None)
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
     val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     def requestWith(taxYear: TaxYear): SubmitForeignPropertyBsasRequestData =

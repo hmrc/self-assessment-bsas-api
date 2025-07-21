@@ -18,10 +18,11 @@ package v5.bsas.trigger
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.bsas.trigger.model.{TriggerBsasRequestData, TriggerBsasResponse}
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockTriggerBsasConnector extends TestSuite with MockFactory {

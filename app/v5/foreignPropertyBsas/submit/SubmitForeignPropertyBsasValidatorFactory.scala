@@ -18,7 +18,7 @@ package v5.foreignPropertyBsas.submit
 
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import v5.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema._
+import v5.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema.*
 import v5.foreignPropertyBsas.submit.def1.Def1_SubmitForeignPropertyBsasValidator
 import v5.foreignPropertyBsas.submit.def2.Def2_SubmitForeignPropertyBsasValidator
 import v5.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData

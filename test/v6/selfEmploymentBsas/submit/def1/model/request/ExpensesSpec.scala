@@ -19,7 +19,7 @@ package v6.selfEmploymentBsas.submit.def1.model.request
 import play.api.libs.json.Json
 import shared.models.domain.EmptyJsonBody
 import shared.utils.UnitSpec
-import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture._
+import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture.*
 
 class ExpensesSpec extends UnitSpec {
 

@@ -16,8 +16,8 @@
 
 package v7.selfEmploymentBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import v7.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
@@ -41,7 +41,7 @@ object Def1_RetrieveSelfEmploymentBsasResponse {
       (JsPath \ "adjustableSummaryCalculation").read[AdjustableSummaryCalculation] and
       (JsPath \ "adjustments").readNullable[Adjustments] and
       (JsPath \ "adjustedSummaryCalculation").readNullable[AdjustedSummaryCalculation]
-  )(Def1_RetrieveSelfEmploymentBsasResponse.apply _)
+  )(Def1_RetrieveSelfEmploymentBsasResponse.apply)
 
   implicit val writes: OWrites[Def1_RetrieveSelfEmploymentBsasResponse] = Json.writes
 }

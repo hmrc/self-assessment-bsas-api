@@ -18,11 +18,11 @@ package v7.foreignPropertyBsas.retrieve.def1.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class AdjustmentsIncomeSpec extends UnitSpec with RoundTripTest {
 
-  import AdjustmentsIncome._
+  import AdjustmentsIncome.*
 
   testRoundTrip(
     "Adjustments Income FHL",

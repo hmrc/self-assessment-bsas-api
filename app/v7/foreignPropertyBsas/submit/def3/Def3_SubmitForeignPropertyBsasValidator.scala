@@ -17,10 +17,10 @@
 package v7.foreignPropertyBsas.submit.def3
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.errors.MtdError
 import v7.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
@@ -34,7 +34,7 @@ object Def3_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
 class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def3_SubmitForeignPropertyBsasValidator._
+  import Def3_SubmitForeignPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
     (
@@ -42,6 +42,6 @@ class Def3_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def3_SubmitForeignPropertyBsasRequestData) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def3_SubmitForeignPropertyBsasRequestData.apply) andThen Def3_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 
 }

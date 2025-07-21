@@ -28,7 +28,7 @@ object IncomeFixture {
     )
 
   def incomeJson(income: Income): JsValue = {
-    import income._
+    import income.*
 
     val fields: Map[String, Option[BigDecimal]] =
       Map(

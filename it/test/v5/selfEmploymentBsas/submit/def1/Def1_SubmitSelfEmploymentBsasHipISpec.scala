@@ -17,16 +17,17 @@
 package v5.selfEmploymentBsas.submit.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
+import v5.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.*
 
 class Def1_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
 
@@ -115,7 +116,7 @@ class Def1_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
           ("AA1234A", BAD_REQUEST, NinoFormatError, requestBody),
           ("AA123456A", BAD_REQUEST, RuleBothExpensesError.copy(paths = Some(List("/expenses"))), mtdRequestWithBothExpenses)
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "des service error" when {
@@ -166,7 +167,7 @@ class Def1_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

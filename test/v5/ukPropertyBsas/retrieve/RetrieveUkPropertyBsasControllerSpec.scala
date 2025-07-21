@@ -16,18 +16,18 @@
 
 package v5.ukPropertyBsas.retrieve
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.CalculationId
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
 import v5.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
-import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -95,7 +95,7 @@ class RetrieveUkPropertyBsasControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveUkPropertyBsasController(
+    val controller: RetrieveUkPropertyBsasController = new RetrieveUkPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveUkPropertyBsasValidatorFactory,

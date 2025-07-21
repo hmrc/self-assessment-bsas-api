@@ -18,10 +18,10 @@ package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class SummaryCalculationCountryLevelDetailSpec extends UnitSpec with RoundTripTest {
-  import SummaryCalculationCountryLevelDetail._
+  import SummaryCalculationCountryLevelDetail.*
 
   testRoundTrip(
     "Summary Calculation Country Level Detail",

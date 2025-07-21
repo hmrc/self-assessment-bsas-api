@@ -18,9 +18,9 @@ package v6.selfEmploymentBsas.submit.def1.model.request.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v6.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestBody
-import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture._
-import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture._
-import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.IncomeFixture._
+import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture.*
+import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture.*
+import v6.selfEmploymentBsas.submit.def1.model.request.fixtures.IncomeFixture.*
 
 import scala.collection.mutable.ListBuffer
 
@@ -284,7 +284,7 @@ object SubmitSelfEmploymentBsasFixtures {
        |""".stripMargin
 
   def submitSelfEmploymentBsasRequestBodyDesJson(dataObject: Def1_SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import dataObject._
+    import dataObject.*
 
     val jsObjects: ListBuffer[JsObject] = ListBuffer.empty[JsObject]
 
@@ -305,7 +305,7 @@ object SubmitSelfEmploymentBsasFixtures {
   }
 
   def submitSelfEmploymentBsasRequestBodyMtdJson(dataObject: Def1_SubmitSelfEmploymentBsasRequestBody): JsValue = {
-    import dataObject._
+    import dataObject.*
 
     val jsObjects: ListBuffer[JsObject] = ListBuffer.empty[JsObject]
 

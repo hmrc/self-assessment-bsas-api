@@ -16,8 +16,8 @@
 
 package v5.ukPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class AdjustmentsIncome(
     totalRentsReceived: Option[BigDecimal],
@@ -33,14 +33,14 @@ object AdjustmentsIncome {
       Reads.pure(None) and
       Reads.pure(None) and
       Reads.pure(None)
-  )(AdjustmentsIncome.apply _)
+  )(AdjustmentsIncome.apply)
 
   val readsNonFhl: Reads[AdjustmentsIncome] = (
     (JsPath \ "totalRentsReceived").readNullable[BigDecimal] and
       (JsPath \ "premiumsOfLeaseGrant").readNullable[BigDecimal] and
       (JsPath \ "reversePremiums").readNullable[BigDecimal] and
       (JsPath \ "otherPropertyIncome").readNullable[BigDecimal]
-  )(AdjustmentsIncome.apply _)
+  )(AdjustmentsIncome.apply)
 
   implicit val writes: OWrites[AdjustmentsIncome] = Json.writes[AdjustmentsIncome]
 }

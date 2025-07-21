@@ -19,7 +19,7 @@ package v7.selfEmploymentBsas.submit.def2.model.request
 import play.api.libs.json.Json
 import shared.models.domain.EmptyJsonBody
 import shared.utils.UnitSpec
-import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.IncomeFixture._
+import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.IncomeFixture.*
 
 class IncomeSpec extends UnitSpec {
 

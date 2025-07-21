@@ -19,11 +19,11 @@ package v6.ukPropertyBsas.retrieve.def2.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures._
+import v6.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import SummaryCalculationExpenses._
+  import SummaryCalculationExpenses.*
 
   testRoundTrip(
     "Summary Calculation Expenses",

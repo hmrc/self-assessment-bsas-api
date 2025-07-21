@@ -16,9 +16,9 @@
 
 package v5.selfEmploymentBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Reads._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.Reads.*
+import play.api.libs.json.*
 import shared.models.domain.Source
 import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 
@@ -42,7 +42,7 @@ object Inputs {
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[Source] and
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriod]]
-  )(Inputs.apply _)
+  )(Inputs.apply)
 
   implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
 }

@@ -16,7 +16,7 @@
 
 package v6.ukPropertyBsas.submit.def2.model.request
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class Income(
     totalRentsReceived: Option[BigDecimal],

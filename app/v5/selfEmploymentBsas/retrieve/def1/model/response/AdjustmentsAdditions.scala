@@ -16,8 +16,8 @@
 
 package v5.selfEmploymentBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class AdjustmentsAdditions(
     costOfGoodsDisallowable: Option[BigDecimal],
@@ -55,7 +55,7 @@ object AdjustmentsAdditions {
       (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "advertisingCostsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsDisallowable").readNullable[BigDecimal]
-  )(AdjustmentsAdditions.apply _)
+  )(AdjustmentsAdditions.apply)
 
   implicit val writes: OWrites[AdjustmentsAdditions] = Json.writes[AdjustmentsAdditions]
 }

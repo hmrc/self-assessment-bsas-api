@@ -28,7 +28,7 @@ object Def2_SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[Def2_S
 
   def validateBusinessRules(parsed: Def2_SubmitSelfEmploymentBsasRequestData): Validated[Seq[MtdError], Def2_SubmitSelfEmploymentBsasRequestData] = {
 
-    import parsed._
+    import parsed.*
 
     val validatedZeroAdjustments = validateZeroAdjustments(body.zeroAdjustments, body.income, body.expenses, body.additions)
 

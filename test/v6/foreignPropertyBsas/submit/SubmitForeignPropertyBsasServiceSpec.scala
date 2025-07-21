@@ -16,14 +16,14 @@
 
 package v6.foreignPropertyBsas.submit
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v6.foreignPropertyBsas.submit.def3.model.request._
+import v6.foreignPropertyBsas.submit.def3.model.request.*
 
 import scala.concurrent.Future
 
@@ -115,7 +115,7 @@ class SubmitForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("INCOME_SOURCE_TYPE_NOT_MATCHED", RuleTypeOfBusinessIncorrectError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

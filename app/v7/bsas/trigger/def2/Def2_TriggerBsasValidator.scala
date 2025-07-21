@@ -17,7 +17,7 @@
 package v7.bsas.trigger.def2
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import config.BsasConfig
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
@@ -36,7 +36,7 @@ class Def2_TriggerBsasValidator(
 )(implicit bsasConfig: BsasConfig)
     extends Validator[TriggerBsasRequestData] {
 
-  import Def2_TriggerBsasValidator._
+  import Def2_TriggerBsasValidator.*
 
   lazy private val rulesValidator = new Def2_TriggerBsasRulesValidator
 
@@ -44,7 +44,7 @@ class Def2_TriggerBsasValidator(
     (
       ResolveNino(nino),
       resolveJson(body)
-    ).mapN(Def2_TriggerBsasRequestData) andThen rulesValidator.validateBusinessRules
+    ).mapN(Def2_TriggerBsasRequestData.apply) andThen rulesValidator.validateBusinessRules
   }
 
 }

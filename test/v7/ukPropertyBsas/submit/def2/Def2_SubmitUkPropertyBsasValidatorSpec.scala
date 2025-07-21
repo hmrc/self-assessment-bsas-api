@@ -16,15 +16,15 @@
 
 package v7.ukPropertyBsas.submit.def2
 
-import common.errors._
+import common.errors.*
 import org.scalatest.Assertion
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
+import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 import v7.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
-import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
 
 class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
@@ -410,7 +410,8 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           ErrorWrapper(
             correlationId,
             ValueFormatError.copy(
-              paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+              paths = Some(List(path1, path2)),
+              message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
           )
         )
       }

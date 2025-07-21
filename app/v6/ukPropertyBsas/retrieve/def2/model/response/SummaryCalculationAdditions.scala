@@ -16,8 +16,8 @@
 
 package v6.ukPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class SummaryCalculationAdditions(
     privateUseAdjustment: Option[BigDecimal],
@@ -31,7 +31,7 @@ object SummaryCalculationAdditions {
     (JsPath \ "privateUseAdjustment").readNullable[BigDecimal] and
       (JsPath \ "balancingCharge").readNullable[BigDecimal] and
       (JsPath \ "bpraBalancingCharge").readNullable[BigDecimal]
-  )(SummaryCalculationAdditions.apply _)
+  )(SummaryCalculationAdditions.apply)
 
   implicit val writes: OWrites[SummaryCalculationAdditions] = Json.writes[SummaryCalculationAdditions]
 }

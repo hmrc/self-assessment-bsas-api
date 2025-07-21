@@ -17,7 +17,7 @@
 package v5.foreignPropertyBsas.retrieve
 
 import shared.controllers.validators.Validator
-import v5.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema._
+import v5.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema.*
 import v5.foreignPropertyBsas.retrieve.def1.Def1_RetrieveForeignPropertyBsasValidator
 import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 

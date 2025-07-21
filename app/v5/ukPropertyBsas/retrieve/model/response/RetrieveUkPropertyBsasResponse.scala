@@ -16,7 +16,7 @@
 
 package v5.ukPropertyBsas.retrieve.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v5.common.model.HasTypeOfBusiness
 import v5.ukPropertyBsas.retrieve.def1.model.response.Def1_RetrieveUkPropertyBsasResponse

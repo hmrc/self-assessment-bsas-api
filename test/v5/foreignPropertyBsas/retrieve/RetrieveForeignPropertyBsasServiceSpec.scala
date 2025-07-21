@@ -16,16 +16,16 @@
 
 package v5.foreignPropertyBsas.retrieve
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v5.common.model.TypeOfBusiness
 import v5.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
-import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v5.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 import v5.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 import v5.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
@@ -60,7 +60,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
 
     "return error response" when {
       "downstream returns a success response with invalid type of business" should {
-        import TypeOfBusiness._
+        import TypeOfBusiness.*
         List(`self-employment`, `uk-property-fhl`, `uk-property-non-fhl`).foreach(typeOfBusiness =>
           s"return an error for $typeOfBusiness" in new Test {
             val response: RetrieveForeignPropertyBsasResponse = parsedNonFhlRetrieveForeignPropertyBsasResponseWith(typeOfBusiness)
@@ -101,7 +101,7 @@ class RetrieveForeignPropertyBsasServiceSpec extends ServiceSpec {
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

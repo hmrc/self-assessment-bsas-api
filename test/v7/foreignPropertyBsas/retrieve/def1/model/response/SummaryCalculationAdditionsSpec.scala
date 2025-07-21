@@ -18,11 +18,11 @@ package v7.foreignPropertyBsas.retrieve.def1.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class SummaryCalculationAdditionsSpec extends UnitSpec with RoundTripTest {
 
-  import SummaryCalculationAdditions._
+  import SummaryCalculationAdditions.*
 
   testRoundTrip(
     "Summary Calculation Additions",

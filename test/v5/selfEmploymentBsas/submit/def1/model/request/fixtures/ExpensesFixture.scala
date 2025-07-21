@@ -42,7 +42,7 @@ object ExpensesFixture {
     )
 
   def expensesToDesJson(expenses: Expenses): JsValue = {
-    import expenses._
+    import expenses.*
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
@@ -67,7 +67,7 @@ object ExpensesFixture {
   }
 
   def expensesFromMtdJson(expenses: Expenses): JsValue = {
-    import expenses._
+    import expenses.*
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(

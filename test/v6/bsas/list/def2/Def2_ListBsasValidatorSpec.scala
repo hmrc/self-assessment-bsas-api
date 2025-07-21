@@ -18,7 +18,7 @@ package v6.bsas.list.def2
 
 import common.errors.TypeOfBusinessFormatError
 import shared.models.domain.{BusinessId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v6.bsas.list.def2.model.request.Def2_ListBsasRequestData
 

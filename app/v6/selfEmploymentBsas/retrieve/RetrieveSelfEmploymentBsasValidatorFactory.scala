@@ -18,9 +18,8 @@ package v6.selfEmploymentBsas.retrieve
 
 import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
-import v6.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema.Def1
+import v6.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema.{Def1, Def2}
 import v6.selfEmploymentBsas.retrieve.def1.Def1_RetrieveSelfEmploymentBsasValidator
-import v6.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema.Def2
 import v6.selfEmploymentBsas.retrieve.def2.Def2_RetrieveSelfEmploymentBsasValidator
 import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 

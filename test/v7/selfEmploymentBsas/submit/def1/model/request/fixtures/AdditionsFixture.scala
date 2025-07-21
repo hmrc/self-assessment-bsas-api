@@ -41,7 +41,7 @@ object AdditionsFixture {
     )
 
   def additionsToDesJson(additions: Additions): JsValue = {
-    import additions._
+    import additions.*
 
     val desFields: Map[String, Option[BigDecimal]] =
       Map(
@@ -66,7 +66,7 @@ object AdditionsFixture {
   }
 
   def additionsFromVendorJson(additions: Additions): JsValue = {
-    import additions._
+    import additions.*
 
     val vendorSuppliedFields: Map[String, Option[BigDecimal]] =
       Map(

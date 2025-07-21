@@ -16,15 +16,15 @@
 
 package v7.selfEmploymentBsas.submit.def2
 
-import common.errors._
-import play.api.http.HeaderNames.ACCEPT
+import common.errors.*
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers._
-import shared.models.errors._
+import play.api.test.Helpers.*
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.SubmitSelfEmploymentBsasFixtures._
+import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.*
 
 class Def2_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
 
@@ -172,7 +172,7 @@ class Def2_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
         )
       )
 
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
@@ -218,7 +218,7 @@ class Def2_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

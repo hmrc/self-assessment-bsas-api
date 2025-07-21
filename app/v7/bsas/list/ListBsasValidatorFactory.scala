@@ -18,10 +18,10 @@ package v7.bsas.list
 
 import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
+import v7.bsas.list.ListBsasSchema.*
 import v7.bsas.list.def1.Def1_ListBsasValidator
 import v7.bsas.list.def2.Def2_ListBsasValidator
 import v7.bsas.list.model.request.ListBsasRequestData
-import ListBsasSchema._
 
 import javax.inject.Singleton
 

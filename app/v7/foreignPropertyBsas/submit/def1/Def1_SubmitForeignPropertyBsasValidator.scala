@@ -17,11 +17,11 @@
 package v7.foreignPropertyBsas.submit.def1
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.models.errors.MtdError
 import v7.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
@@ -29,15 +29,16 @@ import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequ
 object Def1_SubmitForeignPropertyBsasValidator extends ResolverSupport {
 
   private val resolveJson =
-    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "foreignProperty").resolver thenResolve
+    new ResolveExclusiveJsonProperty(RuleBothPropertiesSuppliedError, "foreignFhlEea", "foreignProperty").resolver.thenResolve(
       ResolveNonEmptyJsonObject.resolver[Def1_SubmitForeignPropertyBsasRequestBody]
+    )
 
   private val resolveTaxYear = ResolveTaxYear.resolver
 }
 
 class Def1_SubmitForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String, body: JsValue)
     extends Validator[SubmitForeignPropertyBsasRequestData] {
-  import Def1_SubmitForeignPropertyBsasValidator._
+  import Def1_SubmitForeignPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] =
     (
@@ -45,6 +46,6 @@ class Def1_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_SubmitForeignPropertyBsasRequestData) andThen Def1_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
+    ).mapN(Def1_SubmitForeignPropertyBsasRequestData.apply) andThen Def1_SubmitForeignPropertyBsasRulesValidator.validateBusinessRules
 
 }

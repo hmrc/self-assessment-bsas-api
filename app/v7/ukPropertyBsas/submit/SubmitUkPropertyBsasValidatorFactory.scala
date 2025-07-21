@@ -19,7 +19,7 @@ package v7.ukPropertyBsas.submit
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import v7.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema._
+import v7.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema.*
 import v7.ukPropertyBsas.submit.def1.Def1_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.def2.Def2_SubmitUkPropertyBsasValidator
 import v7.ukPropertyBsas.submit.def3.Def3_SubmitUkPropertyBsasValidator

@@ -18,7 +18,7 @@ package v7.foreignPropertyBsas.retrieve
 
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -36,8 +36,8 @@ class RetrieveForeignPropertyBsasConnector @Inject() (val http: HttpClientV2, va
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveForeignPropertyBsasResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     lazy val downstreamUri1876: DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1876")) {
       HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
