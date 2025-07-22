@@ -17,9 +17,9 @@
 package v6.selfEmploymentBsas.retrieve
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.ServiceOutcome
 import v6.common.BaseRetrieveBsasService
 import v6.common.model.IncomeSourceType

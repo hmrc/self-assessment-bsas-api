@@ -16,7 +16,7 @@
 
 package v5.foreignPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v5.common.model.{IncomeSourceType, TypeOfBusiness}
 
@@ -38,7 +38,7 @@ object Inputs {
       (JsPath \ "accountingPeriodEndDate").read[String] and
       (JsPath \ "source").read[String] and
       (JsPath \ "submissionPeriods").read[Seq[SubmissionPeriods]]
-  )(Inputs.apply _)
+  )(Inputs.apply)
 
   implicit val writes: OWrites[Inputs] = Json.writes[Inputs]
 }

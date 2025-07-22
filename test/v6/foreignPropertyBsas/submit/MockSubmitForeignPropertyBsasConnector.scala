@@ -18,10 +18,11 @@ package v6.foreignPropertyBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v6.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockSubmitForeignPropertyBsasConnector extends TestSuite with MockFactory {

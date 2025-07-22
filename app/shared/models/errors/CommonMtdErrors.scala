@@ -16,7 +16,7 @@
 
 package shared.models.errors
 
-import play.api.http.Status._
+import play.api.http.Status.*
 
 // MtdError types that are common across MTD APIs.
 
@@ -55,6 +55,7 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
 
   def forPathAndMin(path: String, min: String): MtdError =
     ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be $min or more")
+
 }
 
 object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid", BAD_REQUEST)
@@ -134,4 +135,5 @@ object RuleEndBeforeStartDateError
 object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code", BAD_REQUEST)
 
 //Stub Errors
-object RuleIncorrectGovTestScenarioError extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The supplied Gov-Test-Scenario is not valid", BAD_REQUEST)
+object RuleIncorrectGovTestScenarioError
+    extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The supplied Gov-Test-Scenario is not valid", BAD_REQUEST)

@@ -18,7 +18,7 @@ package v6.foreignPropertyBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsObject, Json}
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures._
+import v6.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.*
 
 class Def1_SubmitForeignPropertyBsasRequestBodySpec extends UnitSpec {
 

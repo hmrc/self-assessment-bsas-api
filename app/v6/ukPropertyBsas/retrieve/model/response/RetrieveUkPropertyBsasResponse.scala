@@ -16,7 +16,7 @@
 
 package v6.ukPropertyBsas.retrieve.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v6.common.model.{HasIncomeSourceType, HasTaxYear}
 import v6.ukPropertyBsas.retrieve.def1.model.response.Def1_RetrieveUkPropertyBsasResponse

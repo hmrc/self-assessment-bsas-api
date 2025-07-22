@@ -17,14 +17,15 @@
 package v5.selfEmploymentBsas.retrieve
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.ServiceOutcome
 import v5.common.BaseRetrieveBsasService
 import v5.common.model.TypeOfBusiness
 import v5.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v5.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 

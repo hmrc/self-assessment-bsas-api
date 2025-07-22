@@ -16,14 +16,14 @@
 
 package v7.foreignPropertyBsas.submit.def2
 
-import common.errors._
-import play.api.libs.json._
+import common.errors.*
+import play.api.libs.json.*
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
+import v7.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.*
 import v7.foreignPropertyBsas.submit.def2.model.request.{Def2_SubmitForeignPropertyBsasRequestBody, Def2_SubmitForeignPropertyBsasRequestData}
-import v7.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures._
 
 class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {
 
@@ -345,7 +345,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           (bodyWith(entry.replaceWithEmptyObject("/expenses")), "/foreignProperty/countryLevelDetail/0/expenses"),
           (bodyWith(entry.removeProperty("/countryCode")), "/foreignProperty/countryLevelDetail/0/countryCode"),
           (bodyWith(entry.removeProperty("/income").removeProperty("/expenses")), "/foreignProperty/countryLevelDetail/0")
-        ).foreach((testWith _).tupled)
+        ).foreach(testWith.tupled)
 
         def testWith(body: JsValue, expectedPath: String): Unit =
           s"for $expectedPath" in {
@@ -448,7 +448,8 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           ErrorWrapper(
             correlationId,
             ValueFormatError.copy(
-              paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+              paths = Some(List(path1, path2)),
+              message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
           )
         )
       }

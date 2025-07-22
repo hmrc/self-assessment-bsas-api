@@ -28,7 +28,7 @@ object Def1_SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[Def1_S
 
   def validateBusinessRules(parsed: Def1_SubmitSelfEmploymentBsasRequestData): Validated[Seq[MtdError], Def1_SubmitSelfEmploymentBsasRequestData] = {
 
-    import parsed._
+    import parsed.*
 
     val validatedIncome = body.income.map(validateIncome).getOrElse(valid)
 

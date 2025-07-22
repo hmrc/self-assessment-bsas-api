@@ -22,7 +22,7 @@ import common.errors.RuleBothExpensesError
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.ResolveParsedNumber
 import shared.models.errors.MtdError
-import v5.ukPropertyBsas.submit.def2.model.request._
+import v5.ukPropertyBsas.submit.def2.model.request.*
 
 object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitUkPropertyBsasRequestData] {
 

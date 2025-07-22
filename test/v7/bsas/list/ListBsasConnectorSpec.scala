@@ -21,11 +21,12 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{BusinessId, Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v7.bsas.list.def2.model.Def2_ListBsasFixtures
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v7.bsas.list.model.request.ListBsasRequestData
 import v7.bsas.list.model.response.ListBsasResponse
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class ListBsasConnectorSpec extends ConnectorSpec {
@@ -61,8 +62,8 @@ class ListBsasConnectorSpec extends ConnectorSpec {
   }
 
   "a valid request with Tax Year Specific tax year is supplied" in new IfsTest with Test with Def2_ListBsasFixtures {
-    def taxYear: TaxYear                             = tysTaxYear
-    def downstreamQueryParams: Seq[(String, String)] = commonQueryParams
+    def taxYear: TaxYear                                           = tysTaxYear
+    def downstreamQueryParams: Seq[(String, String)]               = commonQueryParams
     val outcome: Right[Nothing, ResponseWrapper[ListBsasResponse]] = Right(ResponseWrapper(correlationId, listBsasResponse))
 
     stubTysHttpResponse(outcome)
@@ -98,7 +99,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
     protected def taxYear: TaxYear
     protected def downstreamQueryParams: Seq[(String, String)]
 

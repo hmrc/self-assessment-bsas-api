@@ -16,16 +16,16 @@
 
 package v7.ukPropertyBsas.submit.def2
 
-import common.errors._
-import play.api.http.HeaderNames.ACCEPT
-import play.api.libs.json._
+import common.errors.*
+import play.api.libs.json.*
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers._
-import shared.models.errors._
+import play.api.test.Helpers.*
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
-import shared.services._
+import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 
 class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
@@ -223,7 +223,7 @@ class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErr
         )
       )
 
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
@@ -266,7 +266,7 @@ class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErr
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

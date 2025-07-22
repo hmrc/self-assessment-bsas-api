@@ -18,11 +18,12 @@ package v6.ukPropertyBsas.retrieve
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v6.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 import v6.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveUkPropertyBsasService extends TestSuite with MockFactory {

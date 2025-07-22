@@ -19,11 +19,11 @@ package v7.foreignPropertyBsas.submit.def3
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits.toFoldableOps
-import common.errors._
+import common.errors.*
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v7.foreignPropertyBsas.submit.def3.model.request._
+import v7.foreignPropertyBsas.submit.def3.model.request.*
 
 object Def3_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def3_SubmitForeignPropertyBsasRequestData] {
 

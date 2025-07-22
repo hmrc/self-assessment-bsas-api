@@ -18,7 +18,7 @@ package v7.common.model
 
 import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
-import v7.common.model.TypeOfBusinessWithFHL._
+import v7.common.model.TypeOfBusinessWithFHL.*
 
 class TypeOfBusinessWithFHLSpec extends UnitSpec with EnumJsonSpecSupport {
 

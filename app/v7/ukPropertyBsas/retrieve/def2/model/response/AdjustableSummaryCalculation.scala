@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class AdjustableSummaryCalculation(
     totalIncome: Option[BigDecimal],
@@ -35,7 +35,7 @@ case class AdjustableSummaryCalculation(
 
 object AdjustableSummaryCalculation {
 
-  val reads: Reads[AdjustableSummaryCalculation] = summaryCalculationReads(AdjustableSummaryCalculation.apply _)
+  val reads: Reads[AdjustableSummaryCalculation] = summaryCalculationReads(AdjustableSummaryCalculation.apply)
 
   implicit val writes: OWrites[AdjustableSummaryCalculation] = Json.writes[AdjustableSummaryCalculation]
 }

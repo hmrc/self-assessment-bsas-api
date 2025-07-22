@@ -18,10 +18,10 @@ package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v6.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class InputsSpec extends UnitSpec with RoundTripTest {
-  import Inputs._
+  import Inputs.*
 
   testRoundTrip("Inputs ", inputsDesJson, parsedInputs, inputsMtdJson)(reads)
 }

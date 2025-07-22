@@ -16,7 +16,7 @@
 
 package v5.foreignPropertyBsas.submit
 
-import common.errors._
+import common.errors.*
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
@@ -24,11 +24,11 @@ import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import shared.utils.MockIdGenerator
-import v5.foreignPropertyBsas.submit.def1.model.request._
+import v5.foreignPropertyBsas.submit.def1.model.request.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -133,7 +133,7 @@ class SubmitForeignPropertyBsasControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new SubmitForeignPropertyBsasController(
+    val controller: SubmitForeignPropertyBsasController = new SubmitForeignPropertyBsasController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockSubmitForeignPropertyBsasValidatorFactory,

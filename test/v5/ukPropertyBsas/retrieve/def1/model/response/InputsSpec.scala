@@ -20,7 +20,7 @@ import common.model.RoundTripTest
 import play.api.libs.json.JsResultException
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
@@ -42,7 +42,7 @@ class InputsSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
     }
   }
 
-  import Inputs._
+  import Inputs.*
 
   testRoundTrip("Inputs FHL", downstreamInputsFhlJson, inputsFhl, mtdInputsFhlJson)(reads)
   testRoundTrip("Inputs Non-FHL", downstreamInputsNonFhlJson, inputsNonFhl, mtdInputsNonFhlJson)(reads)

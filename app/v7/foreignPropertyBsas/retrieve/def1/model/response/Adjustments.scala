@@ -16,7 +16,7 @@
 
 package v7.foreignPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Adjustments(countryLevelDetail: Option[Seq[Adjustments]],
@@ -33,7 +33,7 @@ object Adjustments {
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.readsFhl) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.readsFhl) and
       Reads.pure(None)
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   val readsNonFhl: Reads[Adjustments] = (
     Reads.pure(None) and
@@ -41,7 +41,7 @@ object Adjustments {
       (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
       (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads) and
       Reads.pure(None)
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   val readsSeq: Reads[Seq[Adjustments]] = Reads.traversableReads[Seq, Adjustments](implicitly, readsNonFhl)
 
@@ -51,7 +51,7 @@ object Adjustments {
       Reads.pure(None) and
       Reads.pure(None) and
       (JsPath \ "zeroAdjustments").readNullable[Boolean]
-  )(Adjustments.apply _)
+  )(Adjustments.apply)
 
   implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

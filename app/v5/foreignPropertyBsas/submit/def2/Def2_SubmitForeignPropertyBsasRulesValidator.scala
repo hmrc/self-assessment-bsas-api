@@ -23,8 +23,7 @@ import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v5.foreignPropertyBsas.submit.def2.model.request.{FhlEea, FhlEeaExpenses, ForeignProperty, ForeignPropertyExpenses}
-import v5.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestData
+import v5.foreignPropertyBsas.submit.def2.model.request.*
 
 object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitForeignPropertyBsasRequestData] {
 

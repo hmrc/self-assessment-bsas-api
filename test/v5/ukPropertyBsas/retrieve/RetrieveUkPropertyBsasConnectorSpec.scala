@@ -20,10 +20,11 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v5.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
-import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
-import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 import uk.gov.hmrc.http.StringContextOps
+import v5.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
+import v5.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
+import v5.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
+
 import scala.concurrent.Future
 
 class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -32,7 +33,7 @@ class RetrieveUkPropertyBsasConnectorSpec extends ConnectorSpec {
   private val calculationId = CalculationId("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4")
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
     val connector: RetrieveUkPropertyBsasConnector = new RetrieveUkPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
   }
 

@@ -17,9 +17,9 @@
 package v6.foreignPropertyBsas.submit.def3
 
 import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
@@ -244,7 +244,8 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             ErrorWrapper(
               correlationId,
               ValueFormatError.copy(
-                paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+                paths = Some(List(path1, path2)),
+                message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
             )
           )
         }

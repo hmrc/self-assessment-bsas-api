@@ -18,7 +18,7 @@ package v5.ukPropertyBsas.retrieve
 
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import shared.models.domain.TaxYear
 import uk.gov.hmrc.http.HeaderCarrier
@@ -30,15 +30,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveUkPropertyBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveUkPropertyBsasRequestData)(implicit
-                                                           hc: HeaderCarrier,
-                                                           ec: ExecutionContext,
-                                                           correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveUkPropertyBsasResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     def downstreamUri1876(taxYear: TaxYear): DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1876")) {
       HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
@@ -50,7 +50,7 @@ class RetrieveUkPropertyBsasConnector @Inject()(val http: HttpClientV2, val appC
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
       case Some(ty) if ty.useTaxYearSpecificApi => downstreamUri1876(ty)
-      case _ => downstreamUri1516
+      case _                                    => downstreamUri1516
     }
 
     get(downstreamUri)

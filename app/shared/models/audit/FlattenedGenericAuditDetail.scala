@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package shared.models.audit
 
-import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, JsValue, OWrites}
 import shared.models.auth.UserDetails
 
@@ -48,7 +48,7 @@ object FlattenedGenericAuditDetail {
       (JsPath \ "outcome").write[String] and
       (JsPath \ "httpStatusCode").write[Int] and
       (JsPath \ "errorCodes").writeNullable[Seq[String]]
-  )(unlift(FlattenedGenericAuditDetail.unapply))
+  )(w => Tuple.fromProductTyped(w))
 
   def apply(versionNumber: Option[String] = None,
             userDetails: UserDetails,
