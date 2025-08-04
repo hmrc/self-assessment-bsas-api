@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v7.bsas.trigger.def2
+package v6.bsas.trigger.def2
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.*
@@ -27,9 +27,9 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
+import v6.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
 
-class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
+class Def2_TriggerBsasHipISpec extends IntegrationBaseSpec {
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
@@ -39,7 +39,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
         "uk-property",
         "foreign-property"
       ).foreach { typeOfBusiness =>
-        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
+        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new Test {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -59,7 +59,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
       "validation error" when {
         def validationErrorTest(requestNino: String, json: JsObject, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
 
@@ -100,7 +100,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -120,12 +120,10 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ENDED", BAD_REQUEST, RuleAccountingPeriodNotEndedError),
           (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", BAD_REQUEST, RuleObligationsNotMet),
           (UNPROCESSABLE_ENTITY, "NO_ACCOUNTING_PERIOD", BAD_REQUEST, RuleNoAccountingPeriodError),
-          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, TriggerNotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         val extraTysErrors = List(
@@ -164,12 +162,12 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
   object RequestBodyHelper extends RequestBodyHelper
 
-  private trait Test {
+  private trait Test extends RequestBodyHelper {
     self: RequestBodyHelper =>
 
     val nino = "AA123456A"
 
-    def downstreamUri: String
+    def downstreamUri: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino"
 
     def setupStubs(): StubMapping
 
@@ -177,20 +175,27 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.7.0+json"),
+          (ACCEPT, "application/vnd.hmrc.6.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
 
-    def uri: String = s"/$nino/trigger"
+    private def uri: String = s"/$nino/trigger"
 
-    def errorBody(code: String): String =
+    def errorBody(`type`: String): String =
       s"""
+         |{
+         |  "origin": "HIP",
+         |  "response": {
+         |    "failures": [
          |      {
-         |        "code": "$code",
-         |        "reason": "message"
+         |        "type": "${`type`}",
+         |        "reason": "downstream message"
          |      }
-    """.stripMargin
+         |    ]
+         |  }
+         |}
+          """.stripMargin
 
     val responseBody: String =
       """
@@ -198,12 +203,6 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
          |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435"
          |}
     """.stripMargin
-
-  }
-
-  private trait TysIfsTest extends Test with RequestBodyHelper {
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino"
 
   }
 

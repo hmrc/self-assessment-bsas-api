@@ -29,7 +29,10 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 
-class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
+class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1873.enabled" -> false) ++ super.servicesConfig
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.bsas.trigger.def2
+package v7.bsas.trigger.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.*
@@ -27,18 +27,39 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v6.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
+import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 
-class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
+class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1873.enabled" -> false) ++ super.servicesConfig
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
 
       List(
         "self-employment",
+        "uk-property-fhl",
         "uk-property",
+        "foreign-property-fhl-eea",
         "foreign-property"
       ).foreach { typeOfBusiness =>
+        s"any valid request is made with typeOfBusiness: $typeOfBusiness" in new NonTysTest {
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+
+            DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
+          }
+
+          val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
+          result.status shouldBe OK
+          result.json shouldBe Json.parse(responseBody)
+          result.header("Content-Type") shouldBe Some("application/json")
+        }
+
         s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
 
           override def setupStubs(): StubMapping = {
@@ -59,7 +80,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
       "validation error" when {
         def validationErrorTest(requestNino: String, json: JsObject, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String = requestNino
 
@@ -75,7 +96,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        import RequestBodyHelper.*
+        import NonTysRequestBodyHelper.*
 
         val input = List(
           ("AA1123A", requestBody(), BAD_REQUEST, NinoFormatError),
@@ -93,14 +114,16 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
           ("AA123456A", requestBody(endDate = "20190506"), BAD_REQUEST, EndDateFormatError),
           ("AA123456A", requestBody(typeOfBusiness = "badTypeOfBusiness"), BAD_REQUEST, TypeOfBusinessFormatError),
           ("AA123456A", requestBody(businessId = "badBusinessId"), BAD_REQUEST, BusinessIdFormatError),
-          ("AA123456A", requestBody(startDate = "2080-02-02", endDate = defaultEndDate), BAD_REQUEST, RuleEndBeforeStartDateError)
+          ("AA123456A", requestBody(startDate = "2080-02-02", endDate = defaultEndDate), BAD_REQUEST, RuleEndBeforeStartDateError),
+          ("AA123456A", requestBody(startDate = "2018-02-02", endDate = "2018-05-06"), BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
         )
+
         input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -144,9 +167,9 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
     val defaultBusinessId = "XAIS12345678901"
 
-    val defaultStartDate = "2025-04-06"
+    val defaultStartDate: String
 
-    val defaultEndDate = "2026-04-05"
+    val defaultEndDate: String
 
     def requestBody(typeOfBusiness: String = defaultTypeOfBusiness,
                     startDate: String = defaultStartDate,
@@ -161,7 +184,20 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
   }
 
-  object RequestBodyHelper extends RequestBodyHelper
+  trait NonTysRequestBodyHelper extends RequestBodyHelper {
+    val defaultStartDate = "2021-04-06"
+
+    val defaultEndDate = "2022-04-05"
+  }
+
+  object NonTysRequestBodyHelper extends NonTysRequestBodyHelper
+
+  trait TysRequestBodyHelper extends RequestBodyHelper {
+
+    val defaultStartDate = "2023-04-06"
+
+    val defaultEndDate = "2024-04-05"
+  }
 
   private trait Test {
     self: RequestBodyHelper =>
@@ -176,7 +212,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -200,9 +236,15 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
   }
 
-  private trait TysIfsTest extends Test with RequestBodyHelper {
+  private trait NonTysTest extends Test with NonTysRequestBodyHelper {
 
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+
+  }
+
+  private trait TysIfsTest extends Test with TysRequestBodyHelper {
+
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
 
   }
 

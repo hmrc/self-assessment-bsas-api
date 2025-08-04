@@ -16,8 +16,8 @@
 
 package v5.bsas.trigger
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.IfsUri
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -38,12 +38,18 @@ class TriggerBsasConnector @Inject() (val http: HttpClientV2, val appConfig: Sha
     import request.*
     import schema.*
 
-    val downstreamUri: DownstreamUri[DownstreamResp] =
-      if (taxYear.useTaxYearSpecificApi) {
-        IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
+    lazy val downstreamUri1873: DownstreamUri[DownstreamResp] =
+      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1873")) {
+        HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino")
       } else {
-        IfsUri(s"income-tax/adjustable-summary-calculation/$nino")
+        IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
       }
+
+    lazy val downstreamUri1515: DownstreamUri[DownstreamResp] =
+      IfsUri(s"income-tax/adjustable-summary-calculation/$nino")
+
+    val downstreamUri: DownstreamUri[DownstreamResp] =
+      if (taxYear.useTaxYearSpecificApi) downstreamUri1873 else downstreamUri1515
 
     post(body, downstreamUri)
 
