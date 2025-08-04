@@ -163,8 +163,7 @@ class Def2_TriggerBsasHipISpec extends IntegrationBaseSpec {
   object RequestBodyHelper extends RequestBodyHelper
 
   private trait Test extends RequestBodyHelper {
-    self: RequestBodyHelper =>
-
+  
     val nino = "AA123456A"
 
     def downstreamUri: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino"

@@ -185,7 +185,7 @@ class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
         )
     }
 
-    def uri: String = s"/$nino/trigger"
+    private def uri: String = s"/$nino/trigger"
 
     def errorBody(code: String): String =
       s"""

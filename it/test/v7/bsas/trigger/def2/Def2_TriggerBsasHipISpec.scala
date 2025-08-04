@@ -164,8 +164,7 @@ class Def2_TriggerBsasHipISpec extends IntegrationBaseSpec {
   object RequestBodyHelper extends RequestBodyHelper
 
   trait Test extends RequestBodyHelper {
-    self: RequestBodyHelper =>
-
+    
     val nino = "AA123456A"
 
     def downstreamUri: String =

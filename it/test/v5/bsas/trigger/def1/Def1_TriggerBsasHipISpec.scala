@@ -50,7 +50,7 @@ class Def1_TriggerBsasHipISpec extends IntegrationBaseSpec {
             DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
           }
 
-          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, tys = true)))
+          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness)))
           result.status shouldBe OK
           result.json shouldBe Json.parse(responseBody)
           result.header("Content-Type") shouldBe Some("application/json")
@@ -155,7 +155,7 @@ class Def1_TriggerBsasHipISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.POST, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().post(makeRequestBody("self-employment", tys = true)))
+            val response: WSResponse = await(request().post(makeRequestBody("self-employment")))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -218,7 +218,7 @@ class Def1_TriggerBsasHipISpec extends IntegrationBaseSpec {
          |}
        """.stripMargin
 
-    def makeRequestBody(typeOfBusiness: String, tys: Boolean): JsObject = {
+    def makeRequestBody(typeOfBusiness: String): JsObject = {
 
       val startDate = "2023-05-01"
 
