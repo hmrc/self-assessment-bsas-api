@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v6.bsas.trigger.def1
+package v5.bsas.trigger.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.*
@@ -27,9 +27,12 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v6.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
+import v5.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 
-class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
+class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1873.enabled" -> false) ++ super.servicesConfig
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
@@ -37,7 +40,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
       List(
         "self-employment",
         "uk-property-fhl",
-        "uk-property",
+        "uk-property-non-fhl",
         "foreign-property-fhl-eea",
         "foreign-property"
       ).foreach { typeOfBusiness =>
@@ -51,7 +54,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
             DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
           }
 
-          val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
+          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, tys = false)))
           result.status shouldBe OK
           result.json shouldBe Json.parse(responseBody)
           result.header("Content-Type") shouldBe Some("application/json")
@@ -66,7 +69,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
             DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
           }
 
-          val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
+          val result: WSResponse = await(request().post(makeRequestBody(typeOfBusiness, tys = true)))
           result.status shouldBe OK
           result.json shouldBe Json.parse(responseBody)
           result.header("Content-Type") shouldBe Some("application/json")
@@ -93,28 +96,70 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
           }
         }
 
-        import NonTysRequestBodyHelper.*
-
-        val input = List(
-          ("AA1123A", requestBody(), BAD_REQUEST, NinoFormatError),
-          (
-            "AA123456A",
-            Json.obj("accountingPeriod" -> Json.obj("startDate" -> defaultStartDate, "endDate" -> defaultEndDate)),
-            BAD_REQUEST,
-            RuleIncorrectOrEmptyBodyError.copy(
-              paths = Some(
-                List(
-                  "/businessId",
-                  "/typeOfBusiness"
-                )))),
-          ("AA123456A", requestBody(startDate = "20180202"), BAD_REQUEST, StartDateFormatError),
-          ("AA123456A", requestBody(endDate = "20190506"), BAD_REQUEST, EndDateFormatError),
-          ("AA123456A", requestBody(typeOfBusiness = "badTypeOfBusiness"), BAD_REQUEST, TypeOfBusinessFormatError),
-          ("AA123456A", requestBody(businessId = "badBusinessId"), BAD_REQUEST, BusinessIdFormatError),
-          ("AA123456A", requestBody(startDate = "2080-02-02", endDate = defaultEndDate), BAD_REQUEST, RuleEndBeforeStartDateError),
-          ("AA123456A", requestBody(startDate = "2018-02-02", endDate = "2018-05-06"), BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
+        val validRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05", "endDate" -> "2020-05-06"),
+          "typeOfBusiness"   -> "self-employment",
+          "businessId"       -> "XAIS12345678901"
         )
 
+        val missingFieldsRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2019-05-05")
+        )
+
+        val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+          paths = Some(
+            List(
+              "/accountingPeriod/endDate",
+              "/businessId",
+              "/typeOfBusiness"
+            )))
+
+        val startDateErrorRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "20180202", "endDate" -> "2019-05-06"),
+          "typeOfBusiness"   -> "self-employment",
+          "businessId"       -> "XAIS12345678901"
+        )
+
+        val endDateErrorRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "20190506"),
+          "typeOfBusiness"   -> "self-employment",
+          "businessId"       -> "XAIS12345678901"
+        )
+
+        val typeOfBusinessErrorRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
+          "typeOfBusiness"   -> "selfemployment",
+          "businessId"       -> "XAIS12345678901"
+        )
+
+        val businessIdErrorRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2019-05-06"),
+          "typeOfBusiness"   -> "self-employment",
+          "businessId"       -> "XAIS12345678901234"
+        )
+
+        val DateOrderErrorRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2020-02-02", "endDate" -> "2019-05-06"),
+          "typeOfBusiness"   -> "self-employment",
+          "businessId"       -> "XAIS12345678901"
+        )
+
+        val accountingPeriodNotSupportRequestJson: JsObject = Json.obj(
+          "accountingPeriod" -> Json.obj("startDate" -> "2018-02-02", "endDate" -> "2018-05-06"),
+          "typeOfBusiness"   -> "self-employment",
+          "businessId"       -> "XAIS12345678901"
+        )
+
+        val input = List(
+          ("AA1123A", validRequestJson, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", missingFieldsRequestJson, BAD_REQUEST, missingFieldsError),
+          ("AA123456A", startDateErrorRequestJson, BAD_REQUEST, StartDateFormatError),
+          ("AA123456A", endDateErrorRequestJson, BAD_REQUEST, EndDateFormatError),
+          ("AA123456A", typeOfBusinessErrorRequestJson, BAD_REQUEST, TypeOfBusinessFormatError),
+          ("AA123456A", businessIdErrorRequestJson, BAD_REQUEST, BusinessIdFormatError),
+          ("AA123456A", DateOrderErrorRequestJson, BAD_REQUEST, RuleEndBeforeStartDateError),
+          ("AA123456A", accountingPeriodNotSupportRequestJson, BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
+        )
         input.foreach(validationErrorTest.tupled)
       }
 
@@ -129,7 +174,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.POST, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().post(requestBody("self-employment")))
+            val response: WSResponse = await(request().post(makeRequestBody("self-employment", tys = false)))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -138,7 +183,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
         val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ENDED", BAD_REQUEST, RuleAccountingPeriodNotEndedError),
-          (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", BAD_REQUEST, RuleObligationsNotMet),
+          (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", BAD_REQUEST, RulePeriodicDataIncompleteError),
           (UNPROCESSABLE_ENTITY, "NO_ACCOUNTING_PERIOD", BAD_REQUEST, RuleNoAccountingPeriodError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, TriggerNotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
@@ -152,54 +197,18 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", INTERNAL_SERVER_ERROR, InternalError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
-
         (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }
 
-  trait RequestBodyHelper {
-
-    val defaultTypeOfBusiness = "self-employment"
-
-    val defaultBusinessId = "XAIS12345678901"
-
-    val defaultStartDate: String
-
-    val defaultEndDate: String
-
-    def requestBody(typeOfBusiness: String = defaultTypeOfBusiness,
-                    startDate: String = defaultStartDate,
-                    endDate: String = defaultEndDate,
-                    businessId: String = defaultBusinessId): JsObject = {
-      Json.obj(
-        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-        "typeOfBusiness"   -> typeOfBusiness,
-        "businessId"       -> businessId
-      )
-    }
-
-  }
-
-  trait NonTysRequestBodyHelper extends RequestBodyHelper {
-    val defaultStartDate = "2021-04-06"
-
-    val defaultEndDate = "2022-04-05"
-  }
-
-  object NonTysRequestBodyHelper extends NonTysRequestBodyHelper
-
-  trait TysRequestBodyHelper extends RequestBodyHelper {
-
-    val defaultStartDate = "2023-04-06"
-
-    val defaultEndDate = "2024-04-05"
-  }
-
   private trait Test {
-    self: RequestBodyHelper =>
 
     val nino = "AA123456A"
+
+    def mtdTaxYear: String
+
+    def downstreamTaxYear: String
 
     def downstreamUri: String
 
@@ -209,7 +218,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.6.0+json"),
+          (ACCEPT, "application/vnd.hmrc.5.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -224,6 +233,19 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
          |      }
     """.stripMargin
 
+    def makeRequestBody(typeOfBusiness: String, tys: Boolean): JsObject = {
+
+      val startDate = if (tys) "2023-05-01" else "2019-01-01"
+
+      val endDate = if (tys) "2023-05-02" else "2022-10-31"
+
+      Json.obj(
+        "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
+        "typeOfBusiness"   -> typeOfBusiness,
+        "businessId"       -> "XAIS12345678901"
+      )
+    }
+
     val responseBody: String =
       """
          |{
@@ -233,16 +255,21 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
 
   }
 
-  private trait NonTysTest extends Test with NonTysRequestBodyHelper {
+  private trait NonTysTest extends Test {
+    def mtdTaxYear: String = "2019-20"
+
+    def downstreamTaxYear: String = "2020"
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
   }
 
-  private trait TysIfsTest extends Test with TysRequestBodyHelper {
+  private trait TysIfsTest extends Test {
+    def downstreamTaxYear: String = "23-24"
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
 
+    def mtdTaxYear: String = "2023-24"
   }
 
 }

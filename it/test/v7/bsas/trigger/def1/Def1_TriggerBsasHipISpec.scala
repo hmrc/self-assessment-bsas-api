@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v7.bsas.trigger.def2
+package v7.bsas.trigger.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.*
@@ -27,19 +27,21 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
+import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 
-class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
+class Def1_TriggerBsasHipISpec extends IntegrationBaseSpec {
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
 
       List(
         "self-employment",
+        "uk-property-fhl",
         "uk-property",
+        "foreign-property-fhl-eea",
         "foreign-property"
       ).foreach { typeOfBusiness =>
-        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
+        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new Test {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -59,7 +61,7 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
       "validation error" when {
         def validationErrorTest(requestNino: String, json: JsObject, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
 
@@ -93,14 +95,16 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
           ("AA123456A", requestBody(endDate = "20190506"), BAD_REQUEST, EndDateFormatError),
           ("AA123456A", requestBody(typeOfBusiness = "badTypeOfBusiness"), BAD_REQUEST, TypeOfBusinessFormatError),
           ("AA123456A", requestBody(businessId = "badBusinessId"), BAD_REQUEST, BusinessIdFormatError),
-          ("AA123456A", requestBody(startDate = "2080-02-02", endDate = defaultEndDate), BAD_REQUEST, RuleEndBeforeStartDateError)
+          ("AA123456A", requestBody(startDate = "2080-02-02", endDate = defaultEndDate), BAD_REQUEST, RuleEndBeforeStartDateError),
+          ("AA123456A", requestBody(startDate = "2018-02-02", endDate = "2018-05-06"), BAD_REQUEST, RuleAccountingPeriodNotSupportedError)
         )
+
         input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -120,12 +124,10 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ENDED", BAD_REQUEST, RuleAccountingPeriodNotEndedError),
           (UNPROCESSABLE_ENTITY, "OBLIGATIONS_NOT_MET", BAD_REQUEST, RuleObligationsNotMet),
           (UNPROCESSABLE_ENTITY, "NO_ACCOUNTING_PERIOD", BAD_REQUEST, RuleNoAccountingPeriodError),
-          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, TriggerNotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         val extraTysErrors = List(
@@ -145,9 +147,8 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
     val defaultBusinessId = "XAIS12345678901"
 
-    val defaultStartDate = "2025-04-06"
-
-    val defaultEndDate = "2026-04-05"
+    val defaultStartDate = "2023-04-06"
+    val defaultEndDate   = "2024-04-05"
 
     def requestBody(typeOfBusiness: String = defaultTypeOfBusiness,
                     startDate: String = defaultStartDate,
@@ -164,12 +165,12 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
   object RequestBodyHelper extends RequestBodyHelper
 
-  private trait Test {
-    self: RequestBodyHelper =>
+  private trait Test extends RequestBodyHelper {
 
     val nino = "AA123456A"
 
-    def downstreamUri: String
+    def downstreamUri: String =
+      s"/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino"
 
     def setupStubs(): StubMapping
 
@@ -182,15 +183,22 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
         )
     }
 
-    def uri: String = s"/$nino/trigger"
+    private def uri: String = s"/$nino/trigger"
 
-    def errorBody(code: String): String =
+    def errorBody(`type`: String): String =
       s"""
+         |{
+         |  "origin": "HIP",
+         |  "response": {
+         |    "failures": [
          |      {
-         |        "code": "$code",
-         |        "reason": "message"
+         |        "type": "${`type`}",
+         |        "reason": "downstream message"
          |      }
-    """.stripMargin
+         |    ]
+         |  }
+         |}
+              """.stripMargin
 
     val responseBody: String =
       """
@@ -198,12 +206,6 @@ class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
          |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435"
          |}
     """.stripMargin
-
-  }
-
-  private trait TysIfsTest extends Test with RequestBodyHelper {
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino"
 
   }
 

@@ -17,6 +17,7 @@
 package v6.bsas.trigger
 
 import org.scalamock.handlers.CallHandler
+import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
@@ -40,6 +41,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
   "triggerBsas" must {
 
     "post a TriggerBsasRequest body and return the result" in new IfsTest with Test {
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1873.enabled" -> false))
       protected def taxYear: TaxYear = preTysTaxYear
 
       val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] =
@@ -49,13 +51,31 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
       await(connector.triggerBsas(request)) shouldBe outcome
     }
 
-    "post a TriggerBsasRequest body and return the result given a TYS tax year" in new IfsTest with Test {
+    "post a TriggerBsasRequest body and return the result given a TYS tax year on IFS" in new IfsTest with Test {
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1873.enabled" -> false))
+
       override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
       protected def taxYear: TaxYear                         = tysTaxYear
 
       val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] =
         Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
       stubTysHttpResponse(outcome)
+
+      await(connector.triggerBsas(request)) shouldBe outcome
+    }
+
+    "post a TriggerBsasRequest body and return the result given a TYS tax year on HIP" in new HipTest with Test {
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1873.enabled" -> true))
+      override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
+
+      protected def taxYear: TaxYear = tysTaxYear
+
+      val outcome: Right[Nothing, ResponseWrapper[Def1_TriggerBsasResponse]] =
+        Right(ResponseWrapper(correlationId, Def1_TriggerBsasResponse(calculationId)))
+      willPost(
+        url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino",
+        body = tysTriggerBsasRequestBody
+      ).returns(Future.successful(outcome))
 
       await(connector.triggerBsas(request)) shouldBe outcome
     }
@@ -75,6 +95,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
     }
 
     "return the error given a TYS tax year request" in new IfsTest with Test {
+      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1873.enabled" -> false))
       override protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, tysTriggerBsasRequestBody)
       protected def taxYear: TaxYear                         = tysTaxYear
 
