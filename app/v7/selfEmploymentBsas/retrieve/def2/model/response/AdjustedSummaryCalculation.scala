@@ -32,7 +32,9 @@ case class AdjustedSummaryCalculation(
     totalAccountingAdjustments: Option[BigDecimal],
     accountingAdjustments: Option[SummaryCalculationAccountingAdjustments],
     taxableProfit: Option[BigDecimal],
-    adjustedIncomeTaxLoss: Option[BigDecimal]
+    adjustedIncomeTaxLoss: Option[BigDecimal],
+    adjustedProfit: Option[BigDecimal],
+    outstandingBusinessIncome: Option[BigDecimal]
 )
 
 object AdjustedSummaryCalculation {
