@@ -43,16 +43,17 @@ class TriggerBsasService @Inject() (connector: TriggerBsasConnector) extends Bas
 
   private val errorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID"   -> NinoFormatError,
-      "INVALID_CORRELATIONID"       -> InternalError,
-      "INVALID_PAYLOAD"             -> InternalError,
-      "NO_DATA_FOUND"               -> TriggerNotFoundError,
-      "ACCOUNTING_PERIOD_NOT_ENDED" -> RuleAccountingPeriodNotEndedError,
-      "OBLIGATIONS_NOT_MET"         -> RuleObligationsNotMet,
-      "NO_ACCOUNTING_PERIOD"        -> RuleNoAccountingPeriodError,
-      "OUTSIDE_AMENDMENT_WINDOW"    -> RuleOutsideAmendmentWindowError,
-      "SERVER_ERROR"                -> InternalError,
-      "SERVICE_UNAVAILABLE"         -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"     -> NinoFormatError,
+      "INVALID_CORRELATIONID"         -> InternalError,
+      "INVALID_PAYLOAD"               -> InternalError,
+      "NO_DATA_FOUND"                 -> TriggerNotFoundError,
+      "ACCOUNTING_PERIOD_NOT_ENDED"   -> RuleAccountingPeriodNotEndedError,
+      "OBLIGATIONS_NOT_MET"           -> RuleObligationsNotMet,
+      "NO_ACCOUNTING_PERIOD"          -> RuleNoAccountingPeriodError,
+      "OUTSIDE_AMENDMENT_WINDOW"      -> RuleOutsideAmendmentWindowError,
+      "SERVER_ERROR"                  -> InternalError,
+      "SERVICE_UNAVAILABLE"           -> InternalError,
+      "ACCOUNTING_PERIOD_NOT_ALIGNED" -> InternalError
     )
     val extraTysErrors =
       Map(

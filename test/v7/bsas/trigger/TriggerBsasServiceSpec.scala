@@ -78,7 +78,8 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("INVALID_PAYLOAD", InternalError),
         ("SERVER_ERROR", InternalError),
         ("SERVICE_UNAVAILABLE", InternalError),
-        ("INVALID_CORRELATIONID", InternalError)
+        ("INVALID_CORRELATIONID", InternalError),
+        ("ACCOUNTING_PERIOD_NOT_ALIGNED", InternalError)
       )
 
       val extraTysErrors = List(
