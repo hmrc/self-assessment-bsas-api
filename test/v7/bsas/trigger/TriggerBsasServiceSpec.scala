@@ -78,14 +78,14 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         ("INVALID_PAYLOAD", InternalError),
         ("SERVER_ERROR", InternalError),
         ("SERVICE_UNAVAILABLE", InternalError),
-        ("INVALID_CORRELATIONID", InternalError),
-        ("ACCOUNTING_PERIOD_NOT_ALIGNED", InternalError)
+        ("INVALID_CORRELATIONID", InternalError)
       )
 
       val extraTysErrors = List(
         "INVALID_CORRELATION_ID" -> InternalError,
         "INVALID_TAX_YEAR"       -> InternalError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+        ("ACCOUNTING_PERIOD_NOT_ALIGNED", InternalError)
       )
 
       (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))

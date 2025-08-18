@@ -127,14 +127,14 @@ class Def1_TriggerBsasHipISpec extends IntegrationBaseSpec {
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, TriggerNotFoundError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-          (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ALIGNED", INTERNAL_SERVER_ERROR, InternalError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         val extraTysErrors = List(
           (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", INTERNAL_SERVER_ERROR, InternalError),
-          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (UNPROCESSABLE_ENTITY, "ACCOUNTING_PERIOD_NOT_ALIGNED", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
