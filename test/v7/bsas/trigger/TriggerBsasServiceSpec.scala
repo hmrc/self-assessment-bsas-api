@@ -85,7 +85,7 @@ class TriggerBsasServiceSpec extends ServiceSpec {
         "INVALID_CORRELATION_ID" -> InternalError,
         "INVALID_TAX_YEAR"       -> InternalError,
         "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-        ("ACCOUNTING_PERIOD_NOT_ALIGNED", InternalError)
+        "ACCOUNTING_PERIOD_NOT_ALIGNED", InternalError
       )
 
       (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
