@@ -5,6 +5,10 @@ post:
     income and expenditure for a specified business for a given accounting period. A Business Source Adjustable Summary 
     must be generated before accounting adjustments are to be entered. A National Insurance number must be provided.
     
+    <strong>
+      Note: For tax years before 2025-26, data can be submitted for UK FHL or Non-FHL, Foreign EEA-FHL or Non-FHL property business types. From tax year 2025-26 onwards, the UK FHL, UK Non-FHL, Foreign EEA-FHL and Non-FHL property types are no longer valid and you must use the UK Property or Foreign Property type.
+    </strong>  
+    
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
     
@@ -39,28 +43,23 @@ post:
             - $ref: "./schemas/trigger/def1/request.json"
             - $ref: "./schemas/trigger/def2/request.json"
         examples:
-          PRE-TY-2024-25-Self-Employment:
-            description: Self-employment Trigger for TY 2023-24 and before
+          Self-employment Trigger for TY 2024-25 and before:
             value:
               $ref: "./examples/trigger/def1/trigger_se_request.json"
-          TY-2024-25-Self-Employment:
-            description: Self-employment Trigger for TY 2024-25 and after
+          Self-employment Trigger for TY 2025-26 and after:
             value:
               $ref: "./examples/trigger/def2/trigger_se_request.json"
-          PRE-TY-2024-25-UK-Property:
-            description: UK Property Trigger for TY 2023-24 and before
+          UK Property Trigger for TY 2024-25 and before:
             value:
               $ref: "./examples/trigger/def1/trigger_uk_property_request.json"
-          TY-2024-25-UK-Property:
-            description: UK Property Trigger for TY 2024-25 and after
+          UK Property Trigger for TY 2025-26 and after:
             value:
               $ref: "./examples/trigger/def2/trigger_uk_property_request.json"
-          PRE-TY-2024-25-Foreign-Property-Income-Response:
-            description: Foreign Property Trigger for TY 2023-24 and before
+          Foreign Property Trigger for TY 2024-25 and before:
+            description:
             value:
               $ref: "./examples/trigger/def1/trigger_foreign_property_request.json"
-          TY-2024-25-Foreign-Property-Income-Response:
-            description: Foreign Property Trigger for TY 2024-25 and after
+          Foreign Property Trigger for TY 2025-26 and after:
             value:
               $ref: "./examples/trigger/def2/trigger_foreign_property_request.json"
 
@@ -80,31 +79,9 @@ post:
         application/json:
           schema:
             $ref: "./schemas/trigger/response.json"
-          examples:
-            PRE-TY-2024-25-Self-Employment-Response:
-              description: Self-employment example response
-              value:
-                $ref: "./examples/trigger/def1/trigger_se_response.json"
-            TY-2024-25-Self-Employment-Response:
-              description: Self-employment example response
-              value:
-                $ref: "./examples/trigger/def2/trigger_se_response.json"
-            PRE-TY-2024-25-UK-Property-Response:
-              description: UK Property example response
-              value:
-                $ref: "./examples/trigger/def1/trigger_uk_property_response.json"
-            TY-2024-25-UK-Property-Response:
-              description: UK Property example response
-              value:
-                $ref: "./examples/trigger/def2/trigger_uk_property_response.json"
-            PRE-TY-2024-25-Foreign-Property-Income-Response:
-              description: Foreign Property example response
-              value:
-                $ref: "./examples/trigger/def1/trigger_foreign_property_response.json"
-            TY-2024-25-FOREIGN-PROPERTY-INCOME-Response:
-              description: Foreign Property example response
-              value:
-                $ref: "./examples/trigger/def2/trigger_foreign_property_response.json"
+          example:
+            $ref: "./examples/trigger/response.json"
+
     400:
       description: Bad request
       headers:
