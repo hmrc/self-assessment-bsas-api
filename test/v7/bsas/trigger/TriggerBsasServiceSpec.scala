@@ -82,9 +82,9 @@ class TriggerBsasServiceSpec extends ServiceSpec {
       )
 
       val extraTysErrors = List(
-        "INVALID_CORRELATION_ID" -> InternalError,
-        "INVALID_TAX_YEAR"       -> InternalError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+        "INVALID_CORRELATION_ID"        -> InternalError,
+        "INVALID_TAX_YEAR"              -> InternalError,
+        "TAX_YEAR_NOT_SUPPORTED"        -> RuleTaxYearNotSupportedError,
         "ACCOUNTING_PERIOD_NOT_ALIGNED" -> InternalError
       )
 

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "For TY 2024-25 and after",
+  "title": "For TY 2025-26 and after",
   "description": "Trigger a Business Source Adjustable Summary (BSAS)",
   "type": "object",
   "properties": {
@@ -40,4 +40,3 @@
   ],
   "additionalProperties": false
 }
-
