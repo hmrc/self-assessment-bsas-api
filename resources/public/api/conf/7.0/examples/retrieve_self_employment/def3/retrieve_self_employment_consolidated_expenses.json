@@ -34,6 +34,8 @@
     },
     "netProfit": 0.12,
     "totalAdditions": 0,
+    "outstandingBusinessIncome": 0.12,
+    "adjustedProfit": 0.12,
     "totalDeductions": 0.12,
     "deductions": {
       "annualInvestmentAllowance": 0.12,
