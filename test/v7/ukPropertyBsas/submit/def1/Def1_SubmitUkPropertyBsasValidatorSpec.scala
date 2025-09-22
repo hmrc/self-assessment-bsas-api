@@ -338,12 +338,9 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           "/ukProperty/expenses/professionalFees",
           "/ukProperty/expenses/costOfServices",
           "/ukProperty/expenses/other",
-          "/ukProperty/expenses/travelCosts"
-        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path))
-
-        List(
+          "/ukProperty/expenses/travelCosts",
           "/ukProperty/expenses/residentialFinancialCost"
-        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path, min = "-99999999999.99"))
+        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path))
       }
 
       "consolidated expenses is invalid" when {
@@ -376,7 +373,7 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit =
         s"for $expectedPath" when {
           def doTest(value: JsNumber): Assertion = {
             val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
@@ -384,12 +381,12 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             result shouldBe Left(
               ErrorWrapper(
                 correlationId,
-                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
+                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
               )
             )
           }
 
-          "value is out of range" in doTest(JsNumber(BigDecimal(max) + 0.01))
+          "value is out of range" in doTest(JsNumber(BigDecimal(99999999999.99) + 0.01))
 
           "value is zero" in doTest(JsNumber(0))
         }

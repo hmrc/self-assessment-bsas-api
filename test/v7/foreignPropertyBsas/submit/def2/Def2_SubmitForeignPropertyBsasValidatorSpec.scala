@@ -410,14 +410,12 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             "/foreignProperty/countryLevelDetail/0/expenses/professionalFees"),
           ((v: JsNumber) => bodyWith(entry.update("/expenses/costOfServices", v)), "/foreignProperty/countryLevelDetail/0/expenses/costOfServices"),
           ((v: JsNumber) => bodyWith(entry.update("/expenses/other", v)), "/foreignProperty/countryLevelDetail/0/expenses/other"),
-          ((v: JsNumber) => bodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/countryLevelDetail/0/expenses/travelCosts")
-        ).foreach { case (body, path) => testWith(body, path) }
-
-        List(
+          ((v: JsNumber) => bodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/countryLevelDetail/0/expenses/travelCosts"),
           (
             (v: JsNumber) => bodyWith(entry.update("/expenses/residentialFinancialCost", v)),
             "/foreignProperty/countryLevelDetail/0/expenses/residentialFinancialCost")
-        ).foreach { case (body, path) => testWith(body, path, min = "0") }
+        ).foreach { case (body, path) => testWith(body, path) }
+
       }
 
       "consolidated expenses is invalid" when {
@@ -454,7 +452,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
         )
       }
 
-      def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit =
         s"for $expectedPath" when {
           def doTest(value: JsNumber) = {
             val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
@@ -462,7 +460,7 @@ class Def2_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             result shouldBe Left(
               ErrorWrapper(
                 correlationId,
-                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
+                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
               )
             )
           }

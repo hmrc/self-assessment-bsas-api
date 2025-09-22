@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,7 @@ import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
-  downstreamRequestValid,
-  mtdRequestForeignPropertyValid,
-  mtdRequestFull,
-  mtdRequestValid
-}
+import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 
 class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
@@ -113,17 +108,7 @@ class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
             "2024-25",
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
-          (
-            "AA123456A",
-            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2024-25",
-            mtdRequestForeignPropertyValid,
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-              paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
-            ))
+            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode"))))
         )
         input.foreach(validationErrorTest.tupled)
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -382,16 +382,13 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/financialCosts", v)), "/nonFurnishedHolidayLet/0/expenses/financialCosts"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/professionalFees", v)), "/nonFurnishedHolidayLet/0/expenses/professionalFees"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/costOfServices", v)), "/nonFurnishedHolidayLet/0/expenses/costOfServices"),
+            (
+              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
+              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/other", v)), "/nonFurnishedHolidayLet/0/expenses/other"),
             ((v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/travelCosts", v)), "/nonFurnishedHolidayLet/0/expenses/travelCosts")
           ).foreach { case (body, path) => testWith(body, path) }
 
-          List(
-            (
-              (v: JsNumber) => nonFhlBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-              "/nonFurnishedHolidayLet/0/expenses/residentialFinancialCost")).foreach { case (body, path) =>
-            testWith(body, path, min = "-99999999999.99")
-          }
         }
 
         "consolidated expenses is invalid" when {
@@ -428,7 +425,7 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           )
         }
 
-        def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+        def testWith(body: JsNumber => JsValue, expectedPath: String): Unit =
           s"for $expectedPath" when {
             def doTest(value: JsNumber) = {
               val result = validator(validNino, validCalculationId, None, body(value)).validateAndWrapResult()
@@ -436,7 +433,7 @@ class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
               result shouldBe Left(
                 ErrorWrapper(
                   correlationId,
-                  ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
+                  ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
                 )
               )
             }

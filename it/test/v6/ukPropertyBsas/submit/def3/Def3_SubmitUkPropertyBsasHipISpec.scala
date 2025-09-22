@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,17 +85,7 @@ class Def3_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErr
             fullRequestJson.update("/ukProperty/expenses/consolidatedExpenses", JsNumber(1.23)),
             BAD_REQUEST,
             RuleBothExpensesError.copy(paths = Some(List("/ukProperty/expenses")))
-          ),
-          (
-            "AA123456A",
-            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            "2025-26",
-            fullRequestJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-              paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
-            ))
+          )
         )
         input.foreach(validationErrorTest.tupled)
       }

@@ -46,31 +46,6 @@ object SubmitForeignPropertyBsasFixtures {
       |}
       |""".stripMargin)
 
-  val mtdRequestNonFhlValid: JsValue = Json.parse("""
-      |{
-      |   "nonFurnishedHolidayLet":  [
-      |       {
-      |          "countryCode": "FRA",
-      |          "income": {
-      |              "totalRentsReceived": 1.12,
-      |              "premiumsOfLeaseGrant": 2.12,
-      |              "otherPropertyIncome": 3.12
-      |          },
-      |          "expenses": {
-      |              "premisesRunningCosts": 5.12,
-      |              "repairsAndMaintenance": 6.12,
-      |              "financialCosts": 7.12,
-      |              "professionalFees": 8.12,
-      |              "costOfServices": 9.12,
-      |              "residentialFinancialCost": -3000.93,
-      |              "other": 11.12,
-      |              "travelCosts": 12.12
-      |          }
-      |       }
-      |    ]
-      |}
-      |""".stripMargin)
-
   val downstreamRequestNonFhlFull: JsValue = Json.parse("""
       |{
       |   "incomeSourceType": "15",

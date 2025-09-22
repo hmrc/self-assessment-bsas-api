@@ -207,19 +207,6 @@ class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErr
           RuleBothPropertiesSuppliedError,
           None,
           None
-        ),
-        (
-          "AA123456A",
-          "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-          "2024-25",
-          ukPropertyRequestBodyJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
-          BAD_REQUEST,
-          ValueFormatError.copy(
-            message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-            paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
-          ),
-          None,
-          None
         )
       )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.{
   downstreamRequestValid,
   mtdRequestForeignPropertyFull,
-  mtdRequestForeignPropertyInvalidResidentialCost,
   mtdRequestForeignPropertyValid
 }
 
@@ -111,17 +110,7 @@ class Def3_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
             "2025-26",
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
-          (
-            "AA123456A",
-            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2025-26",
-            mtdRequestForeignPropertyInvalidResidentialCost,
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-              paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
-            ))
+            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode"))))
         )
         input.foreach(validationErrorTest.tupled)
       }
