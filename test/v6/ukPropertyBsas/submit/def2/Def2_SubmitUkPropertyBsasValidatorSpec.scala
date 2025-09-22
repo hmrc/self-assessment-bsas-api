@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -338,12 +338,10 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           "/ukProperty/expenses/professionalFees",
           "/ukProperty/expenses/costOfServices",
           "/ukProperty/expenses/other",
-          "/ukProperty/expenses/travelCosts"
+          "/ukProperty/expenses/travelCosts",
+          "/ukProperty/expenses/residentialFinancialCost"
         ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path))
 
-        List(
-          "/ukProperty/expenses/residentialFinancialCost"
-        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path, min = "0"))
       }
 
       "consolidated expenses is invalid" when {
@@ -376,7 +374,7 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit =
         s"for $expectedPath" when {
           def doTest(value: JsNumber): Assertion = {
             val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
@@ -384,12 +382,12 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             result shouldBe Left(
               ErrorWrapper(
                 correlationId,
-                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
+                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
               )
             )
           }
 
-          "value is out of range" in doTest(JsNumber(BigDecimal(max) + 0.01))
+          "value is out of range" in doTest(JsNumber(BigDecimal(99999999999.99) + 0.01))
 
           "value is zero" in doTest(JsNumber(0))
         }

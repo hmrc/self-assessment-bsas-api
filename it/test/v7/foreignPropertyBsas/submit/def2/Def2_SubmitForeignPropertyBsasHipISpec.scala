@@ -227,19 +227,6 @@ class Def2_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
           CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/countryLevelDetail/0/countryCode"))),
           None,
           None
-        ),
-        (
-          "AA123456A",
-          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2024-25",
-          mtdRequestForeignPropertyInvalid,
-          BAD_REQUEST,
-          ValueFormatError.copy(
-            message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-            paths = Some(List("/foreignProperty/countryLevelDetail/0/expenses/residentialFinancialCost"))
-          ),
-          None,
-          None
         )
       )
 

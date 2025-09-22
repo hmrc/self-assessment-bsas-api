@@ -101,9 +101,6 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
     validateZeroAdjustments(zeroAdjustments, hasAdjustableFields, "/foreignProperty")
   }
 
-  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
-    ResolveParsedNumber(disallowZero = true)(value, path)
-
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
@@ -170,7 +167,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
       resolveMaybeNegativeNumber(path("expenses/professionalFees"), countryLevelDetail.expenses.flatMap(_.professionalFees)),
       resolveMaybeNegativeNumber(path("expenses/travelCosts"), countryLevelDetail.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber(path("expenses/costOfServices"), countryLevelDetail.expenses.flatMap(_.costOfServices)),
-      resolveNonNegativeNumber(path("expenses/residentialFinancialCost"), countryLevelDetail.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber(path("expenses/residentialFinancialCost"), countryLevelDetail.expenses.flatMap(_.residentialFinancialCost)),
       resolveMaybeNegativeNumber(path("expenses/other"), countryLevelDetail.expenses.flatMap(_.other)),
       resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), countryLevelDetail.expenses.flatMap(_.consolidatedExpenses))
     )

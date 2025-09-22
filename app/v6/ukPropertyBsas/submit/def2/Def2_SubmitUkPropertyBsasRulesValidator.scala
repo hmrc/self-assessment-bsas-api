@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,9 +57,6 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
     ).onSuccess(parsed)
   }
 
-  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
-    ResolveParsedNumber(disallowZero = true)(value, path)
-
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
@@ -89,7 +86,7 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
       resolveMaybeNegativeNumber("/ukProperty/expenses/professionalFees", ukProperty.expenses.flatMap(_.professionalFees)),
       resolveMaybeNegativeNumber("/ukProperty/expenses/travelCosts", ukProperty.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber("/ukProperty/expenses/costOfServices", ukProperty.expenses.flatMap(_.costOfServices)),
-      resolveNonNegativeNumber("/ukProperty/expenses/residentialFinancialCost", ukProperty.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/residentialFinancialCost", ukProperty.expenses.flatMap(_.residentialFinancialCost)),
       resolveMaybeNegativeNumber("/ukProperty/expenses/other", ukProperty.expenses.flatMap(_.other)),
       resolveMaybeNegativeNumber("/ukProperty/expenses/consolidatedExpenses", ukProperty.expenses.flatMap(_.consolidatedExpenses))
     )
