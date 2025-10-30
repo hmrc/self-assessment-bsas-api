@@ -135,7 +135,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockSha
   "Routing requests with unsupported version" should {
 
     "return 404" in new Test {
-      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.5.0+json")
+      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.7.0+json")
 
       private val request = buildRequest("/v1")
 
@@ -151,7 +151,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockSha
   "Routing requests with retired v2 version" when {
 
     "return 404 Not Found" in new Test {
-      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.5.0+json")
+      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.7.0+json")
 
       private val request = buildRequest("/v2")
       inside(requestHandler.routeRequest(request)) { case Some(action: EssentialAction) =>
