@@ -18,7 +18,7 @@ package definition
 
 import shared.config.SharedAppConfig
 import shared.definition.*
-import shared.routing.{Version5, Version6, Version7}
+import shared.routing.{Version6, Version7}
 
 import javax.inject.{Inject, Singleton}
 
@@ -33,11 +33,6 @@ class BsasApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConf
         context = appConfig.apiGatewayContext,
         categories = List(mtdCategory),
         versions = List(
-          APIVersion(
-            version = Version5,
-            status = buildAPIStatus(Version5),
-            endpointsEnabled = appConfig.endpointsEnabled(Version5)
-          ),
           APIVersion(
             version = Version6,
             status = buildAPIStatus(Version6),
