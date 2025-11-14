@@ -6,7 +6,7 @@ components:
       description: An identifier for the business, unique to the customer.
       schema:
         type: string
-        example: XAIS12345678910
+        example: XBIS12345678901
         pattern: ^X[A-Z0-9]{1}IS[0-9]{11}$
       required: false
 
