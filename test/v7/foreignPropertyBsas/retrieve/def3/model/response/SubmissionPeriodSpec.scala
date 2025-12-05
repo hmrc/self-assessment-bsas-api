@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package v7.foreignPropertyBsas.retrieve.def2.model.response
+package v7.foreignPropertyBsas.retrieve.def3.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v7.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures._
 
-class InputsSpec extends UnitSpec with RoundTripTest {
-  import Inputs._
+class SubmissionPeriodSpec extends UnitSpec with RoundTripTest {
+  import SubmissionPeriod._
 
-  testRoundTrip("Inputs ", inputsDesJson, parsedInputs, inputsMtdJson)(reads)
+  testRoundTrip(
+    "Submission Period",
+    submissionPeriodDesJson,
+    parsedSubmissionPeriod,
+    submissionPeriodMtdJson
+  )(reads)
+
 }

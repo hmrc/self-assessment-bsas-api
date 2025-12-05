@@ -21,6 +21,7 @@ import shared.utils.JsonWritesUtil
 import v7.common.model.{HasIncomeSourceType, HasTaxYear}
 import v7.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
 import v7.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignPropertyBsasResponse
+import v7.foreignPropertyBsas.retrieve.def3.model.response.Def3_RetrieveForeignPropertyBsasResponse
 
 trait RetrieveForeignPropertyBsasResponse extends HasIncomeSourceType with HasTaxYear
 
@@ -31,6 +32,8 @@ object RetrieveForeignPropertyBsasResponse extends JsonWritesUtil {
       implicitly[OWrites[Def1_RetrieveForeignPropertyBsasResponse]].writes(def1)
     case def2: Def2_RetrieveForeignPropertyBsasResponse =>
       implicitly[OWrites[Def2_RetrieveForeignPropertyBsasResponse]].writes(def2)
+    case def3: Def3_RetrieveForeignPropertyBsasResponse =>
+      implicitly[OWrites[Def3_RetrieveForeignPropertyBsasResponse]].writes(def3)
   }
 
 }
