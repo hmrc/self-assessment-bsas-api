@@ -18,16 +18,16 @@ package v7.foreignPropertyBsas.retrieve.def3.model.response
 
 import common.model.RoundTripTest
 import shared.utils.UnitSpec
-import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class SummaryCalculationExpensesSpec extends UnitSpec with RoundTripTest {
-  import SummaryCalculationExpenses._
+  import SummaryCalculationExpenses.*
 
   testRoundTrip(
     "Summary Calculation Expenses",
     summaryCalculationExpensesDesJson,
     parsedSummaryCalculationExpenses,
     summaryCalculationExpensesMtdJson
-  )(reads)
+  )
 
 }

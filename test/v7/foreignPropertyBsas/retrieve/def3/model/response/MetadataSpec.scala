@@ -25,7 +25,7 @@ class MetadataSpec extends UnitSpec with JsonErrorValidators {
   "reads" should {
     "return the expected parsed object" when {
       "given a valid json object with all fields" in {
-        metadataDesJson.as[Metadata] shouldBe parsedMetadata
+        metadataHipJson.as[Metadata] shouldBe parsedMetadata
       }
     }
   }

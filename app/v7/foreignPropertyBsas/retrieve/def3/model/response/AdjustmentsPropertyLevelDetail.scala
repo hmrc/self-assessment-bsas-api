@@ -16,17 +16,10 @@
 
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
-import play.api.libs.functional.syntax.*
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
-case class SubmissionPeriod(submissionId: String, startDate: String, endDate: String, receivedDateTime: String)
+case class AdjustmentsPropertyLevelDetail(propertyId: String, income: Option[AdjustmentsIncome], expenses: Option[AdjustmentsExpenses])
 
-object SubmissionPeriod {
-
-  implicit val reads: Reads[SubmissionPeriod] = ((JsPath \ "submissionId").read[String] and
-    (JsPath \ "startDate").read[String] and
-    (JsPath \ "endDate").read[String] and
-    (JsPath \ "receivedDateTime").read[String])(SubmissionPeriod.apply _)
-
-  implicit val writes: OWrites[SubmissionPeriod] = Json.writes[SubmissionPeriod]
+object AdjustmentsPropertyLevelDetail {
+  given OFormat[AdjustmentsPropertyLevelDetail] = Json.format[AdjustmentsPropertyLevelDetail]
 }

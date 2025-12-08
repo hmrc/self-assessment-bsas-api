@@ -16,7 +16,7 @@
 
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class SummaryCalculationExpenses(consolidatedExpenses: Option[BigDecimal],
                                       premisesRunningCosts: Option[BigDecimal],
@@ -30,7 +30,5 @@ case class SummaryCalculationExpenses(consolidatedExpenses: Option[BigDecimal],
                                       travelCosts: Option[BigDecimal])
 
 object SummaryCalculationExpenses {
-  implicit val reads: Reads[SummaryCalculationExpenses] = Json.reads[SummaryCalculationExpenses]
-
-  implicit val writes: OWrites[SummaryCalculationExpenses] = Json.writes[SummaryCalculationExpenses]
+  given OFormat[SummaryCalculationExpenses] = Json.format[SummaryCalculationExpenses]
 }

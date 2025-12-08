@@ -16,7 +16,7 @@
 
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SummaryCalculationCountryLevelDetail(countryCode: String,
@@ -31,11 +31,12 @@ case class SummaryCalculationCountryLevelDetail(countryCode: String,
                                                 totalDeductions: Option[BigDecimal],
                                                 deductions: Option[SummaryCalculationDeductions],
                                                 taxableProfit: Option[BigDecimal],
-                                                adjustedIncomeTaxLoss: Option[BigDecimal])
+                                                adjustedIncomeTaxLoss: Option[BigDecimal],
+                                                propertyLevelDetail: Option[Seq[SummaryCalculationPropertyLevelDetail]])
 
 object SummaryCalculationCountryLevelDetail {
 
-  implicit val reads: Reads[SummaryCalculationCountryLevelDetail] = (
+  given Reads[SummaryCalculationCountryLevelDetail] = (
     (JsPath \ "countryCode").read[String] and
       (JsPath \ "totalIncome").readNullable[BigDecimal] and
       (JsPath \ "income").readNullable[SummaryCalculationIncome] and
@@ -48,8 +49,9 @@ object SummaryCalculationCountryLevelDetail {
       (JsPath \ "totalDeductions").readNullable[BigDecimal] and
       (JsPath \ "deductions").readNullable[SummaryCalculationDeductions] and
       (JsPath \ "taxableProfit").readNullable[BigDecimal] and
-      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal]
-    )(SummaryCalculationCountryLevelDetail.apply _)
+      (JsPath \ "adjustedIncomeTaxLoss").readNullable[BigDecimal] and
+      (JsPath \ "propertyLevelDetail").readNullable[Seq[SummaryCalculationPropertyLevelDetail]]
+  )(SummaryCalculationCountryLevelDetail.apply)
 
-  implicit val writes: OWrites[SummaryCalculationCountryLevelDetail] = Json.writes[SummaryCalculationCountryLevelDetail]
+  given OWrites[SummaryCalculationCountryLevelDetail] = Json.writes[SummaryCalculationCountryLevelDetail]
 }

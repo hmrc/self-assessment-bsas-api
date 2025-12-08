@@ -22,7 +22,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   /* Downstream JSON */
 
-  lazy val metadataDesJson: JsValue = Json.parse(
+  lazy val metadataHipJson: JsValue = Json.parse(
     """{
       |  "calculationId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
       |  "requestedDateTime": "2020-12-05T16:19:44Z",
@@ -110,8 +110,69 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "totalDeductions": 0.06,
        |  "deductions": $summaryCalculationDeductionsDesJson,
        |  "taxableProfit": 1.12,
+       |  "adjustedIncomeTaxLoss": 1.13,
+       |  "propertyLevelDetail": [$summaryCalculationPropertyLevelDetailHipJson]
+       |}""".stripMargin
+  )
+
+  lazy val summaryCalculationPropertyLevelDetailHipJson: JsValue = Json.parse(
+    s"""{
+       |  "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       |  "totalIncome": 0.01,
+       |  "income": $summaryCalculationPropertyLevelIncomeHipJson,
+       |  "totalExpenses": 0.02,
+       |  "expenses": $summaryCalculationPropertyLevelExpensesHipJson,
+       |  "netProfit": 0.03,
+       |  "netLoss": 0.04,
+       |  "totalAdditions": 0.05,
+       |  "additions": $summaryCalculationPropertyLevelAdditionsHipJson,
+       |  "totalDeductions": 0.06,
+       |  "deductions": $summaryCalculationPropertyLevelDeductionsHipJson,
+       |  "taxableProfit": 1.12,
        |  "adjustedIncomeTaxLoss": 1.13
        |}""".stripMargin
+  )
+
+  lazy val summaryCalculationPropertyLevelIncomeHipJson: JsValue = Json.parse(
+    """{
+      |  "rentAmount": 0.02,
+      |  "premiumsOfLeaseGrantAmount": 0.03,
+      |  "otherPropertyIncomeAmount": 0.04
+      |}""".stripMargin
+  )
+
+  lazy val summaryCalculationPropertyLevelExpensesHipJson: JsValue = Json.parse(
+    """{
+      |  "premisesRunningCostsAmount": 0.07,
+      |  "repairsAndMaintenanceAmount": 0.08,
+      |  "financialCostsAmount": 0.09,
+      |  "professionalFeesAmount": 0.10,
+      |  "travelCostsAmount": 0.11,
+      |  "costOfServicesAmount": 0.12,
+      |  "residentialFinancialCostAmount": 0.13,
+      |  "broughtFwdResidentialFinancialCostAmount": 0.14,
+      |  "otherAmount": 0.15,
+      |  "consolidatedExpensesAmount": 0.06
+      |}""".stripMargin
+  )
+
+  lazy val summaryCalculationPropertyLevelAdditionsHipJson: JsValue = Json.parse(
+    """{
+      |  "privateUseAdjustment": 0.19,
+      |  "balancingCharge": 0.20
+      |}""".stripMargin
+  )
+
+  lazy val summaryCalculationPropertyLevelDeductionsHipJson: JsValue = Json.parse(
+    """{
+      |  "annualInvestmentAllowance": 0.22,
+      |  "costOfReplacingDomesticItems": 0.23,
+      |  "zeroEmissionsGoodsVehicleAllowance": 0.24,
+      |  "propertyAllowance": 0.25,
+      |  "otherCapitalAllowance": 0.26,
+      |  "structuredBuildingAllowance": 0.28,
+      |  "zeroEmissionsCarAllowance": 0.29
+      |}""".stripMargin
   )
 
   lazy val summaryCalculationDesJson: JsValue = Json.parse(
@@ -156,7 +217,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val adjustmentsDesJson: JsValue = Json.parse(
     s"""{
-       |  "countryCode": "AFG",
+       |  "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
        |  "income": $adjustmentsIncomeDesJson,
        |  "expenses": $adjustmentsExpensesDesJson
        |}""".stripMargin
@@ -168,9 +229,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val retrieveForeignPropertyBsasDesJson: JsValue = Json.parse(
+  lazy val retrieveForeignPropertyBsasHipJson: JsValue = Json.parse(
     s"""{
-       |  "metadata": $metadataDesJson,
+       |  "metadata": $metadataHipJson,
        |  "inputs": $inputsDesJson,
        |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
        |  "adjustments": [$adjustmentsDesJson],
@@ -180,7 +241,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
 
   lazy val retrieveForeignPropertyBsasDesZeroAdjustmentJson: JsValue = Json.parse(
     s"""{
-       |  "metadata": $metadataDesJson,
+       |  "metadata": $metadataHipJson,
        |  "inputs": $inputsDesJson,
        |  "adjustableSummaryCalculation": $summaryCalculationDesJson,
        |  "adjustments": $zeroAdjustmentsDesJson,
@@ -462,6 +523,23 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     totalDeductions = Some(0.06),
     deductions = Some(parsedSummaryCalculationDeductions),
     taxableProfit = Some(1.12),
+    adjustedIncomeTaxLoss = Some(1.13),
+    propertyLevelDetail = Some(parsedSummaryCalculationPropertyLevelDetail)
+  )
+
+  lazy val parsedSummaryCalculationPropertyLevelDetail: AdjustmentsPropertyLevelDetail = AdjustmentsPropertyLevelDetail(
+    propertyId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+    totalIncome = Some(0.01),
+    income = Some(parsedSummaryCalculationIncome),
+    totalExpenses = Some(0.02),
+    expenses = Some(parsedSummaryCalculationExpenses),
+    netProfit = Some(0.03),
+    netLoss = Some(0.04),
+    totalAdditions = Some(0.05),
+    additions = Some(parsedSummaryCalculationAdditions),
+    totalDeductions = Some(0.06),
+    deductions = Some(parsedSummaryCalculationDeductions),
+    taxableProfit = Some(1.12),
     adjustedIncomeTaxLoss = Some(1.13)
   )
 
@@ -500,29 +578,23 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   )
 
   lazy val parsedAdjustments: Adjustments = Adjustments(
-    income = Some(parsedAdjustmentsIncome),
-    expenses = Some(parsedAdjustmentsExpenses),
-    propertyLevelDetail = None,
+    propertyLevelDetail = Some(Seq(parsedSummaryCalculationPropertyLevelDetail)),
     zeroAdjustments = None
   )
 
   lazy val zeroParsedAdjustments: Adjustments = Adjustments(
-    income = None,
-    expenses = None,
     propertyLevelDetail = None,
     zeroAdjustments = Some(true)
   )
 
   lazy val parsedAdjustmentsSeq: Adjustments = Adjustments(
     propertyLevelDetail = Some(
-      List(Adjustments(
-        propertyLevelDetail = None,
-        income = parsedAdjustments.income,
-        expenses = parsedAdjustments.expenses,
-        zeroAdjustments = None
-      ))),
-    income = None,
-    expenses = None,
+      List(
+        AdjustmentsPropertyLevelDetail(
+          propertyId = "17f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+          income = parsedAdjustments.income,
+          expenses = parsedAdjustments.expenses
+        ))),
     zeroAdjustments = None
   )
 
