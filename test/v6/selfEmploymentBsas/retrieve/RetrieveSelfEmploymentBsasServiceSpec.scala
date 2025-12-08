@@ -16,14 +16,14 @@
 
 package v6.selfEmploymentBsas.retrieve
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
+import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v6.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
@@ -109,7 +109,7 @@ class RetrieveSelfEmploymentBsasServiceSpec extends ServiceSpec {
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

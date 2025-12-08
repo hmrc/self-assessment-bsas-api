@@ -89,10 +89,8 @@ object Def3_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def3_Submi
       resolveMaybeNegativeNumber("/ukProperty/expenses/travelCosts", ukProperty.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber("/ukProperty/expenses/consolidatedExpenses", ukProperty.expenses.flatMap(_.consolidatedExpenses)),
       resolveMaybeNegativeNumber("/ukProperty/expenses/costOfServices", ukProperty.expenses.flatMap(_.costOfServices)),
-      ResolveParsedNumber(disallowZero = true)(
-        ukProperty.expenses.flatMap(_.residentialFinancialCost),
-        "/ukProperty/expenses/residentialFinancialCost"),
-      ResolveParsedNumber(disallowZero = true)(ukProperty.expenses.flatMap(_.other), "/ukProperty/expenses/other")
+      resolveMaybeNegativeNumber("/ukProperty/expenses/residentialFinancialCost", ukProperty.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber("/ukProperty/expenses/other", ukProperty.expenses.flatMap(_.other))
     )
   }
 

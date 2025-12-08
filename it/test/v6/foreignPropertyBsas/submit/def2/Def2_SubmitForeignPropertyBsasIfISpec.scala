@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,18 @@
 
 package v6.foreignPropertyBsas.submit.def2
 
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
-import shared.services._
+import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{
-  downstreamRequestValid,
-  mtdRequestForeignPropertyValid,
-  mtdRequestFull,
-  mtdRequestValid
-}
+import v6.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 
 class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
@@ -112,19 +108,9 @@ class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
             "2024-25",
             requestBodyWithCountryCode("FRANCE"),
             BAD_REQUEST,
-            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode")))),
-          (
-            "AA123456A",
-            "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-            "2024-25",
-            mtdRequestForeignPropertyValid,
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-              paths = Some(List("/foreignProperty/0/expenses/residentialFinancialCost"))
-            ))
+            CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/0/countryCode"))))
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "service error" when {
@@ -170,7 +156,7 @@ class Def2_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

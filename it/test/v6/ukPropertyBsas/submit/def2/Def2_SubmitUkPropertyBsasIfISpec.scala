@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
 
 package v6.ukPropertyBsas.submit.def2
 
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
-import play.api.libs.json._
+import play.api.http.Status.*
+import play.api.libs.json.*
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
-import shared.services._
+import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v6.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
+import v6.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 
 class Def2_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   override def servicesConfig: Map[String, Any] =
     Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
 
-  val requestBodyJson: JsValue           = validfhlInputJson
-  val ukPropertyRequestBodyJson: JsValue = validUkPropertyInputJson
+  val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
@@ -95,19 +95,9 @@ class Def2_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErro
             "2023-24",
             requestBodyJson.update("/ukProperty/income/totalRentsReceived", JsNumber(2.25)),
             BAD_REQUEST,
-            RuleBothPropertiesSuppliedError),
-          (
-            "AA123456A",
-            "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2",
-            "2024-25",
-            ukPropertyRequestBodyJson.update("/ukProperty/expenses/residentialFinancialCost", JsNumber(-1.523)),
-            BAD_REQUEST,
-            ValueFormatError.copy(
-              message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-              paths = Some(List("/ukProperty/expenses/residentialFinancialCost"))
-            ))
+            RuleBothPropertiesSuppliedError)
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -153,7 +143,7 @@ class Def2_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErro
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

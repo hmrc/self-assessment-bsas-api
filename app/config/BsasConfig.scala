@@ -17,7 +17,7 @@
 package config
 
 import play.api.Configuration
-import shared.config.{AppConfigBase, FeatureSwitches}
+import shared.config.{AppConfigBase, FeatureSwitches, SharedAppConfig}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
@@ -29,7 +29,7 @@ class BsasConfig @Inject() (val config: ServicesConfig, val configuration: Confi
 
   def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
-  def featureSwitches: FeatureSwitches = BsasFeatureSwitches(featureSwitchConfig)
+  def featureSwitches(implicit appConfig: SharedAppConfig): FeatureSwitches = BsasFeatureSwitches()
 
   // V3 Trigger BSAS minimum dates
   def v3TriggerForeignBsasMinimumTaxYear: String    = config.getString("v3TriggerForeignBsasMinimumTaxYear")

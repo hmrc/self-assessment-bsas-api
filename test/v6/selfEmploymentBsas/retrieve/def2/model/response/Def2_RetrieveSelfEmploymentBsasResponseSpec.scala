@@ -19,11 +19,11 @@ package v6.selfEmploymentBsas.retrieve.def2.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v6.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures._
+import v6.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures.*
 
 class Def2_RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import Def2_RetrieveSelfEmploymentBsasResponse._
+  import Def2_RetrieveSelfEmploymentBsasResponse.*
 
   testRoundTrip(
     "Retrieve Self Employment Bsas Response ",

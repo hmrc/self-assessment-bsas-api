@@ -18,9 +18,9 @@ package v7.bsas.list
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils._
+import shared.utils.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ trait MockHttpClient extends TestSuite with MockFactory {
           }
         })
         .returns(mockRequestBuilder)
-      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext)).expects(*, *)
+      (mockRequestBuilder.execute[T](using _: HttpReads[T], _: ExecutionContext)).expects(*, *)
     }
 
     def post[T](url: URL,
@@ -67,6 +67,7 @@ trait MockHttpClient extends TestSuite with MockFactory {
         .expects(assertArgs { (actualUrl: URL, hc: HeaderCarrier) =>
           {
             actualUrl shouldBe url
+
             val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
             assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
           }
@@ -74,12 +75,10 @@ trait MockHttpClient extends TestSuite with MockFactory {
         .returns(mockRequestBuilder)
 
       (mockRequestBuilder
-        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+        .withBody(_: JsValue)(using _: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
         .expects(body, *, *, *)
         .returns(mockRequestBuilder)
-      (mockRequestBuilder
-        .execute(_: HttpReads[T], _: ExecutionContext))
-        .expects(*, *)
+      (mockRequestBuilder.execute[T](using _: HttpReads[T], _: ExecutionContext)).expects(*, *)
     }
 
     def put[T](url: URL,
@@ -92,6 +91,7 @@ trait MockHttpClient extends TestSuite with MockFactory {
         .expects(assertArgs { (actualUrl: URL, hc: HeaderCarrier) =>
           {
             actualUrl shouldBe url
+
             val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
             assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
           }
@@ -99,11 +99,11 @@ trait MockHttpClient extends TestSuite with MockFactory {
         .returns(mockRequestBuilder)
 
       (mockRequestBuilder
-        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+        .withBody(_: JsValue)(using _: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
         .expects(body, *, *, *)
         .returns(mockRequestBuilder)
       (mockRequestBuilder
-        .execute(_: HttpReads[T], _: ExecutionContext))
+        .execute[T](using _: HttpReads[T], _: ExecutionContext))
         .expects(*, *)
     }
 
@@ -122,12 +122,12 @@ trait MockHttpClient extends TestSuite with MockFactory {
           }
         })
         .returns(mockRequestBuilder)
-      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext)).expects(*, *)
+      (mockRequestBuilder.execute[T](using _: HttpReads[T], _: ExecutionContext)).expects(*, *)
     }
 
-    private def assertHeaders(actualHeaders: Seq[(String, String)],
-                              requiredHeaders: Seq[(String, String)],
-                              excludedHeaders: Seq[(String, String)]) = {
+    private def assertHeaders[T, I](actualHeaders: Seq[(String, String)],
+                                    requiredHeaders: Seq[(String, String)],
+                                    excludedHeaders: Seq[(String, String)]) = {
 
       actualHeaders should contain allElementsOf requiredHeaders
       actualHeaders should contain noElementsOf excludedHeaders

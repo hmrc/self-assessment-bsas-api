@@ -16,8 +16,8 @@
 
 package v6.ukPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import shared.models.domain.{Status, TaxYear}
 
 case class Metadata(
@@ -38,7 +38,7 @@ object Metadata {
       (JsPath \ "taxableEntityId").read[String] and
       (JsPath \ "taxYear").read[Int].map(taxYear => TaxYear.fromDownstreamInt(taxYear).asMtd) and
       (JsPath \ "status").read[Status]
-  )(Metadata.apply _)
+  )(Metadata.apply)
 
   implicit val writes: OWrites[Metadata] = Json.writes[Metadata]
 }

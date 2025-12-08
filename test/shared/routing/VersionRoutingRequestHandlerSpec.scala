@@ -19,12 +19,11 @@ package shared.routing
 import org.apache.pekko.actor.ActorSystem
 import org.scalatest.Inside
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.HeaderNames.ACCEPT
 import play.api.http.{HttpConfiguration, HttpErrorHandler, HttpFilters}
-import play.api.mvc._
+import play.api.mvc.*
 import play.api.routing.Router
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import shared.config.MockSharedAppConfig
 import shared.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 import shared.utils.UnitSpec
@@ -37,7 +36,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockSha
   val actionBuilder: DefaultActionBuilder = app.injector.instanceOf[DefaultActionBuilder]
 
   import play.api.mvc.Handler
-  import play.api.routing.sird._
+  import play.api.routing.sird.*
 
   object DefaultHandler extends Handler
   object V3Handler      extends Handler
@@ -136,7 +135,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockSha
   "Routing requests with unsupported version" should {
 
     "return 404" in new Test {
-      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.5.0+json")
+      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.7.0+json")
 
       private val request = buildRequest("/v1")
 
@@ -152,7 +151,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockSha
   "Routing requests with retired v2 version" when {
 
     "return 404 Not Found" in new Test {
-      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.5.0+json")
+      val maybeAcceptHeader: Option[String] = Some("application/vnd.hmrc.7.0+json")
 
       private val request = buildRequest("/v2")
       inside(requestHandler.routeRequest(request)) { case Some(action: EssentialAction) =>

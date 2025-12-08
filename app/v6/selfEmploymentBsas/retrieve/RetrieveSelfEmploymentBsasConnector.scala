@@ -18,7 +18,7 @@ package v6.selfEmploymentBsas.retrieve
 
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -29,15 +29,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfEmploymentBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveSelfEmploymentBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveSelfEmploymentBsas(request: RetrieveSelfEmploymentBsasRequestData)(implicit
-                                                                                 hc: HeaderCarrier,
-                                                                                 ec: ExecutionContext,
-                                                                                 correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveSelfEmploymentBsasResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     lazy val downstreamUri1876: DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1876")) {
       HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")

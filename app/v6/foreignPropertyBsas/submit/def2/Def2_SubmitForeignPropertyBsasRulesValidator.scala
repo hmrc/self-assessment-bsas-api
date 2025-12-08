@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
 import shared.models.errors.MtdError
-import v6.foreignPropertyBsas.submit.def2.model.request._
+import v6.foreignPropertyBsas.submit.def2.model.request.*
 
 object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_SubmitForeignPropertyBsasRequestData] {
 
@@ -61,9 +61,6 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
       validatedDuplicateCountryCode
     ).onSuccess(parsed)
   }
-
-  private def resolveNonNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
-    ResolveParsedNumber(disallowZero = true)(value, path)
 
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
@@ -136,7 +133,7 @@ object Def2_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def2_
       resolveMaybeNegativeNumber(path("expenses/professionalFees"), foreignProperty.expenses.flatMap(_.professionalFees)),
       resolveMaybeNegativeNumber(path("expenses/travelCosts"), foreignProperty.expenses.flatMap(_.travelCosts)),
       resolveMaybeNegativeNumber(path("expenses/costOfServices"), foreignProperty.expenses.flatMap(_.costOfServices)),
-      resolveNonNegativeNumber(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
+      resolveMaybeNegativeNumber(path("expenses/residentialFinancialCost"), foreignProperty.expenses.flatMap(_.residentialFinancialCost)),
       resolveMaybeNegativeNumber(path("expenses/other"), foreignProperty.expenses.flatMap(_.other)),
       resolveMaybeNegativeNumber(path("expenses/consolidatedExpenses"), foreignProperty.expenses.flatMap(_.consolidatedExpenses))
     )

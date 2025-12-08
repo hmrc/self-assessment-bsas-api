@@ -16,16 +16,16 @@
 
 package v7.foreignPropertyBsas.submit.def3
 
-import common.errors._
-import play.api.http.HeaderNames.ACCEPT
+import common.errors.*
 import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers._
-import shared.models.errors._
+import play.api.test.Helpers.*
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
-import shared.services._
+import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures._
+import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.*
 
 class Def3_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
@@ -170,22 +170,10 @@ class Def3_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
           BAD_REQUEST,
           CountryCodeFormatError.copy(paths = Some(List("/foreignProperty/countryLevelDetail/0/countryCode"))),
           None
-        ),
-        (
-          "AA123456A",
-          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
-          "2025-26",
-          mtdRequestForeignPropertyInvalidResidentialCost,
-          BAD_REQUEST,
-          ValueFormatError.copy(
-            message = "The value must be between 0 and 99999999999.99 (but cannot be 0 or 0.00)",
-            paths = Some(List("/foreignProperty/countryLevelDetail/0/expenses/residentialFinancialCost"))
-          ),
-          None
         )
       )
 
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
@@ -230,7 +218,7 @@ class Def3_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec with Jso
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

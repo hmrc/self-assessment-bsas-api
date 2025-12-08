@@ -19,7 +19,7 @@ package v7.selfEmploymentBsas.retrieve.def2.model
 import play.api.libs.json.{JsValue, Json}
 import shared.models.domain.{Source, Status}
 import v7.common.model.{IncomeSourceType, TypeOfBusiness}
-import v7.selfEmploymentBsas.retrieve.def2.model.response._
+import v7.selfEmploymentBsas.retrieve.def2.model.response.*
 import v7.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
 object Def2_RetrieveSelfEmploymentBsasFixtures {
@@ -143,7 +143,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |  "otherExpensesDisallowable": 5.13,
       |  "advertisingCostsDisallowable": 5.14,
       |  "businessEntertainmentCostsDisallowable": 5.15,
-      |  "outstandingBusinessIncome": 5.16,
+      |  "outstandingBusinessIncome": 11.00,
       |  "balancingChargeOther": 5.17,
       |  "balancingChargeBpra": 5.18,
       |  "goodAndServicesOwnUse": 5.19
@@ -198,7 +198,9 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "accountingAdjustments": 7.00,
        |  "selfEmploymentAccountingAdjustments": $downstreamSummaryCalculationAccountingAdjustmentsJson,
        |  "taxableProfit": 8.00,
-       |  "adjustedIncomeTaxLoss": 9.00
+       |  "adjustedIncomeTaxLoss": 9.00,
+       |  "adjustedProfit": 10.00,
+       |  "outstandingBusinessIncome": 11.00
        |}
        |""".stripMargin
   )
@@ -375,7 +377,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |  "otherExpensesDisallowable": 5.13,
       |  "advertisingCostsDisallowable": 5.14,
       |  "businessEntertainmentCostsDisallowable": 5.15,
-      |  "outstandingBusinessIncome": 5.16,
+      |  "outstandingBusinessIncome": 11,
       |  "balancingChargeOther": 5.17,
       |  "balancingChargeBpra": 5.18,
       |  "goodsAndServicesOwnUse": 5.19
@@ -430,7 +432,9 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
        |  "totalAccountingAdjustments": 7,
        |  "accountingAdjustments": $mtdSummaryCalculationAccountingAdjustmentsJson,
        |  "taxableProfit": 8,
-       |  "adjustedIncomeTaxLoss": 9
+       |  "adjustedIncomeTaxLoss": 9,
+       |  "adjustedProfit": 10,
+       |  "outstandingBusinessIncome": 11
        |}
        |""".stripMargin
   )
@@ -585,7 +589,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     otherExpensesDisallowable = Some(5.13),
     advertisingCostsDisallowable = Some(5.14),
     businessEntertainmentCostsDisallowable = Some(5.15),
-    outstandingBusinessIncome = Some(5.16),
+    outstandingBusinessIncome = Some(11),
     balancingChargeOther = Some(5.17),
     balancingChargeBpra = Some(5.18),
     goodsAndServicesOwnUse = Some(5.19)
@@ -628,7 +632,9 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     totalAccountingAdjustments = Some(7),
     accountingAdjustments = Some(summaryCalculationAccountingAdjustments),
     taxableProfit = Some(8),
-    adjustedIncomeTaxLoss = Some(9)
+    adjustedIncomeTaxLoss = Some(9),
+    adjustedProfit = Some(10),
+    outstandingBusinessIncome = Some(11)
   )
 
   val adjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(
@@ -694,7 +700,9 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     totalAccountingAdjustments = Some(7),
     accountingAdjustments = Some(summaryCalculationAccountingAdjustments),
     taxableProfit = Some(8),
-    adjustedIncomeTaxLoss = Some(9)
+    adjustedIncomeTaxLoss = Some(9),
+    adjustedProfit = Some(10),
+    outstandingBusinessIncome = Some(11)
   )
 
   val retrieveBsasResponse: Def2_RetrieveSelfEmploymentBsasResponse = Def2_RetrieveSelfEmploymentBsasResponse(

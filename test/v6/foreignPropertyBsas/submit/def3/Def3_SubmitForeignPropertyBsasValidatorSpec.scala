@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 package v6.foreignPropertyBsas.submit.def3
 
 import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v6.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
@@ -211,13 +211,12 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             ((v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/professionalFees", v)), "/foreignProperty/0/expenses/professionalFees"),
             ((v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/costOfServices", v)), "/foreignProperty/0/expenses/costOfServices"),
             ((v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/other", v)), "/foreignProperty/0/expenses/other"),
-            ((v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/0/expenses/travelCosts")
-          ).foreach { case (body, path) => testWith(body, path) }
-
-          List(
+            ((v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/travelCosts", v)), "/foreignProperty/0/expenses/travelCosts"),
             (
               (v: JsNumber) => foreignPropertyBodyWith(entry.update("/expenses/residentialFinancialCost", v)),
-              "/foreignProperty/0/expenses/residentialFinancialCost")).foreach { case (body, path) => testWith(body, path, min = "0") }
+              "/foreignProperty/0/expenses/residentialFinancialCost")
+          ).foreach { case (body, path) => testWith(body, path) }
+
         }
 
         "consolidated expenses is invalid" when {
@@ -244,12 +243,13 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
             ErrorWrapper(
               correlationId,
               ValueFormatError.copy(
-                paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+                paths = Some(List(path1, path2)),
+                message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
             )
           )
         }
 
-        def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+        def testWith(body: JsNumber => JsValue, expectedPath: String): Unit =
           s"for $expectedPath" when {
             def doTest(value: JsNumber) = {
               val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
@@ -257,7 +257,7 @@ class Def3_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
               result shouldBe Left(
                 ErrorWrapper(
                   correlationId,
-                  ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
+                  ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
                 )
               )
             }

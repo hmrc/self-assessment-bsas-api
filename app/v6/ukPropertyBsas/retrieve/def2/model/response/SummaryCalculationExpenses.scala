@@ -16,8 +16,8 @@
 
 package v6.ukPropertyBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class SummaryCalculationExpenses(
     consolidatedExpenses: Option[BigDecimal],
@@ -45,7 +45,7 @@ object SummaryCalculationExpenses {
       (JsPath \ "broughtFwdResidentialFinancialCost").readNullable[BigDecimal] and
       (JsPath \ "other").readNullable[BigDecimal] and
       (JsPath \ "travelCosts").readNullable[BigDecimal]
-  )(SummaryCalculationExpenses.apply _)
+  )(SummaryCalculationExpenses.apply)
 
   implicit val writes: OWrites[SummaryCalculationExpenses] = Json.writes[SummaryCalculationExpenses]
 }

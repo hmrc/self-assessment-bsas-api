@@ -18,7 +18,7 @@ package v7.foreignPropertyBsas.retrieve
 
 import cats.data.Validated.{Invalid, Valid}
 import shared.controllers.validators.Validator
-import v7.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema._
+import v7.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema.*
 import v7.foreignPropertyBsas.retrieve.def1.Def1_RetrieveForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.retrieve.def2.Def2_RetrieveForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.retrieve.def3.Def3_RetrieveForeignPropertyBsasValidator

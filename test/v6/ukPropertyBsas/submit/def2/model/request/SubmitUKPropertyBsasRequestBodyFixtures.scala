@@ -44,29 +44,6 @@ object SubmitUKPropertyBsasRequestBodyFixtures {
       |}
       |""".stripMargin)
 
-  val validUkPropertyInputJson: JsValue = Json.parse("""
-      |{
-      |  "ukProperty": {
-      |    "income": {
-      |      "totalRentsReceived": 1.45,
-      |      "premiumsOfLeaseGrant": 2.45,
-      |      "reversePremiums": 3.45,
-      |      "otherPropertyIncome": 4.45
-      |    },
-      |    "expenses": {
-      |      "premisesRunningCosts": 6.45,
-      |      "repairsAndMaintenance": 7.45,
-      |      "financialCosts": 8.45,
-      |      "professionalFees": 9.45,
-      |      "costOfServices": 10.45,
-      |      "residentialFinancialCost": 11.45,
-      |      "other": 12.45,
-      |      "travelCosts": 13.45
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
-
   val requestUkPropertyFull: Def2_SubmitUkPropertyBsasRequestBody = Def2_SubmitUkPropertyBsasRequestBody(
     ukProperty = Some(
       UkProperty(

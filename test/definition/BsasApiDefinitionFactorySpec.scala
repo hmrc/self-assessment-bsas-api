@@ -20,26 +20,24 @@ import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
 import shared.config.MockSharedAppConfig
 import shared.definition.APIStatus.BETA
-import shared.definition._
-import shared.mocks.MockHttpClient
-import shared.routing.{Version5, Version6, Version7}
+import shared.definition.*
+import shared.routing.{Version6, Version7}
 import shared.utils.UnitSpec
 
 class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
 
-  class Test extends MockHttpClient with MockSharedAppConfig {
-    MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
-    val apiDefinitionFactory = new BsasApiDefinitionFactory(mockSharedAppConfig)
-  }
-
   "definition" when {
     "called" should {
-      "return a valid Definition case class" in new Test {
-        List(Version5, Version6, Version7).foreach { version =>
+      "return a valid Definition case class" in {
+        MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
+
+        List(Version6, Version7).foreach { version =>
           MockedSharedAppConfig.apiStatus(version) returns "BETA"
           MockedSharedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
           MockedSharedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
         }
+
+        val apiDefinitionFactory = new BsasApiDefinitionFactory(mockSharedAppConfig)
 
         apiDefinitionFactory.definition shouldBe
           Definition(
@@ -49,11 +47,6 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
               context = "individuals/self-assessment/adjustable-summary",
               categories = List("INCOME_TAX_MTD"),
               versions = List(
-                APIVersion(
-                  Version5,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
                 APIVersion(
                   Version6,
                   status = BETA,

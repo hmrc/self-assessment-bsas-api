@@ -21,11 +21,12 @@ import play.api.libs.json.JsValue
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures._
+import uk.gov.hmrc.http.StringContextOps
+import v6.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v6.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 import v6.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
-import uk.gov.hmrc.http.StringContextOps
+
 import scala.concurrent.Future
 
 class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
@@ -34,7 +35,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
   private val calculationId = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     val connector: RetrieveSelfEmploymentBsasConnector =
       new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
@@ -49,7 +50,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       "a valid request is supplied" in {
         new IfsTest with Test {
           val outcome: Right[Nothing, ResponseWrapper[JsValue]] = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson("2019-20")))
-          val expectedUrl = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+          val expectedUrl                                       = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
           val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] =
@@ -64,9 +65,9 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         new IfsTest with Test {
           MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> false))
 
-          val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+          val taxYear: TaxYear                                  = TaxYear.fromMtd("2023-24")
           val outcome: Right[Nothing, ResponseWrapper[JsValue]] = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson()))
-          val expectedUrl      = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId"
+          val expectedUrl = url"$baseUrl/income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
           val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(taxYear)))
@@ -80,9 +81,9 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
         new HipTest with Test {
           MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1876.enabled" -> true))
 
-          val taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+          val taxYear: TaxYear                                  = TaxYear.fromMtd("2023-24")
           val outcome: Right[Nothing, ResponseWrapper[JsValue]] = Right(ResponseWrapper(correlationId, mtdRetrieveBsasResponseJson()))
-          val expectedUrl      = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId"
+          val expectedUrl = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId"
           willGet(url = expectedUrl) returns Future.successful(outcome)
 
           val result: DownstreamOutcome[RetrieveSelfEmploymentBsasResponse] = await(connector.retrieveSelfEmploymentBsas(requestWith(taxYear)))

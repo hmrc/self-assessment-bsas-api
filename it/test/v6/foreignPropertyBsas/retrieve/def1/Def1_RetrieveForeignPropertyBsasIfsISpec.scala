@@ -18,11 +18,11 @@ package v6.foreignPropertyBsas.retrieve.def1
 
 import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v6.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
@@ -114,7 +114,7 @@ class Def1_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-2024", BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2023-25", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(validationErrorTest.tupled)
     }
 
     "downstream service error" when {
@@ -152,7 +152,7 @@ class Def1_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+      (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
     }
   }
 

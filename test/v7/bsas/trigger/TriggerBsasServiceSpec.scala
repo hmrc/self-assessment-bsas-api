@@ -16,14 +16,14 @@
 
 package v7.bsas.trigger
 
-import common.errors._
+import common.errors.*
 import shared.controllers.EndpointLogContext
 import shared.models.domain.Nino
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures._
+import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v7.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v7.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v7.bsas.trigger.model.TriggerBsasRequestData
@@ -82,12 +82,13 @@ class TriggerBsasServiceSpec extends ServiceSpec {
       )
 
       val extraTysErrors = List(
-        "INVALID_CORRELATION_ID" -> InternalError,
-        "INVALID_TAX_YEAR"       -> InternalError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        "INVALID_CORRELATION_ID"        -> InternalError,
+        "INVALID_TAX_YEAR"              -> InternalError,
+        "TAX_YEAR_NOT_SUPPORTED"        -> RuleTaxYearNotSupportedError,
+        "ACCOUNTING_PERIOD_NOT_ALIGNED" -> InternalError
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

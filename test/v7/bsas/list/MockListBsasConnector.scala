@@ -18,11 +18,12 @@ package v7.bsas.list
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.bsas.list.model.request.ListBsasRequestData
 import v7.bsas.list.model.response.ListBsasResponse
-import org.scalatest.TestSuite
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockListBsasConnector extends TestSuite with MockFactory {

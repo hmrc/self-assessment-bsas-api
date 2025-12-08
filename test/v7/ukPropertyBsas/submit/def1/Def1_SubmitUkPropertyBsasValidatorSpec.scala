@@ -20,7 +20,7 @@ import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
 import org.scalatest.Assertion
 import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v7.ukPropertyBsas.submit.def1.model.request.{Def1_SubmitUkPropertyBsasRequestBody, Def1_SubmitUkPropertyBsasRequestData}
@@ -338,12 +338,9 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           "/ukProperty/expenses/professionalFees",
           "/ukProperty/expenses/costOfServices",
           "/ukProperty/expenses/other",
-          "/ukProperty/expenses/travelCosts"
-        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path))
-
-        List(
+          "/ukProperty/expenses/travelCosts",
           "/ukProperty/expenses/residentialFinancialCost"
-        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path, min = "-99999999999.99"))
+        ).foreach(path => testWith(ukPropertyBodyJson.update(path, _), path))
       }
 
       "consolidated expenses is invalid" when {
@@ -370,12 +367,13 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
           ErrorWrapper(
             correlationId,
             ValueFormatError.copy(
-              paths = Some(List(path1, path2)), message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
+              paths = Some(List(path1, path2)),
+              message = "The value must be between -99999999999.99 and 99999999999.99 (but cannot be 0 or 0.00)")
           )
         )
       }
 
-      def testWith(body: JsNumber => JsValue, expectedPath: String, min: String = "-99999999999.99", max: String = "99999999999.99"): Unit =
+      def testWith(body: JsNumber => JsValue, expectedPath: String): Unit =
         s"for $expectedPath" when {
           def doTest(value: JsNumber): Assertion = {
             val result = validator(validNino, validCalculationId, validTaxYear, body(value)).validateAndWrapResult()
@@ -383,12 +381,12 @@ class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
             result shouldBe Left(
               ErrorWrapper(
                 correlationId,
-                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, min, max)
+                ValueFormatError.forPathAndRangeExcludeZero(expectedPath, "-99999999999.99", "99999999999.99")
               )
             )
           }
 
-          "value is out of range" in doTest(JsNumber(BigDecimal(max) + 0.01))
+          "value is out of range" in doTest(JsNumber(BigDecimal(99999999999.99) + 0.01))
 
           "value is zero" in doTest(JsNumber(0))
         }

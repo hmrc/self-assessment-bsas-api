@@ -299,21 +299,35 @@
           "type": "number",
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": " 1000.45"
+          "example": "1000.45"
         },
         "netLoss": {
           "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": " 1000.45"
+          "example": "1000.45"
         },
         "totalAdditions": {
           "description": "The total additions to net profit (or deduction to net loss). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": " 1000.45"
+          "example": "1000.45"
+        },
+        "outstandingBusinessIncome": {
+          "description": "{{#unless (releasedInProduction 'api_1876_r18_docs')}}[Test only] {{/unless}}Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "adjustedProfit": {
+          "description": "{{#unless (releasedInProduction 'api_1876_r18_docs')}}[Test only] {{/unless}}Profit including disallowable expenses and deducting non‑taxable income, before claiming capital allowances or making any further tax adjustments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
         },
         "additions": {
           "type": "object",
@@ -425,11 +439,12 @@
               "example": "1000.45"
             },
             "outstandingBusinessIncome": {
-              "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Use `outstandingBusinessIncome` in `adjustableSummaryCalculation` or `adjustedSummaryCalculation` instead.",
               "type": "number",
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": "1000.45",
+              "deprecated": true
             },
             "balancingChargeOther": {
               "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -1062,6 +1077,20 @@
           "maximum": 99999999999.99,
           "example": "1000.45"
         },
+        "outstandingBusinessIncome": {
+          "description": "{{#unless (releasedInProduction 'api_1876_r18_docs')}}[Test only] {{/unless}}Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
+        "adjustedProfit": {
+          "description": "{{#unless (releasedInProduction 'api_1876_r18_docs')}}[Test only] {{/unless}}Profit including disallowable expenses and deducting non‑taxable income, before claiming capital allowances or making any further tax adjustments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": "1000.45"
+        },
         "additions": {
           "type": "object",
           "description": "Object containing the breakdown of the adjustable additions for the accounting period.",
@@ -1172,11 +1201,12 @@
               "example": "1000.45"
             },
             "outstandingBusinessIncome": {
-              "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Use `outstandingBusinessIncome` in `adjustableSummaryCalculation` or `adjustedSummaryCalculation` instead.",
               "type": "number",
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": "1000.45",
+              "deprecated": true
             },
             "balancingChargeOther": {
               "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",

@@ -48,6 +48,8 @@
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
+    "adjustedProfit": 0.12,
+    "outstandingBusinessIncome": 0.12,
     "additions": {
       "costOfGoodsDisallowable": -0.12,
       "paymentsToSubcontractorsDisallowable": -0.12,
@@ -148,6 +150,8 @@
     },
     "netProfit": 0.12,
     "totalAdditions": 0.12,
+    "adjustedProfit": 0.12,
+    "outstandingBusinessIncome": 0.12,
     "additions": {
       "costOfGoodsDisallowable": 0.12,
       "paymentsToSubcontractorsDisallowable": 0.12,

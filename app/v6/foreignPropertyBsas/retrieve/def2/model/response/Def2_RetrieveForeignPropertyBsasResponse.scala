@@ -17,7 +17,7 @@
 package v6.foreignPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import v6.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
@@ -42,7 +42,7 @@ object Def2_RetrieveForeignPropertyBsasResponse {
       // Handles cases where "adjustments" is not always an array, e.g., typeOfBusiness is self-employment
       (JsPath \ "adjustments").readNullable[Seq[Adjustments]].orElse(Reads.pure(None)) and
       (JsPath \ "adjustedSummaryCalculation").readNullable[SummaryCalculation]
-  )(Def2_RetrieveForeignPropertyBsasResponse.apply _)
+  )(Def2_RetrieveForeignPropertyBsasResponse.apply)
 
   implicit val writes: OWrites[Def2_RetrieveForeignPropertyBsasResponse] = Json.writes[Def2_RetrieveForeignPropertyBsasResponse]
 }

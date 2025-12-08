@@ -19,11 +19,11 @@ package v7.ukPropertyBsas.retrieve.def1.model.response
 import common.model.RoundTripTest
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class Def1_RetrieveUkPropertyBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import Def1_RetrieveUkPropertyBsasResponse._
+  import Def1_RetrieveUkPropertyBsasResponse.*
 
   testRoundTrip(
     testName = "Retrieve UK Property FHL",

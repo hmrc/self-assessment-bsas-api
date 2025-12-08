@@ -16,7 +16,7 @@
 
 package v7.common
 
-import common.errors._
+import common.errors.*
 import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NotFoundError}
 import shared.models.outcomes.ResponseWrapper

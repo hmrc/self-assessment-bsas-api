@@ -20,10 +20,11 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v6.ukPropertyBsas.submit.def3.model.request.Def3_SubmitUkPropertyBsasRequestData
-import v6.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures._
-import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 import uk.gov.hmrc.http.StringContextOps
+import v6.ukPropertyBsas.submit.def3.model.request.Def3_SubmitUkPropertyBsasRequestData
+import v6.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
+import v6.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
+
 import scala.concurrent.Future
 
 class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
@@ -43,7 +44,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
   }
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     protected val connector: SubmitUkPropertyBsasConnector = new SubmitUkPropertyBsasConnector(
       http = mockHttpClient,
@@ -57,7 +58,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
 
       "post a SubmitBsasRequest body and return the result for the non-TYS scenario" in new IfsTest with Test {
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-        val url     = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
+        val url                                            = url"$baseUrl/income-tax/adjustable-summary-calculation/$nino/$calculationId"
         willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(nonTysRequest))
@@ -67,7 +68,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the TYS scenario" in new IfsTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-        val url     = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
+        val url                                            = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
         willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(tysRequest))
@@ -77,7 +78,7 @@ class SubmitUkPropertyBsasConnectorSpec extends ConnectorSpec {
       "post a SubmitBsasRequest body and return the result for the TYS scenario on HIP" in new HipTest with Test {
         MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true))
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-        val url     = url"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
+        val url = url"$baseUrl/itsa/income-tax/v1/23-24/adjustable-summary-calculation/$nino/$calculationId"
         willPut(url = url, body = requestFullParsed) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.submitPropertyBsas(tysRequest))

@@ -17,8 +17,8 @@
 package v6.selfEmploymentBsas.retrieve.def1
 
 import cats.data.Validated
-import cats.data.Validated._
-import cats.implicits._
+import cats.data.Validated.*
+import cats.implicits.*
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import shared.models.errors.MtdError
@@ -35,13 +35,13 @@ class Def1_RetrieveSelfEmploymentBsasValidator(
     taxYear: String
 ) extends Validator[RetrieveSelfEmploymentBsasRequestData] {
 
-  import Def1_RetrieveSelfEmploymentBsasValidator._
+  import Def1_RetrieveSelfEmploymentBsasValidator.*
 
   def validate: Validated[Seq[MtdError], RetrieveSelfEmploymentBsasRequestData] =
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_RetrieveSelfEmploymentBsasRequestData)
+    ).mapN(Def1_RetrieveSelfEmploymentBsasRequestData.apply)
 
 }

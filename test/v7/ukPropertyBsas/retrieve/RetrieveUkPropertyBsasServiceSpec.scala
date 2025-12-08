@@ -19,12 +19,12 @@ package v7.ukPropertyBsas.retrieve
 import common.errors.RuleTypeOfBusinessIncorrectError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
-import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures._
+import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*
 import v7.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 import v7.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
@@ -108,7 +108,7 @@ class RetrieveUkPropertyBsasServiceSpec extends ServiceSpec {
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

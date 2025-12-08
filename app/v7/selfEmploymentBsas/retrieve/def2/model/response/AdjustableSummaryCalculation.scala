@@ -16,7 +16,7 @@
 
 package v7.selfEmploymentBsas.retrieve.def2.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class AdjustableSummaryCalculation(
     totalIncome: Option[BigDecimal],
@@ -32,11 +32,13 @@ case class AdjustableSummaryCalculation(
     totalAccountingAdjustments: Option[BigDecimal],
     accountingAdjustments: Option[SummaryCalculationAccountingAdjustments],
     taxableProfit: Option[BigDecimal],
-    adjustedIncomeTaxLoss: Option[BigDecimal]
+    adjustedIncomeTaxLoss: Option[BigDecimal],
+    adjustedProfit: Option[BigDecimal],
+    outstandingBusinessIncome: Option[BigDecimal]
 )
 
 object AdjustableSummaryCalculation {
-  implicit val reads: Reads[AdjustableSummaryCalculation] = summaryCalculationReads(AdjustableSummaryCalculation.apply _)
+  implicit val reads: Reads[AdjustableSummaryCalculation] = summaryCalculationReads(AdjustableSummaryCalculation.apply)
 
   implicit val writes: OWrites[AdjustableSummaryCalculation] = Json.writes[AdjustableSummaryCalculation]
 }

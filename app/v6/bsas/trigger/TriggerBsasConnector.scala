@@ -16,9 +16,9 @@
 
 package v6.bsas.trigger
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.IfsUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
@@ -28,22 +28,28 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TriggerBsasConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class TriggerBsasConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def triggerBsas(request: TriggerBsasRequestData)(implicit
-                                                   hc: HeaderCarrier,
-                                                   ec: ExecutionContext,
-                                                   correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[TriggerBsasResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
+
+    lazy val downstreamUri1873: DownstreamUri[DownstreamResp] =
+      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1873")) {
+        HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino")
+      } else {
+        IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
+      }
+
+    lazy val downstreamUri1515: DownstreamUri[DownstreamResp] =
+      IfsUri(s"income-tax/adjustable-summary-calculation/$nino")
 
     val downstreamUri: DownstreamUri[DownstreamResp] =
-      if (taxYear.useTaxYearSpecificApi) {
-        IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
-      } else {
-        IfsUri(s"income-tax/adjustable-summary-calculation/$nino")
-      }
+      if (taxYear.useTaxYearSpecificApi) downstreamUri1873 else downstreamUri1515
 
     post(body, downstreamUri)
 
