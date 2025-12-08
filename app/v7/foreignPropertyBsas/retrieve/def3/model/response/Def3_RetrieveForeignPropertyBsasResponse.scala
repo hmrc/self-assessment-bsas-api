@@ -56,7 +56,7 @@ object Def3_RetrieveForeignPropertyBsasResponse {
   private def adjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
     (json \ "adjustments")
       .validateOpt[Seq[Adjustments]]
-      .map(s => Some(Adjustments(s, None, None, None)))
+      .map(s => Some(Adjustments(s, "", None, None, None)))
       .orElse((json \ "adjustments").validateOpt[Adjustments](Adjustments.readsZeroAdjustments))
       .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
 
