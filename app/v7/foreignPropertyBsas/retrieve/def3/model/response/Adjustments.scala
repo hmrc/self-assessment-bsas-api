@@ -17,10 +17,31 @@
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
 import play.api.libs.functional.syntax.*
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Adjustments(propertyLevelDetail: Option[Seq[AdjustmentsPropertyLevelDetail]], zeroAdjustments: Option[Boolean])
+case class Adjustments(propertyLevelDetail: Option[Seq[Adjustments]],
+                       propertyId: Option[String],
+                       income: Option[AdjustmentsIncome],
+                       expenses: Option[AdjustmentsExpenses],
+                       zeroAdjustments: Option[Boolean])
 
 object Adjustments {
-  given OFormat[Adjustments] = Json.format[Adjustments]
+
+  implicit val reads: Reads[Adjustments] = (
+    Reads.pure(None) and
+      (JsPath \ "propertyId").readNullable[String] and
+      (JsPath \ "income").readNullable[AdjustmentsIncome](AdjustmentsIncome.reads) and
+      (JsPath \ "expenses").readNullable[AdjustmentsExpenses](AdjustmentsExpenses.reads) and
+      Reads.pure(None)
+  )(Adjustments.apply)
+
+  val readsZeroAdjustments: Reads[Adjustments] = (
+    Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      Reads.pure(None) and
+      (JsPath \ "zeroAdjustments").readNullable[Boolean]
+  )(Adjustments.apply)
+
+  implicit val writes: OWrites[Adjustments] = Json.writes[Adjustments]
 }

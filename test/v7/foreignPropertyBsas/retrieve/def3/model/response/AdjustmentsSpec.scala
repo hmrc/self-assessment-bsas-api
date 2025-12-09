@@ -24,7 +24,7 @@ class AdjustmentsSpec extends RoundTripTest {
 
   testRoundTrip(
     "Adjustments ",
-    adjustmentsDesJson,
+    adjustmentsHipJson,
     parsedAdjustments,
     adjustmentsPropertyLevelDetailMtdJson
   )

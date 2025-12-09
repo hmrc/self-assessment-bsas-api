@@ -23,7 +23,7 @@ case class SummaryCalculationPropertyLevelDetail(propertyId: String,
                                                  totalIncome: Option[BigDecimal],
                                                  income: Option[SummaryCalculationPropertyLevelIncome],
                                                  totalExpenses: Option[BigDecimal],
-                                                 expenses: Option[SummaryCalculationExpenses],
+                                                 expenses: Option[SummaryCalculationPropertyLevelExpenses],
                                                  netProfit: Option[BigDecimal],
                                                  netLoss: Option[BigDecimal],
                                                  totalAdditions: Option[BigDecimal],
@@ -40,7 +40,7 @@ object SummaryCalculationPropertyLevelDetail {
       (JsPath \ "totalIncome").readNullable[BigDecimal] and
       (JsPath \ "income").readNullable[SummaryCalculationPropertyLevelIncome] and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses] and
+      (JsPath \ "expenses").readNullable[SummaryCalculationPropertyLevelExpenses] and
       (JsPath \ "netProfit").readNullable[BigDecimal] and
       (JsPath \ "netLoss").readNullable[BigDecimal] and
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and

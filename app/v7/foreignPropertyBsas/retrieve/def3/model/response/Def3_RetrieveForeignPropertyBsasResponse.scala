@@ -41,7 +41,7 @@ object Def3_RetrieveForeignPropertyBsasResponse {
 
       adjustableSummaryCalculation <- (json \ "adjustableSummaryCalculation").validate[SummaryCalculation]
 
-      adjustments <- (json \ "adjustments").validateOpt[Adjustments]
+      adjustments <- adjustmentsReads(json)
 
       adjustedSummaryCalculation <- (json \ "adjustedSummaryCalculation").validateOpt[SummaryCalculation]
 
@@ -52,6 +52,13 @@ object Def3_RetrieveForeignPropertyBsasResponse {
       adjustments = adjustments,
       adjustedSummaryCalculation = adjustedSummaryCalculation
     )
+
+  private def adjustmentsReads(json: JsValue): JsResult[Option[Adjustments]] =
+    (json \ "adjustments")
+      .validateOpt[Seq[Adjustments]]
+      .map(s => Some(Adjustments(s, None, None, None, None)))
+      .orElse((json \ "adjustments").validateOpt[Adjustments](Adjustments.readsZeroAdjustments))
+      .orElse(JsSuccess(None)) // Not an array, e.g. typeOfBusiness is self-employment
 
   implicit val writes: OWrites[Def3_RetrieveForeignPropertyBsasResponse] = Json.writes[Def3_RetrieveForeignPropertyBsasResponse]
 }
