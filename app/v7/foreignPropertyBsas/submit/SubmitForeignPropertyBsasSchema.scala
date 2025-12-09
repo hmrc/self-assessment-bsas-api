@@ -31,6 +31,7 @@ object SubmitForeignPropertyBsasSchema {
   case object Def1 extends SubmitForeignPropertyBsasSchema
   case object Def2 extends SubmitForeignPropertyBsasSchema
   case object Def3 extends SubmitForeignPropertyBsasSchema
+  case object Def4 extends SubmitForeignPropertyBsasSchema
 
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], SubmitForeignPropertyBsasSchema] = {
     ResolveTaxYear(taxYearString) andThen schemaFor
@@ -39,7 +40,8 @@ object SubmitForeignPropertyBsasSchema {
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], SubmitForeignPropertyBsasSchema] = {
     if (taxYear <= TaxYear.starting(2023)) Valid(Def1)
     else if (taxYear == TaxYear.starting(2024)) Valid(Def2)
-    else Valid(Def3)
+    else if (taxYear == TaxYear.starting(2025)) Valid(Def3)
+    else Valid(Def4)
   }
 
 }

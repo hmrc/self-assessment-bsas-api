@@ -1,0 +1,18 @@
+{
+  "foreignProperty": {
+    "propertyLevelDetail": [
+      {
+        "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+        "income": {
+          "totalRentsReceived": 1000.45,
+          "premiumsOfLeaseGrant": -99.99,
+          "otherPropertyIncome": 1000.00
+        },
+        "expenses": {
+          "consolidatedExpenses": 999.99
+        }
+      }
+    ]
+  }
+}
+

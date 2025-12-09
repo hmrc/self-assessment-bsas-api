@@ -41,6 +41,8 @@ object PaymentIdFormatError extends MtdError(code = "FORMAT_PAYMENT_ID", message
 
 object TransactionIdFormatError extends MtdError(code = "FORMAT_TRANSACTION_ID", message = "The transaction ID format is invalid", BAD_REQUEST)
 
+object PropertyIdFormatError extends MtdError(code = "FORMAT_PROPERTY_ID", message = "The property ID format is invalid", BAD_REQUEST)
+
 object IdFormatError extends MtdError(code = "FORMAT_ID", message = "The ID format is invalid", BAD_REQUEST)
 
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided Country code is invalid", BAD_REQUEST)
