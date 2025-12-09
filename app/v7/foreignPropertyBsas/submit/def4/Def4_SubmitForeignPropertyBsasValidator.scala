@@ -37,7 +37,6 @@ class Def4_SubmitForeignPropertyBsasValidator(nino: String, calculationId: Strin
   import Def4_SubmitForeignPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], SubmitForeignPropertyBsasRequestData] = {
-    println(s"\n\nJson body: \n $body")
     (
       ResolveNino(nino),
       ResolveCalculationId(calculationId),
