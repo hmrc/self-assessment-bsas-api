@@ -27,13 +27,13 @@ class AdjustmentsSpec extends RoundTripTest {
     adjustmentsHipJson,
     parsedAdjustments,
     adjustmentsPropertyLevelDetailMtdJson
-  )
+  )(reads)
 
   testRoundTrip(
     "Zero Adjustments ",
     zeroAdjustmentsDesJson,
     zeroParsedAdjustments,
     zeroAdjustmentsMtdJson
-  )
+  )(readsZeroAdjustments)
 
 }

@@ -338,9 +338,51 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |  "totalDeductions": 0.06,
        |  "deductions": $summaryCalculationDeductionsMtdJson,
        |  "taxableProfit": 1.12,
-       |  "adjustedIncomeTaxLoss": 1.13
+       |  "adjustedIncomeTaxLoss": 1.13,
+       |  "propertyLevelDetail": [$summaryCalculationPropertyLevelDetailMtdJson]
        |}""".stripMargin
   )
+
+  lazy val summaryCalcPropLevelIncomeMtdJson: JsValue = Json.parse("""
+      |{
+      | "totalRentsReceived": 0.02,
+      | "premiumsOfLeaseGrant": 0.03,
+      | "otherPropertyIncome": 0.04
+      |}
+      |""".stripMargin)
+
+  lazy val summaryCalcPropLevelExpensesMtdJson: JsValue = Json.parse("""
+      |{
+      | "premisesRunningCosts": 0.07,
+      | "repairsAndMaintenance": 0.08,
+      | "financialCosts": 0.09,
+      | "professionalFees": 0.10,
+      | "travelCosts": 0.11,
+      | "costOfServices": 0.12,
+      | "residentialFinancialCost": 0.13,
+      | "broughtFwdResidentialFinancialCost": 0.14,
+      | "other": 0.15,
+      | "consolidatedExpenses": 0.06
+      |}
+      |""".stripMargin)
+
+  lazy val summaryCalculationPropertyLevelDetailMtdJson: JsValue = Json.parse(s"""
+       |{
+       | "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+       | "totalIncome": 0.01,
+       | "income": $summaryCalcPropLevelIncomeMtdJson,
+       | "totalExpenses": 0.02,
+       | "expenses": $summaryCalcPropLevelExpensesMtdJson,
+       | "netProfit": 0.03,
+       | "netLoss": 0.04,
+       | "totalAdditions": 0.05,
+       | "additions": $summaryCalculationAdditionsMtdJson,
+       | "totalDeductions": 0.06,
+       | "deductions":$summaryCalculationDeductionsMtdJson,
+       | "taxableProfit": 1.12,
+       | "adjustedIncomeTaxLoss": 1.13
+       |}
+       |""".stripMargin)
 
   lazy val summaryCalculationMtdJson: JsValue = Json.parse(
     s"""{
