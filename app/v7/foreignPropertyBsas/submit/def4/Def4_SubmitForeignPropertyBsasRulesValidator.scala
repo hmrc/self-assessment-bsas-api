@@ -21,9 +21,9 @@ import cats.data.Validated.Invalid
 import cats.implicits.toFoldableOps
 import common.errors.*
 import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.ResolveParsedNumber
-import shared.models.errors.MtdError
-import v7.common.resolvers.ResolvePropertyId
+import shared.controllers.validators.resolvers.{ResolveParsedNumber, ResolveUuid}
+import shared.models.errors.{MtdError, PropertyIdFormatError}
+import v7.common.model.PropertyId
 import v7.foreignPropertyBsas.submit.def4.model.request.*
 
 object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_SubmitForeignPropertyBsasRequestData] {
@@ -71,6 +71,9 @@ object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
+  private def resolvePropertyId(value: PropertyId): Validated[Seq[MtdError], PropertyId] =
+    ResolveUuid[PropertyId](value.toString, PropertyIdFormatError)(PropertyId(_))
+
   private def validatePropertyLevelDetails(propertyLevelDetails: Seq[(PropertyLevelDetail, Int)]): Validated[Seq[MtdError], Unit] =
     propertyLevelDetails.traverse_ { case (propertyLevelDetail, i) =>
       validatePropertyLevelDetail(propertyLevelDetail, i)
@@ -82,7 +85,7 @@ object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_
     def path(suffix: String) = s"/foreignProperty/propertyLevelDetail/$index/$suffix"
 
     combine(
-      ResolvePropertyId(propertyLevelDetail.propertyId),
+      resolvePropertyId(propertyLevelDetail.propertyId),
       resolveMaybeNegativeNumber(path("income/totalRentsReceived"), propertyLevelDetail.income.flatMap(_.totalRentsReceived)),
       resolveMaybeNegativeNumber(path("income/premiumsOfLeaseGrant"), propertyLevelDetail.income.flatMap(_.premiumsOfLeaseGrant)),
       resolveMaybeNegativeNumber(path("income/otherPropertyIncome"), propertyLevelDetail.income.flatMap(_.otherPropertyIncome)),
