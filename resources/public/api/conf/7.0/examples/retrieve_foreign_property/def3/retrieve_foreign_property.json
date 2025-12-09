@@ -92,7 +92,49 @@
           "structuredBuildingAllowance": 0.12,
           "zeroEmissionsCarAllowance": 0.12
         },
-        "taxableProfit": 0.12
+        "taxableProfit": 0.12,
+        "propertLevelDetail": [
+          {
+            "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+            "totalIncome": 0.01,
+            "income": {
+              "totalRentsReceived": 0.02,
+              "premiumsOfLeaseGrant": 0.03,
+              "otherPropertyIncome": 0.04
+            },
+            "totalExpenses": 0.02,
+            "expenses": {
+              "premisesRunningCosts": 0.07,
+              "repairsAndMaintenance": 0.08,
+              "financialCosts": 0.09,
+              "professionalFees": 0.10,
+              "travelCosts": 0.11,
+              "costOfServices": 0.12,
+              "residentialFinancialCost": 0.13,
+              "broughtFwdResidentialFinancialCost": 0.14,
+              "other": 0.15
+            },
+            "netProfit": 0.03,
+            "netLoss": 0.04,
+            "totalAdditions": 0.05,
+            "additions": {
+              "privateUseAdjustment": 0.19,
+              "balancingCharge": 0.20
+            },
+            "totalDeductions": 0.06,
+            "deductions":{
+              "annualInvestmentAllowance": 0.22,
+              "costOfReplacingDomesticItems": 0.23,
+              "zeroEmissionGoods": 0.24,
+              "propertyAllowance": 0.25,
+              "otherCapitalAllowance": 0.26,
+              "structuredBuildingAllowance": 0.28,
+              "zeroEmissionsCarAllowance": 0.29
+            },
+            "taxableProfit": 1.12,
+            "adjustedIncomeTaxLoss": 1.13
+          }
+        ]
       }
     ]
   },
@@ -185,7 +227,49 @@
           "zeroEmissionGoods": 0.12,
           "otherCapitalAllowance": 0.12
         },
-        "taxableProfit": 0.12
+        "taxableProfit": 0.12,
+        "propertLevelDetail": [
+          {
+            "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+            "totalIncome": 0.01,
+            "income": {
+              "totalRentsReceived": 0.02,
+              "premiumsOfLeaseGrant": 0.03,
+              "otherPropertyIncome": 0.04
+            },
+            "totalExpenses": 0.02,
+            "expenses": {
+              "premisesRunningCosts": 0.07,
+              "repairsAndMaintenance": 0.08,
+              "financialCosts": 0.09,
+              "professionalFees": 0.10,
+              "travelCosts": 0.11,
+              "costOfServices": 0.12,
+              "residentialFinancialCost": 0.13,
+              "broughtFwdResidentialFinancialCost": 0.14,
+              "other": 0.15
+            },
+            "netProfit": 0.03,
+            "netLoss": 0.04,
+            "totalAdditions": 0.05,
+            "additions": {
+              "privateUseAdjustment": 0.19,
+              "balancingCharge": 0.20
+            },
+            "totalDeductions": 0.06,
+            "deductions":{
+              "annualInvestmentAllowance": 0.22,
+              "costOfReplacingDomesticItems": 0.23,
+              "zeroEmissionGoods": 0.24,
+              "propertyAllowance": 0.25,
+              "otherCapitalAllowance": 0.26,
+              "structuredBuildingAllowance": 0.28,
+              "zeroEmissionsCarAllowance": 0.29
+            },
+            "taxableProfit": 1.12,
+            "adjustedIncomeTaxLoss": 1.13
+          }
+        ]
       }
     ]
   }

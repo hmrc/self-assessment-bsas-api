@@ -21,7 +21,6 @@ import shared.utils.UnitSpec
 import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class SummaryCalculationExpensesSpec extends UnitSpec with RoundTripTest {
-  import SummaryCalculationExpenses.*
 
   testRoundTrip(
     "Summary Calculation Expenses",
