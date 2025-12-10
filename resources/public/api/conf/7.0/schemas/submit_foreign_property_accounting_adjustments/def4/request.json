@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "For TY 2026-27 and after",
+  "title": "For TY 2026-27 and after {{#unless (releasedInProduction '1874_r19_submit_foreign_property') }} [Test only] {{/unless}}",
   "description": "Submit Foreign Property Accounting Adjustments Request",
   "type": "object",
   "properties": {
