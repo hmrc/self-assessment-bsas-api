@@ -31,7 +31,7 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
   private val validNino          = "AA123456A"
   private val validCalculationId = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-  private val validTaxYear       = "2025-26"
+  private val validTaxYear       = "2026-27"
 
   private val parsedNino          = Nino(validNino)
   private val parsedCalculationId = CalculationId(validCalculationId)
