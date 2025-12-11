@@ -19,7 +19,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 ThisBuild / scalaVersion := "3.5.2"
 ThisBuild / majorVersion := 1
 ThisBuild / scalacOptions ++= Seq(
-//  "-Werror",
+  "-Werror",
   "-Wconf:msg=Flag.*repeatedly:s"
 )
 ThisBuild / scalafmtOnCompile := true
