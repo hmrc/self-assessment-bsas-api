@@ -25,6 +25,7 @@ import shared.models.errors.MtdError
 import shared.schema.DownstreamReadable
 import v7.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
 import v7.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignPropertyBsasResponse
+import v7.foreignPropertyBsas.retrieve.def3.model.response.Def3_RetrieveForeignPropertyBsasResponse
 import v7.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
 import scala.math.Ordered.orderingToOrdered
@@ -43,13 +44,19 @@ object RetrieveForeignPropertyBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_RetrieveForeignPropertyBsasResponse.reads
   }
 
+  case object Def3 extends RetrieveForeignPropertyBsasSchema {
+    type DownstreamResp = Def3_RetrieveForeignPropertyBsasResponse
+    val connectorReads: Reads[DownstreamResp] = Def3_RetrieveForeignPropertyBsasResponse.reads
+  }
+
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] = {
     ResolveTaxYear(taxYearString) andThen schemaFor
   }
 
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveForeignPropertyBsasSchema] = {
     if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
-    else Valid(Def2)
+    else if (taxYear <= TaxYear.starting(2025)) Valid(Def2)
+    else Valid(Def3)
   }
 
 }

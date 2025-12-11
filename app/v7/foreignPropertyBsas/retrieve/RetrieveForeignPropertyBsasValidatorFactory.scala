@@ -21,6 +21,7 @@ import shared.controllers.validators.Validator
 import v7.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema.*
 import v7.foreignPropertyBsas.retrieve.def1.Def1_RetrieveForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.retrieve.def2.Def2_RetrieveForeignPropertyBsasValidator
+import v7.foreignPropertyBsas.retrieve.def3.Def3_RetrieveForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -37,6 +38,7 @@ class RetrieveForeignPropertyBsasValidatorFactory {
     RetrieveForeignPropertyBsasSchema.schemaFor(taxYear) match {
       case Valid(Def1)     => new Def1_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
       case Valid(Def2)     => new Def2_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
+      case Valid(Def3)     => new Def3_RetrieveForeignPropertyBsasValidator(nino, calculationId, taxYear)
       case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
