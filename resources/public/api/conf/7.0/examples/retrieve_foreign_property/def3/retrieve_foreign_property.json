@@ -93,7 +93,7 @@
           "zeroEmissionsCarAllowance": 0.12
         },
         "taxableProfit": 0.12,
-        "propertLevelDetail": [
+        "propertyLevelDetail": [
           {
             "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
             "totalIncome": 0.01,
@@ -228,7 +228,7 @@
           "otherCapitalAllowance": 0.12
         },
         "taxableProfit": 0.12,
-        "propertLevelDetail": [
+        "propertyLevelDetail": [
           {
             "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
             "totalIncome": 0.01,
