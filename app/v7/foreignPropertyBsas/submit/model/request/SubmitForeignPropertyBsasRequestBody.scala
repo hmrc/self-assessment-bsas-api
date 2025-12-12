@@ -21,6 +21,7 @@ import shared.utils.JsonWritesUtil
 import v7.foreignPropertyBsas.submit.def1.model.request.Def1_SubmitForeignPropertyBsasRequestBody
 import v7.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestBody
 import v7.foreignPropertyBsas.submit.def3.model.request.Def3_SubmitForeignPropertyBsasRequestBody
+import v7.foreignPropertyBsas.submit.def4.model.request.Def4_SubmitForeignPropertyBsasRequestBody
 
 trait SubmitForeignPropertyBsasRequestBody
 
@@ -33,6 +34,8 @@ object SubmitForeignPropertyBsasRequestBody extends JsonWritesUtil {
       implicitly[OWrites[Def2_SubmitForeignPropertyBsasRequestBody]].writes(def2)
     case def3: Def3_SubmitForeignPropertyBsasRequestBody =>
       implicitly[OWrites[Def3_SubmitForeignPropertyBsasRequestBody]].writes(def3)
+    case def4: Def4_SubmitForeignPropertyBsasRequestBody =>
+      implicitly[OWrites[Def4_SubmitForeignPropertyBsasRequestBody]].writes(def4)
   }
 
 }

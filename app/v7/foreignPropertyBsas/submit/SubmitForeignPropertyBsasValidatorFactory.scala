@@ -23,6 +23,7 @@ import v7.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema.*
 import v7.foreignPropertyBsas.submit.def1.Def1_SubmitForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.submit.def2.Def2_SubmitForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.submit.def3.Def3_SubmitForeignPropertyBsasValidator
+import v7.foreignPropertyBsas.submit.def4.Def4_SubmitForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
 import javax.inject.Singleton
@@ -41,6 +42,7 @@ class SubmitForeignPropertyBsasValidatorFactory {
       case Valid(Def1)     => new Def1_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Valid(Def2)     => new Def2_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Valid(Def3)     => new Def3_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
+      case Valid(Def4)     => new Def4_SubmitForeignPropertyBsasValidator(nino, calculationId, taxYear, body)
       case Invalid(errors) => Validator.returningErrors(errors)
     }
 

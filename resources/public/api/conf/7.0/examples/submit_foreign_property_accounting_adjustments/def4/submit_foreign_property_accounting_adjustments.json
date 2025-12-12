@@ -1,0 +1,24 @@
+{
+  "foreignProperty": {
+    "propertyLevelDetail": [
+      {
+        "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+        "income": {
+          "totalRentsReceived": 1000.45,
+          "premiumsOfLeaseGrant": -99.99,
+          "otherPropertyIncome": 1000.00
+        },
+        "expenses": {
+          "premisesRunningCosts": 1000.45,
+          "repairsAndMaintenance": -99999.99,
+          "financialCosts": 5000.45,
+          "professionalFees": 300.99,
+          "costOfServices": 500.00,
+          "residentialFinancialCost": 9000.00,
+          "other": 1000.00,
+          "travelCosts": 99.99
+        }
+      }
+    ]
+  }
+}

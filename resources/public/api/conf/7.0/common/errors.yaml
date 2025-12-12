@@ -50,6 +50,12 @@ components:
         code: FORMAT_COUNTRY_CODE
         message: The provided Country code is invalid
 
+    formatPropertyId:
+      description: The format of the supplied property ID field is not valid.
+      value:
+        code: FORMAT_PROPERTY_ID
+        message: The provided property ID is invalid
+
     ruleCountryCode:
       description: Not a valid ISO 3166-1 alpha-3 country code.
       value:
