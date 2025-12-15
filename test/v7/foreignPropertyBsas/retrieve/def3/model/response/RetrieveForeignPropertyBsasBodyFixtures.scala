@@ -119,60 +119,18 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     s"""{
        |  "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
        |  "totalIncome": 0.01,
-       |  "income": $summaryCalculationPropertyLevelIncomeHipJson,
+       |  "income": $summaryCalculationIncomeDesJson,
        |  "totalExpenses": 0.02,
-       |  "expenses": $summaryCalculationPropertyLevelExpensesHipJson,
+       |  "expenses": $summaryCalculationExpensesDesJson,
        |  "netProfit": 0.03,
        |  "netLoss": 0.04,
        |  "totalAdditions": 0.05,
-       |  "additions": $summaryCalculationPropertyLevelAdditionsHipJson,
+       |  "additions": $summaryCalculationAdditionsDesJson,
        |  "totalDeductions": 0.06,
-       |  "deductions": $summaryCalculationPropertyLevelDeductionsHipJson,
+       |  "deductions": $summaryCalculationDeductionsDesJson,
        |  "taxableProfit": 1.12,
        |  "adjustedIncomeTaxLoss": 1.13
        |}""".stripMargin
-  )
-
-  lazy val summaryCalculationPropertyLevelIncomeHipJson: JsValue = Json.parse(
-    """{
-      |  "rentAmount": 0.02,
-      |  "premiumsOfLeaseGrantAmount": 0.03,
-      |  "otherPropertyIncomeAmount": 0.04
-      |}""".stripMargin
-  )
-
-  lazy val summaryCalculationPropertyLevelExpensesHipJson: JsValue = Json.parse(
-    """{
-      |  "premisesRunningCostsAmount": 0.07,
-      |  "repairsAndMaintenanceAmount": 0.08,
-      |  "financialCostsAmount": 0.09,
-      |  "professionalFeesAmount": 0.10,
-      |  "travelCostsAmount": 0.11,
-      |  "costOfServicesAmount": 0.12,
-      |  "residentialFinancialCostAmount": 0.13,
-      |  "broughtFwdResidentialFinancialCostAmount": 0.14,
-      |  "otherAmount": 0.15,
-      |  "consolidatedExpenseAmount": 0.06
-      |}""".stripMargin
-  )
-
-  lazy val summaryCalculationPropertyLevelAdditionsHipJson: JsValue = Json.parse(
-    """{
-      |  "privateUseAdjustment": 0.19,
-      |  "balancingCharge": 0.20
-      |}""".stripMargin
-  )
-
-  lazy val summaryCalculationPropertyLevelDeductionsHipJson: JsValue = Json.parse(
-    """{
-      |  "annualInvestmentAllowance": 0.22,
-      |  "costOfReplacingDomesticItems": 0.23,
-      |  "zeroEmissionsGoodsVehicleAllowance": 0.24,
-      |  "propertyAllowance": 0.25,
-      |  "otherCapitalAllowance": 0.26,
-      |  "structuredBuildingAllowance": 0.28,
-      |  "zeroEmissionsCarAllowance": 0.29
-      |}""".stripMargin
   )
 
   lazy val summaryCalculationDesJson: JsValue = Json.parse(
@@ -343,36 +301,13 @@ object RetrieveForeignPropertyBsasBodyFixtures {
        |}""".stripMargin
   )
 
-  lazy val summaryCalcPropLevelIncomeMtdJson: JsValue = Json.parse("""
-      |{
-      | "totalRentsReceived": 0.02,
-      | "premiumsOfLeaseGrant": 0.03,
-      | "otherPropertyIncome": 0.04
-      |}
-      |""".stripMargin)
-
-  lazy val summaryCalcPropLevelExpensesMtdJson: JsValue = Json.parse("""
-      |{
-      | "premisesRunningCosts": 0.07,
-      | "repairsAndMaintenance": 0.08,
-      | "financialCosts": 0.09,
-      | "professionalFees": 0.10,
-      | "travelCosts": 0.11,
-      | "costOfServices": 0.12,
-      | "residentialFinancialCost": 0.13,
-      | "broughtFwdResidentialFinancialCost": 0.14,
-      | "other": 0.15,
-      | "consolidatedExpenses": 0.06
-      |}
-      |""".stripMargin)
-
   lazy val summaryCalculationPropertyLevelDetailMtdJson: JsValue = Json.parse(s"""
        |{
        | "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
        | "totalIncome": 0.01,
-       | "income": $summaryCalcPropLevelIncomeMtdJson,
+       | "income": $summaryCalculationIncomeMtdJson,
        | "totalExpenses": 0.02,
-       | "expenses": $summaryCalcPropLevelExpensesMtdJson,
+       | "expenses": $summaryCalculationExpensesMtdJson,
        | "netProfit": 0.03,
        | "netLoss": 0.04,
        | "totalAdditions": 0.05,
@@ -524,26 +459,7 @@ object RetrieveForeignPropertyBsasBodyFixtures {
     otherPropertyIncome = Some(0.04)
   )
 
-  lazy val parsedSummaryCalculationPropertyLevelIncome: SummaryCalculationPropertyLevelIncome = SummaryCalculationPropertyLevelIncome(
-    totalRentsReceived = Some(0.02),
-    premiumsOfLeaseGrant = Some(0.03),
-    otherPropertyIncome = Some(0.04)
-  )
-
   lazy val parsedSummaryCalculationExpenses: SummaryCalculationExpenses = SummaryCalculationExpenses(
-    consolidatedExpenses = Some(0.06),
-    premisesRunningCosts = Some(0.07),
-    repairsAndMaintenance = Some(0.08),
-    financialCosts = Some(0.09),
-    professionalFees = Some(0.10),
-    costOfServices = Some(0.12),
-    residentialFinancialCost = Some(0.13),
-    broughtFwdResidentialFinancialCost = Some(0.14),
-    other = Some(0.15),
-    travelCosts = Some(0.11)
-  )
-
-  lazy val parsedSummaryCalculationPropertyLevelExpenses: SummaryCalculationPropertyLevelExpenses = SummaryCalculationPropertyLevelExpenses(
     consolidatedExpenses = Some(0.06),
     premisesRunningCosts = Some(0.07),
     repairsAndMaintenance = Some(0.08),
@@ -591,9 +507,9 @@ object RetrieveForeignPropertyBsasBodyFixtures {
   lazy val parsedSummaryCalculationPropertyLevelDetail: SummaryCalculationPropertyLevelDetail = SummaryCalculationPropertyLevelDetail(
     propertyId = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
     totalIncome = Some(0.01),
-    income = Some(parsedSummaryCalculationPropertyLevelIncome),
+    income = Some(parsedSummaryCalculationIncome),
     totalExpenses = Some(0.02),
-    expenses = Some(parsedSummaryCalculationPropertyLevelExpenses),
+    expenses = Some(parsedSummaryCalculationExpenses),
     netProfit = Some(0.03),
     netLoss = Some(0.04),
     totalAdditions = Some(0.05),

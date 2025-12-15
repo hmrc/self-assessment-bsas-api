@@ -17,7 +17,7 @@
 package v7.foreignPropertyBsas.submit.def4
 
 import common.errors.*
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
@@ -27,7 +27,7 @@ import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def4.model.request.SubmitForeignPropertyBsasFixtures.*
 
-class Def4_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def4_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
@@ -54,6 +54,23 @@ class Def4_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
     }
 
     "return error according to spec" when {
+      def requestBodyWithPropertyIds(propertyIds: Seq[String]): JsValue = {
+        val propertiesJson = propertyIds.map { propertyId =>
+          Json.obj(
+            "propertyId" -> propertyId,
+            "income" -> Json.obj(
+              "totalRentsReceived" -> 123.12
+            )
+          )
+        }
+
+        Json.obj(
+          "foreignProperty" -> Json.obj(
+            "propertyLevelDetail" -> JsArray(propertiesJson)
+          )
+        )
+      }
+
       def validationErrorTest(requestNino: String,
                               requestCalculationId: String,
                               requestTaxYear: String,
@@ -88,7 +105,29 @@ class Def4_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
           mtdRequestForeignPropertyValid,
           BAD_REQUEST,
           RuleTaxYearRangeInvalidError,
-          None),
+          None
+        ),
+        (
+          "AA123456A",
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+          "2026-27",
+          requestBodyWithPropertyIds(Seq("1234")),
+          BAD_REQUEST,
+          PropertyIdFormatError.withPath("/foreignProperty/propertyLevelDetail/0/propertyId"),
+          None
+        ),
+        (
+          "AA123456A",
+          "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c",
+          "2026-27",
+          requestBodyWithPropertyIds(Seq("717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4", "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4")),
+          BAD_REQUEST,
+          RuleDuplicatePropertyIdError.forDuplicatedIdsAndPaths(
+            id = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+            paths = List("/foreignProperty/propertyLevelDetail/0/propertyId", "/foreignProperty/propertyLevelDetail/1/propertyId")
+          ),
+          None
+        ),
         ("AA123456A", "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c", "2026-27", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
         (
           "AA123456A",
@@ -179,6 +218,7 @@ class Def4_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with Js
 
         val extraTysErrors = List(
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (UNPROCESSABLE_ENTITY, "PROPERTY_ID_DO_NOT_MATCH", BAD_REQUEST, RulePropertyIdMismatchError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
           (UNPROCESSABLE_ENTITY, "INCOME_SOURCE_TYPE_NOT_MATCHED", BAD_REQUEST, RuleTypeOfBusinessIncorrectError)

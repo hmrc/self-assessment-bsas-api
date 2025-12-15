@@ -97,3 +97,16 @@ object RuleBothAdjustmentsSuppliedError
     extends MtdError("RULE_BOTH_ADJUSTMENTS_SUPPLIED", "Both adjustments and zero adjustments must not be present at the same time", BAD_REQUEST)
 
 object RuleZeroAdjustmentsInvalidError extends MtdError("RULE_ZERO_ADJUSTMENTS_INVALID", "Zero adjustments can only be set to true", BAD_REQUEST)
+
+object RuleDuplicatePropertyIdError
+    extends MtdError("RULE_DUPLICATE_PROPERTY_ID", "You cannot supply the same property ID for multiple properties", BAD_REQUEST) {
+
+  def forDuplicatedIdsAndPaths(id: String, paths: Seq[String]): MtdError = copy(
+    message = s"The property ID '$id' is duplicated for multiple properties",
+    paths = Some(paths)
+  )
+
+}
+
+object RulePropertyIdMismatchError
+    extends MtdError("RULE_PROPERTY_ID_MISMATCH", "The supplied property ID is not valid for this income source", BAD_REQUEST)
