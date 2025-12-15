@@ -914,13 +914,6 @@
                 "type": "string",
                 "example": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"
               },
-              "totalIncome": {
-                "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                "type": "number",
-                "minimum": 0,
-                "maximum": 99999999999.99,
-                "example": "1000.45"
-              },
               "income": {
                 "type": "object",
                 "description": "Object containing the adjustments to income.",
