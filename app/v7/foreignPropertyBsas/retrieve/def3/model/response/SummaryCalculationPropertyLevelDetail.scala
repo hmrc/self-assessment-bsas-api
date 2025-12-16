@@ -21,9 +21,9 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class SummaryCalculationPropertyLevelDetail(propertyId: String,
                                                  totalIncome: Option[BigDecimal],
-                                                 income: Option[SummaryCalculationPropertyLevelIncome],
+                                                 income: Option[SummaryCalculationIncome],
                                                  totalExpenses: Option[BigDecimal],
-                                                 expenses: Option[SummaryCalculationPropertyLevelExpenses],
+                                                 expenses: Option[SummaryCalculationExpenses],
                                                  netProfit: Option[BigDecimal],
                                                  netLoss: Option[BigDecimal],
                                                  totalAdditions: Option[BigDecimal],
@@ -38,9 +38,9 @@ object SummaryCalculationPropertyLevelDetail {
   given Reads[SummaryCalculationPropertyLevelDetail] = (
     (JsPath \ "propertyId").read[String] and
       (JsPath \ "totalIncome").readNullable[BigDecimal] and
-      (JsPath \ "income").readNullable[SummaryCalculationPropertyLevelIncome] and
+      (JsPath \ "income").readNullable[SummaryCalculationIncome] and
       (JsPath \ "totalExpenses").readNullable[BigDecimal] and
-      (JsPath \ "expenses").readNullable[SummaryCalculationPropertyLevelExpenses] and
+      (JsPath \ "expenses").readNullable[SummaryCalculationExpenses] and
       (JsPath \ "netProfit").readNullable[BigDecimal] and
       (JsPath \ "netLoss").readNullable[BigDecimal] and
       (JsPath \ "totalAdditions").readNullable[BigDecimal] and

@@ -217,6 +217,20 @@ components:
         code: RULE_BOTH_ADJUSTMENTS_SUPPLIED
         message: Both adjustments and zero adjustments must not be present at the same time
 
+    ruleDuplicatePropertyId:
+      description: |
+        You cannot supply the same property ID for multiple properties.
+      value:
+        code: RULE_DUPLICATE_PROPERTY_ID
+        message: The property ID '8e8b8450-dc1b-4360-8109-7067337b42cb' is duplicated for multiple properties
+
+    rulePropertyIdMismatch:
+      description: |
+        The supplied property ID is not associated with the income source on record.
+      value:
+        code: RULE_PROPERTY_ID_MISMATCH
+        message: The supplied property ID is not valid for this income source
+
     invalidTaxYear:
       description: |
         A tax year before 2023-24 was supplied. A request with a tax year parameter is only valid for tax years

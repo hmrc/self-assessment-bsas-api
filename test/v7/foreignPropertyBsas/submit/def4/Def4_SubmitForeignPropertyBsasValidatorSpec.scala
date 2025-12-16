@@ -204,6 +204,21 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
       }
     }
 
+    "return PropertyIdFormatError" when {
+      "passed a body with a badly formated propertyId" in {
+        val result = validator(
+          validNino,
+          validCalculationId,
+          validTaxYear,
+          foreignPropertyBodyWith(entry.update("propertyId", JsString("1234")))
+        ).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, PropertyIdFormatError.withPath("/foreignProperty/propertyLevelDetail/0/propertyId"))
+        )
+      }
+    }
+
     "return RuleIncorrectOrEmptyBodyError" when {
       "passed an empty body" in {
         val body   = Json.parse("{}")
@@ -268,7 +283,9 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
 
         val json =
           foreignPropertyBodyWith(
-            entry.update("/expenses/travelCosts", JsNumber(0)),
+            entry
+              .update("propertyId", JsString("617f3a7a-db8e-11e9-8a34-2a2ae2dbcce4"))
+              .update("/expenses/travelCosts", JsNumber(0)),
             entry.update("/income/totalRentsReceived", JsNumber(123.123))
           )
 
@@ -306,7 +323,9 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
     "return RuleBothExpensesSuppliedError" when {
       "passed consolidated and separate non-fhl expenses" in {
         val body = foreignPropertyBodyWith(
-          entry.update("expenses/consolidatedExpenses", JsNumber(123.45)),
+          entry
+            .update("expenses/consolidatedExpenses", JsNumber(123.45))
+            .update("propertyId", JsString("617f3a7a-db8e-11e9-8a34-2a2ae2dbcce4")),
           entry.update("expenses/consolidatedExpenses", JsNumber(123.45))
         )
         val result = validator(validNino, validCalculationId, validTaxYear, body).validateAndWrapResult()
@@ -353,6 +372,27 @@ class Def4_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErro
           ErrorWrapper(
             correlationId,
             RuleBothAdjustmentsSuppliedError.withPath("/foreignProperty")
+          )
+        )
+      }
+    }
+
+    "return RuleDuplicatePropertyIdError" when {
+      "passed a body with duplicated property IDs" in {
+        val result = validator(
+          validNino,
+          validCalculationId,
+          validTaxYear,
+          foreignPropertyBodyWith(entry, entry)
+        ).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(
+            correlationId,
+            RuleDuplicatePropertyIdError.forDuplicatedIdsAndPaths(
+              id = "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+              paths = List("/foreignProperty/propertyLevelDetail/0/propertyId", "/foreignProperty/propertyLevelDetail/1/propertyId")
+            )
           )
         )
       }

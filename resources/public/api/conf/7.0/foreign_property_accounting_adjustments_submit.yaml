@@ -24,6 +24,7 @@ post:
     | NOT_FOUND                                             | Simulates the scenario where no data is found.                                                                               |
     | TAX_YEAR_NOT_SUPPORTED                                | Simulates the scenario where the tax year is not supported.                                                                  |
     | REQUEST_CANNOT_BE_FULFILLED                           | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.|
+    | PROPERTY_ID_MISMATCH                                  | Simulates the scenario where the supplied property ID is not associated with the income source on record.                    |
     | STATEFUL                                              | Performs a stateful submit.                                                                                                  |
 
   tags:
@@ -50,9 +51,7 @@ post:
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def1/request.json'
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def2/request.json'
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def3/request.json'
-            {{#if (enabled '1874_r19_submit_foreign_property')}}
             - $ref: './schemas/submit_foreign_property_accounting_adjustments/def4/request.json'
-            {{/if}}
         examples:
           Foreign Property EEA FHL:
             value:
@@ -84,7 +83,6 @@ post:
           TY-2025-26 {{#unless (enabled '1874_r19_submit_foreign_property')}} onwards {{/unless}} - Foreign Property Zero Adjustments:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def3/submit_foreign_property_accounting_adjustments_zero.json
-          {{#if (enabled '1874_r19_submit_foreign_property')}}
           TY-2026-27 onwards - Foreign Property Adjustment:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def4/submit_foreign_property_accounting_adjustments.json
@@ -94,7 +92,6 @@ post:
           TY-2026-27 onwards - Foreign Property Zero Adjustments:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def4/submit_foreign_property_accounting_adjustments_zero.json
-          {{/if}}
 
   responses:
     200:
@@ -170,13 +167,15 @@ post:
             RULE_INCORRECT_GOV_TEST_SCENARIO:
               $ref: ./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario
             RULE_ZERO_ADJUSTMENTS_INVALID:
-              $ref: "./common/errors.yaml#/components/examples/ruleZeroAdjustmentsInvalid"
+              $ref: ./common/errors.yaml#/components/examples/ruleZeroAdjustmentsInvalid
             RULE_BOTH_ADJUSTMENTS_SUPPLIED:
-              $ref: "./common/errors.yaml#/components/examples/ruleBothAdjustmentsSupplied"
-            {{#if (enabled '1874_r19_submit_foreign_property')}}
+              $ref: ./common/errors.yaml#/components/examples/ruleBothAdjustmentsSupplied
             FORMAT_PROPERTY_ID:
               $ref: ./common/errors.yaml#/components/examples/formatPropertyId
-            {{/if}}
+            RULE_DUPLICATE_PROPERTY_ID:
+              $ref: ./common/errors.yaml#/components/examples/ruleDuplicatePropertyId
+            RULE_PROPERTY_ID_MISMATCH:
+              $ref: ./common/errors.yaml#/components/examples/rulePropertyIdMismatch
 
     403:
       description: Forbidden

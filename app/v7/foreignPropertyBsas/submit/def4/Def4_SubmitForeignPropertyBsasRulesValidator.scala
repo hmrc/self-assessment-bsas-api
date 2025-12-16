@@ -34,14 +34,21 @@ object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_
 
     val validatedZeroAdjustments = validateZeroAdjustments(body.foreignProperty)
 
-    val validatedPropertyLevelDetails = body.foreignProperty.fold(valid)(foreignProperty =>
-      val propertyLevelDetailsWithIndex = foreignProperty.propertyLevelDetail.getOrElse(Seq.empty).zipWithIndex
-      validatePropertyLevelDetails(propertyLevelDetailsWithIndex)
-    )
+    val (validatedPropertyLevelDetails, validatedDuplicatePropertyId) = body.foreignProperty match {
+      case Some(foreignProperty) =>
+        val propertyLevelDetailsWithIndex = foreignProperty.propertyLevelDetail.getOrElse(Seq.empty).zipWithIndex
+        (
+          validatePropertyLevelDetails(propertyLevelDetailsWithIndex),
+          duplicatePropertyIdValidation(propertyLevelDetailsWithIndex)
+        )
+
+      case None => (valid, valid)
+    }
 
     combine(
       validatedZeroAdjustments,
-      validatedPropertyLevelDetails
+      validatedPropertyLevelDetails,
+      validatedDuplicatePropertyId
     ).onSuccess(parsed)
   }
 
@@ -71,8 +78,8 @@ object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_
   private def resolveMaybeNegativeNumber(path: String, value: Option[BigDecimal]): Validated[Seq[MtdError], Option[BigDecimal]] =
     ResolveParsedNumber(min = -99999999999.99, disallowZero = true)(value, path)
 
-  private def resolvePropertyId(value: PropertyId): Validated[Seq[MtdError], PropertyId] =
-    ResolveUuid[PropertyId](value.toString, PropertyIdFormatError)(PropertyId(_))
+  private def resolvePropertyId(path: String, value: PropertyId): Validated[Seq[MtdError], PropertyId] =
+    ResolveUuid[PropertyId](value.toString, PropertyIdFormatError.withPath(path))(PropertyId(_))
 
   private def validatePropertyLevelDetails(propertyLevelDetails: Seq[(PropertyLevelDetail, Int)]): Validated[Seq[MtdError], Unit] =
     propertyLevelDetails.traverse_ { case (propertyLevelDetail, i) =>
@@ -80,12 +87,24 @@ object Def4_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def4_
         .combine(validatePropertyLevelDetailConsolidatedExpenses(propertyLevelDetail, i))
     }
 
+  private def duplicatePropertyIdValidation(propertyLevelDetails: Seq[(PropertyLevelDetail, Int)]): Validated[Seq[MtdError], Unit] = {
+    val duplicateErrors = propertyLevelDetails
+      .groupMap(_._1.propertyId.propertyId) { case (_, index) =>
+        s"/foreignProperty/propertyLevelDetail/$index/propertyId"
+      }
+      .collect {
+        case (id, paths) if paths.size > 1 => RuleDuplicatePropertyIdError.forDuplicatedIdsAndPaths(id, paths)
+      }
+
+    if (duplicateErrors.nonEmpty) Invalid(duplicateErrors.toList) else valid
+  }
+
   private def validatePropertyLevelDetail(propertyLevelDetail: PropertyLevelDetail, index: Int): Validated[Seq[MtdError], Unit] = {
 
     def path(suffix: String) = s"/foreignProperty/propertyLevelDetail/$index/$suffix"
 
     combine(
-      resolvePropertyId(propertyLevelDetail.propertyId),
+      resolvePropertyId(path("propertyId"), propertyLevelDetail.propertyId),
       resolveMaybeNegativeNumber(path("income/totalRentsReceived"), propertyLevelDetail.income.flatMap(_.totalRentsReceived)),
       resolveMaybeNegativeNumber(path("income/premiumsOfLeaseGrant"), propertyLevelDetail.income.flatMap(_.premiumsOfLeaseGrant)),
       resolveMaybeNegativeNumber(path("income/otherPropertyIncome"), propertyLevelDetail.income.flatMap(_.otherPropertyIncome)),
