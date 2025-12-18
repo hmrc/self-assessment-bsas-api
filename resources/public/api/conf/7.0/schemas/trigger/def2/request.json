@@ -11,12 +11,12 @@
       "properties": {
         "startDate": {
           "type": "string",
-          "description": "The date the accounting period started.",
+          "description": "The date the accounting period started. This date must fall on the 6th of April.",
           "example": "2019-04-06"
         },
         "endDate": {
           "type": "string",
-          "description": "\t\nThe date the accounting period ended. The accounting period must end in the tax year to which it is assigned. For Making Tax Digital (MTD) submissions, the earliest tax year in which an accounting period can end is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.",
+          "description": "\t\nThe date the accounting period ended. The accounting period must end in the tax year to which it is assigned (i.e. the 5th of April). For Making Tax Digital (MTD) submissions, the earliest tax year in which an accounting period can end is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.",
           "example": "2020-04-05"
         }
       },
