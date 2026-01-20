@@ -588,13 +588,6 @@
                     "maximum": 99999999999.99,
                     "example": "1000.45"
                   },
-                  "electricChargePointAllowance": {
-                    "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 99999999999.99,
-                    "example": "1000.45"
-                  },
                   "structuredBuildingAllowance": {
                     "description": "The amount of structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
@@ -975,13 +968,6 @@
               "maximum": 99999999999.99,
               "example": "1000.45"
             },
-            "electricChargePointAllowance": {
-              "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "minimum": 0,
-              "maximum": 99999999999.99,
-              "example": "1000.45"
-            },
             "structuredBuildingAllowance": {
               "description": "The amount of enhanced structured building allowance.  The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
@@ -1226,13 +1212,6 @@
                   },
                   "otherCapitalAllowance": {
                     "description": "Other capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 99999999999.99,
-                    "example": "1000.45"
-                  },
-                  "electricChargePointAllowance": {
-                    "description": "The expenditure incurred on electric charge-point equipment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                     "type": "number",
                     "minimum": 0,
                     "maximum": 99999999999.99,
