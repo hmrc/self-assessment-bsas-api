@@ -86,7 +86,28 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
       |}""".stripMargin
     )
 
-  private val parsedUkPropertyConsolidatedBody = ukPropertyConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
+  private val ukConsolidatedAndResidentialBodyJson =
+    Json.parse(
+      s"""
+         |{
+         |"ukProperty": {
+         |  "income": {
+         |     "totalRentsReceived": 1000.45,
+         |     "premiumsOfLeaseGrant": 1000.45,
+         |     "reversePremiums": 1000.45,
+         |     "otherPropertyIncome": 1000.45
+         |  },
+         |  "expenses": {
+         |     "consolidatedExpenses": 1000.45,
+         |     "residentialFinancialCost": 130.32
+         |    }
+         |  }
+         |}
+         |""".stripMargin
+    )
+
+  private val parsedUkPropertyConsolidatedBody           = ukPropertyConsolidatedBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
+  private val parsedUkConsolidatedAndResidentialBodyJson = ukConsolidatedAndResidentialBodyJson.as[Def2_SubmitUkPropertyBsasRequestBody]
 
   private val fhlBodyJson =
     Json
@@ -175,11 +196,20 @@ class Def2_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "a valid ukProperty consolidated expenses request is supplied" in {
+      "a valid ukProperty request containing only consolidated expenses is supplied" in {
         val result = validator(validNino, validCalculationId, validTaxYear, ukPropertyConsolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
           Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedUkPropertyConsolidatedBody)
+        )
+      }
+
+      "a valid ukProperty request containing residentialFinancialCost and consolidated expenses is supplied" in {
+
+        val result = validator(validNino, validCalculationId, validTaxYear, ukConsolidatedAndResidentialBodyJson).validateAndWrapResult()
+
+        result shouldBe Right(
+          Def2_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedUkConsolidatedAndResidentialBodyJson)
         )
       }
 

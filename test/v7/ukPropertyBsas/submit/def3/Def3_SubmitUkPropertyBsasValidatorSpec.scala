@@ -60,6 +60,26 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
        |""".stripMargin
     )
 
+  private val consolidatedAndResidentialBodyJson =
+    Json.parse(
+      s"""
+         |{
+         |"ukProperty": {
+         |  "income": {
+         |     "totalRentsReceived": 1000.45,
+         |     "premiumsOfLeaseGrant": 1000.45,
+         |     "reversePremiums": 1000.45,
+         |     "otherPropertyIncome": 1000.45
+         |  },
+         |  "expenses": {
+         |     "consolidatedExpenses": 1000.45,
+         |     "residentialFinancialCost": 130.32
+         |    }
+         |  }
+         |}
+         |""".stripMargin
+    )
+
   private val invalidUkPropertyConsolidatedBodyJson =
     Json.parse(
       """
@@ -76,7 +96,8 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         |}""".stripMargin
     )
 
-  private val parsedConsolidatedBody = consolidatedBodyJson.as[Def3_SubmitUkPropertyBsasRequestBody]
+  private val parsedConsolidatedBody               = consolidatedBodyJson.as[Def3_SubmitUkPropertyBsasRequestBody]
+  private val parsedConsolidatedAndResidentialBody = consolidatedAndResidentialBodyJson.as[Def3_SubmitUkPropertyBsasRequestBody]
 
   private val parsedWithOnlyZeroAdjustmentsBody: Def3_SubmitUkPropertyBsasRequestBody =
     mtdRequestWithOnlyZeroAdjustments(true).as[Def3_SubmitUkPropertyBsasRequestBody]
@@ -103,11 +124,20 @@ class Def3_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorVali
         )
       }
 
-      "a valid consolidated expenses request is supplied" in {
+      "a valid request containing only consolidated expenses is supplied" in {
         val result = validator(validNino, validCalculationId, validTaxYear, consolidatedBodyJson).validateAndWrapResult()
 
         result shouldBe Right(
           Def3_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedConsolidatedBody)
+        )
+      }
+
+      "a valid request containing residentialFinancialCost and consolidated expenses is supplied" in {
+
+        val result = validator(validNino, validCalculationId, validTaxYear, consolidatedAndResidentialBodyJson).validateAndWrapResult()
+
+        result shouldBe Right(
+          Def3_SubmitUkPropertyBsasRequestData(parsedNino, parsedCalculationId, parsedTaxYear, parsedConsolidatedAndResidentialBody)
         )
       }
 
