@@ -146,7 +146,7 @@ object Def2_SubmitUkPropertyBsasRulesValidator extends RulesValidator[Def2_Submi
       .collect {
         case expenses if expenses.consolidatedExpenses.isDefined =>
           expenses match {
-            case Expenses(None, None, None, None, None, None, None, None, Some(_)) =>
+            case Expenses(None, None, None, None, None, None, _, None, Some(_)) =>
               valid
             case _ =>
               Invalid(List(RuleBothExpensesError.withPath("/ukProperty/expenses")))
