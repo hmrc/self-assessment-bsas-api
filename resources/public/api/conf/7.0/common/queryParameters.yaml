@@ -26,11 +26,11 @@ components:
       description: |
         The type of business the summary calculation is for.
 
-        Limited to the following possible values for tax years before 2025-26:
+        Limited to the following possible values for tax years 2024-25 and before:
 
         - foreign-property-fhl-eea
         - foreign-property
-        - uk-property-non-fhl
+        - uk-property
         - uk-property-fhl
         - self-employment
 
@@ -41,7 +41,7 @@ components:
         - self-employment
       schema:
         type: string
-        enum: [ self-employment, uk-property-fhl, uk-property, foreign-property-fhl-eea, foreign-property, uk-property ]
+        enum: [ self-employment, uk-property-fhl, uk-property, foreign-property-fhl-eea, foreign-property ]
         example: foreign-property
       required: false
 
