@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package definition
 
 import shared.config.SharedAppConfig
 import shared.definition.*
-import shared.routing.{Version6, Version7}
+import shared.routing.Version7
 
 import javax.inject.{Inject, Singleton}
 
@@ -33,11 +33,6 @@ class BsasApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConf
         context = appConfig.apiGatewayContext,
         categories = List(mtdCategory),
         versions = List(
-          APIVersion(
-            version = Version6,
-            status = buildAPIStatus(Version6),
-            endpointsEnabled = appConfig.endpointsEnabled(Version6)
-          ),
           APIVersion(
             version = Version7,
             status = buildAPIStatus(Version7),
