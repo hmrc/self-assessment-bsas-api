@@ -9,7 +9,8 @@
           "otherPropertyIncome": 1000.00
         },
         "expenses": {
-          "consolidatedExpenses": 999.99
+          "consolidatedExpenses": 999.99,
+          "residentialFinancialCost": 999.99
         }
       }
     ]
