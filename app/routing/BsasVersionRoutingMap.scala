@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,12 @@ import javax.inject.{Inject, Singleton}
 @Singleton case class BsasVersionRoutingMap @Inject() (
     appConfig: SharedAppConfig,
     defaultRouter: Router,
-    v6Router: v6.Routes,
     v7Router: v7.Routes
 ) extends VersionRoutingMap {
 
   /** Routes corresponding to available versions.
     */
   val map: Map[Version, Router] = Map(
-    Version6 -> v6Router,
     Version7 -> v7Router
   )
 

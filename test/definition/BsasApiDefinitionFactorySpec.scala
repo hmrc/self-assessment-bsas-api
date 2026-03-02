@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import shared.config.Deprecation.NotDeprecated
 import shared.config.MockSharedAppConfig
 import shared.definition.APIStatus.BETA
 import shared.definition.*
-import shared.routing.{Version6, Version7}
+import shared.routing.Version7
 import shared.utils.UnitSpec
 
 class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
@@ -31,11 +31,9 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
       "return a valid Definition case class" in {
         MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
 
-        List(Version6, Version7).foreach { version =>
-          MockedSharedAppConfig.apiStatus(version) returns "BETA"
-          MockedSharedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
-          MockedSharedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
-        }
+        MockedSharedAppConfig.apiStatus(Version7) returns "BETA"
+        MockedSharedAppConfig.endpointsEnabled(Version7).returns(true).anyNumberOfTimes()
+        MockedSharedAppConfig.deprecationFor(Version7).returns(NotDeprecated.valid).anyNumberOfTimes()
 
         val apiDefinitionFactory = new BsasApiDefinitionFactory(mockSharedAppConfig)
 
@@ -47,11 +45,6 @@ class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
               context = "individuals/self-assessment/adjustable-summary",
               categories = List("INCOME_TAX_MTD"),
               versions = List(
-                APIVersion(
-                  Version6,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
                 APIVersion(
                   Version7,
                   status = BETA,
