@@ -74,6 +74,9 @@ post:
           TY-2024-25 - Foreign Property (Non-FHL) with non-negative residential financial cost:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_accounting_adjustments.json
+          TY-2024-25 - Foreign Property Consolidated Adjustment:
+            value:
+              $ref: ./examples/submit_foreign_property_accounting_adjustments/def2/submit_foreign_property_consolidated_accounting_adjustments.json
           TY-2025-26 - Foreign Property Adjustment:
             value:
               $ref: ./examples/submit_foreign_property_accounting_adjustments/def3/submit_foreign_property_accounting_adjustments.json
