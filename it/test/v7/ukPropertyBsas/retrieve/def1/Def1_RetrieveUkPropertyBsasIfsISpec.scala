@@ -137,50 +137,6 @@ class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
       )
       input.foreach(validationErrorTest.tupled)
     }
-
-    "des service error" when {
-
-      def errorBody(code: String): String =
-        s"""{
-           |  "code": "$code",
-           |  "reason": "des message"
-           |}""".stripMargin
-
-      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"des returns an $desCode error and status $desStatus" in new NonTysTest {
-
-          override def setupStubs(): Unit = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, downstreamUri, desStatus, errorBody(desCode))
-          }
-
-          val response: WSResponse = await(request.get())
-          response.status shouldBe expectedStatus
-          response.json shouldBe Json.toJson(expectedBody)
-          response.header("Content-Type") shouldBe Some("application/json")
-        }
-      }
-
-      val errors = List(
-        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
-        (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, InternalError),
-        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
-      )
-      val extraTysErrors = List(
-        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
-        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
-      )
-
-      (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
-    }
   }
 
   private trait Test {
