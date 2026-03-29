@@ -30,9 +30,6 @@ import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixt
 
 class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1876.enabled" -> false) ++ super.servicesConfig
-
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {
       "valid request is made and FHL is returned" in new NonTysTest {
@@ -62,31 +59,6 @@ class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
 
         }
       }
-
-      "any valid Tax Year Specific request is made and FHL is returned" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasFhlResponseJson())
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseFhlJson()
-      }
-
-      "any valid Tax Year Specific request is made and Uk Property is returned" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasUkPropertyResponseJson())
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-
-        response.json shouldBe mtdRetrieveBsasResponseUkPropertyJson()
-      }
     }
 
     "return error response with status BAD_REQUEST" when {
@@ -114,7 +86,7 @@ class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
                               taxYearString: String,
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
@@ -166,13 +138,6 @@ class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
 
     override def taxYear: String = "2019-20"
     def downstreamUri: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-  }
-
-  private trait TysIfsTest extends Test {
-
-    override def taxYear: String = "2023-24"
-
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
 }

@@ -30,8 +30,7 @@ class Def2_RetrieveSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
 
   override def servicesConfig: Map[String, Any] =
     Map(
-      "api.7.0.endpoints.allow-request-cannot-be-fulfilled-header" -> true,
-      "feature-switch.ifs_hip_migration_1876.enabled"              -> true
+      "api.7.0.endpoints.allow-request-cannot-be-fulfilled-header" -> true
     ) ++ super.servicesConfig
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
