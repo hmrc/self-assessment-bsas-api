@@ -26,7 +26,7 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.*
 
-class Def2_SubmitSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
+class Def2_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
   private trait Test {
 

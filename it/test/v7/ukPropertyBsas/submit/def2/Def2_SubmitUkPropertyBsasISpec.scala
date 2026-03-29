@@ -27,7 +27,7 @@ import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 
-class Def2_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def2_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   val requestBodyJson: JsValue           = validfhlInputJson
   val ukPropertyRequestBodyJson: JsValue = validUkPropertyInputJson

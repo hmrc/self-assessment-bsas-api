@@ -27,7 +27,7 @@ import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def2.model.request.SubmitForeignPropertyBsasFixtures.*
 
-class Def2_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def2_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   private def removePropertyFromArray(json: JsValue, pathToArray: JsPath): JsValue =
     json

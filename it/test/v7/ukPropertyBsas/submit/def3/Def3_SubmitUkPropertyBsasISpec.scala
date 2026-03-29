@@ -27,7 +27,7 @@ import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v7.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 
-class Def3_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitUkPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {

@@ -32,7 +32,7 @@ import v7.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
 import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures
 import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
 
-class Def2_RetrieveForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
+class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {

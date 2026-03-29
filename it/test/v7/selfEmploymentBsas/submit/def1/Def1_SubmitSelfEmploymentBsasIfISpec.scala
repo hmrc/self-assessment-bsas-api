@@ -31,9 +31,6 @@ import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploy
 
 class Def1_SubmitSelfEmploymentBsasIfISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
-
   private trait Test {
 
     val nino          = "AA123456A"
@@ -71,31 +68,11 @@ class Def1_SubmitSelfEmploymentBsasIfISpec extends IntegrationBaseSpec {
     def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
   }
 
-  private trait TysIfsTest extends Test {
-    override def taxYear: String = "2023-24"
-    def mtdUri: String           = s"/$nino/self-employment/$calculationId/adjust/$taxYear"
-    def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
-  }
-
   val requestBody: JsValue = mtdRequestJson
 
   "Calling the Submit Adjustments endpoint for self-employment" should {
     "return a 200 status code" when {
       "any valid request is made" in new NonTysTest {
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK)
-        }
-
-        val result: WSResponse = await(request().post(requestBody))
-        result.status shouldBe OK
-        result.header("Content-Type") shouldBe None
-      }
-
-      "any valid TYS request is made" in new TysIfsTest {
-
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()

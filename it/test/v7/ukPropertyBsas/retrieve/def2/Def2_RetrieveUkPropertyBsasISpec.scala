@@ -28,7 +28,7 @@ import shared.support.IntegrationBaseSpec
 import v7.common.model.IncomeSourceType
 import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures.*
 
-class Def2_RetrieveUkPropertyBsasHipISpec extends IntegrationBaseSpec {
+class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {

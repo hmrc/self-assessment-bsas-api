@@ -27,7 +27,7 @@ import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.*
 
-class Def3_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {
+class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {

@@ -26,7 +26,7 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures.*
 
-class Def2_RetrieveSelfEmploymentBsasHipISpec extends IntegrationBaseSpec {
+class Def2_RetrieveSelfEmploymentBsasISpec extends IntegrationBaseSpec {
 
   override def servicesConfig: Map[String, Any] =
     Map(

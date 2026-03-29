@@ -29,7 +29,7 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
 
-class Def2_TriggerBsasHipISpec extends IntegrationBaseSpec {
+class Def2_TriggerBsasISpec extends IntegrationBaseSpec {
 
   "Calling the triggerBsas" should {
     "return a 200 status code" when {

@@ -16,7 +16,6 @@
 
 package v7.selfEmploymentBsas.submit
 
-import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -63,24 +62,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
       result shouldBe outcome
     }
 
-    "post a SubmitBsasRequest body and return the result for a TYS tax year" in new IfsTest with Test {
-      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
-      val request: SubmitSelfEmploymentBsasRequestData =
-        Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBodyModel)
-
-      val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
-
-      willPut(
-        url = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId",
-        body = submitSelfEmploymentBsasRequestBodyModel
-      ).returns(Future.successful(outcome))
-
-      val result: DownstreamOutcome[Unit] = await(connector.submitSelfEmploymentBsas(request))
-      result shouldBe outcome
-    }
-
     "post a SubmitBsasRequest body and return the result for a TYS tax year on HIP" in new HipTest with Test {
-      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true))
       val request: SubmitSelfEmploymentBsasRequestData =
         Def1_SubmitSelfEmploymentBsasRequestData(nino, calculationId, TaxYear.fromMtd("2023-24"), submitSelfEmploymentBsasRequestBodyModel)
 
