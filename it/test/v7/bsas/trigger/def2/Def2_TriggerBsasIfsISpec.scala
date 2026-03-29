@@ -31,9 +31,6 @@ import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.*
 
 class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1873.enabled" -> false) ++ super.servicesConfig
-
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
 
@@ -42,7 +39,7 @@ class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
         "uk-property",
         "foreign-property"
       ).foreach { typeOfBusiness =>
-        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
+        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new NonTysTest {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -62,7 +59,7 @@ class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
       "validation error" when {
         def validationErrorTest(requestNino: String, json: JsObject, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String = requestNino
 
@@ -103,7 +100,7 @@ class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -149,9 +146,9 @@ class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
 
     val defaultBusinessId = "XAIS12345678901"
 
-    val defaultStartDate = "2025-04-06"
+    val defaultStartDate = "2021-04-06"
 
-    val defaultEndDate = "2026-04-05"
+    val defaultEndDate = "2022-04-05"
 
     def requestBody(typeOfBusiness: String = defaultTypeOfBusiness,
                     startDate: String = defaultStartDate,
@@ -205,9 +202,9 @@ class Def2_TriggerBsasIfsISpec extends IntegrationBaseSpec {
 
   }
 
-  private trait TysIfsTest extends Test with RequestBodyHelper {
+  private trait NonTysTest extends Test with RequestBodyHelper {
 
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino"
+    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
 
   }
 
