@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": {{#if (enabled '1876_r19_retrieve_foreign_property')}} "TY 2025-26" {{else}} "TY 2025-26 onwards" {{/if}},
+  "title": "TY 2025-26",
   "description": "Retrieve a Foreign property Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
