@@ -31,9 +31,6 @@ import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 
 class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1873.enabled" -> false) ++ super.servicesConfig
-
   "Calling the triggerBsas" should {
     "return a 200 status code" when {
 
@@ -45,22 +42,6 @@ class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
         "foreign-property"
       ).foreach { typeOfBusiness =>
         s"any valid request is made with typeOfBusiness: $typeOfBusiness" in new NonTysTest {
-
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-
-            DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK, Json.parse(downstreamResponse))
-          }
-
-          val result: WSResponse = await(request().post(requestBody(typeOfBusiness)))
-          result.status shouldBe OK
-          result.json shouldBe Json.parse(responseBody)
-          result.header("Content-Type") shouldBe Some("application/json")
-        }
-
-        s"any valid request is made with typeOfBusiness: $typeOfBusiness (TYS)" in new TysIfsTest {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -193,13 +174,6 @@ class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
 
   object NonTysRequestBodyHelper extends NonTysRequestBodyHelper
 
-  trait TysRequestBodyHelper extends RequestBodyHelper {
-
-    val defaultStartDate = "2023-04-06"
-
-    val defaultEndDate = "2024-04-05"
-  }
-
   private trait Test {
     self: RequestBodyHelper =>
 
@@ -240,12 +214,6 @@ class Def1_TriggerBsasIfsISpec extends IntegrationBaseSpec {
   private trait NonTysTest extends Test with NonTysRequestBodyHelper {
 
     override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
-
-  }
-
-  private trait TysIfsTest extends Test with TysRequestBodyHelper {
-
-    override def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino"
 
   }
 

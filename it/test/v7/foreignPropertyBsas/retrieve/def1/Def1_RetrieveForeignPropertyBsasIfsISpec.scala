@@ -36,9 +36,6 @@ import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixt
 
 class Def1_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1876.enabled" -> false) ++ super.servicesConfig
-
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
       "valid request is made and Non-fhl is returned" in new NonTysTest {
@@ -58,17 +55,6 @@ class Def1_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request.get())
 
         response.json shouldBe retrieveForeignPropertyBsasMtdFhlJson(taxYear)
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-
-      }
-
-      "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson())
-
-        val response: WSResponse = await(request.get())
-
-        response.json shouldBe retrieveForeignPropertyBsasMtdJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
@@ -98,7 +84,7 @@ class Def1_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
       def validationErrorTest(requestNino: String, requestBsasId: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit =
-        s"validation fails with ${expectedBody.code} error" in new TysTest {
+        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
           override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
           override def taxYear: String       = requestTaxYear
@@ -179,12 +165,6 @@ class Def1_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
   private trait NonTysTest extends Test {
     def taxYear: String       = "2019-20"
     def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-  }
-
-  private trait TysTest extends Test {
-    def taxYear: String       = "2023-24"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
   }
 

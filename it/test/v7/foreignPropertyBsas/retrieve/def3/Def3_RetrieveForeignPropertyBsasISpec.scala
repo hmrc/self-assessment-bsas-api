@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v7.foreignPropertyBsas.retrieve.def2
+package v7.foreignPropertyBsas.retrieve.def3
 
 import common.errors.RuleTypeOfBusinessIncorrectError
 import play.api.http.HeaderNames.ACCEPT
@@ -25,20 +25,20 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v7.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
-  retrieveForeignPropertyBsasDesJson,
+import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
+  retrieveForeignPropertyBsasHipJson,
   retrieveForeignPropertyBsasMtdJson
 }
 import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures
 import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
 
-class Def2_RetrieveForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
+class Def3_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
 
       "valid request is made for a Tax Year Specific (TYS) tax year" in new TysTest {
-        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasDesJson)
+        DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, retrieveForeignPropertyBsasHipJson)
 
         val response: WSResponse = await(request.get())
 
@@ -154,8 +154,8 @@ class Def2_RetrieveForeignPropertyBsasHipISpec extends IntegrationBaseSpec {
   }
 
   private trait TysTest extends Test {
-    def taxYear: String       = "2025-26"
-    def downstreamUrl: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
+    def taxYear: String       = "2026-27"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/26-27/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

@@ -16,7 +16,6 @@
 
 package v7.foreignPropertyBsas.submit
 
-import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{CalculationId, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
@@ -55,22 +54,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
       result shouldBe outcome
     }
 
-    "post a SubmitBsasRequest body and return the result for a post-TYS tax year request" in new IfsTest with Test {
-      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> false))
-      private val request = requestWith(TaxYear.fromMtd("2023-24"))
-      private val outcome = Right(ResponseWrapper(correlationId, ()))
-
-      willPut(
-        url = url"$baseUrl/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId",
-        body = parsedSubmitForeignPropertyBsasRequestBody)
-        .returns(Future.successful(outcome))
-
-      val result: DownstreamOutcome[Unit] = await(connector.submitForeignPropertyBsas(request))
-      result shouldBe outcome
-    }
-
     "post a SubmitBsasRequest body and return the result for a post-TYS tax year request on HIP" in new HipTest with Test {
-      MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("ifs_hip_migration_1874.enabled" -> true))
       private val request = requestWith(TaxYear.fromMtd("2023-24"))
       private val outcome = Right(ResponseWrapper(correlationId, ()))
 

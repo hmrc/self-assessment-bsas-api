@@ -30,9 +30,6 @@ import v7.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsa
 
 class Def1_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
-
   "Calling the submit foreign property bsas endpoint" should {
     "return a 200 status code" when {
       "any valid foreignProperty request is made" in new NonTysTest {
@@ -44,17 +41,6 @@ class Def1_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("X-CorrelationId") should not be empty
       }
-
-      "a valid request is made for TYS" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(mtdRequestValid))
-        response.status shouldBe OK
-        response.header("X-CorrelationId") should not be empty
-      }
-
     }
 
     "return error according to spec" when {
@@ -79,7 +65,7 @@ class Def1_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String          = requestNino
             override val calculationId: String = requestCalculationId
@@ -124,7 +110,7 @@ class Def1_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec {
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
@@ -215,13 +201,6 @@ class Def1_SubmitForeignPropertyBsasIfISpec extends IntegrationBaseSpec {
   private trait NonTysTest extends Test {
     override def taxYear: String = "2019-20"
     def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
-
-  }
-
-  private trait TysIfsTest extends Test {
-    override def taxYear: String = "2023-24"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
 
   }
 

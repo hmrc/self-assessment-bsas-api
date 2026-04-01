@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.retrieve
 
-import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
@@ -39,11 +39,8 @@ class RetrieveUkPropertyBsasConnector @Inject() (val http: HttpClientV2, val app
     import request.*
     import schema.*
 
-    lazy val downstreamUri1876: DownstreamUri[DownstreamResp] = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1876")) {
+    lazy val downstreamUri1876: DownstreamUri[DownstreamResp] =
       HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino/$calculationId")
-    } else {
-      IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino/$calculationId")
-    }
 
     lazy val downstreamUri1516: DownstreamUri[DownstreamResp] = IfsUri(s"income-tax/adjustable-summary-calculation/$nino/$calculationId")
 

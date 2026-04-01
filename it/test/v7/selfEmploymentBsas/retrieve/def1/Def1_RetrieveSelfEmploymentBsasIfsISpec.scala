@@ -31,29 +31,13 @@ import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsas
 class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
 
   override def servicesConfig: Map[String, Any] =
-    Map(
-      "api.7.0.endpoints.allow-request-cannot-be-fulfilled-header" -> true,
-      "feature-switch.ifs_hip_migration_1876.enabled"              -> false
-    ) ++ super.servicesConfig
+    Map("api.7.0.endpoints.allow-request-cannot-be-fulfilled-header" -> true) ++ super.servicesConfig
 
   "Calling the retrieve Self-assessment Bsas endpoint" should {
     "return a valid response with status OK" when {
       "given a valid request" in new NonTysTest {
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson(2020))
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdRetrieveBsasResponseJson(taxYear)
-        response.header("Deprecation") shouldBe None
-      }
-
-      "given a valid TYS request" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamRetrieveBsasResponseJson())
         }
 
         val response: WSResponse = await(request.get())
@@ -79,18 +63,6 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
                   downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType, 2020)
                 )
             }
-          ),
-          (
-            "TYS",
-            new TysIfsTest {
-              override def setupStubs(): Unit =
-                DownstreamStub.onSuccess(
-                  DownstreamStub.GET,
-                  downstreamUrl,
-                  OK,
-                  downstreamRetrieveBsasResponseJsonInvalidIncomeSourceType(incomeSourceType)
-                )
-            }
           )
         ).foreach { case (scenario, testInstance) =>
           s"given a valid $scenario request but downstream response has invalid income source type $incomeSourceType" in {
@@ -111,7 +83,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
                               expectedStatus: Int,
                               expectedBody: MtdError,
                               maybeGovTestScenario: Option[String]): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+        s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
           override val nino: String          = requestNino
           override val calculationId: String = requestBsasId
@@ -159,7 +131,7 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
            |}""".stripMargin
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamStatus error and status $downstreamCode" in new TysIfsTest {
+        s"downstream returns an $downstreamStatus error and status $downstreamCode" in new NonTysTest {
 
           override def setupStubs(): Unit = {
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
@@ -215,12 +187,6 @@ class Def1_RetrieveSelfEmploymentBsasIfsISpec extends IntegrationBaseSpec {
     override def taxYear: String = "2019-20"
     def downstreamUrl: String    = s"/income-tax/adjustable-summary-calculation/$nino/$calculationId"
 
-  }
-
-  private trait TysIfsTest extends Test {
-    override def taxYear: String = "2023-24"
-
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
 }

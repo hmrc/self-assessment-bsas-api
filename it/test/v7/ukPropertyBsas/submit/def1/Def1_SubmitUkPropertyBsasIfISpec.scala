@@ -31,25 +31,12 @@ import v7.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBo
 
 class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1874.enabled" -> false) ++ super.servicesConfig
-
   val requestBodyJson: JsValue = validfhlInputJson
 
   "Calling the Submit UK Property Accounting Adjustments endpoint" should {
     "return a 200 status code" when {
       "any valid request is made for a non-tys tax year" in new NonTysTest {
 
-        override def setupStubs(): Unit = {
-          stubDownstreamSuccess()
-        }
-
-        val response: WSResponse = await(request().post(requestBodyJson))
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe None
-      }
-
-      "any valid request is made for a TYS tax year" in new TysIfsTest {
         override def setupStubs(): Unit = {
           stubDownstreamSuccess()
         }
@@ -68,7 +55,7 @@ class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErro
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String          = requestNino
             override val calculationId: String = requestCalculationId
@@ -207,12 +194,6 @@ class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErro
          |}
        """.stripMargin
 
-  }
-
-  private trait TysIfsTest extends Test {
-    override def taxYear: String = "2023-24"
-
-    def downstreamUri: String = s"/income-tax/adjustable-summary-calculation/23-24/$nino/$calculationId"
   }
 
   private trait NonTysTest extends Test {

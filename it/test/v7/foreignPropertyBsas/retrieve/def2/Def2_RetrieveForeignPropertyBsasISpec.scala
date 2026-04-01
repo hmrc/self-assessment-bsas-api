@@ -32,10 +32,7 @@ import v7.foreignPropertyBsas.retrieve.def2.model.response.RetrieveForeignProper
 import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures
 import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures
 
-class Def2_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
-
-  override def servicesConfig: Map[String, Any] =
-    Map("feature-switch.ifs_hip_migration_1876.enabled" -> false) ++ super.servicesConfig
+class Def2_RetrieveForeignPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve Foreign Property Bsas endpoint" should {
     "return a valid response with status OK" when {
@@ -119,6 +116,7 @@ class Def2_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_CALCULATION_ID", BAD_REQUEST, CalculationIdFormatError),
         (BAD_REQUEST, "INVALID_RETURN", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, InternalError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
@@ -157,7 +155,7 @@ class Def2_RetrieveForeignPropertyBsasIfsISpec extends IntegrationBaseSpec {
 
   private trait TysTest extends Test {
     def taxYear: String       = "2025-26"
-    def downstreamUrl: String = s"/income-tax/adjustable-summary-calculation/25-26/$nino/$calculationId"
+    def downstreamUrl: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
 
   }
 

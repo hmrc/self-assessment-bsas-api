@@ -16,7 +16,7 @@
 
 package v7.bsas.trigger
 
-import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
@@ -39,11 +39,7 @@ class TriggerBsasConnector @Inject() (val http: HttpClientV2, val appConfig: Sha
     import schema.*
 
     lazy val downstreamUri1873: DownstreamUri[DownstreamResp] =
-      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1873")) {
-        HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino")
-      } else {
-        IfsUri(s"income-tax/adjustable-summary-calculation/${taxYear.asTysDownstream}/$nino")
-      }
+      HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/adjustable-summary-calculation/$nino")
 
     lazy val downstreamUri1515: DownstreamUri[DownstreamResp] =
       IfsUri(s"income-tax/adjustable-summary-calculation/$nino")
