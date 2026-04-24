@@ -90,8 +90,7 @@
     "accountingAdjustments": {
       "basisAdjustment": 0.12,
       "overlapReliefUsed": 0.12,
-      "accountingAdjustment": 0.12,
-      "averagingAdjustment": 0.12
+      "accountingAdjustment": 0.12
     },
     "taxableProfit": 100
   },
@@ -202,8 +201,7 @@
     "accountingAdjustments": {
       "basisAdjustment": 0.12,
       "overlapReliefUsed": 0.12,
-      "accountingAdjustment": 0.12,
-      "averagingAdjustment": 0.12
+      "accountingAdjustment": 0.12
     },
     "taxableProfit": 100
   }

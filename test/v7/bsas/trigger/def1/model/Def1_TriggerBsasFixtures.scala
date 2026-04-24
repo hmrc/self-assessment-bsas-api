@@ -175,8 +175,7 @@ object Def1_TriggerBsasFixtures {
       |  "selfEmploymentAccountingAdjustments": {
       |   "basisAdjustment": 0.02,
       |   "overlapReliefUsed": 0.02,
-      |   "accountingAdjustment": 0.02,
-      |   "averagingAdjustment": 0.02
+      |   "accountingAdjustment": 0.02
       |  },
       |  "taxableProfit": 0.02,
       |  "adjustedIncomeTaxLoss": 0.02
