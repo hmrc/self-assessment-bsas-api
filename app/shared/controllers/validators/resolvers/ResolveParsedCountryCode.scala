@@ -263,12 +263,6 @@ object ResolveParsedCountryCode {
     "ZZZ"
   )
 
-//  def apply1(value: String, path: String): Validated[Seq[MtdError], String] = {
-//    val resolver = ResolveParsedCountryCode(path)
-//
-//    resolver(value)
-//  }
-
   def apply(value: String, path: String): Validated[List[MtdError], String] = {
     if (value.length != 3) {
       Invalid(List(CountryCodeFormatError.withPath(path)))
@@ -278,11 +272,6 @@ object ResolveParsedCountryCode {
       Invalid(List(RuleCountryCodeError.withPath(path)))
     }
   }
-
-//  def apply2(maybeValue: Option[String], path: String): Validated[Seq[MtdError], Option[String]] = {
-//    val resolver = ResolveParsedCountryCode(path)
-//    resolver(maybeValue)
-//  }
 
   def apply(maybeValue: Option[String], path: String): Validated[List[MtdError], Option[String]] = {
     maybeValue match {
