@@ -143,9 +143,10 @@
         "totalIncome": {
           "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "income": {
           "type": "object",
@@ -154,16 +155,18 @@
             "turnover": {
               "description": "The takings, fees, sales or money earned by your business Income associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "other": {
               "description": "Any other business income not included in turnover. Income associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -171,9 +174,10 @@
         "totalExpenses": {
           "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": " 2000.50"
+          "example": 2000.50
         },
         "expenses": {
           "type": "object",
@@ -182,114 +186,130 @@
             "consolidatedExpenses": {
               "description": "Sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "costOfGoods": {
               "description": "Cost of goods bought for resale or goods used. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "paymentsToSubcontractors": {
               "description": "Construction industry - payments to subcontractors. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "wagesAndStaffCosts": {
               "description": "Wages, salaries and other staff costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "carVanTravelExpenses": {
               "description": "Car, van and travel expenses. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "premisesRunningCosts": {
               "description": "Rent, rates, power and insurance costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "maintenanceCosts": {
               "description": "Repairs and renewals of property and equipment. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "adminCosts": {
               "description": "Phone, fax, stationery and other office costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "interestOnBankOtherLoans": {
               "description": "Interest on bank and other loans. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "financeCharges": {
               "description": "Bank, credit card and other financial charges. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "irrecoverableDebts": {
               "description": "Irrecoverable debts written off. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "professionalFees": {
               "description": "Accountancy, legal and other professional fees. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "depreciation": {
               "description": "Depreciation and loss/profit on sales of assets. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "otherExpenses": {
               "description": "Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "advertisingCosts": {
               "description": "Advertising costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "businessEntertainmentCosts": {
               "description": "Business entertainment costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -297,37 +317,42 @@
         "netProfit": {
           "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "netLoss": {
           "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "totalAdditions": {
           "description": "The total additions to net profit (or deduction to net loss). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "outstandingBusinessIncome": {
           "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "adjustedProfit": {
           "description": "Profit including disallowable expenses and deducting non‑taxable income, before claiming capital allowances or making any further tax adjustments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "additions": {
           "type": "object",
@@ -336,136 +361,155 @@
             "costOfGoodsDisallowable": {
               "description": "Cost of goods bought for resale or goods used. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "paymentsToSubcontractorsDisallowable": {
               "description": "Payments to subcontractors - Construction Industry Scheme (CIS). Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "wagesAndStaffCostsDisallowable": {
               "description": "Wages, salaries and other staff costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "carVanTravelExpensesDisallowable": {
               "description": "Car, van and travel expenses. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "premisesRunningCostsDisallowable": {
               "description": "Rent, rates, power and insurance costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "maintenanceCostsDisallowable": {
               "description": "Repairs and renewals of property and equipment. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "adminCostsDisallowable": {
               "description": "Phone, fax, stationery and other office costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "interestOnBankOtherLoansDisallowable": {
               "description": "Interest on bank and other loans. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "financeChargesDisallowable": {
               "description": "Bank, credit card and other financial charges. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "irrecoverableDebtsDisallowable": {
               "description": "Irrecoverable debts written off. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "professionalFeesDisallowable": {
               "description": "Accountancy, legal and other professional fees. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "depreciationDisallowable": {
               "description": "Depreciation and loss/profit on sales of assets. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "otherExpensesDisallowable": {
               "description": "Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "advertisingCostsDisallowable": {
               "description": "Advertising costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "businessEntertainmentCostsDisallowable": {
               "description": "Business entertainment costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "outstandingBusinessIncome": {
               "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Use `outstandingBusinessIncome` in `adjustableSummaryCalculation` or `adjustedSummaryCalculation` instead.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45",
+              "example": 1000.45,
               "deprecated": true
             },
             "balancingChargeOther": {
               "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "balancingChargeBpra": {
               "description": "Balancing charge on sale or cessation of business use (only where Business Premises Renovation Allowance has been claimed). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "goodsAndServicesOwnUse": {
               "description": "Value of the normal sale price of goods or stock have been taken out of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -473,9 +517,10 @@
         "totalDeductions": {
           "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "deductions": {
           "type": "object",
@@ -484,93 +529,106 @@
             "tradingAllowance": {
               "description": "A tax exemption of a limited amount for individuals with trading income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "annualInvestmentAllowance": {
               "description": "Annual investment allowance on items that qualify up to the AIA amount. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "capitalAllowanceMainPool": {
               "description": "Capital allowances at 18% on equipment, including cars with lower CO2 emissions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "capitalAllowanceSpecialRatePool": {
               "description": "Capital allowances at 8% on equipment, including cars with higher CO2 emissions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "zeroEmissionGoods": {
               "description": "Zero emission goods vehicle allowance for goods vehicles purchased for business use. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "businessPremisesRenovationAllowance": {
               "description": "Business Premises Renovation Allowance if converting or renovating unused qualifying business premises. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "enhancedCapitalAllowance": {
               "description": "100% and other enhanced capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "allowanceOnSales": {
               "description": "Allowances on sale or cessation of business use (where you have disposed of assets for less than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "capitalAllowanceSingleAssetPool": {
               "description": "Claim to capital allowances in respect of all single asset pools. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "500.25"
+              "example": 500.25
             },
             "includedNonTaxableProfits": {
               "description": "Income, receipts and other profits included in business income or expenses but not taxable as business profits. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "structuredBuildingAllowance": {
               "description": "The amount of structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "enhancedStructuredBuildingAllowance": {
               "description": "The amount of enhanced structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "zeroEmissionsCarAllowance": {
               "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -578,9 +636,10 @@
         "totalAccountingAdjustments": {
           "description": "The total amount of adjustment for change of accounting practice. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "accountingAdjustments": {
           "type": "object",
@@ -589,31 +648,34 @@
             "basisAdjustment": {
               "description": "If your basis period is not the same as your accounting period, enter the adjustment needed to arrive at the profit or loss for the basis period – if the adjustment needs to be taken off the profit figure, this should be negative. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "overlapReliefUsed": {
               "description": "Overlap relief used this year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "accountingAdjustment": {
               "description": "Adjustment for change of accounting practice. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "averagingAdjustment": {
-              "description": "Averaging adjustment (only for farmers, market gardeners and creators of literary or artistic works) – if the adjustment needs to be taken off the profit figure, this should be negative. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be reinstated in a future release.",
+              "description": "Averaging adjustment (only for farmers, market gardeners and creators of literary or artistic works) – if the adjustment needs to be taken off the profit figure, this should be negative. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45",
-              "deprecated": true
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -646,16 +708,18 @@
             "turnover": {
               "description": "The adjustment to takings, fees, sales or money earned by your business. Income associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "other": {
               "description": "The adjustment to any other business income not included in turnover. Income associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             }
           },
           "additionalProperties": false
@@ -667,114 +731,130 @@
             "consolidatedExpenses": {
               "description": "The adjustment to the sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "costOfGoods": {
               "description": "The adjustment to cost of goods bought for resale or goods used. Expenses associated with the running of the business.The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "paymentsToSubcontractors": {
               "description": "Construction industry – payments to subcontractors. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "wagesAndStaffCosts": {
               "description": "The adjustment to wages, salaries and other staff costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "carVanTravelExpenses": {
               "description": "The adjustment to car, van and travel expenses. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "premisesRunningCosts": {
               "description": "The adjustment to rent, rates, power and insurance costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "maintenanceCosts": {
               "description": "The adjustment to repairs and renewals of property and equipment. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "adminCosts": {
               "description": "The adjustment to phone, fax, stationery and other office costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "interestOnBankOtherLoans": {
               "description": "The adjustment to interest on bank and other loans. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "financeCharges": {
               "description": "The adjustment to bank, credit card and other financial charges. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "irrecoverableDebts": {
               "description": "The adjustment to irrecoverable debts written off. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "professionalFees": {
               "description": "The adjustment to accountancy, legal and other professional fees. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "depreciation": {
               "description": "The adjustment to depreciation and loss/profit on sales of assets. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "otherExpenses": {
               "description": "The adjustment to other business expenses. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "advertisingCosts": {
               "description": "The adjustment to advertising costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "businessEntertainmentCosts": {
               "description": "The adjustment to business entertainment costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             }
           },
           "additionalProperties": false
@@ -786,107 +866,122 @@
             "costOfGoodsDisallowable": {
               "description": "The adjustment to cost of goods bought for resale or goods used. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places. (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "paymentsToSubcontractorsDisallowable": {
               "description": "The adjustment to Payments to subcontractors - Construction Industry Scheme (CIS). Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "wagesAndStaffCostsDisallowable": {
               "description": "The adjustment to wages, salaries and other staff costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "carVanTravelExpensesDisallowable": {
               "description": "The adjustment to car, van and travel expenses. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "premisesRunningCostsDisallowable": {
               "description": "The adjustment to rent, rates, power and insurance costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "maintenanceCostsDisallowable": {
               "description": "The adjustment to repairs and renewals of property and equipment. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "adminCostsDisallowable": {
               "description": "The adjustment to phone, fax, stationery and other office costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "interestOnBankOtherLoansDisallowable": {
               "description": "The adjustment to interest on bank and other loans. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "financeChargesDisallowable": {
               "description": "The adjustment to bank, credit card and other financial charges. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "irrecoverableDebtsDisallowable": {
               "description": "The adjustment to irrecoverable debts written off. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "professionalFeesDisallowable": {
               "description": "The adjustment to accountancy, legal and other professional fees. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "depreciationDisallowable": {
               "description": "The adjustment to depreciation and loss/profit on sales of assets. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "otherExpensesDisallowable": {
               "description": "The adjustment to other business expenses. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "advertisingCostsDisallowable": {
               "description": "The adjustment to advertising costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             },
             "businessEntertainmentCostsDisallowable": {
               "description": "The adjustment to business entertainment costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places (excluding 0 or 0.00).",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "10000.89"
+              "example": 10000.89
             }
           },
           "additionalProperties": false
@@ -906,9 +1001,10 @@
         "totalIncome": {
           "description": "The total income for the income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "income": {
           "type": "object",
@@ -917,16 +1013,18 @@
             "turnover": {
               "description": "The takings, fees, sales or money earned by your business Income associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "other": {
               "description": "Any other business income not included in turnover. Income associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -934,9 +1032,10 @@
         "totalExpenses": {
           "description": "The total expenses for the income source. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "2000.50"
+          "example": 2000.50
         },
         "expenses": {
           "type": "object",
@@ -945,114 +1044,130 @@
             "consolidatedExpenses": {
               "description": "Sum of all expenses for the specified period. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "costOfGoods": {
               "description": "Cost of goods bought for resale or goods used. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "paymentsToSubcontractors": {
               "description": "Construction industry – payments to subcontractors. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "wagesAndStaffCosts": {
               "description": "Wages, salaries and other staff costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "carVanTravelExpenses": {
               "description": "Car, van and travel expenses. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "premisesRunningCosts": {
               "description": "Rent, rates, power and insurance costs. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "maintenanceCosts": {
               "description": "Repairs and renewals of property and equipment. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "adminCosts": {
               "description": "Phone, fax, stationery and other office costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "interestOnBankOtherLoans": {
               "description": "Interest on bank and other loans. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "financeCharges": {
               "description": "Bank, credit card and other financial charges. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "irrecoverableDebts": {
               "description": "Irrecoverable debts written off. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "professionalFees": {
               "description": "Accountancy, legal and other professional fees. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "depreciation": {
               "description": "Depreciation and loss/profit on sales of assets. Expenses associated with the running of the business. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "otherExpenses": {
               "description": "Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "advertisingCosts": {
               "description": "Advertising costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "businessEntertainmentCosts": {
               "description": "Business entertainment costs. Expenses associated with the running of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -1060,37 +1175,42 @@
         "netProfit": {
           "description": "The net profit of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "netLoss": {
           "description": "The net loss of income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "totalAdditions": {
           "description": "The total additions to net profit (or deduction to net loss). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "outstandingBusinessIncome": {
           "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "adjustedProfit": {
           "description": "Profit including disallowable expenses and deducting non‑taxable income, before claiming capital allowances or making any further tax adjustments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "additions": {
           "type": "object",
@@ -1099,136 +1219,155 @@
             "costOfGoodsDisallowable": {
               "description": "Cost of goods bought for resale or goods used. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "paymentsToSubcontractorsDisallowable": {
               "description": "Payments to subcontractors - Construction Industry Scheme (CIS). Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "wagesAndStaffCostsDisallowable": {
               "description": "Wages, salaries and other staff costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "carVanTravelExpensesDisallowable": {
               "description": "Car, van and travel expenses. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "premisesRunningCostsDisallowable": {
               "description": "Rent, rates, power and insurance costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "maintenanceCostsDisallowable": {
               "description": "Repairs and renewals of property and equipment. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "adminCostsDisallowable": {
               "description": "Phone, fax, stationery and other office costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "interestOnBankOtherLoansDisallowable": {
               "description": "Interest on bank and other loans. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "financeChargesDisallowable": {
               "description": "Bank, credit card and other financial charges. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "irrecoverableDebtsDisallowable": {
               "description": "Irrecoverable debts written off. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "professionalFeesDisallowable": {
               "description": "Accountancy, legal and other professional fees. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "depreciationDisallowable": {
               "description": "Depreciation and loss/profit on sales of assets. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "otherExpensesDisallowable": {
               "description": "Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "advertisingCostsDisallowable": {
               "description": "Advertising costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "businessEntertainmentCostsDisallowable": {
               "description": "Business entertainment costs. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "outstandingBusinessIncome": {
               "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Use `outstandingBusinessIncome` in `adjustableSummaryCalculation` or `adjustedSummaryCalculation` instead.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45",
+              "example": 1000.45,
               "deprecated": true
             },
             "balancingChargeOther": {
               "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "balancingChargeBpra": {
               "description": "Balancing charge on sale or cessation of business use (only where Business Premises Renovation Allowance has been claimed). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "goodsAndServicesOwnUse": {
               "description": "Value of the normal sale price of goods or stock have been taken out of the business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -1236,9 +1375,10 @@
         "totalDeductions": {
           "description": "The total deductions to net loss (or addition to net profit). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "deductions": {
           "type": "object",
@@ -1247,93 +1387,106 @@
             "tradingAllowance": {
               "description": "A tax exemption of a limited amount for individuals with trading income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "annualInvestmentAllowance": {
               "description": "Annual investment allowance on items that qualify up to the AIA amount. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "capitalAllowanceMainPool": {
               "description": "Capital allowances at 18% on equipment, including cars with lower CO2 emissions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "capitalAllowanceSpecialRatePool": {
               "description": "Capital allowances at 8% on equipment, including cars with higher CO2 emissions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "zeroEmissionGoods": {
               "description": "Zero emission goods vehicle allowance for goods vehicles purchased for business use. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "businessPremisesRenovationAllowance": {
               "description": "Business Premises Renovation Allowance if converting or renovating unused qualifying business premises. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "enhancedCapitalAllowance": {
               "description": "100% and other enhanced capital allowances. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "allowanceOnSales": {
               "description": "Allowances on sale or cessation of business use (where you have disposed of assets for less than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "capitalAllowanceSingleAssetPool": {
               "description": "Claim to capital allowances in respect of all single asset pools.\nThe value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "500.25"
+              "example": 500.25
             },
             "includedNonTaxableProfits": {
               "description": "Income, receipts and other profits included in business income or expenses but not taxable as business profits. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "structuredBuildingAllowance": {
               "description": "The amount of structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "enhancedStructuredBuildingAllowance": {
               "description": "The amount of enhanced structured building allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "zeroEmissionsCarAllowance": {
               "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -1341,9 +1494,10 @@
         "totalAccountingAdjustments": {
           "description": "The total amount of adjustment for change of accounting practice. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
+          "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "accountingAdjustments": {
           "type": "object",
@@ -1352,31 +1506,34 @@
             "basisAdjustment": {
               "description": "If your basis period is not the same as your accounting period, enter the adjustment needed to arrive at the profit or loss for the basis period – if the adjustment needs to be taken off the profit figure, this should be negative. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "overlapReliefUsed": {
               "description": "Overlap relief used this year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "accountingAdjustment": {
               "description": "Adjustment for change of accounting practice. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": 0,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "averagingAdjustment": {
-              "description": "Averaging adjustment (only for farmers, market gardeners and creators of literary or artistic works) – if the adjustment needs to be taken off the profit figure, this should be negative. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be reinstated in a future release.",
+              "description": "Averaging adjustment (only for farmers, market gardeners and creators of literary or artistic works) – if the adjustment needs to be taken off the profit figure, this should be negative. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
+              "multipleOf": 0.01,
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45",
-              "deprecated": true
+              "example": 1000.45
             }
           },
           "additionalProperties": false
