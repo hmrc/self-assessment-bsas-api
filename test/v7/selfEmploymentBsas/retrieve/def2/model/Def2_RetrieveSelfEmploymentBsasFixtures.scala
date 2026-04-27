@@ -176,8 +176,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |{
       |  "basisAdjustment": 7.01,
       |  "overlapReliefUsed": 7.02,
-      |  "accountingAdjustment": 7.03,
-      |  "averagingAdjustment": 7.04
+      |  "accountingAdjustment": 7.03
       |}
       |""".stripMargin
   )
@@ -410,8 +409,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |{
       |  "basisAdjustment": 7.01,
       |  "overlapReliefUsed": 7.02,
-      |  "accountingAdjustment": 7.03,
-      |  "averagingAdjustment": 7.04
+      |  "accountingAdjustment": 7.03
       |}
       |""".stripMargin
   )
@@ -614,8 +612,7 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
   val summaryCalculationAccountingAdjustments: SummaryCalculationAccountingAdjustments = SummaryCalculationAccountingAdjustments(
     basisAdjustment = Some(7.01),
     overlapReliefUsed = Some(7.02),
-    accountingAdjustment = Some(7.03),
-    averagingAdjustment = Some(7.04)
+    accountingAdjustment = Some(7.03)
   )
 
   val adjustableSummaryCalculation: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
