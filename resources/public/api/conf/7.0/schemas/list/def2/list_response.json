@@ -36,11 +36,13 @@
               "startDate": {
                 "type": "string",
                 "description": "The date the accounting period began.",
+                "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
                 "example": "2018-05-01"
               },
               "endDate": {
                 "type": "string",
                 "description": "The date the accounting period finished. The accounting period must end in the tax year to which it is assigned. For MTD submissions 2019-20 is the earliest tax year in which an accounting period can end.",
+                "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
                 "example": "2019-04-30"
               }
             },
@@ -49,6 +51,7 @@
           "taxYear": {
             "type": "string",
             "description": "The tax year that the Adjustable Summary Calculation relates to.",
+            "pattern": "^2[0-9]{3}-[0-9]{2}$",
             "example": "2020-21"
           },
           "summaries": {
@@ -66,9 +69,11 @@
                   "pattern": "^[0-9]{8}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                 },
                 "requestedDateTime": {
+                  "type": "string",
                   "title": "Requested Datetime",
                   "description": "The date and time this summary calculation was originally requested, prior to any adjustments.",
-                  "type": "string"
+                  "format": "date-time",
+                  "example": "2021-07-06T09:37:17.000Z"
                 },
                 "summaryStatus": {
                   "title": "Summary Status",
@@ -87,9 +92,11 @@
                   "example": "false"
                 },
                 "adjustedDateTime": {
+                  "type": "string",
                   "title": "Adjusted Datetime",
                   "description": "The date and time this calculation was adjusted.",
-                  "type": "string"
+                  "format": "date-time",
+                  "example": "2021-07-06T09:37:17.000Z"
                 }
               },
               "required": [
