@@ -13,28 +13,28 @@
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "premiumsOfLeaseGrant": {
               "description": "The adjustment to premiums received for the grant of a lease and other lump sums to possess a property. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "reversePremiums": {
               "description": "The adjustment to reverse premiums and inducements. Any expense or partial expense that cannot be claimed for tax purposes. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "otherPropertyIncome": {
               "description": "The adjustment to other income from property, such as rent charges and ground rents, income from letting others tip waste on your land, and income for the use of a caravan or houseboat at a fixed location. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -48,63 +48,63 @@
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "repairsAndMaintenance": {
               "description": "The adjustment to property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "financialCosts": {
               "description": "The adjustment to loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "professionalFees": {
               "description": "The adjustment to legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "travelCosts": {
               "description": "The adjustment to car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "costOfServices": {
               "description": "The adjustment to cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "residentialFinancialCost": {
               "description": "The adjustment to the residential financial cost that can be deductible from rental income (tax relief). The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "other": {
               "description": "The adjustment to other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "consolidatedExpenses": {
               "description": "The adjustment to the sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -125,7 +125,7 @@
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -139,56 +139,56 @@
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "repairsAndMaintenance": {
               "description": "The adjustment to property repairs and maintenance. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "financialCosts": {
               "description": "The adjustment to loan interest and other financial costs. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "professionalFees": {
               "description": "The adjustment to legal, management and other professional fees. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "travelCosts": {
               "description": "The adjustment to car, van and travel costs incurred in running a property business. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "costOfServices": {
               "description": "The adjustment to cost of services provided, including wages. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "other": {
               "description": "The adjustment to other allowable property expenses. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             },
             "consolidatedExpenses": {
               "description": "The adjustment to the sum of all expenses for the specified period. The value must be between -99999999999.99 and 99999999999.99 (excluding 0 or 0.00).",
               "type": "number",
               "minimum": -99999999999.99,
               "maximum": 99999999999.99,
-              "example": "1000.45"
+              "example": 1000.45
             }
           },
           "additionalProperties": false
@@ -206,7 +206,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "other": {
           "type": "number",
@@ -214,7 +214,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         }
       },
       "additionalProperties": false
@@ -229,7 +229,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "paymentsToSubcontractors": {
           "type": "number",
@@ -237,7 +237,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "wagesAndStaffCosts": {
           "type": "number",
@@ -245,7 +245,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "carVanTravelExpenses": {
           "type": "number",
@@ -253,7 +253,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "premisesRunningCosts": {
           "type": "number",
@@ -261,7 +261,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "maintenanceCosts": {
           "type": "number",
@@ -269,7 +269,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "adminCosts": {
           "type": "number",
@@ -277,7 +277,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "interestOnBankOtherLoans": {
           "type": "number",
@@ -285,7 +285,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "financeCharges": {
           "type": "number",
@@ -293,7 +293,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "irrecoverableDebts": {
           "type": "number",
@@ -301,7 +301,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "professionalFees": {
           "type": "number",
@@ -309,7 +309,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "depreciation": {
           "type": "number",
@@ -317,7 +317,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "otherExpenses": {
           "type": "number",
@@ -325,7 +325,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "advertisingCosts": {
           "type": "number",
@@ -333,7 +333,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "businessEntertainmentCosts": {
           "type": "number",
@@ -341,7 +341,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "consolidatedExpenses": {
           "type": "number",
@@ -349,7 +349,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         }
       },
       "additionalProperties": false
@@ -364,7 +364,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "paymentsToSubcontractorsDisallowable": {
           "type": "number",
@@ -372,7 +372,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "wagesAndStaffCostsDisallowable": {
           "type": "number",
@@ -380,7 +380,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "carVanTravelExpensesDisallowable": {
           "type": "number",
@@ -388,7 +388,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "premisesRunningCostsDisallowable": {
           "type": "number",
@@ -396,7 +396,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "maintenanceCostsDisallowable": {
           "type": "number",
@@ -404,7 +404,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "adminCostsDisallowable": {
           "type": "number",
@@ -412,7 +412,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "interestOnBankOtherLoansDisallowable": {
           "type": "number",
@@ -420,7 +420,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "financeChargesDisallowable": {
           "type": "number",
@@ -428,7 +428,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "irrecoverableDebtsDisallowable": {
           "type": "number",
@@ -436,7 +436,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "professionalFeesDisallowable": {
           "type": "number",
@@ -444,7 +444,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "depreciationDisallowable": {
           "type": "number",
@@ -452,7 +452,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "otherExpensesDisallowable": {
           "type": "number",
@@ -460,7 +460,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "advertisingCostsDisallowable": {
           "type": "number",
@@ -468,7 +468,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         },
         "businessEntertainmentCostsDisallowable": {
           "type": "number",
@@ -476,7 +476,7 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": "1000.45"
+          "example": 1000.45
         }
       },
       "additionalProperties": false

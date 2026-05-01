@@ -73,7 +73,7 @@
                   "title": "Requested Datetime",
                   "description": "The date and time this summary calculation was originally requested, prior to any adjustments.",
                   "format": "date-time",
-                  "example": "2021-07-06T09:37:17.000Z"
+                  "example": "2019-04-04T01:01:01Z"
                 },
                 "summaryStatus": {
                   "title": "Summary Status",
@@ -96,7 +96,7 @@
                   "title": "Adjusted Datetime",
                   "description": "The date and time this calculation was adjusted.",
                   "format": "date-time",
-                  "example": "2021-07-06T09:37:17.000Z"
+                  "example": "2019-04-04T01:01:01Z"
                 }
               },
               "required": [
