@@ -408,10 +408,9 @@
         "adjustedIncomeTaxLoss": {
           "description": "Amount of taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
           "type": "number",
-          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999.99,
-          "example": 1000.45
+          "example": 1000
         },
         "countryLevelDetail": {
           "type": "array",
@@ -1397,7 +1396,6 @@
         "adjustedIncomeTaxLoss": {
           "description": "Amount of taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
           "type": "integer",
-          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999,
           "example": 1000

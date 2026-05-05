@@ -89,7 +89,7 @@
                   "title": "Adjusted Summary",
                   "description": "Indicates whether the original summary calculation has had adjustments applied.",
                   "type": "boolean",
-                  "example": "false"
+                  "example": false
                 },
                 "adjustedDateTime": {
                   "type": "string",
