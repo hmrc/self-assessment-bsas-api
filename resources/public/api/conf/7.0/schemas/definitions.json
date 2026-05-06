@@ -25,11 +25,13 @@
         "startDate": {
           "type": "string",
           "description": "The date the accounting period started.",
+          "format": "date",
           "example": "2019-04-06"
         },
         "endDate": {
           "type": "string",
           "description": "The date the accounting period ended.",
+          "format": "date",
           "example": "2020-04-05"
         }
       },
@@ -83,7 +85,7 @@
     "adjustedSummary": {
       "type": "boolean",
       "description": "Indicates if summary includes adjusted values.",
-      "example": "false"
+      "example": false
     },
     "taxYear": {
       "type": "string",
