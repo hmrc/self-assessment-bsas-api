@@ -462,7 +462,6 @@
         "taxableProfit": {
           "description": "Amount of taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
           "type": "integer",
-          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999,
           "example": 1000
@@ -470,7 +469,6 @@
         "adjustedIncomeTaxLoss": {
           "description": "Amount of taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
           "type": "integer",
-          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999,
           "example": 1000
@@ -915,7 +913,6 @@
         "taxableProfit": {
           "description": "Amount of  taxable net profit. The value must be between 0 and 99999999999 no decimal places.",
           "type": "integer",
-          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999,
           "example": 1000
@@ -923,7 +920,6 @@
         "adjustedIncomeTaxLoss": {
           "description": "Amount of  taxable net loss. The value must be between 0 and 99999999999 no decimal places.",
           "type": "integer",
-          "multipleOf": 0.01,
           "minimum": 0,
           "maximum": 99999999999,
           "example": 1000
