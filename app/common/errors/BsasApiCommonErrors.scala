@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,3 +110,10 @@ object RuleDuplicatePropertyIdError
 
 object RulePropertyIdMismatchError
     extends MtdError("RULE_PROPERTY_ID_MISMATCH", "The supplied property ID is not valid for this income source", BAD_REQUEST)
+
+object RuleAccountingPeriodNotAlignedError
+  extends MtdError(
+    "RULE_ACCOUNTING_PERIOD_NOT_ALIGNED",
+    "The accounting period must be a complete tax year (6 April to 5 April of the following year)",
+    BAD_REQUEST
+  )

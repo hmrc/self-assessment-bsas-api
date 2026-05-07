@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class BsasAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
   def sendMtdRequest(request: WSRequest): WSResponse = await(request.post(requestJson))
 
-  val downstreamUri: String = s"/income-tax/adjustable-summary-calculation/$nino"
+  val downstreamUri: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino"
 
   val maybeDownstreamResponseJson: Option[JsValue] = Some(
     Json.parse(Def1_TriggerBsasFixtures.downstreamResponse)
@@ -41,7 +41,7 @@ class BsasAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
   private val requestJson =
     Json.obj(
-      "accountingPeriod" -> Json.obj("startDate" -> "2019-01-01", "endDate" -> "2019-10-31"),
+      "accountingPeriod" -> Json.obj("startDate" -> "2025-04-06", "endDate" -> "2026-04-05"),
       "typeOfBusiness"   -> TypeOfBusiness.`self-employment`.toString,
       "businessId"       -> "XAIS12345678901"
     )

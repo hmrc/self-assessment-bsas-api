@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
 package v7.bsas.trigger.def2
 
 import cats.data.Validated
-import cats.data.Validated.Invalid
+import cats.data.Validated.{Invalid, cond}
 import cats.implicits.*
-import common.errors.RuleAccountingPeriodNotSupportedError
+import common.errors.{RuleAccountingPeriodNotAlignedError, RuleAccountingPeriodNotSupportedError}
 import config.BsasConfig
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveDateRange}
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v7.bsas.trigger.def2.model.request.Def2_TriggerBsasRequestData
 import v7.common.model.TypeOfBusiness
@@ -64,8 +65,17 @@ class Def2_TriggerBsasRulesValidator(implicit bsasConfig: BsasConfig) extends Ru
       validatedDateRange,
       validatedTypeOfBusiness
     ).mapN((_, _, _))
-      .andThen { case (_, dateRange, typeOfBusiness) => validateAccountingPeriodNotSupported(dateRange.endDate, typeOfBusiness) }
+      .andThen { case (_, dateRange, typeOfBusiness) =>
+        validateAccountingPeriodNotSupported(dateRange.endDate, typeOfBusiness)
+          .andThen(_ => validateAccountingPeriodNotAligned(dateRange.startDate, dateRange.endDate))
+      }
       .onSuccess(parsed)
+  }
+
+  private def validateAccountingPeriodNotAligned(startDate: LocalDate, endDate: LocalDate): Validated[Seq[MtdError], Unit] = {
+    val taxYear: TaxYear = TaxYear.containing(endDate)
+
+    cond((taxYear.startDate, taxYear.endDate) == (startDate, endDate), (), List(RuleAccountingPeriodNotAlignedError))
   }
 
   private def validateAccountingPeriodNotSupported(endDate: LocalDate, typeOfBusiness: TypeOfBusiness): Validated[Seq[MtdError], Unit] = {
