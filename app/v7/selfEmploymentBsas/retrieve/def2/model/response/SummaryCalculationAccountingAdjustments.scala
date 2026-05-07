@@ -21,7 +21,6 @@ import play.api.libs.json.*
 
 case class SummaryCalculationAccountingAdjustments(
     basisAdjustment: Option[BigDecimal],
-    overlapReliefUsed: Option[BigDecimal],
     accountingAdjustment: Option[BigDecimal]
 )
 
@@ -29,7 +28,6 @@ object SummaryCalculationAccountingAdjustments {
 
   implicit val reads: Reads[SummaryCalculationAccountingAdjustments] = (
     (JsPath \ "basisAdjustment").readNullable[BigDecimal] and
-      (JsPath \ "overlapReliefUsed").readNullable[BigDecimal] and
       (JsPath \ "accountingAdjustment").readNullable[BigDecimal]
   )(SummaryCalculationAccountingAdjustments.apply)
 
