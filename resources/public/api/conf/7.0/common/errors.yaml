@@ -231,6 +231,13 @@ components:
         code: RULE_PROPERTY_ID_MISMATCH
         message: The supplied property ID is not valid for this income source
 
+    ruleAccountingPeriodNotAligned:
+      description: |
+        The accounting period must be a complete tax year (6 April to 5 April of the following year).
+      value:
+        code: RULE_ACCOUNTING_PERIOD_NOT_ALIGNED
+        message: The accounting period must be a complete tax year (6 April to 5 April of the following year)
+
     invalidTaxYear:
       description: |
         A tax year before 2023-24 was supplied. A request with a tax year parameter is only valid for tax years

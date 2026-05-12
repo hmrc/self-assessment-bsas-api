@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 
 package v7.bsas.trigger.def1
 
-import cats.data.Validated
-import cats.data.Validated.Valid
-import common.errors.{RuleAccountingPeriodNotSupportedError, TypeOfBusinessFormatError}
+import common.errors.*
 import config.MockBsasConfig
 import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.models.domain.Nino
@@ -26,7 +24,6 @@ import shared.models.errors.*
 import shared.utils.UnitSpec
 import v7.bsas.trigger.def1.model.request.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 import v7.bsas.trigger.model.TriggerBsasRequestData
-import v7.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
 
 class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
 
@@ -37,8 +34,8 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
 
   private def validator(nino: String, body: JsValue) = new Def1_TriggerBsasValidator(nino, body)
 
-  private def triggerBsasRequestJson(startDate: String = "2021-05-05",
-                                     endDate: String = "2022-05-06",
+  private def triggerBsasRequestJson(startDate: String = "2021-04-06",
+                                     endDate: String = "2022-04-05",
                                      typeOfBusiness: String = "self-employment",
                                      businessId: String = "XAIS12345678901"): JsObject = {
     Json.obj(
@@ -48,7 +45,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     )
   }
 
-  class SetUp {
+  private trait Test {
     MockedBsasConfig.v3TriggerForeignBsasMinimumTaxYear.returns("2021-22").anyNumberOfTimes()
     MockedBsasConfig.v3TriggerNonForeignBsasMinimumTaxYear.returns("2019-20").anyNumberOfTimes()
   }
@@ -56,24 +53,30 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
   "running validation" should {
     "return the parsed domain object" when {
       List(
-        "self-employment",
-        "uk-property-fhl",
-        "uk-property",
-        "foreign-property-fhl-eea",
-        "foreign-property"
-      ).foreach { typeOfBusiness =>
-        s"$typeOfBusiness is supplied" in new SetUp {
-          val body: JsObject                            = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness)
+        ("self-employment", "2019-04-06", "2020-04-05"),
+        ("uk-property-fhl", "2019-04-06", "2020-04-05"),
+        ("uk-property", "2019-04-06", "2020-04-05"),
+        ("foreign-property-fhl-eea", "2021-04-06", "2022-04-05"),
+        ("foreign-property", "2021-04-06", "2022-04-05")
+      ).foreach { case (typeOfBusiness, startDate, endDate) =>
+        s"$typeOfBusiness is supplied" in new Test {
+          val body: JsObject = triggerBsasRequestJson(
+            startDate = startDate,
+            endDate = endDate,
+            typeOfBusiness = typeOfBusiness
+          )
+
           val expectedBody: Def1_TriggerBsasRequestBody = body.as[Def1_TriggerBsasRequestBody]
 
-          val result: Validated[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
-          result shouldBe Valid(Def1_TriggerBsasRequestData(parsedNino, expectedBody))
+          val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, body).validateAndWrapResult()
+
+          result shouldBe Right(Def1_TriggerBsasRequestData(parsedNino, expectedBody))
         }
       }
     }
 
     "return NinoFormatError" when {
-      "the nino is invalid" in new SetUp {
+      "the nino is invalid" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator("not-a-nino", triggerBsasRequestJson()).validateAndWrapResult()
 
         result shouldBe Left(
@@ -83,7 +86,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
 
     "return a StartDateFormatError" when {
-      "the start date format is incorrect" in new SetUp {
+      "the start date format is incorrect" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(startDate = "06-05-2019")).validateAndWrapResult()
 
@@ -92,7 +95,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
         )
       }
 
-      "the start date is before the min start date" in new SetUp {
+      "the start date is before the min start date" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(startDate = "1890-05-23")).validateAndWrapResult()
 
@@ -103,7 +106,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
 
     "return an EndDateFormatError" when {
-      "the end date format is incorrect" in new SetUp {
+      "the end date format is incorrect" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(endDate = "06-05-2020")).validateAndWrapResult()
 
@@ -112,7 +115,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
         )
       }
 
-      "the end date is after the max end date" in new SetUp {
+      "the end date is after the max end date" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(endDate = "2101-05-20")).validateAndWrapResult()
 
@@ -123,7 +126,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
 
     "return a TypeOfBusinessFormatError" when {
-      "an incorrect business type is given" in new SetUp {
+      "an incorrect business type is given" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(typeOfBusiness = "not-a-type-of-business")).validateAndWrapResult()
 
@@ -134,7 +137,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
 
     "return a BusinessIdFormatError" when {
-      "a business id is provided with wrong formatting" in new SetUp {
+      "a business id is provided with wrong formatting" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(businessId = "not-a-business-id")).validateAndWrapResult()
 
@@ -145,7 +148,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
 
     "return a RuleIncorrectOrEmptyBodyError" when {
-      "an empty body is submitted" in new SetUp {
+      "an empty body is submitted" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, JsObject.empty).validateAndWrapResult()
 
         result shouldBe Left(
@@ -153,8 +156,8 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
         )
       }
 
-      "mandatory fields are missing" in new SetUp {
-        val requestJs: JsObject                                  = Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2020-05-06"))
+      "mandatory fields are missing" in new Test {
+        val requestJs: JsObject                                  = Json.obj("accountingPeriod" -> Json.obj("endDate" -> "2022-04-05"))
         val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, requestJs).validateAndWrapResult()
 
         result shouldBe Left(
@@ -164,7 +167,7 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
 
     "return a RuleEndBeforeStartDateError" when {
-      "the end date is before the start date" in new SetUp {
+      "the end date is before the start date" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(startDate = "2022-05-07")).validateAndWrapResult()
 
@@ -174,30 +177,39 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
       }
     }
 
-    "return a RuleEndBeforeStartDateError" when {
-      "the end date is equal to start date" in new SetUp {
-        val body: JsObject                            = triggerBsasRequestJson(startDate = "2022-05-07", endDate = "2022-05-07")
-        val expectedBody: Def1_TriggerBsasRequestBody = body.as[Def1_TriggerBsasRequestBody]
-        val result: Either[ErrorWrapper, TriggerBsasRequestData] =
-          validator(validNino, body).validateAndWrapResult()
+    "return a RuleAccountingPeriodNotSupportedError" when {
+      List(
+        ("self-employment", "2018-04-06", "2019-04-05"),
+        ("uk-property-fhl", "2018-04-06", "2019-04-05"),
+        ("uk-property", "2018-04-06", "2019-04-05"),
+        ("foreign-property-fhl-eea", "2020-04-06", "2021-04-05"),
+        ("foreign-property", "2020-04-06", "2021-04-05")
+      ).foreach { case (typeOfBusiness, startDate, endDate) =>
+        s"the accounting period is before the minimum tax year and typeOfBusiness is $typeOfBusiness" in new Test {
+          val body: JsObject = triggerBsasRequestJson(
+            startDate = startDate,
+            endDate = endDate,
+            typeOfBusiness = typeOfBusiness
+          )
 
-        result shouldBe Right(Def1_TriggerBsasRequestData(parsedNino, expectedBody))
+          val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, body).validateAndWrapResult()
+
+          result shouldBe Left(ErrorWrapper(correlationId, RuleAccountingPeriodNotSupportedError))
+        }
       }
     }
 
-    "return a RuleAccountingPeriodNotSupportedError" when {
-      "the accounting period is before the minimum tax year" in new SetUp {
+    "return a RuleAccountingPeriodNotAlignedError" when {
+      "the accounting period does not align to a complete tax year" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
-          validator(validNino, triggerBsasRequestJson(startDate = "2015-05-05", endDate = "2016-05-06")).validateAndWrapResult()
+          validator(validNino, triggerBsasRequestJson(startDate = "2021-04-07")).validateAndWrapResult()
 
-        result shouldBe Left(
-          ErrorWrapper(correlationId, RuleAccountingPeriodNotSupportedError)
-        )
+        result shouldBe Left(ErrorWrapper(correlationId, RuleAccountingPeriodNotAlignedError))
       }
     }
 
     "return multiple errors" when {
-      "the request body has muliple issues" in new SetUp {
+      "the request body has multiple issues" in new Test {
         val result: Either[ErrorWrapper, TriggerBsasRequestData] =
           validator(validNino, triggerBsasRequestJson(typeOfBusiness = "", businessId = "")).validateAndWrapResult()
 
@@ -212,48 +224,5 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
   }
 
-  "the Accounting Period validation" should {
-    "return no errors" when {
-      "passed the correct Accounting Period dates for each Type of Business" when {
-        List(
-          (TypeOfBusiness.`self-employment`, "2019-04-06"),
-          (TypeOfBusinessWithFHL.`uk-property-fhl`, "2019-04-06"),
-          (TypeOfBusinessWithFHL.`uk-property`, "2019-04-06"),
-          (TypeOfBusinessWithFHL.`foreign-property-fhl-eea`, "2021-04-06"),
-          (TypeOfBusiness.`foreign-property`, "2021-04-06")
-        ).foreach { case (typeOfBusiness, endDate) =>
-          s"typeOfBusiness is $typeOfBusiness and the endDate is after the allowed end date" in new SetUp {
-            private val body         = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
-            private val expectedBody = body.as[Def1_TriggerBsasRequestBody]
-
-            val result: Validated[Seq[MtdError], TriggerBsasRequestData] = validator(validNino, body).validate
-            result shouldBe Valid(Def1_TriggerBsasRequestData(parsedNino, expectedBody))
-          }
-        }
-      }
-
-      "return RuleAccountingPeriodNotSupported" when {
-        "passed incorrect Accounting Period dates for each Type of Business" when {
-          List(
-            (TypeOfBusiness.`self-employment`, "2019-04-05"),
-            (TypeOfBusinessWithFHL.`uk-property-fhl`, "2019-04-05"),
-            (TypeOfBusinessWithFHL.`uk-property`, "2019-04-05"),
-            (TypeOfBusinessWithFHL.`foreign-property-fhl-eea`, "2021-04-05"),
-            (TypeOfBusiness.`foreign-property`, "2021-04-05")
-          ).foreach { case (typeOfBusiness, endDate) =>
-            s"typeOfBusiness is $typeOfBusiness and endDate is before the earliest allowed end date" in new SetUp {
-              private val body = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness.toString, startDate = "2019-01-01", endDate = endDate)
-
-              val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, body).validateAndWrapResult()
-
-              result shouldBe Left(
-                ErrorWrapper(correlationId, RuleAccountingPeriodNotSupportedError)
-              )
-            }
-          }
-        }
-      }
-    }
-  }
 
 }

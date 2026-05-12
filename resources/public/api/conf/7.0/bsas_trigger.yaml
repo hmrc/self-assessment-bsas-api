@@ -112,6 +112,8 @@ post:
               $ref: "./common/errors.yaml#/components/examples/ruleEndDateBeforeStartDate"
             RULE_ACCOUNTING_PERIOD_NOT_SUPPORTED:
               $ref: "./common/errors.yaml#/components/examples/ruleAccountingPeriodNotSupported"
+            RULE_ACCOUNTING_PERIOD_NOT_ALIGNED:
+              $ref: "./common/errors.yaml#/components/examples/ruleAccountingPeriodNotAligned"
             RULE_ACCOUNTING_PERIOD_NOT_ENDED:
               $ref: "./common/errors.yaml#/components/examples/ruleAccountingPeriodNotEnded"
             RULE_OBLIGATIONS_NOT_MET:
