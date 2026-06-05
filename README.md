@@ -4,7 +4,7 @@
 
 - Scala 3.5.2
 - Java 11
-- sbt 1.9.7
+- sbt 1.10.10
 - [Service Manager](https://github.com/hmrc/sm2)
 
 # To run locally
