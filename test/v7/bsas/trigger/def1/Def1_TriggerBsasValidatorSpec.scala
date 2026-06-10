@@ -224,5 +224,4 @@ class Def1_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
     }
   }
 
-
 }

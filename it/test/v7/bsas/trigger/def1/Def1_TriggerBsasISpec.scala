@@ -35,8 +35,8 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
                           businessId: String = "XAIS12345678901"): JsObject = {
     Json.obj(
       "accountingPeriod" -> Json.obj("startDate" -> startDate, "endDate" -> endDate),
-      "typeOfBusiness" -> typeOfBusiness,
-      "businessId" -> businessId
+      "typeOfBusiness"   -> typeOfBusiness,
+      "businessId"       -> businessId
     )
   }
 
@@ -161,7 +161,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
       }
     }
   }
-  
+
   private trait Test {
     val nino = "AA123456A"
 
@@ -201,6 +201,7 @@ class Def1_TriggerBsasISpec extends IntegrationBaseSpec {
         |  "calculationId": "c75f40a6-a3df-4429-a697-471eeec46435"
         |}
       """.stripMargin
+
   }
 
   private trait NonTysTest extends Test {
