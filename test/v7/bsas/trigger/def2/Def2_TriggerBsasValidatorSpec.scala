@@ -58,7 +58,7 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
         "foreign-property"
       ).foreach { typeOfBusiness =>
         s"$typeOfBusiness is supplied" in new Test {
-          val body: JsObject = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness)
+          val body: JsObject                            = triggerBsasRequestJson(typeOfBusiness = typeOfBusiness)
           val expectedBody: Def2_TriggerBsasRequestBody = body.as[Def2_TriggerBsasRequestBody]
 
           val result: Either[ErrorWrapper, TriggerBsasRequestData] = validator(validNino, body).validateAndWrapResult()
@@ -214,6 +214,5 @@ class Def2_TriggerBsasValidatorSpec extends UnitSpec with MockBsasConfig {
       }
     }
   }
-
 
 }

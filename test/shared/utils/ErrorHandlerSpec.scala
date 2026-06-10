@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import shared.models.errors.*
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
-import uk.gov.hmrc.http.{HeaderCarrier, JsValidationException, NotFoundException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{GatewayTimeoutException, HeaderCarrier, JsValidationException, NotFoundException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.model.{DataEvent, TruncationLog}
@@ -92,11 +92,11 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         status(result) shouldBe BAD_REQUEST
         contentAsJson(result) shouldBe Json.parse(
           """
-          |{
-          |  "code": "INVALID_REQUEST",
-          |  "message": "unmatched error"
-          |}
-          |""".stripMargin
+            |{
+            |  "code": "INVALID_REQUEST",
+            |  "message": "unmatched error"
+            |}
+            |""".stripMargin
         )
       }
     }
@@ -131,6 +131,14 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
         contentAsJson(result) shouldBe BadRequestError.asJson
       }
+
+      "Upstream4xxResponse thrown" in new Test {
+        val ex: UpstreamErrorResponse = UpstreamErrorResponse("client error", TOO_MANY_REQUESTS, TOO_MANY_REQUESTS, None.orNull)
+        val result: Future[Result]    = handler.onServerError(requestHeader, ex)
+
+        status(result) shouldBe BAD_REQUEST
+        contentAsJson(result) shouldBe BadRequestError.asJson
+      }
     }
 
     "return 500 with error body" when {
@@ -140,9 +148,24 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
         contentAsJson(result) shouldBe InternalError.asJson
       }
+
+      "Upstream5xxResponse thrown" in new Test {
+        val ex: UpstreamErrorResponse = UpstreamErrorResponse("server error", SERVICE_UNAVAILABLE, SERVICE_UNAVAILABLE, None.orNull)
+        val result: Future[Result]    = handler.onServerError(requestHeader, ex)
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        contentAsJson(result) shouldBe InternalError.asJson
+      }
     }
 
     "return GATEWAY_TIMEOUT with error body" when {
+      "GatewayTimeoutException is thrown" in new Test {
+        val result: Future[Result] = handler.onServerError(requestHeader, new GatewayTimeoutException("test") with NoStackTrace)
+
+        status(result) shouldBe GATEWAY_TIMEOUT
+        contentAsJson(result) shouldBe GatewayTimeoutError.asJson
+      }
+
       Seq(499, GATEWAY_TIMEOUT).foreach { statusCode =>
         s"a $statusCode UpstreamErrorResponse is returned" in new Test {
           val errorResponse: UpstreamErrorResponse = UpstreamErrorResponse("request timeout", statusCode, statusCode, Map.empty)
