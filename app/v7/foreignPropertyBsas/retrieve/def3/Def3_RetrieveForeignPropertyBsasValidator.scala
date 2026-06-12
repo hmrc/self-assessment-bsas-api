@@ -19,9 +19,9 @@ package v7.foreignPropertyBsas.retrieve.def3
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
+import api.models.errors.MtdError
 import v7.foreignPropertyBsas.retrieve.def3.model.request.Def3_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 

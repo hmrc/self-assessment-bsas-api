@@ -16,7 +16,7 @@
 
 package v7.bsas.trigger.def1.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v7.bsas.trigger.TriggerSchema
 import v7.bsas.trigger.model.TriggerBsasRequestData
 

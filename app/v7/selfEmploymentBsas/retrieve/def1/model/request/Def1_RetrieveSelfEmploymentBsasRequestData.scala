@@ -16,7 +16,7 @@
 
 package v7.selfEmploymentBsas.retrieve.def1.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import v7.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema
 import v7.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 

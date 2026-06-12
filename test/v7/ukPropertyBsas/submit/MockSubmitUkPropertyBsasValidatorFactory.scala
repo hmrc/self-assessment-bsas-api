@@ -18,7 +18,7 @@ package v7.ukPropertyBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 
 trait MockSubmitUkPropertyBsasValidatorFactory extends MockValidatorFactory[SubmitUkPropertyBsasRequestData] {

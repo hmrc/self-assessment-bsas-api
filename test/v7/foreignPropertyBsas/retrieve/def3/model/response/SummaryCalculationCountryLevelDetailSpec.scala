@@ -17,7 +17,7 @@
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
 import common.model.RoundTripTest
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class SummaryCalculationCountryLevelDetailSpec extends UnitSpec with RoundTripTest {

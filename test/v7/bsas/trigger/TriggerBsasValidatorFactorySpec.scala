@@ -18,8 +18,8 @@ package v7.bsas.trigger
 
 import config.MockBsasConfig
 import play.api.libs.json.Json
-import shared.controllers.validators.AlwaysErrorsValidator
-import shared.utils.UnitSpec
+import api.controllers.validators.AlwaysErrorsValidator
+import api.utils.UnitSpec
 import v7.bsas.trigger.def1.Def1_TriggerBsasValidator
 import v7.bsas.trigger.def2.Def2_TriggerBsasValidator
 

@@ -17,7 +17,7 @@
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
 import play.api.libs.json.*
-import shared.models.domain.TaxYear
+import api.models.domain.TaxYear
 import v7.foreignPropertyBsas.retrieve.model.response.RetrieveForeignPropertyBsasResponse
 
 case class Def3_RetrieveForeignPropertyBsasResponse(

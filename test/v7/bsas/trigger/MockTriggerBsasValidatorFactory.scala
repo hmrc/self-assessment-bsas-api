@@ -18,7 +18,7 @@ package v7.bsas.trigger
 
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v7.bsas.trigger.model.TriggerBsasRequestData
 
 trait MockTriggerBsasValidatorFactory extends MockValidatorFactory[TriggerBsasRequestData] {

@@ -17,9 +17,9 @@
 package v7.selfEmploymentBsas.retrieve
 
 import play.api.libs.json.JsValue
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v7.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
@@ -37,7 +37,7 @@ class RetrieveSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
     self: ConnectorTest =>
 
     val connector: RetrieveSelfEmploymentBsasConnector =
-      new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new RetrieveSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def requestWith(taxYear: TaxYear): RetrieveSelfEmploymentBsasRequestData =
       Def1_RetrieveSelfEmploymentBsasRequestData(nino, calculationId, taxYear)

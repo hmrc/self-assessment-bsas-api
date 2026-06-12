@@ -20,9 +20,9 @@ import cats.data.Validated
 import cats.implicits.*
 import config.BsasConfig
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolverSupport}
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolverSupport}
+import api.models.errors.MtdError
 import v7.bsas.trigger.def1.model.request.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 import v7.bsas.trigger.model.TriggerBsasRequestData
 

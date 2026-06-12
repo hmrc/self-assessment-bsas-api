@@ -17,11 +17,11 @@
 package v7.bsas.list.def1.model.response
 
 import play.api.libs.json.{JsError, JsObject, Json}
-import shared.config.MockSharedAppConfig
-import shared.utils.UnitSpec
+import api.config.MockAppConfig
+import api.utils.UnitSpec
 import v7.bsas.list.def1.model.Def1_ListBsasFixtures
 
-class Def1_ListBsasResponseSpec extends UnitSpec with MockSharedAppConfig with Def1_ListBsasFixtures {
+class Def1_ListBsasResponseSpec extends UnitSpec with MockAppConfig with Def1_ListBsasFixtures {
 
   "ListBsasResponse" when {
     "read from valid JSON" should {

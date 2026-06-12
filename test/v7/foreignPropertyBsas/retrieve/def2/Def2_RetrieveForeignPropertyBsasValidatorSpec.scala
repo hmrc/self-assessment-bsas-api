@@ -16,9 +16,9 @@
 
 package v7.foreignPropertyBsas.retrieve.def2
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v7.foreignPropertyBsas.retrieve.def2.model.request.Def2_RetrieveForeignPropertyBsasRequestData
 
 class Def2_RetrieveForeignPropertyBsasValidatorSpec extends UnitSpec {

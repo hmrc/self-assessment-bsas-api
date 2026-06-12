@@ -19,13 +19,13 @@ package v7.selfEmploymentBsas.retrieve
 import common.errors.*
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import shared.utils.MockIdGenerator
+import api.config.MockAppConfig
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.{CalculationId, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.utils.MockIdGenerator
 import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v7.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData
 
@@ -40,7 +40,7 @@ class RetrieveSelfEmploymentBsasControllerSpec
     with MockRetrieveSelfEmploymentBsasValidatorFactory
     with MockRetrieveSelfEmploymentBsasService
     with MockIdGenerator
-    with MockSharedAppConfig {
+    with MockAppConfig {
 
   private val calculationId = CalculationId("03e3bc8b-910d-4f5b-88d7-b627c84f2ed7")
   private val requestData   = Def1_RetrieveSelfEmploymentBsasRequestData(parsedNino, calculationId, TaxYear.fromMtd("2023-24"))
@@ -90,11 +90,11 @@ class RetrieveSelfEmploymentBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.handleRequest(validNino, calculationId.calculationId, "2023-24")(fakeGetRequest)
   }

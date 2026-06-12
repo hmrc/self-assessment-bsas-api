@@ -18,7 +18,7 @@ package v7.selfEmploymentBsas.submit
 
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
 trait MockSubmitSelfEmploymentBsasValidatorFactory extends MockValidatorFactory[SubmitSelfEmploymentBsasRequestData] {

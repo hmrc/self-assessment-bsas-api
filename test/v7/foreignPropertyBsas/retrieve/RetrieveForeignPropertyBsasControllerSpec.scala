@@ -19,13 +19,13 @@ package v7.foreignPropertyBsas.retrieve
 import common.errors.*
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import shared.utils.MockIdGenerator
+import api.config.MockAppConfig
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.{CalculationId, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.utils.MockIdGenerator
 import v7.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
@@ -40,7 +40,7 @@ class RetrieveForeignPropertyBsasControllerSpec
     with MockRetrieveForeignPropertyBsasValidatorFactory
     with MockRetrieveForeignPropertyBsasService
     with MockIdGenerator
-    with MockSharedAppConfig {
+    with MockAppConfig {
 
   private val calculationId   = CalculationId("f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c")
   private val taxYear: String = "2023-24"
@@ -91,11 +91,11 @@ class RetrieveForeignPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.retrieve(validNino, calculationId.calculationId, taxYear)(fakeGetRequest)

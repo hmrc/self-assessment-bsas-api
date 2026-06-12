@@ -19,10 +19,10 @@ package v7.bsas.list.def1
 import cats.data.Validated
 import cats.data.Validated.*
 import cats.implicits.*
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
-import shared.models.domain.TaxYear
-import shared.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
+import api.models.domain.TaxYear
+import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import v7.bsas.list.def1.model.request.Def1_ListBsasRequestData
 import v7.bsas.list.model.request.ListBsasRequestData
 import v7.common.resolvers.ResolveTypeOfBusinessWithFHL

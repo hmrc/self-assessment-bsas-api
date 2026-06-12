@@ -16,8 +16,8 @@
 
 package v7.bsas.list
 
-import shared.controllers.validators.AlwaysErrorsValidator
-import shared.utils.UnitSpec
+import api.controllers.validators.AlwaysErrorsValidator
+import api.utils.UnitSpec
 import v7.bsas.list.def1.Def1_ListBsasValidator
 import v7.bsas.list.def2.Def2_ListBsasValidator
 

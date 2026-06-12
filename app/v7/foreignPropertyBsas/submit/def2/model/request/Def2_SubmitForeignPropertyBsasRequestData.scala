@@ -16,7 +16,7 @@
 
 package v7.foreignPropertyBsas.submit.def2.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import v7.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 

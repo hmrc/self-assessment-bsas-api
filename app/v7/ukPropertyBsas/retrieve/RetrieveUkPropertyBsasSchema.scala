@@ -19,10 +19,10 @@ package v7.ukPropertyBsas.retrieve
 import cats.data.Validated
 import cats.data.Validated.Valid
 import play.api.libs.json.Reads
-import shared.controllers.validators.resolvers.ResolveTaxYear
-import shared.models.domain.TaxYear
-import shared.models.errors.MtdError
-import shared.schema.DownstreamReadable
+import api.controllers.validators.resolvers.ResolveTaxYear
+import api.models.domain.TaxYear
+import api.models.errors.MtdError
+import api.schema.DownstreamReadable
 import v7.ukPropertyBsas.retrieve.def1.model.response.Def1_RetrieveUkPropertyBsasResponse
 import v7.ukPropertyBsas.retrieve.def2.model.response.Def2_RetrieveUkPropertyBsasResponse
 import v7.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse

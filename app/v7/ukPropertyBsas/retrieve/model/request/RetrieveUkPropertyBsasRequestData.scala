@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.retrieve.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import v7.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema
 
 trait RetrieveUkPropertyBsasRequestData {

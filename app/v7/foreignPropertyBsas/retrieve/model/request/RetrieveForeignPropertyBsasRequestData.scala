@@ -16,7 +16,7 @@
 
 package v7.foreignPropertyBsas.retrieve.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import v7.foreignPropertyBsas.retrieve.RetrieveForeignPropertyBsasSchema
 
 trait RetrieveForeignPropertyBsasRequestData {

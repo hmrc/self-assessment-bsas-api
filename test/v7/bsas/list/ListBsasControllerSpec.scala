@@ -18,13 +18,13 @@ package v7.bsas.list
 
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.{BusinessId, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import shared.utils.MockIdGenerator
+import api.config.MockAppConfig
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.{BusinessId, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.utils.MockIdGenerator
 import v7.bsas.list.def2.model.Def2_ListBsasFixtures
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v7.bsas.list.def2.model.response.Def2_ListBsasResponse
@@ -42,7 +42,7 @@ class ListBsasControllerSpec
     with MockMtdIdLookupService
     with MockListBsasValidatorFactory
     with MockListBsasService
-    with MockSharedAppConfig
+    with MockAppConfig
     with MockIdGenerator
     with Def2_ListBsasFixtures {
 
@@ -52,8 +52,8 @@ class ListBsasControllerSpec
   "list bsas" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockedSharedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
-        MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext.returns("individuals/self-assessment/adjustable-summary").anyNumberOfTimes()
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("tys-api.enabled" -> false)).anyNumberOfTimes()
 
         willUseValidator(returningSuccess(requestData))
 
@@ -121,11 +121,11 @@ class ListBsasControllerSpec
           ))
       ))
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.listBsas(validNino, taxYear, Some(typeOfBusiness), Some(businessId))(fakeGetRequest)

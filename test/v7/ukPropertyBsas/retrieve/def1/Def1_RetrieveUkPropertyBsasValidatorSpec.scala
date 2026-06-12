@@ -16,9 +16,9 @@
 
 package v7.ukPropertyBsas.retrieve.def1
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v7.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 
 class Def1_RetrieveUkPropertyBsasValidatorSpec extends UnitSpec {

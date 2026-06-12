@@ -16,8 +16,8 @@
 
 package v7.common.model
 
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 import v7.common.model.IncomeSourceTypeWithFHL.*
 
 class IncomeSourceTypeWithFHLSpec extends UnitSpec with EnumJsonSpecSupport {

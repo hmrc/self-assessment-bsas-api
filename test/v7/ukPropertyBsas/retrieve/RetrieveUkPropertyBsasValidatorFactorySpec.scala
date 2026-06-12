@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.retrieve
 
-import shared.controllers.validators.AlwaysErrorsValidator
-import shared.utils.UnitSpec
+import api.controllers.validators.AlwaysErrorsValidator
+import api.utils.UnitSpec
 import v7.ukPropertyBsas.retrieve.def1.Def1_RetrieveUkPropertyBsasValidator
 import v7.ukPropertyBsas.retrieve.def2.Def2_RetrieveUkPropertyBsasValidator
 

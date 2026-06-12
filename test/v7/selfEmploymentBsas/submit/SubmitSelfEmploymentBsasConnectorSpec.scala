@@ -16,9 +16,9 @@
 
 package v7.selfEmploymentBsas.submit
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture.additions
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.ExpensesFixture.expenses
@@ -42,7 +42,7 @@ class SubmitSelfEmploymentBsasConnectorSpec extends ConnectorSpec {
 
   trait Test {
     self: ConnectorTest =>
-    val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+    val connector: SubmitSelfEmploymentBsasConnector = new SubmitSelfEmploymentBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
   }
 
   "submitBsas" must {

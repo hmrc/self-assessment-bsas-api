@@ -16,7 +16,7 @@
 
 package v7.common.model
 
-import shared.models.domain.TaxYear
+import api.models.domain.TaxYear
 
 trait HasTaxYear {
   def taxYear: TaxYear

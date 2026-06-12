@@ -19,9 +19,9 @@ package v7.selfEmploymentBsas.submit.def1
 import cats.data.Validated
 import cats.implicits.*
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.*
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.*
+import api.models.errors.MtdError
 import v7.selfEmploymentBsas.submit.def1.model.request.{Def1_SubmitSelfEmploymentBsasRequestBody, Def1_SubmitSelfEmploymentBsasRequestData}
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 

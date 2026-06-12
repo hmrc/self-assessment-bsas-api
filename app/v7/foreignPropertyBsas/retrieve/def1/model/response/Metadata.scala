@@ -18,7 +18,7 @@ package v7.foreignPropertyBsas.retrieve.def1.model.response
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import shared.models.domain.TaxYear
+import api.models.domain.TaxYear
 
 case class Metadata(calculationId: String,
                     requestedDateTime: String,

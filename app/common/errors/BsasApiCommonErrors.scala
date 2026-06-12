@@ -17,7 +17,7 @@
 package common.errors
 
 import play.api.http.Status.{BAD_REQUEST, NOT_FOUND}
-import shared.models.errors.MtdError
+import api.models.errors.MtdError
 
 object TypeOfBusinessFormatError extends MtdError("FORMAT_TYPE_OF_BUSINESS", "The provided type of business is invalid", BAD_REQUEST)
 

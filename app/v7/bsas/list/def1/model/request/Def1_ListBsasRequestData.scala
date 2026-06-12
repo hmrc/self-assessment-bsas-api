@@ -16,7 +16,7 @@
 
 package v7.bsas.list.def1.model.request
 
-import shared.models.domain.{BusinessId, Nino, TaxYear}
+import api.models.domain.{BusinessId, Nino, TaxYear}
 import v7.bsas.list.ListBsasSchema
 import v7.bsas.list.ListBsasSchema.Def1
 import v7.bsas.list.model.request.ListBsasRequestData

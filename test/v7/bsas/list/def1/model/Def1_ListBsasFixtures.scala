@@ -17,7 +17,7 @@
 package v7.bsas.list.def1.model
 
 import play.api.libs.json.{JsArray, JsValue, Json}
-import shared.models.domain.{Status, TaxYear}
+import api.models.domain.{Status, TaxYear}
 import v7.bsas.list.def1.model.response.{AccountingPeriod, BsasSummary, BusinessSource, Def1_ListBsasResponse}
 import v7.bsas.list.model.response.ListBsasResponse
 import v7.common.model.TypeOfBusinessWithFHL
