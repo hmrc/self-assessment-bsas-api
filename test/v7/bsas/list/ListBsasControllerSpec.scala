@@ -16,8 +16,6 @@
 
 package v7.bsas.list
 
-import play.api.Configuration
-import play.api.mvc.Result
 import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.{BusinessId, TaxYear}
@@ -25,6 +23,8 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.utils.MockIdGenerator
+import play.api.Configuration
+import play.api.mvc.Result
 import v7.bsas.list.def2.model.Def2_ListBsasFixtures
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v7.bsas.list.def2.model.response.Def2_ListBsasResponse

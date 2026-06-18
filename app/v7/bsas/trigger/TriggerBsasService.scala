@@ -16,11 +16,11 @@
 
 package v7.bsas.trigger
 
-import cats.implicits.*
-import common.errors.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
+import common.errors.*
 import v7.bsas.trigger.model.{TriggerBsasRequestData, TriggerBsasResponse}
 
 import javax.inject.{Inject, Singleton}

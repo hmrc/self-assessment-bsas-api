@@ -16,12 +16,12 @@
 
 package v7.bsas.trigger.def1
 
-import common.errors.*
-import config.MockBsasConfig
-import play.api.libs.json.{JsObject, JsValue, Json}
 import api.models.domain.Nino
 import api.models.errors.*
 import api.utils.UnitSpec
+import common.errors.*
+import config.MockBsasConfig
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v7.bsas.trigger.def1.model.request.{Def1_TriggerBsasRequestBody, Def1_TriggerBsasRequestData}
 import v7.bsas.trigger.model.TriggerBsasRequestData
 

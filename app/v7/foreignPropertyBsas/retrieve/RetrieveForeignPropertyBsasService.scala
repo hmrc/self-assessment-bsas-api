@@ -16,11 +16,11 @@
 
 package v7.foreignPropertyBsas.retrieve
 
-import cats.data.EitherT
-import cats.implicits.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.ServiceOutcome
+import cats.data.EitherT
+import cats.implicits.*
 import v7.common.BaseRetrieveBsasService
 import v7.common.model.{IncomeSourceType, IncomeSourceTypeWithFHL}
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData

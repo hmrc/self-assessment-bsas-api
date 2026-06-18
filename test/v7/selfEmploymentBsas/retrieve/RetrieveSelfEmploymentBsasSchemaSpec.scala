@@ -16,11 +16,11 @@
 
 package v7.selfEmploymentBsas.retrieve
 
-import cats.data.Validated.{Invalid, Valid}
-import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import api.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
 import api.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import api.utils.UnitSpec
+import cats.data.Validated.{Invalid, Valid}
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class RetrieveSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 

@@ -16,12 +16,12 @@
 
 package v7.selfEmploymentBsas.retrieve
 
-import common.errors.*
 import api.controllers.EndpointLogContext
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import common.errors.*
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v7.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData

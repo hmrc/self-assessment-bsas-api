@@ -16,12 +16,12 @@
 
 package v7.foreignPropertyBsas.submit.def4
 
-import common.errors.*
-import play.api.libs.json.*
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import common.errors.*
+import play.api.libs.json.*
 import v7.foreignPropertyBsas.submit.def4.model.request.*
 import v7.foreignPropertyBsas.submit.def4.model.request.SubmitForeignPropertyBsasFixtures.*
 

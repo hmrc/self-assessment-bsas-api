@@ -16,8 +16,8 @@
 
 package v7.foreignPropertyBsas.submit.def4.model.request
 
-import play.api.libs.json.{JsValue, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsValue, Json}
 import v7.common.model.PropertyId
 
 class PropertyLevelDetailSpec extends UnitSpec {

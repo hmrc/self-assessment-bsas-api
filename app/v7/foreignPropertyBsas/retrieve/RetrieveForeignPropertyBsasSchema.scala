@@ -16,13 +16,13 @@
 
 package v7.foreignPropertyBsas.retrieve
 
-import cats.data.Validated
-import cats.data.Validated.Valid
-import play.api.libs.json.Reads
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import api.schema.DownstreamReadable
+import cats.data.Validated
+import cats.data.Validated.Valid
+import play.api.libs.json.Reads
 import v7.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
 import v7.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignPropertyBsasResponse
 import v7.foreignPropertyBsas.retrieve.def3.model.response.Def3_RetrieveForeignPropertyBsasResponse

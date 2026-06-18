@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.submit.model.request
 
-import play.api.libs.json.*
 import api.utils.JsonWritesUtil
+import play.api.libs.json.*
 import v7.ukPropertyBsas.submit.def1.model.request.Def1_SubmitUkPropertyBsasRequestBody
 import v7.ukPropertyBsas.submit.def2.model.request.Def2_SubmitUkPropertyBsasRequestBody
 import v7.ukPropertyBsas.submit.def3.model.request.Def3_SubmitUkPropertyBsasRequestBody

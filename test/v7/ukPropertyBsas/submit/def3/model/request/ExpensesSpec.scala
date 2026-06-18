@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.submit.def3.model.request
 
-import play.api.libs.json.{JsObject, JsValue, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v7.ukPropertyBsas.submit.def3.model.request
 
 class ExpensesSpec extends UnitSpec {

@@ -16,10 +16,10 @@
 
 package v7.bsas.list.def2
 
-import common.errors.TypeOfBusinessFormatError
 import api.models.domain.{BusinessId, Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
+import common.errors.TypeOfBusinessFormatError
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
 
 class Def2_ListBsasValidatorSpec extends UnitSpec {

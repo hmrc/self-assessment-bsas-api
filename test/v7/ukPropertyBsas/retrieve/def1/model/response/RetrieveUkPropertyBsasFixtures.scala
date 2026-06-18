@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.retrieve.def1.model.response
 
-import play.api.libs.json.{JsValue, Json}
 import api.models.domain.{Source, Status}
+import play.api.libs.json.{JsValue, Json}
 import v7.common.model.{IncomeSourceType, TypeOfBusinessWithFHL}
 
 object RetrieveUkPropertyBsasFixtures {

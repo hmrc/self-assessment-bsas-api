@@ -16,11 +16,11 @@
 
 package v7.foreignPropertyBsas.submit
 
-import play.api.http.Status
 import api.config.AppConfig
 import api.connectors.DownstreamUri.{HipUri, IfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData

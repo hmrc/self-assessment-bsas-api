@@ -16,8 +16,8 @@
 
 package v7.bsas.list.def1.model.response
 
-import play.api.libs.json.{JsError, JsObject, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsError, JsObject, Json}
 import v7.bsas.list.def1.model.Def1_ListBsasFixtures
 
 class AccountingPeriodSpec extends UnitSpec with Def1_ListBsasFixtures {

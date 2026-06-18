@@ -16,8 +16,8 @@
 
 package v7.foreignPropertyBsas.submit.def3.model.request
 
-import play.api.libs.json.{JsValue, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsValue, Json}
 
 class CountryLevelDetailSpec extends UnitSpec {
 

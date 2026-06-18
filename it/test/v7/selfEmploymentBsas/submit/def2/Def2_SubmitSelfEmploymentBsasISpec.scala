@@ -16,14 +16,14 @@
 
 package v7.selfEmploymentBsas.submit.def2
 
+import api.models.errors.*
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.support.IntegrationBaseSpec
 import common.errors.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
-import api.models.errors.*
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.support.IntegrationBaseSpec
 import v7.selfEmploymentBsas.submit.def2.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.*
 
 class Def2_SubmitSelfEmploymentBsasISpec extends IntegrationBaseSpec {

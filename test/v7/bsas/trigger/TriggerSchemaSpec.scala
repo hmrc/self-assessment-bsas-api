@@ -16,12 +16,12 @@
 
 package v7.bsas.trigger
 
-import cats.data.Validated.{Invalid, Valid}
-import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import play.api.libs.json.{JsObject, Json}
 import api.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
 import api.models.errors.{EndDateFormatError, RuleIncorrectOrEmptyBodyError}
 import api.utils.UnitSpec
+import cats.data.Validated.{Invalid, Valid}
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+import play.api.libs.json.{JsObject, Json}
 
 import java.time.LocalDate
 

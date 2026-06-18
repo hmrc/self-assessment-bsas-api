@@ -18,7 +18,7 @@ package v7.foreignPropertyBsas.retrieve.def3.model.response
 
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class MetadataSpec extends UnitSpec with JsonErrorValidators {
 

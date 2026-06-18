@@ -16,12 +16,12 @@
 
 package v7.foreignPropertyBsas.retrieve.def1
 
-import cats.data.Validated
-import cats.data.Validated.*
-import cats.implicits.*
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.*
+import cats.implicits.*
 import v7.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 

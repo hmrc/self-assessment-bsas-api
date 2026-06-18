@@ -16,9 +16,9 @@
 
 package v7.common.model
 
+import api.utils.enums.Enums
 import play.api.libs.json
 import play.api.libs.json.Format
-import api.utils.enums.Enums
 
 enum IncomeSourceTypeWithFHL(val toTypeOfBusiness: TypeOfBusinessWithFHL) {
   case `01` extends IncomeSourceTypeWithFHL(TypeOfBusinessWithFHL.`self-employment`)

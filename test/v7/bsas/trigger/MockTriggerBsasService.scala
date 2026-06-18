@@ -16,11 +16,11 @@
 
 package v7.bsas.trigger
 
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.controllers.RequestContext
-import api.services.ServiceOutcome
 import v7.bsas.trigger.model.{TriggerBsasRequestData, TriggerBsasResponse}
 
 import scala.concurrent.{ExecutionContext, Future}

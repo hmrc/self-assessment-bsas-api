@@ -16,12 +16,12 @@
 
 package v7.ukPropertyBsas.submit.def3
 
-import cats.data.Validated
-import cats.implicits.*
-import play.api.libs.json.JsValue
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.*
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.*
+import play.api.libs.json.JsValue
 import v7.ukPropertyBsas.submit.def3.model.request.{Def3_SubmitUkPropertyBsasRequestBody, Def3_SubmitUkPropertyBsasRequestData}
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 

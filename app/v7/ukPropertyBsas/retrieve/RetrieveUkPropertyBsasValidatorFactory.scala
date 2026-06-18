@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.retrieve
 
-import cats.data.Validated.{Invalid, Valid}
 import api.controllers.validators.Validator
+import cats.data.Validated.{Invalid, Valid}
 import v7.ukPropertyBsas.retrieve.RetrieveUkPropertyBsasSchema.{Def1, Def2}
 import v7.ukPropertyBsas.retrieve.def1.Def1_RetrieveUkPropertyBsasValidator
 import v7.ukPropertyBsas.retrieve.def2.Def2_RetrieveUkPropertyBsasValidator

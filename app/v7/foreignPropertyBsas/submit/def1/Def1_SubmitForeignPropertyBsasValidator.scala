@@ -16,13 +16,13 @@
 
 package v7.foreignPropertyBsas.submit.def1
 
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.*
+import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits.*
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.*
-import api.models.errors.MtdError
 import v7.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 

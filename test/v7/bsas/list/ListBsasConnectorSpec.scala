@@ -16,11 +16,11 @@
 
 package v7.bsas.list
 
-import org.scalamock.handlers.CallHandler
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{BusinessId, Nino, TaxYear}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
+import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.http.StringContextOps
 import v7.bsas.list.def2.model.Def2_ListBsasFixtures
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData

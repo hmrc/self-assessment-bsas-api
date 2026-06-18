@@ -17,7 +17,7 @@
 package v7.foreignPropertyBsas.retrieve.def3
 
 import api.models.domain.{CalculationId, Nino, TaxYear}
-import api.models.errors._
+import api.models.errors.*
 import api.utils.UnitSpec
 import v7.foreignPropertyBsas.retrieve.def3.model.request.Def3_RetrieveForeignPropertyBsasRequestData
 

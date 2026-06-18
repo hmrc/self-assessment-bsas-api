@@ -16,9 +16,6 @@
 
 package v7.foreignPropertyBsas.retrieve
 
-import common.errors.*
-import play.api.Configuration
-import play.api.mvc.Result
 import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.{CalculationId, TaxYear}
@@ -26,6 +23,9 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.utils.MockIdGenerator
+import common.errors.*
+import play.api.Configuration
+import play.api.mvc.Result
 import v7.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 

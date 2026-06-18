@@ -16,10 +16,6 @@
 
 package v7.bsas.trigger
 
-import common.errors.*
-import play.api.Configuration
-import play.api.libs.json.JsValue
-import play.api.mvc.Result
 import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -27,9 +23,13 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.utils.MockIdGenerator
+import common.errors.*
+import play.api.Configuration
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v7.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
-import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.{mtdResponseJs, requestBody, requestBodyForProperty, responseObj, _}
+import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.{mtdResponseJs, requestBody, requestBodyForProperty, responseObj, *}
 import v7.bsas.trigger.def2.model.request.Def2_TriggerBsasRequestData
 import v7.common.model.{TypeOfBusiness, TypeOfBusinessWithFHL}
 

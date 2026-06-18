@@ -16,13 +16,13 @@
 
 package v7.ukPropertyBsas.submit.def1
 
-import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
-import org.scalatest.Assertion
-import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError}
+import org.scalatest.Assertion
+import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import v7.ukPropertyBsas.submit.def1.model.request.{Def1_SubmitUkPropertyBsasRequestBody, Def1_SubmitUkPropertyBsasRequestData}
 
 class Def1_SubmitUkPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {

@@ -16,12 +16,12 @@
 
 package v7.ukPropertyBsas.retrieve
 
-import common.errors.RuleTypeOfBusinessIncorrectError
 import api.controllers.EndpointLogContext
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import common.errors.RuleTypeOfBusinessIncorrectError
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures.*

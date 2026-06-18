@@ -16,13 +16,13 @@
 
 package v7.foreignPropertyBsas.submit.def4
 
+import api.controllers.validators.RulesValidator
+import api.controllers.validators.resolvers.{ResolveParsedNumber, ResolveUuid}
+import api.models.errors.{MtdError, PropertyIdFormatError}
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits.toFoldableOps
 import common.errors.*
-import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.{ResolveParsedNumber, ResolveUuid}
-import api.models.errors.{MtdError, PropertyIdFormatError}
 import v7.common.model.PropertyId
 import v7.foreignPropertyBsas.submit.def4.model.request.*
 

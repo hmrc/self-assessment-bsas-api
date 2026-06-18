@@ -16,10 +16,10 @@
 
 package v7.selfEmploymentBsas.retrieve
 
-import play.api.libs.json.JsValue
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.StringContextOps
 import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 import v7.selfEmploymentBsas.retrieve.def1.model.request.Def1_RetrieveSelfEmploymentBsasRequestData

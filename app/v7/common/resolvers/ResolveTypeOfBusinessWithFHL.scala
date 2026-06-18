@@ -16,11 +16,11 @@
 
 package v7.common.resolvers
 
+import api.controllers.validators.resolvers.ResolverSupport
+import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import common.errors.TypeOfBusinessFormatError
-import api.controllers.validators.resolvers.ResolverSupport
-import api.models.errors.MtdError
 import v7.common.model.TypeOfBusinessWithFHL
 
 import scala.util.{Failure, Success, Try}
