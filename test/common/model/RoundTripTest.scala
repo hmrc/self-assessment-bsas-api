@@ -17,8 +17,8 @@
 package common.model
 
 import play.api.libs.json.{JsValue, Json, Reads, Writes}
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 
 trait RoundTripTest extends UnitSpec with JsonErrorValidators {
 

@@ -20,9 +20,9 @@ import cats.data.Validated
 import cats.implicits.*
 import common.errors.RuleBothPropertiesSuppliedError
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.*
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.*
+import api.models.errors.MtdError
 import v7.foreignPropertyBsas.submit.def2.model.request
 import v7.foreignPropertyBsas.submit.def2.model.request.Def2_SubmitForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData

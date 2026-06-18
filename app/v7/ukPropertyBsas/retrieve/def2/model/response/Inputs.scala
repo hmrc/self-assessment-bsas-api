@@ -19,7 +19,7 @@ package v7.ukPropertyBsas.retrieve.def2.model.response
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.Reads.*
 import play.api.libs.json.*
-import shared.models.domain.Source
+import api.models.domain.Source
 
 case class Inputs(
     incomeSourceType: String,

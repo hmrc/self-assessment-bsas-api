@@ -17,7 +17,7 @@
 package v7.bsas.list.model.response
 
 import play.api.libs.json.OWrites
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v7.bsas.list.def1.model.response.Def1_ListBsasResponse
 import v7.bsas.list.def2.model.response.Def2_ListBsasResponse
 

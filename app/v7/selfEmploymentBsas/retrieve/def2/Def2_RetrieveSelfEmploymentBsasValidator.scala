@@ -19,9 +19,9 @@ package v7.selfEmploymentBsas.retrieve.def2
 import cats.data.Validated
 import cats.data.Validated.*
 import cats.implicits.*
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
+import api.models.errors.MtdError
 import v7.selfEmploymentBsas.retrieve.def2.model.request.Def2_RetrieveSelfEmploymentBsasRequestData
 import v7.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 

@@ -17,10 +17,10 @@
 package v7.bsas.trigger
 
 import org.scalamock.handlers.CallHandler
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v7.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
@@ -84,7 +84,7 @@ class TriggerBsasConnectorSpec extends ConnectorSpec {
 
     protected def taxYear: TaxYear
     protected val request: TriggerBsasRequestData = Def1_TriggerBsasRequestData(nino, triggerBsasRequestBody)
-    protected val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+    protected val connector: TriggerBsasConnector = new TriggerBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
         outcome: DownstreamOutcome[Def1_TriggerBsasResponse]): CallHandler[Future[DownstreamOutcome[Def1_TriggerBsasResponse]]]#Derived = {

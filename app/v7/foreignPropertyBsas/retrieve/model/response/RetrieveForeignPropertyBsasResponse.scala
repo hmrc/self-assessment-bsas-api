@@ -17,7 +17,7 @@
 package v7.foreignPropertyBsas.retrieve.model.response
 
 import play.api.libs.json.*
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v7.common.model.{HasIncomeSourceType, HasTaxYear}
 import v7.foreignPropertyBsas.retrieve.def1.model.response.Def1_RetrieveForeignPropertyBsasResponse
 import v7.foreignPropertyBsas.retrieve.def2.model.response.Def2_RetrieveForeignPropertyBsasResponse

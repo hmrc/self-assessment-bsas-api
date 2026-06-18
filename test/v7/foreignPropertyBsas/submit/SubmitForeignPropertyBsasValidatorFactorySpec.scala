@@ -17,8 +17,8 @@
 package v7.foreignPropertyBsas.submit
 
 import play.api.libs.json.JsObject
-import shared.controllers.validators.AlwaysErrorsValidator
-import shared.utils.UnitSpec
+import api.controllers.validators.AlwaysErrorsValidator
+import api.utils.UnitSpec
 import v7.foreignPropertyBsas.submit.def1.Def1_SubmitForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.submit.def2.Def2_SubmitForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.submit.def3.Def3_SubmitForeignPropertyBsasValidator

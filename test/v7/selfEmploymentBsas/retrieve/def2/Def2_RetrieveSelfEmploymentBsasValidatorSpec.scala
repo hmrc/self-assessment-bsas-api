@@ -16,9 +16,9 @@
 
 package v7.selfEmploymentBsas.retrieve.def2
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v7.selfEmploymentBsas.retrieve.def2.model.request.Def2_RetrieveSelfEmploymentBsasRequestData
 
 class Def2_RetrieveSelfEmploymentBsasValidatorSpec extends UnitSpec {

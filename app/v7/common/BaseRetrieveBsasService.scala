@@ -17,10 +17,10 @@
 package v7.common
 
 import common.errors.*
-import shared.models.domain.TaxYear
-import shared.models.errors.{ErrorWrapper, NotFoundError}
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{BaseService, ServiceOutcome}
+import api.models.domain.TaxYear
+import api.models.errors.{ErrorWrapper, NotFoundError}
+import api.models.outcomes.ResponseWrapper
+import api.services.{BaseService, ServiceOutcome}
 import v7.common.model.{HasIncomeSourceType, HasTaxYear}
 
 trait BaseRetrieveBsasService extends BaseService {

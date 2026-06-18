@@ -16,7 +16,7 @@
 
 package v7.ukPropertyBsas.submit.model.request
 
-import shared.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.domain.{CalculationId, Nino, TaxYear}
 import v7.ukPropertyBsas.submit.SubmitUkPropertyBsasSchema
 
 trait SubmitUkPropertyBsasRequestData {

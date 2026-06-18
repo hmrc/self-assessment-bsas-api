@@ -19,9 +19,9 @@ package v7.bsas.trigger.def2
 import common.errors.*
 import config.MockBsasConfig
 import play.api.libs.json.{JsObject, JsValue, Json}
-import shared.models.domain.Nino
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.Nino
+import api.models.errors.*
+import api.utils.UnitSpec
 import v7.bsas.trigger.def2.model.request.{Def2_TriggerBsasRequestBody, Def2_TriggerBsasRequestData}
 import v7.bsas.trigger.model.TriggerBsasRequestData
 

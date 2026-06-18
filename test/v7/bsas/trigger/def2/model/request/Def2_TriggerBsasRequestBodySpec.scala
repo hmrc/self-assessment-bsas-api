@@ -17,7 +17,7 @@
 package v7.bsas.trigger.def2.model.request
 
 import play.api.libs.json.Json
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.{downstreamJson, mtdJson, triggerBsasRequestBody}
 
 class Def2_TriggerBsasRequestBodySpec extends UnitSpec {

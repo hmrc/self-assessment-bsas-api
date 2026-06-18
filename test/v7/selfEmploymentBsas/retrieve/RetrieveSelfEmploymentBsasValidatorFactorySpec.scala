@@ -16,8 +16,8 @@
 
 package v7.selfEmploymentBsas.retrieve
 
-import shared.controllers.validators.AlwaysErrorsValidator
-import shared.utils.UnitSpec
+import api.controllers.validators.AlwaysErrorsValidator
+import api.utils.UnitSpec
 import v7.selfEmploymentBsas.retrieve.def1.Def1_RetrieveSelfEmploymentBsasValidator
 import v7.selfEmploymentBsas.retrieve.def2.Def2_RetrieveSelfEmploymentBsasValidator
 

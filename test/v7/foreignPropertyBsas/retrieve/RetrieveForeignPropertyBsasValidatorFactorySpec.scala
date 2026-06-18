@@ -16,8 +16,8 @@
 
 package v7.foreignPropertyBsas.retrieve
 
-import shared.controllers.validators.AlwaysErrorsValidator
-import shared.utils.UnitSpec
+import api.controllers.validators.AlwaysErrorsValidator
+import api.utils.UnitSpec
 import v7.foreignPropertyBsas.retrieve.def1.Def1_RetrieveForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.retrieve.def2.Def2_RetrieveForeignPropertyBsasValidator
 

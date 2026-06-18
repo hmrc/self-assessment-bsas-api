@@ -19,7 +19,7 @@ package v7.bsas.trigger
 import cats.data.Validated.{Invalid, Valid}
 import config.BsasConfig
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v7.bsas.trigger.TriggerSchema.{Def1, Def2}
 import v7.bsas.trigger.def1.Def1_TriggerBsasValidator
 import v7.bsas.trigger.def2.Def2_TriggerBsasValidator

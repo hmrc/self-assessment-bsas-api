@@ -16,7 +16,7 @@
 
 package v7.bsas.list.model.request
 
-import shared.models.domain.{BusinessId, Nino, TaxYear}
+import api.models.domain.{BusinessId, Nino, TaxYear}
 import v7.bsas.list.ListBsasSchema
 
 trait ListBsasRequestData {

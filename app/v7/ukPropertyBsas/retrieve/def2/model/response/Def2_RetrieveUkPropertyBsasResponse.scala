@@ -17,7 +17,7 @@
 package v7.ukPropertyBsas.retrieve.def2.model.response
 
 import play.api.libs.json.*
-import shared.models.domain.TaxYear
+import api.models.domain.TaxYear
 import v7.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
 case class Def2_RetrieveUkPropertyBsasResponse(

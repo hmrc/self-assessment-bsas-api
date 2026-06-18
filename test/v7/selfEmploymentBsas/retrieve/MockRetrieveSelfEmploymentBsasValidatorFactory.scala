@@ -17,7 +17,7 @@
 package v7.selfEmploymentBsas.retrieve
 
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v7.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 
 trait MockRetrieveSelfEmploymentBsasValidatorFactory extends MockValidatorFactory[RetrieveSelfEmploymentBsasRequestData] {

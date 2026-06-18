@@ -20,13 +20,13 @@ import common.errors.*
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import shared.utils.MockIdGenerator
+import api.config.MockAppConfig
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.utils.MockIdGenerator
 import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures.*
 import v7.bsas.trigger.def1.model.request.Def1_TriggerBsasRequestData
 import v7.bsas.trigger.def2.model.Def2_TriggerBsasFixtures.{mtdResponseJs, requestBody, requestBodyForProperty, responseObj, _}
@@ -45,7 +45,7 @@ class TriggerBsasControllerSpec
     with MockTriggerBsasService
     with MockIdGenerator
     with MockAuditService
-    with MockSharedAppConfig {
+    with MockAppConfig {
 
   private val requestDataDef1 = Def1_TriggerBsasRequestData(
     parsedNino,
@@ -197,11 +197,11 @@ class TriggerBsasControllerSpec
 
     protected val requestBodyForController: JsValue = requestBody
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.triggerBsas(validNino)(fakePostRequest(requestBodyForController))

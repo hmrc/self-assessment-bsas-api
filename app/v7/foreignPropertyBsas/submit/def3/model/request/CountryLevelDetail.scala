@@ -17,8 +17,8 @@
 package v7.foreignPropertyBsas.submit.def3.model.request
 
 import play.api.libs.json.{Format, Json}
-import shared.utils.EmptinessChecker
-import shared.utils.EmptinessChecker.field
+import api.utils.EmptinessChecker
+import api.utils.EmptinessChecker.field
 
 case class CountryLevelDetail(countryCode: String, income: Option[ForeignPropertyIncome], expenses: Option[ForeignPropertyExpenses])
 

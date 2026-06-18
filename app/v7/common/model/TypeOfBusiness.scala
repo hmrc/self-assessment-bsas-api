@@ -17,7 +17,7 @@
 package v7.common.model
 
 import play.api.libs.json.Format
-import shared.utils.enums.Enums
+import api.utils.enums.Enums
 
 trait HasTypeOfBusiness {
   def typeOfBusiness: TypeOfBusiness

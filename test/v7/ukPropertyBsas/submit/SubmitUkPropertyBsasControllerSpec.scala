@@ -20,14 +20,14 @@ import common.errors.*
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.{CalculationId, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import shared.utils.MockIdGenerator
+import api.config.MockAppConfig
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{CalculationId, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.utils.MockIdGenerator
 import v7.ukPropertyBsas.submit.def3.model.request.Def3_SubmitUkPropertyBsasRequestData
 import v7.ukPropertyBsas.submit.def3.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 
@@ -43,7 +43,7 @@ class SubmitUkPropertyBsasControllerSpec
     with MockSubmitUkPropertyBsasService
     with MockIdGenerator
     with MockAuditService
-    with MockSharedAppConfig {
+    with MockAppConfig {
 
   private val calculationId = CalculationId("c75f40a6-a3df-4429-a697-471eeec46435")
   private val rawTaxYear    = "2023-24"
@@ -112,11 +112,11 @@ class SubmitUkPropertyBsasControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.handleRequest(validNino, calculationId.calculationId, rawTaxYear)(fakePostRequest(fullRequestJson))

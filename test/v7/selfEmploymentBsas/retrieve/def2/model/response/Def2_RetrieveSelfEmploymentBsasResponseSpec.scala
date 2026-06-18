@@ -17,8 +17,8 @@
 package v7.selfEmploymentBsas.retrieve.def2.model.response
 
 import common.model.RoundTripTest
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures.*
 
 class Def2_RetrieveSelfEmploymentBsasResponseSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {

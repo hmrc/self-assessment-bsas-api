@@ -17,25 +17,25 @@
 package definition
 
 import cats.implicits.catsSyntaxValidatedId
-import shared.config.Deprecation.NotDeprecated
-import shared.config.MockSharedAppConfig
-import shared.definition.APIStatus.BETA
-import shared.definition.*
-import shared.routing.Version7
-import shared.utils.UnitSpec
+import api.config.Deprecation.NotDeprecated
+import api.config.MockAppConfig
+import api.definition.APIStatus.BETA
+import api.definition.*
+import api.routing.Version7
+import api.utils.UnitSpec
 
-class BsasApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
+class BsasApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
   "definition" when {
     "called" should {
       "return a valid Definition case class" in {
-        MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
+        MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
 
-        MockedSharedAppConfig.apiStatus(Version7) returns "BETA"
-        MockedSharedAppConfig.endpointsEnabled(Version7).returns(true).anyNumberOfTimes()
-        MockedSharedAppConfig.deprecationFor(Version7).returns(NotDeprecated.valid).anyNumberOfTimes()
+        MockedAppConfig.apiStatus(Version7) returns "BETA"
+        MockedAppConfig.endpointsEnabled(Version7).returns(true).anyNumberOfTimes()
+        MockedAppConfig.deprecationFor(Version7).returns(NotDeprecated.valid).anyNumberOfTimes()
 
-        val apiDefinitionFactory = new BsasApiDefinitionFactory(mockSharedAppConfig)
+        val apiDefinitionFactory = new BsasApiDefinitionFactory(mockAppConfig)
 
         apiDefinitionFactory.definition shouldBe
           Definition(

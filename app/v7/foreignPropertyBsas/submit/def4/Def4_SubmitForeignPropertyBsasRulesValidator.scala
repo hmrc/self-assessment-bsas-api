@@ -20,9 +20,9 @@ import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits.toFoldableOps
 import common.errors.*
-import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.{ResolveParsedNumber, ResolveUuid}
-import shared.models.errors.{MtdError, PropertyIdFormatError}
+import api.controllers.validators.RulesValidator
+import api.controllers.validators.resolvers.{ResolveParsedNumber, ResolveUuid}
+import api.models.errors.{MtdError, PropertyIdFormatError}
 import v7.common.model.PropertyId
 import v7.foreignPropertyBsas.submit.def4.model.request.*
 

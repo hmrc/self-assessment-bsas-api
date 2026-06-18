@@ -18,9 +18,9 @@ package v7.foreignPropertyBsas.submit
 
 import cats.implicits.*
 import common.errors.*
-import shared.controllers.RequestContext
-import shared.models.errors.*
-import shared.services.{BaseService, ServiceOutcome}
+import api.controllers.RequestContext
+import api.models.errors.*
+import api.services.{BaseService, ServiceOutcome}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
 import javax.inject.{Inject, Singleton}

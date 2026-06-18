@@ -18,9 +18,9 @@ package v7.bsas.list
 
 import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport, TaxYearTestSupport}
-import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import shared.utils.UnitSpec
+import api.models.domain.{TaxYear, TaxYearPropertyCheckSupport, TaxYearTestSupport}
+import api.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import api.utils.UnitSpec
 
 class ListBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport with TaxYearTestSupport {
 

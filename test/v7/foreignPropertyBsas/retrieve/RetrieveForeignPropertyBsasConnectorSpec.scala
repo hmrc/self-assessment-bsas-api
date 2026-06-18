@@ -16,9 +16,9 @@
 
 package v7.foreignPropertyBsas.retrieve
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v7.foreignPropertyBsas.retrieve.def1.model.request.Def1_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
@@ -36,7 +36,7 @@ class RetrieveForeignPropertyBsasConnectorSpec extends ConnectorSpec {
     self: ConnectorTest =>
 
     val connector: RetrieveForeignPropertyBsasConnector =
-      new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new RetrieveForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
   }
 

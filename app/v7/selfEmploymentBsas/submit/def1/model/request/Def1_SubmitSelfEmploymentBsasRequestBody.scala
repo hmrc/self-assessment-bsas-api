@@ -17,7 +17,7 @@
 package v7.selfEmploymentBsas.submit.def1.model.request
 
 import play.api.libs.json.{JsObject, Json, OWrites, Reads}
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestBody
 
 case class Def1_SubmitSelfEmploymentBsasRequestBody(

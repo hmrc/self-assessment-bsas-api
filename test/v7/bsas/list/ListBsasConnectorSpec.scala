@@ -17,10 +17,10 @@
 package v7.bsas.list
 
 import org.scalamock.handlers.CallHandler
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{BusinessId, Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{BusinessId, Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v7.bsas.list.def2.model.Def2_ListBsasFixtures
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
@@ -107,7 +107,7 @@ class ListBsasConnectorSpec extends ConnectorSpec {
       Def2_ListBsasRequestData(nino, taxYear, Some(BusinessId(incomeSourceId)), Some(incomeSourceType))
 
     protected val connector: ListBsasConnector =
-      new ListBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new ListBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
         outcome: DownstreamOutcome[ListBsasResponse]

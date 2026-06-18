@@ -17,7 +17,7 @@
 package config
 
 import play.api.Configuration
-import shared.config.{FeatureSwitches, SharedAppConfig}
+import api.config.{FeatureSwitches, AppConfig}
 
 /** API-specific feature switches.
   */
@@ -28,5 +28,5 @@ case class BsasFeatureSwitches private[config] (protected val featureSwitchConfi
 }
 
 object BsasFeatureSwitches {
-  def apply()(implicit appConfig: SharedAppConfig): BsasFeatureSwitches = BsasFeatureSwitches(appConfig.featureSwitchConfig)
+  def apply()(implicit appConfig: AppConfig): BsasFeatureSwitches = BsasFeatureSwitches(appConfig.featureSwitchConfig)
 }

@@ -17,7 +17,7 @@
 package v7.bsas.trigger.model
 
 import play.api.libs.json.OWrites
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v7.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v7.bsas.trigger.def2.model.response.Def2_TriggerBsasResponse
 

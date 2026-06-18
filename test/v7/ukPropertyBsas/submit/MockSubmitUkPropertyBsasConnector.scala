@@ -19,7 +19,7 @@ package v7.ukPropertyBsas.submit
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.connectors.DownstreamOutcome
+import api.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v7.ukPropertyBsas.submit.model.request.SubmitUkPropertyBsasRequestData
 

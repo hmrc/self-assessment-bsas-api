@@ -17,7 +17,7 @@
 package v7.bsas.list
 
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v7.bsas.list.model.request.ListBsasRequestData
 
 trait MockListBsasValidatorFactory extends MockValidatorFactory[ListBsasRequestData] {

@@ -18,9 +18,9 @@ package v7.foreignPropertyBsas.submit
 
 import cats.data.Validated.{Invalid, Valid}
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-import shared.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
-import shared.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import shared.utils.UnitSpec
+import api.models.domain.{TaxYear, TaxYearPropertyCheckSupport}
+import api.models.errors.{RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import api.utils.UnitSpec
 
 class SubmitForeignPropertyBsasSchemaSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks with TaxYearPropertyCheckSupport {
 

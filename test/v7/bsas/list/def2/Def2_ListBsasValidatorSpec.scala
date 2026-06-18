@@ -17,9 +17,9 @@
 package v7.bsas.list.def2
 
 import common.errors.TypeOfBusinessFormatError
-import shared.models.domain.{BusinessId, Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{BusinessId, Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
 
 class Def2_ListBsasValidatorSpec extends UnitSpec {

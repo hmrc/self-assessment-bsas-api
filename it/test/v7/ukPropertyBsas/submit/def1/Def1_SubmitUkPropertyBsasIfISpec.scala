@@ -23,10 +23,10 @@ import play.api.libs.json.*
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors.*
-import shared.models.utils.JsonErrorValidators
-import shared.services.*
-import shared.support.IntegrationBaseSpec
+import api.models.errors.*
+import api.models.utils.JsonErrorValidators
+import api.services.*
+import api.support.IntegrationBaseSpec
 import v7.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures.validfhlInputJson
 
 class Def1_SubmitUkPropertyBsasIfISpec extends IntegrationBaseSpec with JsonErrorValidators {

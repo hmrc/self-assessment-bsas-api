@@ -17,7 +17,7 @@
 package v7.common.model
 
 import play.api.libs.json.Format
-import shared.utils.enums.Enums
+import api.utils.enums.Enums
 
 enum TypeOfBusinessWithFHL(val asDownstreamValue: String) {
   case `self-employment`          extends TypeOfBusinessWithFHL("01")

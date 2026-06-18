@@ -23,9 +23,9 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors.*
-import shared.services.*
-import shared.support.IntegrationBaseSpec
+import api.models.errors.*
+import api.services.*
+import api.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def1.model.request.SubmitForeignPropertyBsasFixtures.{downstreamRequestValid, mtdRequestFull, mtdRequestValid}
 
 class Def1_SubmitForeignPropertyBsasHipISpec extends IntegrationBaseSpec {

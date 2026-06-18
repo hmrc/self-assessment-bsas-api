@@ -16,9 +16,9 @@
 
 package v7.foreignPropertyBsas.submit
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{CalculationId, Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{CalculationId, Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v7.foreignPropertyBsas.submit.def3.model.request.{Def3_SubmitForeignPropertyBsasRequestBody, Def3_SubmitForeignPropertyBsasRequestData}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
@@ -34,7 +34,7 @@ class SubmitForeignPropertyBsasConnectorSpec extends ConnectorSpec {
 
   trait Test {
     self: ConnectorTest =>
-    val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+    val connector: SubmitForeignPropertyBsasConnector = new SubmitForeignPropertyBsasConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def requestWith(taxYear: TaxYear): SubmitForeignPropertyBsasRequestData =
       Def3_SubmitForeignPropertyBsasRequestData(nino, calculationId, taxYear, parsedSubmitForeignPropertyBsasRequestBody)

@@ -18,7 +18,7 @@ package v7.selfEmploymentBsas.retrieve.model.response
 
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.libs.json.*
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v7.common.model.{HasIncomeSourceType, HasTaxYear}
 import v7.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
 import v7.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasResponse
