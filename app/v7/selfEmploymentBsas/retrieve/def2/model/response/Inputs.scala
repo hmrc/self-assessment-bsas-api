@@ -16,10 +16,10 @@
 
 package v7.selfEmploymentBsas.retrieve.def2.model.response
 
-import play.api.libs.functional.syntax.*
-import play.api.libs.json.Reads.*
-import play.api.libs.json.*
 import api.models.domain.Source
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
+import play.api.libs.json.Reads.*
 import v7.common.model.{IncomeSourceType, TypeOfBusiness}
 
 case class Inputs(

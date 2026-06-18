@@ -16,15 +16,15 @@
 
 package v7.foreignPropertyBsas.submit.def3
 
+import api.models.errors.*
+import api.models.utils.JsonErrorValidators
+import api.services.*
+import api.support.IntegrationBaseSpec
 import common.errors.*
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
-import api.models.errors.*
-import api.models.utils.JsonErrorValidators
-import api.services.*
-import api.support.IntegrationBaseSpec
 import v7.foreignPropertyBsas.submit.def3.model.request.SubmitForeignPropertyBsasFixtures.*
 
 class Def3_SubmitForeignPropertyBsasISpec extends IntegrationBaseSpec with JsonErrorValidators {

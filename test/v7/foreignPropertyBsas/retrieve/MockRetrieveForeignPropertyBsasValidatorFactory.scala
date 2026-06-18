@@ -16,8 +16,8 @@
 
 package v7.foreignPropertyBsas.retrieve
 
-import org.scalamock.handlers.CallHandler
 import api.controllers.validators.{MockValidatorFactory, Validator}
+import org.scalamock.handlers.CallHandler
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 
 trait MockRetrieveForeignPropertyBsasValidatorFactory extends MockValidatorFactory[RetrieveForeignPropertyBsasRequestData] {

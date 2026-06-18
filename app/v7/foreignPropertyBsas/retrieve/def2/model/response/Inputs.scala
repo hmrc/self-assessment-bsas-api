@@ -16,9 +16,9 @@
 
 package v7.foreignPropertyBsas.retrieve.def2.model.response
 
+import api.utils.JsonWritesUtil
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import api.utils.JsonWritesUtil
 
 case class Inputs(businessId: String,
                   incomeSourceType: String,

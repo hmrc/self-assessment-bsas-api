@@ -16,9 +16,9 @@
 
 package v7.selfEmploymentBsas.retrieve.def2.model.response
 
+import api.models.domain.{Status, TaxYear}
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
-import api.models.domain.{Status, TaxYear}
 
 case class Metadata(
     calculationId: String,

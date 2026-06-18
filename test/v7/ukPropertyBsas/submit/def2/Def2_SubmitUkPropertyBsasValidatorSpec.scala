@@ -16,13 +16,13 @@
 
 package v7.ukPropertyBsas.submit.def2
 
-import common.errors.*
-import org.scalatest.Assertion
-import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import common.errors.*
+import org.scalatest.Assertion
+import play.api.libs.json.{JsNumber, JsObject, JsValue, Json}
 import v7.ukPropertyBsas.submit.def2.model.request.SubmitUKPropertyBsasRequestBodyFixtures.*
 import v7.ukPropertyBsas.submit.def2.model.request.{Def2_SubmitUkPropertyBsasRequestBody, Def2_SubmitUkPropertyBsasRequestData}
 

@@ -16,10 +16,10 @@
 
 package v7.bsas.list
 
-import cats.implicits.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
 import v7.bsas.list.model.request.ListBsasRequestData
 import v7.bsas.list.model.response.ListBsasResponse
 

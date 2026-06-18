@@ -16,11 +16,11 @@
 
 package v7.selfEmploymentBsas.submit
 
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.controllers.RequestContext
-import api.services.ServiceOutcome
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
 import scala.concurrent.{ExecutionContext, Future}

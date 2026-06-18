@@ -16,8 +16,8 @@
 
 package v7.ukPropertyBsas.retrieve
 
-import org.scalamock.handlers.CallHandler
 import api.controllers.validators.{MockValidatorFactory, Validator}
+import org.scalamock.handlers.CallHandler
 import v7.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 
 trait MockRetrieveUkPropertyBsasValidatorFactory extends MockValidatorFactory[RetrieveUkPropertyBsasRequestData] {

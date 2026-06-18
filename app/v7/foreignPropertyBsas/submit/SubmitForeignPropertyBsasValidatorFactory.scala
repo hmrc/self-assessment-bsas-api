@@ -16,9 +16,9 @@
 
 package v7.foreignPropertyBsas.submit
 
+import api.controllers.validators.Validator
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.JsValue
-import api.controllers.validators.Validator
 import v7.foreignPropertyBsas.submit.SubmitForeignPropertyBsasSchema.*
 import v7.foreignPropertyBsas.submit.def1.Def1_SubmitForeignPropertyBsasValidator
 import v7.foreignPropertyBsas.submit.def2.Def2_SubmitForeignPropertyBsasValidator

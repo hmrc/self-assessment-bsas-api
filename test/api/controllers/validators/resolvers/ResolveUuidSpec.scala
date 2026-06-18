@@ -16,11 +16,11 @@
 
 package api.controllers.validators.resolvers
 
+import api.models.errors.{MtdError, PropertyIdFormatError}
+import api.utils.UnitSpec
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import v7.common.model.PropertyId
-import api.models.errors.{MtdError, PropertyIdFormatError}
-import api.utils.UnitSpec
 
 import java.util.UUID
 

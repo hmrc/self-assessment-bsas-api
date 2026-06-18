@@ -16,11 +16,11 @@
 
 package v7.selfEmploymentBsas.submit
 
-import cats.implicits.*
-import common.errors.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
+import common.errors.*
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 
 import javax.inject.{Inject, Singleton}

@@ -16,9 +16,9 @@
 
 package v7.bsas.list.def1.model.response
 
-import play.api.libs.json.{JsError, JsObject, Json}
 import api.config.MockAppConfig
 import api.utils.UnitSpec
+import play.api.libs.json.{JsError, JsObject, Json}
 import v7.bsas.list.def1.model.Def1_ListBsasFixtures
 
 class Def1_ListBsasResponseSpec extends UnitSpec with MockAppConfig with Def1_ListBsasFixtures {

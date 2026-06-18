@@ -16,8 +16,8 @@
 
 package v7.selfEmploymentBsas.retrieve.def1.model
 
-import play.api.libs.json.{JsValue, Json}
 import api.models.domain.{Source, Status}
+import play.api.libs.json.{JsValue, Json}
 import v7.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 import v7.selfEmploymentBsas.retrieve.def1.model.response.*
 import v7.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse

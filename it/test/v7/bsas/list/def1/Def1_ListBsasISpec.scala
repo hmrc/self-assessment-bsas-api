@@ -16,6 +16,9 @@
 
 package v7.bsas.list.def1
 
+import api.models.errors.*
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.TypeOfBusinessFormatError
 import play.api.http.HeaderNames.ACCEPT
@@ -23,9 +26,6 @@ import play.api.http.Status.*
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import api.models.errors.*
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.support.IntegrationBaseSpec
 import v7.bsas.list.def1.model.Def1_ListBsasFixtures
 
 class Def1_ListBsasISpec extends IntegrationBaseSpec with Def1_ListBsasFixtures {

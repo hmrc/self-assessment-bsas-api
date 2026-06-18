@@ -16,13 +16,13 @@
 
 package v7.foreignPropertyBsas.submit.def1
 
+import api.controllers.validators.RulesValidator
+import api.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
+import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.*
 import cats.implicits.*
 import common.errors.{RuleBothExpensesError, RuleDuplicateCountryCodeError}
-import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
-import api.models.errors.MtdError
 import v7.foreignPropertyBsas.submit.def1.model.request.*
 
 object Def1_SubmitForeignPropertyBsasRulesValidator extends RulesValidator[Def1_SubmitForeignPropertyBsasRequestData] {

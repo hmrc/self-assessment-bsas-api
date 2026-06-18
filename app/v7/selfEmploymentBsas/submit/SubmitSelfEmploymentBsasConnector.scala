@@ -16,10 +16,10 @@
 
 package v7.selfEmploymentBsas.submit
 
-import play.api.http.Status
 import api.config.AppConfig
 import api.connectors.DownstreamUri.{HipUri, IfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData

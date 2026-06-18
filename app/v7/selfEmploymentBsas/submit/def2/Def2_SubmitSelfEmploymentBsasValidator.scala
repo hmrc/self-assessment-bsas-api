@@ -16,12 +16,12 @@
 
 package v7.selfEmploymentBsas.submit.def2
 
-import cats.data.Validated
-import cats.implicits.*
-import play.api.libs.json.JsValue
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.*
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.*
+import play.api.libs.json.JsValue
 import v7.selfEmploymentBsas.submit.def2.model.request.{Def2_SubmitSelfEmploymentBsasRequestBody, Def2_SubmitSelfEmploymentBsasRequestData}
 import v7.selfEmploymentBsas.submit.model.request.SubmitSelfEmploymentBsasRequestData
 

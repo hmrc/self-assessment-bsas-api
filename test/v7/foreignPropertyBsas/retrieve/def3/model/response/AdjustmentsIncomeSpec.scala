@@ -16,12 +16,12 @@
 
 package v7.foreignPropertyBsas.retrieve.def3.model.response
 
-import common.model.RoundTripTest
 import api.utils.UnitSpec
-import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures._
+import common.model.RoundTripTest
+import v7.foreignPropertyBsas.retrieve.def3.model.response.RetrieveForeignPropertyBsasBodyFixtures.*
 
 class AdjustmentsIncomeSpec extends UnitSpec with RoundTripTest {
-  import AdjustmentsIncome._
+  import AdjustmentsIncome.*
 
   testRoundTrip(
     "Adjustments Income ",

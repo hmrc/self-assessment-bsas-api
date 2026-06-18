@@ -16,13 +16,13 @@
 
 package v7.bsas.trigger.def2
 
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolverSupport}
+import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits.*
 import config.BsasConfig
 import play.api.libs.json.JsValue
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolverSupport}
-import api.models.errors.MtdError
 import v7.bsas.trigger.def2.model.request.{Def2_TriggerBsasRequestBody, Def2_TriggerBsasRequestData}
 import v7.bsas.trigger.model.TriggerBsasRequestData
 

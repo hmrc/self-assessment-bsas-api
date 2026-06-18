@@ -16,9 +16,9 @@
 
 package v7.selfEmploymentBsas.submit.def1.model.request
 
-import play.api.libs.json.Json
 import api.models.domain.EmptyJsonBody
 import api.utils.UnitSpec
+import play.api.libs.json.Json
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.AdditionsFixture.*
 
 class AdditionsSpec extends UnitSpec {

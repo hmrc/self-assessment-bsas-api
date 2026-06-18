@@ -16,13 +16,13 @@
 
 package v7.bsas.trigger
 
-import cats.data.Validated
-import cats.data.Validated.Invalid
-import play.api.libs.json.{JsValue, Reads}
 import api.controllers.validators.resolvers.ResolveIsoDate
 import api.models.domain.TaxYear
 import api.models.errors.{EndDateFormatError, MtdError, RuleIncorrectOrEmptyBodyError}
 import api.schema.DownstreamReadable
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import play.api.libs.json.{JsValue, Reads}
 import v7.bsas.trigger.def1.model.response.Def1_TriggerBsasResponse
 import v7.bsas.trigger.def2.model.response.Def2_TriggerBsasResponse
 import v7.bsas.trigger.model.TriggerBsasResponse

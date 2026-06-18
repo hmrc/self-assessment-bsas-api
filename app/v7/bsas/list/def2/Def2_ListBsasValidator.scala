@@ -16,13 +16,13 @@
 
 package v7.bsas.list.def2
 
-import cats.data.Validated
-import cats.data.Validated.*
-import cats.implicits.*
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveBusinessId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import cats.data.Validated
+import cats.data.Validated.*
+import cats.implicits.*
 import v7.bsas.list.def2.model.request.Def2_ListBsasRequestData
 import v7.bsas.list.model.request.ListBsasRequestData
 import v7.common.resolvers.ResolveTypeOfBusiness

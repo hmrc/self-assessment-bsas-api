@@ -16,11 +16,11 @@
 
 package v7.ukPropertyBsas.retrieve.def1
 
-import cats.data.Validated
-import cats.implicits.*
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.*
 import v7.ukPropertyBsas.retrieve.def1.model.request.Def1_RetrieveUkPropertyBsasRequestData
 import v7.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 

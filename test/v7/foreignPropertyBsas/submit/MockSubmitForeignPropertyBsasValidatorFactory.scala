@@ -16,9 +16,9 @@
 
 package v7.foreignPropertyBsas.submit
 
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import api.controllers.validators.{MockValidatorFactory, Validator}
 import v7.foreignPropertyBsas.submit.model.request.SubmitForeignPropertyBsasRequestData
 
 trait MockSubmitForeignPropertyBsasValidatorFactory extends MockValidatorFactory[SubmitForeignPropertyBsasRequestData] {

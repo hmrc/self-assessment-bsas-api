@@ -16,9 +16,9 @@
 
 package v7.selfEmploymentBsas.retrieve.def1.model.response
 
-import play.api.libs.json.Json
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import play.api.libs.json.Json
 import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures.*
 
 class SummaryCalculationIncomeSpec extends UnitSpec with JsonErrorValidators {

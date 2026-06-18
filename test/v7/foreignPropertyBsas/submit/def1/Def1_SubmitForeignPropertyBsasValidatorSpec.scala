@@ -16,12 +16,12 @@
 
 package v7.foreignPropertyBsas.submit.def1
 
-import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError}
-import play.api.libs.json.*
 import api.models.domain.{CalculationId, Nino, TaxYear}
 import api.models.errors.*
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import common.errors.{RuleBothExpensesError, RuleBothPropertiesSuppliedError, RuleDuplicateCountryCodeError}
+import play.api.libs.json.*
 import v7.foreignPropertyBsas.submit.def1.model.request.{Def1_SubmitForeignPropertyBsasRequestBody, Def1_SubmitForeignPropertyBsasRequestData}
 
 class Def1_SubmitForeignPropertyBsasValidatorSpec extends UnitSpec with JsonErrorValidators {

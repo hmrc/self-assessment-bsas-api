@@ -16,9 +16,9 @@
 
 package v7.bsas.list.def1.model.response
 
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
-import api.models.domain.TaxYear
 import v7.common.model.{IncomeSourceTypeWithFHL, TypeOfBusinessWithFHL}
 
 case class BusinessSource(

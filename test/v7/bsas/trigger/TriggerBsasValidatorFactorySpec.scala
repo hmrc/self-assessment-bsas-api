@@ -16,10 +16,10 @@
 
 package v7.bsas.trigger
 
-import config.MockBsasConfig
-import play.api.libs.json.Json
 import api.controllers.validators.AlwaysErrorsValidator
 import api.utils.UnitSpec
+import config.MockBsasConfig
+import play.api.libs.json.Json
 import v7.bsas.trigger.def1.Def1_TriggerBsasValidator
 import v7.bsas.trigger.def2.Def2_TriggerBsasValidator
 

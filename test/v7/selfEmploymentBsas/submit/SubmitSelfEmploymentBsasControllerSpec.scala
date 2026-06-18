@@ -16,10 +16,6 @@
 
 package v7.selfEmploymentBsas.submit
 
-import common.errors.*
-import play.api.Configuration
-import play.api.libs.json.JsValue
-import play.api.mvc.Result
 import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -28,6 +24,10 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.utils.MockIdGenerator
+import common.errors.*
+import play.api.Configuration
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 import v7.selfEmploymentBsas.submit.def1.model.request.Def1_SubmitSelfEmploymentBsasRequestData
 import v7.selfEmploymentBsas.submit.def1.model.request.fixtures.SubmitSelfEmploymentBsasFixtures.{mtdRequestJson, submitSelfEmploymentBsasRequestBody}
 

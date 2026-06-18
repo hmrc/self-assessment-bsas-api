@@ -16,8 +16,8 @@
 
 package config
 
+import api.config.{AppConfig, AppConfigBase, FeatureSwitches}
 import play.api.Configuration
-import api.config.{AppConfigBase, FeatureSwitches, AppConfig}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}

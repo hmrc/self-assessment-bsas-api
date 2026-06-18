@@ -16,9 +16,9 @@
 
 package v7.bsas.list.def1.model.response
 
+import api.models.domain.Status
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import api.models.domain.Status
 
 case class BsasSummary(
     calculationId: String,

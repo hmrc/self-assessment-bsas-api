@@ -16,8 +16,8 @@
 
 package v7.bsas.trigger.def2.model.request
 
-import play.api.libs.json.{JsError, JsSuccess, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsError, JsSuccess, Json}
 
 class AccountingPeriodSpec extends UnitSpec {
 

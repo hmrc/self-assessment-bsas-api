@@ -16,6 +16,10 @@
 
 package v7.ukPropertyBsas.submit.def1
 
+import api.models.errors.*
+import api.models.utils.JsonErrorValidators
+import api.services.*
+import api.support.IntegrationBaseSpec
 import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
@@ -23,10 +27,6 @@ import play.api.libs.json.*
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import api.models.errors.*
-import api.models.utils.JsonErrorValidators
-import api.services.*
-import api.support.IntegrationBaseSpec
 import v7.ukPropertyBsas.submit.def1.model.request.SubmitUKPropertyBsasRequestBodyFixtures.validfhlInputJson
 
 class Def1_SubmitUkPropertyBsasHipISpec extends IntegrationBaseSpec with JsonErrorValidators {

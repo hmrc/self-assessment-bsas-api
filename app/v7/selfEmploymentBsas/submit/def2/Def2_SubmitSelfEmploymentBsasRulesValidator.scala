@@ -16,12 +16,12 @@
 
 package v7.selfEmploymentBsas.submit.def2
 
-import cats.data.Validated
-import cats.data.Validated.Invalid
-import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, RuleZeroAdjustmentsInvalidError}
 import api.controllers.validators.RulesValidator
 import api.controllers.validators.resolvers.ResolveParsedNumber
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import common.errors.{RuleBothAdjustmentsSuppliedError, RuleBothExpensesError, RuleZeroAdjustmentsInvalidError}
 import v7.selfEmploymentBsas.submit.def2.model.request.{Additions, Def2_SubmitSelfEmploymentBsasRequestData, Expenses, Income}
 
 object Def2_SubmitSelfEmploymentBsasRulesValidator extends RulesValidator[Def2_SubmitSelfEmploymentBsasRequestData] {

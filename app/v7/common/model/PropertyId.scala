@@ -16,7 +16,7 @@
 
 package v7.common.model
 
-import play.api.libs.json.{Reads, Writes, JsString}
+import play.api.libs.json.{JsString, Reads, Writes}
 
 case class PropertyId(propertyId: String) {
 

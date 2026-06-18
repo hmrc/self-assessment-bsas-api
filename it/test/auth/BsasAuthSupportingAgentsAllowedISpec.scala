@@ -16,10 +16,10 @@
 
 package auth
 
+import api.auth.AuthSupportingAgentsAllowedISpec
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import api.auth.AuthSupportingAgentsAllowedISpec
 import v7.bsas.trigger.def1.model.Def1_TriggerBsasFixtures
 import v7.common.model.TypeOfBusiness
 

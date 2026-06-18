@@ -16,11 +16,11 @@
 
 package v7.bsas.list
 
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import api.config.AppConfig
 import api.controllers.*
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.*
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext

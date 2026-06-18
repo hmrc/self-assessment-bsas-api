@@ -16,12 +16,12 @@
 
 package v7.foreignPropertyBsas.retrieve.def3
 
-import cats.data.Validated
-import cats.data.Validated._
-import cats.implicits._
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.*
+import cats.implicits.*
 import v7.foreignPropertyBsas.retrieve.def3.model.request.Def3_RetrieveForeignPropertyBsasRequestData
 import v7.foreignPropertyBsas.retrieve.model.request.RetrieveForeignPropertyBsasRequestData
 
@@ -31,7 +31,7 @@ object Def3_RetrieveForeignPropertyBsasValidator extends ResolverSupport {
 
 class Def3_RetrieveForeignPropertyBsasValidator(nino: String, calculationId: String, taxYear: String)
     extends Validator[RetrieveForeignPropertyBsasRequestData] {
-  import Def3_RetrieveForeignPropertyBsasValidator._
+  import Def3_RetrieveForeignPropertyBsasValidator.*
 
   def validate: Validated[Seq[MtdError], RetrieveForeignPropertyBsasRequestData] =
     (

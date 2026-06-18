@@ -16,14 +16,14 @@
 
 package v7.ukPropertyBsas.retrieve.def2.model.response
 
-import common.model.RoundTripTest
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import common.model.RoundTripTest
 import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures.*
 
 class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import AdjustableSummaryCalculation.{reads => readsAdjustable}
+  import AdjustableSummaryCalculation.reads as readsAdjustable
 
   testRoundTrip(
     "Adjustable Summary Calculation",
@@ -32,7 +32,7 @@ class SummaryCalculationSpec extends UnitSpec with JsonErrorValidators with Roun
     mtdSummaryCalculationJson
   )(readsAdjustable)
 
-  import AdjustedSummaryCalculation.{reads => readsAdjusted}
+  import AdjustedSummaryCalculation.reads as readsAdjusted
 
   testRoundTrip(
     "Adjusted Summary Calculation",
