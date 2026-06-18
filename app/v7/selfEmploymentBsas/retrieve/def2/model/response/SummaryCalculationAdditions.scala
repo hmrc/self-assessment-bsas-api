@@ -35,7 +35,6 @@ case class SummaryCalculationAdditions(
     otherExpensesDisallowable: Option[BigDecimal],
     advertisingCostsDisallowable: Option[BigDecimal],
     businessEntertainmentCostsDisallowable: Option[BigDecimal],
-    outstandingBusinessIncome: Option[BigDecimal],
     balancingChargeOther: Option[BigDecimal],
     balancingChargeBpra: Option[BigDecimal],
     goodsAndServicesOwnUse: Option[BigDecimal]
@@ -59,7 +58,6 @@ object SummaryCalculationAdditions {
       (JsPath \ "otherExpensesDisallowable").readNullable[BigDecimal] and
       (JsPath \ "advertisingCostsDisallowable").readNullable[BigDecimal] and
       (JsPath \ "businessEntertainmentCostsDisallowable").readNullable[BigDecimal] and
-      (JsPath \ "outstandingBusinessIncome").readNullable[BigDecimal] and
       (JsPath \ "balancingChargeOther").readNullable[BigDecimal] and
       (JsPath \ "balancingChargeBpra").readNullable[BigDecimal] and
       (JsPath \ "goodAndServicesOwnUse").readNullable[BigDecimal]

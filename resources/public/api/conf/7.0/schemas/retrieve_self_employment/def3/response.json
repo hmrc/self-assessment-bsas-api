@@ -491,15 +491,6 @@
               "maximum": 99999999999.99,
               "example": 1000.45
             },
-            "outstandingBusinessIncome": {
-              "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Use `outstandingBusinessIncome` in `adjustableSummaryCalculation` or `adjustedSummaryCalculation` instead.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": 0,
-              "maximum": 99999999999.99,
-              "example": 1000.45,
-              "deprecated": true
-            },
             "balancingChargeOther": {
               "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
@@ -1350,15 +1341,6 @@
               "minimum": 0,
               "maximum": 99999999999.99,
               "example": 1000.45
-            },
-            "outstandingBusinessIncome": {
-              "description": "Any other business income not included in other fields. The value must be between 0 and 99999999999.99 up to 2 decimal places. This field is deprecated and will be removed in a future release. Use `outstandingBusinessIncome` in `adjustableSummaryCalculation` or `adjustedSummaryCalculation` instead.",
-              "type": "number",
-              "multipleOf": 0.01,
-              "minimum": 0,
-              "maximum": 99999999999.99,
-              "example": 1000.45,
-              "deprecated": true
             },
             "balancingChargeOther": {
               "description": "Balancing charge on sale or cessation of business use (where you have disposed of assets for more than their tax value). The value must be between 0 and 99999999999.99 up to 2 decimal places.",

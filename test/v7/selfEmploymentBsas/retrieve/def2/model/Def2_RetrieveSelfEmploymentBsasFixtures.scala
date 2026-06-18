@@ -375,7 +375,6 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
       |  "otherExpensesDisallowable": 5.13,
       |  "advertisingCostsDisallowable": 5.14,
       |  "businessEntertainmentCostsDisallowable": 5.15,
-      |  "outstandingBusinessIncome": 11,
       |  "balancingChargeOther": 5.17,
       |  "balancingChargeBpra": 5.18,
       |  "goodsAndServicesOwnUse": 5.19
@@ -585,7 +584,6 @@ object Def2_RetrieveSelfEmploymentBsasFixtures {
     otherExpensesDisallowable = Some(5.13),
     advertisingCostsDisallowable = Some(5.14),
     businessEntertainmentCostsDisallowable = Some(5.15),
-    outstandingBusinessIncome = Some(11),
     balancingChargeOther = Some(5.17),
     balancingChargeBpra = Some(5.18),
     goodsAndServicesOwnUse = Some(5.19)

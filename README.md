@@ -2,9 +2,9 @@
 
 ## Requirements
 
-- Scala 3.5.2
-- Java 11
-- sbt 1.10.10
+- Scala 3.x.x
+- Java 21
+- sbt 1.10.x
 - [Service Manager](https://github.com/hmrc/sm2)
 
 # To run locally
