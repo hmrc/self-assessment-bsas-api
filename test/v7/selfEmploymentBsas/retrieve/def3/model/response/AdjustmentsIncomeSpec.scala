@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package v7.selfEmploymentBsas.retrieve.def2.model.response
+package v7.selfEmploymentBsas.retrieve.def3.model.response
 
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
 import play.api.libs.json.Json
-import v7.selfEmploymentBsas.retrieve.def2.model.Def2_RetrieveSelfEmploymentBsasFixtures.*
+import v7.selfEmploymentBsas.retrieve.def3.model.Def3_RetrieveSelfEmploymentBsasFixtures.*
 
-class AdjustmentsSpec extends UnitSpec with JsonErrorValidators {
+class AdjustmentsIncomeSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" should {
     "return a valid model" when {
       "passed valid JSON" in {
-        downstreamAdjustmentsJson.as[Adjustments] shouldBe adjustments
+        downstreamAdjustmentsIncomeJson.as[AdjustmentsIncome] shouldBe adjustmentsIncome
       }
     }
   }
@@ -34,7 +34,7 @@ class AdjustmentsSpec extends UnitSpec with JsonErrorValidators {
   "writes" should {
     "return valid JSON" when {
       "passed a valid model" in {
-        Json.toJson(adjustments) shouldBe mtdAdjustmentsJson
+        Json.toJson(adjustmentsIncome) shouldBe mtdAdjustmentsIncomeJson
       }
     }
   }

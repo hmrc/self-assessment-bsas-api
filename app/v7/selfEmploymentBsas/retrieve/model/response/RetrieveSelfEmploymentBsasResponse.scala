@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import v7.common.model.{HasIncomeSourceType, HasTaxYear}
 import v7.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
 import v7.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasResponse
+import v7.selfEmploymentBsas.retrieve.def3.model.response.Def3_RetrieveSelfEmploymentBsasResponse
 
 trait RetrieveSelfEmploymentBsasResponse extends HasIncomeSourceType with HasTaxYear
 
@@ -32,6 +33,8 @@ object RetrieveSelfEmploymentBsasResponse extends JsonWritesUtil {
       implicitly[OWrites[Def1_RetrieveSelfEmploymentBsasResponse]].writes(def1)
     case def2: Def2_RetrieveSelfEmploymentBsasResponse =>
       implicitly[OWrites[Def2_RetrieveSelfEmploymentBsasResponse]].writes(def2)
+    case def3: Def3_RetrieveSelfEmploymentBsasResponse =>
+      implicitly[OWrites[Def3_RetrieveSelfEmploymentBsasResponse]].writes(def3)
   }
 
 }

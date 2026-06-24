@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import v7.selfEmploymentBsas.retrieve.def1.model.response.Def1_RetrieveSelfEmploymentBsasResponse
 import v7.selfEmploymentBsas.retrieve.def2.model.response.Def2_RetrieveSelfEmploymentBsasResponse
+import v7.selfEmploymentBsas.retrieve.def3.model.response.Def3_RetrieveSelfEmploymentBsasResponse
 import v7.selfEmploymentBsas.retrieve.model.response.RetrieveSelfEmploymentBsasResponse
 
 import scala.math.Ordered.orderingToOrdered
@@ -43,13 +44,19 @@ object RetrieveSelfEmploymentBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_RetrieveSelfEmploymentBsasResponse.reads
   }
 
+  case object Def3 extends RetrieveSelfEmploymentBsasSchema {
+    type DownstreamResp = Def3_RetrieveSelfEmploymentBsasResponse
+    val connectorReads: Reads[DownstreamResp] = Def3_RetrieveSelfEmploymentBsasResponse.reads
+  }
+
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
     ResolveTaxYear(taxYearString) andThen schemaFor
   }
 
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
     if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
-    else Valid(Def2)
+    else if (taxYear <= TaxYear.starting(2025)) Valid(Def2)
+    else Valid(Def3)
   }
 
 }
