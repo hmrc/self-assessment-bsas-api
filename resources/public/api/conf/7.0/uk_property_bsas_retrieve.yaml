@@ -87,6 +87,9 @@ get:
               - $ref: "./schemas/retrieve_uk_property/def1/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def1a/retrieve_uk_property.json"
               - $ref: "./schemas/retrieve_uk_property/def2/retrieve_uk_property.json"
+              {{#if (enabled 'r22_fya_docs')}}
+              - $ref: "./schemas/retrieve_uk_property/def3/retrieve_uk_property.json"
+              {{/if}}
           examples:
             PRE-TY-2024-25-UK-FHL-Response:
               description: UK FHL Response
@@ -140,6 +143,24 @@ get:
               description: Zero Adjustments Response
               value:
                 $ref: "./examples/retrieve_uk_property/def2/retrieve_zero_adjustments.json"
+            {{#if (enabled 'r22_fya_docs')}}
+            TY-2026-27-UK-Property-Response:
+              description: UK Property Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def3/retrieve_uk_property.json"
+            TY-2026-27-UK-Property-Consolidated-Expenses-Response:
+              description: UK Property with Consolidated Expenses Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def3/retrieve_uk_property_consolidated.json"
+            TY-2026-27-UK-Property-With-Property-Allowance-Response:
+              description: UK Property with Property Allowance Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def3/retrieve_uk_property_allowance.json"
+            TY-2026-27-Zero-Adjustments-Response:
+              description: Zero Adjustments Response
+              value:
+                $ref: "./examples/retrieve_uk_property/def3/retrieve_zero_adjustments.json"
+            {{/if}}
 
 
     400:
