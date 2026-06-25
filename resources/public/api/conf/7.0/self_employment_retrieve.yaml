@@ -80,7 +80,9 @@ get:
               - $ref: "./schemas/retrieve_self_employment/def1/response.json"
               - $ref: "./schemas/retrieve_self_employment/def2/response.json"
               - $ref: "./schemas/retrieve_self_employment/def3/response.json"
+              {{#if (enabled 'r22_fya_docs')}}
               - $ref: "./schemas/retrieve_self_employment/def4/response.json"
+              {{/if}}
           examples:
             "PRE-TY-2024-25-Full-Expenses":
               value:
@@ -106,7 +108,11 @@ get:
             "TY-2025-26-Full-Expenses":
               value:
                 $ref: "./examples/retrieve_self_employment/def3/retrieve_self_employment_full_expenses.json"
+            {{#if (enabled 'r22_fya_docs')}}
             "TY-2025-26-Zero-Adjustments":
+            {{else}}
+            "TY-2025-26-Onwards-Zero-Adjustments":
+            {{/if}}
               value:
                 $ref: "./examples/retrieve_self_employment/def3/retrieve_self_employment_zero_adjustments.json"
             "TY-2025-26-Consolidated-Expenses":
@@ -115,6 +121,7 @@ get:
             "TY-2025-26-Trading-Allowance":
               value:
                 $ref: "./examples/retrieve_self_employment/def3/retrieve_self_employment_trading_allowance.json"
+            {{#if (enabled 'r22_fya_docs')}}
             "TY-2026-27-Full-Expenses":
               value:
                 $ref: "./examples/retrieve_self_employment/def4/retrieve_self_employment_full_expenses.json"
@@ -127,6 +134,7 @@ get:
             "TY-2026-27-Onwards-Zero-Adjustments":
               value:
                 $ref: "./examples/retrieve_self_employment/def4/retrieve_self_employment_zero_adjustments.json"
+            {{/if}}
 
     400:
       description: Bad request

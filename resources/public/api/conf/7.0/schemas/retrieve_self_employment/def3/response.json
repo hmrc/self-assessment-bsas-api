@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": {{#if (enabled 'r22_fya_docs')}} "For TY 2025-26 and after" {{else}} "For TY 2025-26" {{/if}},
+  "title": {{#if (enabled 'r22_fya_docs')}} "For TY 2025-26" {{else}} "For TY 2025-26  and after" {{/if}},
   "description": "Retrieve a Self-Employment Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
