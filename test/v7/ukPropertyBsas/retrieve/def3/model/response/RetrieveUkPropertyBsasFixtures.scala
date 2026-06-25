@@ -380,7 +380,8 @@ object RetrieveUkPropertyBsasFixtures {
       |  "propertyAllowance": 6.05,
       |  "otherCapitalAllowance": 6.06,
       |  "rarReliefClaimed": 6.07,
-      |  "zeroEmissionsCarAllowance": 6.11
+      |  "zeroEmissionsCarAllowance": 6.11,
+      |  "firstYearAllowanceOnPlantAndMachinery": 6.12
       |}
       |""".stripMargin
   )
