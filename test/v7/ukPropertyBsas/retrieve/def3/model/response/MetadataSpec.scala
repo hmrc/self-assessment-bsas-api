@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package v7.ukPropertyBsas.retrieve.def2.model.response
+package v7.ukPropertyBsas.retrieve.def3.model.response
 
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
 import common.model.RoundTripTest
-import v7.ukPropertyBsas.retrieve.def2.model.response.RetrieveUkPropertyBsasFixtures.*
+import v7.ukPropertyBsas.retrieve.def3.model.response.Metadata.reads
+import v7.ukPropertyBsas.retrieve.def3.model.response.RetrieveUkPropertyBsasFixtures.{downstreamMetadataJson, mtdMetadataJson, parsedMetadata}
 
-class SummaryCalculationExpensesSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
+class MetadataSpec extends UnitSpec with JsonErrorValidators with RoundTripTest {
 
-  import SummaryCalculationExpenses.*
-
-  testRoundTrip(
-    "Summary Calculation Expenses",
-    downstreamSummaryCalculationExpensesJson,
-    summaryCalculationExpenses,
-    mtdSummaryCalculationExpensesJson
-  )(reads)
+  testRoundTrip("Metadata", downstreamMetadataJson, parsedMetadata, mtdMetadataJson)(reads)
 
 }

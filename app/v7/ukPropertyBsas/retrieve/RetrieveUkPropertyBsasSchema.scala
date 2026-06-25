@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import v7.ukPropertyBsas.retrieve.def1.model.response.Def1_RetrieveUkPropertyBsasResponse
 import v7.ukPropertyBsas.retrieve.def2.model.response.Def2_RetrieveUkPropertyBsasResponse
+import v7.ukPropertyBsas.retrieve.def3.model.response.Def3_RetrieveUkPropertyBsasResponse
 import v7.ukPropertyBsas.retrieve.model.response.RetrieveUkPropertyBsasResponse
 
 import scala.math.Ordered.orderingToOrdered
@@ -43,13 +44,19 @@ object RetrieveUkPropertyBsasSchema {
     val connectorReads: Reads[DownstreamResp] = Def2_RetrieveUkPropertyBsasResponse.reads
   }
 
+  case object Def3 extends RetrieveUkPropertyBsasSchema {
+    type DownstreamResp = Def3_RetrieveUkPropertyBsasResponse
+    val connectorReads: Reads[DownstreamResp] = Def3_RetrieveUkPropertyBsasResponse.reads
+  }
+
   def schemaFor(taxYearString: String): Validated[Seq[MtdError], RetrieveUkPropertyBsasSchema] = {
     ResolveTaxYear(taxYearString) andThen schemaFor
   }
 
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveUkPropertyBsasSchema] = {
     if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
-    else Valid(Def2)
+    else if (taxYear == TaxYear.starting(2025)) Valid(Def2)
+    else Valid(Def3)
   }
 
 }
