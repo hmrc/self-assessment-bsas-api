@@ -95,7 +95,8 @@
       "includedNonTaxableProfits": 0.12,
       "structuredBuildingAllowance": 0.12,
       "enhancedStructuredBuildingAllowance": 0.12,
-      "zeroEmissionsCarAllowance": 0.12
+      "zeroEmissionsCarAllowance": 0.12,
+      "firstYearAllowanceOnPlantAndMachinery": 0.12
     },
     "totalAccountingAdjustments": 0.12,
     "accountingAdjustments": {
