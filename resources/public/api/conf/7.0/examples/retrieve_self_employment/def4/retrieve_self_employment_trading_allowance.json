@@ -72,8 +72,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "tradingAllowance": 0.12,
-      "firstYearAllowanceOnPlantAndMachinery": 0.12
+      "tradingAllowance": 0.12
     },
     "totalAccountingAdjustments": 0.12,
     "accountingAdjustments": {
@@ -172,8 +171,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "tradingAllowance": 0.12,
-      "firstYearAllowanceOnPlantAndMachinery": 0.12
+      "tradingAllowance": 0.12
     },
     "totalAccountingAdjustments": 0.12,
     "accountingAdjustments": {
