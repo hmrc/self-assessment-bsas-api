@@ -145,7 +145,6 @@ class Def3_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
   private trait Test {
     val nino                  = "AA123456B"
     val calculationId         = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-    def uri: String           = s"/$nino/uk-property/$calculationId/$taxYear"
     def taxYear: String       = "2026-27"
     def downstreamUri: String = s"/itsa/income-tax/v1/26-27/adjustable-summary-calculation/$nino/$calculationId"
     def setupStubs(): Unit
@@ -155,7 +154,7 @@ class Def3_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/$nino/uk-property/$calculationId/$taxYear")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
