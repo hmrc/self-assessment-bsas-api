@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": {{#if (enabled 'r22_fya_docs')}} "For TY 2025-26" {{else}} "For TY 2025-26 and after" {{/if}},
+  "title": "{{#unless (releasedInProduction "r22_fya_docs")}}[Test only] {{/unless}} For TY 2026-27 and after",
   "description": "Retrieve a Self-Employment Business Source Adjustable Summary Response.",
   "type": "object",
   "properties": {
@@ -628,6 +628,14 @@
             },
             "zeroEmissionsCarAllowance": {
               "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "firstYearAllowanceOnPlantAndMachinery": {
+              "description": "First-Year Allowance for qualifying expenditure incurred on plant and machinery. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
@@ -1479,6 +1487,14 @@
             },
             "zeroEmissionsCarAllowance": {
               "description": "The amount of zero emissions car allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1000.45
+            },
+            "firstYearAllowanceOnPlantAndMachinery": {
+              "description": "First-Year Allowance for qualifying expenditure incurred on plant and machinery. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
               "multipleOf": 0.01,
               "minimum": 0,
