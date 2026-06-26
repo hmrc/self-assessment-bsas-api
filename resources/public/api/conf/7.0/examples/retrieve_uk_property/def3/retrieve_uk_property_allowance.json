@@ -50,8 +50,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12,
-      "firstYearAllowanceOnPlantAndMachinery": 0.12
+      "propertyAllowance": 0.12
     },
     "taxableProfit": 12500
   },
@@ -102,8 +101,7 @@
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12,
-      "firstYearAllowanceOnPlantAndMachinery": 0.12
+      "propertyAllowance": 0.12
     },
     "taxableProfit": 22500
   }
