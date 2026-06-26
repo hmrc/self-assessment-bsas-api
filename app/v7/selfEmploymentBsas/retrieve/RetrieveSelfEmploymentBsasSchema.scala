@@ -55,7 +55,7 @@ object RetrieveSelfEmploymentBsasSchema {
 
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrieveSelfEmploymentBsasSchema] = {
     if (taxYear <= TaxYear.starting(2024)) Valid(Def1)
-    else if (taxYear <= TaxYear.starting(2025)) Valid(Def2)
+    else if (taxYear == TaxYear.starting(2025)) Valid(Def2)
     else Valid(Def3)
   }
 

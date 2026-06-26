@@ -27,7 +27,7 @@ class Def3_RetrieveSelfEmploymentBsasValidatorSpec extends UnitSpec {
 
   private val validNino          = "AA123456A"
   private val validCalculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-  private val validTaxYear       = "2023-24"
+  private val validTaxYear       = "2026-27"
 
   private val parsedNino          = Nino(validNino)
   private val parsedCalculationId = CalculationId(validCalculationId)
