@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,14 @@ class RetrieveSelfEmploymentBsasSchemaSpec extends UnitSpec with ScalaCheckDrive
         RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def1)
       }
 
-      "use Def2 for tax years 2025-26 onwards" in {
+      "use Def2 for tax year 2025-26" in {
         val taxYear = TaxYear.fromMtd("2025-26")
         RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def2)
+      }
+
+      "use Def3 for tax years 2026-27 onwards" in {
+        val taxYear = TaxYear.fromMtd("2026-27")
+        RetrieveSelfEmploymentBsasSchema.schemaFor(taxYear.asMtd) shouldBe Valid(RetrieveSelfEmploymentBsasSchema.Def3)
       }
     }
 

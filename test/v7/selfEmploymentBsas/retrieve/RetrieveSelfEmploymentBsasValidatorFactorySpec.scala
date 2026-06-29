@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import api.controllers.validators.AlwaysErrorsValidator
 import api.utils.UnitSpec
 import v7.selfEmploymentBsas.retrieve.def1.Def1_RetrieveSelfEmploymentBsasValidator
 import v7.selfEmploymentBsas.retrieve.def2.Def2_RetrieveSelfEmploymentBsasValidator
+import v7.selfEmploymentBsas.retrieve.def3.Def3_RetrieveSelfEmploymentBsasValidator
 
 class RetrieveSelfEmploymentBsasValidatorFactorySpec extends UnitSpec {
 
@@ -36,6 +37,12 @@ class RetrieveSelfEmploymentBsasValidatorFactorySpec extends UnitSpec {
     "given a request corresponding to a Def2 schema" should {
       "return a Def2 validator" in {
         validatorFor("2025-26") shouldBe a[Def2_RetrieveSelfEmploymentBsasValidator]
+      }
+    }
+
+    "given a request corresponding to a Def3 schema" should {
+      "return a Def3 validator" in {
+        validatorFor("2026-27") shouldBe a[Def3_RetrieveSelfEmploymentBsasValidator]
       }
     }
 

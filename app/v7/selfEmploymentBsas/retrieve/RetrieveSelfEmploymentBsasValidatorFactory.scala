@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package v7.selfEmploymentBsas.retrieve
 
 import api.controllers.validators.Validator
 import cats.data.Validated.{Invalid, Valid}
-import v7.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema.{Def1, Def2}
+import v7.selfEmploymentBsas.retrieve.RetrieveSelfEmploymentBsasSchema.{Def1, Def2, Def3}
 import v7.selfEmploymentBsas.retrieve.def1.Def1_RetrieveSelfEmploymentBsasValidator
 import v7.selfEmploymentBsas.retrieve.def2.Def2_RetrieveSelfEmploymentBsasValidator
+import v7.selfEmploymentBsas.retrieve.def3.Def3_RetrieveSelfEmploymentBsasValidator
 import v7.selfEmploymentBsas.retrieve.model.request.RetrieveSelfEmploymentBsasRequestData
 
 import javax.inject.Singleton
@@ -39,6 +40,7 @@ class RetrieveSelfEmploymentBsasValidatorFactory {
     schema match {
       case Valid(Def1)     => new Def1_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
       case Valid(Def2)     => new Def2_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
+      case Valid(Def3)     => new Def3_RetrieveSelfEmploymentBsasValidator(nino, calculationId, taxYear)
       case Invalid(errors) => Validator.returningErrors(errors)
     }
   }
