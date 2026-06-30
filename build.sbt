@@ -18,10 +18,12 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / scalaVersion := "3.5.2"
 ThisBuild / majorVersion := 1
+
 ThisBuild / scalacOptions ++= Seq(
   "-Werror",
   "-Wconf:msg=Flag.*repeatedly:s"
 )
+
 ThisBuild / scalafmtOnCompile := true
 
 val appName = "self-assessment-bsas-api"
@@ -47,7 +49,5 @@ lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test")
   .settings(DefaultBuildSettings.itSettings())
-  .settings(
-    Test / fork := true,
-    Test / javaOptions += "-Dlogger.resource=logback-test.xml")
+  .settings(Test / fork := true, Test / javaOptions += "-Dlogger.resource=logback-test.xml")
   .settings(libraryDependencies ++= AppDependencies.itDependencies)

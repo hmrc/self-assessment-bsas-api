@@ -94,38 +94,38 @@
         "submissionPeriod": {
           "type": "object",
           "description": "Object containing the submission period for the income source.",
-            "properties": {
-              "submissionId": {
-                "description": "A reference to the unique identifier of the period.",
-                "type": "string",
-                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
-              },
-              "startDate": {
-                "type": "string",
-                "description": "The date the submission period started.",
-                "format": "date",
-                "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
-                "example": "2019-04-06"
-              },
-              "endDate": {
-                "type": "string",
-                "description": "The date the submission period ended.",
-                "format": "date",
-                "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
-                "example": "2019-07-05"
-              },
-              "receivedDateTime": {
-                "description": "The date and time data received.",
-                "type": "string",
-                "example": "2026-04-04T01:01:01.123Z"
-              }
+          "properties": {
+            "submissionId": {
+              "description": "A reference to the unique identifier of the period.",
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
             },
-            "required": [
-              "submissionId",
-              "startDate",
-              "endDate",
-              "receivedDateTime"
-            ]
+            "startDate": {
+              "type": "string",
+              "description": "The date the submission period started.",
+              "format": "date",
+              "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
+              "example": "2019-04-06"
+            },
+            "endDate": {
+              "type": "string",
+              "description": "The date the submission period ended.",
+              "format": "date",
+              "pattern": "^2[0-9]{3}-[0-9]{2}-[0-9]{2}$",
+              "example": "2019-07-05"
+            },
+            "receivedDateTime": {
+              "description": "The date and time data received.",
+              "type": "string",
+              "example": "2026-04-04T01:01:01.123Z"
+            }
+          },
+          "required": [
+            "submissionId",
+            "startDate",
+            "endDate",
+            "receivedDateTime"
+          ]
         }
       },
       "required": [
@@ -573,7 +573,9 @@
         "zeroAdjustments": {
           "type": "boolean",
           "description": "Indicates zero adjustments for all income and expenses. The value must be true if this is the case.",
-          "enum": [true]
+          "enum": [
+            true
+          ]
         }
       }
     },

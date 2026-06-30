@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,6 @@ class Def1_RetrieveUkPropertyBsasIfsISpec extends IntegrationBaseSpec {
         response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        // response.json shouldBe mtdRetrieveBsasResponseFhlJson(taxYear)
-
       }
 
       "valid request is made and Uk Property is returned" in new NonTysTest {

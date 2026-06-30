@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,36 +32,21 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
 
   "Calling the retrieve UK Property Bsas endpoint" should {
     "return a valid response with status OK" when {
-      "valid request is made" in new TysIfsTest {
-
+      "valid request is made" in new Test {
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasResponseJson)
         }
 
         val response: WSResponse = await(request.get())
-
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdRetrieveBsasResponseJson
 
-      }
-
-      "any valid Tax Year Specific request is made" in new TysIfsTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamRetrieveBsasResponseJson)
-        }
-
-        val response: WSResponse = await(request.get())
-
-        response.status shouldBe OK
-        response.header("Content-Type") shouldBe Some("application/json")
-
-        response.json shouldBe mtdRetrieveBsasResponseJson
       }
     }
 
     "return error response with status BAD_REQUEST" when {
-      "valid request is made but downstream response has invalid type of business" in new TysIfsTest {
+      "valid request is made but downstream response has invalid type of business" in new Test {
 
         override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(
@@ -85,7 +70,7 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
                               taxYearString: String,
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new TysIfsTest {
+        s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String          = requestNino
           override val calculationId: String = requestCalculationId
@@ -118,7 +103,7 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
            |}""".stripMargin
 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
           override def setupStubs(): Unit = {
             AuditStub.audit()
@@ -156,10 +141,10 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
   }
 
   private trait Test {
-    val nino          = "AA123456B"
-    val calculationId = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
-
-    def downstreamUri: String
+    val nino                  = "AA123456B"
+    val calculationId         = "f2fb30e5-4ab6-4a29-b3c1-c7264259ff1c"
+    def taxYear: String       = "2025-26"
+    def downstreamUri: String = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
 
     def setupStubs(): Unit
 
@@ -168,22 +153,13 @@ class Def2_RetrieveUkPropertyBsasISpec extends IntegrationBaseSpec {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/$nino/uk-property/$calculationId/$taxYear")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.7.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
 
-    def taxYear: String
-
-    def uri: String = s"/$nino/uk-property/$calculationId/$taxYear"
-  }
-
-  private trait TysIfsTest extends Test {
-
-    override def taxYear: String = "2025-26"
-    def downstreamUri: String    = s"/itsa/income-tax/v1/25-26/adjustable-summary-calculation/$nino/$calculationId"
   }
 
 }

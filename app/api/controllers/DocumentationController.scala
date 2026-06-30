@@ -17,10 +17,10 @@
 package api.controllers
 
 import api.config.rewriters.DocumentationRewriters
-import org.apache.pekko.stream.Materializer
-import play.api.Configuration
 import api.definition.ApiDefinitionFactory
 import controllers.RewriteableAssets
+import org.apache.pekko.stream.Materializer
+import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.*
 import play.filters.cors.CORSActionBuilder

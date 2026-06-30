@@ -22,7 +22,6 @@ sbt test
 sbt it/test
 ```
 
-
 ## To view the OAS
 
 To view documentation locally ensure the Self Assessment BSAS Api is running, and run api-documentation-frontend:

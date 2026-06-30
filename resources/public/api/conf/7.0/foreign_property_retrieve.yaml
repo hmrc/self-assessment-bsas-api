@@ -10,7 +10,7 @@ get:
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
-     
+    
     |  Tax Year                    | Header Value (Gov-Test-Scenario)              | Scenario                                                                                                                                 |
     | -----------------------------| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
     | All                          | N/A - DEFAULT                                 | Simulates the scenario where no data is found.                                                                                           |
@@ -59,19 +59,19 @@ get:
 
   summary: Retrieve a Foreign Property Business Source Adjustable Summary
   tags:
-  - Foreign property business
+    - Foreign property business
 
   parameters:
-  - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
-  - $ref: "./common/pathParameters.yaml#/components/parameters/calculationId"
-  - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
-  - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
-  - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
-  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/calculationId"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
 
   security:
-  - User-Restricted:
-    - read:self-assessment
+    - User-Restricted:
+        - read:self-assessment
 
   responses:
     200:
@@ -89,10 +89,10 @@ get:
         application/json:
           schema:
             oneOf:
-            - $ref: "./schemas/retrieve_foreign_property/def1/retrieve_foreign_property.json"
-            - $ref: "./schemas/retrieve_foreign_property/def1a/retrieve_foreign_property.json"
-            - $ref: "./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json"
-            - $ref: "./schemas/retrieve_foreign_property/def3/retrieve_foreign_property.json"
+              - $ref: "./schemas/retrieve_foreign_property/def1/retrieve_foreign_property.json"
+              - $ref: "./schemas/retrieve_foreign_property/def1a/retrieve_foreign_property.json"
+              - $ref: "./schemas/retrieve_foreign_property/def2/retrieve_foreign_property.json"
+              - $ref: "./schemas/retrieve_foreign_property/def3/retrieve_foreign_property.json"
           examples:
             PRE-TY-2023-24-Foreign-Property-EEA-FHL:
               value:

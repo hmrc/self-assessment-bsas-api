@@ -1,7 +1,5 @@
 {
-  "foreignProperty":
-    {
-      "zeroAdjustments": true
-    }
-
+  "foreignProperty": {
+    "zeroAdjustments": true
+  }
 }
