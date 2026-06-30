@@ -39,4 +39,5 @@ class Def3_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, 
         taxYear = TaxYear.fromMtd(taxYear)
       )
     }
+
 }

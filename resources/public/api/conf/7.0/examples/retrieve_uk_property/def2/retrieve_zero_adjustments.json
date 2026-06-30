@@ -13,8 +13,7 @@
     "accountingPeriodStartDate": "2019-04-06",
     "accountingPeriodEndDate": "2020-04-05",
     "source": "MTD-SA",
-    "submissionPeriod":
-    {
+    "submissionPeriod": {
       "submissionId": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
       "startDate": "2019-04-06",
       "endDate": "2020-04-05",

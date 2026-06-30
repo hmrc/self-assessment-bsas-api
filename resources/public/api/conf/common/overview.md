@@ -1,6 +1,8 @@
-Use the Business Source Adjustable Summary API to generate a year-end financial statement and submit and retrieve accounting adjustments for a customer's self-employment or property business.
+Use the Business Source Adjustable Summary API to generate a year-end financial statement and submit and retrieve
+accounting adjustments for a customer's self-employment or property business.
 
 This API is related to the following customer journey:
+
 * Submit business accounting adjustments
 
 For information on how to connect to this

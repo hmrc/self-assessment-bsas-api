@@ -38,17 +38,6 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val downstreamSubmissionPeriodWithPeriodIdRegexJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "submissionId": "7038926d-d7a1-4399-8641-f278b438259c",
-       |  "startDate": "$now",
-       |  "endDate": "$aYearFromNow",
-       |  "receivedDateTime": "2000-01-01T10:12:10Z"
-       |}
-       |""".stripMargin
-  )
-
   val downstreamSubmissionPeriodWithSubmissionIdRegexJson: JsValue = Json.parse(
     s"""
        |{
