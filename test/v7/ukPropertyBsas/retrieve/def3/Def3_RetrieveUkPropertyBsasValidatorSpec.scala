@@ -84,24 +84,6 @@ class Def3_RetrieveUkPropertyBsasValidatorSpec extends UnitSpec {
         )
       }
     }
-
-    "return TaxYearFormatError" when {
-      "passed an incorrectly formatted taxYear" in {
-        val result = validator(validNino, validCalculationId, "202324").validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, TaxYearFormatError)
-        )
-      }
-    }
-
-    "return RuleTaxYearRangeInvalidError" when {
-      "passed a tax year range of more than one year" in {
-        val result = validator(validNino, validCalculationId, "2022-24").validateAndWrapResult()
-        result shouldBe Left(
-          ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
-        )
-      }
-    }
   }
 
 }

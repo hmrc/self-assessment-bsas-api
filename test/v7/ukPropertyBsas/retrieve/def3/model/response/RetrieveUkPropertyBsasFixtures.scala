@@ -18,7 +18,7 @@ package v7.ukPropertyBsas.retrieve.def3.model.response
 
 import api.models.domain.{Source, Status}
 import play.api.libs.json.{JsValue, Json}
-import v7.common.model.{IncomeSourceType, TypeOfBusiness}
+import v7.common.model.IncomeSourceType
 
 object RetrieveUkPropertyBsasFixtures {
 
@@ -56,20 +56,6 @@ object RetrieveUkPropertyBsasFixtures {
        |  "startDate": "$now",
        |  "endDate": "$aYearFromNow",
        |  "receivedDateTime": "2000-01-01T10:12:10Z"
-       |}
-       |""".stripMargin
-  )
-
-  val downstreamInputsFhlJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "incomeSourceType": "04",
-       |  "incomeSourceId": "XAIS12345678910",
-       |  "incomeSourceName": "Business Name",
-       |  "accountingPeriodStartDate": "$now",
-       |  "accountingPeriodEndDate": "$aYearFromNow",
-       |  "source": "MTD-SA",
-       |  "submissionPeriod": $downstreamSubmissionPeriodWithSubmissionIdRegexJson
        |}
        |""".stripMargin
   )
@@ -283,19 +269,6 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdInputsFhlJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "businessId": "XAIS12345678910",
-       |  "businessName": "Business Name",
-       |  "accountingPeriodStartDate": "$now",
-       |  "accountingPeriodEndDate": "$aYearFromNow",
-       |  "source": "MTD-SA",
-       |  "submissionPeriods": $mtdSubmissionPeriodWithSubmissionIdJson
-       |}
-       |""".stripMargin
-  )
-
   val mtdInputsJson: JsValue = Json.parse(
     s"""
        |{
@@ -309,15 +282,6 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdSummaryCalculationIncomeFhlJson: JsValue = Json.parse(
-    """
-      |{
-      |  "totalRentsReceived": 1.05,
-      |  "rarRentReceived": 1.06
-      |}
-      |""".stripMargin
-  )
-
   val mtdSummaryCalculationIncomeJson: JsValue = Json.parse(
     """
       |{
@@ -326,21 +290,6 @@ object RetrieveUkPropertyBsasFixtures {
       |  "reversePremiums": 1.03,
       |  "otherPropertyIncome": 1.04,
       |  "rarRentReceived": 1.06
-      |}
-      |""".stripMargin
-  )
-
-  val mtdSummaryCalculationExpensesFhlJson: JsValue = Json.parse(
-    """
-      |{
-      |  "consolidatedExpenses": 2.01,
-      |  "premisesRunningCosts": 2.02,
-      |  "repairsAndMaintenance": 2.03,
-      |  "financialCosts": 2.04,
-      |  "professionalFees": 2.05,
-      |  "costOfServices": 2.06,
-      |  "other": 2.09,
-      |  "travelCosts": 2.10
       |}
       |""".stripMargin
   )
@@ -372,20 +321,6 @@ object RetrieveUkPropertyBsasFixtures {
       |""".stripMargin
   )
 
-  val mtdSummaryCalculationDeductionsFhlJson: JsValue = Json.parse(
-    """
-      |{
-      |  "annualInvestmentAllowance": 6.02,
-      |  "businessPremisesRenovationAllowance": 6.04,
-      |  "propertyAllowance": 6.05,
-      |  "otherCapitalAllowance": 6.06,
-      |  "rarReliefClaimed": 6.07,
-      |  "zeroEmissionsCarAllowance": 6.11,
-      |  "firstYearAllowanceOnPlantAndMachinery": 6.12
-      |}
-      |""".stripMargin
-  )
-
   val mtdSummaryCalculationDeductionsJson: JsValue = Json.parse(
     """
       |{
@@ -402,25 +337,6 @@ object RetrieveUkPropertyBsasFixtures {
       |  "firstYearAllowanceOnPlantAndMachinery": 6.12
       |}
       |""".stripMargin
-  )
-
-  val mtdSummaryCalculationFhlJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "totalIncome": 1,
-       |  "income": $mtdSummaryCalculationIncomeFhlJson,
-       |  "totalExpenses": 2,
-       |  "expenses": $mtdSummaryCalculationExpensesFhlJson,
-       |  "netProfit": 3,
-       |  "netLoss": 4,
-       |  "totalAdditions": 5,
-       |  "additions": $mtdSummaryCalculationAdditionsJson,
-       |  "totalDeductions": 6,
-       |  "deductions": $mtdSummaryCalculationDeductionsFhlJson,
-       |  "taxableProfit": 7,
-       |  "adjustedIncomeTaxLoss": 8
-       |}
-       |""".stripMargin
   )
 
   val mtdSummaryCalculationJson: JsValue = Json.parse(
@@ -442,14 +358,6 @@ object RetrieveUkPropertyBsasFixtures {
        |""".stripMargin
   )
 
-  val mtdAdjustmentsIncomeFhlJson: JsValue = Json.parse(
-    """
-      |{
-      |  "totalRentsReceived": 1.05
-      |}
-      |""".stripMargin
-  )
-
   val mtdAdjustmentsIncomeJson: JsValue = Json.parse(
     """
       |{
@@ -457,21 +365,6 @@ object RetrieveUkPropertyBsasFixtures {
       |  "premiumsOfLeaseGrant": 1.02,
       |  "reversePremiums": 1.03,
       |  "otherPropertyIncome": 1.04
-      |}
-      |""".stripMargin
-  )
-
-  val mtdAdjustmentsExpensesFhlJson: JsValue = Json.parse(
-    """
-      |{
-      |    "consolidatedExpenses": 2.01,
-      |    "premisesRunningCosts": 2.02,
-      |    "repairsAndMaintenance": 2.03,
-      |    "financialCosts": 2.04,
-      |    "professionalFees": 2.05,
-      |    "costOfServices": 2.06,
-      |    "other": 2.08,
-      |    "travelCosts": 2.09
       |}
       |""".stripMargin
   )
@@ -490,15 +383,6 @@ object RetrieveUkPropertyBsasFixtures {
       |    "travelCosts": 2.09
       |}
       |""".stripMargin
-  )
-
-  val mtdAdjustmentsFhlJson: JsValue = Json.parse(
-    s"""
-       |{
-       |  "income": $mtdAdjustmentsIncomeFhlJson,
-       |  "expenses": $mtdAdjustmentsExpensesFhlJson
-       |}
-       |""".stripMargin
   )
 
   val mtdAdjustmentsJson: JsValue = Json.parse(
@@ -546,16 +430,6 @@ object RetrieveUkPropertyBsasFixtures {
     receivedDateTime = "2000-01-01T10:12:10Z"
   )
 
-  val inputsFhl: Inputs = Inputs(
-    incomeSourceType = "04",
-    businessId = "XAIS12345678910",
-    businessName = Some("Business Name"),
-    accountingPeriodStartDate = now,
-    accountingPeriodEndDate = aYearFromNow,
-    source = Source.`MTD-SA`,
-    submissionPeriod = submissionPeriodWithSubmissionId
-  )
-
   val inputs: Inputs = Inputs(
     incomeSourceType = "02",
     businessId = "XAIS12345678910",
@@ -566,33 +440,12 @@ object RetrieveUkPropertyBsasFixtures {
     submissionPeriod = submissionPeriodWithSubmissionId
   )
 
-  val summaryCalculationIncomeFhl: SummaryCalculationIncome = SummaryCalculationIncome(
-    totalRentsReceived = Some(1.05),
-    premiumsOfLeaseGrant = None,
-    reversePremiums = None,
-    otherPropertyIncome = None,
-    rarRentReceived = Some(1.06)
-  )
-
   val summaryCalculationIncome: SummaryCalculationIncome = SummaryCalculationIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
     otherPropertyIncome = Some(1.04),
     rarRentReceived = Some(1.06)
-  )
-
-  val summaryCalculationExpensesFhl: SummaryCalculationExpenses = SummaryCalculationExpenses(
-    consolidatedExpenses = Some(2.01),
-    premisesRunningCosts = Some(2.02),
-    repairsAndMaintenance = Some(2.03),
-    financialCosts = Some(2.04),
-    professionalFees = Some(2.05),
-    costOfServices = Some(2.06),
-    residentialFinancialCost = None,
-    broughtFwdResidentialFinancialCost = None,
-    other = Some(2.09),
-    travelCosts = Some(2.10)
   )
 
   val summaryCalculationExpenses: SummaryCalculationExpenses = SummaryCalculationExpenses(
@@ -614,20 +467,6 @@ object RetrieveUkPropertyBsasFixtures {
     bpraBalancingCharge = Some(5.03)
   )
 
-  val summaryCalculationDeductionsFhl: SummaryCalculationDeductions = SummaryCalculationDeductions(
-    zeroEmissionGoods = None,
-    annualInvestmentAllowance = Some(6.02),
-    costOfReplacingDomesticItems = None,
-    businessPremisesRenovationAllowance = Some(6.04),
-    propertyAllowance = Some(6.05),
-    otherCapitalAllowance = Some(6.06),
-    rarReliefClaimed = Some(6.07),
-    structuredBuildingAllowance = None,
-    enhancedStructuredBuildingAllowance = None,
-    zeroEmissionsCarAllowance = Some(6.11),
-    firstYearAllowanceOnPlantAndMachinery = Some(6.12)
-  )
-
   val summaryCalculationDeductions: SummaryCalculationDeductions = SummaryCalculationDeductions(
     zeroEmissionGoods = Some(6.01),
     annualInvestmentAllowance = Some(6.02),
@@ -640,21 +479,6 @@ object RetrieveUkPropertyBsasFixtures {
     enhancedStructuredBuildingAllowance = Some(6.10),
     zeroEmissionsCarAllowance = Some(6.11),
     firstYearAllowanceOnPlantAndMachinery = Some(6.12)
-  )
-
-  val adjustableSummaryCalculationFhl: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
-    totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeFhl),
-    totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesFhl),
-    netProfit = Some(3),
-    netLoss = Some(4),
-    totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditions),
-    totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsFhl),
-    taxableProfit = Some(7),
-    adjustedIncomeTaxLoss = Some(8)
   )
 
   val adjustableSummaryCalculation: AdjustableSummaryCalculation = AdjustableSummaryCalculation(
@@ -672,30 +496,11 @@ object RetrieveUkPropertyBsasFixtures {
     adjustedIncomeTaxLoss = Some(8)
   )
 
-  val adjustmentsIncomeFhl: AdjustmentsIncome = AdjustmentsIncome(
-    totalRentsReceived = Some(1.05),
-    premiumsOfLeaseGrant = None,
-    reversePremiums = None,
-    otherPropertyIncome = None
-  )
-
   val adjustmentsIncome: AdjustmentsIncome = AdjustmentsIncome(
     totalRentsReceived = Some(1.01),
     premiumsOfLeaseGrant = Some(1.02),
     reversePremiums = Some(1.03),
     otherPropertyIncome = Some(1.04)
-  )
-
-  val adjustmentsExpensesFhl: AdjustmentsExpenses = AdjustmentsExpenses(
-    consolidatedExpenses = Some(2.01),
-    premisesRunningCosts = Some(2.02),
-    repairsAndMaintenance = Some(2.03),
-    financialCosts = Some(2.04),
-    professionalFees = Some(2.05),
-    costOfServices = Some(2.06),
-    residentialFinancialCost = None,
-    other = Some(2.08),
-    travelCosts = Some(2.09)
   )
 
   val adjustmentsExpensesUkProperty: AdjustmentsExpenses = AdjustmentsExpenses(
@@ -710,12 +515,6 @@ object RetrieveUkPropertyBsasFixtures {
     travelCosts = Some(2.09)
   )
 
-  val adjustmentsFhl: Adjustments = Adjustments(
-    income = Some(adjustmentsIncomeFhl),
-    expenses = Some(adjustmentsExpensesFhl),
-    zeroAdjustments = None
-  )
-
   val adjustments: Adjustments = Adjustments(
     income = Some(adjustmentsIncome),
     expenses = Some(adjustmentsExpensesUkProperty),
@@ -726,21 +525,6 @@ object RetrieveUkPropertyBsasFixtures {
     income = None,
     expenses = None,
     zeroAdjustments = Some(true)
-  )
-
-  val adjustedSummaryCalculationFhl: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
-    totalIncome = Some(1),
-    income = Some(summaryCalculationIncomeFhl),
-    totalExpenses = Some(2),
-    expenses = Some(summaryCalculationExpensesFhl),
-    netProfit = Some(3),
-    netLoss = Some(4),
-    totalAdditions = Some(5),
-    additions = Some(summaryCalculationAdditions),
-    totalDeductions = Some(6),
-    deductions = Some(summaryCalculationDeductionsFhl),
-    taxableProfit = Some(7),
-    adjustedIncomeTaxLoss = Some(8)
   )
 
   val adjustedSummaryCalculation: AdjustedSummaryCalculation = AdjustedSummaryCalculation(
@@ -765,14 +549,5 @@ object RetrieveUkPropertyBsasFixtures {
     adjustments = Some(adjustments),
     adjustedSummaryCalculation = Some(adjustedSummaryCalculation)
   )
-
-  def retrieveBsasResponseInvalidTypeOfBusiness(typeOfBusiness: TypeOfBusiness): Def3_RetrieveUkPropertyBsasResponse =
-    Def3_RetrieveUkPropertyBsasResponse(
-      metadata = parsedMetadata,
-      inputs = inputsFhl,
-      adjustableSummaryCalculation = adjustableSummaryCalculationFhl,
-      adjustments = Some(adjustmentsFhl),
-      adjustedSummaryCalculation = Some(adjustedSummaryCalculationFhl)
-    )
 
 }

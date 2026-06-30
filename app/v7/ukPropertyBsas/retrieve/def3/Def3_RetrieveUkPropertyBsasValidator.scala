@@ -17,26 +17,26 @@
 package v7.ukPropertyBsas.retrieve.def3
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino, ResolveTaxYear, ResolverSupport}
+import api.controllers.validators.resolvers.{ResolveCalculationId, ResolveNino}
+import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits.*
 import v7.ukPropertyBsas.retrieve.def3.model.request.Def3_RetrieveUkPropertyBsasRequestData
 import v7.ukPropertyBsas.retrieve.model.request.RetrieveUkPropertyBsasRequestData
 
-object Def3_RetrieveUkPropertyBsasValidator extends ResolverSupport {
-  private val resolveTaxYear = ResolveTaxYear.resolver
-}
-
 class Def3_RetrieveUkPropertyBsasValidator(nino: String, calculationId: String, taxYear: String)
     extends Validator[RetrieveUkPropertyBsasRequestData] {
-  import Def3_RetrieveUkPropertyBsasValidator.*
 
-  def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] =
+  override def validate: Validated[Seq[MtdError], RetrieveUkPropertyBsasRequestData] =
     (
       ResolveNino(nino),
-      ResolveCalculationId(calculationId),
-      resolveTaxYear(taxYear)
-    ).mapN(Def3_RetrieveUkPropertyBsasRequestData.apply)
-
+      ResolveCalculationId(calculationId)
+    ).mapN { (validNino, validCalculationId) =>
+      Def3_RetrieveUkPropertyBsasRequestData(
+        nino = validNino,
+        calculationId = validCalculationId,
+        taxYear = TaxYear.fromMtd(taxYear)
+      )
+    }
 }
