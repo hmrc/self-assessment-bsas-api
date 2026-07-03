@@ -1,38 +1,56 @@
-# self-assessment-bsas-api
+Self Assessment BSAS API
+========================
+
+[![Apache-2.0 license](http://img.shields.io/badge/license-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ## Requirements
 
 - Scala 3.x.x
 - Java 21
 - sbt 1.10.x
-- [Service Manager](https://github.com/hmrc/sm2)
+- [Service manager V2](https://github.com/hmrc/sm2)
 
-# To run locally
+## Development Setup
 
-`sbt "run 9787"`
-or
-`sbt run`
+Run the microservice from the console using: `sbt run` (starts on port 9787 by default)
 
-Start the service manager profile: `sm2 --start MTDFB_BSAS`
+Start the service manager profile:
+
+```bash
+sm2 -start MTDFB_BSAS
+```
 
 ## Running tests
 
+Run unit tests: `sbt test`
+
+Run integration tests: `sbt it/test`
+
+## View OpenAPI Specification (OAS) documentation
+
+To view the OpenAPI documentation locally, ensure the API is running.
+
+Start the `api-documentation-frontend` and `api-definition` services using the Service Manager profile:
+
+```bash
+sm2 -start DEVHUB_PREVIEW_OPENAPI
 ```
-sbt test
-sbt it/test
+
+Then navigate to the preview page:
+
+```text
+http://localhost:9680/api-documentation/docs/openapi/preview
 ```
 
-## To view the OAS
+Enter the specification URL using the appropriate port and API version:
 
-To view documentation locally ensure the Self Assessment BSAS Api is running, and run api-documentation-frontend:
-`./run_local_with_dependencies.sh`
-
-Then go to http://localhost:9680/api-documentation/docs/openapi/preview and use this port and version:
-`http://localhost:9787/api/conf/7.0/application.yaml`
+```text
+http://localhost:9787/api/conf/7.0/application.yaml
+```
 
 ## Changelog
 
-You can see our changelog [here](https://github.com/hmrc/income-tax-mtd-changelog/wiki)
+You can see our changelog [here](https://github.com/hmrc/income-tax-mtd-changelog)
 
 ## Support and Reporting Issues
 
@@ -40,10 +58,8 @@ You can create a GitHub issue [here](https://github.com/hmrc/income-tax-mtd-chan
 
 ## API Reference / Documentation
 
-Available on
-the [HMRC Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api/3.0)
+Available on the [HMRC Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/self-assessment-bsas-api/3.0)
 
 # License
 
-This code is open source software licensed under
-the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
+This code is open source software licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
