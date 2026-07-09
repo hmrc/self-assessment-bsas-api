@@ -43,11 +43,12 @@
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
+      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12
+      "propertyAllowance": 0.25
     },
     "taxableProfit": 12500
   },
@@ -85,11 +86,12 @@
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
+      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12
+      "propertyAllowance": 0.25
     },
     "taxableProfit": 2500
   }
