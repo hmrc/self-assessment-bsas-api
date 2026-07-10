@@ -23,49 +23,9 @@
   "adjustableSummaryCalculation": {
     "totalIncome": 0.12,
     "income": {
-      "totalRentsReceived": 0.12
-    },
-    "totalExpenses": 0.12,
-    "expenses": {
-      "premisesRunningCosts": -509.67,
-      "repairsAndMaintenance": 50,
-      "financialCosts": -67.98,
-      "professionalFees": 100.00,
-      "costOfServices": 156.76,
-      "travelCosts": 82.78,
-      "residentialFinancialCost": 98,
-      "broughtFwdResidentialFinancialCost": 0.12,
-      "other": 88.12
-    },
-    "netProfit": 0.12,
-    "totalAdditions": 0.12,
-    "additions": {
-      "balancingCharge": 0.12
-    },
-    "totalDeductions": 0.12,
-    "deductions": {
-      "propertyAllowance": 0.12
-    },
-    "taxableProfit": 12500
-  },
-  "adjustments": {
-    "income": {
-      "totalRentsReceived": -99999999999.99
-    },
-    "expenses": {
-      "premisesRunningCosts": -999.99,
-      "repairsAndMaintenance": -99999999999.99,
-      "financialCosts": -99999999999.99,
-      "professionalFees": -99999999999.99,
-      "costOfServices": -99999999999.99,
-      "travelCosts": -99999999999.99,
-      "other": -99999999999.99
-    }
-  },
-  "adjustedSummaryCalculation": {
-    "totalIncome": 0.12,
-    "income": {
-      "totalRentsReceived": 0.12
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "otherPropertyIncome": 0.12
     },
     "totalExpenses": 0.12,
     "expenses": {
@@ -82,12 +42,134 @@
     "netProfit": 0.12,
     "totalAdditions": 0.12,
     "additions": {
+      "privateUseAdjustment": 0.12,
       "balancingCharge": 0.12
     },
     "totalDeductions": 0.12,
     "deductions": {
-      "propertyAllowance": 0.12
+      "propertyAllowance": 0.25
     },
-    "taxableProfit": 2500
+    "taxableProfit": 2500,
+    "countryLevelDetail": [
+      {
+        "countryCode": "CYM",
+        "totalIncome": 0.12,
+        "income": {
+          "totalRentsReceived": 0.12,
+          "premiumsOfLeaseGrant": 0.12,
+          "otherPropertyIncome": 0.12
+        },
+        "totalExpenses": -3000.87,
+        "expenses": {
+          "premisesRunningCosts": 0.12,
+          "repairsAndMaintenance": 0.12,
+          "financialCosts": 0.12,
+          "professionalFees": 0.12,
+          "travelCosts": 0.12,
+          "costOfServices": 0.12,
+          "residentialFinancialCost": 0.12,
+          "broughtFwdResidentialFinancialCost": 0.12,
+          "other": 0.12
+        },
+        "netProfit": 0.12,
+        "totalAdditions": 0.12,
+        "additions": {
+          "privateUseAdjustment": 0.12,
+          "balancingCharge": 0.12
+        },
+        "totalDeductions": 0.12,
+        "deductions": {
+          "propertyAllowance": 0.25
+        },
+        "taxableProfit": 0.12
+      }
+    ]
+  },
+  "adjustments": {
+    "countryLevelDetail": [
+      {
+        "countryCode": "CYM",
+        "income": {
+          "totalRentsReceived": 99999999999.99,
+          "premiumsOfLeaseGrant": 99999999999.99,
+          "otherPropertyIncome": 99999999999.99
+        },
+        "expenses": {
+          "premisesRunningCosts": 99999999999.99,
+          "repairsAndMaintenance": 99999999999.99,
+          "financialCosts": 99999999999.99,
+          "professionalFees": 99999999999.99,
+          "travelCosts": 99999999999.99,
+          "costOfServices": 99999999999.99,
+          "residentialFinancialCost": 99999999999.99,
+          "other": 99999999999.99
+        }
+      }
+    ]
+  },
+  "adjustedSummaryCalculation": {
+    "totalIncome": 0.12,
+    "income": {
+      "totalRentsReceived": 0.12,
+      "premiumsOfLeaseGrant": 0.12,
+      "otherPropertyIncome": 0.12
+    },
+    "totalExpenses": 0.12,
+    "expenses": {
+      "premisesRunningCosts": -0.12,
+      "repairsAndMaintenance": 0.12,
+      "financialCosts": 0.12,
+      "professionalFees": 0.12,
+      "travelCosts": -0.12,
+      "costOfServices": 0.12,
+      "residentialFinancialCost": 0.12,
+      "broughtFwdResidentialFinancialCost": 0.12,
+      "other": 0.12
+    },
+    "netProfit": 0.12,
+    "totalAdditions": 0.12,
+    "additions": {
+      "privateUseAdjustment": 0.12,
+      "balancingCharge": 0.12
+    },
+    "totalDeductions": 0.12,
+    "deductions": {
+      "propertyAllowance": 0.25
+    },
+    "taxableProfit": 2500,
+    "countryLevelDetail": [
+      {
+        "countryCode": "CYM",
+        "totalIncome": 0.12,
+        "income": {
+          "totalRentsReceived": 0.12,
+          "premiumsOfLeaseGrant": 0.12,
+          "otherPropertyIncome": 0.12
+        },
+        "totalExpenses": 0.12,
+        "expenses": {
+          "premisesRunningCosts": -509.67,
+          "repairsAndMaintenance": 50,
+          "financialCosts": -67.98,
+          "professionalFees": 100.00,
+          "costOfServices": 156001.76,
+          "travelCosts": 82.78,
+          "residentialFinancialCost": 98,
+          "broughtFwdResidentialFinancialCost": 0.12,
+          "other": 88.12
+        },
+        "netProfit": 0.12,
+        "totalAdditions": 0.12,
+        "additions": {
+          "privateUseAdjustment": 0.12,
+          "balancingCharge": 0.12
+        },
+        "totalDeductions": 0.12,
+        "deductions": {
+          "propertyAllowance": 0.25
+        },
+        "taxableProfit": 0.12
+      }
+    ]
   }
 }
