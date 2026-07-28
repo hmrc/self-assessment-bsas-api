@@ -19,7 +19,7 @@
           "type": "string",
           "description": "\t\nThe date the accounting period ended. The accounting period must end on the 5th of April in the tax year to which it is assigned. For Making Tax Digital (MTD) submissions, the earliest tax year in which an accounting period can end is 2019-20 for self-employment and UK property, and for foreign property, it is 2021-22.",
           "format": "date",
-          "example": "2021-07-05"
+          "example": "2022-04-05"
         }
       },
       "required": [
