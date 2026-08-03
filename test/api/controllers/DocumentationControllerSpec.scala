@@ -18,7 +18,7 @@ package api.controllers
 
 import api.config.rewriters.*
 import api.config.rewriters.DocumentationRewriters.CheckAndRewrite
-import api.config.{AppConfig, MockAppConfig, RealAppConfig}
+import api.config.{MockAppConfig, RealAppConfig}
 import api.definition.*
 import api.routing.{Version, Versions}
 import com.typesafe.config.ConfigFactory
@@ -179,20 +179,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     private implicit val materializer: Materializer = NoMaterializer
 
-    private val apiFactory = new ApiDefinitionFactory {
-      protected val appConfig: AppConfig = mockAppConfig
-
-      val definition: Definition = Definition(
-        APIDefinition(
-          "test API definition",
-          "description",
-          "context",
-          List("category"),
-          List(APIVersion(apiVersion, APIStatus.BETA, endpointsEnabled = true)),
-          None)
-      )
-
-    }
+    private val apiFactory = new ApiDefinitionFactory(mockAppConfig)
 
     private val config    = new Configuration(ConfigFactory.load())
     private val mimeTypes = HttpConfiguration.parseFileMimeTypes(config) ++ Map("yaml" -> "text/yaml", "md" -> "text/markdown")

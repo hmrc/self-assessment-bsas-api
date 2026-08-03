@@ -25,7 +25,12 @@ import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{retrieveForeignPropertyBsasDesFhlJson, retrieveForeignPropertyBsasDesJson, retrieveForeignPropertyBsasMtdFhlJson, retrieveForeignPropertyBsasMtdJson}
+import v7.foreignPropertyBsas.retrieve.def1.model.response.RetrieveForeignPropertyBsasBodyFixtures.{
+  retrieveForeignPropertyBsasDesFhlJson,
+  retrieveForeignPropertyBsasDesJson,
+  retrieveForeignPropertyBsasMtdFhlJson,
+  retrieveForeignPropertyBsasMtdJson
+}
 import v7.selfEmploymentBsas.retrieve.def1.model.Def1_RetrieveSelfEmploymentBsasFixtures
 import v7.ukPropertyBsas.retrieve.def1.model.response.RetrieveUkPropertyBsasFixtures
 
