@@ -20,6 +20,14 @@ import api.routing.Version
 import api.utils.enums.Enums
 import play.api.libs.json.*
 
+enum APIAccessType {
+  case CONTROLLED, PUBLIC
+}
+
+object APIAccessType {
+  given Format[APIAccessType] = Enums.format(values)
+}
+
 enum APIStatus {
   case ALPHA, BETA, STABLE, DEPRECATED, RETIRED
 }
@@ -31,7 +39,7 @@ object APIStatus {
 
 }
 
-case class APIVersion(version: Version, status: APIStatus, endpointsEnabled: Boolean)
+case class APIVersion(version: Version, status: APIStatus, access: APIAccessType, endpointsEnabled: Boolean)
 
 object APIVersion {
   given OFormat[APIVersion] = Json.format[APIVersion]
